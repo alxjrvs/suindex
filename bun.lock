@@ -7,7 +7,7 @@
         "react": "^19.1.1",
         "react-dom": "^19.1.1",
         "react-router-dom": "^7.9.4",
-        "salvageunion-reference": "^1.0.8",
+        "salvageunion-reference": "^1.0.9",
       },
       "devDependencies": {
         "@eslint/js": "^9.36.0",
@@ -528,7 +528,7 @@
 
     "run-parallel": ["run-parallel@1.2.0", "", { "dependencies": { "queue-microtask": "^1.2.2" } }, "sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA=="],
 
-    "salvageunion-reference": ["salvageunion-reference@1.0.8", "", {}, "sha512-4IURDYi8z0vrFnQFCKR6XhMBNI7oXezPj0kGw8TbTDT5cVlivhN+XgvQ6Me/7f18X/pkVeBxXc5VNstmV/NbZQ=="],
+    "salvageunion-reference": ["salvageunion-reference@1.0.9", "", {}, "sha512-4d0IDtPGOSDiXhifgjRWKgF9EfzjPr3omElRkd1JsUjrqy9EXRdgCVtozQO2c3IczbVf97IGkXbrvrdlYBr4qw=="],
 
     "scheduler": ["scheduler@0.27.0", "", {}, "sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q=="],
 

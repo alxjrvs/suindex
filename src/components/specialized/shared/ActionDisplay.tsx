@@ -109,17 +109,31 @@ export function ActionDisplay({
 
       {action.options && action.options.length > 0 && (
         <div className="space-y-1 ml-4">
-          {action.options.map((option, index) => (
-            <div key={index} className="text-[var(--color-su-black)]">
-              <span className="font-bold">
-                {option.label}
-                {option.label?.includes("•") || option.label?.length === 0
-                  ? ""
-                  : ":"}
-              </span>{" "}
-              {option.value}
-            </div>
-          ))}
+          {action.options.map((option, index) => {
+            const label =
+              typeof option === "string"
+                ? ""
+                : option.label || option.value || "";
+            const value =
+              typeof option === "string" ? option : option.value || "";
+
+            return (
+              <div key={index} className="text-[var(--color-su-black)]">
+                {
+                  <span className="font-bold">
+                    {label}
+                    {label.includes("•") ? "" : "-"}
+                  </span>
+                }
+                {value && (
+                  <>
+                    {label && " "}
+                    {value}
+                  </>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 

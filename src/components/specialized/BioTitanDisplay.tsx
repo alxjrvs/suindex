@@ -16,6 +16,7 @@ interface BioTitanDisplayProps {
       damage?: { type: string; amount: number } | string;
       actionType?: string;
       traits?: Array<{ type: string; amount?: number }>;
+      options?: Array<{ label: string; value: string }>;
     }>;
     page: number;
   };

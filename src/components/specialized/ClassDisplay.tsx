@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { SalvageUnionReference } from "salvageunion-reference";
 import { Frame } from "./shared/Frame";
+import { DataList } from "./shared/DataList";
 
 interface AbilityData {
   name: string;
@@ -100,22 +101,27 @@ function AbilityList({
 }
 
 function AbilityItem({ ability }: { ability: AbilityData }) {
-  const details: string[] = [];
+  interface DataValue {
+    value: string | number;
+    cost?: boolean;
+  }
+
+  const details: DataValue[] = [];
 
   if (ability.activationCost) {
     const costValue =
       ability.activationCost === "Variable"
-        ? "Variable AP"
-        : `${ability.activationCost} AP`;
-    details.push(costValue);
+        ? "Variable"
+        : `${ability.activationCost}`;
+    details.push({ value: costValue, cost: true });
   }
 
   if (ability.range) {
-    details.push(ability.range);
+    details.push({ value: ability.range });
   }
 
   if (ability.actionType) {
-    details.push(ability.actionType);
+    details.push({ value: ability.actionType });
   }
 
   return (
@@ -129,8 +135,8 @@ function AbilityItem({ ability }: { ability: AbilityData }) {
             {ability.name}
           </h5>
           {details.length > 0 && (
-            <div className="text-sm text-[var(--color-su-brick)] mt-1">
-              {details.join(" • ")}
+            <div className="mt-1">
+              <DataList values={details} textColor="var(--color-su-brick)" />
             </div>
           )}
         </div>
