@@ -46,7 +46,7 @@ function App() {
   }
 
   return (
-    <Router basename="/SUIndex/">
+    <Router basename="/">
       <div className="flex h-screen bg-[var(--color-su-white)]">
         <Navigation schemas={schemaIndex.schemas} />
         <main className="flex-1 overflow-auto">
