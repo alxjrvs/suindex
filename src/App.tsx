@@ -4,8 +4,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useNavigate,
-  useLocation,
 } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import SchemaViewer from "./components/SchemaViewer";
@@ -13,29 +11,11 @@ import ItemShowPage from "./components/ItemShowPage";
 import schemaIndexData from "salvageunion-reference/schemas/index.json";
 
 function AppContent() {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [schemaIndex, setSchemaIndex] = useState<typeof schemaIndexData | null>(
     null
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hasRedirected, setHasRedirected] = useState(false);
-
-  useEffect(() => {
-    // Handle redirect from 404.html on first load
-    if (!hasRedirected && location.pathname === "/suindex/") {
-      const redirect = sessionStorage.redirect;
-      if (redirect) {
-        delete sessionStorage.redirect;
-        // The redirect already contains the route (e.g., /schema/crawlers)
-        if (redirect && redirect !== "/") {
-          navigate(redirect);
-        }
-        setHasRedirected(true);
-      }
-    }
-  }, [hasRedirected, location.pathname, navigate]);
 
   useEffect(() => {
     try {

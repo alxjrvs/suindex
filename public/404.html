@@ -13,11 +13,9 @@
       // e.g., /suindex/schema/crawlers -> /schema/crawlers
       var route = path.replace(/^\/suindex\/?/, "/");
 
-      // Store the route for React Router to handle
-      sessionStorage.redirect = route + search + hash;
-
-      // Redirect to the index page
-      window.location.replace("/suindex/");
+      // Redirect directly to the route with hash-based routing
+      // This ensures React Router can handle it properly
+      window.location.replace("/suindex/#" + route + search + hash);
     </script>
   </head>
   <body></body>
