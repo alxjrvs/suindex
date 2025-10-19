@@ -46,9 +46,9 @@ function AppContent() {
   }
 
   return (
-    <div className="flex h-screen bg-[var(--color-su-white)]">
+    <div className="flex flex-col md:flex-row h-screen bg-[var(--color-su-white)]">
       <Navigation schemas={schemaIndex.schemas} />
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pt-16 md:pt-0">
         <Routes>
           <Route
             path="/"
