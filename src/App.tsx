@@ -28,10 +28,9 @@ function AppContent() {
       const redirect = sessionStorage.redirect;
       if (redirect) {
         delete sessionStorage.redirect;
-        // Extract the path after /suindex/
-        const path = redirect.replace("/suindex/", "");
-        if (path && path !== "/") {
-          navigate(path);
+        // The redirect already contains the route (e.g., /schema/crawlers)
+        if (redirect && redirect !== "/") {
+          navigate(redirect);
         }
         setHasRedirected(true);
       }
