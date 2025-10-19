@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { SchemaInfo, DataItem } from "../types/schema";
 
@@ -12,8 +12,20 @@ export default function DataTable({ data, schema }: DataTableProps) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
+  const [techLevelFilters, setTechLevelFilters] = useState<Set<string>>(
+    new Set()
+  );
   const [sortField, setSortField] = useState<string>("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  // Clear filters when schema changes
+  useEffect(() => {
+    setSearchTerm("");
+    setFilters({});
+    setTechLevelFilters(new Set());
+    setSortField("name");
+    setSortDirection("asc");
+  }, [schemaId]);
 
   // Get all unique fields from the data
   const allFields = useMemo(() => {
@@ -74,6 +86,14 @@ export default function DataTable({ data, schema }: DataTableProps) {
         if (!nameMatch && !descMatch) return false;
       }
 
+      // Tech level filter (multi-select)
+      if (techLevelFilters.size > 0 && !techLevelFilters.has("all")) {
+        const itemTechLevel = item.techLevel?.toString();
+        if (!itemTechLevel || !techLevelFilters.has(itemTechLevel)) {
+          return false;
+        }
+      }
+
       // Field filters
       for (const [field, filterValue] of Object.entries(filters)) {
         if (!filterValue) continue;
@@ -92,7 +112,7 @@ export default function DataTable({ data, schema }: DataTableProps) {
 
       return true;
     });
-  }, [data, searchTerm, filters]);
+  }, [data, searchTerm, filters, techLevelFilters]);
 
   // Sort data
   const sortedData = useMemo(() => {
@@ -144,9 +164,26 @@ export default function DataTable({ data, schema }: DataTableProps) {
         fields.push(f);
       }
     });
-    return fields
-      .filter((f) => allFields.includes(f) && f !== "id") // Exclude id field
-      .slice(0, 6); // Limit to 6 columns
+
+    // Filter and limit to 6 columns, excluding id, page, and source
+    const result = fields
+      .filter(
+        (f) =>
+          allFields.includes(f) && f !== "id" && f !== "source" && f !== "page"
+      )
+      .slice(0, 4); // Limit to 4 columns (leaving room for page and source)
+
+    // Add page before source if it exists
+    if (allFields.includes("page")) {
+      result.push("page");
+    }
+
+    // Add source as the last column if it exists
+    if (allFields.includes("source")) {
+      result.push("source");
+    }
+
+    return result;
   }, [allFields, schema.requiredFields]);
 
   return (
@@ -163,21 +200,67 @@ export default function DataTable({ data, schema }: DataTableProps) {
           />
         </div>
 
+        {/* Tech Level Buttons */}
+        {allFields.includes("techLevel") &&
+          fieldValues["techLevel"].size > 1 && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-[var(--color-su-black)] mb-2">
+                Tech Level
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => {
+                    setTechLevelFilters(new Set());
+                  }}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    techLevelFilters.size === 0
+                      ? "bg-[var(--color-su-orange)] text-[var(--color-su-white)]"
+                      : "bg-[var(--color-su-light-blue)] text-[var(--color-su-black)] border border-[var(--color-su-light-blue)] hover:bg-[var(--color-su-light-orange)]"
+                  }`}
+                >
+                  All
+                </button>
+                {Array.from(fieldValues["techLevel"])
+                  .sort()
+                  .map((value) => {
+                    const isSelected = techLevelFilters.has(String(value));
+                    return (
+                      <button
+                        key={String(value)}
+                        onClick={() => {
+                          const newFilters = new Set(techLevelFilters);
+                          if (isSelected) {
+                            newFilters.delete(String(value));
+                          } else {
+                            newFilters.add(String(value));
+                          }
+                          setTechLevelFilters(newFilters);
+                        }}
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                          isSelected
+                            ? "bg-[var(--color-su-orange)] text-[var(--color-su-white)]"
+                            : "bg-[var(--color-su-light-blue)] text-[var(--color-su-black)] border border-[var(--color-su-light-blue)] hover:bg-[var(--color-su-light-orange)]"
+                        }`}
+                      >
+                        T{String(value)}
+                      </button>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
+
+        {/* Class Dropdown */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {allFields
             .filter((field) => {
-              // Only show techLevel and class filters
-              const allowedFields = ["techLevel", "class"];
-              return (
-                allowedFields.includes(field) && fieldValues[field].size > 1
-              );
+              // Only show class filter (techLevel is now buttons)
+              return field === "class" && fieldValues[field].size > 1;
             })
             .map((field) => (
               <div key={field}>
                 <label className="block text-sm font-medium text-[var(--color-su-black)] mb-1 capitalize">
-                  {field === "techLevel"
-                    ? "Tech Level"
-                    : field.replace(/([A-Z])/g, " $1").trim()}
+                  {field.replace(/([A-Z])/g, " $1").trim()}
                 </label>
                 <select
                   value={filters[field] || ""}
