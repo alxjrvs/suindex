@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+      // Store the requested path in sessionStorage so React can access it
+      var path = window.location.pathname;
+      var search = window.location.search;
+      var hash = window.location.hash;
+
+      // Store the full path for React Router to handle
+      sessionStorage.redirect = path + search + hash;
+
+      // Redirect to the index page
+      window.location.replace("/suindex/");
+    </script>
+  </head>
+  <body></body>
+</html>

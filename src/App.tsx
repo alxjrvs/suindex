@@ -4,18 +4,39 @@ import {
   Routes,
   Route,
   Navigate,
+  useNavigate,
+  useLocation,
 } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import SchemaViewer from "./components/SchemaViewer";
 import ItemShowPage from "./components/ItemShowPage";
 import schemaIndexData from "salvageunion-reference/schemas/index.json";
 
-function App() {
+function AppContent() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [schemaIndex, setSchemaIndex] = useState<typeof schemaIndexData | null>(
     null
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasRedirected, setHasRedirected] = useState(false);
+
+  useEffect(() => {
+    // Handle redirect from 404.html on first load
+    if (!hasRedirected && location.pathname === "/suindex/") {
+      const redirect = sessionStorage.redirect;
+      if (redirect) {
+        delete sessionStorage.redirect;
+        // Extract the path after /suindex/
+        const path = redirect.replace("/suindex/", "");
+        if (path && path !== "/") {
+          navigate(path);
+        }
+        setHasRedirected(true);
+      }
+    }
+  }, [hasRedirected, location.pathname, navigate]);
 
   useEffect(() => {
     try {
@@ -46,31 +67,37 @@ function App() {
   }
 
   return (
+    <div className="flex h-screen bg-[var(--color-su-white)]">
+      <Navigation schemas={schemaIndex.schemas} />
+      <main className="flex-1 overflow-auto">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Navigate
+                to={`/schema/${schemaIndex.schemas[0]?.id || ""}`}
+                replace
+              />
+            }
+          />
+          <Route
+            path="/schema/:schemaId"
+            element={<SchemaViewer schemas={schemaIndex.schemas} />}
+          />
+          <Route
+            path="/schema/:schemaId/item/:itemId"
+            element={<ItemShowPage schemas={schemaIndex.schemas} />}
+          />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
+function App() {
+  return (
     <Router basename="/suindex/">
-      <div className="flex h-screen bg-[var(--color-su-white)]">
-        <Navigation schemas={schemaIndex.schemas} />
-        <main className="flex-1 overflow-auto">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Navigate
-                  to={`/schema/${schemaIndex.schemas[0]?.id || ""}`}
-                  replace
-                />
-              }
-            />
-            <Route
-              path="/schema/:schemaId"
-              element={<SchemaViewer schemas={schemaIndex.schemas} />}
-            />
-            <Route
-              path="/schema/:schemaId/item/:itemId"
-              element={<ItemShowPage schemas={schemaIndex.schemas} />}
-            />
-          </Routes>
-        </main>
-      </div>
+      <AppContent />
     </Router>
   );
 }
