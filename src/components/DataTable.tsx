@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import type { SchemaInfo, DataItem } from "../types/schema";
 
 interface DataTableProps {
@@ -9,6 +9,7 @@ interface DataTableProps {
 
 export default function DataTable({ data, schema }: DataTableProps) {
   const { schemaId } = useParams<{ schemaId: string }>();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [sortField, setSortField] = useState<string>("name");
@@ -232,7 +233,7 @@ export default function DataTable({ data, schema }: DataTableProps) {
                     key={item.id || index}
                     className="hover:bg-[var(--color-su-light-orange)] cursor-pointer transition-colors"
                     onClick={() => {
-                      window.location.href = `/schema/${schemaId}/item/${item.id}`;
+                      navigate(`/schema/${schemaId}/item/${item.id}`);
                     }}
                   >
                     {displayFields.map((field) => (
