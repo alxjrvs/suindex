@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -75,7 +75,7 @@ function AppContent() {
 
 function App() {
   return (
-    <Router basename={import.meta.env.BASE_URL}>
+    <Router>
       <AppContent />
     </Router>
   );
