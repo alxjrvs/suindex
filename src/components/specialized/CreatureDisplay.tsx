@@ -1,0 +1,137 @@
+import { Frame } from "./shared/Frame";
+import { StatList } from "./shared/StatList";
+
+interface TraitReference {
+  type: string;
+  amount?: number;
+}
+
+interface DamageData {
+  type: string;
+  amount: number | string;
+}
+
+interface CreatureAbility {
+  name: string;
+  range?: string;
+  damage?: DamageData;
+  traits?: TraitReference[];
+  description?: string;
+}
+
+interface CreatureData {
+  name: string;
+  source: string;
+  description: string;
+  hitPoints: number;
+  traits?: TraitReference[];
+  abilities: CreatureAbility[];
+  page: number;
+}
+
+interface CreatureDisplayProps {
+  data: CreatureData;
+}
+
+function formatTraits(traits?: TraitReference[]): string {
+  if (!traits || traits.length === 0) return "";
+  return traits
+    .map((t) => {
+      const type = t.type.charAt(0).toUpperCase() + t.type.slice(1);
+      const amount = t.amount !== undefined ? `(${t.amount})` : "";
+      return `${type}${amount}`;
+    })
+    .join(", ");
+}
+
+export function CreatureDisplay({ data }: CreatureDisplayProps) {
+  return (
+    <Frame
+      header={data.name}
+      headerColor="var(--color-su-orange)"
+      description={data.description}
+      headerContent={
+        <div className="ml-auto pb-24" style={{ overflow: "visible" }}>
+          <StatList
+            stats={[{ label: "Hit Points", value: data.hitPoints }]}
+            up={false}
+          />
+        </div>
+      }
+      showSidebar={false}
+    >
+      {/* Creature Traits */}
+      {data.traits && data.traits.length > 0 && (
+        <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
+          <span className="font-bold text-[var(--color-su-brick)]">
+            Traits:{" "}
+          </span>
+          <span className="text-[var(--color-su-black)]">
+            {formatTraits(data.traits)}
+          </span>
+        </div>
+      )}
+
+      {/* Abilities */}
+      {data.abilities && data.abilities.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold text-[var(--color-su-brick)]">
+            Abilities
+          </h3>
+          {data.abilities.map((ability, index) => (
+            <div
+              key={index}
+              className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2"
+            >
+              <div className="font-bold text-[var(--color-su-black)] text-lg">
+                {ability.name}
+              </div>
+
+              {/* Ability Stats */}
+              <div className="space-y-1">
+                {ability.range && (
+                  <div className="text-[var(--color-su-black)]">
+                    <span className="font-bold text-[var(--color-su-brick)]">
+                      Range:{" "}
+                    </span>
+                    {ability.range}
+                  </div>
+                )}
+                {ability.damage && (
+                  <div className="text-[var(--color-su-black)]">
+                    <span className="font-bold text-[var(--color-su-brick)]">
+                      Damage:{" "}
+                    </span>
+                    {ability.damage.amount}
+                    {ability.damage.type}
+                  </div>
+                )}
+                {ability.traits && ability.traits.length > 0 && (
+                  <div className="text-[var(--color-su-black)]">
+                    <span className="font-bold text-[var(--color-su-brick)]">
+                      Traits:{" "}
+                    </span>
+                    {formatTraits(ability.traits)}
+                  </div>
+                )}
+              </div>
+
+              {/* Ability Description */}
+              {ability.description && (
+                <div className="text-[var(--color-su-black)] pt-2 border-t border-[var(--color-su-black)]">
+                  {ability.description}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Page Reference */}
+      <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
+        <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
+        <span className="text-[var(--color-su-black)] ml-2">{data.page}</span>
+      </div>
+    </Frame>
+  );
+}
