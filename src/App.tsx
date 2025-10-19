@@ -75,7 +75,7 @@ function AppContent() {
 
 function App() {
   return (
-    <Router basename="/suindex/">
+    <Router basename={import.meta.env.BASE_URL}>
       <AppContent />
     </Router>
   );
