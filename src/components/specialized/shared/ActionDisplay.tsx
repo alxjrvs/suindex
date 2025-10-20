@@ -1,9 +1,17 @@
 import { DataList } from './DataList'
 import type { DataValue } from '../../../types/common'
-import type { System } from 'salvageunion-reference'
+import type { System, BioTitan, NPC, Meld, Squad, Equipment, Module } from 'salvageunion-reference'
 import type { ReactNode } from 'react'
 
-type Action = NonNullable<System['actions']>[number]
+type Action =
+  | NonNullable<System['actions']>[number]
+  | NonNullable<Module['actions']>[number]
+  | NonNullable<Equipment['actions']>[number]
+  | BioTitan['abilities'][number]
+  | NPC['abilities'][number]
+  | NonNullable<Meld['abilities']>[number]
+  | NonNullable<Squad['abilities']>[number]
+
 interface ActionDisplayProps {
   action: Action
   activationCurrency?: string
@@ -47,35 +55,11 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
     Array.isArray(action.options) &&
     action.options.length > 0 ? (
       <div className="space-y-1 ml-4">
-        {action.options.map((option, index) => {
-          if (typeof option === 'string') {
-            return (
-              <div key={index} className="text-[var(--color-su-black)]">
-                • {option}
-              </div>
-            )
-          }
-
-          const label = option.label || ''
-          const value = option.value || ''
-
-          return (
-            <div key={index} className="text-[var(--color-su-black)]">
-              {label && (
-                <span className="font-bold">
-                  {label}
-                  {label.includes('•') ? '' : ':'}
-                </span>
-              )}
-              {value && (
-                <>
-                  {label && ' '}
-                  {value}
-                </>
-              )}
-            </div>
-          )
-        })}
+        {action.options.map((option, index) => (
+          <div key={index} className="text-[var(--color-su-black)]">
+            • {option}
+          </div>
+        ))}
       </div>
     ) : null
 

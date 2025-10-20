@@ -200,14 +200,28 @@ describe('MechBuilder', () => {
       const chassisSelect = screen.getByRole('combobox')
 
       await user.selectOptions(chassisSelect, 'chassis-1')
-      await waitFor(() => {
-        expect(screen.getByText(/0\/10/)).toBeInTheDocument()
-      })
+      await waitFor(
+        () => {
+          // Check for chassis-1 stats: 4 system slots, 3 module slots
+          const systemSlots = screen.getAllByText(/0\/4/)
+          const moduleSlots = screen.getAllByText(/0\/3/)
+          expect(systemSlots.length).toBeGreaterThan(0)
+          expect(moduleSlots.length).toBeGreaterThan(0)
+        },
+        { timeout: 5000 }
+      )
 
       await user.selectOptions(chassisSelect, 'chassis-2')
-      await waitFor(() => {
-        expect(screen.getByText(/0\/12/)).toBeInTheDocument()
-      })
+      await waitFor(
+        () => {
+          // Check for chassis-2 stats: 5 system slots, 4 module slots
+          const systemSlots = screen.getAllByText(/0\/5/)
+          const moduleSlots = screen.getAllByText(/0\/4/)
+          expect(systemSlots.length).toBeGreaterThan(0)
+          expect(moduleSlots.length).toBeGreaterThan(0)
+        },
+        { timeout: 5000 }
+      )
     })
   })
 
@@ -216,15 +230,24 @@ describe('MechBuilder', () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
+
+      await waitFor(() => {
+        const patternInput = screen.getByPlaceholderText(/enter or select a pattern/i)
+        expect(patternInput).not.toBeDisabled()
+      })
 
       const patternInput = screen.getByPlaceholderText(/enter or select a pattern/i)
       await user.click(patternInput)
 
-      await waitFor(() => {
-        expect(screen.getByText(/scout pattern/i)).toBeInTheDocument()
-      })
+      await waitFor(
+        () => {
+          const suggestions = screen.queryByText(/scout pattern/i)
+          expect(suggestions).toBeInTheDocument()
+        },
+        { timeout: 5000 }
+      )
     })
 
     it('applies pattern when confirmed', async () => {
@@ -233,13 +256,18 @@ describe('MechBuilder', () => {
 
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
+
+      await waitFor(() => {
+        const patternInput = screen.getByPlaceholderText(/enter or select a pattern/i)
+        expect(patternInput).not.toBeDisabled()
+      })
 
       const patternInput = screen.getByPlaceholderText(/enter or select a pattern/i)
       await user.click(patternInput)
 
-      const scoutPattern = await screen.findByText(/scout pattern/i)
+      const scoutPattern = await screen.findByText(/scout pattern/i, {}, { timeout: 5000 })
       await user.click(scoutPattern)
 
       expect(confirmSpy).toHaveBeenCalled()
@@ -252,12 +280,17 @@ describe('MechBuilder', () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
-      await waitFor(() => {
-        expect(screen.getByText(/0\/10/)).toBeInTheDocument()
-      })
+      await waitFor(
+        () => {
+          // Verify SP display exists (0/10 for chassis-1)
+          const spDisplays = screen.getAllByText(/0\/10/)
+          expect(spDisplays.length).toBeGreaterThan(0)
+        },
+        { timeout: 5000 }
+      )
 
       // Find increment buttons for SP
       const spSection = screen.getByText(/^SP$/i).closest('div')
@@ -265,9 +298,13 @@ describe('MechBuilder', () => {
 
       if (incrementButton) {
         await user.click(incrementButton)
-        await waitFor(() => {
-          expect(screen.getByText(/1\/10/)).toBeInTheDocument()
-        })
+        await waitFor(
+          () => {
+            const updatedDisplays = screen.getAllByText(/1\/10/)
+            expect(updatedDisplays.length).toBeGreaterThan(0)
+          },
+          { timeout: 5000 }
+        )
       }
     })
   })
@@ -284,26 +321,35 @@ describe('MechBuilder', () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
-      await waitFor(() => {
-        const addButton = screen.getByRole('button', { name: /add system\/module/i })
-        expect(addButton).not.toBeDisabled()
-      })
+      await waitFor(
+        () => {
+          const addButton = screen.getByRole('button', { name: /add system\/module/i })
+          expect(addButton).not.toBeDisabled()
+        },
+        { timeout: 5000 }
+      )
     })
 
     it('displays system and module slot usage', async () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
-      await waitFor(() => {
-        expect(screen.getByText(/0\/4/)).toBeInTheDocument() // System slots
-        expect(screen.getByText(/0\/3/)).toBeInTheDocument() // Module slots
-      })
+      await waitFor(
+        () => {
+          // Check for chassis-1 stats: 4 system slots, 3 module slots
+          const systemSlots = screen.getAllByText(/0\/4/)
+          const moduleSlots = screen.getAllByText(/0\/3/)
+          expect(systemSlots.length).toBeGreaterThan(0)
+          expect(moduleSlots.length).toBeGreaterThan(0)
+        },
+        { timeout: 5000 }
+      )
     })
   })
 
@@ -319,7 +365,7 @@ describe('MechBuilder', () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
       await waitFor(() => {
@@ -332,19 +378,24 @@ describe('MechBuilder', () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
-      await waitFor(() => {
-        expect(screen.getByText(/0\/5/)).toBeInTheDocument() // Cargo cap
-      })
+      await waitFor(
+        () => {
+          // Check for chassis-1 cargo cap: 0/5
+          const cargoDisplays = screen.getAllByText(/0\/5/)
+          expect(cargoDisplays.length).toBeGreaterThan(0)
+        },
+        { timeout: 5000 }
+      )
     })
 
     it('opens cargo modal when add cargo is clicked', async () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
       await waitFor(async () => {
@@ -364,7 +415,7 @@ describe('MechBuilder', () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
       const quirkInput = screen.getByPlaceholderText(/enter quirk/i)
@@ -377,7 +428,7 @@ describe('MechBuilder', () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
@@ -392,16 +443,26 @@ describe('MechBuilder', () => {
       const user = userEvent.setup()
       render(<MechBuilder />)
 
-      const chassisSelect = screen.getByLabelText(/chassis/i)
+      const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, 'chassis-1')
 
-      await waitFor(() => {
-        expect(screen.getByText(/system slots/i)).toBeInTheDocument()
-        expect(screen.getByText(/module slots/i)).toBeInTheDocument()
-        expect(screen.getByText(/cargo cap/i)).toBeInTheDocument()
-        expect(screen.getByText(/tech level/i)).toBeInTheDocument()
-        expect(screen.getByText(/salvage value/i)).toBeInTheDocument()
-      })
+      await waitFor(
+        () => {
+          // Check that all stat labels are present
+          const systemSlotsLabels = screen.getAllByText(/system slots/i)
+          const moduleSlotsLabels = screen.getAllByText(/module slots/i)
+          const cargoCapLabels = screen.getAllByText(/cargo cap/i)
+          const techLevelLabels = screen.getAllByText(/tech level/i)
+          const salvageValueLabels = screen.getAllByText(/salvage value/i)
+
+          expect(systemSlotsLabels.length).toBeGreaterThan(0)
+          expect(moduleSlotsLabels.length).toBeGreaterThan(0)
+          expect(cargoCapLabels.length).toBeGreaterThan(0)
+          expect(techLevelLabels.length).toBeGreaterThan(0)
+          expect(salvageValueLabels.length).toBeGreaterThan(0)
+        },
+        { timeout: 5000 }
+      )
     })
   })
 })

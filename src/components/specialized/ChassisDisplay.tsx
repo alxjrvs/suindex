@@ -30,7 +30,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                 { label: 'Tech Level', value: stats.tech_level },
                 { label: 'Salvage Value', value: stats.salvage_value },
               ]}
-              notes={stats.notes}
+              notes={'notes' in stats && typeof stats.notes === 'string' ? stats.notes : undefined}
               up={false}
             />
           </div>
@@ -54,9 +54,9 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                     <span className="text-[var(--color-su-black)]">{ability.description}</span>
                   </div>
 
-                  {ability.options && ability.options.length > 0 && (
+                  {'options' in ability && ability.options && ability.options.length > 0 && (
                     <div className="ml-4 space-y-1">
-                      {ability.options.map((option, optIndex) => (
+                      {ability.options.map((option: any, optIndex: number) => (
                         <div key={optIndex} className="text-[var(--color-su-black)]">
                           <span className="font-bold">
                             {option.label}
@@ -68,7 +68,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                     </div>
                   )}
 
-                  {ability.stats && (
+                  {'stats' in ability && ability.stats && (
                     <div className="mt-2" style={{ overflow: 'visible' }}>
                       <StatList
                         stats={[
@@ -102,7 +102,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                             value: ability.stats.salvage_value,
                           },
                         ]}
-                        notes={ability.stats.notes}
+                        notes={'notes' in ability.stats ? ability.stats.notes : undefined}
                         up={true}
                       />
                     </div>
@@ -125,7 +125,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
             >
               <div className="flex items-center gap-2">
                 <h4 className="text-xl font-bold text-[var(--color-su-black)]">{pattern.name}</h4>
-                {pattern.legalStarting && (
+                {'legalStarting' in pattern && pattern.legalStarting && (
                   <span className="bg-[var(--color-su-military-green)] text-[var(--color-su-white)] text-xs font-bold px-2 py-1 rounded">
                     LEGAL STARTING
                   </span>

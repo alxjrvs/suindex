@@ -146,12 +146,20 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     [allSystems]
   )
 
-  const handleRemoveSystem = useCallback((systemId: string) => {
-    setMech((prev) => ({
-      ...prev,
-      systems: prev.systems.filter((s) => s.id !== systemId),
-    }))
-  }, [])
+  const handleRemoveSystem = useCallback(
+    (systemId: string) => {
+      const systemToRemove = mech.systems.find((s) => s.id === systemId)
+      const systemName = systemToRemove?.name || 'this system'
+
+      if (window.confirm(`Are you sure you want to remove ${systemName}?`)) {
+        setMech((prev) => ({
+          ...prev,
+          systems: prev.systems.filter((s) => s.id !== systemId),
+        }))
+      }
+    },
+    [mech.systems]
+  )
 
   const handleAddModule = useCallback(
     (moduleId: string) => {
@@ -175,12 +183,20 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     [allModules]
   )
 
-  const handleRemoveModule = useCallback((moduleId: string) => {
-    setMech((prev) => ({
-      ...prev,
-      modules: prev.modules.filter((m) => m.id !== moduleId),
-    }))
-  }, [])
+  const handleRemoveModule = useCallback(
+    (moduleId: string) => {
+      const moduleToRemove = mech.modules.find((m) => m.id === moduleId)
+      const moduleName = moduleToRemove?.name || 'this module'
+
+      if (window.confirm(`Are you sure you want to remove ${moduleName}?`)) {
+        setMech((prev) => ({
+          ...prev,
+          modules: prev.modules.filter((m) => m.id !== moduleId),
+        }))
+      }
+    },
+    [mech.modules]
+  )
 
   const handleAddCargo = useCallback((amount: number, description: string) => {
     setMech((prev) => ({
@@ -196,12 +212,20 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     }))
   }, [])
 
-  const handleRemoveCargo = useCallback((cargoId: string) => {
-    setMech((prev) => ({
-      ...prev,
-      cargo: prev.cargo.filter((c) => c.id !== cargoId),
-    }))
-  }, [])
+  const handleRemoveCargo = useCallback(
+    (cargoId: string) => {
+      const cargoToRemove = mech.cargo.find((c) => c.id === cargoId)
+      const cargoDescription = cargoToRemove?.description || 'this cargo'
+
+      if (window.confirm(`Are you sure you want to remove ${cargoDescription}?`)) {
+        setMech((prev) => ({
+          ...prev,
+          cargo: prev.cargo.filter((c) => c.id !== cargoId),
+        }))
+      }
+    },
+    [mech.cargo]
+  )
 
   const updateMech = useCallback((updates: Partial<MechState>) => {
     setMech((prev) => ({ ...prev, ...updates }))

@@ -93,7 +93,7 @@ export default function MechBuilder() {
               </div>
             </div>
 
-            <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg flex items-center">
+            <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl px-2 py-6 shadow-lg flex items-center justify-center h-full">
               <MechResourceSteppers
                 stats={stats}
                 currentSP={mech.currentSP}

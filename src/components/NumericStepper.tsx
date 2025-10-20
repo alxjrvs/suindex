@@ -37,6 +37,7 @@ export default function NumericStepper({
           onClick={handleIncrement}
           disabled={value >= max}
           className="w-5 h-5 bg-[#e8e5d8] rounded text-[#2d3e36] text-xs font-bold flex items-center justify-center hover:bg-[#d8d5c8] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[#e8e5d8]"
+          aria-label="Increment"
         >
           ▲
         </button>
@@ -44,6 +45,7 @@ export default function NumericStepper({
           onClick={handleDecrement}
           disabled={value <= min}
           className="w-5 h-5 bg-[#e8e5d8] rounded text-[#2d3e36] text-xs font-bold flex items-center justify-center hover:bg-[#d8d5c8] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[#e8e5d8]"
+          aria-label="Decrement"
         >
           ▼
         </button>

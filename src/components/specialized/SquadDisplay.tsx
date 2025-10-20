@@ -1,25 +1,10 @@
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import { ActionDisplay } from './shared/ActionDisplay'
+import type { Squad } from 'salvageunion-reference'
 
 interface SquadDisplayProps {
-  data: {
-    name: string
-    source: string
-    description?: string
-    hitPoints?: number
-    structurePoints?: number
-    abilities?: Array<{
-      name: string
-      description?: string
-      effect?: string
-      range?: string
-      damage?: { type: string; amount: number } | string
-      actionType?: string
-      traits?: Array<{ type: string; amount?: number }>
-    }>
-    page: number
-  }
+  data: Squad
 }
 
 export function SquadDisplay({ data }: SquadDisplayProps) {
@@ -69,18 +54,18 @@ export function SquadDisplay({ data }: SquadDisplayProps) {
                 <ActionDisplay action={ability} />
 
                 {/* Description */}
-                {ability.description && (
+                {'description' in ability && ability.description ? (
                   <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
                     <p className="text-[var(--color-su-black)]">{ability.description}</p>
                   </div>
-                )}
+                ) : null}
 
                 {/* Effect */}
-                {ability.effect && (
+                {'effect' in ability && ability.effect && typeof ability.effect === 'string' ? (
                   <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
                     <p className="text-[var(--color-su-black)] italic">{ability.effect}</p>
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
           ))}

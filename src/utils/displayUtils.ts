@@ -1,4 +1,4 @@
-import type { Traits } from 'salvageunion-reference'
+import type { Equipment, Module, System, Traits } from 'salvageunion-reference'
 import type { DataValue } from '../types/common'
 
 export function formatTraits(traits?: NonNullable<Traits>): string[] {
@@ -11,14 +11,7 @@ export function formatTraits(traits?: NonNullable<Traits>): string[] {
 }
 
 export function generateDetails(
-  data: {
-    activationCost?: number | string
-    actionType?: string
-    range?: string
-    damage?: { type: string; amount: number | string }
-    traits?: NonNullable<Traits>
-    recommended?: boolean
-  },
+  data: System | Module | Equipment,
   currency: string = 'AP'
 ): DataValue[] {
   const details: DataValue[] = []
@@ -40,18 +33,22 @@ export function generateDetails(
     details.push({ value: `Range:${data.range}` })
   }
 
-  if (data.damage) {
-    details.push({
-      value: `Damage:${data.damage.amount}${data.damage.type}`,
-    })
+  if ('damage' in data && data.damage) {
+    if (typeof data.damage === 'string') {
+      details.push({ value: `Damage:${data.damage}` })
+    } else {
+      details.push({
+        value: `Damage:${data.damage.amount}${data.damage.type}`,
+      })
+    }
   }
 
-  const traits = formatTraits(data.traits)
+  const traits = 'traits' in data ? formatTraits(data.traits) : []
   traits.forEach((t) => {
     details.push({ value: t })
   })
 
-  if (data.recommended) {
+  if ('recommended' in data && data.recommended) {
     details.push({ value: 'Recommended' })
   }
 

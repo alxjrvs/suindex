@@ -10,12 +10,12 @@ function formatTraits(traits?: Equipment['traits']): string[] {
   if (!traits) return []
   return traits.map((t) => {
     const type = t.type.charAt(0).toUpperCase() + t.type.slice(1)
-    const amount = t.amount !== undefined ? `(${t.amount})` : ''
+    const amount = 'amount' in t && t.amount !== undefined ? `(${t.amount})` : ''
     return `${type}${amount}`
   })
 }
 
-function generateDetails(data: EquipmentData) {
+function generateDetails(data: Equipment) {
   const details: Array<{ value: string | number; cost?: boolean }> = []
 
   if (data.range) {

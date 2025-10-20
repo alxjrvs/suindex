@@ -7,7 +7,7 @@ interface DroneDisplayProps {
   data: Drone
 }
 
-function formatTraits(traits?: Drone['traits']): string {
+function formatTraits(traits?: Array<{ type: string; amount?: number }>): string {
   if (!traits || traits.length === 0) return ''
   return formatTraitsArray(traits).join(', ')
 }
@@ -32,12 +32,12 @@ export function DroneDisplay({ data }: DroneDisplayProps) {
       salvageValue={data.salvageValue}
     >
       {/* Drone Traits */}
-      {data.traits && data.traits.length > 0 && (
+      {'traits' in data && data.traits && Array.isArray(data.traits) && data.traits.length > 0 ? (
         <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
           <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
           <span className="text-[var(--color-su-black)]">{formatTraits(data.traits)}</span>
         </div>
-      )}
+      ) : null}
 
       {/* Systems */}
       {data.systems && data.systems.length > 0 && (
@@ -50,7 +50,7 @@ export function DroneDisplay({ data }: DroneDisplayProps) {
             >
               <div className="font-bold text-[var(--color-su-black)]">
                 {system.name}
-                {system.count && system.count > 1 && ` (×${system.count})`}
+                {'count' in system && system.count && system.count > 1 && ` (×${system.count})`}
               </div>
               {system.range && (
                 <div className="text-[var(--color-su-black)]">

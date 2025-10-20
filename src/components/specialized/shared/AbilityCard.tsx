@@ -24,18 +24,20 @@ export function AbilityCard({ ability, headerColor = 'var(--color-su-brick)' }: 
         <ActionDisplay action={ability} />
 
         {/* Description */}
-        {ability.description && (
+        {'description' in ability &&
+        ability.description &&
+        typeof ability.description === 'string' ? (
           <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
             <p className="text-[var(--color-su-black)]">{ability.description}</p>
           </div>
-        )}
+        ) : null}
 
         {/* Effect */}
-        {ability.effect && (
+        {'effect' in ability && ability.effect && typeof ability.effect === 'string' ? (
           <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
             <p className="text-[var(--color-su-black)] italic">{ability.effect}</p>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   )

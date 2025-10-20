@@ -9,6 +9,21 @@ interface ModuleDisplayProps {
   data: Module
 }
 
+function hasStatBonus(
+  data: Module
+): data is Module & { statBonus: { bonus: number; stat: string } } {
+  return (
+    'statBonus' in data &&
+    data.statBonus !== undefined &&
+    typeof data.statBonus === 'object' &&
+    data.statBonus !== null &&
+    'bonus' in data.statBonus &&
+    'stat' in data.statBonus &&
+    typeof data.statBonus.bonus === 'number' &&
+    typeof data.statBonus.stat === 'string'
+  )
+}
+
 export function ModuleDisplay({ data }: ModuleDisplayProps) {
   const details = generateDetails(data, 'EP')
 
@@ -23,12 +38,10 @@ export function ModuleDisplay({ data }: ModuleDisplayProps) {
       slotsRequired={data.slotsRequired}
       salvageValue={data.salvageValue}
     >
-      {/* Stat Bonus */}
-      {data.statBonus && (
+      {hasStatBonus(data) && (
         <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
       )}
 
-      {/* Actions */}
       {data.actions && data.actions.length > 0 && (
         <div className="space-y-3">
           {data.actions.map((action, index) => (
@@ -37,7 +50,6 @@ export function ModuleDisplay({ data }: ModuleDisplayProps) {
         </div>
       )}
 
-      {/* Roll Table */}
       {data.rollTable && <RollTableDisplay rollTable={data.rollTable} />}
     </Frame>
   )

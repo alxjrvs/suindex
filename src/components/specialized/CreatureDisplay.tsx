@@ -59,7 +59,7 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
                     {ability.damage.type}
                   </div>
                 )}
-                {ability.traits && ability.traits.length > 0 && (
+                {'traits' in ability && ability.traits && ability.traits.length > 0 && (
                   <div className="text-[var(--color-su-black)]">
                     <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
                     {formatTraits(ability.traits)}
@@ -68,7 +68,7 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
               </div>
 
               {/* Ability Description */}
-              {ability.description && (
+              {'description' in ability && ability.description && (
                 <div className="text-[var(--color-su-black)] pt-2 border-t border-[var(--color-su-black)]">
                   {ability.description}
                 </div>

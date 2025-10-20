@@ -1,16 +1,9 @@
 import { Frame } from './shared/Frame'
 import { RollTableDisplay } from './shared/RollTableDisplay'
-
-interface TableData {
-  name: string
-  source: string
-  section: string
-  rollTable: Record<string, string>
-  page: number
-}
+import type { Table } from 'salvageunion-reference'
 
 interface TableDisplayProps {
-  data: TableData
+  data: Table
 }
 
 export function TableDisplay({ data }: TableDisplayProps) {

@@ -36,6 +36,26 @@ export function SystemsModulesList({
   onRemoveModule,
   onAddClick,
 }: SystemsModulesListProps) {
+  // Sort systems by tech level, then by name
+  const sortedSystems = [...systems].sort((a, b) => {
+    const techLevelA = (a.data as System).techLevel || 0
+    const techLevelB = (b.data as System).techLevel || 0
+    if (techLevelA !== techLevelB) {
+      return techLevelA - techLevelB
+    }
+    return a.name.localeCompare(b.name)
+  })
+
+  // Sort modules by tech level, then by name
+  const sortedModules = [...modules].sort((a, b) => {
+    const techLevelA = (a.data as Module).techLevel || 0
+    const techLevelB = (b.data as Module).techLevel || 0
+    if (techLevelA !== techLevelB) {
+      return techLevelA - techLevelB
+    }
+    return a.name.localeCompare(b.name)
+  })
+
   return (
     <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
       <div className="flex items-center justify-between mb-4">
@@ -47,10 +67,10 @@ export function SystemsModulesList({
       </div>
 
       <div className="space-y-4">
-        {systems.length > 0 && (
+        {sortedSystems.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-lg font-bold text-[#e8e5d8] uppercase">Systems</h3>
-            {systems.map((item) => (
+            {sortedSystems.map((item) => (
               <div key={item.id} className="relative">
                 <button
                   onClick={() => onRemoveSystem(item.id)}
@@ -65,10 +85,10 @@ export function SystemsModulesList({
           </div>
         )}
 
-        {modules.length > 0 && (
+        {sortedModules.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-lg font-bold text-[#e8e5d8] uppercase">Modules</h3>
-            {modules.map((item) => (
+            {sortedModules.map((item) => (
               <div key={item.id} className="relative">
                 <button
                   onClick={() => onRemoveModule(item.id)}

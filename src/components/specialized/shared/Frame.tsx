@@ -7,7 +7,7 @@ interface FrameProps {
   headerColor?: string
   headerContent?: ReactNode
   level?: string | number
-  techLevel?: 1 | 2 | 3 | 4 | 5 | 6
+  techLevel?: number
   details?: DataValue[]
   description?: string
   notes?: string
@@ -77,7 +77,7 @@ export function Frame({
         {/* Sidebar */}
         {showSidebar && (techLevel || slotsRequired || salvageValue) && (
           <div
-            className="flex flex-col items-center justify-start pb-2 gap-1 min-w-[35px] max-w-[35px]"
+            className="flex flex-col items-center justify-start pb-1 gap-1 min-w-[35px] max-w-[35px]"
             style={{ backgroundColor, overflow: 'visible' }}
           >
             {/* Tech Level - Black rounded square with white text */}
@@ -110,7 +110,7 @@ export function Frame({
                     borderLeft: '15px solid transparent',
                     borderRight: '15px solid transparent',
                     borderBottom: '25px solid var(--color-su-black)',
-                    top: 0,
+                    top: -2,
                     left: 0,
                   }}
                 />

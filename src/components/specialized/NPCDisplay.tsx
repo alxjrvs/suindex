@@ -3,17 +3,10 @@ import { StatList } from './shared/StatList'
 import { AbilityCard } from './shared/AbilityCard'
 import { DescriptionBox } from './shared/DescriptionBox'
 import { PageReferenceDisplay } from './shared/PageReferenceDisplay'
-import type { AbilityItem } from '../../types/common'
+import type { NPC } from 'salvageunion-reference'
 
 interface NPCDisplayProps {
-  data: {
-    name: string
-    source: string
-    description?: string
-    hitPoints: number
-    abilities?: AbilityItem[]
-    page: number
-  }
+  data: NPC
 }
 
 export function NPCDisplay({ data }: NPCDisplayProps) {

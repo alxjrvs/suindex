@@ -21,7 +21,7 @@ export function MechResourceSteppers({
   onHeatChange,
 }: MechResourceSteppersProps) {
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col items-center space-y-2">
       <NumericStepper
         label="SP"
         value={currentSP}

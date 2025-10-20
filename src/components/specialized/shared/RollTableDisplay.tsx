@@ -1,3 +1,5 @@
+import type { Table } from 'salvageunion-reference'
+
 interface DigestedRollTable {
   order: number
   name: string
@@ -6,11 +8,11 @@ interface DigestedRollTable {
 }
 
 interface RollTableDisplayProps {
-  rollTable: Record<string, string>
+  rollTable: Table['rollTable']
   showCommand?: boolean
 }
 
-function digestRollTable(tables: Record<string, string>): DigestedRollTable[] {
+function digestRollTable(tables: Table['rollTable']): DigestedRollTable[] {
   const sorted = Object.keys(tables)
     .sort((a, b) => {
       const aNum = parseInt(a.split('-')[0])
@@ -20,7 +22,7 @@ function digestRollTable(tables: Record<string, string>): DigestedRollTable[] {
     .reverse()
 
   return sorted.map((key, order) => {
-    const fullDescription = tables[key]
+    const fullDescription = tables[key as keyof typeof tables] || ''
     const name = fullDescription.split(':')[0]
     const description = fullDescription.replace(`${name}:`, '').trim()
 

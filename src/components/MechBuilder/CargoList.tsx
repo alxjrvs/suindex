@@ -25,22 +25,22 @@ export function CargoList({
         <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
         {cargo.map((item) => (
           <div
             key={item.id}
-            className="relative bg-[#e8e5d8] border-2 border-[#2d3e36] rounded-2xl p-4"
+            className="relative bg-[#e8e5d8] border-2 border-[#2d3e36] rounded-2xl p-3 aspect-square flex flex-col"
           >
             <button
               onClick={() => onRemove(item.id)}
-              className="absolute top-2 right-2 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-2 py-1 rounded font-bold hover:bg-[var(--color-su-black)] text-xs"
+              className="absolute top-1 right-1 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-2 py-1 rounded font-bold hover:bg-[var(--color-su-black)] text-xs"
               aria-label="Remove"
             >
               ✕
             </button>
-            <div className="pr-8">
-              <div className="text-lg font-bold text-[#2d3e36] mb-2">Amount: {item.amount}</div>
-              <div className="text-sm text-[#2d3e36]">{item.description}</div>
+            <div className="flex-1 flex flex-col justify-between pr-6">
+              <div className="text-sm font-bold text-[#2d3e36] mb-2">{item.description}</div>
+              <div className="text-2xl font-bold text-[#2d3e36] text-center">{item.amount}</div>
             </div>
           </div>
         ))}
@@ -48,7 +48,7 @@ export function CargoList({
         <button
           onClick={onAddClick}
           disabled={!canAddCargo}
-          className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded-2xl font-bold hover:bg-[var(--color-su-green)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full h-full min-h-[100px]"
+          className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded-2xl font-bold hover:bg-[var(--color-su-green)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full aspect-square"
         >
           + Add Cargo
         </button>

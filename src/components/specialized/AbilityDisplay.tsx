@@ -36,7 +36,7 @@ export function AbilityDisplay({ data }: AbilityDisplayProps) {
       level={data.level}
       headerColor={isLegendary ? 'var(--color-su-pink)' : 'var(--color-su-orange)'}
       details={details}
-      notes={data.notes}
+      notes={'notes' in data && typeof data.notes === 'string' ? data.notes : undefined}
       showSidebar={false}
     >
       <div className="space-y-4">
