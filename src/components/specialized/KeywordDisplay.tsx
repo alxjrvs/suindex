@@ -1,4 +1,5 @@
 import { Frame } from "./shared/Frame";
+import { capitalizeFirstLetter } from "../../utils/displayUtils";
 
 interface KeywordData {
   name: string;
@@ -11,10 +12,6 @@ interface KeywordDisplayProps {
   data: KeywordData;
 }
 
-function capitalizeFirstLetter(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
 export function KeywordDisplay({ data }: KeywordDisplayProps) {
   return (
     <Frame
@@ -25,7 +22,9 @@ export function KeywordDisplay({ data }: KeywordDisplayProps) {
     >
       <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-[var(--color-su-brick)]">Source:</span>
+          <span className="font-bold text-[var(--color-su-brick)]">
+            Source:
+          </span>
           <span className="text-[var(--color-su-black)] capitalize">
             {data.source}
           </span>
@@ -38,4 +37,3 @@ export function KeywordDisplay({ data }: KeywordDisplayProps) {
     </Frame>
   );
 }
-

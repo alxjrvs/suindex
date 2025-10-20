@@ -1,10 +1,6 @@
 import { Frame } from "./shared/Frame";
 import { ActionDisplay } from "./shared/ActionDisplay";
-
-interface TraitReference {
-  type: string;
-  amount?: number;
-}
+import type { TraitReference, Action } from "../../types/common";
 
 interface EquipmentData {
   name: string;
@@ -15,7 +11,7 @@ interface EquipmentData {
   description: string;
   notes?: string;
   page: number;
-  actions?: any[];
+  actions?: Action[];
 }
 
 interface EquipmentDisplayProps {
@@ -75,4 +71,3 @@ export function EquipmentDisplay({ data }: EquipmentDisplayProps) {
     </Frame>
   );
 }
-

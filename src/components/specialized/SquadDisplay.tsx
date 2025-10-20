@@ -22,7 +22,7 @@ interface SquadDisplayProps {
   };
 }
 
-export default function SquadDisplay({ data }: SquadDisplayProps) {
+export function SquadDisplay({ data }: SquadDisplayProps) {
   // Build stats array
   const stats = [];
   if (data.hitPoints !== undefined) {

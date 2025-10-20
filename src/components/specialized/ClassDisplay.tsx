@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { SalvageUnionReference } from "salvageunion-reference";
 import { Frame } from "./shared/Frame";
 import { DataList } from "./shared/DataList";
+import type { DataValue } from "../../types/common";
 
 interface AbilityData {
   name: string;
@@ -101,11 +102,6 @@ function AbilityList({
 }
 
 function AbilityItem({ ability }: { ability: AbilityData }) {
-  interface DataValue {
-    value: string | number;
-    cost?: boolean;
-  }
-
   const details: DataValue[] = [];
 
   if (ability.activationCost) {

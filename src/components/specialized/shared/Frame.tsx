@@ -1,11 +1,6 @@
 import type { ReactNode } from "react";
 import { DataList } from "./DataList";
-
-interface DataValue {
-  value: string | number;
-  cost?: boolean;
-  type?: string;
-}
+import type { DataValue } from "../../../types/common";
 
 interface FrameProps {
   header: string;

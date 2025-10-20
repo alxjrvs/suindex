@@ -1,15 +1,7 @@
 import { Frame } from "./shared/Frame";
 import { StatList } from "./shared/StatList";
-
-interface TraitReference {
-  type: string;
-  amount?: number;
-}
-
-interface DamageData {
-  type: string;
-  amount: number | string;
-}
+import type { TraitReference, DamageData } from "../../types/common";
+import { formatTraits as formatTraitsArray } from "../../utils/displayUtils";
 
 interface CreatureAbility {
   name: string;
@@ -35,13 +27,7 @@ interface CreatureDisplayProps {
 
 function formatTraits(traits?: TraitReference[]): string {
   if (!traits || traits.length === 0) return "";
-  return traits
-    .map((t) => {
-      const type = t.type.charAt(0).toUpperCase() + t.type.slice(1);
-      const amount = t.amount !== undefined ? `(${t.amount})` : "";
-      return `${type}${amount}`;
-    })
-    .join(", ");
+  return formatTraitsArray(traits).join(", ");
 }
 
 export function CreatureDisplay({ data }: CreatureDisplayProps) {

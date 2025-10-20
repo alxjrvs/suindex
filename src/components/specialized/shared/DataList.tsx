@@ -1,8 +1,4 @@
-interface DataValue {
-  value: string | number;
-  cost?: boolean;
-  type?: string;
-}
+import type { DataValue } from "../../../types/common";
 
 interface DataListProps {
   values: DataValue[];

@@ -1,33 +1,5 @@
 import { DataList } from "./DataList";
-
-interface DataValue {
-  value: string | number;
-  cost?: boolean;
-  type?: string;
-}
-
-interface ActionOption {
-  label: string;
-  value: string;
-}
-
-interface SubAbility {
-  name: string;
-  description?: string;
-  activationCost?: number | string;
-  actionType?: string;
-}
-
-interface ActionData {
-  name?: string;
-  description?: string;
-  activationCost?: number | string;
-  range?: string;
-  actionType?: string;
-  options?: (ActionOption | string)[];
-  subAbilities?: SubAbility[];
-  notes?: string;
-}
+import type { DataValue, ActionData } from "../../../types/common";
 
 interface ActionDisplayProps {
   action: ActionData;

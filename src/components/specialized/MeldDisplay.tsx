@@ -24,7 +24,7 @@ interface MeldDisplayProps {
   };
 }
 
-export default function MeldDisplay({ data }: MeldDisplayProps) {
+export function MeldDisplay({ data }: MeldDisplayProps) {
   // Build stats array
   const stats = [];
   if (data.hitPoints !== undefined) {

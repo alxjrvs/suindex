@@ -1,101 +1,18 @@
 import { Frame } from "./shared/Frame";
 import { RollTableDisplay } from "./shared/RollTableDisplay";
 import { ActionDisplay } from "./shared/ActionDisplay";
+import { StatBonusDisplay } from "./shared/StatBonusDisplay";
+import type { SlottedItem } from "../../types/common";
+import { generateDetails } from "../../utils/displayUtils";
 
-interface TraitReference {
-  type: string;
-  amount?: number;
-}
-
-interface DamageData {
-  type: string;
-  amount: number | string;
-}
-
-interface StatBonusData {
-  stat: string;
-  bonus: number;
-}
-
-interface ModuleData {
-  name: string;
-  source: string;
-  techLevel: 1 | 2 | 3 | 4 | 5 | 6;
-  slotsRequired: number;
-  salvageValue: number;
-  description: string;
-  page: number;
-  range?: string;
-  damage?: DamageData;
-  traits?: TraitReference[];
-  actionType?: string;
-  statBonus?: StatBonusData;
-  rollTable?: Record<string, string>;
-  notes?: string;
-  activationCost?: number | string;
-  actions?: any[];
-  recommended?: boolean;
-}
+type ModuleData = SlottedItem;
 
 interface ModuleDisplayProps {
   data: ModuleData;
 }
 
-function formatTraits(traits?: TraitReference[]): string[] {
-  if (!traits) return [];
-  return traits.map((t) => {
-    const type = t.type.charAt(0).toUpperCase() + t.type.slice(1);
-    const amount = t.amount !== undefined ? `(${t.amount})` : "";
-    return `${type}${amount}`;
-  });
-}
-
-function generateDetails(data: ModuleData) {
-  const details: Array<{ value: string | number; cost?: boolean }> = [];
-
-  // Activation cost
-  if (data.activationCost !== undefined) {
-    const costValue =
-      String(data.activationCost).toLowerCase() === "variable"
-        ? "XEP"
-        : `${data.activationCost}EP`;
-    details.push({ value: costValue, cost: true });
-  }
-
-  // Action type
-  if (data.actionType) {
-    const actionType = data.actionType.includes("action")
-      ? data.actionType
-      : `${data.actionType} Action`;
-    details.push({ value: actionType });
-  }
-
-  // Range
-  if (data.range) {
-    details.push({ value: `Range:${data.range}` });
-  }
-
-  // Damage
-  if (data.damage) {
-    details.push({ value: `Damage:${data.damage.amount}${data.damage.type}` });
-  }
-
-  // Traits
-  const traits = formatTraits(data.traits);
-  traits.forEach((t) => {
-    details.push({ value: t });
-  });
-
-  // Recommended
-  if (data.recommended) {
-    details.push({ value: "Recommended" });
-  }
-
-  return details;
-}
-
 export function ModuleDisplay({ data }: ModuleDisplayProps) {
-  const details = generateDetails(data);
+  const details = generateDetails(data, "EP");
 
   return (
     <Frame
@@ -110,14 +27,10 @@ export function ModuleDisplay({ data }: ModuleDisplayProps) {
     >
       {/* Stat Bonus */}
       {data.statBonus && (
-        <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-          <span className="font-bold text-[var(--color-su-brick)]">
-            Stat Bonus:{" "}
-          </span>
-          <span className="text-[var(--color-su-black)]">
-            +{data.statBonus.bonus} {data.statBonus.stat.replace(/_/g, " ")}
-          </span>
-        </div>
+        <StatBonusDisplay
+          bonus={data.statBonus.bonus}
+          stat={data.statBonus.stat}
+        />
       )}
 
       {/* Actions */}
@@ -138,4 +51,3 @@ export function ModuleDisplay({ data }: ModuleDisplayProps) {
     </Frame>
   );
 }
-

@@ -3,24 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import type { ReactElement } from "react";
 import { SalvageUnionReference } from "salvageunion-reference";
 import type { SchemaInfo, DataItem } from "../types/schema";
-import { ChassisDisplay } from "./specialized/ChassisDisplay";
-import { ClassDisplay } from "./specialized/ClassDisplay";
-import { AbilityDisplay } from "./specialized/AbilityDisplay";
-import { ModuleDisplay } from "./specialized/ModuleDisplay";
-import { SystemDisplay } from "./specialized/SystemDisplay";
-import { TableDisplay } from "./specialized/TableDisplay";
-import { TraitDisplay } from "./specialized/TraitDisplay";
-import { KeywordDisplay } from "./specialized/KeywordDisplay";
-import { EquipmentDisplay } from "./specialized/EquipmentDisplay";
-import { VehicleDisplay } from "./specialized/VehicleDisplay";
-import { DroneDisplay } from "./specialized/DroneDisplay";
-import { CrawlerDisplay } from "./specialized/CrawlerDisplay";
-import { CreatureDisplay } from "./specialized/CreatureDisplay";
-import { AbilityTreeRequirementDisplay } from "./specialized/AbilityTreeRequirementDisplay";
-import BioTitanDisplay from "./specialized/BioTitanDisplay";
-import MeldDisplay from "./specialized/MeldDisplay";
-import NPCDisplay from "./specialized/NPCDisplay";
-import SquadDisplay from "./specialized/SquadDisplay";
+import { getDisplayComponent } from "./specialized/componentRegistry";
 
 // Map schema IDs to their models
 const modelMap: Record<string, { all: () => unknown[] }> = {
@@ -153,46 +136,10 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
 
   // Render specialized component based on schema type
   const renderSpecializedContent = () => {
-    switch (schemaId) {
-      case "chassis":
-        return <ChassisDisplay data={item as any} />;
-      case "classes":
-        return <ClassDisplay data={item as any} />;
-      case "abilities":
-        return <AbilityDisplay data={item as any} />;
-      case "modules":
-        return <ModuleDisplay data={item as any} />;
-      case "systems":
-        return <SystemDisplay data={item as any} />;
-      case "tables":
-        return <TableDisplay data={item as any} />;
-      case "traits":
-        return <TraitDisplay data={item as any} />;
-      case "keywords":
-        return <KeywordDisplay data={item as any} />;
-      case "equipment":
-        return <EquipmentDisplay data={item as any} />;
-      case "vehicles":
-        return <VehicleDisplay data={item as any} />;
-      case "drones":
-        return <DroneDisplay data={item as any} />;
-      case "crawlers":
-        return <CrawlerDisplay data={item as any} />;
-      case "creatures":
-        return <CreatureDisplay data={item as any} />;
-      case "ability-tree-requirements":
-        return <AbilityTreeRequirementDisplay data={item as any} />;
-      case "bio-titans":
-        return <BioTitanDisplay data={item as any} />;
-      case "meld":
-        return <MeldDisplay data={item as any} />;
-      case "npcs":
-        return <NPCDisplay data={item as any} />;
-      case "squads":
-        return <SquadDisplay data={item as any} />;
-      default:
-        return null;
-    }
+    if (!schemaId) return null;
+    const DisplayComponent = getDisplayComponent(schemaId);
+    if (!DisplayComponent) return null;
+    return <DisplayComponent data={item} />;
   };
 
   const specializedContent = renderSpecializedContent();
