@@ -14,10 +14,6 @@ interface AbilityCardProps {
   headerColor?: string
 }
 
-/**
- * Reusable component for displaying ability cards with consistent styling
- * Used by BioTitanDisplay, NPCDisplay, and similar components
- */
 export function AbilityCard({ ability, headerColor = 'var(--color-su-brick)' }: AbilityCardProps) {
   return (
     <div className="border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)]">

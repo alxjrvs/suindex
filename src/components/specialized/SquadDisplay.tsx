@@ -23,7 +23,6 @@ interface SquadDisplayProps {
 }
 
 export function SquadDisplay({ data }: SquadDisplayProps) {
-  // Build stats array
   const stats = []
   if (data.hitPoints !== undefined) {
     stats.push({ label: 'HP', value: data.hitPoints.toString() })

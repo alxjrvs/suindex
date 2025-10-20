@@ -8,14 +8,6 @@ interface UseSchemaDataResult {
   error: string | null
 }
 
-/**
- * Custom hook for loading schema data
- * Handles loading state, error handling, and data fetching
- * @param schemaId - The schema ID to load data for
- * @returns Object containing data, loading state, and error
- * @example
- * const { data, loading, error } = useSchemaData(schemaId);
- */
 export function useSchemaData(schemaId: string | undefined): UseSchemaDataResult {
   const [data, setData] = useState<DataItem[]>([])
   const [loading, setLoading] = useState(true)

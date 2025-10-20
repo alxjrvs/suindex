@@ -79,7 +79,6 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
     )
   }
 
-  // Render specialized component based on schema type
   const renderSpecializedContent = () => {
     if (!schemaId) return null
     const DisplayComponent = getDisplayComponent(schemaId)
@@ -119,15 +118,12 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
       <div className="flex-1 overflow-auto p-6">
         <div className="max-w-6xl mx-auto">
           {specializedContent ? (
-            // Render specialized component
             specializedContent
           ) : (
-            // Render generic fallback
             <div className="bg-[var(--color-su-white)] rounded-lg shadow-lg p-8 border border-[var(--color-su-light-blue)]">
               <div className="space-y-6">
                 {Object.entries(item)
                   .sort(([a], [b]) => {
-                    // Sort: name first, then other fields alphabetically
                     if (a === 'name') return -1
                     if (b === 'name') return 1
                     return a.localeCompare(b)

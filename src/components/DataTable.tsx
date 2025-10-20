@@ -14,12 +14,10 @@ export default function DataTable({ data, schema }: DataTableProps) {
   const navigate = useNavigate()
   const [filterState, dispatch] = useDataTableFilters()
 
-  // Clear filters when schema changes
   useEffect(() => {
     dispatch({ type: 'RESET' })
   }, [schemaId, dispatch])
 
-  // Get all unique fields from the data
   const allFields = useMemo(() => {
     if (data.length === 0) return []
     const fieldSet = new Set<string>()
@@ -29,7 +27,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
     return Array.from(fieldSet).sort()
   }, [data])
 
-  // Get unique values for each field (for filter dropdowns)
   const fieldValues = useMemo(() => {
     const values: Record<string, Set<unknown>> = {}
     allFields.forEach((field) => {
@@ -37,7 +34,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
       data.forEach((item) => {
         const value = item[field]
         if (value !== undefined && value !== null && value !== '') {
-          // For arrays, add each element
           if (Array.isArray(value)) {
             value.forEach((v) => {
               if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') {
@@ -57,10 +53,8 @@ export default function DataTable({ data, schema }: DataTableProps) {
     return values
   }, [data, allFields])
 
-  // Filter and search data
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      // Search filter
       if (filterState.searchTerm) {
         const searchLower = filterState.searchTerm.toLowerCase()
         const nameMatch = item.name?.toString().toLowerCase().includes(searchLower)
@@ -68,7 +62,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
         if (!nameMatch && !descMatch) return false
       }
 
-      // Tech level filter (multi-select)
       if (filterState.techLevelFilters.size > 0 && !filterState.techLevelFilters.has('all')) {
         const itemTechLevel = item.techLevel?.toString()
         if (!itemTechLevel || !filterState.techLevelFilters.has(itemTechLevel)) {
@@ -76,14 +69,12 @@ export default function DataTable({ data, schema }: DataTableProps) {
         }
       }
 
-      // Field filters
       for (const [field, filterValue] of Object.entries(filterState.filters)) {
         if (!filterValue) continue
 
         const itemValue = item[field]
         if (itemValue === undefined || itemValue === null) return false
 
-        // Handle arrays
         if (Array.isArray(itemValue)) {
           if (!itemValue.some((v) => v?.toString() === filterValue)) return false
         } else if (itemValue.toString() !== filterValue) {
@@ -95,7 +86,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
     })
   }, [data, filterState])
 
-  // Sort data
   const sortedData = useMemo(() => {
     return [...filteredData].sort((a, b) => {
       const aVal = a[filterState.sortField]
@@ -144,27 +134,22 @@ export default function DataTable({ data, schema }: DataTableProps) {
     return String(value)
   }, [])
 
-  // Determine which fields to show as columns (prioritize required fields)
   const displayFields = useMemo(() => {
     const fields = ['name', ...schema.requiredFields.filter((f) => f !== 'name' && f !== 'id')]
-    // Add a few more common fields if they exist
     ;['description', 'effect', 'type', 'category'].forEach((f) => {
       if (allFields.includes(f) && !fields.includes(f)) {
         fields.push(f)
       }
     })
 
-    // Filter and limit to 6 columns, excluding id, page, and source
     const result = fields
       .filter((f) => allFields.includes(f) && f !== 'id' && f !== 'source' && f !== 'page')
       .slice(0, 4) // Limit to 4 columns (leaving room for page and source)
 
-    // Add page before source if it exists
     if (allFields.includes('page')) {
       result.push('page')
     }
 
-    // Add source as the last column if it exists
     if (allFields.includes('source')) {
       result.push('source')
     }
@@ -239,7 +224,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {allFields
             .filter((field) => {
-              // Only show class filter (techLevel is now buttons)
               return field === 'class' && fieldValues[field].size > 1
             })
             .map((field) => (

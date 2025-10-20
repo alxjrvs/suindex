@@ -25,10 +25,6 @@ const initialState: DataTableFilterState = {
   sortDirection: 'asc',
 }
 
-/**
- * Reducer function for managing data table filter state
- * Consolidates multiple useState calls into a single useReducer
- */
 function filterReducer(
   state: DataTableFilterState,
   action: DataTableFilterAction
@@ -79,14 +75,6 @@ function filterReducer(
   }
 }
 
-/**
- * Custom hook for managing data table filter state
- * Replaces multiple useState calls with a single useReducer
- * @returns State and dispatch function for filter actions
- * @example
- * const [state, dispatch] = useDataTableFilters();
- * dispatch({ type: "SET_SEARCH", payload: "search term" });
- */
 export function useDataTableFilters() {
   return useReducer(filterReducer, initialState)
 }

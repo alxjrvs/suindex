@@ -30,12 +30,10 @@ function formatTraits(traits?: TraitReference[]): string[] {
 function generateDetails(data: EquipmentData) {
   const details: Array<{ value: string | number; cost?: boolean }> = []
 
-  // Range
   if (data.range) {
     details.push({ value: `Range:${data.range}` })
   }
 
-  // Traits
   const traits = formatTraits(data.traits)
   traits.forEach((t) => {
     details.push({ value: t })

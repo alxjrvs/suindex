@@ -25,7 +25,6 @@ interface MeldDisplayProps {
 }
 
 export function MeldDisplay({ data }: MeldDisplayProps) {
-  // Build stats array
   const stats = []
   if (data.hitPoints !== undefined) {
     stats.push({ label: 'HP', value: data.hitPoints.toString() })
@@ -37,7 +36,6 @@ export function MeldDisplay({ data }: MeldDisplayProps) {
     stats.push({ label: 'SV', value: data.salvageValue.toString() })
   }
 
-  // Format traits for display
   const traitsText = data.traits
     ?.map((trait) => {
       if (trait.amount !== undefined) {

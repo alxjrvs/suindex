@@ -9,7 +9,6 @@ interface ActionDisplayProps {
 function generateDataListValues(action: ActionData): DataValue[] {
   const details: DataValue[] = []
 
-  // Activation cost is now shown in the badge, not in the data list
 
   if (action.range) {
     details.push({ value: action.range })
@@ -83,7 +82,6 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
       {action.options && action.options.length > 0 && (
         <div className="space-y-1 ml-4">
           {action.options.map((option, index) => {
-            // Handle both string and object options
             if (typeof option === 'string') {
               return (
                 <div key={index} className="text-[var(--color-su-black)]">
@@ -92,7 +90,6 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
               )
             }
 
-            // Handle object options with label and value
             const label = option.label || ''
             const value = option.value || ''
 

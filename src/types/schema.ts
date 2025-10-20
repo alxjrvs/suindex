@@ -1,4 +1,3 @@
-// Schema catalog types
 export interface SchemaInfo {
   id: string
   title: string
@@ -18,7 +17,6 @@ export interface SchemaIndex {
   schemas: SchemaInfo[]
 }
 
-// Generic data item type
 export type DataItem = {
   id: string
   name?: string

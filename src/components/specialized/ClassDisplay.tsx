@@ -165,7 +165,6 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
     )
   }
 
-  // Hydrate abilities
   const coreAbilities: HydratedAbilities = {}
   data.coreAbilities.forEach((tree) => {
     coreAbilities[tree] = abilities

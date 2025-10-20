@@ -10,14 +10,6 @@ interface ErrorBoundaryState {
   error: Error | null
 }
 
-/**
- * Error Boundary component that catches errors in child components
- * Prevents the entire app from crashing due to component errors
- * @example
- * <ErrorBoundary>
- *   <YourComponent />
- * </ErrorBoundary>
- */
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
@@ -29,7 +21,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error details for debugging
     console.error('Error caught by boundary:', error, errorInfo)
   }
 

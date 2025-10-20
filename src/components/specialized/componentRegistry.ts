@@ -1,14 +1,8 @@
 import type { ComponentType } from 'react'
 import { lazy } from 'react'
 
-// Use a generic object type instead of 'any' to maintain type safety
-// while allowing flexibility for different component prop types
 type DisplayComponentType = ComponentType<{ data: Record<string, unknown> }>
 
-/**
- * Lazy-loaded display components for code splitting
- * Each component is loaded on-demand to reduce initial bundle size
- */
 const AbilityDisplay = lazy(() =>
   import('./AbilityDisplay').then((m) => ({ default: m.AbilityDisplay }))
 )
@@ -52,11 +46,6 @@ const VehicleDisplay = lazy(() =>
   import('./VehicleDisplay').then((m) => ({ default: m.VehicleDisplay }))
 )
 
-/**
- * Registry mapping schema IDs to their display components
- * This replaces the large switch statement in ItemShowPage
- * Components are lazy-loaded for code splitting and better performance
- */
 export const componentRegistry: Record<string, DisplayComponentType> = {
   abilities: AbilityDisplay as unknown as DisplayComponentType,
   'ability-tree-requirements': AbilityTreeRequirementDisplay as unknown as DisplayComponentType,
@@ -78,9 +67,6 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   vehicles: VehicleDisplay as unknown as DisplayComponentType,
 }
 
-/**
- * Get the display component for a given schema ID
- */
 export function getDisplayComponent(schemaId: string): DisplayComponentType | null {
   return componentRegistry[schemaId] || null
 }

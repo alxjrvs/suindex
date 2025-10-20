@@ -1,4 +1,3 @@
-// Shared type definitions used across display components
 
 export interface TraitReference {
   type: string
@@ -44,10 +43,8 @@ export interface Action {
   notes?: string
 }
 
-// Re-export for convenience
 export type ActionData = Action
 
-// Base interface for items with tech level and slots
 export interface SlottedItem {
   name: string
   source: string
@@ -68,7 +65,6 @@ export interface SlottedItem {
   recommended?: boolean
 }
 
-// Base interface for items with abilities
 export interface AbilityItem {
   name: string
   description?: string

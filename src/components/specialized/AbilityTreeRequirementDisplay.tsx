@@ -11,7 +11,6 @@ interface AbilityTreeRequirementDisplayProps {
 }
 
 export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDisplayProps) {
-  // Determine header color based on tree type
   const getHeaderColor = () => {
     if (data.tree.toLowerCase().includes('legendary')) {
       return 'var(--color-su-pink)'

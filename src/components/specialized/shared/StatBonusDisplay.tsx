@@ -5,9 +5,6 @@ interface StatBonusDisplayProps {
   stat: string
 }
 
-/**
- * Reusable component for displaying stat bonus information
- */
 export function StatBonusDisplay({ bonus, stat }: StatBonusDisplayProps) {
   return (
     <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
