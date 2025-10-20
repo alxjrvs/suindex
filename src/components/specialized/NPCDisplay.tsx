@@ -1,19 +1,19 @@
-import { Frame } from "./shared/Frame";
-import { StatList } from "./shared/StatList";
-import { AbilityCard } from "./shared/AbilityCard";
-import { DescriptionBox } from "./shared/DescriptionBox";
-import { PageReferenceDisplay } from "./shared/PageReferenceDisplay";
-import type { AbilityItem } from "../../types/common";
+import { Frame } from './shared/Frame'
+import { StatList } from './shared/StatList'
+import { AbilityCard } from './shared/AbilityCard'
+import { DescriptionBox } from './shared/DescriptionBox'
+import { PageReferenceDisplay } from './shared/PageReferenceDisplay'
+import type { AbilityItem } from '../../types/common'
 
 interface NPCDisplayProps {
   data: {
-    name: string;
-    source: string;
-    description?: string;
-    hitPoints: number;
-    abilities?: AbilityItem[];
-    page: number;
-  };
+    name: string
+    source: string
+    description?: string
+    hitPoints: number
+    abilities?: AbilityItem[]
+    page: number
+  }
 }
 
 export function NPCDisplay({ data }: NPCDisplayProps) {
@@ -21,11 +21,11 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
     <Frame
       header={data.name}
       headerContent={
-        <div className="ml-auto pb-6" style={{ overflow: "visible" }}>
+        <div className="ml-auto pb-6" style={{ overflow: 'visible' }}>
           <StatList
             stats={[
               {
-                label: "HP",
+                label: 'HP',
                 value: data.hitPoints.toString(),
               },
             ]}
@@ -41,9 +41,7 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
       {/* Abilities */}
       {data.abilities && data.abilities.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-lg font-bold text-[var(--color-su-black)] uppercase">
-            Abilities
-          </h3>
+          <h3 className="text-lg font-bold text-[var(--color-su-black)] uppercase">Abilities</h3>
           {data.abilities.map((ability, index) => (
             <AbilityCard key={index} ability={ability} />
           ))}
@@ -53,5 +51,5 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
       {/* Page Reference */}
       <PageReferenceDisplay source={data.source} page={data.page} />
     </Frame>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap");
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
 
 @theme {
   /* Salvage Union Color Palette */
@@ -20,7 +20,7 @@
   --color-su-white: rgb(251, 248, 243);
 
   /* Font Family */
-  --font-family-mono: "Fira Code", Monaco, Consolas, "Ubuntu Mono", monospace;
+  --font-family-mono: 'Fira Code', Monaco, Consolas, 'Ubuntu Mono', monospace;
 }
 
 body {

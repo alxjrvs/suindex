@@ -1,51 +1,51 @@
-import { Frame } from "./shared/Frame";
-import { ActionDisplay } from "./shared/ActionDisplay";
-import type { TraitReference, Action } from "../../types/common";
+import { Frame } from './shared/Frame'
+import { ActionDisplay } from './shared/ActionDisplay'
+import type { TraitReference, Action } from '../../types/common'
 
 interface EquipmentData {
-  name: string;
-  source: string;
-  techLevel?: 1 | 2 | 3 | 4 | 5 | 6;
-  traits?: TraitReference[];
-  range?: string;
-  description: string;
-  notes?: string;
-  page: number;
-  actions?: Action[];
+  name: string
+  source: string
+  techLevel?: 1 | 2 | 3 | 4 | 5 | 6
+  traits?: TraitReference[]
+  range?: string
+  description: string
+  notes?: string
+  page: number
+  actions?: Action[]
 }
 
 interface EquipmentDisplayProps {
-  data: EquipmentData;
+  data: EquipmentData
 }
 
 function formatTraits(traits?: TraitReference[]): string[] {
-  if (!traits) return [];
+  if (!traits) return []
   return traits.map((t) => {
-    const type = t.type.charAt(0).toUpperCase() + t.type.slice(1);
-    const amount = t.amount !== undefined ? `(${t.amount})` : "";
-    return `${type}${amount}`;
-  });
+    const type = t.type.charAt(0).toUpperCase() + t.type.slice(1)
+    const amount = t.amount !== undefined ? `(${t.amount})` : ''
+    return `${type}${amount}`
+  })
 }
 
 function generateDetails(data: EquipmentData) {
-  const details: Array<{ value: string | number; cost?: boolean }> = [];
+  const details: Array<{ value: string | number; cost?: boolean }> = []
 
   // Range
   if (data.range) {
-    details.push({ value: `Range:${data.range}` });
+    details.push({ value: `Range:${data.range}` })
   }
 
   // Traits
-  const traits = formatTraits(data.traits);
+  const traits = formatTraits(data.traits)
   traits.forEach((t) => {
-    details.push({ value: t });
-  });
+    details.push({ value: t })
+  })
 
-  return details;
+  return details
 }
 
 export function EquipmentDisplay({ data }: EquipmentDisplayProps) {
-  const details = generateDetails(data);
+  const details = generateDetails(data)
 
   return (
     <Frame
@@ -60,14 +60,10 @@ export function EquipmentDisplay({ data }: EquipmentDisplayProps) {
       {data.actions && data.actions.length > 0 && (
         <div className="space-y-3">
           {data.actions.map((action, index) => (
-            <ActionDisplay
-              key={index}
-              action={action}
-              activationCurrency="AP"
-            />
+            <ActionDisplay key={index} action={action} activationCurrency="AP" />
           ))}
         </div>
       )}
     </Frame>
-  );
+  )
 }

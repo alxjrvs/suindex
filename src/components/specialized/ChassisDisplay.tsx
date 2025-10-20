@@ -1,52 +1,52 @@
-import { Frame } from "./shared/Frame";
-import { StatList } from "./shared/StatList";
+import { Frame } from './shared/Frame'
+import { StatList } from './shared/StatList'
 
 interface ChassisStats {
-  structure_pts: number;
-  energy_pts: number;
-  heat_cap: number;
-  system_slots: number;
-  module_slots: number;
-  cargo_cap: number;
-  tech_level: 1 | 2 | 3 | 4 | 5 | 6;
-  salvage_value: number;
-  notes?: string;
+  structure_pts: number
+  energy_pts: number
+  heat_cap: number
+  system_slots: number
+  module_slots: number
+  cargo_cap: number
+  tech_level: 1 | 2 | 3 | 4 | 5 | 6
+  salvage_value: number
+  notes?: string
 }
 
 interface ChassisAbility {
-  name?: string;
-  description?: string;
-  activationCost?: number | string;
-  range?: string;
-  actionType?: string;
-  options?: Array<{ label: string; value: string }>;
-  stats?: ChassisStats;
+  name?: string
+  description?: string
+  activationCost?: number | string
+  range?: string
+  actionType?: string
+  options?: Array<{ label: string; value: string }>
+  stats?: ChassisStats
 }
 
 interface ChassisPattern {
-  name: string;
-  description: string;
-  legalStarting?: boolean;
-  systems?: string[];
-  modules?: string[];
+  name: string
+  description: string
+  legalStarting?: boolean
+  systems?: string[]
+  modules?: string[]
 }
 
 interface ChassisData {
-  name: string;
-  source: string;
-  page: number;
-  stats: ChassisStats;
-  chassis_abilities?: ChassisAbility[];
-  description?: string;
-  patterns?: ChassisPattern[];
+  name: string
+  source: string
+  page: number
+  stats: ChassisStats
+  chassis_abilities?: ChassisAbility[]
+  description?: string
+  patterns?: ChassisPattern[]
 }
 
 interface ChassisDisplayProps {
-  data: ChassisData;
+  data: ChassisData
 }
 
 export function ChassisDisplay({ data }: ChassisDisplayProps) {
-  const stats = data.stats;
+  const stats = data.stats
 
   return (
     <div className="space-y-6">
@@ -57,17 +57,17 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
         description={data.description}
         showSidebar={false}
         headerContent={
-          <div className="ml-auto pb-6" style={{ overflow: "visible" }}>
+          <div className="ml-auto pb-6" style={{ overflow: 'visible' }}>
             <StatList
               stats={[
-                { label: "Structure Pts.", value: stats.structure_pts },
-                { label: "Energy Pts.", value: stats.energy_pts },
-                { label: "Heat Cap.", value: stats.heat_cap },
-                { label: "System Slots", value: stats.system_slots },
-                { label: "Module Slots", value: stats.module_slots },
-                { label: "Cargo Cap.", value: stats.cargo_cap },
-                { label: "Tech Level", value: stats.tech_level },
-                { label: "Salvage Value", value: stats.salvage_value },
+                { label: 'Structure Pts.', value: stats.structure_pts },
+                { label: 'Energy Pts.', value: stats.energy_pts },
+                { label: 'Heat Cap.', value: stats.heat_cap },
+                { label: 'System Slots', value: stats.system_slots },
+                { label: 'Module Slots', value: stats.module_slots },
+                { label: 'Cargo Cap.', value: stats.cargo_cap },
+                { label: 'Tech Level', value: stats.tech_level },
+                { label: 'Salvage Value', value: stats.salvage_value },
               ]}
               notes={stats.notes}
               up={false}
@@ -87,28 +87,20 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                   <div>
                     {ability.name && (
                       <span className="font-bold text-[var(--color-su-black)]">
-                        {ability.name}:{" "}
+                        {ability.name}:{' '}
                       </span>
                     )}
-                    <span className="text-[var(--color-su-black)]">
-                      {ability.description}
-                    </span>
+                    <span className="text-[var(--color-su-black)]">{ability.description}</span>
                   </div>
 
                   {ability.options && ability.options.length > 0 && (
                     <div className="ml-4 space-y-1">
                       {ability.options.map((option, optIndex) => (
-                        <div
-                          key={optIndex}
-                          className="text-[var(--color-su-black)]"
-                        >
+                        <div key={optIndex} className="text-[var(--color-su-black)]">
                           <span className="font-bold">
                             {option.label}
-                            {option.label.includes("•") ||
-                            option.label.length === 0
-                              ? ""
-                              : ":"}
-                          </span>{" "}
+                            {option.label.includes('•') || option.label.length === 0 ? '' : ':'}
+                          </span>{' '}
                           {option.value}
                         </div>
                       ))}
@@ -116,36 +108,36 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                   )}
 
                   {ability.stats && (
-                    <div className="mt-2" style={{ overflow: "visible" }}>
+                    <div className="mt-2" style={{ overflow: 'visible' }}>
                       <StatList
                         stats={[
                           {
-                            label: "Structure Pts.",
+                            label: 'Structure Pts.',
                             value: ability.stats.structure_pts,
                           },
                           {
-                            label: "Energy Pts.",
+                            label: 'Energy Pts.',
                             value: ability.stats.energy_pts,
                           },
-                          { label: "Heat Cap.", value: ability.stats.heat_cap },
+                          { label: 'Heat Cap.', value: ability.stats.heat_cap },
                           {
-                            label: "System Slots",
+                            label: 'System Slots',
                             value: ability.stats.system_slots,
                           },
                           {
-                            label: "Module Slots",
+                            label: 'Module Slots',
                             value: ability.stats.module_slots,
                           },
                           {
-                            label: "Cargo Cap.",
+                            label: 'Cargo Cap.',
                             value: ability.stats.cargo_cap,
                           },
                           {
-                            label: "Tech Level",
+                            label: 'Tech Level',
                             value: ability.stats.tech_level,
                           },
                           {
-                            label: "Salvage Value",
+                            label: 'Salvage Value',
                             value: ability.stats.salvage_value,
                           },
                         ]}
@@ -164,39 +156,28 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
       {/* Patterns */}
       {data.patterns && data.patterns.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-2xl font-bold text-[var(--color-su-black)] uppercase">
-            Patterns
-          </h3>
+          <h3 className="text-2xl font-bold text-[var(--color-su-black)] uppercase">Patterns</h3>
           {data.patterns.map((pattern, index) => (
             <div
               key={index}
               className="bg-[var(--color-su-light-blue)] border border-[var(--color-su-black)] rounded-lg p-4 space-y-3"
             >
               <div className="flex items-center gap-2">
-                <h4 className="text-xl font-bold text-[var(--color-su-black)]">
-                  {pattern.name}
-                </h4>
+                <h4 className="text-xl font-bold text-[var(--color-su-black)]">{pattern.name}</h4>
                 {pattern.legalStarting && (
                   <span className="bg-[var(--color-su-military-green)] text-[var(--color-su-white)] text-xs font-bold px-2 py-1 rounded">
                     LEGAL STARTING
                   </span>
                 )}
               </div>
-              <p className="text-[var(--color-su-black)]">
-                {pattern.description}
-              </p>
+              <p className="text-[var(--color-su-black)]">{pattern.description}</p>
 
               {pattern.systems && pattern.systems.length > 0 && (
                 <div>
-                  <h5 className="font-bold text-[var(--color-su-brick)] mb-2">
-                    Systems:
-                  </h5>
+                  <h5 className="font-bold text-[var(--color-su-brick)] mb-2">Systems:</h5>
                   <ul className="list-disc ml-6 space-y-1">
                     {pattern.systems.map((system, sysIndex) => (
-                      <li
-                        key={sysIndex}
-                        className="text-[var(--color-su-black)]"
-                      >
+                      <li key={sysIndex} className="text-[var(--color-su-black)]">
                         {system}
                       </li>
                     ))}
@@ -206,15 +187,10 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
 
               {pattern.modules && pattern.modules.length > 0 && (
                 <div>
-                  <h5 className="font-bold text-[var(--color-su-brick)] mb-2">
-                    Modules:
-                  </h5>
+                  <h5 className="font-bold text-[var(--color-su-brick)] mb-2">Modules:</h5>
                   <ul className="list-disc ml-6 space-y-1">
                     {pattern.modules.map((module, modIndex) => (
-                      <li
-                        key={modIndex}
-                        className="text-[var(--color-su-black)]"
-                      >
+                      <li key={modIndex} className="text-[var(--color-su-black)]">
                         {module}
                       </li>
                     ))}
@@ -226,5 +202,5 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

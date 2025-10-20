@@ -1,58 +1,53 @@
-import { Frame } from "./shared/Frame";
-import type { DataValue } from "../../types/common";
+import { Frame } from './shared/Frame'
+import type { DataValue } from '../../types/common'
 
 interface AbilityData {
-  name: string;
-  source: string;
-  tree: string;
-  level: number | string;
-  description?: string;
-  effect?: string;
-  activationCost?: number | string;
-  range?: string;
-  actionType?: string;
-  page: number;
-  notes?: string;
+  name: string
+  source: string
+  tree: string
+  level: number | string
+  description?: string
+  effect?: string
+  activationCost?: number | string
+  range?: string
+  actionType?: string
+  page: number
+  notes?: string
 }
 
 interface AbilityDisplayProps {
-  data: AbilityData;
+  data: AbilityData
 }
 
 function generateAbilityDetails(ability: AbilityData): DataValue[] {
-  const details: DataValue[] = [];
+  const details: DataValue[] = []
 
   if (ability.activationCost) {
     const costValue =
-      ability.activationCost === "Variable"
-        ? "Variable AP"
-        : `${ability.activationCost} AP`;
-    details.push({ value: costValue, cost: true });
+      ability.activationCost === 'Variable' ? 'Variable AP' : `${ability.activationCost} AP`
+    details.push({ value: costValue, cost: true })
   }
 
   if (ability.range) {
-    details.push({ value: ability.range });
+    details.push({ value: ability.range })
   }
 
   if (ability.actionType) {
-    details.push({ value: ability.actionType });
+    details.push({ value: ability.actionType })
   }
 
-  return details;
+  return details
 }
 
 export function AbilityDisplay({ data }: AbilityDisplayProps) {
-  const details = generateAbilityDetails(data);
-  const isLegendary =
-    String(data.level).toUpperCase() === "L" || data.tree.includes("Legendary");
+  const details = generateAbilityDetails(data)
+  const isLegendary = String(data.level).toUpperCase() === 'L' || data.tree.includes('Legendary')
 
   return (
     <Frame
       header={data.name}
       level={data.level}
-      headerColor={
-        isLegendary ? "var(--color-su-pink)" : "var(--color-su-orange)"
-      }
+      headerColor={isLegendary ? 'var(--color-su-pink)' : 'var(--color-su-orange)'}
       details={details}
       notes={data.notes}
       showSidebar={false}
@@ -61,23 +56,15 @@ export function AbilityDisplay({ data }: AbilityDisplayProps) {
         {/* Tree Information */}
         <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-[var(--color-su-brick)]">
-              Tree:
-            </span>
+            <span className="font-bold text-[var(--color-su-brick)]">Tree:</span>
             <span className="text-[var(--color-su-black)]">{data.tree}</span>
           </div>
           <div className="flex items-center gap-2 mt-1">
-            <span className="font-bold text-[var(--color-su-brick)]">
-              Source:
-            </span>
-            <span className="text-[var(--color-su-black)] capitalize">
-              {data.source}
-            </span>
+            <span className="font-bold text-[var(--color-su-brick)]">Source:</span>
+            <span className="text-[var(--color-su-black)] capitalize">{data.source}</span>
           </div>
           <div className="flex items-center gap-2 mt-1">
-            <span className="font-bold text-[var(--color-su-brick)]">
-              Page:
-            </span>
+            <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
             <span className="text-[var(--color-su-black)]">{data.page}</span>
           </div>
         </div>
@@ -85,21 +72,15 @@ export function AbilityDisplay({ data }: AbilityDisplayProps) {
         {/* Description */}
         {data.description && (
           <div>
-            <h4 className="font-bold text-[var(--color-su-black)] mb-2">
-              Description:
-            </h4>
-            <p className="text-[var(--color-su-black)] leading-relaxed">
-              {data.description}
-            </p>
+            <h4 className="font-bold text-[var(--color-su-black)] mb-2">Description:</h4>
+            <p className="text-[var(--color-su-black)] leading-relaxed">{data.description}</p>
           </div>
         )}
 
         {/* Effect */}
         {data.effect && (
           <div>
-            <h4 className="font-bold text-[var(--color-su-black)] mb-2">
-              Effect:
-            </h4>
+            <h4 className="font-bold text-[var(--color-su-black)] mb-2">Effect:</h4>
             <p className="text-[var(--color-su-black)] leading-relaxed whitespace-pre-line">
               {data.effect}
             </p>
@@ -107,5 +88,5 @@ export function AbilityDisplay({ data }: AbilityDisplayProps) {
         )}
       </div>
     </Frame>
-  );
+  )
 }

@@ -1,43 +1,40 @@
 interface DigestedRollTable {
-  order: number;
-  name: string;
-  description: string;
-  key: string;
+  order: number
+  name: string
+  description: string
+  key: string
 }
 
 interface RollTableDisplayProps {
-  rollTable: Record<string, string>;
-  showCommand?: boolean;
+  rollTable: Record<string, string>
+  showCommand?: boolean
 }
 
 function digestRollTable(tables: Record<string, string>): DigestedRollTable[] {
   const sorted = Object.keys(tables)
     .sort((a, b) => {
-      const aNum = parseInt(a.split("-")[0]);
-      const bNum = parseInt(b.split("-")[0]);
-      return aNum - bNum;
+      const aNum = parseInt(a.split('-')[0])
+      const bNum = parseInt(b.split('-')[0])
+      return aNum - bNum
     })
-    .reverse();
+    .reverse()
 
   return sorted.map((key, order) => {
-    const fullDescription = tables[key];
-    const name = fullDescription.split(":")[0];
-    const description = fullDescription.replace(`${name}:`, "").trim();
+    const fullDescription = tables[key]
+    const name = fullDescription.split(':')[0]
+    const description = fullDescription.replace(`${name}:`, '').trim()
 
     return {
       order,
       name,
       description,
       key,
-    };
-  });
+    }
+  })
 }
 
-export function RollTableDisplay({
-  rollTable,
-  showCommand = false,
-}: RollTableDisplayProps) {
-  const digestedTable = digestRollTable(rollTable);
+export function RollTableDisplay({ rollTable, showCommand = false }: RollTableDisplayProps) {
+  const digestedTable = digestRollTable(rollTable)
 
   return (
     <div>
@@ -47,12 +44,9 @@ export function RollTableDisplay({
         </div>
       )}
       {digestedTable.map(({ name, description, key }, index) => {
-        if (key === "type") return null;
-        const showTitle = name !== description;
-        const bgColor =
-          index % 2 === 0
-            ? "var(--color-su-light-orange)"
-            : "var(--color-su-white)";
+        if (key === 'type') return null
+        const showTitle = name !== description
+        const bgColor = index % 2 === 0 ? 'var(--color-su-light-orange)' : 'var(--color-su-white)'
 
         return (
           <div
@@ -72,8 +66,8 @@ export function RollTableDisplay({
               </p>
             </div>
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

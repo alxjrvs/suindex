@@ -1,18 +1,18 @@
-import { Frame } from "./shared/Frame";
-import { RollTableDisplay } from "./shared/RollTableDisplay";
-import { ActionDisplay } from "./shared/ActionDisplay";
-import { StatBonusDisplay } from "./shared/StatBonusDisplay";
-import type { SlottedItem } from "../../types/common";
-import { generateDetails } from "../../utils/displayUtils";
+import { Frame } from './shared/Frame'
+import { RollTableDisplay } from './shared/RollTableDisplay'
+import { ActionDisplay } from './shared/ActionDisplay'
+import { StatBonusDisplay } from './shared/StatBonusDisplay'
+import type { SlottedItem } from '../../types/common'
+import { generateDetails } from '../../utils/displayUtils'
 
-type ModuleData = SlottedItem;
+type ModuleData = SlottedItem
 
 interface ModuleDisplayProps {
-  data: ModuleData;
+  data: ModuleData
 }
 
 export function ModuleDisplay({ data }: ModuleDisplayProps) {
-  const details = generateDetails(data, "EP");
+  const details = generateDetails(data, 'EP')
 
   return (
     <Frame
@@ -27,21 +27,14 @@ export function ModuleDisplay({ data }: ModuleDisplayProps) {
     >
       {/* Stat Bonus */}
       {data.statBonus && (
-        <StatBonusDisplay
-          bonus={data.statBonus.bonus}
-          stat={data.statBonus.stat}
-        />
+        <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
       )}
 
       {/* Actions */}
       {data.actions && data.actions.length > 0 && (
         <div className="space-y-3">
           {data.actions.map((action, index) => (
-            <ActionDisplay
-              key={index}
-              action={action}
-              activationCurrency="EP"
-            />
+            <ActionDisplay key={index} action={action} activationCurrency="EP" />
           ))}
         </div>
       )}
@@ -49,5 +42,5 @@ export function ModuleDisplay({ data }: ModuleDisplayProps) {
       {/* Roll Table */}
       {data.rollTable && <RollTableDisplay rollTable={data.rollTable} />}
     </Frame>
-  );
+  )
 }

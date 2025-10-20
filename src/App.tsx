@@ -1,48 +1,40 @@
-import { useEffect, useState } from "react";
-import {
-  HashRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import Navigation from "./components/Navigation";
-import SchemaViewer from "./components/SchemaViewer";
-import ItemShowPage from "./components/ItemShowPage";
-import schemaIndexData from "salvageunion-reference/schemas/index.json";
+import { useEffect, useState } from 'react'
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Navigation from './components/Navigation'
+import SchemaViewer from './components/SchemaViewer'
+import ItemShowPage from './components/ItemShowPage'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 
 function AppContent() {
-  const [schemaIndex, setSchemaIndex] = useState<typeof schemaIndexData | null>(
-    null
-  );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [schemaIndex, setSchemaIndex] = useState<typeof schemaIndexData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     try {
-      setSchemaIndex(schemaIndexData);
-      setLoading(false);
+      setSchemaIndex(schemaIndexData)
+      setLoading(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load schemas");
-      setLoading(false);
+      setError(err instanceof Error ? err.message : 'Failed to load schemas')
+      setLoading(false)
     }
-  }, []);
+  }, [])
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-xl">Loading schemas...</div>
       </div>
-    );
+    )
   }
 
   if (error || !schemaIndex) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="text-xl text-red-600">
-          Error: {error || "Failed to load schemas"}
-        </div>
+        <div className="text-xl text-red-600">Error: {error || 'Failed to load schemas'}</div>
       </div>
-    );
+    )
   }
 
   return (
@@ -52,12 +44,7 @@ function AppContent() {
         <Routes>
           <Route
             path="/"
-            element={
-              <Navigate
-                to={`/schema/${schemaIndex.schemas[0]?.id || ""}`}
-                replace
-              />
-            }
+            element={<Navigate to={`/schema/${schemaIndex.schemas[0]?.id || ''}`} replace />}
           />
           <Route
             path="/schema/:schemaId"
@@ -70,15 +57,17 @@ function AppContent() {
         </Routes>
       </main>
     </div>
-  );
+  )
 }
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
+    <ErrorBoundary>
+      <Router>
+        <AppContent />
+      </Router>
+    </ErrorBoundary>
+  )
 }
 
-export default App;
+export default App

@@ -1,35 +1,35 @@
-import { Frame } from "./shared/Frame";
-import { StatList } from "./shared/StatList";
-import { ActionDisplay } from "./shared/ActionDisplay";
+import { Frame } from './shared/Frame'
+import { StatList } from './shared/StatList'
+import { ActionDisplay } from './shared/ActionDisplay'
 
 interface SquadDisplayProps {
   data: {
-    name: string;
-    source: string;
-    description?: string;
-    hitPoints?: number;
-    structurePoints?: number;
+    name: string
+    source: string
+    description?: string
+    hitPoints?: number
+    structurePoints?: number
     abilities?: Array<{
-      name: string;
-      description?: string;
-      effect?: string;
-      range?: string;
-      damage?: { type: string; amount: number } | string;
-      actionType?: string;
-      traits?: Array<{ type: string; amount?: number }>;
-    }>;
-    page: number;
-  };
+      name: string
+      description?: string
+      effect?: string
+      range?: string
+      damage?: { type: string; amount: number } | string
+      actionType?: string
+      traits?: Array<{ type: string; amount?: number }>
+    }>
+    page: number
+  }
 }
 
 export function SquadDisplay({ data }: SquadDisplayProps) {
   // Build stats array
-  const stats = [];
+  const stats = []
   if (data.hitPoints !== undefined) {
-    stats.push({ label: "HP", value: data.hitPoints.toString() });
+    stats.push({ label: 'HP', value: data.hitPoints.toString() })
   }
   if (data.structurePoints !== undefined) {
-    stats.push({ label: "SP", value: data.structurePoints.toString() });
+    stats.push({ label: 'SP', value: data.structurePoints.toString() })
   }
 
   return (
@@ -37,7 +37,7 @@ export function SquadDisplay({ data }: SquadDisplayProps) {
       header={data.name}
       headerContent={
         stats.length > 0 ? (
-          <div className="ml-auto pb-6" style={{ overflow: "visible" }}>
+          <div className="ml-auto pb-6" style={{ overflow: 'visible' }}>
             <StatList stats={stats} up={false} />
           </div>
         ) : undefined
@@ -54,9 +54,7 @@ export function SquadDisplay({ data }: SquadDisplayProps) {
       {/* Abilities */}
       {data.abilities && data.abilities.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-lg font-bold text-[var(--color-su-black)] uppercase">
-            Abilities
-          </h3>
+          <h3 className="text-lg font-bold text-[var(--color-su-black)] uppercase">Abilities</h3>
           {data.abilities.map((ability, index) => (
             <div
               key={index}
@@ -74,18 +72,14 @@ export function SquadDisplay({ data }: SquadDisplayProps) {
                 {/* Description */}
                 {ability.description && (
                   <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
-                    <p className="text-[var(--color-su-black)]">
-                      {ability.description}
-                    </p>
+                    <p className="text-[var(--color-su-black)]">{ability.description}</p>
                   </div>
                 )}
 
                 {/* Effect */}
                 {ability.effect && (
                   <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
-                    <p className="text-[var(--color-su-black)] italic">
-                      {ability.effect}
-                    </p>
+                    <p className="text-[var(--color-su-black)] italic">{ability.effect}</p>
                   </div>
                 )}
               </div>
@@ -96,9 +90,8 @@ export function SquadDisplay({ data }: SquadDisplayProps) {
 
       {/* Page Reference */}
       <div className="mt-4 pt-3 border-t-2 border-[var(--color-su-black)] text-sm text-[var(--color-su-black)]">
-        <span className="font-bold uppercase">{data.source}</span> • Page{" "}
-        {data.page}
+        <span className="font-bold uppercase">{data.source}</span> • Page {data.page}
       </div>
     </Frame>
-  );
+  )
 }

@@ -1,55 +1,52 @@
-import { DataList } from "./DataList";
-import type { DataValue, ActionData } from "../../../types/common";
+import { DataList } from './DataList'
+import type { DataValue, ActionData } from '../../../types/common'
 
 interface ActionDisplayProps {
-  action: ActionData;
-  activationCurrency?: string;
+  action: ActionData
+  activationCurrency?: string
 }
 
 function generateDataListValues(action: ActionData): DataValue[] {
-  const details: DataValue[] = [];
+  const details: DataValue[] = []
 
   // Activation cost is now shown in the badge, not in the data list
 
   if (action.range) {
-    details.push({ value: action.range });
+    details.push({ value: action.range })
   }
 
   if (action.actionType) {
-    details.push({ value: action.actionType });
+    details.push({ value: action.actionType })
   }
 
-  return details;
+  return details
 }
 
-export function ActionDisplay({
-  action,
-  activationCurrency = "AP",
-}: ActionDisplayProps) {
-  const dataListValues = generateDataListValues(action);
-  const description = action.description?.replaceAll("•", "\n•");
+export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDisplayProps) {
+  const dataListValues = generateDataListValues(action)
+  const description = action.description?.replaceAll('•', '\n•')
 
   return (
     <div className="border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] p-3 space-y-2">
       {/* Action Header with Activation Cost Badge */}
       <div className="flex items-center gap-1">
         {action.activationCost && (
-          <div className="flex items-center" style={{ overflow: "visible" }}>
+          <div className="flex items-center" style={{ overflow: 'visible' }}>
             {/* Black badge with white text */}
             <div
               className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold uppercase flex items-center justify-center"
               style={{
-                fontSize: "15px",
-                paddingLeft: "4px",
-                paddingRight: "4px",
-                paddingTop: "2px",
-                paddingBottom: "2px",
-                height: "20px",
+                fontSize: '15px',
+                paddingLeft: '4px',
+                paddingRight: '4px',
+                paddingTop: '2px',
+                paddingBottom: '2px',
+                height: '20px',
                 zIndex: 2,
               }}
             >
-              {action.activationCost === "Variable"
-                ? "Variable"
+              {action.activationCost === 'Variable'
+                ? 'Variable'
                 : `${action.activationCost} ${activationCurrency}`}
             </div>
             {/* Triangle arrow pointing right */}
@@ -57,19 +54,17 @@ export function ActionDisplay({
               style={{
                 width: 0,
                 height: 0,
-                borderTop: "10px solid transparent",
-                borderBottom: "10px solid transparent",
-                borderLeft: "10px solid var(--color-su-black)",
-                marginLeft: "0px",
+                borderTop: '10px solid transparent',
+                borderBottom: '10px solid transparent',
+                borderLeft: '10px solid var(--color-su-black)',
+                marginLeft: '0px',
                 zIndex: 1,
               }}
             />
           </div>
         )}
         {action.name && (
-          <span className="font-bold text-[var(--color-su-black)] text-[17px]">
-            {action.name}
-          </span>
+          <span className="font-bold text-[var(--color-su-black)] text-[17px]">{action.name}</span>
         )}
       </div>
 
@@ -82,43 +77,41 @@ export function ActionDisplay({
 
       {/* Description */}
       {description && (
-        <p className="text-[var(--color-su-black)] whitespace-pre-line">
-          {description}
-        </p>
+        <p className="text-[var(--color-su-black)] whitespace-pre-line">{description}</p>
       )}
 
       {action.options && action.options.length > 0 && (
         <div className="space-y-1 ml-4">
           {action.options.map((option, index) => {
             // Handle both string and object options
-            if (typeof option === "string") {
+            if (typeof option === 'string') {
               return (
                 <div key={index} className="text-[var(--color-su-black)]">
                   • {option}
                 </div>
-              );
+              )
             }
 
             // Handle object options with label and value
-            const label = option.label || "";
-            const value = option.value || "";
+            const label = option.label || ''
+            const value = option.value || ''
 
             return (
               <div key={index} className="text-[var(--color-su-black)]">
                 {label && (
                   <span className="font-bold">
                     {label}
-                    {label.includes("•") ? "" : ":"}
+                    {label.includes('•') ? '' : ':'}
                   </span>
                 )}
                 {value && (
                   <>
-                    {label && " "}
+                    {label && ' '}
                     {value}
                   </>
                 )}
               </div>
-            );
+            )
           })}
         </div>
       )}
@@ -128,9 +121,7 @@ export function ActionDisplay({
           {action.subAbilities.map((subAbility, index) => (
             <div key={index} className="ml-2">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[var(--color-su-black)]">
-                  {subAbility.name}
-                </span>
+                <span className="font-bold text-[var(--color-su-black)]">{subAbility.name}</span>
                 {subAbility.actionType && (
                   <span className="text-sm text-[var(--color-su-brick)]">
                     ({subAbility.actionType})
@@ -153,10 +144,8 @@ export function ActionDisplay({
       )}
 
       {action.notes && (
-        <p className="text-sm text-[var(--color-su-black)] italic mt-2">
-          {action.notes}
-        </p>
+        <p className="text-sm text-[var(--color-su-black)] italic mt-2">{action.notes}</p>
       )}
     </div>
-  );
+  )
 }

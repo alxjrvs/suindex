@@ -1,27 +1,24 @@
-import { ActionDisplay } from "./ActionDisplay";
+import { ActionDisplay } from './ActionDisplay'
 
 interface AbilityCardProps {
   ability: {
-    name: string;
-    description?: string;
-    effect?: string;
-    range?: string;
-    damage?: { type: string; amount: number } | string;
-    actionType?: string;
-    traits?: Array<{ type: string; amount?: number }>;
-    options?: Array<{ label: string; value: string }>;
-  };
-  headerColor?: string;
+    name: string
+    description?: string
+    effect?: string
+    range?: string
+    damage?: { type: string; amount: number } | string
+    actionType?: string
+    traits?: Array<{ type: string; amount?: number }>
+    options?: Array<{ label: string; value: string }>
+  }
+  headerColor?: string
 }
 
 /**
  * Reusable component for displaying ability cards with consistent styling
  * Used by BioTitanDisplay, NPCDisplay, and similar components
  */
-export function AbilityCard({
-  ability,
-  headerColor = "var(--color-su-brick)",
-}: AbilityCardProps) {
+export function AbilityCard({ ability, headerColor = 'var(--color-su-brick)' }: AbilityCardProps) {
   return (
     <div className="border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)]">
       {/* Ability Header */}
@@ -51,6 +48,5 @@ export function AbilityCard({
         )}
       </div>
     </div>
-  );
+  )
 }
-
