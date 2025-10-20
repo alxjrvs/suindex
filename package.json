@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "license": "Salvage Union Open Game Licence 1.0b",
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc -b --noEmit",
@@ -20,7 +21,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.4",
-    "salvageunion-reference": "^1.11.0"
+    "salvageunion-reference": "^1.12.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
