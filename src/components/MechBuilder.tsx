@@ -62,12 +62,10 @@ export default function MechBuilder() {
     [build.chassisId, allChassis]
   )
 
-  // Initialize SP, EP, and Cargo to max values when chassis changes
   useEffect(() => {
     if (selectedChassis?.stats) {
       setCurrentSP(selectedChassis.stats.structure_pts)
       setCurrentEP(selectedChassis.stats.energy_pts)
-      setCurrentCargo(selectedChassis.stats.cargo_cap)
     }
   }, [selectedChassis])
 
@@ -356,27 +354,43 @@ export default function MechBuilder() {
             </div>
 
             <div className="space-y-4">
-              {/* Render existing systems and modules */}
-              {[...build.systems, ...build.modules].map((item) => (
-                <div key={item.id} className="relative">
-                  <button
-                    onClick={() =>
-                      item.type === 'system'
-                        ? handleRemoveSystem(item.id)
-                        : handleRemoveModule(item.id)
-                    }
-                    className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
-                    aria-label="Remove"
-                  >
-                    ✕ Remove
-                  </button>
-                  {item.type === 'system' ? (
-                    <SystemDisplay data={item.data as System} />
-                  ) : (
-                    <ModuleDisplay data={item.data as Module} />
-                  )}
+              {/* Render Systems */}
+              {build.systems.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-bold text-[#e8e5d8] uppercase">Systems</h3>
+                  {build.systems.map((item) => (
+                    <div key={item.id} className="relative">
+                      <button
+                        onClick={() => handleRemoveSystem(item.id)}
+                        className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
+                        aria-label="Remove"
+                      >
+                        ✕ Remove
+                      </button>
+                      <SystemDisplay data={item.data as System} />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+
+              {/* Render Modules */}
+              {build.modules.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-bold text-[#e8e5d8] uppercase">Modules</h3>
+                  {build.modules.map((item) => (
+                    <div key={item.id} className="relative">
+                      <button
+                        onClick={() => handleRemoveModule(item.id)}
+                        className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
+                        aria-label="Remove"
+                      >
+                        ✕ Remove
+                      </button>
+                      <ModuleDisplay data={item.data as Module} />
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Add System/Module Button */}
               {canAddMore && (

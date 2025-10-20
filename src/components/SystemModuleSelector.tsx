@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react'
 import type { System, Module } from 'salvageunion-reference'
 import Modal from './Modal'
+import { SystemDisplay } from './specialized/SystemDisplay'
+import { ModuleDisplay } from './specialized/ModuleDisplay'
 
 interface SystemModuleSelectorProps {
   isOpen: boolean
@@ -28,8 +30,7 @@ export default function SystemModuleSelector({
   availableModuleSlots,
 }: SystemModuleSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [showSystems, setShowSystems] = useState(true)
-  const [showModules, setShowModules] = useState(true)
+  const [typeFilter, setTypeFilter] = useState<'all' | 'systems' | 'modules'>('all')
   const [techLevelFilter, setTechLevelFilter] = useState<number | null>(null)
 
   const availableSystems = useMemo(
@@ -49,7 +50,7 @@ export default function SystemModuleSelector({
       canAfford: boolean
     }> = []
 
-    if (showSystems) {
+    if (typeFilter === 'all' || typeFilter === 'systems') {
       availableSystems.forEach((sys) =>
         items.push({
           type: 'system',
@@ -59,7 +60,7 @@ export default function SystemModuleSelector({
       )
     }
 
-    if (showModules) {
+    if (typeFilter === 'all' || typeFilter === 'modules') {
       availableModules.forEach((mod) =>
         items.push({
           type: 'module',
@@ -84,8 +85,7 @@ export default function SystemModuleSelector({
   }, [
     availableSystems,
     availableModules,
-    showSystems,
-    showModules,
+    typeFilter,
     searchTerm,
     techLevelFilter,
     availableSystemSlots,
@@ -120,12 +120,9 @@ export default function SystemModuleSelector({
           {/* Type Filter */}
           <div className="flex gap-2">
             <button
-              onClick={() => {
-                setShowSystems(true)
-                setShowModules(true)
-              }}
+              onClick={() => setTypeFilter('all')}
               className={`px-4 py-2 rounded font-bold ${
-                showSystems && showModules
+                typeFilter === 'all'
                   ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
                   : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
               }`}
@@ -133,11 +130,9 @@ export default function SystemModuleSelector({
               Both
             </button>
             <button
-              onClick={() => {
-                setShowSystems(!showSystems)
-              }}
+              onClick={() => setTypeFilter('systems')}
               className={`px-4 py-2 rounded font-bold ${
-                showSystems && !showModules
+                typeFilter === 'systems'
                   ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
                   : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
               }`}
@@ -145,11 +140,9 @@ export default function SystemModuleSelector({
               Systems
             </button>
             <button
-              onClick={() => {
-                setShowModules(!showModules)
-              }}
+              onClick={() => setTypeFilter('modules')}
               className={`px-4 py-2 rounded font-bold ${
-                showModules && !showSystems
+                typeFilter === 'modules'
                   ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
                   : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
               }`}
@@ -198,41 +191,25 @@ export default function SystemModuleSelector({
                 key={`${item.type}-${item.data.id}-${index}`}
                 onClick={() => handleSelect(item)}
                 disabled={!item.canAfford}
-                className={`w-full text-left border-2 border-[var(--color-su-black)] rounded p-4 transition-colors ${
+                className={`w-full text-left transition-all ${
                   item.canAfford
-                    ? 'bg-[var(--color-su-light-blue)] hover:bg-[var(--color-su-blue)] cursor-pointer'
-                    : 'bg-[#d0cdc0] opacity-60 cursor-not-allowed'
+                    ? 'hover:shadow-lg hover:scale-[1.01] cursor-pointer'
+                    : 'opacity-60 cursor-not-allowed'
                 }`}
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-[var(--color-su-black)]">
-                        {item.data.name}
+                <div className="relative">
+                  {!item.canAfford && (
+                    <div className="absolute top-2 right-2 z-10">
+                      <span className="text-xs px-2 py-1 rounded bg-[var(--color-su-brick)] text-[var(--color-su-white)] font-bold">
+                        TOO LARGE
                       </span>
-                      <span className="text-xs px-2 py-1 rounded bg-[var(--color-su-green)] text-[var(--color-su-white)] font-bold">
-                        {item.type === 'system' ? 'SYSTEM' : 'MODULE'}
-                      </span>
-                      <span className="text-xs px-2 py-1 rounded bg-[var(--color-su-orange)] text-[var(--color-su-white)] font-bold">
-                        TL{item.data.techLevel}
-                      </span>
-                      {!item.canAfford && (
-                        <span className="text-xs px-2 py-1 rounded bg-[var(--color-su-brick)] text-[var(--color-su-white)] font-bold">
-                          TOO LARGE
-                        </span>
-                      )}
                     </div>
-                    {item.data.description && (
-                      <p className="text-sm text-[var(--color-su-black)] opacity-75 line-clamp-2">
-                        {item.data.description}
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-bold text-[var(--color-su-brick)]">
-                      {item.data.slotsRequired} slot{item.data.slotsRequired !== 1 ? 's' : ''}
-                    </div>
-                  </div>
+                  )}
+                  {item.type === 'system' ? (
+                    <SystemDisplay data={item.data as System} />
+                  ) : (
+                    <ModuleDisplay data={item.data as Module} />
+                  )}
                 </div>
               </button>
             ))
