@@ -26,4 +26,5 @@ export interface MechState {
   currentSP: number
   currentEP: number
   currentHeat: number
+  notes: string
 }

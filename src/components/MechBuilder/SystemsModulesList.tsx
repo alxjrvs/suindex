@@ -68,43 +68,47 @@ export function SystemsModulesList({
         {sortedSystems.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-lg font-bold text-[#e8e5d8] uppercase">Systems</h3>
-            {sortedSystems.map((item) => (
-              <div key={item.id} className="relative">
-                <button
-                  onClick={() => onRemoveSystem(item.id)}
-                  className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
-                  aria-label="Remove"
-                >
-                  ✕ Remove
-                </button>
-                <SystemDisplay data={item.data as System} />
-              </div>
-            ))}
+            <div className="columns-1 md:columns-2 gap-4 space-y-4">
+              {sortedSystems.map((item) => (
+                <div key={item.id} className="relative break-inside-avoid mb-4">
+                  <button
+                    onClick={() => onRemoveSystem(item.id)}
+                    className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
+                    aria-label="Remove"
+                  >
+                    ✕ Remove
+                  </button>
+                  <SystemDisplay data={item.data as System} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         {sortedModules.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-lg font-bold text-[#e8e5d8] uppercase">Modules</h3>
-            {sortedModules.map((item) => (
-              <div key={item.id} className="relative">
-                <button
-                  onClick={() => onRemoveModule(item.id)}
-                  className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
-                  aria-label="Remove"
-                >
-                  ✕ Remove
-                </button>
-                <ModuleDisplay data={item.data as Module} />
-              </div>
-            ))}
+            <div className="columns-1 md:columns-2 gap-4 space-y-4">
+              {sortedModules.map((item) => (
+                <div key={item.id} className="relative break-inside-avoid mb-4">
+                  <button
+                    onClick={() => onRemoveModule(item.id)}
+                    className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
+                    aria-label="Remove"
+                  >
+                    ✕ Remove
+                  </button>
+                  <ModuleDisplay data={item.data as Module} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         <button
           onClick={onAddClick}
           disabled={!canAddMore}
-          className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-3 rounded-2xl font-bold hover:bg-[var(--color-su-green)] transition-colors text-lg disabled:opacity-50 disabled:cursor-not-allowed w-full"
+          className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-3 rounded-2xl font-bold hover:bg-[var(--color-su-light-orange)] transition-colors text-lg disabled:opacity-50 disabled:cursor-not-allowed w-full"
         >
           + Add System/Module
         </button>

@@ -118,7 +118,7 @@ describe('MechBuilder', () => {
 
       expect(screen.getByRole('combobox')).toBeInTheDocument()
       expect(screen.getByPlaceholderText(/enter or select a pattern/i)).toBeInTheDocument()
-      expect(screen.getByText(/chassis stats/i)).toBeInTheDocument()
+      expect(screen.getAllByText(/system slots/i)[0]).toBeInTheDocument()
     })
 
     it('displays all main sections', () => {
@@ -357,8 +357,9 @@ describe('MechBuilder', () => {
     it('shows add cargo button disabled when no chassis selected', () => {
       render(<MechBuilder />)
 
-      const addButton = screen.getByRole('button', { name: /add cargo/i })
-      expect(addButton).toBeDisabled()
+      const addButtons = screen.getAllByRole('button', { name: /\+ add/i })
+      const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
+      expect(cargoButton).toBeDisabled()
     })
 
     it('enables add cargo button when chassis is selected', async () => {
@@ -369,8 +370,9 @@ describe('MechBuilder', () => {
       await user.selectOptions(chassisSelect, 'chassis-1')
 
       await waitFor(() => {
-        const addButton = screen.getByRole('button', { name: /add cargo/i })
-        expect(addButton).not.toBeDisabled()
+        const addButtons = screen.getAllByRole('button', { name: /\+ add/i })
+        const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
+        expect(cargoButton).not.toBeDisabled()
       })
     })
 
@@ -399,12 +401,13 @@ describe('MechBuilder', () => {
       await user.selectOptions(chassisSelect, 'chassis-1')
 
       await waitFor(async () => {
-        const addButton = screen.getByRole('button', { name: /add cargo/i })
-        await user.click(addButton)
+        const addButtons = screen.getAllByRole('button', { name: /\+ add/i })
+        const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
+        await user.click(cargoButton)
       })
 
       await waitFor(() => {
-        expect(screen.getByText(/cargo amount/i)).toBeInTheDocument()
+        expect(screen.getByText(/amount/i)).toBeInTheDocument()
         expect(screen.getByText(/description/i)).toBeInTheDocument()
       })
     })
@@ -463,6 +466,50 @@ describe('MechBuilder', () => {
         },
         { timeout: 5000 }
       )
+    })
+  })
+
+  describe('Notes', () => {
+    it('shows notes section', () => {
+      render(<MechBuilder />)
+
+      expect(screen.getByText(/notes/i)).toBeInTheDocument()
+    })
+
+    it('shows notes textarea disabled when no chassis selected', () => {
+      render(<MechBuilder />)
+
+      const notesTextarea = screen.getByPlaceholderText(/add notes about your mech/i)
+      expect(notesTextarea).toBeDisabled()
+    })
+
+    it('enables notes textarea when chassis is selected', async () => {
+      const user = userEvent.setup()
+      render(<MechBuilder />)
+
+      const chassisSelect = screen.getByRole('combobox')
+      await user.selectOptions(chassisSelect, 'chassis-1')
+
+      await waitFor(() => {
+        const notesTextarea = screen.getByPlaceholderText(/add notes about your mech/i)
+        expect(notesTextarea).not.toBeDisabled()
+      })
+    })
+
+    it('allows entering notes text when chassis is selected', async () => {
+      const user = userEvent.setup()
+      render(<MechBuilder />)
+
+      const chassisSelect = screen.getByRole('combobox')
+      await user.selectOptions(chassisSelect, 'chassis-1')
+
+      await waitFor(async () => {
+        const notesTextarea = screen.getByPlaceholderText(/add notes about your mech/i)
+        await user.type(notesTextarea, 'This mech is equipped for long-range combat')
+      })
+
+      const notesTextarea = screen.getByPlaceholderText(/add notes about your mech/i)
+      expect(notesTextarea).toHaveValue('This mech is equipped for long-range combat')
     })
   })
 })

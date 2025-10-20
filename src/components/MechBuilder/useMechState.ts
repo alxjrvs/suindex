@@ -15,6 +15,7 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     currentSP: 0,
     currentEP: 0,
     currentHeat: 0,
+    notes: '',
   })
 
   const selectedChassis = useMemo(

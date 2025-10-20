@@ -33,45 +33,46 @@ export function CargoModal({ isOpen, onClose, onAdd, maxCargo, currentCargo }: C
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Add Cargo">
-      <div className="space-y-3">
-        <div>
-          <label className="block text-sm font-bold text-[#e8e5d8] mb-1">
-            Cargo Amount (Available: {availableCargo})
-          </label>
-          <input
-            type="number"
-            min="0"
-            max={availableCargo}
-            value={amount}
-            onChange={(e) =>
-              setAmount(Math.max(0, Math.min(availableCargo, parseInt(e.target.value) || 0)))
-            }
-            className="w-full p-2 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold"
-          />
+      <div className="space-y-2">
+        <div className="flex gap-2 items-end">
+          <div className="w-24">
+            <label className="block text-xs font-bold text-[#e8e5d8] mb-1">Amount</label>
+            <input
+              type="number"
+              min="0"
+              max={availableCargo}
+              value={amount}
+              onChange={(e) =>
+                setAmount(Math.max(0, Math.min(availableCargo, parseInt(e.target.value) || 0)))
+              }
+              className="w-full p-1.5 border-0 rounded-lg bg-[#e8e5d8] text-[#2d3e36] font-semibold text-center"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block text-xs font-bold text-[#e8e5d8] mb-1">
+              Description (Available: {availableCargo})
+            </label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter cargo description..."
+              className="w-full p-1.5 border-0 rounded-lg bg-[#e8e5d8] text-[#2d3e36] font-semibold"
+            />
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-bold text-[#e8e5d8] mb-1">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter cargo description..."
-            rows={3}
-            className="w-full p-2 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold resize-none"
-          />
-        </div>
-
-        <div className="flex gap-2 justify-end pt-2">
+        <div className="flex gap-2 justify-end pt-1">
           <button
             onClick={handleClose}
-            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-4 py-2 rounded-2xl font-bold hover:bg-[var(--color-su-black)] transition-colors"
+            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-1.5 rounded-lg font-bold hover:bg-[var(--color-su-black)] transition-colors text-sm"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!isValid}
-            className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded-2xl font-bold hover:bg-[var(--color-su-green)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-3 py-1.5 rounded-lg font-bold hover:bg-[var(--color-su-light-orange)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             Add Cargo
           </button>

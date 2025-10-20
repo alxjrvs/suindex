@@ -11,6 +11,7 @@ import { QuirkAppearanceInputs } from './QuirkAppearanceInputs'
 import { SystemsModulesList } from './SystemsModulesList'
 import { CargoList } from './CargoList'
 import { CargoModal } from './CargoModal'
+import { Notes } from './Notes'
 import { useMechState } from './useMechState'
 
 export default function MechBuilder() {
@@ -68,32 +69,38 @@ export default function MechBuilder() {
       <div className="max-w-7xl mx-auto">
         <div className="space-y-6">
           <div className="flex gap-6">
-            <div className="flex-1 bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
-              <div className="bg-[#6b8e7f] rounded-2xl p-4">
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <ChassisSelector
-                    chassisId={mech.chassisId}
-                    allChassis={allChassis}
-                    onChange={handleChassisChange}
-                  />
+            <div className="flex-1 space-y-6">
+              <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
+                <div className="bg-[#6b8e7f] rounded-2xl p-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <ChassisSelector
+                      chassisId={mech.chassisId}
+                      allChassis={allChassis}
+                      onChange={handleChassisChange}
+                    />
 
-                  <PatternSelector
-                    pattern={mech.pattern}
-                    selectedChassis={selectedChassis}
-                    onChange={handlePatternChange}
+                    <PatternSelector
+                      pattern={mech.pattern}
+                      selectedChassis={selectedChassis}
+                      onChange={handlePatternChange}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-4 shadow-lg">
+                <div className="bg-[#6b8e7f] rounded-2xl p-2">
+                  <ChassisStatsGrid
+                    stats={stats}
+                    usedSystemSlots={usedSystemSlots}
+                    usedModuleSlots={usedModuleSlots}
+                    totalCargo={totalCargo}
                   />
                 </div>
-
-                <ChassisStatsGrid
-                  stats={stats}
-                  usedSystemSlots={usedSystemSlots}
-                  usedModuleSlots={usedModuleSlots}
-                  totalCargo={totalCargo}
-                />
               </div>
             </div>
 
-            <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl px-2 py-6 shadow-lg flex items-center justify-center h-full">
+            <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl px-2 py-6 shadow-lg flex items-center justify-center">
               <MechResourceSteppers
                 stats={stats}
                 currentSP={mech.currentSP}
@@ -133,14 +140,22 @@ export default function MechBuilder() {
             onAddClick={() => setIsSelectorOpen(true)}
           />
 
-          <CargoList
-            cargo={mech.cargo}
-            totalCargo={totalCargo}
-            maxCargo={stats?.cargo_cap || 0}
-            canAddCargo={!!selectedChassis}
-            onRemove={handleRemoveCargo}
-            onAddClick={() => setIsCargoModalOpen(true)}
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <CargoList
+              cargo={mech.cargo}
+              totalCargo={totalCargo}
+              maxCargo={stats?.cargo_cap || 0}
+              canAddCargo={!!selectedChassis}
+              onRemove={handleRemoveCargo}
+              onAddClick={() => setIsCargoModalOpen(true)}
+            />
+
+            <Notes
+              notes={mech.notes}
+              onChange={(value) => updateMech({ notes: value })}
+              disabled={!selectedChassis}
+            />
+          </div>
 
           <SystemModuleSelector
             availableSystemSlots={Number(stats?.system_slots) - usedSystemSlots || 0}
