@@ -11,7 +11,6 @@ interface AbilityCardProps {
 export function AbilityCard({ ability, headerColor = 'var(--color-su-brick)' }: AbilityCardProps) {
   return (
     <div className="border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)]">
-      {/* Ability Header */}
       <div
         className="text-[var(--color-su-white)] px-3 py-2 font-bold uppercase"
         style={{ backgroundColor: headerColor }}
@@ -19,11 +18,9 @@ export function AbilityCard({ ability, headerColor = 'var(--color-su-brick)' }: 
         {ability.name}
       </div>
 
-      {/* Ability Details */}
       <div className="p-3 space-y-2">
         <ActionDisplay action={ability} />
 
-        {/* Description */}
         {'description' in ability &&
         ability.description &&
         typeof ability.description === 'string' ? (
@@ -32,7 +29,6 @@ export function AbilityCard({ ability, headerColor = 'var(--color-su-brick)' }: 
           </div>
         ) : null}
 
-        {/* Effect */}
         {'effect' in ability && ability.effect && typeof ability.effect === 'string' ? (
           <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
             <p className="text-[var(--color-su-black)] italic">{ability.effect}</p>

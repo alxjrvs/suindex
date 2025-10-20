@@ -10,7 +10,6 @@ export function TableDisplay({ data }: TableDisplayProps) {
   return (
     <Frame header={data.name} headerColor="var(--color-su-orange)" showSidebar={false}>
       <div className="space-y-4">
-        {/* Section Info */}
         <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2">
           <div className="flex items-center gap-2">
             <span className="font-bold text-[var(--color-su-brick)]">Section:</span>
@@ -26,7 +25,6 @@ export function TableDisplay({ data }: TableDisplayProps) {
           </div>
         </div>
 
-        {/* Roll Table */}
         <RollTableDisplay rollTable={data.rollTable} showCommand={true} />
       </div>
     </Frame>

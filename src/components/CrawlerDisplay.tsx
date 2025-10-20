@@ -13,7 +13,6 @@ export function CrawlerDisplay({ data }: CrawlerDisplayProps) {
       description={data.description}
       showSidebar={false}
     >
-      {/* Crawler Abilities */}
       {data.abilities && data.abilities.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-lg font-bold text-[var(--color-su-brick)]">Crawler Abilities</h3>
@@ -29,7 +28,6 @@ export function CrawlerDisplay({ data }: CrawlerDisplayProps) {
         </div>
       )}
 
-      {/* Page Reference */}
       <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
         <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
         <span className="text-[var(--color-su-black)] ml-2">{data.page}</span>

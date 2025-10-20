@@ -42,7 +42,6 @@ export function EquipmentDisplay({ data }: EquipmentDisplayProps) {
       notes={data.notes}
       showSidebar={false}
     >
-      {/* Actions */}
       {data.actions && data.actions.length > 0 && (
         <div className="space-y-3">
           {data.actions.map((action, index) => (

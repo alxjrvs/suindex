@@ -82,15 +82,12 @@ export function SystemModuleSelector({
         return matchesSearch && matchesTechLevel
       })
       .sort((a, b) => {
-        // Sort by affordability first (affordable items first)
         if (a.canAfford !== b.canAfford) {
           return a.canAfford ? -1 : 1
         }
-        // Then sort by tech level
         if (a.data.techLevel !== b.data.techLevel) {
           return a.data.techLevel - b.data.techLevel
         }
-        // Finally sort alphabetically by name
         return a.data.name.localeCompare(b.data.name)
       })
   }, [
@@ -117,7 +114,6 @@ export function SystemModuleSelector({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add System or Module">
       <div className="space-y-4">
-        {/* Search */}
         <input
           type="text"
           placeholder="Search by name or description..."
@@ -126,9 +122,7 @@ export function SystemModuleSelector({
           className="w-full px-4 py-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
         />
 
-        {/* Filters */}
         <div className="flex justify-between gap-4 flex-wrap">
-          {/* Type Filter */}
           <div className="flex gap-2">
             <button
               onClick={() => setTypeFilter('all')}
@@ -162,7 +156,6 @@ export function SystemModuleSelector({
             </button>
           </div>
 
-          {/* Tech Level Filter */}
           <div className="flex gap-2">
             {techLevels.map((tl) => (
               <button
@@ -190,7 +183,6 @@ export function SystemModuleSelector({
           </div>
         </div>
 
-        {/* Results */}
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {filteredItems.length === 0 ? (
             <p className="text-center text-[var(--color-su-black)] py-8">

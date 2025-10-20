@@ -28,10 +28,8 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
       }
       showSidebar={false}
     >
-      {/* Description */}
       {data.description && <DescriptionBox description={data.description} />}
 
-      {/* Abilities */}
       {data.abilities && data.abilities.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-lg font-bold text-[var(--color-su-black)] uppercase">Abilities</h3>
@@ -41,7 +39,6 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
         </div>
       )}
 
-      {/* Page Reference */}
       <PageReferenceDisplay source={data.source} page={data.page} />
     </Frame>
   )

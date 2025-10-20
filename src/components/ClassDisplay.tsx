@@ -168,7 +168,6 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
       showSidebar={false}
     >
       <div className="space-y-6">
-        {/* Class Info */}
         <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2">
           <div className="flex items-center gap-2">
             <span className="font-bold text-[var(--color-su-brick)]">Type:</span>
@@ -196,14 +195,12 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
           )}
         </div>
 
-        {/* Core Abilities */}
         <AbilitySection
           title="Core Abilities"
           abilities={coreAbilities}
           headerColor="var(--color-su-brick)"
         />
 
-        {/* Advanced Abilities */}
         {Object.keys(advancedAbilities).length > 0 && (
           <AbilitySection
             title="Advanced Abilities"
@@ -212,7 +209,6 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
           />
         )}
 
-        {/* Legendary Abilities */}
         {Object.keys(legendaryAbilities).length > 0 && (
           <AbilitySection
             title="Legendary Abilities"

@@ -31,7 +31,6 @@ export function DroneDisplay({ data }: DroneDisplayProps) {
       showSidebar={true}
       salvageValue={data.salvageValue}
     >
-      {/* Drone Traits */}
       {'traits' in data && data.traits && Array.isArray(data.traits) && data.traits.length > 0 ? (
         <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
           <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
@@ -39,7 +38,6 @@ export function DroneDisplay({ data }: DroneDisplayProps) {
         </div>
       ) : null}
 
-      {/* Systems */}
       {data.systems && data.systems.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-lg font-bold text-[var(--color-su-brick)]">Systems</h3>

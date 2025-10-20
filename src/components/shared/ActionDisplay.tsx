@@ -99,11 +99,9 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
 
   return (
     <div className="border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] p-3 space-y-2">
-      {/* Action Header with Activation Cost Badge */}
       <div className="flex items-center gap-1">
         {'activationCost' in action && action.activationCost && (
           <div className="flex items-center" style={{ overflow: 'visible' }}>
-            {/* Black badge with white text */}
             <div
               className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold uppercase flex items-center justify-center"
               style={{
@@ -120,7 +118,6 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
                 ? 'Variable'
                 : `${action.activationCost} ${activationCurrency}`}
             </div>
-            {/* Triangle arrow pointing right */}
             <div
               style={{
                 width: 0,

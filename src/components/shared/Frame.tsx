@@ -48,7 +48,6 @@ export function Frame({
       className="bg-[var(--color-su-light-blue)] w-full rounded-lg shadow-lg"
       style={{ overflow: 'visible' }}
     >
-      {/* Header */}
       <div className="p-3 z-10" style={{ backgroundColor, overflow: 'visible' }}>
         <div className="flex items-start gap-3" style={{ overflow: 'visible' }}>
           {level && (
@@ -72,15 +71,12 @@ export function Frame({
         </div>
       </div>
 
-      {/* Content */}
       <div className="flex" style={{ backgroundColor }}>
-        {/* Sidebar */}
         {showSidebar && (techLevel || slotsRequired || salvageValue) && (
           <div
             className="flex flex-col items-center justify-start pb-1 gap-1 min-w-[35px] max-w-[35px]"
             style={{ backgroundColor, overflow: 'visible' }}
           >
-            {/* Tech Level - Black rounded square with white text */}
             {techLevel && (
               <div
                 className="bg-[var(--color-su-black)] border border-[var(--color-su-black)] text-[var(--color-su-white)] font-bold text-center flex items-center justify-center"
@@ -95,7 +91,6 @@ export function Frame({
                 T{techLevel}
               </div>
             )}
-            {/* Slots Required - Black triangle with white text */}
             {slotsRequired && (
               <div
                 className="relative flex items-center justify-center"
@@ -125,7 +120,6 @@ export function Frame({
                 </div>
               </div>
             )}
-            {/* Salvage Value - Black circle with white text */}
             {salvageValue && (
               <div
                 className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold text-center flex items-center justify-center"
@@ -143,7 +137,6 @@ export function Frame({
           </div>
         )}
 
-        {/* Main Content */}
         <div className="flex-1 bg-[var(--color-su-light-blue)] p-3 space-y-6">
           {description && (
             <p className="text-[var(--color-su-black)] font-medium leading-relaxed">

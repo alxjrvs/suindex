@@ -40,7 +40,6 @@ export function AbilityDisplay({ data }: AbilityDisplayProps) {
       showSidebar={false}
     >
       <div className="space-y-4">
-        {/* Tree Information */}
         <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
           <div className="flex items-center gap-2">
             <span className="font-bold text-[var(--color-su-brick)]">Tree:</span>
@@ -56,7 +55,6 @@ export function AbilityDisplay({ data }: AbilityDisplayProps) {
           </div>
         </div>
 
-        {/* Description */}
         {data.description && (
           <div>
             <h4 className="font-bold text-[var(--color-su-black)] mb-2">Description:</h4>
@@ -64,7 +62,6 @@ export function AbilityDisplay({ data }: AbilityDisplayProps) {
           </div>
         )}
 
-        {/* Effect */}
         {data.effect && (
           <div>
             <h4 className="font-bold text-[var(--color-su-black)] mb-2">Effect:</h4>

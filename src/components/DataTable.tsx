@@ -144,7 +144,7 @@ export default function DataTable({ data, schema }: DataTableProps) {
 
     const result = fields
       .filter((f) => allFields.includes(f) && f !== 'id' && f !== 'source' && f !== 'page')
-      .slice(0, 4) // Limit to 4 columns (leaving room for page and source)
+      .slice(0, 4)
 
     if (allFields.includes('page')) {
       result.push('page')
@@ -159,7 +159,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
 
   return (
     <div className="p-6">
-      {/* Search and Filters */}
       <div className="mb-6 bg-[var(--color-su-white)] p-4 rounded-lg shadow border border-[var(--color-su-light-blue)]">
         <div className="mb-4">
           <input
@@ -171,7 +170,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
           />
         </div>
 
-        {/* Tech Level Buttons */}
         {allFields.includes('techLevel') && fieldValues['techLevel'].size > 1 && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-[var(--color-su-black)] mb-2">
@@ -220,7 +218,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
           </div>
         )}
 
-        {/* Class Dropdown */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {allFields
             .filter((field) => {
@@ -259,7 +256,6 @@ export default function DataTable({ data, schema }: DataTableProps) {
         </div>
       </div>
 
-      {/* Data Table */}
       <div className="bg-[var(--color-su-white)] rounded-lg shadow overflow-hidden border border-[var(--color-su-light-blue)]">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-[var(--color-su-light-blue)]">

@@ -24,7 +24,6 @@ export function DataList({
           )}
           {item.cost ? (
             <span className="inline-flex items-center" style={{ overflow: 'visible' }}>
-              {/* Black badge with white text */}
               <span
                 style={{
                   backgroundColor: 'var(--color-su-black)',
@@ -44,7 +43,6 @@ export function DataList({
               >
                 {item.value}
               </span>
-              {/* Triangle arrow pointing right */}
               <div
                 style={{
                   width: 0,

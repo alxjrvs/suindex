@@ -23,12 +23,10 @@ export function SystemDisplay({ data }: SystemDisplayProps) {
       slotsRequired={data.slotsRequired}
       salvageValue={data.salvageValue}
     >
-      {/* Stat Bonus */}
       {data.statBonus && (
         <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
       )}
 
-      {/* Actions */}
       {data.actions && data.actions.length > 0 && (
         <div className="space-y-3">
           {data.actions.map((action, index) => (
@@ -37,7 +35,6 @@ export function SystemDisplay({ data }: SystemDisplayProps) {
         </div>
       )}
 
-      {/* Roll Table */}
       {data.rollTable && <RollTableDisplay rollTable={data.rollTable} />}
     </Frame>
   )

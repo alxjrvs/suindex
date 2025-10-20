@@ -36,7 +36,6 @@ export function SystemsModulesList({
   onRemoveModule,
   onAddClick,
 }: SystemsModulesListProps) {
-  // Sort systems by tech level, then by name
   const sortedSystems = [...systems].sort((a, b) => {
     const techLevelA = (a.data as System).techLevel || 0
     const techLevelB = (b.data as System).techLevel || 0
@@ -46,7 +45,6 @@ export function SystemsModulesList({
     return a.name.localeCompare(b.name)
   })
 
-  // Sort modules by tech level, then by name
   const sortedModules = [...modules].sort((a, b) => {
     const techLevelA = (a.data as Module).techLevel || 0
     const techLevelB = (b.data as Module).techLevel || 0

@@ -11,7 +11,6 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
 
   return (
     <div className="space-y-6">
-      {/* Main Chassis Info */}
       <Frame
         header={data.name}
         techLevel={stats.tech_level}
@@ -36,7 +35,6 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
           </div>
         }
       >
-        {/* Chassis Abilities */}
         {data.chassis_abilities && data.chassis_abilities.length > 0 && (
           <div className="space-y-3">
             <h4 className="text-lg font-bold text-[var(--color-su-black)] uppercase">
@@ -114,7 +112,6 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
         )}
       </Frame>
 
-      {/* Patterns */}
       {data.patterns && data.patterns.length > 0 && (
         <div className="space-y-4">
           <h3 className="text-2xl font-bold text-[var(--color-su-black)] uppercase">Patterns</h3>

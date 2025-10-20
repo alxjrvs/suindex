@@ -30,16 +30,13 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black bg-opacity-50"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal */}
       <div className="relative bg-[#6b8e7f] rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
         <div className="bg-[var(--color-su-green)] px-6 py-4 flex items-center justify-between border-b-4 border-[var(--color-su-black)]">
           <h2 className="text-2xl font-bold text-[var(--color-su-white)]">{title}</h2>
           <button
@@ -51,7 +48,6 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
           </button>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">{children}</div>
       </div>
     </div>

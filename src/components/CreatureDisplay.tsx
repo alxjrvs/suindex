@@ -25,7 +25,6 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
       }
       showSidebar={false}
     >
-      {/* Creature Traits */}
       {data.traits && data.traits.length > 0 && (
         <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
           <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
@@ -33,7 +32,6 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
         </div>
       )}
 
-      {/* Abilities */}
       {data.abilities && data.abilities.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-lg font-bold text-[var(--color-su-brick)]">Abilities</h3>
@@ -44,7 +42,6 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
             >
               <div className="font-bold text-[var(--color-su-black)] text-lg">{ability.name}</div>
 
-              {/* Ability Stats */}
               <div className="space-y-1">
                 {ability.range && (
                   <div className="text-[var(--color-su-black)]">
@@ -67,7 +64,6 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
                 )}
               </div>
 
-              {/* Ability Description */}
               {'description' in ability && ability.description && (
                 <div className="text-[var(--color-su-black)] pt-2 border-t border-[var(--color-su-black)]">
                   {ability.description}
@@ -78,7 +74,6 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
         </div>
       )}
 
-      {/* Page Reference */}
       <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
         <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
         <span className="text-[var(--color-su-black)] ml-2">{data.page}</span>
