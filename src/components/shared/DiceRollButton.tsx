@@ -26,4 +26,3 @@ export function DiceRollButton({ onClick, disabled, ariaLabel, title }: DiceRoll
     </button>
   )
 }
-

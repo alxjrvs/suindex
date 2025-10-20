@@ -4,6 +4,7 @@ import Navigation from './components/Navigation'
 import SchemaViewer from './components/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
 import MechBuilder from './components/MechBuilder'
+import CharacterBuilder from './components/CharacterBuilder'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 
@@ -48,6 +49,7 @@ function AppContent() {
             element={<Navigate to={`/schema/${schemaIndex.schemas[0]?.id || ''}`} replace />}
           />
           <Route path="/mech-builder" element={<MechBuilder />} />
+          <Route path="/character-builder" element={<CharacterBuilder />} />
           <Route
             path="/schema/:schemaId"
             element={<SchemaViewer schemas={schemaIndex.schemas} />}

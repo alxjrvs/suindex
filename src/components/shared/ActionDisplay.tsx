@@ -103,20 +103,19 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
         {'activationCost' in action && action.activationCost && (
           <div className="flex items-center" style={{ overflow: 'visible' }}>
             <div
-              className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold uppercase flex items-center justify-center"
+              className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold uppercase flex items-center justify-center whitespace-nowrap"
               style={{
                 fontSize: '15px',
-                paddingLeft: '4px',
-                paddingRight: '4px',
+                paddingLeft: '6px',
+                paddingRight: '6px',
                 paddingTop: '2px',
                 paddingBottom: '2px',
                 height: '20px',
+                minWidth: '50px',
                 zIndex: 2,
               }}
             >
-              {action.activationCost === 'Variable'
-                ? 'Variable'
-                : `${action.activationCost} ${activationCurrency}`}
+              {`${action.activationCost === 'Variable' ? 'X' : action.activationCost} ${activationCurrency}`}
             </div>
             <div
               style={{
