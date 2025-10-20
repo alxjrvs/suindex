@@ -4,7 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>web</title>
+    <meta
+      name="description"
+      content="A dynamic web application for viewing and exploring Salvage Union game data"
+    />
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/suindex/assets/vendor.js" as="script" />
+    <link rel="preload" href="/suindex/assets/salvage-union.js" as="script" />
+
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+    <title>Salvage Union Data Viewer</title>
   </head>
   <body>
     <div id="root"></div>

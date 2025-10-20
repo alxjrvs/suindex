@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { ReactElement } from "react";
 import { SalvageUnionReference } from "salvageunion-reference";
@@ -139,7 +139,17 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
     if (!schemaId) return null;
     const DisplayComponent = getDisplayComponent(schemaId);
     if (!DisplayComponent) return null;
-    return <DisplayComponent data={item} />;
+    return (
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-full">
+            <div className="text-xl">Loading component...</div>
+          </div>
+        }
+      >
+        <DisplayComponent data={item} />
+      </Suspense>
+    );
   };
 
   const specializedContent = renderSpecializedContent();
