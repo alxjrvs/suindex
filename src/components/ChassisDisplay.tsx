@@ -54,7 +54,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
 
                   {'options' in ability && ability.options && ability.options.length > 0 && (
                     <div className="ml-4 space-y-1">
-                      {ability.options.map((option: any, optIndex: number) => (
+                      {ability.options.map((option, optIndex) => (
                         <div key={optIndex} className="text-[var(--color-su-black)]">
                           <span className="font-bold">
                             {option.label}
