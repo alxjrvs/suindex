@@ -11,13 +11,21 @@ interface ActionOption {
   value: string;
 }
 
+interface SubAbility {
+  name: string;
+  description?: string;
+  activationCost?: number | string;
+  actionType?: string;
+}
+
 interface ActionData {
   name?: string;
   description?: string;
   activationCost?: number | string;
   range?: string;
   actionType?: string;
-  options?: ActionOption[];
+  options?: (ActionOption | string)[];
+  subAbilities?: SubAbility[];
   notes?: string;
 }
 
@@ -110,21 +118,27 @@ export function ActionDisplay({
       {action.options && action.options.length > 0 && (
         <div className="space-y-1 ml-4">
           {action.options.map((option, index) => {
-            const label =
-              typeof option === "string"
-                ? ""
-                : option.label || option.value || "";
-            const value =
-              typeof option === "string" ? option : option.value || "";
+            // Handle both string and object options
+            if (typeof option === "string") {
+              return (
+                <div key={index} className="text-[var(--color-su-black)]">
+                  • {option}
+                </div>
+              );
+            }
+
+            // Handle object options with label and value
+            const label = option.label || "";
+            const value = option.value || "";
 
             return (
               <div key={index} className="text-[var(--color-su-black)]">
-                {
+                {label && (
                   <span className="font-bold">
                     {label}
-                    {label.includes("•") ? "" : "-"}
+                    {label.includes("•") ? "" : ":"}
                   </span>
-                }
+                )}
                 {value && (
                   <>
                     {label && " "}
@@ -134,6 +148,35 @@ export function ActionDisplay({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {action.subAbilities && action.subAbilities.length > 0 && (
+        <div className="space-y-2 mt-2 border-t-2 border-[var(--color-su-black)] pt-2">
+          {action.subAbilities.map((subAbility, index) => (
+            <div key={index} className="ml-2">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-[var(--color-su-black)]">
+                  {subAbility.name}
+                </span>
+                {subAbility.actionType && (
+                  <span className="text-sm text-[var(--color-su-brick)]">
+                    ({subAbility.actionType})
+                  </span>
+                )}
+                {subAbility.activationCost && (
+                  <span className="text-sm text-[var(--color-su-brick)]">
+                    {subAbility.activationCost} AP
+                  </span>
+                )}
+              </div>
+              {subAbility.description && (
+                <p className="text-sm text-[var(--color-su-black)] mt-1">
+                  {subAbility.description}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       )}
 
