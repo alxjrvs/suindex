@@ -1,4 +1,3 @@
-
 import type { TraitReference, DataValue } from '../types/common'
 
 export function formatTraits(traits?: TraitReference[]): string[] {

@@ -9,7 +9,6 @@ interface ActionDisplayProps {
 function generateDataListValues(action: ActionData): DataValue[] {
   const details: DataValue[] = []
 
-
   if (action.range) {
     details.push({ value: action.range })
   }

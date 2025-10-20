@@ -1,4 +1,3 @@
-
 export interface TraitReference {
   type: string
   amount?: number
