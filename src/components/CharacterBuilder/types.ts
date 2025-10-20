@@ -12,6 +12,7 @@ export interface CharacterEquipment {
 
 export interface CharacterState {
   classId: string | null
+  advancedClassId: string | null
   callsign: string
   motto: string
   mottoUsed: boolean

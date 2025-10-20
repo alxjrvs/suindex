@@ -92,6 +92,21 @@ export function AbilitySelector({
     onClose()
   }
 
+  // Get the lowest available level for each tree
+  const getLowestAvailableLevel = (treeName: string): number => {
+    const selectedFromTree = selectedAbilityIds
+      .map((id) => abilities.find((a) => a.id === id))
+      .filter((a) => a && a.tree === treeName)
+
+    if (selectedFromTree.length === 0) {
+      return 1 // Start at level 1
+    }
+
+    // Find the highest level selected in this tree
+    const highestLevel = Math.max(...selectedFromTree.map((a) => Number(a!.level)))
+    return highestLevel + 1 // Next level is available
+  }
+
   const isSelected = (abilityId: string) => selectedAbilityIds.includes(abilityId)
 
   if (!isOpen) return null
@@ -121,14 +136,21 @@ export function AbilitySelector({
                     const cost = getAbilityCost(ability, selectedClass)
                     const canAfford = currentTP >= cost
                     const alreadySelected = isSelected(ability.id)
+                    const lowestAvailable = getLowestAvailableLevel(treeName)
+                    const abilityLevel = Number(ability.level)
+                    const isAvailable = abilityLevel === lowestAvailable
+                    const isDisabled = alreadySelected || !canAfford || !isAvailable
+
                     return (
                       <AbilityDisplay
                         key={ability.id}
                         data={ability}
                         compact
-                        onClick={() => handleSelect(ability.id)}
-                        disabled={alreadySelected || !canAfford}
-                        dimmed={!alreadySelected && !canAfford}
+                        onClick={isAvailable ? () => handleSelect(ability.id) : undefined}
+                        disabled={isDisabled}
+                        dimmed={!alreadySelected && (!canAfford || !isAvailable)}
+                        collapsible={true}
+                        defaultExpanded={false}
                       />
                     )
                   })}
@@ -137,57 +159,7 @@ export function AbilitySelector({
             ))}
           </div>
 
-          {/* Advanced Tree - Full Width */}
-          {advancedTreeName && advancedTreeAbilities.length > 0 && (
-            <div className="mb-4">
-              <h3 className="text-lg font-bold text-[var(--color-su-orange)] uppercase mb-2 text-center">
-                {advancedTreeName}
-              </h3>
-              <div className="grid grid-cols-3 gap-2">
-                {advancedTreeAbilities.map((ability) => {
-                  const cost = getAbilityCost(ability, selectedClass)
-                  const canAfford = currentTP >= cost
-                  const alreadySelected = isSelected(ability.id)
-                  return (
-                    <AbilityDisplay
-                      key={ability.id}
-                      data={ability}
-                      compact
-                      onClick={() => handleSelect(ability.id)}
-                      disabled={alreadySelected || !canAfford}
-                      dimmed={!alreadySelected && !canAfford}
-                    />
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Legendary Abilities - Full Width */}
-          {legendaryAbilities.length > 0 && (
-            <div>
-              <h3 className="text-lg font-bold text-[var(--color-su-pink)] uppercase mb-2 text-center">
-                Legendary Abilities
-              </h3>
-              <div className="grid grid-cols-3 gap-2">
-                {legendaryAbilities.map((ability) => {
-                  const cost = getAbilityCost(ability, selectedClass)
-                  const canAfford = currentTP >= cost
-                  const alreadySelected = isSelected(ability.id)
-                  return (
-                    <AbilityDisplay
-                      key={ability.id}
-                      data={ability}
-                      compact
-                      onClick={() => handleSelect(ability.id)}
-                      disabled={alreadySelected || !canAfford}
-                      dimmed={!alreadySelected && !canAfford}
-                    />
-                  )
-                })}
-              </div>
-            </div>
-          )}
+          {/* Advanced and Legendary abilities are hidden in character creation */}
         </div>
 
         {/* Footer */}

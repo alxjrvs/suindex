@@ -43,9 +43,9 @@ export function AbilitiesList({
   return (
     <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
       {/* Header with Add Button and TP Display */}
-      <div className="flex items-end justify-between mb-4">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-[#e8e5d8] uppercase">Abilities</h2>
-        <div className="flex items-end gap-4">
+        <div className="flex items-center gap-4">
           <div className="flex flex-col items-center">
             <label className="text-xs font-bold text-[#e8e5d8] mb-1 block">Add</label>
             <button
@@ -77,6 +77,8 @@ export function AbilitiesList({
                     compact
                     showRemoveButton
                     onRemove={() => onRemove(charAbility.id)}
+                    collapsible={false}
+                    defaultExpanded={true}
                   />
                 ))}
               </div>

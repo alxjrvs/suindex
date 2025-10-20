@@ -1,5 +1,5 @@
+import { useState } from 'react'
 import { Frame } from './shared/Frame'
-import { DataList } from './shared/DataList'
 import type { Ability } from 'salvageunion-reference'
 import type { DataValue } from '../types/common'
 
@@ -11,6 +11,8 @@ interface AbilityDisplayProps {
   dimmed?: boolean
   showRemoveButton?: boolean
   onRemove?: () => void
+  collapsible?: boolean
+  defaultExpanded?: boolean
 }
 
 function generateAbilityDetails(ability: Ability): DataValue[] {
@@ -74,11 +76,13 @@ export function AbilityDisplay({
   data,
   compact = false,
   onClick,
-  disabled = false,
   dimmed = false,
   showRemoveButton = false,
   onRemove,
+  collapsible = false,
+  defaultExpanded = false,
 }: AbilityDisplayProps) {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
   const details = generateAbilityDetails(data)
   const isLegendary = String(data.level).toUpperCase() === 'L' || data.tree.includes('Legendary')
   const headerColor = isLegendary ? 'var(--color-su-pink)' : 'var(--color-su-orange)'
@@ -100,29 +104,71 @@ export function AbilityDisplay({
   }
 
   // Compact mode for selector/list
-  const WrapperComponent = onClick ? 'button' : 'div'
   const opacityClass = dimmed ? 'opacity-50 hover:opacity-100' : 'opacity-100'
-  const wrapperProps = onClick
-    ? {
-        onClick,
-        disabled,
-        className: `w-full text-left border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] transition-opacity disabled:cursor-not-allowed disabled:hover:opacity-50 ${opacityClass} ${showRemoveButton ? 'relative' : ''}`,
-      }
-    : {
-        className: `w-full border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] ${opacityClass} ${showRemoveButton ? 'relative' : ''}`,
-      }
 
   return (
-    <WrapperComponent {...wrapperProps}>
+    <div
+      className={`w-full border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] ${opacityClass} ${showRemoveButton ? 'relative' : ''}`}
+    >
       {/* Header */}
       <div
-        className="text-[var(--color-su-white)] px-3 py-2 font-bold uppercase flex items-center gap-2"
+        className="text-[var(--color-su-white)] px-3 py-2 font-bold uppercase flex items-center gap-2 flex-wrap cursor-pointer"
         style={{ backgroundColor: headerColor }}
+        onClick={collapsible ? () => setIsExpanded(!isExpanded) : undefined}
       >
+        {/* Expand/Collapse Icon */}
+        {collapsible && (
+          <span className="text-[var(--color-su-white)] text-lg">{isExpanded ? '▼' : '▶'}</span>
+        )}
+
         <span className="bg-[var(--color-su-white)] text-[var(--color-su-black)] font-bold px-2 py-1 rounded min-w-[30px] text-center">
           {data.level}
         </span>
         <span className="flex-1">{data.name}</span>
+
+        {data.activationCost && (
+          <div className="flex items-center" style={{ overflow: 'visible' }}>
+            <div
+              className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold uppercase flex items-center justify-center whitespace-nowrap"
+              style={{
+                fontSize: '13px',
+                paddingLeft: '6px',
+                paddingRight: '6px',
+                paddingTop: '2px',
+                paddingBottom: '2px',
+                height: '20px',
+                minWidth: '50px',
+                zIndex: 2,
+              }}
+            >
+              {data.activationCost === 'Variable' ? 'X AP' : `${data.activationCost} AP`}
+            </div>
+            <div
+              style={{
+                width: 0,
+                height: 0,
+                borderTop: '10px solid transparent',
+                borderBottom: '10px solid transparent',
+                borderLeft: '10px solid var(--color-su-black)',
+                marginLeft: '0px',
+                zIndex: 1,
+              }}
+            />
+          </div>
+        )}
+
+        {/* Tags in header */}
+        {data.range && (
+          <span className="bg-[var(--color-su-white)] text-[var(--color-su-black)] px-2 py-1 rounded text-xs font-bold">
+            {data.range}
+          </span>
+        )}
+        {data.actionType && (
+          <span className="bg-[var(--color-su-white)] text-[var(--color-su-black)] px-2 py-1 rounded text-xs font-bold">
+            {data.actionType}
+          </span>
+        )}
+
         {showRemoveButton && onRemove && (
           <button
             onClick={(e) => {
@@ -137,39 +183,37 @@ export function AbilityDisplay({
         )}
       </div>
 
-      {/* Content */}
-      <div className="p-3 space-y-2">
-        {details.length > 0 && (
-          <div>
-            <DataList values={details} textColor="var(--color-su-brick)" />
-          </div>
-        )}
+      {(!collapsible || isExpanded) && (
+        <div
+          className={`p-3 space-y-2 ${onClick && collapsible ? 'cursor-pointer hover:bg-[#f5f5f0] transition-colors' : ''}`}
+          onClick={onClick && collapsible ? onClick : undefined}
+        >
+          {data.description && (
+            <div>
+              <p className="text-[var(--color-su-black)] text-sm">{data.description}</p>
+            </div>
+          )}
 
-        {data.description && (
-          <div>
-            <p className="text-[var(--color-su-black)] text-sm">{data.description}</p>
-          </div>
-        )}
+          {data.effect && (
+            <div>
+              <p className="text-[var(--color-su-black)] text-sm leading-relaxed whitespace-pre-line">
+                {data.effect}
+              </p>
+            </div>
+          )}
 
-        {data.effect && (
-          <div>
-            <p className="text-[var(--color-su-black)] text-sm leading-relaxed whitespace-pre-line">
-              {data.effect}
-            </p>
-          </div>
-        )}
-
-        {/* Footer - Source, Page */}
-        <div className="pt-2 border-t border-[var(--color-su-black)] text-xs text-[var(--color-su-brick)]">
-          <div className="flex items-center gap-2">
-            <span className="font-bold">Source:</span>
-            <span className="capitalize">{data.source}</span>
-            <span>•</span>
-            <span className="font-bold">Page:</span>
-            <span>{data.page}</span>
+          {/* Footer - Source, Page */}
+          <div className="pt-2 border-t border-[var(--color-su-black)] text-xs text-[var(--color-su-brick)]">
+            <div className="flex items-center gap-2">
+              <span className="font-bold">Source:</span>
+              <span className="capitalize">{data.source}</span>
+              <span>•</span>
+              <span className="font-bold">Page:</span>
+              <span>{data.page}</span>
+            </div>
           </div>
         </div>
-      </div>
-    </WrapperComponent>
+      )}
+    </div>
   )
 }

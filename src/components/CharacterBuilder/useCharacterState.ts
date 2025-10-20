@@ -30,6 +30,7 @@ export function useCharacterState(
 ) {
   const [character, setCharacter] = useState<CharacterState>({
     classId: null,
+    advancedClassId: null,
     callsign: '',
     motto: '',
     mottoUsed: false,

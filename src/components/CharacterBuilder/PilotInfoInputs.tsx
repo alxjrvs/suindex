@@ -13,6 +13,7 @@ interface PilotInfoInputsProps {
   backgroundUsed: boolean
   appearance: string
   classId: string | null
+  advancedClassId: string | null
   allClasses: Class[]
   disabled?: boolean
   onCallsignChange: (value: string) => void
@@ -24,6 +25,7 @@ interface PilotInfoInputsProps {
   onBackgroundUsedChange: (value: boolean) => void
   onAppearanceChange: (value: string) => void
   onClassChange: (classId: string) => void
+  onAdvancedClassChange: (classId: string) => void
 }
 
 export function PilotInfoInputs({
@@ -36,6 +38,7 @@ export function PilotInfoInputs({
   backgroundUsed,
   appearance,
   classId,
+  advancedClassId,
   allClasses,
   disabled = false,
   onCallsignChange,
@@ -47,6 +50,7 @@ export function PilotInfoInputs({
   onBackgroundUsedChange,
   onAppearanceChange,
   onClassChange,
+  onAdvancedClassChange,
 }: PilotInfoInputsProps) {
   // Filter to only show basic (core) classes
   const basicClasses = useMemo(() => {
@@ -124,22 +128,40 @@ export function PilotInfoInputs({
         </div>
       </div>
 
-      {/* Class */}
-      <div>
-        <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Class</label>
-        <select
-          value={classId || ''}
-          onChange={(e) => onClassChange(e.target.value)}
-          disabled={disabled}
-          className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <option value="">Select a class...</option>
-          {basicClasses.map((cls) => (
-            <option key={cls.id} value={cls.id}>
-              {cls.name}
-            </option>
-          ))}
-        </select>
+      {/* Class and Advanced Class - Together take same width as Callsign */}
+      <div className="flex gap-4">
+        {/* Class */}
+        <div className="flex-1">
+          <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Class</label>
+          <select
+            value={classId || ''}
+            onChange={(e) => onClassChange(e.target.value)}
+            disabled={disabled}
+            className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">Select a class...</option>
+            {basicClasses.map((cls) => (
+              <option key={cls.id} value={cls.id}>
+                {cls.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Advanced Class */}
+        <div className="flex-1">
+          <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">
+            Advanced Class
+          </label>
+          <select
+            value={advancedClassId || ''}
+            onChange={(e) => onAdvancedClassChange(e.target.value)}
+            disabled={true}
+            className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">Select an advanced class...</option>
+          </select>
+        </div>
       </div>
 
       {/* Keepsake */}

@@ -67,6 +67,7 @@ export default function CharacterBuilder() {
                   backgroundUsed={character.backgroundUsed}
                   appearance={character.appearance}
                   classId={character.classId}
+                  advancedClassId={character.advancedClassId}
                   allClasses={allClasses}
                   disabled={false}
                   onCallsignChange={(value) => updateCharacter({ callsign: value })}
@@ -78,6 +79,7 @@ export default function CharacterBuilder() {
                   onBackgroundUsedChange={(value) => updateCharacter({ backgroundUsed: value })}
                   onAppearanceChange={(value) => updateCharacter({ appearance: value })}
                   onClassChange={handleClassChange}
+                  onAdvancedClassChange={(value) => updateCharacter({ advancedClassId: value })}
                 />
               </div>
             </div>
