@@ -37,7 +37,7 @@ export default function SquadDisplay({ data }: SquadDisplayProps) {
       header={data.name}
       headerContent={
         stats.length > 0 ? (
-          <div className="ml-auto pb-24" style={{ overflow: "visible" }}>
+          <div className="ml-auto pb-6" style={{ overflow: "visible" }}>
             <StatList stats={stats} up={false} />
           </div>
         ) : undefined

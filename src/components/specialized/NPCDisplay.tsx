@@ -26,7 +26,7 @@ export default function NPCDisplay({ data }: NPCDisplayProps) {
     <Frame
       header={data.name}
       headerContent={
-        <div className="ml-auto pb-24" style={{ overflow: "visible" }}>
+        <div className="ml-auto pb-6" style={{ overflow: "visible" }}>
           <StatList
             stats={[
               {

@@ -51,7 +51,7 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
       headerColor="var(--color-su-orange)"
       description={data.description}
       headerContent={
-        <div className="ml-auto pb-24" style={{ overflow: "visible" }}>
+        <div className="ml-auto pb-6" style={{ overflow: "visible" }}>
           <StatList
             stats={[{ label: "Hit Points", value: data.hitPoints }]}
             up={false}

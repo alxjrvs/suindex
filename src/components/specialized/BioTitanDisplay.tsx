@@ -27,7 +27,7 @@ export default function BioTitanDisplay({ data }: BioTitanDisplayProps) {
     <Frame
       header={data.name}
       headerContent={
-        <div className="ml-auto pb-12" style={{ overflow: "visible" }}>
+        <div className="ml-auto pb-6" style={{ overflow: "visible" }}>
           <StatList
             stats={[
               {

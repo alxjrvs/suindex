@@ -111,8 +111,8 @@ function AbilityItem({ ability }: { ability: AbilityData }) {
   if (ability.activationCost) {
     const costValue =
       ability.activationCost === "Variable"
-        ? "Variable"
-        : `${ability.activationCost}`;
+        ? "X AP"
+        : `${ability.activationCost} AP`;
     details.push({ value: costValue, cost: true });
   }
 

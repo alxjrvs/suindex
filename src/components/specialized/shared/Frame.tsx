@@ -107,6 +107,7 @@ export function Frame({
                   borderRadius: "5px",
                   paddingTop: "2px",
                 }}
+                title="Tech level"
               >
                 T{techLevel}
               </div>
@@ -116,6 +117,7 @@ export function Frame({
               <div
                 className="relative flex items-center justify-center"
                 style={{ width: "30px", height: "25px" }}
+                title="Slots"
               >
                 <div
                   className="border-solid absolute"
@@ -150,6 +152,7 @@ export function Frame({
                   borderRadius: "30px",
                   paddingTop: "4px",
                 }}
+                title="Salvage value"
               >
                 {salvageValue}
               </div>

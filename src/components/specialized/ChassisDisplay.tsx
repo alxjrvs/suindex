@@ -57,7 +57,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
         description={data.description}
         showSidebar={false}
         headerContent={
-          <div className="ml-auto pb-24" style={{ overflow: "visible" }}>
+          <div className="ml-auto pb-6" style={{ overflow: "visible" }}>
             <StatList
               stats={[
                 { label: "Structure Pts.", value: stats.structure_pts },
