@@ -2,7 +2,7 @@ import { Suspense, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { ReactElement } from 'react'
 import type { SchemaInfo } from '../types/schema'
-import { getDisplayComponent } from './specialized/componentRegistry'
+import { getDisplayComponent } from './componentRegistry'
 import { useSchemaData } from '../hooks/useSchemaData'
 import { useSchemaParams } from '../hooks/useSchemaParams'
 

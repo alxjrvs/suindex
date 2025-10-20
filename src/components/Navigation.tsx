@@ -18,7 +18,6 @@ export default function Navigation({ schemas }: NavigationProps) {
 
   return (
     <>
-      {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed top-4 left-4 z-50 md:hidden bg-[var(--color-su-orange)] text-[var(--color-su-white)] p-2 rounded-lg"
@@ -34,7 +33,6 @@ export default function Navigation({ schemas }: NavigationProps) {
         </svg>
       </button>
 
-      {/* Overlay for mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
@@ -42,7 +40,6 @@ export default function Navigation({ schemas }: NavigationProps) {
         />
       )}
 
-      {/* Navigation Drawer */}
       <nav
         className={`fixed md:static top-0 left-0 h-screen md:h-auto w-64 bg-[var(--color-su-white)] shadow-lg overflow-y-auto border-r border-[var(--color-su-light-blue)] z-40 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
@@ -54,6 +51,12 @@ export default function Navigation({ schemas }: NavigationProps) {
         >
           <h1 className="text-xl font-bold text-[var(--color-su-black)]">Salvage Union</h1>
           <p className="text-sm text-[var(--color-su-brick)]">Data Viewer</p>
+        </button>
+        <button
+          onClick={() => handleNavigate('/mech-builder')}
+          className="w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer text-[var(--color-su-black)] font-semibold"
+        >
+          🤖 Mech Builder
         </button>
         <ul className="py-2">
           {schemas.map((schema) => (
