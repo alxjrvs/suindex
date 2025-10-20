@@ -3,7 +3,7 @@ interface StatDisplayProps {
   value: string | number
 }
 
-export default function StatDisplay({ label, value }: StatDisplayProps) {
+export function StatDisplay({ label, value }: StatDisplayProps) {
   return (
     <div className="flex flex-col items-center">
       <label className="text-xs font-bold text-[#e8e5d8] mb-1 block">{label}</label>

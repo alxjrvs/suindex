@@ -1,4 +1,4 @@
-import StatDisplay from './StatDisplay'
+import { StatDisplay } from './StatDisplay'
 
 interface NumericStepperProps {
   label: string

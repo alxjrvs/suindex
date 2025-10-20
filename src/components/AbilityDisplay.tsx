@@ -10,9 +10,12 @@ interface AbilityDisplayProps {
   disabled?: boolean
   dimmed?: boolean
   showRemoveButton?: boolean
+  disableRemove?: boolean
   onRemove?: () => void
   collapsible?: boolean
   defaultExpanded?: boolean
+  expanded?: boolean
+  onToggleExpanded?: () => void
 }
 
 function generateAbilityDetails(ability: Ability): DataValue[] {
@@ -78,11 +81,25 @@ export function AbilityDisplay({
   onClick,
   dimmed = false,
   showRemoveButton = false,
+  disableRemove = false,
   onRemove,
   collapsible = false,
   defaultExpanded = false,
+  expanded,
+  onToggleExpanded,
 }: AbilityDisplayProps) {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
+
+  // Use controlled expansion if provided, otherwise use internal state
+  const isExpanded = expanded !== undefined ? expanded : internalExpanded
+  const handleToggle = () => {
+    if (onToggleExpanded) {
+      onToggleExpanded()
+    } else {
+      setInternalExpanded(!internalExpanded)
+    }
+  }
+
   const details = generateAbilityDetails(data)
   const isLegendary = String(data.level).toUpperCase() === 'L' || data.tree.includes('Legendary')
   const headerColor = isLegendary ? 'var(--color-su-pink)' : 'var(--color-su-orange)'
@@ -104,7 +121,8 @@ export function AbilityDisplay({
   }
 
   // Compact mode for selector/list
-  const opacityClass = dimmed ? 'opacity-50 hover:opacity-100' : 'opacity-100'
+  // Only apply hover effect if not dimmed (i.e., selectable)
+  const opacityClass = dimmed ? 'opacity-50' : 'opacity-100 hover:opacity-100'
 
   return (
     <div
@@ -114,7 +132,7 @@ export function AbilityDisplay({
       <div
         className="text-[var(--color-su-white)] px-3 py-2 font-bold uppercase flex items-center gap-2 flex-wrap cursor-pointer"
         style={{ backgroundColor: headerColor }}
-        onClick={collapsible ? () => setIsExpanded(!isExpanded) : undefined}
+        onClick={collapsible ? handleToggle : undefined}
       >
         {/* Expand/Collapse Icon */}
         {collapsible && (
@@ -173,9 +191,18 @@ export function AbilityDisplay({
           <button
             onClick={(e) => {
               e.stopPropagation()
-              onRemove()
+              if (disableRemove) return
+
+              const confirmed = window.confirm(
+                `Are you sure you want to remove "${data.name}"?\n\nThis will cost 1 TP.`
+              )
+
+              if (confirmed) {
+                onRemove()
+              }
             }}
-            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-1 rounded font-bold hover:bg-[var(--color-su-black)] transition-colors text-sm"
+            disabled={disableRemove}
+            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-1 rounded font-bold hover:bg-[var(--color-su-black)] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-su-brick)]"
             aria-label="Remove ability"
           >
             ✕

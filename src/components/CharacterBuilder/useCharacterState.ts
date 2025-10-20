@@ -1,19 +1,31 @@
 import { useState, useCallback, useMemo } from 'react'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 import type { CharacterState } from './types'
 
 // Helper function to calculate ability cost
-function getAbilityCost(ability: Ability, selectedClass: Class | undefined): number {
+function getAbilityCost(
+  ability: Ability,
+  selectedClass: Class | undefined,
+  selectedAdvancedClass?: Class | undefined
+): number {
   if (!selectedClass) return 0
 
-  // Check if it's a legendary ability
-  const legendaryAbilities = (selectedClass.legendaryAbilities || []) as string[]
-  const isLegendary = legendaryAbilities.includes(ability.name)
+  // Check if it's a legendary ability from either class
+  const baseLegendaryAbilities = (selectedClass.legendaryAbilities || []) as string[]
+  const advancedLegendaryAbilities = (selectedAdvancedClass?.legendaryAbilities || []) as string[]
+  const isLegendary =
+    baseLegendaryAbilities.includes(ability.name) ||
+    advancedLegendaryAbilities.includes(ability.name)
   if (isLegendary) return 3
 
-  // Check if it's an advanced ability
+  // Check if it's an advanced ability from the base class
   const isAdvanced = selectedClass.advancedAbilities === ability.tree
   if (isAdvanced) return 2
+
+  // Check if it's an advanced ability from the hybrid class
+  const isHybridAdvanced = selectedAdvancedClass?.advancedAbilities === ability.tree
+  if (isHybridAdvanced) return 2
 
   // Check if it's a core ability
   const isCore = selectedClass.coreAbilities.includes(ability.tree)
@@ -39,6 +51,7 @@ export function useCharacterState(
     background: '',
     backgroundUsed: false,
     appearance: '',
+    legendaryAbilityId: null,
     abilities: [],
     equipment: [],
     maxHP: 10,
@@ -54,6 +67,78 @@ export function useCharacterState(
     [character.classId, allClasses]
   )
 
+  const selectedAdvancedClass = useMemo(
+    () => allClasses.find((c) => c.id === character.advancedClassId),
+    [character.advancedClassId, allClasses]
+  )
+
+  // Calculate available advanced classes
+  const availableAdvancedClasses = useMemo(() => {
+    if (character.abilities.length < 6) {
+      return []
+    }
+
+    // Salvager class cannot take advanced classes
+    if (selectedClass?.name === 'Salvager') {
+      return []
+    }
+
+    const abilitiesByTree: Record<string, number> = {}
+    character.abilities.forEach((charAbility) => {
+      const tree = charAbility.ability.tree
+      abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
+    })
+
+    const completeTrees = Object.keys(abilitiesByTree).filter((tree) => abilitiesByTree[tree] >= 3)
+
+    if (completeTrees.length === 0) {
+      return []
+    }
+
+    const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
+    const results: Array<{ id: string; name: string; isAdvancedVersion: boolean }> = []
+
+    // Check hybrid classes
+    const hybridClasses = allClasses.filter((cls) => cls.type === 'hybrid')
+
+    hybridClasses.forEach((cls) => {
+      const treeRequirement = allTreeRequirements.find((req) => req.tree === cls.advancedAbilities)
+
+      if (!treeRequirement || !treeRequirement.requirement) {
+        return
+      }
+
+      const hasRequirement = treeRequirement.requirement.some((requiredTree: string) =>
+        completeTrees.includes(requiredTree)
+      )
+
+      if (hasRequirement) {
+        results.push({
+          id: cls.id,
+          name: cls.name,
+          isAdvancedVersion: false,
+        })
+      }
+    })
+
+    // Check if player can take advanced version of their base class
+    if (selectedClass && selectedClass.coreAbilities) {
+      const hasAllTreesComplete = selectedClass.coreAbilities.some((tree) =>
+        completeTrees.includes(tree)
+      )
+
+      if (hasAllTreesComplete) {
+        results.push({
+          id: selectedClass.id,
+          name: `Adv. ${selectedClass.name}`,
+          isAdvancedVersion: true,
+        })
+      }
+    }
+
+    return results
+  }, [allClasses, character.abilities, selectedClass])
+
   const handleClassChange = useCallback((classId: string) => {
     setCharacter((prev) => ({
       ...prev,
@@ -67,7 +152,7 @@ export function useCharacterState(
       const ability = allAbilities.find((a) => a.id === abilityId)
       if (!ability) return
 
-      const cost = getAbilityCost(ability, selectedClass)
+      const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
 
       // Check if user has enough TP
       if (character.currentTP < cost) {
@@ -89,31 +174,47 @@ export function useCharacterState(
         ],
       }))
     },
-    [allAbilities, selectedClass, character.currentTP]
+    [allAbilities, selectedClass, selectedAdvancedClass, character.currentTP]
   )
 
-  const handleRemoveAbility = useCallback(
-    (id: string) => {
-      const abilityToRemove = character.abilities.find((a) => a.id === id)
-      if (!abilityToRemove) return
+  const handleRemoveAbility = useCallback((id: string) => {
+    // Removing an ability costs 1 TP (confirmation handled in AbilityDisplay)
+    setCharacter((prev) => ({
+      ...prev,
+      currentTP: prev.currentTP - 1,
+      abilities: prev.abilities.filter((a) => a.id !== id),
+    }))
+  }, [])
 
-      const abilityName = abilityToRemove.ability.name
-      const cost = getAbilityCost(abilityToRemove.ability, selectedClass)
+  const handleAddLegendaryAbility = useCallback(
+    (abilityId: string) => {
+      const ability = allAbilities.find((a) => a.id === abilityId)
+      if (!ability) return
 
-      if (
-        window.confirm(
-          `Are you sure you want to remove ${abilityName}? You will be refunded ${cost} TP.`
-        )
-      ) {
-        setCharacter((prev) => ({
-          ...prev,
-          currentTP: prev.currentTP + cost,
-          abilities: prev.abilities.filter((a) => a.id !== id),
-        }))
+      const cost = 3 // Legendary abilities always cost 3 TP
+
+      if (character.currentTP < cost) {
+        alert(`Not enough TP! You need ${cost} TP to select this legendary ability.`)
+        return
       }
+
+      setCharacter((prev) => ({
+        ...prev,
+        currentTP: prev.currentTP - cost,
+        legendaryAbilityId: abilityId,
+      }))
     },
-    [character.abilities, selectedClass]
+    [allAbilities, character.currentTP]
   )
+
+  const handleRemoveLegendaryAbility = useCallback(() => {
+    // Removing a legendary ability costs 1 TP (confirmation handled in AbilityDisplay)
+    setCharacter((prev) => ({
+      ...prev,
+      currentTP: prev.currentTP - 1,
+      legendaryAbilityId: null,
+    }))
+  }, [])
 
   const handleAddEquipment = useCallback(
     (equipmentId: string) => {
@@ -164,9 +265,12 @@ export function useCharacterState(
   return {
     character,
     selectedClass,
+    availableAdvancedClasses,
     handleClassChange,
     handleAddAbility,
     handleRemoveAbility,
+    handleAddLegendaryAbility,
+    handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
     updateCharacter,

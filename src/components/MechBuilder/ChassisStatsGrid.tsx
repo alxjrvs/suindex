@@ -1,4 +1,4 @@
-import StatDisplay from '../StatDisplay'
+import { StatDisplay } from '../StatDisplay'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisStatsGridProps {

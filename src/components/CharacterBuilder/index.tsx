@@ -32,13 +32,21 @@ export default function CharacterBuilder() {
   const {
     character,
     selectedClass,
+    availableAdvancedClasses,
     handleClassChange,
     handleAddAbility,
     handleRemoveAbility,
+    handleAddLegendaryAbility,
+    handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
     updateCharacter,
   } = useCharacterState(allClasses, allAbilities, allEquipment)
+
+  const selectedAdvancedClass = useMemo(
+    () => allClasses.find((c) => c.id === character.advancedClassId),
+    [allClasses, character.advancedClassId]
+  )
 
   if (loading) {
     return (
@@ -69,6 +77,7 @@ export default function CharacterBuilder() {
                   classId={character.classId}
                   advancedClassId={character.advancedClassId}
                   allClasses={allClasses}
+                  availableAdvancedClasses={availableAdvancedClasses}
                   disabled={false}
                   onCallsignChange={(value) => updateCharacter({ callsign: value })}
                   onMottoChange={(value) => updateCharacter({ motto: value })}
@@ -103,10 +112,17 @@ export default function CharacterBuilder() {
           {/* Abilities Section */}
           <AbilitiesList
             abilities={character.abilities}
+            legendaryAbility={
+              character.legendaryAbilityId
+                ? allAbilities.find((a) => a.id === character.legendaryAbilityId) || null
+                : null
+            }
             onRemove={handleRemoveAbility}
+            onRemoveLegendary={handleRemoveLegendaryAbility}
             onAddClick={() => setIsAbilitySelectorOpen(true)}
             currentTP={character.currentTP}
             disabled={!selectedClass}
+            coreTreeNames={selectedClass?.coreAbilities || []}
           />
 
           {/* Equipment Section */}
@@ -134,8 +150,11 @@ export default function CharacterBuilder() {
             onClose={() => setIsAbilitySelectorOpen(false)}
             abilities={allAbilities}
             onSelectAbility={handleAddAbility}
+            onSelectLegendaryAbility={handleAddLegendaryAbility}
             selectedAbilityIds={character.abilities.map((a) => a.ability.id)}
+            selectedLegendaryAbilityId={character.legendaryAbilityId}
             selectedClass={selectedClass}
+            selectedAdvancedClass={selectedAdvancedClass}
             currentTP={character.currentTP}
           />
 

@@ -3,6 +3,12 @@ import { DiceRollButton } from '../shared/DiceRollButton'
 import { rollTable } from '@randsum/salvageunion'
 import type { Class } from 'salvageunion-reference'
 
+interface AdvancedClassOption {
+  id: string
+  name: string
+  isAdvancedVersion: boolean
+}
+
 interface PilotInfoInputsProps {
   callsign: string
   motto: string
@@ -15,6 +21,7 @@ interface PilotInfoInputsProps {
   classId: string | null
   advancedClassId: string | null
   allClasses: Class[]
+  availableAdvancedClasses: AdvancedClassOption[]
   disabled?: boolean
   onCallsignChange: (value: string) => void
   onMottoChange: (value: string) => void
@@ -40,6 +47,7 @@ export function PilotInfoInputs({
   classId,
   advancedClassId,
   allClasses,
+  availableAdvancedClasses,
   disabled = false,
   onCallsignChange,
   onMottoChange,
@@ -156,10 +164,15 @@ export function PilotInfoInputs({
           <select
             value={advancedClassId || ''}
             onChange={(e) => onAdvancedClassChange(e.target.value)}
-            disabled={true}
+            disabled={disabled || availableAdvancedClasses.length === 0}
             className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="">Select an advanced class...</option>
+            {availableAdvancedClasses.map((option) => (
+              <option key={`${option.id}-${option.isAdvancedVersion}`} value={option.id}>
+                {option.name}
+              </option>
+            ))}
           </select>
         </div>
       </div>

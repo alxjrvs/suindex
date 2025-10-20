@@ -23,6 +23,7 @@ export interface CharacterState {
   appearance: string
   abilities: CharacterAbility[]
   equipment: CharacterEquipment[]
+  legendaryAbilityId: string | null
   maxHP: number
   currentHP: number
   maxAP: number

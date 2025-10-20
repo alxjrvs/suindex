@@ -1,7 +1,7 @@
 import type { System, Module } from 'salvageunion-reference'
 import { SystemDisplay } from '../SystemDisplay'
 import { ModuleDisplay } from '../ModuleDisplay'
-import StatDisplay from '../StatDisplay'
+import { StatDisplay } from '../StatDisplay'
 
 interface SelectedItem {
   id: string
