@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Frame } from './shared/Frame'
+import { ActionDisplay } from './shared/ActionDisplay'
 import type { Ability } from 'salvageunion-reference'
 import type { DataValue } from '../types/common'
 
@@ -54,6 +55,15 @@ function AbilityContent({ data }: { data: Ability }) {
           <p className="text-[var(--color-su-black)] leading-relaxed whitespace-pre-line">
             {data.effect}
           </p>
+        </div>
+      )}
+
+      {data.subAbilities && data.subAbilities.length > 0 && (
+        <div className="space-y-3">
+          <h4 className="font-bold text-[var(--color-su-black)] mb-2">Sub-Abilities:</h4>
+          {data.subAbilities.map((subAbility, index) => (
+            <ActionDisplay key={index} action={subAbility} activationCurrency="AP" />
+          ))}
         </div>
       )}
 
@@ -226,6 +236,15 @@ export function AbilityDisplay({
               <p className="text-[var(--color-su-black)] text-sm leading-relaxed whitespace-pre-line">
                 {data.effect}
               </p>
+            </div>
+          )}
+
+          {data.subAbilities && data.subAbilities.length > 0 && (
+            <div className="space-y-2 pt-2">
+              {data.subAbilities.map((subAbility, index) => (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                <ActionDisplay key={index} action={subAbility as any} activationCurrency="AP" />
+              ))}
             </div>
           )}
 

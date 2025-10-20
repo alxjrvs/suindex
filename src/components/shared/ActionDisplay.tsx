@@ -1,16 +1,7 @@
 import { DataList } from './DataList'
 import type { DataValue } from '../../types/common'
-import type { System, BioTitan, NPC, Meld, Squad, Equipment, Module } from 'salvageunion-reference'
 import type { ReactNode } from 'react'
-
-type Action =
-  | NonNullable<System['actions']>[number]
-  | NonNullable<Module['actions']>[number]
-  | NonNullable<Equipment['actions']>[number]
-  | BioTitan['abilities'][number]
-  | NPC['abilities'][number]
-  | NonNullable<Meld['abilities']>[number]
-  | NonNullable<Squad['abilities']>[number]
+import type { Action } from '../types'
 
 interface ActionDisplayProps {
   action: Action
