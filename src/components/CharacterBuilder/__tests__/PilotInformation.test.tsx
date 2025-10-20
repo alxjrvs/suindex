@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CharacterBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -140,24 +140,21 @@ describe('CharacterBuilder - Pilot Information', () => {
     it('shows "Used" checkbox for motto', () => {
       render(<CharacterBuilder />)
 
-      const mottoSection = screen.getByPlaceholderText(/enter motto/i).closest('div')
-      const usedCheckbox = mottoSection?.querySelector('input[type="checkbox"]')
+      const usedCheckbox = screen.getByRole('checkbox', { name: /mottoused/i })
       expect(usedCheckbox).toBeInTheDocument()
     })
 
     it('shows "Used" checkbox for keepsake', () => {
       render(<CharacterBuilder />)
 
-      const keepsakeSection = screen.getByPlaceholderText(/enter keepsake/i).closest('div')
-      const usedCheckbox = keepsakeSection?.querySelector('input[type="checkbox"]')
+      const usedCheckbox = screen.getByRole('checkbox', { name: /keepsakeused/i })
       expect(usedCheckbox).toBeInTheDocument()
     })
 
     it('shows "Used" checkbox for background', () => {
       render(<CharacterBuilder />)
 
-      const backgroundSection = screen.getByPlaceholderText(/enter background/i).closest('div')
-      const usedCheckbox = backgroundSection?.querySelector('input[type="checkbox"]')
+      const usedCheckbox = screen.getByRole('checkbox', { name: /backgroundused/i })
       expect(usedCheckbox).toBeInTheDocument()
     })
 
@@ -165,8 +162,9 @@ describe('CharacterBuilder - Pilot Information', () => {
       const user = userEvent.setup()
       render(<CharacterBuilder />)
 
-      const mottoSection = screen.getByPlaceholderText(/enter motto/i).closest('div')
-      const usedCheckbox = mottoSection?.querySelector('input[type="checkbox"]') as HTMLInputElement
+      const usedCheckbox = screen.getByRole('checkbox', {
+        name: /mottoused/i,
+      }) as HTMLInputElement
 
       expect(usedCheckbox.checked).toBe(false)
 
@@ -179,10 +177,9 @@ describe('CharacterBuilder - Pilot Information', () => {
       const user = userEvent.setup()
       render(<CharacterBuilder />)
 
-      const keepsakeSection = screen.getByPlaceholderText(/enter keepsake/i).closest('div')
-      const usedCheckbox = keepsakeSection?.querySelector(
-        'input[type="checkbox"]'
-      ) as HTMLInputElement
+      const usedCheckbox = screen.getByRole('checkbox', {
+        name: /keepsakeused/i,
+      }) as HTMLInputElement
 
       expect(usedCheckbox.checked).toBe(false)
 
@@ -195,10 +192,9 @@ describe('CharacterBuilder - Pilot Information', () => {
       const user = userEvent.setup()
       render(<CharacterBuilder />)
 
-      const backgroundSection = screen.getByPlaceholderText(/enter background/i).closest('div')
-      const usedCheckbox = backgroundSection?.querySelector(
-        'input[type="checkbox"]'
-      ) as HTMLInputElement
+      const usedCheckbox = screen.getByRole('checkbox', {
+        name: /backgroundused/i,
+      }) as HTMLInputElement
 
       expect(usedCheckbox.checked).toBe(false)
 
@@ -211,8 +207,9 @@ describe('CharacterBuilder - Pilot Information', () => {
       const user = userEvent.setup()
       render(<CharacterBuilder />)
 
-      const mottoSection = screen.getByPlaceholderText(/enter motto/i).closest('div')
-      const usedCheckbox = mottoSection?.querySelector('input[type="checkbox"]') as HTMLInputElement
+      const usedCheckbox = screen.getByRole('checkbox', {
+        name: /mottoused/i,
+      }) as HTMLInputElement
 
       // Check it
       await user.click(usedCheckbox)
@@ -261,7 +258,7 @@ describe('CharacterBuilder - Pilot Information', () => {
       const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
       await user.type(callsignInput, 'Ghost')
 
-      const classSelect = screen.getAllByRole("combobox")[0] // First combobox is Class
+      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
       expect(callsignInput).toHaveValue('Ghost')
@@ -274,7 +271,7 @@ describe('CharacterBuilder - Pilot Information', () => {
       const mottoInput = screen.getByPlaceholderText(/enter motto/i)
       await user.type(mottoInput, 'Never give up')
 
-      const classSelect = screen.getAllByRole("combobox")[0] // First combobox is Class
+      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
       expect(mottoInput).toHaveValue('Never give up')
@@ -287,7 +284,7 @@ describe('CharacterBuilder - Pilot Information', () => {
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
       await user.type(appearanceInput, 'Tall and strong')
 
-      const classSelect = screen.getAllByRole("combobox")[0] // First combobox is Class
+      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
       expect(appearanceInput).toHaveValue('Tall and strong')

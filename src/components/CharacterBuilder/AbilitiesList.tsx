@@ -81,84 +81,73 @@ export function AbilitiesList({
         </div>
       </div>
 
-      {coreTreeNamesDisplay.length === 0 &&
-      advancedTreeNamesDisplay.length === 0 &&
-      !legendaryAbility ? (
-        <p className="text-[#e8e5d8]">No abilities selected yet.</p>
-      ) : (
-        <>
-          {/* Core Abilities - Full Width */}
-          {coreTreeNamesDisplay.length > 0 && (
-            <div className="mb-4">
-              {coreTreeNamesDisplay.map((treeName) => (
-                <div key={treeName} className="mb-4">
-                  <h3 className="text-lg font-bold text-[#e8e5d8] uppercase mb-2 text-center">
-                    {treeName}
-                  </h3>
-                  <div className="space-y-2">
-                    {coreAbilitiesByTree[treeName].map((charAbility) => (
-                      <AbilityDisplay
-                        key={charAbility.id}
-                        data={charAbility.ability}
-                        compact
-                        showRemoveButton
-                        disableRemove={currentTP < 1}
-                        onRemove={() => onRemove(charAbility.id)}
-                        collapsible={true}
-                        defaultExpanded={false}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Advanced/Hybrid Abilities - Full Width */}
-          {advancedTreeNamesDisplay.length > 0 && (
-            <div className="mb-4">
-              {advancedTreeNamesDisplay.map((treeName) => (
-                <div key={treeName} className="mb-4">
-                  <h3 className="text-lg font-bold text-[#e8e5d8] uppercase mb-2 text-center">
-                    {treeName}
-                  </h3>
-                  <div className="space-y-2">
-                    {advancedAbilitiesByTree[treeName].map((charAbility) => (
-                      <AbilityDisplay
-                        key={charAbility.id}
-                        data={charAbility.ability}
-                        compact
-                        showRemoveButton
-                        disableRemove={currentTP < 1}
-                        onRemove={() => onRemove(charAbility.id)}
-                        collapsible={true}
-                        defaultExpanded={false}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Legendary Ability - Full Width */}
-          {legendaryAbility && (
-            <div>
-              <h3 className="text-lg font-bold text-[var(--color-su-white)] uppercase mb-2 text-center">
-                Legendary Ability
+      {coreTreeNamesDisplay.length > 0 && (
+        <div className="mb-4">
+          {coreTreeNamesDisplay.map((treeName) => (
+            <div key={treeName} className="mb-4">
+              <h3 className="text-lg font-bold text-[#e8e5d8] uppercase mb-2 text-center">
+                {treeName}
               </h3>
-              <AbilityDisplay
-                data={legendaryAbility}
-                compact
-                showRemoveButton
-                disableRemove={currentTP < 1}
-                onRemove={onRemoveLegendary}
-                collapsible={true}
-                defaultExpanded={false}
-              />
+              <div className="space-y-2">
+                {coreAbilitiesByTree[treeName].map((charAbility) => (
+                  <AbilityDisplay
+                    key={charAbility.id}
+                    data={charAbility.ability}
+                    compact
+                    showRemoveButton
+                    disableRemove={currentTP < 1}
+                    onRemove={() => onRemove(charAbility.id)}
+                    collapsible={true}
+                    defaultExpanded={false}
+                  />
+                ))}
+              </div>
             </div>
-          )}
-        </>
+          ))}
+        </div>
+      )}
+
+      {advancedTreeNamesDisplay.length > 0 && (
+        <div className="mb-4">
+          {advancedTreeNamesDisplay.map((treeName) => (
+            <div key={treeName} className="mb-4">
+              <h3 className="text-lg font-bold text-[#e8e5d8] uppercase mb-2 text-center">
+                {treeName}
+              </h3>
+              <div className="space-y-2">
+                {advancedAbilitiesByTree[treeName].map((charAbility) => (
+                  <AbilityDisplay
+                    key={charAbility.id}
+                    data={charAbility.ability}
+                    compact
+                    showRemoveButton
+                    disableRemove={currentTP < 1}
+                    onRemove={() => onRemove(charAbility.id)}
+                    collapsible={true}
+                    defaultExpanded={false}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {legendaryAbility && (
+        <div>
+          <h3 className="text-lg font-bold text-[var(--color-su-white)] uppercase mb-2 text-center">
+            Legendary Ability
+          </h3>
+          <AbilityDisplay
+            data={legendaryAbility}
+            compact
+            showRemoveButton
+            disableRemove={currentTP < 1}
+            onRemove={onRemoveLegendary}
+            collapsible={true}
+            defaultExpanded={false}
+          />
+        </div>
       )}
     </div>
   )

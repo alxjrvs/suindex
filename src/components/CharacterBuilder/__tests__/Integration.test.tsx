@@ -336,7 +336,8 @@ describe('CharacterBuilder - Integration Tests', () => {
         expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
 
         // TP (20 - 6 core - 2 hybrid = 12)
-        expect(screen.getByText('TP')).toBeInTheDocument()
+        const tpLabels = screen.getAllByText('TP')
+        expect(tpLabels.length).toBeGreaterThan(0)
         expect(screen.getByText('12')).toBeInTheDocument()
 
         // Notes
@@ -375,7 +376,8 @@ describe('CharacterBuilder - Integration Tests', () => {
 
       // TP should now be 0
       await waitFor(() => {
-        expect(screen.getByText('TP')).toBeInTheDocument()
+        const tpLabels = screen.getAllByText('TP')
+        expect(tpLabels.length).toBeGreaterThan(0)
         expect(screen.getByText('0')).toBeInTheDocument()
       })
 

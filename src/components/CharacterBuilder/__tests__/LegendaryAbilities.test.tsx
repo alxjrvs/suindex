@@ -179,12 +179,18 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       const user = userEvent.setup()
       render(<CharacterBuilder />)
 
-      const classSelect = screen.getAllByRole("combobox")[0] // First combobox is Class
+      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
-      const tpStepper = screen.getByLabelText(/TP/i)
-      await user.clear(tpStepper)
-      await user.type(tpStepper, '20')
+      // Set TP to 20 by clicking increment button
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 20; i++) {
+        await user.click(tpIncrementButton)
+      }
 
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
@@ -230,12 +236,18 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       const user = userEvent.setup()
       render(<CharacterBuilder />)
 
-      const classSelect = screen.getAllByRole("combobox")[0] // First combobox is Class
+      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
-      const tpStepper = screen.getByLabelText(/TP/i)
-      await user.clear(tpStepper)
-      await user.type(tpStepper, '30')
+      // Set TP to 30 by clicking increment button
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 30; i++) {
+        await user.click(tpIncrementButton)
+      }
 
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
@@ -278,12 +290,16 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       const user = userEvent.setup()
       render(<CharacterBuilder />)
 
-      const classSelect = screen.getAllByRole("combobox")[0] // First combobox is Class
+      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
-      const tpStepper = screen.getByLabelText(/TP/i)
-      await user.clear(tpStepper)
-      await user.type(tpStepper, '30')
+      // Set TP to 30 by clicking increment button
+      const incrementButtons = screen.getAllByLabelText('Increment')
+      const tpIncrementButton = incrementButtons[2] // Third stepper is TP (HP, AP, TP)
+
+      for (let i = 0; i < 30; i++) {
+        await user.click(tpIncrementButton)
+      }
 
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
@@ -338,12 +354,18 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       const user = userEvent.setup()
       render(<CharacterBuilder />)
 
-      const classSelect = screen.getAllByRole("combobox")[0] // First combobox is Class
+      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
-      const tpStepper = screen.getByLabelText(/TP/i)
-      await user.clear(tpStepper)
-      await user.type(tpStepper, '30')
+      // Set TP to 30 by clicking increment button
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 30; i++) {
+        await user.click(tpIncrementButton)
+      }
 
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })

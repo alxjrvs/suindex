@@ -115,6 +115,7 @@ export function PilotInfoInputs({
               onChange={(e) => onMottoUsedChange(e.target.checked)}
               disabled={disabled}
               className="w-4 h-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="MottoUsed"
             />
           </label>
         </label>
@@ -189,6 +190,7 @@ export function PilotInfoInputs({
               onChange={(e) => onKeepsakeUsedChange(e.target.checked)}
               disabled={disabled}
               className="w-4 h-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="KeepsakeUsed"
             />
           </label>
         </label>
@@ -243,6 +245,7 @@ export function PilotInfoInputs({
               onChange={(e) => onBackgroundUsedChange(e.target.checked)}
               disabled={disabled}
               className="w-4 h-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="BackgroundUsed"
             />
           </label>
         </label>

@@ -204,15 +204,16 @@ describe('CharacterBuilder', () => {
       render(<CharacterBuilder />)
 
       // HP, AP, and TP stepper buttons should be disabled
-      const incrementButtons = screen.getAllByLabelText('Increment')
-      const decrementButtons = screen.getAllByLabelText('Decrement')
+      const hpStepper = screen.getByRole('group', { name: /HP/i })
+      const apStepper = screen.getByRole('group', { name: /^AP$/i })
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
 
-      incrementButtons.forEach((button) => {
-        expect(button).toBeDisabled()
-      })
-      decrementButtons.forEach((button) => {
-        expect(button).toBeDisabled()
-      })
+      expect(hpStepper.querySelector('button[aria-label="Increment HP"]')).toBeDisabled()
+      expect(hpStepper.querySelector('button[aria-label="Decrement HP"]')).toBeDisabled()
+      expect(apStepper.querySelector('button[aria-label="Increment AP"]')).toBeDisabled()
+      expect(apStepper.querySelector('button[aria-label="Decrement AP"]')).toBeDisabled()
+      expect(tpStepper.querySelector('button[aria-label="Increment TP"]')).toBeDisabled()
+      expect(tpStepper.querySelector('button[aria-label="Decrement TP"]')).toBeDisabled()
     })
 
     it('shows notes section', () => {
@@ -232,14 +233,14 @@ describe('CharacterBuilder', () => {
       await user.selectOptions(classSelect, 'class-hacker')
 
       await waitFor(() => {
-        const incrementButtons = screen.getAllByLabelText('Increment')
-        const decrementButtons = screen.getAllByLabelText('Decrement')
+        // HP and AP start at max, so decrement buttons should be enabled
+        const hpStepper = screen.getByRole('group', { name: /HP/i })
+        const apStepper = screen.getByRole('group', { name: /^AP$/i })
+        const tpStepper = screen.getByRole('group', { name: /TP/i })
 
-        // At least some buttons should be enabled (HP increment should be enabled)
-        const enabledButtons = [...incrementButtons, ...decrementButtons].filter(
-          (button) => !button.hasAttribute('disabled')
-        )
-        expect(enabledButtons.length).toBeGreaterThan(0)
+        expect(hpStepper.querySelector('button[aria-label="Decrement HP"]')).not.toBeDisabled()
+        expect(apStepper.querySelector('button[aria-label="Decrement AP"]')).not.toBeDisabled()
+        expect(tpStepper.querySelector('button[aria-label="Increment TP"]')).not.toBeDisabled()
       })
     })
 

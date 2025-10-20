@@ -8,7 +8,7 @@ export function Notes({ notes, onChange, disabled = false }: NotesProps) {
   return (
     <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
       <h2 className="text-xl font-bold text-[#e8e5d8] uppercase mb-4">Notes</h2>
-      
+
       <textarea
         value={notes}
         onChange={(e) => onChange(e.target.value)}
@@ -19,4 +19,3 @@ export function Notes({ notes, onChange, disabled = false }: NotesProps) {
     </div>
   )
 }
-
