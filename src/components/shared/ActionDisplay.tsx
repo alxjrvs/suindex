@@ -1,5 +1,5 @@
 import { DataList } from './DataList'
-import type { DataValue } from '../../../types/common'
+import type { DataValue } from '../../types/common'
 import type { System, BioTitan, NPC, Meld, Squad, Equipment, Module } from 'salvageunion-reference'
 import type { ReactNode } from 'react'
 

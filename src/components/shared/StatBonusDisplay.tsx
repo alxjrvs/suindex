@@ -1,4 +1,4 @@
-import { formatStatName } from '../../../utils/displayUtils'
+import { formatStatName } from '../../utils/displayUtils'
 
 interface StatBonusDisplayProps {
   bonus: number

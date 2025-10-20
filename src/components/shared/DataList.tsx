@@ -1,4 +1,4 @@
-import type { DataValue } from '../../../types/common'
+import type { DataValue } from '../../types/common'
 
 interface DataListProps {
   values: DataValue[]

@@ -3,7 +3,7 @@ import { RollTableDisplay } from './shared/RollTableDisplay'
 import { ActionDisplay } from './shared/ActionDisplay'
 import { StatBonusDisplay } from './shared/StatBonusDisplay'
 import type { System } from 'salvageunion-reference'
-import { generateDetails } from '../../utils/displayUtils'
+import { generateDetails } from '../utils/displayUtils'
 
 interface SystemDisplayProps {
   data: System

@@ -3,7 +3,7 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability } from 'salvageunion-reference'
 import { Frame } from './shared/Frame'
 import { DataList } from './shared/DataList'
-import type { DataValue } from '../../types/common'
+import type { DataValue } from '../types/common'
 
 interface ClassDisplayProps {
   data: Class

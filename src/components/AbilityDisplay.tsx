@@ -1,6 +1,6 @@
 import { Frame } from './shared/Frame'
 import type { Ability } from 'salvageunion-reference'
-import type { DataValue } from '../../types/common'
+import type { DataValue } from '../types/common'
 
 interface AbilityDisplayProps {
   data: Ability

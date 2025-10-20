@@ -1,7 +1,7 @@
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import type { Drone } from 'salvageunion-reference'
-import { formatTraits as formatTraitsArray } from '../../utils/displayUtils'
+import { formatTraits as formatTraitsArray } from '../utils/displayUtils'
 
 interface DroneDisplayProps {
   data: Drone

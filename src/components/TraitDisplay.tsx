@@ -1,18 +1,18 @@
 import { Frame } from './shared/Frame'
-import { capitalizeFirstLetter } from '../../utils/displayUtils'
+import { capitalizeFirstLetter } from '../utils/displayUtils'
 
-interface KeywordData {
+interface TraitData {
   name: string
   source: string
   description: string
   page: number
 }
 
-interface KeywordDisplayProps {
-  data: KeywordData
+interface TraitDisplayProps {
+  data: TraitData
 }
 
-export function KeywordDisplay({ data }: KeywordDisplayProps) {
+export function TraitDisplay({ data }: TraitDisplayProps) {
   return (
     <Frame
       header={capitalizeFirstLetter(data.name)}

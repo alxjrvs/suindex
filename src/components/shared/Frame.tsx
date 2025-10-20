@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { DataList } from './DataList'
-import type { DataValue } from '../../../types/common'
+import type { DataValue } from '../../types/common'
 
 interface FrameProps {
   header: string

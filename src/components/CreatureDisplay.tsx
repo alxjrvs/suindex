@@ -1,7 +1,7 @@
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import type { Creature } from 'salvageunion-reference'
-import { formatTraits as formatTraitsArray } from '../../utils/displayUtils'
+import { formatTraits as formatTraitsArray } from '../utils/displayUtils'
 
 interface CreatureDisplayProps {
   data: Creature

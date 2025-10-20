@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react'
 import type { System, Module } from 'salvageunion-reference'
 import Modal from '../Modal'
-import { SystemDisplay } from '../specialized/SystemDisplay'
-import { ModuleDisplay } from '../specialized/ModuleDisplay'
+import { SystemDisplay } from '../SystemDisplay'
+import { ModuleDisplay } from '../ModuleDisplay'
 
 interface SystemModuleSelectorProps {
   isOpen: boolean

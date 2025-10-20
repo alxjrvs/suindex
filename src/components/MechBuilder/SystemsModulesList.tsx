@@ -1,6 +1,6 @@
 import type { System, Module } from 'salvageunion-reference'
-import { SystemDisplay } from '../specialized/SystemDisplay'
-import { ModuleDisplay } from '../specialized/ModuleDisplay'
+import { SystemDisplay } from '../SystemDisplay'
+import { ModuleDisplay } from '../ModuleDisplay'
 import StatDisplay from '../StatDisplay'
 
 interface SelectedItem {
