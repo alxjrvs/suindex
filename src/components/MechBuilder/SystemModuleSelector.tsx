@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react'
 import type { System, Module } from 'salvageunion-reference'
-import Modal from './Modal'
-import { SystemDisplay } from './specialized/SystemDisplay'
-import { ModuleDisplay } from './specialized/ModuleDisplay'
+import Modal from '../Modal'
+import { SystemDisplay } from '../specialized/SystemDisplay'
+import { ModuleDisplay } from '../specialized/ModuleDisplay'
 
 interface SystemModuleSelectorProps {
   isOpen: boolean
@@ -17,7 +17,7 @@ interface SystemModuleSelectorProps {
   availableModuleSlots: number
 }
 
-export default function SystemModuleSelector({
+export function SystemModuleSelector({
   isOpen,
   onClose,
   systems,
@@ -81,7 +81,18 @@ export default function SystemModuleSelector({
 
         return matchesSearch && matchesTechLevel
       })
-      .sort((a, b) => a.data.name.localeCompare(b.data.name))
+      .sort((a, b) => {
+        // Sort by affordability first (affordable items first)
+        if (a.canAfford !== b.canAfford) {
+          return a.canAfford ? -1 : 1
+        }
+        // Then sort by tech level
+        if (a.data.techLevel !== b.data.techLevel) {
+          return a.data.techLevel - b.data.techLevel
+        }
+        // Finally sort alphabetically by name
+        return a.data.name.localeCompare(b.data.name)
+      })
   }, [
     availableSystems,
     availableModules,
