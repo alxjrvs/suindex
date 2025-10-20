@@ -1,20 +1,8 @@
 import { Frame } from './shared/Frame'
-
-interface CrawlerAbility {
-  name: string
-  description: string
-}
-
-interface CrawlerData {
-  name: string
-  source: string
-  description: string
-  abilities: CrawlerAbility[]
-  page: number
-}
+import type { Crawler } from 'salvageunion-reference'
 
 interface CrawlerDisplayProps {
-  data: CrawlerData
+  data: Crawler
 }
 
 export function CrawlerDisplay({ data }: CrawlerDisplayProps) {

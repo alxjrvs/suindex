@@ -2,13 +2,11 @@ import { Frame } from './shared/Frame'
 import { RollTableDisplay } from './shared/RollTableDisplay'
 import { ActionDisplay } from './shared/ActionDisplay'
 import { StatBonusDisplay } from './shared/StatBonusDisplay'
-import type { SlottedItem } from '../../types/common'
+import type { Module } from 'salvageunion-reference'
 import { generateDetails } from '../../utils/displayUtils'
 
-type ModuleData = SlottedItem
-
 interface ModuleDisplayProps {
-  data: ModuleData
+  data: Module
 }
 
 export function ModuleDisplay({ data }: ModuleDisplayProps) {

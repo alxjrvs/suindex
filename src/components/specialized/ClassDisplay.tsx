@@ -1,41 +1,16 @@
 import { useEffect, useState } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
+import type { Class, Ability } from 'salvageunion-reference'
 import { Frame } from './shared/Frame'
 import { DataList } from './shared/DataList'
 import type { DataValue } from '../../types/common'
 
-interface AbilityData {
-  name: string
-  source: string
-  tree: string
-  level: number | string
-  description?: string
-  effect?: string
-  activationCost?: number | string
-  range?: string
-  actionType?: string
-  page: number
-}
-
-interface ClassData {
-  name: string
-  source: string
-  type: 'core' | 'hybrid'
-  description: string
-  coreAbilities: string[]
-  hybridClasses?: string[]
-  coreClasses?: string[]
-  advancedAbilities?: string
-  legendaryAbilities: string[]
-  page: number
-}
-
 interface ClassDisplayProps {
-  data: ClassData
+  data: Class
 }
 
 interface HydratedAbilities {
-  [key: string]: AbilityData[]
+  [key: string]: Ability[]
 }
 
 function AbilitySection({
@@ -76,7 +51,7 @@ function AbilityList({
   headerColor,
 }: {
   treeKey: string
-  abilities: AbilityData[]
+  abilities: Ability[]
   headerColor: string
 }) {
   if (abilities.length === 0) return null
@@ -98,7 +73,7 @@ function AbilityList({
   )
 }
 
-function AbilityItem({ ability }: { ability: AbilityData }) {
+function AbilityItem({ ability }: { ability: Ability }) {
   const details: DataValue[] = []
 
   if (ability.activationCost) {
@@ -143,13 +118,12 @@ function AbilityItem({ ability }: { ability: AbilityData }) {
 }
 
 export function ClassDisplay({ data }: ClassDisplayProps) {
-  const [abilities, setAbilities] = useState<AbilityData[]>([])
+  const [abilities, setAbilities] = useState<Ability[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     try {
-      const abilityData = SalvageUnionReference.Abilities.all()
-      setAbilities(abilityData as AbilityData[])
+      setAbilities(SalvageUnionReference.Abilities.all())
       setLoading(false)
     } catch (err) {
       console.error('Failed to load abilities:', err)
@@ -183,7 +157,7 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
   if (data.legendaryAbilities && data.legendaryAbilities.length > 0) {
     legendaryAbilities['Legendary Abilities'] = data.legendaryAbilities
       .map((name) => abilities.find((a) => a.name === name))
-      .filter((a): a is AbilityData => a !== undefined)
+      .filter((a): a is Ability => a !== undefined)
   }
 
   return (

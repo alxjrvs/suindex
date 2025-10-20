@@ -1,10 +1,11 @@
-import type { TraitReference, DataValue } from '../types/common'
+import type { Traits } from 'salvageunion-reference'
+import type { DataValue } from '../types/common'
 
-export function formatTraits(traits?: TraitReference[]): string[] {
+export function formatTraits(traits?: NonNullable<Traits>): string[] {
   if (!traits) return []
   return traits.map((t) => {
     const type = t.type.charAt(0).toUpperCase() + t.type.slice(1)
-    const amount = t.amount !== undefined ? `(${t.amount})` : ''
+    const amount = 'amount' in t && t.amount !== undefined ? `(${t.amount})` : ''
     return `${type}${amount}`
   })
 }
@@ -15,7 +16,7 @@ export function generateDetails(
     actionType?: string
     range?: string
     damage?: { type: string; amount: number | string }
-    traits?: TraitReference[]
+    traits?: NonNullable<Traits>
     recommended?: boolean
   },
   currency: string = 'AP'

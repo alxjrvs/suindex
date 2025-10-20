@@ -1,24 +1,12 @@
 import { Frame } from './shared/Frame'
 import { ActionDisplay } from './shared/ActionDisplay'
-import type { TraitReference, Action } from '../../types/common'
-
-interface EquipmentData {
-  name: string
-  source: string
-  techLevel?: 1 | 2 | 3 | 4 | 5 | 6
-  traits?: TraitReference[]
-  range?: string
-  description: string
-  notes?: string
-  page: number
-  actions?: Action[]
-}
+import type { Equipment } from 'salvageunion-reference'
 
 interface EquipmentDisplayProps {
-  data: EquipmentData
+  data: Equipment
 }
 
-function formatTraits(traits?: TraitReference[]): string[] {
+function formatTraits(traits?: Equipment['traits']): string[] {
   if (!traits) return []
   return traits.map((t) => {
     const type = t.type.charAt(0).toUpperCase() + t.type.slice(1)

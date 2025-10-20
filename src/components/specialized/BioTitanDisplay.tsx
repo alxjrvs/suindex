@@ -3,17 +3,10 @@ import { StatList } from './shared/StatList'
 import { AbilityCard } from './shared/AbilityCard'
 import { DescriptionBox } from './shared/DescriptionBox'
 import { PageReferenceDisplay } from './shared/PageReferenceDisplay'
-import type { AbilityItem } from '../../types/common'
+import type { BioTitan } from 'salvageunion-reference'
 
 interface BioTitanDisplayProps {
-  data: {
-    name: string
-    source: string
-    description?: string
-    structurePoints: number
-    abilities?: AbilityItem[]
-    page: number
-  }
+  data: BioTitan
 }
 
 export function BioTitanDisplay({ data }: BioTitanDisplayProps) {

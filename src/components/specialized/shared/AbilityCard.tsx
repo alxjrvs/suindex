@@ -1,16 +1,10 @@
 import { ActionDisplay } from './ActionDisplay'
+import type { BioTitan, NPC } from 'salvageunion-reference'
+
+type AbilityType = BioTitan['abilities'][number] | NPC['abilities'][number]
 
 interface AbilityCardProps {
-  ability: {
-    name: string
-    description?: string
-    effect?: string
-    range?: string
-    damage?: { type: string; amount: number } | string
-    actionType?: string
-    traits?: Array<{ type: string; amount?: number }>
-    options?: Array<{ label: string; value: string }>
-  }
+  ability: AbilityType
   headerColor?: string
 }
 

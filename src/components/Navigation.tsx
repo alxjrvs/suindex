@@ -55,6 +55,12 @@ export default function Navigation({ schemas }: NavigationProps) {
           <h1 className="text-xl font-bold text-[var(--color-su-black)]">Salvage Union</h1>
           <p className="text-sm text-[var(--color-su-brick)]">Data Viewer</p>
         </button>
+        <button
+          onClick={() => handleNavigate('/mech-builder')}
+          className="w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer text-[var(--color-su-black)] font-semibold"
+        >
+          🤖 Mech Builder
+        </button>
         <ul className="py-2">
           {schemas.map((schema) => (
             <li key={schema.id}>

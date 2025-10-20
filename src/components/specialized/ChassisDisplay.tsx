@@ -1,48 +1,9 @@
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
-
-interface ChassisStats {
-  structure_pts: number
-  energy_pts: number
-  heat_cap: number
-  system_slots: number
-  module_slots: number
-  cargo_cap: number
-  tech_level: 1 | 2 | 3 | 4 | 5 | 6
-  salvage_value: number
-  notes?: string
-}
-
-interface ChassisAbility {
-  name?: string
-  description?: string
-  activationCost?: number | string
-  range?: string
-  actionType?: string
-  options?: Array<{ label: string; value: string }>
-  stats?: ChassisStats
-}
-
-interface ChassisPattern {
-  name: string
-  description: string
-  legalStarting?: boolean
-  systems?: string[]
-  modules?: string[]
-}
-
-interface ChassisData {
-  name: string
-  source: string
-  page: number
-  stats: ChassisStats
-  chassis_abilities?: ChassisAbility[]
-  description?: string
-  patterns?: ChassisPattern[]
-}
+import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisDisplayProps {
-  data: ChassisData
+  data: Chassis
 }
 
 export function ChassisDisplay({ data }: ChassisDisplayProps) {

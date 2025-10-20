@@ -1,33 +1,13 @@
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
-import type { TraitReference, DamageData } from '../../types/common'
+import type { Vehicle } from 'salvageunion-reference'
 import { formatTraits as formatTraitsArray } from '../../utils/displayUtils'
 
-interface SystemData {
-  name: string
-  count?: number
-  range?: string
-  damage?: DamageData
-  traits?: TraitReference[]
-}
-
-interface VehicleData {
-  name: string
-  source: string
-  description: string
-  systems: SystemData[]
-  techLevel?: 1 | 2 | 3 | 4 | 5 | 6
-  salvageValue?: number
-  structurePoints?: number
-  traits?: TraitReference[]
-  page: number
-}
-
 interface VehicleDisplayProps {
-  data: VehicleData
+  data: Vehicle
 }
 
-function formatTraits(traits?: TraitReference[]): string {
+function formatTraits(traits?: Vehicle['traits']): string {
   if (!traits || traits.length === 0) return ''
   return formatTraitsArray(traits).join(', ')
 }
@@ -36,7 +16,7 @@ export function VehicleDisplay({ data }: VehicleDisplayProps) {
   return (
     <Frame
       header={data.name}
-      techLevel={data.techLevel}
+      techLevel={data.techLevel as 1 | 2 | 3 | 4 | 5 | 6}
       description={data.description}
       headerContent={
         data.structurePoints !== undefined ? (
@@ -70,22 +50,22 @@ export function VehicleDisplay({ data }: VehicleDisplayProps) {
             >
               <div className="font-bold text-[var(--color-su-black)]">
                 {system.name}
-                {system.count && system.count > 1 && ` (×${system.count})`}
+                {'count' in system && system.count && system.count > 1 && ` (×${system.count})`}
               </div>
-              {system.range && (
+              {'range' in system && system.range && (
                 <div className="text-[var(--color-su-black)]">
                   <span className="font-bold text-[var(--color-su-brick)]">Range: </span>
                   {system.range}
                 </div>
               )}
-              {system.damage && (
+              {'damage' in system && system.damage && (
                 <div className="text-[var(--color-su-black)]">
                   <span className="font-bold text-[var(--color-su-brick)]">Damage: </span>
                   {system.damage.amount}
                   {system.damage.type}
                 </div>
               )}
-              {system.traits && system.traits.length > 0 && (
+              {'traits' in system && system.traits && system.traits.length > 0 && (
                 <div className="text-[var(--color-su-black)]">
                   <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
                   {formatTraits(system.traits)}

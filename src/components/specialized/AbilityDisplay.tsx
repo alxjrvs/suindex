@@ -1,25 +1,12 @@
 import { Frame } from './shared/Frame'
+import type { Ability } from 'salvageunion-reference'
 import type { DataValue } from '../../types/common'
 
-interface AbilityData {
-  name: string
-  source: string
-  tree: string
-  level: number | string
-  description?: string
-  effect?: string
-  activationCost?: number | string
-  range?: string
-  actionType?: string
-  page: number
-  notes?: string
-}
-
 interface AbilityDisplayProps {
-  data: AbilityData
+  data: Ability
 }
 
-function generateAbilityDetails(ability: AbilityData): DataValue[] {
+function generateAbilityDetails(ability: Ability): DataValue[] {
   const details: DataValue[] = []
 
   if (ability.activationCost) {

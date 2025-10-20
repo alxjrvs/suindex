@@ -1,33 +1,13 @@
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
-import type { TraitReference, DamageData } from '../../types/common'
+import type { Drone } from 'salvageunion-reference'
 import { formatTraits as formatTraitsArray } from '../../utils/displayUtils'
 
-interface SystemData {
-  name: string
-  count?: number
-  range?: string
-  damage?: DamageData
-  traits?: TraitReference[]
-}
-
-interface DroneData {
-  name: string
-  source: string
-  description: string
-  systems: SystemData[]
-  techLevel?: 1 | 2 | 3 | 4 | 5 | 6
-  salvageValue?: number
-  structurePoints?: number
-  traits?: TraitReference[]
-  page: number
-}
-
 interface DroneDisplayProps {
-  data: DroneData
+  data: Drone
 }
 
-function formatTraits(traits?: TraitReference[]): string {
+function formatTraits(traits?: Drone['traits']): string {
   if (!traits || traits.length === 0) return ''
   return formatTraitsArray(traits).join(', ')
 }

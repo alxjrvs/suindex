@@ -3,6 +3,7 @@ import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import SchemaViewer from './components/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
+import MechBuilder from './components/MechBuilder'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 
@@ -46,6 +47,7 @@ function AppContent() {
             path="/"
             element={<Navigate to={`/schema/${schemaIndex.schemas[0]?.id || ''}`} replace />}
           />
+          <Route path="/mech-builder" element={<MechBuilder />} />
           <Route
             path="/schema/:schemaId"
             element={<SchemaViewer schemas={schemaIndex.schemas} />}

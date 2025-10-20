@@ -1,31 +1,13 @@
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
-import type { TraitReference, DamageData } from '../../types/common'
+import type { Creature } from 'salvageunion-reference'
 import { formatTraits as formatTraitsArray } from '../../utils/displayUtils'
 
-interface CreatureAbility {
-  name: string
-  range?: string
-  damage?: DamageData
-  traits?: TraitReference[]
-  description?: string
-}
-
-interface CreatureData {
-  name: string
-  source: string
-  description: string
-  hitPoints: number
-  traits?: TraitReference[]
-  abilities: CreatureAbility[]
-  page: number
-}
-
 interface CreatureDisplayProps {
-  data: CreatureData
+  data: Creature
 }
 
-function formatTraits(traits?: TraitReference[]): string {
+function formatTraits(traits?: Creature['traits']): string {
   if (!traits || traits.length === 0) return ''
   return formatTraitsArray(traits).join(', ')
 }
