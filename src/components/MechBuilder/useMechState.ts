@@ -6,23 +6,23 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
   const isResettingRef = useRef(false)
 
   const [mech, setMech] = useState<MechState>({
-    chassisId: null,
-    pattern: '',
-    quirk: '',
-    appearance: '',
-    chassisAbility: '',
+    chassis_id: null,
+    pattern: null,
+    quirk: null,
+    appearance: null,
+    chassis_ability: null,
     systems: [],
     modules: [],
     cargo: [],
-    currentSP: 0,
-    currentEP: 0,
-    currentHeat: 0,
-    notes: '',
+    current_damage: 0,
+    current_ep: 0,
+    current_heat: 0,
+    notes: null,
   })
 
   const selectedChassis = useMemo(
-    () => allChassis.find((c) => c.id === mech.chassisId),
-    [mech.chassisId, allChassis]
+    () => allChassis.find((c) => c.id === mech.chassis_id),
+    [mech.chassis_id, allChassis]
   )
 
   const usedSystemSlots = useMemo(
@@ -44,8 +44,8 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     if (selectedChassis?.stats) {
       setMech((prev) => ({
         ...prev,
-        currentSP: selectedChassis.stats.structure_pts,
-        currentEP: selectedChassis.stats.energy_pts,
+        current_damage: 0,
+        current_ep: selectedChassis.stats.energy_pts,
       }))
     }
   }, [selectedChassis])
@@ -54,37 +54,37 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     (chassisId: string) => {
       setMech((prev) => {
         // If there's already a chassis selected and user is changing it, reset data
-        if (prev.chassisId && prev.chassisId !== chassisId) {
+        if (prev.chassis_id && prev.chassis_id !== chassisId) {
           // Mark that we're resetting to prevent useEffect from triggering additional updates
           isResettingRef.current = true
 
           // Find the new chassis to get its stats
           const newChassis = allChassis.find((c) => c.id === chassisId)
 
-          // Reset to initial state but keep the new chassisId and set initial stats
+          // Reset to initial state but keep the new chassis_id and set initial stats
           return {
-            chassisId,
-            pattern: '',
-            quirk: '',
-            appearance: '',
-            chassisAbility: '',
+            chassis_id: chassisId,
+            pattern: null,
+            quirk: null,
+            appearance: null,
+            chassis_ability: null,
             systems: [],
             modules: [],
             cargo: [],
-            currentSP: newChassis?.stats.structure_pts || 0,
-            currentEP: newChassis?.stats.energy_pts || 0,
-            currentHeat: 0,
-            notes: '',
+            current_damage: 0,
+            current_ep: newChassis?.stats.energy_pts || 0,
+            current_heat: 0,
+            notes: null,
           }
         }
         // First time selection or same selection
         return {
           ...prev,
-          chassisId,
-          pattern: '',
+          chassis_id: chassisId,
+          pattern: null,
           systems: [],
           modules: [],
-          chassisAbility: '',
+          chassis_ability: null,
         }
       })
     },

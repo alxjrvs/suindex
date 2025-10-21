@@ -120,7 +120,7 @@ The database schema was designed to match the existing builder state objects:
 
 ### Crawler State → Database
 
-- Maps `CrawlerState` from `src/components/CrawlerBuilder/types.ts`
+- Maps `LocalCrawlerState` from `src/components/CrawlerBuilder/types.ts`
 - JSONB fields: `bays`, `cargo`
 - All fields preserved for future Supabase integration
 

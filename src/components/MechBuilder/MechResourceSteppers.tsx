@@ -3,30 +3,34 @@ import type { Chassis } from 'salvageunion-reference'
 
 interface MechResourceSteppersProps {
   stats: Chassis['stats'] | undefined
-  currentSP: number
+  currentDamage: number
   currentEP: number
   currentHeat: number
-  onSPChange: (value: number) => void
+  onDamageChange: (value: number) => void
   onEPChange: (value: number) => void
   onHeatChange: (value: number) => void
 }
 
 export function MechResourceSteppers({
   stats,
-  currentSP,
+  currentDamage,
   currentEP,
   currentHeat,
-  onSPChange,
+  onDamageChange,
   onEPChange,
   onHeatChange,
 }: MechResourceSteppersProps) {
+  const maxSP = stats?.structure_pts || 0
+  const currentSP = maxSP - currentDamage
+
   return (
     <div className="flex flex-col items-center space-y-2">
       <NumericStepper
         label="SP"
         value={currentSP}
-        onChange={onSPChange}
-        max={stats?.structure_pts || 0}
+        onChange={(newSP) => onDamageChange(maxSP - newSP)}
+        max={maxSP}
+        min={0}
       />
       <NumericStepper
         label="EP"

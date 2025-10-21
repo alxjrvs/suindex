@@ -2,36 +2,44 @@ import NumericStepper from '../NumericStepper'
 import { StatDisplay } from '../StatDisplay'
 
 interface CrawlerResourceSteppersProps {
-  currentSP: number
+  currentDamage: number
   maxSP: number
   techLevel: number
   upkeep: string
   upgrade: number
   maxUpgrade: number
   currentScrap: number
-  onSPChange: (value: number) => void
+  onDamageChange: (value: number) => void
   onTechLevelChange: (value: number) => void
   onUpgradeChange: (value: number) => void
   onCurrentScrapChange: (value: number) => void
 }
 
 export function CrawlerResourceSteppers({
-  currentSP,
+  currentDamage,
   maxSP,
   techLevel,
   upkeep,
   upgrade,
   maxUpgrade,
   currentScrap,
-  onSPChange,
+  onDamageChange,
   onTechLevelChange,
   onUpgradeChange,
   onCurrentScrapChange,
 }: CrawlerResourceSteppersProps) {
+  const currentSP = maxSP - currentDamage
+
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
       <div className="flex justify-start items-end">
-        <NumericStepper label="SP" value={currentSP} onChange={onSPChange} max={maxSP} />
+        <NumericStepper
+          label="SP"
+          value={currentSP}
+          onChange={(newSP) => onDamageChange(maxSP - newSP)}
+          max={maxSP}
+          min={0}
+        />
       </div>
       <div className="flex justify-start items-end">
         <NumericStepper label="TECH LVL" value={techLevel} onChange={onTechLevelChange} min={1} />

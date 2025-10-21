@@ -2,11 +2,11 @@ import NumericStepper from '../NumericStepper'
 
 interface PilotResourceSteppersProps {
   maxHP: number
-  currentHP: number
+  currentDamage: number
   maxAP: number
   currentAP: number
   currentTP: number
-  onHPChange: (value: number) => void
+  onDamageChange: (value: number) => void
   onAPChange: (value: number) => void
   onTPChange: (value: number) => void
   disabled?: boolean
@@ -14,23 +14,26 @@ interface PilotResourceSteppersProps {
 
 export function PilotResourceSteppers({
   maxHP,
-  currentHP,
+  currentDamage,
   maxAP,
   currentAP,
   currentTP,
-  onHPChange,
+  onDamageChange,
   onAPChange,
   onTPChange,
   disabled = false,
 }: PilotResourceSteppersProps) {
+  const currentHP = maxHP - currentDamage
+
   return (
     <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
       <div className="flex flex-col items-center space-y-2">
         <NumericStepper
           label="HP"
           value={currentHP}
-          onChange={onHPChange}
+          onChange={(newHP) => onDamageChange(maxHP - newHP)}
           max={maxHP}
+          min={0}
           disabled={disabled}
         />
         <NumericStepper

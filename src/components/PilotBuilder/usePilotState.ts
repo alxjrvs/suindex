@@ -10,35 +10,35 @@ export function usePilotState(
   allEquipment: Equipment[]
 ) {
   const [pilot, setPilot] = useState<PilotState>({
-    classId: null,
-    advancedClassId: null,
+    class_id: null,
+    advanced_class_id: null,
     callsign: '',
-    motto: '',
-    mottoUsed: false,
-    keepsake: '',
-    keepsakeUsed: false,
-    background: '',
-    backgroundUsed: false,
-    appearance: '',
-    legendaryAbilityId: null,
+    motto: null,
+    motto_used: null,
+    keepsake: null,
+    keepsake_used: null,
+    background: null,
+    background_used: null,
+    appearance: null,
+    legendary_ability_id: null,
     abilities: [],
     equipment: [],
-    maxHP: 10,
-    currentHP: 10,
-    maxAP: 5,
-    currentAP: 5,
-    currentTP: 0,
-    notes: '',
+    max_hp: 10,
+    current_damage: 0,
+    max_ap: 5,
+    current_ap: 5,
+    current_tp: 0,
+    notes: null,
   })
 
   const selectedClass = useMemo(
-    () => allClasses.find((c) => c.id === pilot.classId),
-    [pilot.classId, allClasses]
+    () => allClasses.find((c) => c.id === pilot.class_id),
+    [pilot.class_id, allClasses]
   )
 
   const selectedAdvancedClass = useMemo(
-    () => allClasses.find((c) => c.id === pilot.advancedClassId),
-    [pilot.advancedClassId, allClasses]
+    () => allClasses.find((c) => c.id === pilot.advanced_class_id),
+    [pilot.advanced_class_id, allClasses]
   )
 
   // Calculate available advanced classes
@@ -111,34 +111,34 @@ export function usePilotState(
   const handleClassChange = useCallback((classId: string) => {
     setPilot((prev) => {
       // If there's already a class selected and user is changing it, reset data
-      if (prev.classId && prev.classId !== classId) {
-        // Reset to initial state but keep the new classId
+      if (prev.class_id && prev.class_id !== classId) {
+        // Reset to initial state but keep the new class_id
         return {
-          classId,
-          advancedClassId: null,
+          class_id: classId,
+          advanced_class_id: null,
           callsign: '',
-          motto: '',
-          mottoUsed: false,
-          keepsake: '',
-          keepsakeUsed: false,
-          background: '',
-          backgroundUsed: false,
-          appearance: '',
-          legendaryAbilityId: null,
+          motto: null,
+          motto_used: null,
+          keepsake: null,
+          keepsake_used: null,
+          background: null,
+          background_used: null,
+          appearance: null,
+          legendary_ability_id: null,
           abilities: [],
           equipment: [],
-          maxHP: 10,
-          currentHP: 10,
-          maxAP: 5,
-          currentAP: 5,
-          currentTP: 0,
-          notes: '',
+          max_hp: 10,
+          current_damage: 0,
+          max_ap: 5,
+          current_ap: 5,
+          current_tp: 0,
+          notes: null,
         }
       }
       // First time selection or same selection
       return {
         ...prev,
-        classId,
+        class_id: classId,
         abilities: [],
       }
     })
@@ -152,16 +152,16 @@ export function usePilotState(
       const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
 
       // Check if user has enough TP
-      if (pilot.currentTP < cost) {
+      if ((pilot.current_tp ?? 0) < cost) {
         alert(
-          `Not enough TP! This ability costs ${cost} TP, but you only have ${pilot.currentTP} TP.`
+          `Not enough TP! This ability costs ${cost} TP, but you only have ${pilot.current_tp ?? 0} TP.`
         )
         return
       }
 
       setPilot((prev) => ({
         ...prev,
-        currentTP: prev.currentTP - cost,
+        current_tp: (prev.current_tp ?? 0) - cost,
         abilities: [
           ...prev.abilities,
           {
@@ -171,14 +171,14 @@ export function usePilotState(
         ],
       }))
     },
-    [allAbilities, selectedClass, selectedAdvancedClass, pilot.currentTP]
+    [allAbilities, selectedClass, selectedAdvancedClass, pilot.current_tp]
   )
 
   const handleRemoveAbility = useCallback((id: string) => {
     // Removing an ability costs 1 TP (confirmation handled in AbilityDisplay)
     setPilot((prev) => ({
       ...prev,
-      currentTP: prev.currentTP - 1,
+      current_tp: (prev.current_tp ?? 0) - 1,
       abilities: prev.abilities.filter((a) => a.id !== id),
     }))
   }, [])
@@ -190,26 +190,26 @@ export function usePilotState(
 
       const cost = 3 // Legendary abilities always cost 3 TP
 
-      if (pilot.currentTP < cost) {
+      if ((pilot.current_tp ?? 0) < cost) {
         alert(`Not enough TP! You need ${cost} TP to select this legendary ability.`)
         return
       }
 
       setPilot((prev) => ({
         ...prev,
-        currentTP: prev.currentTP - cost,
-        legendaryAbilityId: abilityId,
+        current_tp: (prev.current_tp ?? 0) - cost,
+        legendary_ability_id: abilityId,
       }))
     },
-    [allAbilities, pilot.currentTP]
+    [allAbilities, pilot.current_tp]
   )
 
   const handleRemoveLegendaryAbility = useCallback(() => {
     // Removing a legendary ability costs 1 TP (confirmation handled in AbilityDisplay)
     setPilot((prev) => ({
       ...prev,
-      currentTP: prev.currentTP - 1,
-      legendaryAbilityId: null,
+      current_tp: (prev.current_tp ?? 0) - 1,
+      legendary_ability_id: null,
     }))
   }, [])
 

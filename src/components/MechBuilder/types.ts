@@ -1,4 +1,5 @@
 import type { System, Module } from 'salvageunion-reference'
+import type { TablesInsert } from '../../types/database'
 
 export interface SelectedItem {
   id: string
@@ -14,17 +15,21 @@ export interface CargoItem {
   description: string
 }
 
-export interface MechState {
-  chassisId: string | null
-  pattern: string
-  quirk: string
-  appearance: string
-  chassisAbility: string
+// Use database Insert type, omitting fields managed by the database and fields we'll override
+export type MechState = Omit<
+  TablesInsert<'mechs'>,
+  | 'id'
+  | 'user_id'
+  | 'crawler_id'
+  | 'pilot_id'
+  | 'created_at'
+  | 'updated_at'
+  | 'systems'
+  | 'modules'
+  | 'cargo'
+> & {
+  // Override systems, modules, and cargo to use typed arrays instead of Json
   systems: SelectedItem[]
   modules: SelectedItem[]
   cargo: CargoItem[]
-  currentSP: number
-  currentEP: number
-  currentHeat: number
-  notes: string
 }

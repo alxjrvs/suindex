@@ -52,13 +52,13 @@ export default function MechBuilder() {
             <div className="bg-[#6b8e7f] rounded-2xl p-4">
               <div className="grid grid-cols-2 gap-4">
                 <ChassisSelector
-                  chassisId={mech.chassisId}
+                  chassisId={mech.chassis_id ?? null}
                   allChassis={allChassis}
                   onChange={handleChassisChange}
                 />
 
                 <PatternSelector
-                  pattern={mech.pattern}
+                  pattern={mech.pattern ?? ''}
                   selectedChassis={selectedChassis}
                   onChange={handlePatternChange}
                 />
@@ -81,12 +81,12 @@ export default function MechBuilder() {
         <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl px-2 py-6 shadow-lg flex items-center justify-center">
           <MechResourceSteppers
             stats={stats}
-            currentSP={mech.currentSP}
-            currentEP={mech.currentEP}
-            currentHeat={mech.currentHeat}
-            onSPChange={(value) => updateMech({ currentSP: value })}
-            onEPChange={(value) => updateMech({ currentEP: value })}
-            onHeatChange={(value) => updateMech({ currentHeat: value })}
+            currentDamage={mech.current_damage ?? 0}
+            currentEP={mech.current_ep ?? 0}
+            currentHeat={mech.current_heat ?? 0}
+            onDamageChange={(value) => updateMech({ current_damage: value })}
+            onEPChange={(value) => updateMech({ current_ep: value })}
+            onHeatChange={(value) => updateMech({ current_heat: value })}
           />
 
           {stats && <div className="flex flex-col gap-3 bg-[#6b8e7f] rounded-2xl p-4"></div>}
@@ -97,8 +97,8 @@ export default function MechBuilder() {
         <ChassisAbilities chassis={selectedChassis} />
 
         <QuirkAppearanceInputs
-          quirk={mech.quirk}
-          appearance={mech.appearance}
+          quirk={mech.quirk ?? ''}
+          appearance={mech.appearance ?? ''}
           disabled={!selectedChassis}
           onQuirkChange={(value) => updateMech({ quirk: value })}
           onAppearanceChange={(value) => updateMech({ appearance: value })}
@@ -129,7 +129,7 @@ export default function MechBuilder() {
         />
 
         <Notes
-          notes={mech.notes}
+          notes={mech.notes ?? ''}
           onChange={(value) => updateMech({ notes: value })}
           disabled={!selectedChassis}
           backgroundColor="#6b8e7f"

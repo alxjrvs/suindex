@@ -312,6 +312,12 @@ export function GameShow() {
       'Unknown')
     : ''
 
+  const crawlerMaxSP = crawler?.tech_level
+    ? (SalvageUnionReference.CrawlerTechLevels.all().find(
+        (tl) => tl.techLevel === crawler.tech_level
+      )?.structurePoints ?? 20)
+    : 20
+
   return (
     <div className="p-4 max-w-6xl mx-auto">
       {/* Header */}
@@ -339,7 +345,8 @@ export function GameShow() {
               <CrawlerCard
                 name={crawler.name}
                 typeName={crawlerTypeName}
-                currentSP={crawler.current_sp ?? 0}
+                maxSP={crawlerMaxSP}
+                currentDamage={crawler.current_damage ?? 0}
               />
             ) : (
               <button className="bg-[#c97d9e] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-4 rounded-lg transition-opacity">

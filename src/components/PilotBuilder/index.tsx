@@ -40,42 +40,42 @@ export default function PilotBuilder() {
         <div className="flex-1">
           <PilotInfoInputs
             callsign={pilot.callsign}
-            motto={pilot.motto}
-            mottoUsed={pilot.mottoUsed}
-            keepsake={pilot.keepsake}
-            keepsakeUsed={pilot.keepsakeUsed}
-            background={pilot.background}
-            backgroundUsed={pilot.backgroundUsed}
-            appearance={pilot.appearance}
-            classId={pilot.classId}
-            advancedClassId={pilot.advancedClassId}
+            motto={pilot.motto ?? ''}
+            mottoUsed={pilot.motto_used ?? false}
+            keepsake={pilot.keepsake ?? ''}
+            keepsakeUsed={pilot.keepsake_used ?? false}
+            background={pilot.background ?? ''}
+            backgroundUsed={pilot.background_used ?? false}
+            appearance={pilot.appearance ?? ''}
+            classId={pilot.class_id ?? null}
+            advancedClassId={pilot.advanced_class_id ?? null}
             allClasses={allClasses}
             availableAdvancedClasses={availableAdvancedClasses}
             disabled={false}
             onCallsignChange={(value) => updatePilot({ callsign: value })}
             onMottoChange={(value) => updatePilot({ motto: value })}
-            onMottoUsedChange={(value) => updatePilot({ mottoUsed: value })}
+            onMottoUsedChange={(value) => updatePilot({ motto_used: value })}
             onKeepsakeChange={(value) => updatePilot({ keepsake: value })}
-            onKeepsakeUsedChange={(value) => updatePilot({ keepsakeUsed: value })}
+            onKeepsakeUsedChange={(value) => updatePilot({ keepsake_used: value })}
             onBackgroundChange={(value) => updatePilot({ background: value })}
-            onBackgroundUsedChange={(value) => updatePilot({ backgroundUsed: value })}
+            onBackgroundUsedChange={(value) => updatePilot({ background_used: value })}
             onAppearanceChange={(value) => updatePilot({ appearance: value })}
             onClassChange={handleClassChange}
-            onAdvancedClassChange={(value) => updatePilot({ advancedClassId: value })}
+            onAdvancedClassChange={(value) => updatePilot({ advanced_class_id: value })}
           />
         </div>
 
         {/* Right: Resource Steppers */}
         <div className="w-40">
           <PilotResourceSteppers
-            maxHP={pilot.maxHP}
-            currentHP={pilot.currentHP}
-            maxAP={pilot.maxAP}
-            currentAP={pilot.currentAP}
-            currentTP={pilot.currentTP}
-            onHPChange={(value) => updatePilot({ currentHP: value })}
-            onAPChange={(value) => updatePilot({ currentAP: value })}
-            onTPChange={(value) => updatePilot({ currentTP: value })}
+            maxHP={pilot.max_hp ?? 10}
+            currentDamage={pilot.current_damage ?? 0}
+            maxAP={pilot.max_ap ?? 5}
+            currentAP={pilot.current_ap ?? 5}
+            currentTP={pilot.current_tp ?? 0}
+            onDamageChange={(value) => updatePilot({ current_damage: value })}
+            onAPChange={(value) => updatePilot({ current_ap: value })}
+            onTPChange={(value) => updatePilot({ current_tp: value })}
             disabled={!selectedClass}
           />
         </div>
@@ -85,14 +85,14 @@ export default function PilotBuilder() {
       <AbilitiesList
         abilities={pilot.abilities}
         legendaryAbility={
-          pilot.legendaryAbilityId
-            ? allAbilities.find((a) => a.id === pilot.legendaryAbilityId) || null
+          pilot.legendary_ability_id
+            ? allAbilities.find((a) => a.id === pilot.legendary_ability_id) || null
             : null
         }
         onRemove={handleRemoveAbility}
         onRemoveLegendary={handleRemoveLegendaryAbility}
         onAddClick={() => setIsAbilitySelectorOpen(true)}
-        currentTP={pilot.currentTP}
+        currentTP={pilot.current_tp ?? 0}
         disabled={!selectedClass}
         coreTreeNames={selectedClass?.coreAbilities || []}
       />
@@ -108,7 +108,7 @@ export default function PilotBuilder() {
       <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
         <h2 className="text-xl font-bold text-[#e8e5d8] uppercase mb-4">Notes</h2>
         <textarea
-          value={pilot.notes}
+          value={pilot.notes ?? ''}
           onChange={(e) => updatePilot({ notes: e.target.value })}
           disabled={false}
           placeholder="Add notes about your pilot..."
@@ -124,10 +124,10 @@ export default function PilotBuilder() {
         onSelectAbility={handleAddAbility}
         onSelectLegendaryAbility={handleAddLegendaryAbility}
         selectedAbilityIds={pilot.abilities.map((a) => a.ability.id)}
-        selectedLegendaryAbilityId={pilot.legendaryAbilityId}
+        selectedLegendaryAbilityId={pilot.legendary_ability_id ?? null}
         selectedClass={selectedClass}
         selectedAdvancedClass={selectedAdvancedClass}
-        currentTP={pilot.currentTP}
+        currentTP={pilot.current_tp ?? 0}
       />
 
       {/* Equipment Selector Modal */}

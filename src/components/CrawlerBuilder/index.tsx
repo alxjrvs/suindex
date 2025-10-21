@@ -46,8 +46,8 @@ export default function CrawlerBuilder() {
           <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl p-6 shadow-lg">
             <CrawlerHeaderInputs
               name={crawler.name}
-              crawlerTypeId={crawler.crawlerTypeId}
-              description={crawler.description}
+              crawlerTypeId={crawler.crawler_type_id ?? null}
+              description={crawler.description ?? ''}
               allCrawlers={allCrawlers}
               onNameChange={(value) => updateCrawler({ name: value })}
               onCrawlerTypeChange={handleCrawlerTypeChange}
@@ -59,17 +59,17 @@ export default function CrawlerBuilder() {
         {/* Resource Steppers */}
         <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl px-2 py-6 shadow-lg flex items-center justify-center">
           <CrawlerResourceSteppers
-            currentSP={crawler.currentSP}
+            currentDamage={crawler.current_damage ?? 0}
             maxSP={maxSP}
-            techLevel={crawler.techLevel}
+            techLevel={crawler.tech_level ?? 1}
             upkeep={upkeep}
-            upgrade={crawler.upgrade}
+            upgrade={crawler.upgrade ?? 0}
             maxUpgrade={maxUpgrade}
-            currentScrap={crawler.currentScrap}
-            onSPChange={(value) => updateCrawler({ currentSP: value })}
-            onTechLevelChange={(value) => updateCrawler({ techLevel: value })}
+            currentScrap={crawler.current_scrap ?? 0}
+            onDamageChange={(value) => updateCrawler({ current_damage: value })}
+            onTechLevelChange={(value) => updateCrawler({ tech_level: value })}
             onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
-            onCurrentScrapChange={(value) => updateCrawler({ currentScrap: value })}
+            onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
           />
         </div>
       </div>
@@ -123,11 +123,11 @@ export default function CrawlerBuilder() {
         {/* Storage Bay */}
         {storageBay && (
           <StorageBay
-            operator={crawler.storageBayOperator}
-            description={crawler.storageBayDescription}
+            operator={crawler.storage_bay_operator ?? ''}
+            description={crawler.storage_bay_description ?? ''}
             cargo={crawler.cargo}
-            onOperatorChange={(value) => updateCrawler({ storageBayOperator: value })}
-            onDescriptionChange={(value) => updateCrawler({ storageBayDescription: value })}
+            onOperatorChange={(value) => updateCrawler({ storage_bay_operator: value })}
+            onDescriptionChange={(value) => updateCrawler({ storage_bay_description: value })}
             onAddCargo={() => setIsCargoModalOpen(true)}
             onRemoveCargo={handleRemoveCargo}
           />
@@ -135,7 +135,7 @@ export default function CrawlerBuilder() {
 
         {/* Notes */}
         <Notes
-          notes={crawler.notes}
+          notes={crawler.notes ?? ''}
           onChange={(value) => updateCrawler({ notes: value })}
           backgroundColor="#c97d9e"
           borderWidth={4}
