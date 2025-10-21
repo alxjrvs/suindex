@@ -53,19 +53,19 @@ export default function Navigation({ schemas }: NavigationProps) {
           <p className="text-sm text-[var(--color-su-brick)]">Index</p>
         </button>
         <button
-          onClick={() => handleNavigate('/mech-builder')}
+          onClick={() => handleNavigate('/index/mech-builder')}
           className="w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer text-[var(--color-su-black)] font-semibold"
         >
           🤖 Mech Builder
         </button>
         <button
-          onClick={() => handleNavigate('/pilot-builder')}
+          onClick={() => handleNavigate('/index/pilot-builder')}
           className="w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer text-[var(--color-su-black)] font-semibold"
         >
           👤 Pilot Builder
         </button>
         <button
-          onClick={() => handleNavigate('/crawler-builder')}
+          onClick={() => handleNavigate('/index/crawler-builder')}
           className="w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer text-[var(--color-su-black)] font-semibold"
         >
           🚚 Crawler Builder
@@ -74,7 +74,7 @@ export default function Navigation({ schemas }: NavigationProps) {
           {schemas.map((schema) => (
             <li key={schema.id}>
               <button
-                onClick={() => handleNavigate(`/schema/${schema.id}`)}
+                onClick={() => handleNavigate(`/index/schema/${schema.id}`)}
                 className={`w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer ${
                   schemaId === schema.id
                     ? 'bg-[var(--color-su-light-blue)] border-l-4 border-[var(--color-su-orange)] text-[var(--color-su-black)] font-medium'

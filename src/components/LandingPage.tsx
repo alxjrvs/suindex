@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Footer from './Footer'
 
 export default function LandingPage() {
   return (
@@ -83,42 +84,29 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-[var(--color-su-brick)] mb-6">Get Started</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
-              to="/schema/abilities"
+              to="/index/schema/abilities"
               className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:bg-[var(--color-su-light-orange)] transition-colors text-lg"
             >
               Browse Data
             </Link>
             <Link
-              to="/pilot-builder"
+              to="/index/pilot-builder"
               className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:bg-[var(--color-su-light-orange)] transition-colors text-lg"
             >
               Build a Pilot
             </Link>
             <Link
-              to="/mech-builder"
+              to="/index/mech-builder"
               className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:bg-[var(--color-su-light-orange)] transition-colors text-lg"
             >
               Build a Mech
             </Link>
           </div>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="mt-8 text-center text-[var(--color-su-white)] text-sm">
-          <p className="mb-2">
-            Salvage Union is copyrighted by Leyline Press. Salvage Union and the "Powered by
-            Salvage" logo are used with permission of Leyline Press, under the{' '}
-            <a
-              href="https://leyline.press/pages/salvage-union-open-game-licence-1-0b"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-[var(--color-su-light-orange)]"
-            >
-              Salvage Union Open Game Licence 1.0b
-            </a>
-            .
-          </p>
-        </div>
+      <div className="mt-3">
+        <Footer variant="landing" />
       </div>
     </div>
   )

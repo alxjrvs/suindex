@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import SchemaViewer from './components/SchemaViewer'
@@ -7,63 +6,37 @@ import MechBuilder from './components/MechBuilder'
 import PilotBuilder from './components/PilotBuilder'
 import CrawlerBuilder from './components/CrawlerBuilder'
 import LandingPage from './components/LandingPage'
+import Footer from './components/Footer'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 
 function AppContent() {
-  const [schemaIndex, setSchemaIndex] = useState<typeof schemaIndexData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    try {
-      setSchemaIndex(schemaIndexData)
-      setLoading(false)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load schemas')
-      setLoading(false)
-    }
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-xl">Loading schemas...</div>
-      </div>
-    )
-  }
-
-  if (error || !schemaIndex) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-xl text-red-600">Error: {error || 'Failed to load schemas'}</div>
-      </div>
-    )
-  }
-
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route
-        path="/*"
+        path="/index/*"
         element={
-          <div className="flex flex-col md:flex-row h-screen bg-[var(--color-su-white)]">
-            <Navigation schemas={schemaIndex.schemas} />
-            <main className="flex-1 overflow-auto pt-16 md:pt-0">
-              <Routes>
-                <Route path="/mech-builder" element={<MechBuilder />} />
-                <Route path="/pilot-builder" element={<PilotBuilder />} />
-                <Route path="/crawler-builder" element={<CrawlerBuilder />} />
-                <Route
-                  path="/schema/:schemaId"
-                  element={<SchemaViewer schemas={schemaIndex.schemas} />}
-                />
-                <Route
-                  path="/schema/:schemaId/item/:itemId"
-                  element={<ItemShowPage schemas={schemaIndex.schemas} />}
-                />
-              </Routes>
-            </main>
+          <div className="flex flex-col h-screen bg-[var(--color-su-white)]">
+            <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+              <Navigation schemas={schemaIndexData.schemas} />
+              <main className="flex-1 overflow-auto pt-16 md:pt-0">
+                <Routes>
+                  <Route path="/mech-builder" element={<MechBuilder />} />
+                  <Route path="/pilot-builder" element={<PilotBuilder />} />
+                  <Route path="/crawler-builder" element={<CrawlerBuilder />} />
+                  <Route
+                    path="/schema/:schemaId"
+                    element={<SchemaViewer schemas={schemaIndexData.schemas} />}
+                  />
+                  <Route
+                    path="/schema/:schemaId/item/:itemId"
+                    element={<ItemShowPage schemas={schemaIndexData.schemas} />}
+                  />
+                </Routes>
+              </main>
+            </div>
+            <Footer />
           </div>
         }
       />
