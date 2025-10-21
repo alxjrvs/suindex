@@ -199,7 +199,6 @@ describe('CharacterBuilder - Integration Tests', () => {
       page: 70,
       description: 'A tool',
       techLevel: 1,
-      salvageValue: 10,
       traits: [],
     },
     {
@@ -209,7 +208,6 @@ describe('CharacterBuilder - Integration Tests', () => {
       page: 71,
       description: 'Another tool',
       techLevel: 1,
-      salvageValue: 15,
       traits: [],
     },
   ]

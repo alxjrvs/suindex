@@ -200,28 +200,72 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       // Select 6 core abilities
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Select advanced class
-      const advancedClassSelect = screen.getByLabelText(/advanced class/i)
+      const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, 'class-hacker')
 
       // Select only 2 advanced abilities (not all 3)
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Adv Hack 1'))
-      await user.click(screen.getByText('Adv Hack 1').closest('div')!)
+      const addToCharacterButtons1 = await screen.findAllByRole('button', {
+        name: /Add to Character \(2 TP\)/i,
+      })
+      await user.click(addToCharacterButtons1[0])
+
+      // Close the modal
+      let closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Adv Hack 2'))
-      await user.click(screen.getByText('Adv Hack 2').closest('div')!)
+      const addToCharacterButtons2 = await screen.findAllByRole('button', {
+        name: /Add to Character \(2 TP\)/i,
+      })
+      await user.click(addToCharacterButtons2[0])
+
+      // Close the modal
+      closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       // Open modal - legendary should NOT be visible yet
       await user.click(addButton)
@@ -253,25 +297,58 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       // Select 6 core abilities
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Select advanced class
-      const advancedClassSelect = screen.getByLabelText(/advanced class/i)
+      const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, 'class-hacker')
 
       // Select all 3 advanced abilities
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Adv Hack ${i + 1}`))
-        await user.click(screen.getByText(`Adv Hack ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(2 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Open modal - legendary should now be visible
@@ -304,28 +381,62 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       // Select all required abilities
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
-      const advancedClassSelect = screen.getByLabelText(/advanced class/i)
+      const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, 'class-hacker')
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Adv Hack ${i + 1}`))
-        await user.click(screen.getByText(`Adv Hack ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(2 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Check current TP (30 - 6 core - 6 advanced = 18)
       await waitFor(() => {
-        expect(screen.getByText(/18 TP/i)).toBeInTheDocument()
+        const tpValue = within(tpStepper).getByText('18')
+        expect(tpValue).toBeInTheDocument()
       })
 
       // Select legendary ability
@@ -335,11 +446,24 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       // Verify it shows 3 TP cost
       expect(screen.getByText(/3 TP/i)).toBeInTheDocument()
 
-      await user.click(screen.getByText('Ultimate Hack').closest('div')!)
+      const addToCharacterButtons = await screen.findAllByRole('button', {
+        name: /Add to Character \(3 TP\)/i,
+      })
+      await user.click(addToCharacterButtons[0])
+
+      // Close the modal
+      const closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       // TP should be reduced by 3 (18 - 3 = 15)
       await waitFor(() => {
-        expect(screen.getByText(/15 TP/i)).toBeInTheDocument()
+        const tpValue = within(tpStepper).getByText('15')
+        expect(tpValue).toBeInTheDocument()
       })
     })
 
@@ -366,29 +490,74 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       // Select all required abilities
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
-      const advancedClassSelect = screen.getByLabelText(/advanced class/i)
+      const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, 'class-hacker')
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Adv Hack ${i + 1}`))
-        await user.click(screen.getByText(`Adv Hack ${i + 1}`).closest('div')!)
+        const addToCharacterButtons = await screen.findAllByRole('button', {
+          name: /Add to Character \(2 TP\)/i,
+        })
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Select legendary ability
       await user.click(addButton)
       await waitFor(() => screen.getByText('Ultimate Hack'))
-      await user.click(screen.getByText('Ultimate Hack').closest('div')!)
+      const addToCharacterButtons = await screen.findAllByRole('button', {
+        name: /Add to Character \(3 TP\)/i,
+      })
+      await user.click(addToCharacterButtons[0])
+
+      // Close the modal
+      let closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       // Legendary ability should now be displayed in the abilities list
       await waitFor(() => {

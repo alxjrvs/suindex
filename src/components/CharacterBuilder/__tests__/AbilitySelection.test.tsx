@@ -121,6 +121,9 @@ describe('CharacterBuilder - Ability Selection', () => {
     vi.mocked(SalvageUnionReference.Abilities.all).mockReturnValue(mockAbilities)
     vi.mocked(SalvageUnionReference.Equipment.all).mockReturnValue(mockEquipment)
     vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
+
+    // Mock window.confirm for ability removal
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
 
   describe('Ability Modal', () => {
@@ -430,11 +433,12 @@ describe('CharacterBuilder - Ability Selection', () => {
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
-      await waitFor(() => expect(screen.getByText('Basic Hack')).toBeInTheDocument())
-      const addToCharacterButtons = await screen.findAllByRole('button', {
+      // Wait for the "Add to Character" buttons to appear in the modal
+      const addButtons = await screen.findAllByRole('button', {
         name: /Add to Character \(1 TP\)/i,
       })
-      await user.click(addToCharacterButtons[0])
+      // Click the first available button
+      await user.click(addButtons[0])
 
       // Close the modal
       const closeButton = screen.getByRole('button', { name: /close/i })
@@ -443,6 +447,11 @@ describe('CharacterBuilder - Ability Selection', () => {
       // Wait for modal to close
       await waitFor(() => {
         expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
+
+      // Wait for ability to appear in the selected abilities list
+      await waitFor(() => {
+        expect(screen.getByText('Basic Hack')).toBeInTheDocument()
       })
 
       // TP should be reduced by 1 (from 5 to 4)

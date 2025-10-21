@@ -245,6 +245,9 @@ describe('CharacterBuilder - Advanced Classes', () => {
     vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue(
       mockTreeRequirements
     )
+
+    // Mock window.confirm for ability removal
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
 
   describe('Advanced Class Requirements', () => {
@@ -283,21 +286,37 @@ describe('CharacterBuilder - Advanced Classes', () => {
       // Select 3 from Hacking, but we need to select them progressively
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        const addToCharacterButton = await screen.findByRole('button', {
+        const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Character \(1 TP\)/i,
         })
-        await user.click(addToCharacterButton)
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Select 3 from Tech
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        const addToCharacterButton = await screen.findByRole('button', {
+        const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Character \(1 TP\)/i,
         })
-        await user.click(addToCharacterButton)
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Advanced class should now be enabled (we have 6 abilities and completed trees)
@@ -344,21 +363,37 @@ describe('CharacterBuilder - Advanced Classes', () => {
       // Select 3 from Hacking tree
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        const addToCharacterButton = await screen.findByRole('button', {
+        const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Character \(1 TP\)/i,
         })
-        await user.click(addToCharacterButton)
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Select 3 from Tech tree
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        const addToCharacterButton = await screen.findByRole('button', {
+        const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Character \(1 TP\)/i,
         })
-        await user.click(addToCharacterButton)
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Select Smuggler advanced class
@@ -401,20 +436,36 @@ describe('CharacterBuilder - Advanced Classes', () => {
       // Select 6 abilities to unlock advanced class
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        const addToCharacterButton = await screen.findByRole('button', {
+        const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Character \(1 TP\)/i,
         })
-        await user.click(addToCharacterButton)
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        const addToCharacterButton = await screen.findByRole('button', {
+        const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Character \(1 TP\)/i,
         })
-        await user.click(addToCharacterButton)
+        await user.click(addToCharacterButtons[0])
+
+        // Close the modal
+        const closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
+
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
       }
 
       // Select Smuggler
@@ -423,8 +474,8 @@ describe('CharacterBuilder - Advanced Classes', () => {
 
       // Check current TP (should be 20 - 6 = 14)
       await waitFor(() => {
-        expect(screen.getByText('TP')).toBeInTheDocument()
-        expect(screen.getByText('14')).toBeInTheDocument()
+        const tpValue = within(tpStepper).getByText('14')
+        expect(tpValue).toBeInTheDocument()
       })
 
       // Select a Smuggling ability (should cost 2 TP)
@@ -435,15 +486,24 @@ describe('CharacterBuilder - Advanced Classes', () => {
       expect(screen.getByText(/2 TP/i)).toBeInTheDocument()
 
       await waitFor(() => screen.getByText('Smuggle 1'))
-      const addToCharacterButton = await screen.findByRole('button', {
+      const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Character \(2 TP\)/i,
       })
-      await user.click(addToCharacterButton)
+      await user.click(addToCharacterButtons[0])
+
+      // Close the modal
+      const closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       // TP should be reduced by 2 (14 - 2 = 12)
       await waitFor(() => {
-        expect(screen.getByText('TP')).toBeInTheDocument()
-        expect(screen.getByText('12')).toBeInTheDocument()
+        const tpValue = within(tpStepper).getByText('12')
+        expect(tpValue).toBeInTheDocument()
       })
     })
   })

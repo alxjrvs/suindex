@@ -146,7 +146,6 @@ describe('CharacterBuilder', () => {
       page: 60,
       description: 'A tool for hacking',
       techLevel: 1,
-      salvageValue: 10,
       traits: [],
     },
     {
@@ -156,7 +155,6 @@ describe('CharacterBuilder', () => {
       page: 61,
       description: 'A kit for repairs',
       techLevel: 1,
-      salvageValue: 15,
       traits: [],
     },
   ]

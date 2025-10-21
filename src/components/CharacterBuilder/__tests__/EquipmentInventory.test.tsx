@@ -49,7 +49,6 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       page: 60,
       description: 'A tool for hacking',
       techLevel: 1,
-      salvageValue: 10,
       traits: [],
     },
     {
@@ -59,7 +58,6 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       page: 61,
       description: 'A kit for repairs',
       techLevel: 1,
-      salvageValue: 15,
       traits: [],
     },
     {
@@ -69,7 +67,6 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       page: 62,
       description: 'A scanning device',
       techLevel: 2,
-      salvageValue: 20,
       traits: [],
     },
   ]
