@@ -136,7 +136,6 @@ export function AbilitiesList({
                   <AbilityDisplay
                     key={ability.id}
                     data={ability}
-                    compact
                     showRemoveButton
                     disableRemove={currentTP < 1}
                     onRemove={() => onRemove(ability.id)}
@@ -170,7 +169,6 @@ export function AbilitiesList({
                   <AbilityDisplay
                     key={ability.id}
                     data={ability}
-                    compact
                     showRemoveButton
                     disableRemove={currentTP < 1}
                     onRemove={() => onRemove(ability.id)}
@@ -199,7 +197,6 @@ export function AbilitiesList({
           </Heading>
           <AbilityDisplay
             data={legendaryAbility}
-            compact
             showRemoveButton
             disableRemove={currentTP < 1}
             onRemove={onRemoveLegendary}

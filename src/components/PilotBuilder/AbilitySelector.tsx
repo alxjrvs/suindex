@@ -403,7 +403,6 @@ export function AbilitySelector({
                               <AbilityDisplay
                                 key={ability.id}
                                 data={ability}
-                                compact
                                 onClick={
                                   isSelectable ? () => handleSelect(ability.id, true) : undefined
                                 }
@@ -505,7 +504,6 @@ export function AbilitySelector({
                               <AbilityDisplay
                                 key={ability.id}
                                 data={ability}
-                                compact
                                 onClick={
                                   isSelectable ? () => handleSelect(ability.id, true) : undefined
                                 }

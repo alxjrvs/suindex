@@ -31,7 +31,6 @@ export function SelectableAbilityItem({
     <AbilityDisplay
       key={ability.id}
       data={ability}
-      compact
       onClick={isSelectable ? onSelect : undefined}
       dimmed={alreadySelected || !canAfford || !isAvailable}
       collapsible
