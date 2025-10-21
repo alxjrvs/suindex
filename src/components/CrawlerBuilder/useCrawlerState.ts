@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Crawler, CrawlerBay } from 'salvageunion-reference'
 import type { CrawlerState, CrawlerBayState } from './types'
@@ -8,6 +8,7 @@ const MAX_UPGRADE = 25
 
 export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
   const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
+  const isResettingRef = useRef(false)
 
   const [crawler, setCrawler] = useState<CrawlerState>({
     name: '',
@@ -70,15 +71,12 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
 
   const handleCrawlerTypeChange = useCallback(
     (crawlerTypeId: string) => {
-      // If there's already a crawler type selected and user is changing it, show confirmation
+      // If there's already a crawler type selected and user is changing it, reset data
       setCrawler((prev) => {
         if (prev.crawlerTypeId && prev.crawlerTypeId !== crawlerTypeId) {
-          const confirmed = window.confirm(
-            'Alert - changing this will reset all data. Change type and reset crawler data?'
-          )
-          if (!confirmed) {
-            return prev
-          }
+          // Mark that we're resetting to prevent useEffect from triggering additional updates
+          isResettingRef.current = true
+
           // Reset to initial state but keep the new crawlerTypeId
           const initialTechLevel = allTechLevels.find((tl) => tl.techLevel === INITIAL_TECH_LEVEL)
           return {

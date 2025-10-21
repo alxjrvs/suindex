@@ -110,14 +110,8 @@ export function usePilotState(
 
   const handleClassChange = useCallback((classId: string) => {
     setPilot((prev) => {
-      // If there's already a class selected and user is changing it, show confirmation
+      // If there's already a class selected and user is changing it, reset data
       if (prev.classId && prev.classId !== classId) {
-        const confirmed = window.confirm(
-          'Alert - changing this will reset all data. Change class and reset pilot data?'
-        )
-        if (!confirmed) {
-          return prev
-        }
         // Reset to initial state but keep the new classId
         return {
           classId,

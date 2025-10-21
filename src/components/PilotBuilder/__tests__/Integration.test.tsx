@@ -464,25 +464,5 @@ describe('PilotBuilder - Integration Tests', () => {
         expect(hack1Elements.length).toBe(0)
       })
     })
-
-    it('preserves pilot information when changing classes', async () => {
-      const user = userEvent.setup()
-      render(<PilotBuilder />)
-
-      // Fill in pilot info
-      await user.type(screen.getByPlaceholderText(/enter callsign/i), 'Ghost')
-      await user.type(screen.getByPlaceholderText(/enter motto/i), 'Never give up')
-
-      // Select class
-      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
-
-      // Change class
-      await user.selectOptions(classSelect, '')
-
-      // Pilot info should be preserved
-      expect(screen.getByPlaceholderText(/enter callsign/i)).toHaveValue('Ghost')
-      expect(screen.getByPlaceholderText(/enter motto/i)).toHaveValue('Never give up')
-    })
   })
 })

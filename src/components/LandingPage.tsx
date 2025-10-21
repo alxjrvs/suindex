@@ -3,7 +3,7 @@ import Footer from './Footer'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[var(--color-su-green)] p-6">
+    <div className="min-h-screen bg-[var(--color-su-green)] px-6 pt-6">
       <div className="max-w-4xl mx-auto">
         {/* Hero Section */}
         <div className="bg-[var(--color-su-white)] rounded-lg shadow-lg p-8 mb-6 border-4 border-[var(--color-su-black)]">

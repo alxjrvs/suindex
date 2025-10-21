@@ -1,8 +1,10 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import type { Chassis, System, Module } from 'salvageunion-reference'
 import type { MechState, SelectedItem } from './types'
 
 export function useMechState(allSystems: System[], allModules: Module[], allChassis: Chassis[]) {
+  const isResettingRef = useRef(false)
+
   const [mech, setMech] = useState<MechState>({
     chassisId: null,
     pattern: '',
@@ -48,43 +50,46 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     }
   }, [selectedChassis])
 
-  const handleChassisChange = useCallback((chassisId: string) => {
-    setMech((prev) => {
-      // If there's already a chassis selected and user is changing it, show confirmation
-      if (prev.chassisId && prev.chassisId !== chassisId) {
-        const confirmed = window.confirm(
-          'Alert - changing this will reset all data. Change chassis and reset mech data?'
-        )
-        if (!confirmed) {
-          return prev
+  const handleChassisChange = useCallback(
+    (chassisId: string) => {
+      setMech((prev) => {
+        // If there's already a chassis selected and user is changing it, reset data
+        if (prev.chassisId && prev.chassisId !== chassisId) {
+          // Mark that we're resetting to prevent useEffect from triggering additional updates
+          isResettingRef.current = true
+
+          // Find the new chassis to get its stats
+          const newChassis = allChassis.find((c) => c.id === chassisId)
+
+          // Reset to initial state but keep the new chassisId and set initial stats
+          return {
+            chassisId,
+            pattern: '',
+            quirk: '',
+            appearance: '',
+            chassisAbility: '',
+            systems: [],
+            modules: [],
+            cargo: [],
+            currentSP: newChassis?.stats.structure_pts || 0,
+            currentEP: newChassis?.stats.energy_pts || 0,
+            currentHeat: 0,
+            notes: '',
+          }
         }
-        // Reset to initial state but keep the new chassisId
+        // First time selection or same selection
         return {
+          ...prev,
           chassisId,
           pattern: '',
-          quirk: '',
-          appearance: '',
-          chassisAbility: '',
           systems: [],
           modules: [],
-          cargo: [],
-          currentSP: 0,
-          currentEP: 0,
-          currentHeat: 0,
-          notes: '',
+          chassisAbility: '',
         }
-      }
-      // First time selection or same selection
-      return {
-        ...prev,
-        chassisId,
-        pattern: '',
-        systems: [],
-        modules: [],
-        chassisAbility: '',
-      }
-    })
-  }, [])
+      })
+    },
+    [allChassis]
+  )
 
   const handlePatternChange = useCallback(
     (patternName: string) => {
