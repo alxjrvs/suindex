@@ -8,6 +8,7 @@ interface AssignmentDropdownProps {
   options: { id: string; name: string }[]
   onChange: (value: string | null) => void
   placeholder?: string
+  disabled?: boolean
 }
 
 function AssignmentDropdown({
@@ -16,6 +17,7 @@ function AssignmentDropdown({
   options,
   onChange,
   placeholder = 'None',
+  disabled = false,
 }: AssignmentDropdownProps) {
   const id = `assignment-${label.toLowerCase().replace(/\s+/g, '-')}`
 
@@ -28,7 +30,8 @@ function AssignmentDropdown({
         id={id}
         value={value ?? ''}
         onChange={(e) => onChange(e.target.value || null)}
-        className="px-3 py-1 border-2 border-black rounded-lg bg-white text-black font-mono text-sm focus:outline-none focus:ring-2 focus:ring-black"
+        disabled={disabled}
+        className="px-3 py-1 border-2 border-black rounded-lg bg-white text-black font-mono text-sm focus:outline-none focus:ring-2 focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label={label}
       >
         <option value="">{placeholder}</option>
@@ -82,35 +85,46 @@ export function BuilderControlBar({
   const [pilots, setPilots] = useState<{ id: string; name: string }[]>([])
   const [isSaving, setIsSaving] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
+  const [loadingGames, setLoadingGames] = useState(false)
+  const [loadingCrawlers, setLoadingCrawlers] = useState(false)
+  const [loadingPilots, setLoadingPilots] = useState(false)
+
+  // Track overall loading state
+  const isLoading = loadingGames || loadingCrawlers || loadingPilots
 
   // Fetch games if needed (only fetch games the user is a member of)
   useEffect(() => {
     if (entityType === 'crawler' && onGameChange) {
       const fetchGames = async () => {
-        const { data: userData } = await supabase.auth.getUser()
-        if (!userData.user) return
+        try {
+          setLoadingGames(true)
+          const { data: userData } = await supabase.auth.getUser()
+          if (!userData.user) return
 
-        // Get games where user is a member
-        const { data: memberData } = await supabase
-          .from('game_members')
-          .select('game_id')
-          .eq('user_id', userData.user.id)
+          // Get games where user is a member
+          const { data: memberData } = await supabase
+            .from('game_members')
+            .select('game_id')
+            .eq('user_id', userData.user.id)
 
-        if (!memberData) return
+          if (!memberData) return
 
-        const gameIds = memberData.map((m) => m.game_id)
-        if (gameIds.length === 0) {
-          setGames([])
-          return
+          const gameIds = memberData.map((m) => m.game_id)
+          if (gameIds.length === 0) {
+            setGames([])
+            return
+          }
+
+          const { data } = await supabase
+            .from('games')
+            .select('id, name')
+            .in('id', gameIds)
+            .order('name')
+
+          if (data) setGames(data)
+        } finally {
+          setLoadingGames(false)
         }
-
-        const { data } = await supabase
-          .from('games')
-          .select('id, name')
-          .in('id', gameIds)
-          .order('name')
-
-        if (data) setGames(data)
       }
       fetchGames()
     }
@@ -120,21 +134,26 @@ export function BuilderControlBar({
   useEffect(() => {
     if ((entityType === 'mech' || entityType === 'pilot') && onCrawlerChange) {
       const fetchCrawlers = async () => {
-        const { data: userData } = await supabase.auth.getUser()
-        if (!userData.user) return
+        try {
+          setLoadingCrawlers(true)
+          const { data: userData } = await supabase.auth.getUser()
+          if (!userData.user) return
 
-        let query = supabase
-          .from('crawlers')
-          .select('id, name, game_id')
-          .eq('user_id', userData.user.id)
+          let query = supabase
+            .from('crawlers')
+            .select('id, name, game_id')
+            .eq('user_id', userData.user.id)
 
-        // If game_id is set, only show crawlers for that game
-        if (gameId) {
-          query = query.eq('game_id', gameId)
+          // If game_id is set, only show crawlers for that game
+          if (gameId) {
+            query = query.eq('game_id', gameId)
+          }
+
+          const { data } = await query.order('name')
+          if (data) setCrawlers(data)
+        } finally {
+          setLoadingCrawlers(false)
         }
-
-        const { data } = await query.order('name')
-        if (data) setCrawlers(data)
       }
       fetchCrawlers()
     }
@@ -144,16 +163,21 @@ export function BuilderControlBar({
   useEffect(() => {
     if (entityType === 'mech' && onPilotChange) {
       const fetchPilots = async () => {
-        const { data: userData } = await supabase.auth.getUser()
-        if (!userData.user) return
+        try {
+          setLoadingPilots(true)
+          const { data: userData } = await supabase.auth.getUser()
+          if (!userData.user) return
 
-        const { data } = await supabase
-          .from('pilots')
-          .select('id, callsign')
-          .eq('user_id', userData.user.id)
-          .order('callsign')
+          const { data } = await supabase
+            .from('pilots')
+            .select('id, callsign')
+            .eq('user_id', userData.user.id)
+            .order('callsign')
 
-        if (data) setPilots(data.map((p) => ({ id: p.id, name: p.callsign })))
+          if (data) setPilots(data.map((p) => ({ id: p.id, name: p.callsign })))
+        } finally {
+          setLoadingPilots(false)
+        }
       }
       fetchPilots()
     }
@@ -213,6 +237,7 @@ export function BuilderControlBar({
             options={games}
             onChange={onGameChange}
             placeholder="No Game"
+            disabled={isLoading}
           />
         )}
         {(entityType === 'mech' || entityType === 'pilot') && onCrawlerChange && (
@@ -222,6 +247,7 @@ export function BuilderControlBar({
             options={crawlers}
             onChange={handleCrawlerChange}
             placeholder="No Crawler"
+            disabled={isLoading}
           />
         )}
         {entityType === 'mech' && onPilotChange && (
@@ -231,6 +257,7 @@ export function BuilderControlBar({
             options={pilots}
             onChange={handlePilotChange}
             placeholder="No Pilot"
+            disabled={isLoading}
           />
         )}
       </div>
@@ -266,17 +293,17 @@ export function BuilderControlBar({
         {/* Action buttons */}
         <button
           onClick={handleReset}
-          disabled={!hasUnsavedChanges || isResetting}
+          disabled={!hasUnsavedChanges || isResetting || isLoading}
           className="px-4 py-2 bg-white border-2 border-black rounded-lg font-mono text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors"
         >
-          {isResetting ? 'Resetting...' : 'Reset Changes'}
+          {isLoading ? 'Loading...' : isResetting ? 'Resetting...' : 'Reset Changes'}
         </button>
         <button
           onClick={handleSave}
-          disabled={!hasUnsavedChanges || isSaving}
+          disabled={!hasUnsavedChanges || isSaving || isLoading}
           className="px-4 py-2 bg-black text-white border-2 border-black rounded-lg font-mono text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
         >
-          {isSaving ? 'Saving...' : 'Save'}
+          {isLoading ? 'Loading...' : isSaving ? 'Saving...' : 'Save'}
         </button>
       </div>
     </div>

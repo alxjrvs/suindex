@@ -60,7 +60,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
               to="/dashboard"
-              className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg border-4 border-[var(--color-su-black)]"
+              className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
             >
               Dashboard
             </Link>
