@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useCallback } from 'react'
 import type { Ability, Class } from 'salvageunion-reference'
 import { AbilityDisplay } from '../AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
@@ -176,21 +176,27 @@ export function AbilitySelector({
   }
 
   // Get the lowest available level for each tree
-  const getLowestAvailableLevel = (treeName: string): number => {
-    const selectedFromTree = selectedAbilityIds
-      .map((id) => abilities.find((a) => a.id === id))
-      .filter((a) => a && a.tree === treeName)
+  const getLowestAvailableLevel = useCallback(
+    (treeName: string): number => {
+      const selectedFromTree = selectedAbilityIds
+        .map((id) => abilities.find((a) => a.id === id))
+        .filter((a) => a && a.tree === treeName)
 
-    if (selectedFromTree.length === 0) {
-      return 1 // Start at level 1
-    }
+      if (selectedFromTree.length === 0) {
+        return 1 // Start at level 1
+      }
 
-    // Find the highest level selected in this tree
-    const highestLevel = Math.max(...selectedFromTree.map((a) => Number(a!.level)))
-    return highestLevel + 1 // Next level is available
-  }
+      // Find the highest level selected in this tree
+      const highestLevel = Math.max(...selectedFromTree.map((a) => Number(a!.level)))
+      return highestLevel + 1 // Next level is available
+    },
+    [selectedAbilityIds, abilities]
+  )
 
-  const isSelected = (abilityId: string) => selectedAbilityIds.includes(abilityId)
+  const isSelected = useCallback(
+    (abilityId: string) => selectedAbilityIds.includes(abilityId),
+    [selectedAbilityIds]
+  )
 
   const coreTreeNames = selectedClass?.coreAbilities || []
   const advancedTreeName = selectedClass?.advancedAbilities
@@ -242,6 +248,8 @@ export function AbilitySelector({
     advancedTreeAbilities,
     advancedClassTreeAbilities,
     advancedTreeName,
+    isSelected,
+    getLowestAvailableLevel,
   ])
 
   if (!isOpen) return null

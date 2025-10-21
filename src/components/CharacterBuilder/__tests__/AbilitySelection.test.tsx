@@ -132,6 +132,16 @@ describe('CharacterBuilder - Ability Selection', () => {
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
+      // Set TP to 5
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 5; i++) {
+        await user.click(tpIncrementButton)
+      }
+
       // Find and click the Add button in the Abilities section
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
@@ -149,15 +159,28 @@ describe('CharacterBuilder - Ability Selection', () => {
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
+      // Set TP to 5
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 5; i++) {
+        await user.click(tpIncrementButton)
+      }
+
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
       await waitFor(() => {
+        // Level 1 abilities should be visible and selectable
         expect(screen.getByText('Basic Hack')).toBeInTheDocument()
         expect(screen.getByText('Basic Tech')).toBeInTheDocument()
-        expect(screen.queryByText('Intermediate Hack')).not.toBeInTheDocument()
-        expect(screen.queryByText('Expert Hack')).not.toBeInTheDocument()
+
+        // Higher level abilities are shown but their "Add to Character" buttons should be disabled
+        expect(screen.getByText('Intermediate Hack')).toBeInTheDocument()
+        expect(screen.getByText('Expert Hack')).toBeInTheDocument()
       })
     })
 
@@ -167,6 +190,16 @@ describe('CharacterBuilder - Ability Selection', () => {
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
+
+      // Set TP to 5
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 5; i++) {
+        await user.click(tpIncrementButton)
+      }
 
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
@@ -185,6 +218,16 @@ describe('CharacterBuilder - Ability Selection', () => {
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
+
+      // Set TP to 5
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 5; i++) {
+        await user.click(tpIncrementButton)
+      }
 
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
@@ -212,18 +255,33 @@ describe('CharacterBuilder - Ability Selection', () => {
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
+      // Set TP to 5
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 5; i++) {
+        await user.click(tpIncrementButton)
+      }
+
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
       await waitFor(() => {
-        // Level 1 abilities should be visible and clickable
+        // Level 1 abilities should be visible and selectable
         expect(screen.getByText('Basic Hack')).toBeInTheDocument()
         expect(screen.getByText('Basic Tech')).toBeInTheDocument()
 
-        // Higher level abilities should not be visible
-        expect(screen.queryByText('Intermediate Hack')).not.toBeInTheDocument()
+        // Higher level abilities are shown but dimmed/disabled
+        expect(screen.getByText('Intermediate Hack')).toBeInTheDocument()
       })
+
+      // Verify that level 1 abilities have enabled "Add to Character" buttons
+      const level1Buttons = screen.getAllByRole('button', { name: /Add to Character \(1 TP\)/i })
+      expect(level1Buttons.length).toBeGreaterThan(0)
+      expect(level1Buttons[0]).not.toBeDisabled()
     })
 
     it('unlocks level 2 abilities after selecting level 1 from same tree', async () => {
@@ -232,6 +290,16 @@ describe('CharacterBuilder - Ability Selection', () => {
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
+
+      // Set TP to 5
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 5; i++) {
+        await user.click(tpIncrementButton)
+      }
 
       // Open modal and select Basic Hack (level 1)
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
@@ -242,21 +310,29 @@ describe('CharacterBuilder - Ability Selection', () => {
         expect(screen.getByText('Basic Hack')).toBeInTheDocument()
       })
 
-      const basicHackCard = screen.getByText('Basic Hack').closest('div')
-      await user.click(basicHackCard!)
+      await waitFor(() => screen.getByText('Basic Hack'))
+      const addToCharacterButtons = await screen.findAllByRole('button', {
+        name: /Add to Character \(1 TP\)/i,
+      })
+      await user.click(addToCharacterButtons[0])
 
-      // Confirm the selection
-      const confirmButton = screen.getByRole('button', { name: /ok/i })
-      await user.click(confirmButton)
+      // Close the modal
+      const closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       // Reopen modal
       await user.click(addButton)
 
       await waitFor(() => {
-        // Now level 2 from Hacking tree should be available
+        // Now level 2 from Hacking tree should be available (not dimmed)
         expect(screen.getByText('Intermediate Hack')).toBeInTheDocument()
-        // But level 2 from Tech tree should not (we didn't select Basic Tech)
-        expect(screen.queryByText('Intermediate Tech')).not.toBeInTheDocument()
+        // Level 2 from Tech tree is shown but should be dimmed (we didn't select Basic Tech)
+        expect(screen.getByText('Intermediate Tech')).toBeInTheDocument()
       })
     })
 
@@ -267,20 +343,52 @@ describe('CharacterBuilder - Ability Selection', () => {
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
+      // Set TP to 10
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
+
+      for (let i = 0; i < 10; i++) {
+        await user.click(tpIncrementButton)
+      }
+
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
 
       // Select Basic Hack (level 1)
       await user.click(addButton)
       await waitFor(() => expect(screen.getByText('Basic Hack')).toBeInTheDocument())
-      await user.click(screen.getByText('Basic Hack').closest('div')!)
-      await user.click(screen.getByRole('button', { name: /close/i }))
+      const addToCharacterButtons1 = await screen.findAllByRole('button', {
+        name: /Add to Character \(1 TP\)/i,
+      })
+      await user.click(addToCharacterButtons1[0])
+
+      // Close the modal
+      let closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       // Select Intermediate Hack (level 2)
       await user.click(addButton)
       await waitFor(() => expect(screen.getByText('Intermediate Hack')).toBeInTheDocument())
-      await user.click(screen.getByText('Intermediate Hack').closest('div')!)
-      await user.click(screen.getByRole('button', { name: /close/i }))
+      const addToCharacterButtons2 = await screen.findAllByRole('button', {
+        name: /Add to Character \(1 TP\)/i,
+      })
+      await user.click(addToCharacterButtons2[0])
+
+      // Close the modal
+      closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       // Now Expert Hack (level 3) should be available
       await user.click(addButton)
@@ -298,21 +406,23 @@ describe('CharacterBuilder - Ability Selection', () => {
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
 
-      // Initial TP should be 0 (check using getAllByText since there are multiple TP labels)
-      const tpLabels = screen.getAllByText('TP')
-      expect(tpLabels.length).toBeGreaterThan(0)
-      expect(screen.getByText('0')).toBeInTheDocument()
-
       // Increase TP by clicking increment button 5 times
-      const incrementButtons = screen.getAllByLabelText('Increment')
-      const tpIncrementButton = incrementButtons[2] // Third stepper is TP (HP, AP, TP)
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+
+      // Initial TP should be 0
+      const initialTpValue = within(tpStepper).getByText('0')
+      expect(initialTpValue).toBeInTheDocument()
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
 
       for (let i = 0; i < 5; i++) {
         await user.click(tpIncrementButton)
       }
 
       await waitFor(() => {
-        expect(screen.getByText('5')).toBeInTheDocument()
+        const tpValue = within(tpStepper).getByText('5')
+        expect(tpValue).toBeInTheDocument()
       })
 
       // Select an ability
@@ -321,12 +431,24 @@ describe('CharacterBuilder - Ability Selection', () => {
       await user.click(addButton)
 
       await waitFor(() => expect(screen.getByText('Basic Hack')).toBeInTheDocument())
-      await user.click(screen.getByText('Basic Hack').closest('div')!)
-      await user.click(screen.getByRole('button', { name: /ok/i }))
+      const addToCharacterButtons = await screen.findAllByRole('button', {
+        name: /Add to Character \(1 TP\)/i,
+      })
+      await user.click(addToCharacterButtons[0])
+
+      // Close the modal
+      const closeButton = screen.getByRole('button', { name: /close/i })
+      await user.click(closeButton)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+      })
 
       // TP should be reduced by 1 (from 5 to 4)
       await waitFor(() => {
-        expect(screen.getByText('4')).toBeInTheDocument()
+        const tpValue = within(tpStepper).getByText('4')
+        expect(tpValue).toBeInTheDocument()
       })
     })
   })

@@ -284,16 +284,20 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
+        const addToCharacterButton = await screen.findByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButton)
       }
 
       // Select 3 from Tech
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
+        const addToCharacterButton = await screen.findByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButton)
       }
 
       // Advanced class should now be enabled (we have 6 abilities and completed trees)
@@ -341,16 +345,20 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
+        const addToCharacterButton = await screen.findByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButton)
       }
 
       // Select 3 from Tech tree
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
+        const addToCharacterButton = await screen.findByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButton)
       }
 
       // Select Smuggler advanced class
@@ -394,15 +402,19 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Hack ${i + 1}`))
-        await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
+        const addToCharacterButton = await screen.findByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButton)
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Tech ${i + 1}`))
-        await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
+        const addToCharacterButton = await screen.findByRole('button', {
+          name: /Add to Character \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButton)
       }
 
       // Select Smuggler
@@ -422,8 +434,11 @@ describe('CharacterBuilder - Advanced Classes', () => {
       // Verify it shows 2 TP cost
       expect(screen.getByText(/2 TP/i)).toBeInTheDocument()
 
-      await user.click(screen.getByText('Smuggle 1').closest('div')!)
-      await user.click(screen.getByRole('button', { name: /ok/i }))
+      await waitFor(() => screen.getByText('Smuggle 1'))
+      const addToCharacterButton = await screen.findByRole('button', {
+        name: /Add to Character \(2 TP\)/i,
+      })
+      await user.click(addToCharacterButton)
 
       // TP should be reduced by 2 (14 - 2 = 12)
       await waitFor(() => {

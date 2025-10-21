@@ -8,7 +8,6 @@ interface EquipmentSelectorProps {
   onClose: () => void
   equipment: Equipment[]
   onSelectEquipment: (equipmentId: string) => void
-  selectedEquipmentIds: string[]
 }
 
 export function EquipmentSelector({
@@ -16,18 +15,12 @@ export function EquipmentSelector({
   onClose,
   equipment,
   onSelectEquipment,
-  selectedEquipmentIds,
 }: EquipmentSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [techLevelFilter, setTechLevelFilter] = useState<number | null>(null)
 
-  const availableEquipment = useMemo(
-    () => equipment.filter((e) => !selectedEquipmentIds.includes(e.id)),
-    [equipment, selectedEquipmentIds]
-  )
-
   const filteredEquipment = useMemo(() => {
-    return availableEquipment
+    return equipment
       .filter((item) => {
         const matchesSearch =
           !searchTerm ||
@@ -44,7 +37,7 @@ export function EquipmentSelector({
         }
         return a.name.localeCompare(b.name)
       })
-  }, [availableEquipment, searchTerm, techLevelFilter])
+  }, [equipment, searchTerm, techLevelFilter])
 
   const handleSelect = (equipmentId: string) => {
     onSelectEquipment(equipmentId)
@@ -101,6 +94,7 @@ export function EquipmentSelector({
                 key={item.id}
                 onClick={() => handleSelect(item.id)}
                 className="w-full text-left transition-all hover:shadow-lg hover:scale-[1.01] cursor-pointer"
+                aria-label={item.name}
               >
                 <EquipmentDisplay data={item} />
               </button>

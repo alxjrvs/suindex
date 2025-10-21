@@ -123,7 +123,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       await user.click(addButton)
 
       await waitFor(() => {
-        expect(screen.getByText(/select equipment/i)).toBeInTheDocument()
+        expect(screen.getByText(/add equipment/i)).toBeInTheDocument()
       })
     })
 
@@ -150,15 +150,18 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
-      await waitFor(() => screen.getByText('Hacking Tool'))
+      // Wait for the equipment selector modal to open and find the button
+      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      await user.click(hackingToolButton)
 
-      const equipmentCard = screen.getByText('Hacking Tool').closest('div')
-      await user.click(equipmentCard!)
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /Hacking Tool/i })).not.toBeInTheDocument()
+      })
 
       // Equipment should be added to inventory
       await waitFor(() => {
-        const inventory = screen.getByText(/^inventory$/i).closest('div')
-        expect(within(inventory!).getByText('Hacking Tool')).toBeInTheDocument()
+        expect(screen.getAllByText('Hacking Tool').length).toBeGreaterThan(0)
       })
     })
 
@@ -171,8 +174,8 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
       // Add first equipment
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hacking Tool'))
-      await user.click(screen.getByText('Hacking Tool').closest('div')!)
+      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      await user.click(hackingToolButton)
 
       await waitFor(() => {
         expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
@@ -180,8 +183,8 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
       // Add second equipment
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Repair Kit'))
-      await user.click(screen.getByText('Repair Kit').closest('div')!)
+      const repairKitButton = await screen.findByRole('button', { name: /Repair Kit/i })
+      await user.click(repairKitButton)
 
       await waitFor(() => {
         expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
@@ -196,11 +199,11 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
-      await waitFor(() => screen.getByText('Hacking Tool'))
-      await user.click(screen.getByText('Hacking Tool').closest('div')!)
+      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      await user.click(hackingToolButton)
 
       await waitFor(() => {
-        expect(screen.queryByText(/select equipment/i)).not.toBeInTheDocument()
+        expect(screen.queryByText(/add equipment/i)).not.toBeInTheDocument()
       })
     })
   })
@@ -213,11 +216,33 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
-      // Add 6 items
-      for (let i = 0; i < 6; i++) {
+      // Add first item
+      await user.click(addButton)
+      let hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      await user.click(hackingToolButton)
+
+      await waitFor(() => {
+        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
+      })
+
+      // Add second item
+      await user.click(addButton)
+      hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      await user.click(hackingToolButton)
+
+      await waitFor(() => {
+        expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
+      })
+
+      // Add remaining 4 items
+      for (let i = 2; i < 6; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText('Hacking Tool'))
-        await user.click(screen.getByText('Hacking Tool').closest('div')!)
+        hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+        await user.click(hackingToolButton)
+
+        await waitFor(() => {
+          expect(within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
+        })
       }
 
       // Add button should now be disabled
@@ -236,8 +261,18 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       // Add 6 items
       for (let i = 0; i < 6; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText('Hacking Tool'))
-        await user.click(screen.getByText('Hacking Tool').closest('div')!)
+        const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+        await user.click(hackingToolButton)
+
+        // Wait for modal to close (equipment modal auto-closes)
+        await waitFor(() => {
+          expect(screen.queryByText(/add equipment/i)).not.toBeInTheDocument()
+        })
+
+        // Wait for equipment count to update
+        await waitFor(() => {
+          expect(within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
+        })
       }
 
       await waitFor(() => {
@@ -255,8 +290,18 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       // Add 6 items
       for (let i = 0; i < 6; i++) {
         await user.click(addButton)
-        await waitFor(() => screen.getByText('Hacking Tool'))
-        await user.click(screen.getByText('Hacking Tool').closest('div')!)
+        const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+        await user.click(hackingToolButton)
+
+        // Wait for modal to close (equipment modal auto-closes)
+        await waitFor(() => {
+          expect(screen.queryByText(/add equipment/i)).not.toBeInTheDocument()
+        })
+
+        // Wait for equipment count to update
+        await waitFor(() => {
+          expect(within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
+        })
       }
 
       // Add button should be disabled
@@ -265,10 +310,8 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       })
 
       // Remove one item
-      const equipmentCards = screen.getAllByText('Hacking Tool')
-      const firstCard = equipmentCards[0].closest('div')
-      const removeButton = within(firstCard!).getByRole('button', { name: /✕/i })
-      await user.click(removeButton)
+      const removeButtons = screen.getAllByRole('button', { name: /remove equipment/i })
+      await user.click(removeButtons[0])
 
       // Add button should be enabled again
       await waitFor(() => {
@@ -286,14 +329,19 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hacking Tool'))
-      await user.click(screen.getByText('Hacking Tool').closest('div')!)
+      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      await user.click(hackingToolButton)
 
+      // Wait for equipment count to update
       await waitFor(() => {
-        const equipmentCard = screen.getByText('Hacking Tool').closest('div')
-        const removeButton = within(equipmentCard!).getByRole('button', { name: /✕/i })
-        expect(removeButton).toBeInTheDocument()
+        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
       })
+
+      // Check for remove button - need to find the parent container with the button
+      const removeButton = screen.getByRole('button', {
+        name: /remove equipment/i,
+      })
+      expect(removeButton).toBeInTheDocument()
     })
 
     it('removes equipment when remove button is clicked', async () => {
@@ -304,15 +352,15 @@ describe('CharacterBuilder - Equipment Inventory', () => {
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hacking Tool'))
-      await user.click(screen.getByText('Hacking Tool').closest('div')!)
+      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      await user.click(hackingToolButton)
 
+      // Wait for equipment count to update
       await waitFor(() => {
-        expect(screen.getByText('Hacking Tool')).toBeInTheDocument()
+        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
       })
 
-      const equipmentCard = screen.getByText('Hacking Tool').closest('div')
-      const removeButton = within(equipmentCard!).getByRole('button', { name: /✕/i })
+      const removeButton = screen.getByRole('button', { name: /remove equipment/i })
       await user.click(removeButton)
 
       await waitFor(() => {
@@ -329,21 +377,24 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
       // Add two items
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hacking Tool'))
-      await user.click(screen.getByText('Hacking Tool').closest('div')!)
+      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      await user.click(hackingToolButton)
+
+      await waitFor(() => {
+        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
+      })
 
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Repair Kit'))
-      await user.click(screen.getByText('Repair Kit').closest('div')!)
+      const repairKitButton = await screen.findByRole('button', { name: /Repair Kit/i })
+      await user.click(repairKitButton)
 
       await waitFor(() => {
         expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
       })
 
-      // Remove one item
-      const equipmentCard = screen.getByText('Hacking Tool').closest('div')
-      const removeButton = within(equipmentCard!).getByRole('button', { name: /✕/i })
-      await user.click(removeButton)
+      // Remove one item - get all remove buttons and click the first one
+      const removeButtons = screen.getAllByRole('button', { name: /remove equipment/i })
+      await user.click(removeButtons[0])
 
       await waitFor(() => {
         expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
