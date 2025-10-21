@@ -103,7 +103,7 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
       <div className="bg-[var(--color-su-white)] shadow-sm border-b border-[var(--color-su-light-blue)] p-6">
         <div className="flex items-center gap-4 mb-4">
           <button
-            onClick={() => navigate(`/schema/${schemaId}`)}
+            onClick={() => navigate(`/index/schema/${schemaId}`)}
             className="text-[var(--color-su-orange)] hover:text-[var(--color-su-brick)] font-medium"
           >
             ← Back to {currentSchema.title}
