@@ -34,7 +34,7 @@ export function ModuleDisplay({ data }: ModuleDisplayProps) {
       details={details}
       description={data.description}
       notes={data.notes}
-      showSidebar={true}
+      showSidebar
       slotsRequired={data.slotsRequired}
       salvageValue={data.salvageValue}
     >

@@ -28,7 +28,7 @@ export function DroneDisplay({ data }: DroneDisplayProps) {
           </div>
         ) : undefined
       }
-      showSidebar={true}
+      showSidebar
       salvageValue={data.salvageValue}
     >
       {'traits' in data && data.traits && Array.isArray(data.traits) && data.traits.length > 0 ? (

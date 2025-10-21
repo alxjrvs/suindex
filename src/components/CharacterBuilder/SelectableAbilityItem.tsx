@@ -36,12 +36,11 @@ export function SelectableAbilityItem({
       onClick={isSelectable ? onSelect : undefined}
       disabled={isDisabled}
       dimmed={alreadySelected || !canAfford || !isAvailable}
-      collapsible={true}
+      collapsible
       expanded={isExpanded}
       onToggleExpanded={onToggleExpanded}
-      showSelectButton={true}
+      showSelectButton
       selectButtonCost={cost}
     />
   )
 }
-

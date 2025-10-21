@@ -28,7 +28,7 @@ export function VehicleDisplay({ data }: VehicleDisplayProps) {
           </div>
         ) : undefined
       }
-      showSidebar={true}
+      showSidebar
       salvageValue={data.salvageValue}
     >
       {data.traits && data.traits.length > 0 && (

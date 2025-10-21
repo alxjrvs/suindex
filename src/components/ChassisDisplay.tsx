@@ -101,7 +101,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                           },
                         ]}
                         notes={'notes' in ability.stats ? ability.stats.notes : undefined}
-                        up={true}
+                        up
                       />
                     </div>
                   )}

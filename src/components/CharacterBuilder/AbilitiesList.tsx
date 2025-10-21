@@ -97,7 +97,7 @@ export function AbilitiesList({
                     showRemoveButton
                     disableRemove={currentTP < 1}
                     onRemove={() => onRemove(charAbility.id)}
-                    collapsible={true}
+                    collapsible
                     defaultExpanded={false}
                   />
                 ))}
@@ -123,7 +123,7 @@ export function AbilitiesList({
                     showRemoveButton
                     disableRemove={currentTP < 1}
                     onRemove={() => onRemove(charAbility.id)}
-                    collapsible={true}
+                    collapsible
                     defaultExpanded={false}
                   />
                 ))}
@@ -144,7 +144,7 @@ export function AbilitiesList({
             showRemoveButton
             disableRemove={currentTP < 1}
             onRemove={onRemoveLegendary}
-            collapsible={true}
+            collapsible
             defaultExpanded={false}
           />
         </div>

@@ -365,9 +365,9 @@ export function AbilitySelector({
                                   hasLegendary ||
                                   !allAdvancedSelected
                                 }
-                                collapsible={true}
-                                defaultExpanded={true}
-                                showSelectButton={true}
+                                collapsible
+                                defaultExpanded
+                                showSelectButton
                                 selectButtonCost={cost}
                               />
                             )
@@ -454,9 +454,9 @@ export function AbilitySelector({
                                   hasLegendary ||
                                   !allAdvancedSelected
                                 }
-                                collapsible={true}
-                                defaultExpanded={true}
-                                showSelectButton={true}
+                                collapsible
+                                defaultExpanded
+                                showSelectButton
                                 selectButtonCost={cost}
                               />
                             )

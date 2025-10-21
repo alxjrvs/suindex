@@ -25,7 +25,7 @@ export function TableDisplay({ data }: TableDisplayProps) {
           </div>
         </div>
 
-        <RollTableDisplay rollTable={data.rollTable} showCommand={true} />
+        <RollTableDisplay rollTable={data.rollTable} showCommand />
       </div>
     </Frame>
   )

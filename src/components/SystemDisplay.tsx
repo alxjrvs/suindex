@@ -19,7 +19,7 @@ export function SystemDisplay({ data }: SystemDisplayProps) {
       details={details}
       description={data.description}
       notes={data.notes}
-      showSidebar={true}
+      showSidebar
       slotsRequired={data.slotsRequired}
       salvageValue={data.salvageValue}
     >
