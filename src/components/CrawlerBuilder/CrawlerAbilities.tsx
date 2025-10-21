@@ -9,18 +9,8 @@ interface CrawlerAbilitiesProps {
 export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
   return (
     <Box mb={6}>
-      <Text
-        as="label"
-        display="block"
-        fontSize="sm"
-        fontWeight="bold"
-        color="#e8e5d8"
-        mb={2}
-        textTransform="uppercase"
-      >
-        Ability
-      </Text>
       <VStack gap={3} alignItems="stretch">
+        <Heading as="h2">Abilities</Heading>
         {(
           crawler?.abilities || [
             {
