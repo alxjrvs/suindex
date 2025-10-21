@@ -14,9 +14,9 @@ export function CrawlerCard({ name, typeName, maxSP, currentDamage }: CrawlerCar
 
   return (
     <Flex
-      bg="#c97d9e"
+      bg="su.crawlerPink"
       borderWidth="4px"
-      borderColor="#c97d9e"
+      borderColor="su.crawlerPink"
       borderRadius="3xl"
       p={4}
       shadow="lg"

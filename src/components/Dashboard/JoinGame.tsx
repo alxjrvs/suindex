@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Box, Button, Heading, Input, Text, VStack } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
@@ -14,33 +14,36 @@ export function JoinGame() {
     setCode(searchParams.get('code') || '')
   }, [searchParams])
 
-  const redeem = async (invite: string) => {
-    setError(null)
-    setLoading(true)
-    try {
-      const { data, error } = await supabase.rpc('redeem_invite_code', {
-        invite_code: invite.trim(),
-      })
-      if (error) throw error
-      const gameId = data as string
-      if (!gameId) throw new Error('Invalid response from server')
-      navigate(`/dashboard/games/${gameId}`)
-    } catch (err) {
-      console.error('Failed to join game', err)
-      const message = err instanceof Error ? err.message : 'Failed to join game'
-      if (message.includes('invalid_or_expired_code')) {
-        setError('That invite code is invalid or expired.')
-      } else if (message.includes('invite_max_uses_reached')) {
-        setError('This invite has reached its maximum number of uses.')
-      } else if (message.includes('not_authenticated')) {
-        setError('You must be signed in to join a game.')
-      } else {
-        setError(message)
+  const redeem = useCallback(
+    async (invite: string) => {
+      setError(null)
+      setLoading(true)
+      try {
+        const { data, error } = await supabase.rpc('redeem_invite_code', {
+          invite_code: invite.trim(),
+        })
+        if (error) throw error
+        const gameId = data as string
+        if (!gameId) throw new Error('Invalid response from server')
+        navigate(`/dashboard/games/${gameId}`)
+      } catch (err) {
+        console.error('Failed to join game', err)
+        const message = err instanceof Error ? err.message : 'Failed to join game'
+        if (message.includes('invalid_or_expired_code')) {
+          setError('That invite code is invalid or expired.')
+        } else if (message.includes('invite_max_uses_reached')) {
+          setError('This invite has reached its maximum number of uses.')
+        } else if (message.includes('not_authenticated')) {
+          setError('You must be signed in to join a game.')
+        } else {
+          setError(message)
+        }
+      } finally {
+        setLoading(false)
       }
-    } finally {
-      setLoading(false)
-    }
-  }
+    },
+    [navigate]
+  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,7 +57,7 @@ export function JoinGame() {
       // Auto-join when a code is present
       redeem(q)
     }
-  }, [searchParams])
+  }, [searchParams, redeem])
 
   return (
     <Box p={8} maxW="xl" mx="auto">

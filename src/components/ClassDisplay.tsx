@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Box, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Text, VStack } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability } from 'salvageunion-reference'
 import { Frame } from './shared/Frame'
@@ -29,15 +30,7 @@ function AbilitySection({
 
   return (
     <VStack gap={3} alignItems="stretch">
-      <Heading
-        as="h3"
-        fontSize="xl"
-        fontWeight="bold"
-        textTransform="uppercase"
-        textAlign="center"
-        py={2}
-        color={headerColor}
-      >
+      <Heading as="h3" textTransform="uppercase" textAlign="center" py={2}>
         {title}
       </Heading>
       <VStack gap={4} alignItems="stretch">
@@ -121,9 +114,7 @@ function AbilityItem({ ability }: { ability: Ability }) {
           {ability.level}
         </Text>
         <Box flex="1">
-          <Heading as="h5" fontWeight="bold" color="su.black" fontSize="md">
-            {ability.name}
-          </Heading>
+          <Heading as="h5">{ability.name}</Heading>
           {details.length > 0 && (
             <Box mt={1}>
               <DataList values={details} textColor="var(--color-su-brick)" />

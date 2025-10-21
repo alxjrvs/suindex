@@ -12,11 +12,11 @@ export function DiceRollButton({ onClick, disabled, ariaLabel, title }: DiceRoll
     <IconButton
       onClick={onClick}
       disabled={disabled}
-      color="#e8e5d8"
+      color="su.inputBg"
       _hover={{ color: 'su.white', borderColor: 'su.white' }}
       _disabled={{ opacity: 0.3, cursor: 'not-allowed' }}
       borderWidth="2px"
-      borderColor="#e8e5d8"
+      borderColor="su.inputBg"
       borderRadius="lg"
       p={1}
       aria-label={ariaLabel}

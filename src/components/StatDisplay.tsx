@@ -13,7 +13,7 @@ export function StatDisplay({ label, value, labelId }: StatDisplayProps) {
         as="label"
         fontSize="xs"
         fontWeight="bold"
-        color="#e8e5d8"
+        color="su.inputBg"
         id={labelId}
         textAlign="center"
       >
@@ -23,13 +23,13 @@ export function StatDisplay({ label, value, labelId }: StatDisplayProps) {
         w={16}
         h={16}
         borderRadius="2xl"
-        bg="#e8e5d8"
+        bg="su.inputBg"
         display="flex"
         alignItems="center"
         justifyContent="center"
         pt={0.5}
       >
-        <Text fontSize="lg" fontWeight="bold" color="#2d3e36">
+        <Text fontSize="lg" fontWeight="bold" color="su.inputText">
           {value}
         </Text>
       </Box>

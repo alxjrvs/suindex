@@ -14,7 +14,10 @@ vi.mock('../../../lib/supabase', () => ({
   },
 }))
 
-const mockSupabase = supabase as any
+const mockSupabase = supabase as unknown as {
+  auth: { getUser: ReturnType<typeof vi.fn> }
+  from: ReturnType<typeof vi.fn>
+}
 
 describe('BuilderControlBar', () => {
   const mockUser = { id: 'user-123' }

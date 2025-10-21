@@ -217,7 +217,7 @@ export function GameShow() {
     } finally {
       setLoading(false)
     }
-  }, [gameId, navigate, loadInvites, loadExternalLinks, loadPilotsAndMechs])
+  }, [gameId, loadInvites, loadExternalLinks, loadPilotsAndMechs])
 
   const isInviteActive = (inv: GameInviteRow) => {
     const now = new Date()

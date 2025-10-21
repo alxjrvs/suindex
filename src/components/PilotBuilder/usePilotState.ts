@@ -194,45 +194,48 @@ export function usePilotState(id?: string) {
     }
 
     return results
-  }, [allClasses, pilot.abilities, selectedClass])
+  }, [allClasses, pilot.abilities, selectedClass, allAbilities])
 
-  const handleClassChange = useCallback((classId: string) => {
-    setPilot((prev) => {
-      // If there's already a class selected and user is changing it, reset data
-      if (prev.class_id && prev.class_id !== classId) {
-        // Reset to initial state but keep the new class_id
+  const handleClassChange = useCallback(
+    (classId: string) => {
+      setPilot((prev) => {
+        // If there's already a class selected and user is changing it, reset data
+        if (prev.class_id && prev.class_id !== classId) {
+          // Reset to initial state but keep the new class_id
+          return {
+            ...prev,
+            id: id || '',
+            class_id: classId,
+            advanced_class_id: null,
+            callsign: '',
+            motto: null,
+            motto_used: null,
+            keepsake: null,
+            keepsake_used: null,
+            background: null,
+            background_used: null,
+            appearance: null,
+            legendary_ability_id: null,
+            abilities: [],
+            equipment: [],
+            max_hp: 10,
+            current_damage: 0,
+            max_ap: 5,
+            current_ap: 5,
+            current_tp: 0,
+            notes: null,
+          }
+        }
+        // First time selection or same selection
         return {
           ...prev,
-          id: id || '',
           class_id: classId,
-          advanced_class_id: null,
-          callsign: '',
-          motto: null,
-          motto_used: null,
-          keepsake: null,
-          keepsake_used: null,
-          background: null,
-          background_used: null,
-          appearance: null,
-          legendary_ability_id: null,
           abilities: [],
-          equipment: [],
-          max_hp: 10,
-          current_damage: 0,
-          max_ap: 5,
-          current_ap: 5,
-          current_tp: 0,
-          notes: null,
         }
-      }
-      // First time selection or same selection
-      return {
-        ...prev,
-        class_id: classId,
-        abilities: [],
-      }
-    })
-  }, [])
+      })
+    },
+    [id]
+  )
 
   const handleAddAbility = useCallback(
     (abilityId: string) => {

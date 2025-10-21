@@ -290,6 +290,7 @@ export function BuilderControlBar({
             px={3}
             py={2}
             bg="white"
+            color="black"
             borderWidth="2px"
             borderColor="black"
             borderRadius="lg"
@@ -307,6 +308,7 @@ export function BuilderControlBar({
             px={3}
             py={2}
             bg="white"
+            color="black"
             borderWidth="2px"
             borderColor="black"
             borderRadius="lg"
@@ -324,6 +326,7 @@ export function BuilderControlBar({
             px={3}
             py={2}
             bg="white"
+            color="black"
             borderWidth="2px"
             borderColor="black"
             borderRadius="lg"
@@ -343,6 +346,7 @@ export function BuilderControlBar({
           px={4}
           py={2}
           bg="white"
+          color="black"
           borderWidth="2px"
           borderColor="black"
           borderRadius="lg"

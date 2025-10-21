@@ -1,4 +1,5 @@
-import { Box, Heading, VStack } from '@chakra-ui/react'
+import { Box, VStack } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import { AbilityCard } from './shared/AbilityCard'
@@ -33,13 +34,7 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
 
       {data.abilities && data.abilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
-          <Heading
-            as="h3"
-            fontSize="lg"
-            fontWeight="bold"
-            color="su.black"
-            textTransform="uppercase"
-          >
+          <Heading as="h3" textTransform="uppercase">
             Abilities
           </Heading>
           {data.abilities.map((ability, index) => (

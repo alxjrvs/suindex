@@ -1,4 +1,5 @@
-import { Box, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Text, VStack } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import { Frame } from './shared/Frame'
 import { ActionDisplay } from './shared/ActionDisplay'
 import type { Ability } from 'salvageunion-reference'
@@ -44,7 +45,7 @@ function AbilityContent({ data }: { data: Ability }) {
     <VStack gap={4} alignItems="stretch">
       {data.description && (
         <Box>
-          <Heading as="h4" fontWeight="bold" color="su.black" mb={2} fontSize="md">
+          <Heading as="h4" mb={2}>
             Description:
           </Heading>
           <Text color="su.black" lineHeight="relaxed">
@@ -55,7 +56,7 @@ function AbilityContent({ data }: { data: Ability }) {
 
       {data.effect && (
         <Box>
-          <Heading as="h4" fontWeight="bold" color="su.black" mb={2} fontSize="md">
+          <Heading as="h4" mb={2}>
             Effect:
           </Heading>
           <Text color="su.black" lineHeight="relaxed" whiteSpace="pre-line">
@@ -66,7 +67,7 @@ function AbilityContent({ data }: { data: Ability }) {
 
       {data.subAbilities && data.subAbilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
-          <Heading as="h4" fontWeight="bold" color="su.black" mb={2} fontSize="md">
+          <Heading as="h4" mb={2}>
             Sub-Abilities:
           </Heading>
           {data.subAbilities.map((subAbility, index) => (

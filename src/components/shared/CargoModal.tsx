@@ -59,7 +59,7 @@ export function CargoModal({
                 display="block"
                 fontSize="xs"
                 fontWeight="bold"
-                color="#e8e5d8"
+                color="su.inputBg"
                 mb={1}
               >
                 Amount
@@ -76,8 +76,8 @@ export function CargoModal({
                 p={1.5}
                 borderWidth={0}
                 borderRadius="lg"
-                bg="#e8e5d8"
-                color="#2d3e36"
+                bg="su.inputBg"
+                color="su.inputText"
                 fontWeight="semibold"
                 textAlign="center"
               />
@@ -88,7 +88,7 @@ export function CargoModal({
                 display="block"
                 fontSize="xs"
                 fontWeight="bold"
-                color="#e8e5d8"
+                color="su.inputBg"
                 mb={1}
               >
                 Description (Available: {availableCargo})
@@ -102,15 +102,22 @@ export function CargoModal({
                 p={1.5}
                 borderWidth={0}
                 borderRadius="lg"
-                bg="#e8e5d8"
-                color="#2d3e36"
+                bg="su.inputBg"
+                color="su.inputText"
                 fontWeight="semibold"
               />
             </Box>
           </Flex>
         ) : (
           <Box>
-            <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1}>
+            <Text
+              as="label"
+              display="block"
+              fontSize="xs"
+              fontWeight="bold"
+              color="su.inputBg"
+              mb={1}
+            >
               Description
             </Text>
             <Input
@@ -122,8 +129,8 @@ export function CargoModal({
               p={1.5}
               borderWidth={0}
               borderRadius="lg"
-              bg="#e8e5d8"
-              color="#2d3e36"
+              bg="su.inputBg"
+              color="su.inputText"
               fontWeight="semibold"
             />
           </Box>

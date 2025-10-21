@@ -1,4 +1,5 @@
-import { Box, Heading, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Box, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Heading } from '../shared/StyledHeading'
 import type { CrawlerBay } from './types'
 
 interface BayCardProps {
@@ -8,14 +9,27 @@ interface BayCardProps {
 
 export function BayCard({ bay, onUpdate }: BayCardProps) {
   return (
-    <Box bg="#c97d9e" borderWidth="4px" borderColor="#c97d9e" borderRadius="2xl" p={4}>
+    <Box
+      bg="su.crawlerPink"
+      borderWidth="4px"
+      borderColor="su.crawlerPink"
+      borderRadius="2xl"
+      p={4}
+    >
       <VStack gap={3} alignItems="stretch">
-        <Heading as="h3" fontSize="lg" fontWeight="bold" color="#e8e5d8" textTransform="uppercase">
+        <Heading as="h3" textTransform="uppercase">
           {bay.name}
         </Heading>
 
         <Box>
-          <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1}>
+          <Text
+            as="label"
+            display="block"
+            fontSize="xs"
+            fontWeight="bold"
+            color="su.inputBg"
+            mb={1}
+          >
             {bay.operatorPosition}
           </Text>
           <Input
@@ -27,15 +41,22 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
             p={1.5}
             borderWidth={0}
             borderRadius="lg"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            bg="su.inputBg"
+            color="su.inputText"
             fontWeight="semibold"
             fontSize="sm"
           />
         </Box>
 
         <Box>
-          <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1}>
+          <Text
+            as="label"
+            display="block"
+            fontSize="xs"
+            fontWeight="bold"
+            color="su.inputBg"
+            mb={1}
+          >
             Description
           </Text>
           <Textarea
@@ -46,8 +67,8 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
             p={1.5}
             borderWidth={0}
             borderRadius="lg"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            bg="su.inputBg"
+            color="su.inputText"
             fontWeight="semibold"
             resize="none"
             h="20"

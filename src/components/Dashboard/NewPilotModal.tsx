@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Box, Button, Flex, Input, NativeSelect, Text, Textarea, VStack } from '@chakra-ui/react'
 import Modal from '../Modal'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -30,6 +30,29 @@ export function NewPilotModal({ isOpen, onClose, onSuccess }: NewPilotModalProps
 
   // Filter to only show base (core) classes, not advanced or hybrid
   const classes = SalvageUnionReference.Classes.all().filter((cls) => cls.type === 'core')
+  const loadAvailableCrawlers = useCallback(async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return
+
+      let query = supabase.from('crawlers').select('*').eq('user_id', user.id)
+
+      // If game_id is set, only show crawlers for that game
+      if (gameId) {
+        query = query.eq('game_id', gameId)
+      }
+
+      const { data: crawlersData, error: crawlersError } = await query.order('name')
+
+      if (crawlersError) throw crawlersError
+
+      setAvailableCrawlers((crawlersData || []) as CrawlerRow[])
+    } catch (err) {
+      console.error('Error loading available crawlers:', err)
+    }
+  }, [gameId])
 
   useEffect(() => {
     if (isOpen) {
@@ -41,7 +64,7 @@ export function NewPilotModal({ isOpen, onClose, onSuccess }: NewPilotModalProps
     if (isOpen) {
       loadAvailableCrawlers()
     }
-  }, [isOpen, gameId])
+  }, [isOpen, gameId, loadAvailableCrawlers])
 
   const loadAvailableGames = async () => {
     try {
@@ -76,30 +99,6 @@ export function NewPilotModal({ isOpen, onClose, onSuccess }: NewPilotModalProps
       setAvailableGames((gamesData || []) as GameRow[])
     } catch (err) {
       console.error('Error loading available games:', err)
-    }
-  }
-
-  const loadAvailableCrawlers = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) return
-
-      let query = supabase.from('crawlers').select('*').eq('user_id', user.id)
-
-      // If game_id is set, only show crawlers for that game
-      if (gameId) {
-        query = query.eq('game_id', gameId)
-      }
-
-      const { data: crawlersData, error: crawlersError } = await query.order('name')
-
-      if (crawlersError) throw crawlersError
-
-      setAvailableCrawlers((crawlersData || []) as CrawlerRow[])
-    } catch (err) {
-      console.error('Error loading available crawlers:', err)
     }
   }
 

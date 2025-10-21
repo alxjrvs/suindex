@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Box, Button, Flex, Heading, IconButton, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, IconButton, Text, VStack } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import Footer from './Footer'
 
 export default function BuilderNavigation() {
@@ -86,9 +87,7 @@ export default function BuilderNavigation() {
             variant="ghost"
             h="auto"
           >
-            <Heading as="h1" fontSize="xl" fontWeight="bold" color="su.black">
-              Salvage Union
-            </Heading>
+            <Heading as="h1">Salvage Union</Heading>
             <Text fontSize="sm" color="su.brick">
               Builders
             </Text>

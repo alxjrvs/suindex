@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
-import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react'
+import { Heading } from './StyledHeading'
 import { DataList } from './DataList'
 import type { DataValue } from '../../types/common'
 import { techLevelColors } from '../../theme'
@@ -123,14 +124,7 @@ export function Frame({
           <Box flex="1" overflow="visible">
             <Flex justifyContent="space-between" alignItems="flex-start" overflow="visible">
               {header && (
-                <Heading
-                  as="h3"
-                  fontSize="2xl"
-                  fontWeight="bold"
-                  color="su.white"
-                  maxW="80%"
-                  flexWrap="wrap"
-                >
+                <Heading as="h3" maxW="80%" flexWrap="wrap">
                   {header}
                 </Heading>
               )}

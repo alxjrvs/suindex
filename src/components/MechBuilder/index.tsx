@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
+import { suColors } from '../../theme'
 import { SystemModuleSelector } from './SystemModuleSelector'
 import { ChassisSelector } from './ChassisSelector'
 import { PatternSelector } from './PatternSelector'
@@ -135,14 +136,14 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
       <Flex gap={6}>
         <VStack flex="1" gap={6} alignItems="stretch">
           <Box
-            bg="#6b8e7f"
+            bg="su.green"
             borderWidth="8px"
-            borderColor="#6b8e7f"
+            borderColor="su.green"
             borderRadius="3xl"
             p={6}
             shadow="lg"
           >
-            <Box bg="#6b8e7f" borderRadius="2xl" p={4}>
+            <Box bg="su.green" borderRadius="2xl" p={4}>
               <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                 <ChassisSelector
                   chassisId={mech.chassis_id ?? null}
@@ -160,14 +161,14 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
           </Box>
 
           <Box
-            bg="#6b8e7f"
+            bg="su.green"
             borderWidth="8px"
-            borderColor="#6b8e7f"
+            borderColor="su.green"
             borderRadius="3xl"
             p={4}
             shadow="lg"
           >
-            <Box bg="#6b8e7f" borderRadius="2xl" p={2}>
+            <Box bg="su.green" borderRadius="2xl" p={2}>
               <ChassisStatsGrid
                 stats={stats}
                 usedSystemSlots={usedSystemSlots}
@@ -179,9 +180,9 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
         </VStack>
 
         <Flex
-          bg="#6b8e7f"
+          bg="su.green"
           borderWidth="8px"
-          borderColor="#6b8e7f"
+          borderColor="su.green"
           borderRadius="3xl"
           px={2}
           py={6}
@@ -199,14 +200,14 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
             onHeatChange={(value) => updateMech({ current_heat: value })}
           />
 
-          {stats && <VStack gap={3} bg="#6b8e7f" borderRadius="2xl" p={4}></VStack>}
+          {stats && <VStack gap={3} bg="su.green" borderRadius="2xl" p={4}></VStack>}
         </Flex>
       </Flex>
 
       <Box
-        bg="#6b8e7f"
+        bg="su.green"
         borderWidth="8px"
-        borderColor="#6b8e7f"
+        borderColor="su.green"
         borderRadius="3xl"
         p={6}
         shadow="lg"
@@ -249,7 +250,7 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
           notes={mech.notes ?? ''}
           onChange={(value) => updateMech({ notes: value })}
           disabled={!selectedChassis}
-          backgroundColor="#6b8e7f"
+          backgroundColor={suColors.green}
           borderWidth={8}
           placeholder="Add notes about your mech..."
         />

@@ -37,7 +37,7 @@ export function QuirkAppearanceInputs({
           display="block"
           fontSize="sm"
           fontWeight="bold"
-          color="#e8e5d8"
+          color="su.inputBg"
           mb={2}
           textTransform="uppercase"
         >
@@ -54,8 +54,8 @@ export function QuirkAppearanceInputs({
             p={3}
             borderWidth={0}
             borderRadius="2xl"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            bg="su.inputBg"
+            color="su.inputText"
             fontWeight="semibold"
             _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           />
@@ -74,7 +74,7 @@ export function QuirkAppearanceInputs({
           display="block"
           fontSize="sm"
           fontWeight="bold"
-          color="#e8e5d8"
+          color="su.inputBg"
           mb={2}
           textTransform="uppercase"
         >
@@ -91,8 +91,8 @@ export function QuirkAppearanceInputs({
             p={3}
             borderWidth={0}
             borderRadius="2xl"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            bg="su.inputBg"
+            color="su.inputText"
             fontWeight="semibold"
             _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           />

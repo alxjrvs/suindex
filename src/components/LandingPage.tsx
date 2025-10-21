@@ -1,5 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom'
-import { Box, Container, Heading, Text, Link, Button, Grid } from '@chakra-ui/react'
+import { Box, Container, Text, Link, Button, Grid } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import Footer from './Footer'
 
 export default function LandingPage() {
@@ -16,9 +17,7 @@ export default function LandingPage() {
           borderWidth="4px"
           borderColor="su.black"
         >
-          <Heading as="h1" fontSize="5xl" fontWeight="bold" color="su.black" mb={4}>
-            Salvage Union Index
-          </Heading>
+          <Heading as="h1">Salvage Union Index</Heading>
           <Text fontSize="xl" color="su.black" mb={6}>
             Browse game data and build characters, mechs, and crawlers for Salvage Union.
           </Text>
@@ -34,7 +33,7 @@ export default function LandingPage() {
           borderWidth="4px"
           borderColor="su.black"
         >
-          <Heading as="h2" fontSize="3xl" fontWeight="bold" color="su.brick" mb={4}>
+          <Heading as="h2" mb={4}>
             What This Is
           </Heading>
           <Text fontSize="lg" color="su.black" mb={4}>
@@ -88,7 +87,7 @@ export default function LandingPage() {
           borderWidth="4px"
           borderColor="su.black"
         >
-          <Heading as="h2" fontSize="3xl" fontWeight="bold" color="su.brick" mb={6}>
+          <Heading as="h2" mb={6}>
             Get Started
           </Heading>
           <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={4}>

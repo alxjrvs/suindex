@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { Heading } from '../shared/StyledHeading'
+import { SalvageUnionReference, type Equipment } from 'salvageunion-reference'
 import { EquipmentDisplay } from '../EquipmentDisplay'
 import { StatDisplay } from '../StatDisplay'
 
@@ -22,26 +23,33 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
         const item = allEquipment.find((e) => e.id === id)
         return item ? { id, equipment: item, index } : null
       })
-      .filter((item): item is { id: string; equipment: any; index: number } => item !== null)
+      .filter((item): item is { id: string; equipment: Equipment; index: number } => item !== null)
   }, [equipment, allEquipment])
 
   return (
     <Box
-      bg="var(--color-su-orange)"
+      bg="su.orange"
       borderWidth="8px"
-      borderColor="var(--color-su-orange)"
+      borderColor="su.orange"
       borderRadius="3xl"
       p={6}
       shadow="lg"
     >
       {/* Header with Add Button and Equipment Count */}
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading as="h2" fontSize="xl" fontWeight="bold" color="#e8e5d8" textTransform="uppercase">
+        <Heading as="h2" textTransform="uppercase">
           Inventory
         </Heading>
         <Flex alignItems="center" gap={4}>
           <Flex flexDirection="column" alignItems="center">
-            <Text as="label" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1} display="block">
+            <Text
+              as="label"
+              fontSize="xs"
+              fontWeight="bold"
+              color="su.inputBg"
+              mb={1}
+              display="block"
+            >
               Add
             </Text>
             <Button
@@ -56,7 +64,7 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
               _hover={{ bg: 'su.brick' }}
               borderWidth="2px"
               borderStyle="dashed"
-              borderColor="#e8e5d8"
+              borderColor="su.inputBg"
               _disabled={{
                 opacity: 0.5,
                 cursor: 'not-allowed',

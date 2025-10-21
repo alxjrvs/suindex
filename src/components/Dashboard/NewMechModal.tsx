@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Box, Button, Flex, NativeSelect, Text, VStack } from '@chakra-ui/react'
 import Modal from '../Modal'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -24,19 +24,6 @@ export function NewMechModal({ isOpen, onClose, onSuccess }: NewMechModalProps) 
   const [error, setError] = useState<string | null>(null)
 
   const chassis = SalvageUnionReference.Chassis.all()
-
-  useEffect(() => {
-    if (isOpen) {
-      loadAvailableGames()
-    }
-  }, [isOpen])
-
-  useEffect(() => {
-    if (isOpen) {
-      loadAvailablePilots()
-    }
-  }, [isOpen, gameId])
-
   const loadAvailableGames = async () => {
     try {
       const {
@@ -73,7 +60,7 @@ export function NewMechModal({ isOpen, onClose, onSuccess }: NewMechModalProps) 
     }
   }
 
-  const loadAvailablePilots = async () => {
+  const loadAvailablePilots = useCallback(async () => {
     try {
       const {
         data: { user },
@@ -109,7 +96,19 @@ export function NewMechModal({ isOpen, onClose, onSuccess }: NewMechModalProps) 
     } catch (err) {
       console.error('Error loading available pilots:', err)
     }
-  }
+  }, [gameId])
+
+  useEffect(() => {
+    if (isOpen) {
+      loadAvailableGames()
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (isOpen) {
+      loadAvailablePilots()
+    }
+  }, [isOpen, gameId, loadAvailablePilots])
 
   const handleSubmit = async () => {
     if (!chassisId) {

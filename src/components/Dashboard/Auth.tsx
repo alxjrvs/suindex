@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { Heading } from '../shared/StyledHeading'
 import { supabase } from '../../lib/supabase'
 
 export function Auth() {
@@ -35,14 +36,7 @@ export function Auth() {
           p={8}
           shadow="lg"
         >
-          <Heading
-            as="h1"
-            fontSize="3xl"
-            fontWeight="bold"
-            color="su.black"
-            mb={2}
-            textAlign="center"
-          >
+          <Heading as="h1" mb={2} textAlign="center">
             Salvage Union Dashboard
           </Heading>
           <Text color="su.black" mb={8} textAlign="center">
