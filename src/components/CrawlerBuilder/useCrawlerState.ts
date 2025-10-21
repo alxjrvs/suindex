@@ -1,17 +1,19 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Crawler, CrawlerBay } from 'salvageunion-reference'
 import type { CrawlerState, CrawlerBayState } from './types'
 
-const INITIAL_SP = 20
 const INITIAL_TECH_LEVEL = 1
 const MAX_UPGRADE = 25
 
 export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
+  const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
+
   const [crawler, setCrawler] = useState<CrawlerState>({
     name: '',
     crawlerTypeId: null,
     description: '',
-    currentSP: INITIAL_SP,
+    currentSP: 0,
     techLevel: INITIAL_TECH_LEVEL,
     upgrade: 0,
     currentScrap: 0,
@@ -42,9 +44,29 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
     [crawler.crawlerTypeId, allCrawlers]
   )
 
+  const currentTechLevel = useMemo(
+    () => allTechLevels.find((tl) => tl.techLevel === crawler.techLevel),
+    [allTechLevels, crawler.techLevel]
+  )
+
+  const maxSP = useMemo(() => {
+    return currentTechLevel?.structurePoints || 20
+  }, [currentTechLevel])
+
   const upkeep = useMemo(() => {
     return `5 TL${crawler.techLevel}`
   }, [crawler.techLevel])
+
+  // Update currentSP and reset upgrade when tech level changes
+  useEffect(() => {
+    if (currentTechLevel?.structurePoints) {
+      setCrawler((prev) => ({
+        ...prev,
+        currentSP: currentTechLevel.structurePoints,
+        upgrade: 0,
+      }))
+    }
+  }, [currentTechLevel])
 
   const handleCrawlerTypeChange = useCallback(
     (crawlerTypeId: string) => {
@@ -58,11 +80,12 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
             return prev
           }
           // Reset to initial state but keep the new crawlerTypeId
+          const initialTechLevel = allTechLevels.find((tl) => tl.techLevel === INITIAL_TECH_LEVEL)
           return {
             name: '',
             crawlerTypeId,
             description: '',
-            currentSP: INITIAL_SP,
+            currentSP: initialTechLevel?.structurePoints || 20,
             techLevel: INITIAL_TECH_LEVEL,
             upgrade: 0,
             currentScrap: 0,
@@ -87,7 +110,7 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
         }
       })
     },
-    [allBays]
+    [allBays, allTechLevels]
   )
 
   const handleUpdateBay = useCallback((bayId: string, updates: Partial<CrawlerBayState>) => {
@@ -126,6 +149,7 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
     crawler,
     selectedCrawlerType,
     upkeep,
+    maxSP,
     maxUpgrade: MAX_UPGRADE,
     handleCrawlerTypeChange,
     handleUpdateBay,

@@ -1,6 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Crawler, CrawlerBay } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
 import { CrawlerResourceSteppers } from './CrawlerResourceSteppers'
@@ -11,26 +10,16 @@ import { Notes } from './Notes'
 import { useCrawlerState } from './useCrawlerState'
 
 export default function CrawlerBuilder() {
-  const [allCrawlers, setAllCrawlers] = useState<Crawler[]>([])
-  const [allBays, setAllBays] = useState<CrawlerBay[]>([])
-  const [loading, setLoading] = useState(true)
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
 
-  useMemo(() => {
-    try {
-      setAllCrawlers(SalvageUnionReference.Crawlers.all())
-      setAllBays(SalvageUnionReference.CrawlerBays.all())
-      setLoading(false)
-    } catch (err) {
-      console.error('Failed to load crawler builder data:', err)
-      setLoading(false)
-    }
-  }, [])
+  const allBays = SalvageUnionReference.CrawlerBays.all()
+  const allCrawlers = SalvageUnionReference.Crawlers.all()
 
   const {
     crawler,
     selectedCrawlerType,
     upkeep,
+    maxSP,
     maxUpgrade,
     handleCrawlerTypeChange,
     handleUpdateBay,
@@ -38,14 +27,6 @@ export default function CrawlerBuilder() {
     handleRemoveCargo,
     updateCrawler,
   } = useCrawlerState(allCrawlers, allBays)
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-lg text-[var(--color-su-black)]">Loading crawler builder...</div>
-      </div>
-    )
-  }
 
   // Separate storage bay from other bays
   const storageBay = crawler.bays.find((bay) => bay.bayId === 'storage-bay')
@@ -80,7 +61,7 @@ export default function CrawlerBuilder() {
             <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl px-2 py-6 shadow-lg flex items-center justify-center">
               <CrawlerResourceSteppers
                 currentSP={crawler.currentSP}
-                maxSP={20}
+                maxSP={maxSP}
                 techLevel={crawler.techLevel}
                 upkeep={upkeep}
                 upgrade={crawler.upgrade}

@@ -51,7 +51,7 @@ export function CargoModal({ isOpen, onClose, onAdd }: CargoModalProps) {
             disabled={!isValid}
             className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-3 py-1.5 rounded-lg font-bold hover:bg-[var(--color-su-light-orange)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
-            Add Cargo
+            Add
           </button>
         </div>
       </div>

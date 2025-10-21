@@ -1,6 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Class, Ability, Equipment } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { AbilitiesList } from './AbilitiesList'
@@ -10,24 +9,12 @@ import { EquipmentSelector } from './EquipmentSelector'
 import { usePilotState } from './usePilotState'
 
 export default function PilotBuilder() {
-  const [allClasses, setAllClasses] = useState<Class[]>([])
-  const [allAbilities, setAllAbilities] = useState<Ability[]>([])
-  const [allEquipment, setAllEquipment] = useState<Equipment[]>([])
-  const [loading, setLoading] = useState(true)
   const [isAbilitySelectorOpen, setIsAbilitySelectorOpen] = useState(false)
   const [isEquipmentSelectorOpen, setIsEquipmentSelectorOpen] = useState(false)
 
-  useMemo(() => {
-    try {
-      setAllClasses(SalvageUnionReference.Classes.all())
-      setAllAbilities(SalvageUnionReference.Abilities.all())
-      setAllEquipment(SalvageUnionReference.Equipment.all())
-      setLoading(false)
-    } catch (err) {
-      console.error('Failed to load pilot builder data:', err)
-      setLoading(false)
-    }
-  }, [])
+  const allClasses = SalvageUnionReference.Classes.all()
+  const allAbilities = SalvageUnionReference.Abilities.all()
+  const allEquipment = SalvageUnionReference.Equipment.all()
 
   const {
     pilot,
@@ -43,14 +30,6 @@ export default function PilotBuilder() {
     handleRemoveEquipment,
     updatePilot,
   } = usePilotState(allClasses, allAbilities, allEquipment)
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-lg text-[var(--color-su-black)]">Loading pilot builder...</div>
-      </div>
-    )
-  }
 
   return (
     <div className="bg-[var(--color-su-green)] min-h-screen p-6">
