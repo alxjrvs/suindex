@@ -11,4 +11,3 @@ export function BuilderLayout({ children }: BuilderLayoutProps) {
     </div>
   )
 }
-

@@ -43,7 +43,12 @@ export function CargoModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Add Cargo" backgroundColor={backgroundColor}>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Add Cargo"
+      backgroundColor={backgroundColor}
+    >
       <div className="space-y-2">
         {hasCargoTracking ? (
           <div className="flex gap-2 items-end">
@@ -105,4 +110,3 @@ export function CargoModal({
     </Modal>
   )
 }
-
