@@ -30,4 +30,3 @@ export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
     </div>
   )
 }
-

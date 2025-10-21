@@ -99,4 +99,3 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
     </Frame>
   )
 }
-
