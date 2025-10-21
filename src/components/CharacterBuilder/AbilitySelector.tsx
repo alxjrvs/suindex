@@ -3,6 +3,7 @@ import type { Ability, Class } from 'salvageunion-reference'
 import { AbilityDisplay } from '../AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
+import { SelectableAbilityItem } from './SelectableAbilityItem'
 
 interface AbilitySelectorProps {
   isOpen: boolean
@@ -31,6 +32,22 @@ export function AbilitySelector({
 }: AbilitySelectorProps) {
   // Track which abilities are expanded
   const [expandedAbilityIds, setExpandedAbilityIds] = useState<Set<string>>(new Set())
+
+  // Helper to create toggle expansion handler
+  const createToggleExpanded = useCallback((abilityId: string) => {
+    return () => {
+      setExpandedAbilityIds((prev) => {
+        const next = new Set(prev)
+        if (next.has(abilityId)) {
+          next.delete(abilityId)
+        } else {
+          next.add(abilityId)
+        }
+        return next
+      })
+    }
+  }, [])
+
   // Organize abilities by tree
   const {
     coreTreeAbilities,
@@ -249,32 +266,18 @@ export function AbilitySelector({
                     const lowestAvailable = getLowestAvailableLevel(treeName)
                     const abilityLevel = Number(ability.level)
                     const isAvailable = abilityLevel === lowestAvailable
-                    const isSelectable = isAvailable && canAfford && !alreadySelected
-                    const isDisabled = alreadySelected || !canAfford || !isAvailable
 
                     return (
-                      <AbilityDisplay
+                      <SelectableAbilityItem
                         key={ability.id}
-                        data={ability}
-                        compact
-                        onClick={isSelectable ? () => handleSelect(ability.id) : undefined}
-                        disabled={isDisabled}
-                        dimmed={alreadySelected || !canAfford || !isAvailable}
-                        collapsible={true}
-                        expanded={expandedAbilityIds.has(ability.id)}
-                        onToggleExpanded={() => {
-                          setExpandedAbilityIds((prev) => {
-                            const next = new Set(prev)
-                            if (next.has(ability.id)) {
-                              next.delete(ability.id)
-                            } else {
-                              next.add(ability.id)
-                            }
-                            return next
-                          })
-                        }}
-                        showSelectButton={true}
-                        selectButtonCost={cost}
+                        ability={ability}
+                        cost={cost}
+                        canAfford={canAfford}
+                        alreadySelected={alreadySelected}
+                        isAvailable={isAvailable}
+                        isExpanded={expandedAbilityIds.has(ability.id)}
+                        onSelect={() => handleSelect(ability.id)}
+                        onToggleExpanded={createToggleExpanded(ability.id)}
                       />
                     )
                   })}
@@ -308,32 +311,18 @@ export function AbilitySelector({
                             const lowestAvailable = getLowestAvailableLevel(advancedTreeName!)
                             const abilityLevel = Number(ability.level)
                             const isAvailable = abilityLevel === lowestAvailable
-                            const isSelectable = isAvailable && canAfford && !alreadySelected
-                            const isDisabled = alreadySelected || !canAfford || !isAvailable
 
                             return (
-                              <AbilityDisplay
+                              <SelectableAbilityItem
                                 key={ability.id}
-                                data={ability}
-                                compact
-                                onClick={isSelectable ? () => handleSelect(ability.id) : undefined}
-                                disabled={isDisabled}
-                                dimmed={alreadySelected || !canAfford || !isAvailable}
-                                collapsible={true}
-                                expanded={expandedAbilityIds.has(ability.id)}
-                                onToggleExpanded={() => {
-                                  setExpandedAbilityIds((prev) => {
-                                    const next = new Set(prev)
-                                    if (next.has(ability.id)) {
-                                      next.delete(ability.id)
-                                    } else {
-                                      next.add(ability.id)
-                                    }
-                                    return next
-                                  })
-                                }}
-                                showSelectButton={true}
-                                selectButtonCost={cost}
+                                ability={ability}
+                                cost={cost}
+                                canAfford={canAfford}
+                                alreadySelected={alreadySelected}
+                                isAvailable={isAvailable}
+                                isExpanded={expandedAbilityIds.has(ability.id)}
+                                onSelect={() => handleSelect(ability.id)}
+                                onToggleExpanded={createToggleExpanded(ability.id)}
                               />
                             )
                           })}
@@ -411,32 +400,18 @@ export function AbilitySelector({
                             )
                             const abilityLevel = Number(ability.level)
                             const isAvailable = abilityLevel === lowestAvailable
-                            const isSelectable = isAvailable && canAfford && !alreadySelected
-                            const isDisabled = alreadySelected || !canAfford || !isAvailable
 
                             return (
-                              <AbilityDisplay
+                              <SelectableAbilityItem
                                 key={ability.id}
-                                data={ability}
-                                compact
-                                onClick={isSelectable ? () => handleSelect(ability.id) : undefined}
-                                disabled={isDisabled}
-                                dimmed={alreadySelected || !canAfford || !isAvailable}
-                                collapsible={true}
-                                expanded={expandedAbilityIds.has(ability.id)}
-                                onToggleExpanded={() => {
-                                  setExpandedAbilityIds((prev) => {
-                                    const next = new Set(prev)
-                                    if (next.has(ability.id)) {
-                                      next.delete(ability.id)
-                                    } else {
-                                      next.add(ability.id)
-                                    }
-                                    return next
-                                  })
-                                }}
-                                showSelectButton={true}
-                                selectButtonCost={cost}
+                                ability={ability}
+                                cost={cost}
+                                canAfford={canAfford}
+                                alreadySelected={alreadySelected}
+                                isAvailable={isAvailable}
+                                isExpanded={expandedAbilityIds.has(ability.id)}
+                                onSelect={() => handleSelect(ability.id)}
+                                onToggleExpanded={createToggleExpanded(ability.id)}
                               />
                             )
                           })}
