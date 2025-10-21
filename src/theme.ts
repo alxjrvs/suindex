@@ -153,33 +153,43 @@ const config = defineConfig({
 export const system = createSystem(defaultConfig, config)
 
 // Export heading styles for use in components
+// Font sizes match HTML defaults: h1=2em, h2=1.5em, h3=1.17em, h4=1em, h5=0.83em, h6=0.67em
 export const headingStyles = {
   h1: {
     color: 'su.white',
     bg: 'su.black',
-    padding: '12px',
-    display: 'inline-block',
+    py: '12px',
+    fontWeight: 'bold',
+    fontSize: '2em',
   },
   h2: {
     color: 'su.white',
     bg: 'su.black',
-    padding: '8px',
-    display: 'inline-block',
+    fontWeight: 'bold',
+    fontSize: '1.5em',
   },
   h3: {
     color: 'su.black',
     bg: 'transparent',
+    fontWeight: 'bold',
+    fontSize: '1.17em',
   },
   h4: {
     color: 'su.black',
     bg: 'transparent',
+    fontWeight: 'bold',
+    fontSize: '1em',
   },
   h5: {
     color: 'su.black',
     bg: 'transparent',
+    fontWeight: 'bold',
+    fontSize: '0.83em',
   },
   h6: {
     color: 'su.black',
     bg: 'transparent',
+    fontWeight: 'bold',
+    fontSize: '0.67em',
   },
 } as const

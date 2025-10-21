@@ -17,7 +17,7 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
       p={4}
     >
       <VStack gap={3} alignItems="stretch">
-        <Heading as="h3" textTransform="uppercase">
+        <Heading as="h2" textTransform="uppercase" alignSelf="flex-start">
           {bay.name}
         </Heading>
 

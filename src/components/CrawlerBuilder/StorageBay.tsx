@@ -23,7 +23,7 @@ export function StorageBay({
 }: StorageBayProps) {
   return (
     <Box bg="#c97d9e" borderWidth="4px" borderColor="#c97d9e" borderRadius="2xl" p={4}>
-      <Heading as="h3" textTransform="uppercase" mb={3}>
+      <Heading as="h2" textTransform="uppercase" mb={3}>
         Storage Bay
       </Heading>
 

@@ -7,20 +7,10 @@ export default function LandingPage() {
   return (
     <Box minH="100vh" bg="su.lightBlue" px={6} pt={6}>
       <Container maxW="4xl">
-        {/* Hero Section */}
-        <Box
-          bg="su.white"
-          borderRadius="lg"
-          shadow="lg"
-          p={8}
-          mb={6}
-          borderWidth="4px"
-          borderColor="su.black"
-        >
-          <Heading as="h1">Salvage Union Index</Heading>
-          <Text fontSize="xl" color="su.black" mb={6}>
-            Browse game data and build characters, mechs, and crawlers for Salvage Union.
-          </Text>
+        <Box display="flex" justifyContent="center" mb={6}>
+          <Heading as="h1" fontSize="5xl" my={2}>
+            Salvage Union Index
+          </Heading>
         </Box>
 
         {/* What This Is */}
