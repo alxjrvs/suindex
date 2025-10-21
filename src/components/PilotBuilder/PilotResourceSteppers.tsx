@@ -1,3 +1,4 @@
+import { Box, VStack } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
 
 interface PilotResourceSteppersProps {
@@ -26,8 +27,15 @@ export function PilotResourceSteppers({
   const currentHP = maxHP - currentDamage
 
   return (
-    <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
-      <div className="flex flex-col items-center space-y-2">
+    <Box
+      bg="var(--color-su-orange)"
+      borderWidth="8px"
+      borderColor="var(--color-su-orange)"
+      borderRadius="3xl"
+      p={6}
+      shadow="lg"
+    >
+      <VStack alignItems="center" gap={2}>
         <NumericStepper
           label="HP"
           value={currentHP}
@@ -44,7 +52,7 @@ export function PilotResourceSteppers({
           disabled={disabled}
         />
         <NumericStepper label="TP" value={currentTP} onChange={onTPChange} disabled={disabled} />
-      </div>
-    </div>
+      </VStack>
+    </Box>
   )
 }

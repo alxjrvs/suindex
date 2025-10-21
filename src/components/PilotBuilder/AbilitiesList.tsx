@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Ability } from 'salvageunion-reference'
 import { AbilityDisplay } from '../AbilityDisplay'
@@ -67,33 +68,70 @@ export function AbilitiesList({
   const advancedTreeNamesDisplay = Object.keys(advancedAbilitiesByTree).sort()
 
   return (
-    <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
+    <Box
+      bg="var(--color-su-orange)"
+      borderWidth="8px"
+      borderColor="var(--color-su-orange)"
+      borderRadius="3xl"
+      p={6}
+      shadow="lg"
+    >
       {/* Header with Add Button and TP Display */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-[#e8e5d8] uppercase">Abilities</h2>
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-center">
-            <label className="text-xs font-bold text-[#e8e5d8] mb-1 block">Add</label>
-            <button
+      <Flex alignItems="center" justifyContent="space-between" mb={4}>
+        <Heading as="h2" fontSize="xl" fontWeight="bold" color="#e8e5d8" textTransform="uppercase">
+          Abilities
+        </Heading>
+        <Flex alignItems="center" gap={4}>
+          <Flex flexDirection="column" alignItems="center">
+            <Text as="label" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1} display="block">
+              Add
+            </Text>
+            <Button
               onClick={onAddClick}
               disabled={disabled || currentTP === 0}
-              className="w-16 h-16 rounded-2xl bg-[var(--color-su-light-orange)] text-[var(--color-su-white)] font-bold hover:bg-[var(--color-su-brick)] transition-colors border-2 border-dashed border-[#e8e5d8] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-su-light-orange)] flex items-center justify-center text-2xl"
+              w="16"
+              h="16"
+              borderRadius="2xl"
+              bg="su.lightOrange"
+              color="su.white"
+              fontWeight="bold"
+              _hover={{ bg: 'su.brick' }}
+              borderWidth="2px"
+              borderStyle="dashed"
+              borderColor="#e8e5d8"
+              _disabled={{
+                opacity: 0.5,
+                cursor: 'not-allowed',
+                _hover: { bg: 'su.lightOrange' },
+              }}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              fontSize="2xl"
             >
               +
-            </button>
-          </div>
+            </Button>
+          </Flex>
           <StatDisplay label="TP" value={`${currentTP}`} />
-        </div>
-      </div>
+        </Flex>
+      </Flex>
 
       {coreTreeNamesDisplay.length > 0 && (
-        <div className="mb-4">
+        <Box mb={4}>
           {coreTreeNamesDisplay.map((treeName) => (
-            <div key={treeName} className="mb-4">
-              <h3 className="text-lg font-bold text-[#e8e5d8] uppercase mb-2 text-center">
+            <Box key={treeName} mb={4}>
+              <Heading
+                as="h3"
+                fontSize="lg"
+                fontWeight="bold"
+                color="#e8e5d8"
+                textTransform="uppercase"
+                mb={2}
+                textAlign="center"
+              >
                 {treeName}
-              </h3>
-              <div className="space-y-2">
+              </Heading>
+              <VStack gap={2} alignItems="stretch">
                 {coreAbilitiesByTree[treeName].map((ability) => (
                   <AbilityDisplay
                     key={ability.id}
@@ -106,20 +144,28 @@ export function AbilitiesList({
                     defaultExpanded={false}
                   />
                 ))}
-              </div>
-            </div>
+              </VStack>
+            </Box>
           ))}
-        </div>
+        </Box>
       )}
 
       {advancedTreeNamesDisplay.length > 0 && (
-        <div className="mb-4">
+        <Box mb={4}>
           {advancedTreeNamesDisplay.map((treeName) => (
-            <div key={treeName} className="mb-4">
-              <h3 className="text-lg font-bold text-[#e8e5d8] uppercase mb-2 text-center">
+            <Box key={treeName} mb={4}>
+              <Heading
+                as="h3"
+                fontSize="lg"
+                fontWeight="bold"
+                color="#e8e5d8"
+                textTransform="uppercase"
+                mb={2}
+                textAlign="center"
+              >
                 {treeName}
-              </h3>
-              <div className="space-y-2">
+              </Heading>
+              <VStack gap={2} alignItems="stretch">
                 {advancedAbilitiesByTree[treeName].map((ability) => (
                   <AbilityDisplay
                     key={ability.id}
@@ -132,17 +178,25 @@ export function AbilitiesList({
                     defaultExpanded={false}
                   />
                 ))}
-              </div>
-            </div>
+              </VStack>
+            </Box>
           ))}
-        </div>
+        </Box>
       )}
 
       {legendaryAbility && (
-        <div>
-          <h3 className="text-lg font-bold text-[var(--color-su-white)] uppercase mb-2 text-center">
+        <Box>
+          <Heading
+            as="h3"
+            fontSize="lg"
+            fontWeight="bold"
+            color="su.white"
+            textTransform="uppercase"
+            mb={2}
+            textAlign="center"
+          >
             Legendary Ability
-          </h3>
+          </Heading>
           <AbilityDisplay
             data={legendaryAbility}
             compact
@@ -152,8 +206,8 @@ export function AbilitiesList({
             collapsible
             defaultExpanded={false}
           />
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   )
 }

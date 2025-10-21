@@ -1,3 +1,4 @@
+import { Flex, Grid } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
 import { StatDisplay } from '../StatDisplay'
 
@@ -31,8 +32,8 @@ export function CrawlerResourceSteppers({
   const currentSP = maxSP - currentDamage
 
   return (
-    <div className="grid grid-cols-3 gap-4 p-4">
-      <div className="flex justify-start items-end">
+    <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} p={4}>
+      <Flex justifyContent="start" alignItems="end">
         <NumericStepper
           label="SP"
           value={currentSP}
@@ -40,11 +41,11 @@ export function CrawlerResourceSteppers({
           max={maxSP}
           min={0}
         />
-      </div>
-      <div className="flex justify-start items-end">
+      </Flex>
+      <Flex justifyContent="start" alignItems="end">
         <NumericStepper label="TECH LVL" value={techLevel} onChange={onTechLevelChange} min={1} />
-      </div>
-      <div className="flex justify-start items-end">
+      </Flex>
+      <Flex justifyContent="start" alignItems="end">
         <NumericStepper
           label="UPGRADE"
           value={upgrade}
@@ -52,18 +53,18 @@ export function CrawlerResourceSteppers({
           max={maxUpgrade}
           step={5}
         />
-      </div>
-      <div className="flex justify-start items-end">
+      </Flex>
+      <Flex justifyContent="start" alignItems="end">
         <NumericStepper
           label="TL1 SCRAP"
           value={currentScrap}
           onChange={onCurrentScrapChange}
           min={0}
         />
-      </div>
-      <div className="flex justify-start items-end">
+      </Flex>
+      <Flex justifyContent="start" alignItems="end">
         <StatDisplay label="UPKEEP" value={upkeep} />
-      </div>
-    </div>
+      </Flex>
+    </Grid>
   )
 }

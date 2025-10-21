@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { EquipmentDisplay } from '../EquipmentDisplay'
 import { StatDisplay } from '../StatDisplay'
@@ -25,39 +26,87 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
   }, [equipment, allEquipment])
 
   return (
-    <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
+    <Box
+      bg="var(--color-su-orange)"
+      borderWidth="8px"
+      borderColor="var(--color-su-orange)"
+      borderRadius="3xl"
+      p={6}
+      shadow="lg"
+    >
       {/* Header with Add Button and Equipment Count */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-[#e8e5d8] uppercase">Inventory</h2>
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-center">
-            <label className="text-xs font-bold text-[#e8e5d8] mb-1 block">Add</label>
-            <button
+      <Flex alignItems="center" justifyContent="space-between" mb={4}>
+        <Heading as="h2" fontSize="xl" fontWeight="bold" color="#e8e5d8" textTransform="uppercase">
+          Inventory
+        </Heading>
+        <Flex alignItems="center" gap={4}>
+          <Flex flexDirection="column" alignItems="center">
+            <Text as="label" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1} display="block">
+              Add
+            </Text>
+            <Button
               onClick={onAddClick}
               disabled={isFull}
-              className="w-16 h-16 rounded-2xl bg-[var(--color-su-light-orange)] text-[var(--color-su-white)] font-bold hover:bg-[var(--color-su-brick)] transition-colors border-2 border-dashed border-[#e8e5d8] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-su-light-orange)] flex items-center justify-center text-2xl"
+              w="16"
+              h="16"
+              borderRadius="2xl"
+              bg="su.lightOrange"
+              color="su.white"
+              fontWeight="bold"
+              _hover={{ bg: 'su.brick' }}
+              borderWidth="2px"
+              borderStyle="dashed"
+              borderColor="#e8e5d8"
+              _disabled={{
+                opacity: 0.5,
+                cursor: 'not-allowed',
+                _hover: { bg: 'su.lightOrange' },
+              }}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              fontSize="2xl"
             >
               +
-            </button>
-          </div>
+            </Button>
+          </Flex>
           <StatDisplay label="Equipment" value={`${equipment.length}/${MAX_SLOTS}`} />
-        </div>
-      </div>
+        </Flex>
+      </Flex>
 
-      <div className="columns-2 gap-3 space-y-3">
+      <Box css={{ columns: '2', gap: '0.75rem' }}>
         {equipmentItems.map((item) => (
-          <div key={`${item.id}-${item.index}`} className="relative break-inside-avoid mb-3">
+          <Box
+            key={`${item.id}-${item.index}`}
+            position="relative"
+            css={{ breakInside: 'avoid' }}
+            mb={3}
+          >
             <EquipmentDisplay data={item.equipment} />
-            <button
+            <Button
               onClick={() => onRemove(item.index)}
-              className="absolute top-2 right-2 bg-[var(--color-su-brick)] text-[var(--color-su-white)] w-6 h-6 rounded font-bold hover:bg-[var(--color-su-black)] transition-colors text-xs flex items-center justify-center z-10"
+              position="absolute"
+              top="2"
+              right="2"
+              bg="su.brick"
+              color="su.white"
+              w="6"
+              h="6"
+              borderRadius="md"
+              fontWeight="bold"
+              _hover={{ bg: 'su.black' }}
+              fontSize="xs"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              zIndex="10"
               aria-label="Remove equipment"
             >
               ✕
-            </button>
-          </div>
+            </Button>
+          </Box>
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }

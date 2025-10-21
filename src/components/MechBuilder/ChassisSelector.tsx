@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { Box, Text } from '@chakra-ui/react'
+import { NativeSelectRoot, NativeSelectField } from '@chakra-ui/react'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisSelectorProps {
@@ -30,24 +32,42 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
   }, [allChassis])
 
   return (
-    <div>
-      <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Chassis</label>
-      <select
-        value={chassisId || ''}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold"
+    <Box>
+      <Text
+        as="label"
+        display="block"
+        fontSize="sm"
+        fontWeight="bold"
+        color="#e8e5d8"
+        mb={2}
+        textTransform="uppercase"
       >
-        <option value="">Select a chassis...</option>
-        {groupedChassis.map(({ techLevel, chassis }) => (
-          <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>
-            {chassis.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </optgroup>
-        ))}
-      </select>
-    </div>
+        Chassis
+      </Text>
+      <NativeSelectRoot>
+        <NativeSelectField
+          value={chassisId || ''}
+          onChange={(e) => onChange(e.target.value)}
+          w="full"
+          p={3}
+          borderWidth={0}
+          borderRadius="2xl"
+          bg="#e8e5d8"
+          color="#2d3e36"
+          fontWeight="semibold"
+        >
+          <option value="">Select a chassis...</option>
+          {groupedChassis.map(({ techLevel, chassis }) => (
+            <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>
+              {chassis.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </NativeSelectField>
+      </NativeSelectRoot>
+    </Box>
   )
 }

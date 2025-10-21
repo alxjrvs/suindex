@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Box, Text, Input, VStack, Button, Flex, Badge } from '@chakra-ui/react'
 import type { Chassis } from 'salvageunion-reference'
 
 interface PatternSelectorProps {
@@ -18,9 +19,19 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
   }, [selectedChassis, pattern])
 
   return (
-    <div className="relative">
-      <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Pattern</label>
-      <input
+    <Box position="relative">
+      <Text
+        as="label"
+        display="block"
+        fontSize="sm"
+        fontWeight="bold"
+        color="#e8e5d8"
+        mb={2}
+        textTransform="uppercase"
+      >
+        Pattern
+      </Text>
+      <Input
         type="text"
         value={pattern}
         onChange={(e) => {
@@ -33,32 +44,70 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
         }}
         disabled={!selectedChassis}
         placeholder="Enter or select a pattern..."
-        className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50"
+        w="full"
+        p={3}
+        borderWidth={0}
+        borderRadius="2xl"
+        bg="#e8e5d8"
+        color="#2d3e36"
+        fontWeight="semibold"
+        _disabled={{ opacity: 0.5 }}
       />
       {showSuggestions && selectedChassis && filteredPatterns.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-[#e8e5d8] border-2 border-[#2d3e36] rounded-2xl shadow-lg max-h-60 overflow-y-auto">
-          {filteredPatterns.map((p) => (
-            <button
+        <VStack
+          position="absolute"
+          zIndex={10}
+          w="full"
+          mt={1}
+          bg="#e8e5d8"
+          borderWidth="2px"
+          borderColor="#2d3e36"
+          borderRadius="2xl"
+          shadow="lg"
+          maxH="60"
+          overflowY="auto"
+          gap={0}
+          alignItems="stretch"
+        >
+          {filteredPatterns.map((p, index) => (
+            <Button
               key={p.name}
-              type="button"
+              variant="ghost"
               onClick={() => {
                 onChange(p.name)
                 setShowSuggestions(false)
               }}
-              className="w-full text-left p-3 hover:bg-[var(--color-su-light-blue)] transition-colors font-semibold text-[#2d3e36] border-b border-[#2d3e36] last:border-b-0"
+              w="full"
+              textAlign="left"
+              p={3}
+              _hover={{ bg: 'su.lightBlue' }}
+              fontWeight="semibold"
+              color="#2d3e36"
+              borderBottomWidth={index < filteredPatterns.length - 1 ? '1px' : 0}
+              borderBottomColor="#2d3e36"
+              borderRadius={0}
+              justifyContent="flex-start"
+              h="auto"
             >
-              <div className="flex items-center gap-2">
-                <span>{p.name}</span>
+              <Flex alignItems="center" gap={2}>
+                <Text>{p.name}</Text>
                 {'legalStarting' in p && (
-                  <span className="bg-[var(--color-su-green)] text-[var(--color-su-white)] text-xs font-bold px-2 py-1 rounded">
+                  <Badge
+                    bg="su.green"
+                    color="su.white"
+                    fontSize="xs"
+                    fontWeight="bold"
+                    px={2}
+                    py={1}
+                  >
                     LEGAL STARTING PATTERN
-                  </span>
+                  </Badge>
                 )}
-              </div>
-            </button>
+              </Flex>
+            </Button>
           ))}
-        </div>
+        </VStack>
       )}
-    </div>
+    </Box>
   )
 }

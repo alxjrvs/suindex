@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
+import { HStack, Text, Button, Box } from '@chakra-ui/react'
+import { NativeSelectRoot, NativeSelectField } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 
 interface AssignmentDropdownProps {
@@ -22,26 +24,36 @@ function AssignmentDropdown({
   const id = `assignment-${label.toLowerCase().replace(/\s+/g, '-')}`
 
   return (
-    <div className="flex items-center gap-2">
-      <label htmlFor={id} className="text-sm font-semibold text-white whitespace-nowrap">
+    <HStack gap={2}>
+      <Text fontSize="sm" fontWeight="semibold" color="white" whiteSpace="nowrap" as="label">
         {label}:
-      </label>
-      <select
-        id={id}
-        value={value ?? ''}
-        onChange={(e) => onChange(e.target.value || null)}
-        disabled={disabled}
-        className="px-3 py-1 border-2 border-black rounded-lg bg-white text-black font-mono text-sm focus:outline-none focus:ring-2 focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed"
-        aria-label={label}
-      >
-        <option value="">{placeholder}</option>
-        {options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.name}
-          </option>
-        ))}
-      </select>
-    </div>
+      </Text>
+      <NativeSelectRoot size="sm" disabled={disabled}>
+        <NativeSelectField
+          id={id}
+          value={value ?? ''}
+          onChange={(e) => onChange(e.target.value || null)}
+          px={3}
+          py={1}
+          borderWidth="2px"
+          borderColor="black"
+          borderRadius="lg"
+          bg="white"
+          color="black"
+          fontFamily="mono"
+          fontSize="sm"
+          _focus={{ outline: 'none', ring: 2, ringColor: 'black' }}
+          aria-label={label}
+        >
+          <option value="">{placeholder}</option>
+          {options.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </NativeSelectField>
+      </NativeSelectRoot>
+    </HStack>
   )
 }
 
@@ -224,12 +236,19 @@ export function BuilderControlBar({
   }
 
   return (
-    <div
-      className="border-4 rounded-3xl px-6 py-3 flex items-center justify-between"
-      style={{ backgroundColor, borderColor: backgroundColor }}
+    <Box
+      borderWidth="4px"
+      borderRadius="3xl"
+      px={6}
+      py={3}
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      bg={backgroundColor}
+      borderColor={backgroundColor}
     >
       {/* Left side: Assignment dropdowns */}
-      <div className="flex items-center gap-4">
+      <HStack gap={4}>
         {entityType === 'crawler' && onGameChange && (
           <AssignmentDropdown
             label="Game"
@@ -260,52 +279,100 @@ export function BuilderControlBar({
             disabled={isLoading}
           />
         )}
-      </div>
+      </HStack>
 
       {/* Right side: Link buttons and action buttons */}
-      <div className="flex items-center gap-3">
+      <HStack gap={3}>
         {/* Link buttons - only show for saved entities */}
         {savedGameId && (
-          <Link
-            to={`/dashboard/games/${savedGameId}`}
-            className="px-3 py-2 bg-white border-2 border-black rounded-lg font-mono text-sm font-semibold hover:bg-gray-100 transition-colors"
+          <Button
+            asChild
+            px={3}
+            py={2}
+            bg="white"
+            borderWidth="2px"
+            borderColor="black"
+            borderRadius="lg"
+            fontFamily="mono"
+            fontSize="sm"
+            fontWeight="semibold"
+            _hover={{ bg: 'gray.100' }}
           >
-            → Game
-          </Link>
+            <RouterLink to={`/dashboard/games/${savedGameId}`}>→ Game</RouterLink>
+          </Button>
         )}
         {savedCrawlerId && entityType === 'pilot' && (
-          <Link
-            to={`/dashboard/crawlers/${savedCrawlerId}`}
-            className="px-3 py-2 bg-white border-2 border-black rounded-lg font-mono text-sm font-semibold hover:bg-gray-100 transition-colors"
+          <Button
+            asChild
+            px={3}
+            py={2}
+            bg="white"
+            borderWidth="2px"
+            borderColor="black"
+            borderRadius="lg"
+            fontFamily="mono"
+            fontSize="sm"
+            fontWeight="semibold"
+            _hover={{ bg: 'gray.100' }}
           >
-            → Crawler
-          </Link>
+            <RouterLink to={`/dashboard/crawlers/${savedCrawlerId}`}>→ Crawler</RouterLink>
+          </Button>
         )}
         {savedPilotId && (
-          <Link
-            to={`/dashboard/pilots/${savedPilotId}`}
-            className="px-3 py-2 bg-white border-2 border-black rounded-lg font-mono text-sm font-semibold hover:bg-gray-100 transition-colors"
+          <Button
+            asChild
+            px={3}
+            py={2}
+            bg="white"
+            borderWidth="2px"
+            borderColor="black"
+            borderRadius="lg"
+            fontFamily="mono"
+            fontSize="sm"
+            fontWeight="semibold"
+            _hover={{ bg: 'gray.100' }}
           >
-            → Pilot
-          </Link>
+            <RouterLink to={`/dashboard/pilots/${savedPilotId}`}>→ Pilot</RouterLink>
+          </Button>
         )}
 
         {/* Action buttons */}
-        <button
+        <Button
           onClick={handleReset}
           disabled={!hasUnsavedChanges || isResetting || isLoading}
-          className="px-4 py-2 bg-white border-2 border-black rounded-lg font-mono text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors"
+          px={4}
+          py={2}
+          bg="white"
+          borderWidth="2px"
+          borderColor="black"
+          borderRadius="lg"
+          fontFamily="mono"
+          fontSize="sm"
+          fontWeight="semibold"
+          _hover={{ bg: 'gray.100' }}
+          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
         >
           {isLoading ? 'Loading...' : isResetting ? 'Resetting...' : 'Reset Changes'}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleSave}
           disabled={!hasUnsavedChanges || isSaving || isLoading}
-          className="px-4 py-2 bg-black text-white border-2 border-black rounded-lg font-mono text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
+          px={4}
+          py={2}
+          bg="black"
+          color="white"
+          borderWidth="2px"
+          borderColor="black"
+          borderRadius="lg"
+          fontFamily="mono"
+          fontSize="sm"
+          fontWeight="semibold"
+          _hover={{ bg: 'gray.800' }}
+          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
         >
           {isLoading ? 'Loading...' : isSaving ? 'Saving...' : 'Save'}
-        </button>
-      </div>
-    </div>
+        </Button>
+      </HStack>
+    </Box>
   )
 }

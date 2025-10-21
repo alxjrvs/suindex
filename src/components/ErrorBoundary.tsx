@@ -1,4 +1,5 @@
 import React from 'react'
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
 
 interface ErrorBoundaryProps {
@@ -27,30 +28,54 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex items-center justify-center h-screen bg-[var(--color-su-white)]">
-          <div className="max-w-md w-full p-6 bg-[var(--color-su-light-blue)] rounded-lg shadow-lg border border-[var(--color-su-brick)]">
-            <h1 className="text-2xl font-bold text-[var(--color-su-brick)] mb-4">
+        <Flex alignItems="center" justifyContent="center" h="100vh" bg="su.white">
+          <Box
+            maxW="md"
+            w="full"
+            p={6}
+            bg="su.lightBlue"
+            borderRadius="lg"
+            shadow="lg"
+            borderWidth="1px"
+            borderColor="su.brick"
+          >
+            <Heading as="h1" fontSize="2xl" fontWeight="bold" color="su.brick" mb={4}>
               Oops! Something went wrong
-            </h1>
-            <p className="text-[var(--color-su-black)] mb-4">
+            </Heading>
+            <Text color="su.black" mb={4}>
               An unexpected error occurred. Please try refreshing the page.
-            </p>
-            <details className="mb-4 p-3 bg-[var(--color-su-white)] rounded border border-[var(--color-su-light-orange)]">
-              <summary className="cursor-pointer font-semibold text-[var(--color-su-black)]">
+            </Text>
+            <Box
+              as="details"
+              mb={4}
+              p={3}
+              bg="su.white"
+              borderRadius="md"
+              borderWidth="1px"
+              borderColor="su.lightOrange"
+            >
+              <Text as="summary" cursor="pointer" fontWeight="semibold" color="su.black">
                 Error Details
-              </summary>
-              <pre className="mt-2 text-xs text-[var(--color-su-brick)] overflow-auto max-h-40">
+              </Text>
+              <Text as="pre" mt={2} fontSize="xs" color="su.brick" overflowY="auto" maxH="40">
                 {this.state.error?.toString()}
-              </pre>
-            </details>
-            <button
+              </Text>
+            </Box>
+            <Button
               onClick={() => window.location.reload()}
-              className="w-full px-4 py-2 bg-[var(--color-su-orange)] text-[var(--color-su-white)] rounded-lg hover:bg-[var(--color-su-brick)] transition-colors font-medium"
+              w="full"
+              px={4}
+              py={2}
+              bg="su.orange"
+              color="su.white"
+              borderRadius="lg"
+              _hover={{ bg: 'su.brick' }}
+              fontWeight="medium"
             >
               Refresh Page
-            </button>
-          </div>
-        </div>
+            </Button>
+          </Box>
+        </Flex>
       )
     }
 

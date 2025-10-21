@@ -1,3 +1,4 @@
+import { Box, Flex, Heading, Grid, Button, Text } from '@chakra-ui/react'
 import { StatDisplay } from '../StatDisplay'
 import type { CargoItem } from './types'
 
@@ -19,42 +20,91 @@ export function CargoList({
   onAddClick,
 }: CargoListProps) {
   return (
-    <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-[#e8e5d8] uppercase">Cargo</h2>
+    <Box bg="#6b8e7f" borderWidth="8px" borderColor="#6b8e7f" borderRadius="3xl" p={6} shadow="lg">
+      <Flex alignItems="center" justifyContent="space-between" mb={4}>
+        <Heading as="h2" fontSize="xl" fontWeight="bold" color="#e8e5d8" textTransform="uppercase">
+          Cargo
+        </Heading>
         <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} />
-      </div>
+      </Flex>
 
-      <div className="grid grid-cols-4 gap-3">
+      <Grid templateColumns="repeat(4, 1fr)" gap={3}>
         {cargo.map((item) => (
-          <div
+          <Box
             key={item.id}
-            className="relative bg-[#e8e5d8] border-2 border-[#2d3e36] rounded-lg p-2 aspect-square flex flex-col"
+            position="relative"
+            bg="#e8e5d8"
+            borderWidth="2px"
+            borderColor="#2d3e36"
+            borderRadius="lg"
+            p={2}
+            aspectRatio="1"
+            display="flex"
+            flexDirection="column"
           >
-            <button
+            <Button
               onClick={() => onRemove(item.id)}
-              className="absolute top-1 right-1 bg-[var(--color-su-brick)] text-[var(--color-su-white)] w-5 h-5 rounded font-bold hover:bg-[var(--color-su-black)] text-xs flex items-center justify-center leading-none"
+              position="absolute"
+              top={1}
+              right={1}
+              bg="su.brick"
+              color="su.white"
+              w={5}
+              h={5}
+              borderRadius="md"
+              fontWeight="bold"
+              _hover={{ bg: 'su.black' }}
+              fontSize="xs"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              lineHeight="none"
               aria-label="Remove"
+              minW={5}
+              p={0}
             >
               ✕
-            </button>
-            <div className="flex-1 flex flex-col items-center justify-center">
-              <div className="text-3xl font-bold text-[#2d3e36]">{item.amount}</div>
-              <div className="text-xs text-[#2d3e36] text-center line-clamp-2 px-2">
+            </Button>
+            <Flex flex="1" flexDirection="column" alignItems="center" justifyContent="center">
+              <Text fontSize="3xl" fontWeight="bold" color="#2d3e36">
+                {item.amount}
+              </Text>
+              <Text
+                fontSize="xs"
+                color="#2d3e36"
+                textAlign="center"
+                px={2}
+                css={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                }}
+              >
                 {item.description}
-              </div>
-            </div>
-          </div>
+              </Text>
+            </Flex>
+          </Box>
         ))}
 
-        <button
+        <Button
           onClick={onAddClick}
           disabled={!canAddCargo}
-          className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-3 py-2 rounded-lg font-bold hover:bg-[var(--color-su-light-orange)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full aspect-square text-base"
+          bg="su.orange"
+          color="su.white"
+          px={3}
+          py={2}
+          borderRadius="lg"
+          fontWeight="bold"
+          _hover={{ bg: 'su.lightOrange' }}
+          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+          w="full"
+          aspectRatio="1"
+          fontSize="base"
         >
           + Add
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Grid>
+    </Box>
   )
 }

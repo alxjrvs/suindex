@@ -1,3 +1,5 @@
+import { Box, Flex, Image, Link, Text } from '@chakra-ui/react'
+
 interface FooterProps {
   variant?: 'landing' | 'inner' | 'nav'
 }
@@ -5,122 +7,139 @@ interface FooterProps {
 export default function Footer({ variant = 'inner' }: FooterProps) {
   if (variant === 'nav') {
     return (
-      <footer className="bg-[var(--color-su-white)] border-t border-[var(--color-su-light-blue)] py-3">
-        <div className="px-4 text-[var(--color-su-black)] text-xs flex flex-col items-center gap-3">
-          <div className="text-center">
-            <p>
+      <Box as="footer" bg="su.white" borderTopWidth="1px" borderTopColor="su.lightBlue" py={3}>
+        <Flex
+          px={4}
+          color="su.black"
+          fontSize="xs"
+          flexDirection="column"
+          alignItems="center"
+          gap={3}
+        >
+          <Box textAlign="center">
+            <Text>
               Salvage Union is copyrighted by{' '}
-              <a
+              <Link
                 href="https://leyline.press"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-[var(--color-su-brick)]"
+                textDecoration="underline"
+                _hover={{ color: 'su.brick' }}
               >
                 Leyline Press
-              </a>
+              </Link>
               .
-            </p>
-            <p>
+            </Text>
+            <Text>
               Salvage Union and the "Powered by Salvage" logo are used with permission of Leyline
               Press, under the{' '}
-              <a
+              <Link
                 href="https://leyline.press/pages/salvage-union-open-game-licence-1-0b"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-[var(--color-su-brick)]"
+                textDecoration="underline"
+                _hover={{ color: 'su.brick' }}
               >
                 Salvage Union Open Game Licence 1.0b
-              </a>
+              </Link>
               .
-            </p>
-          </div>
-          <img
-            src="/Powered_by_Salvage_Black.webp"
-            alt="Powered by Salvage"
-            className="h-12 w-auto"
-          />
-        </div>
-      </footer>
+            </Text>
+          </Box>
+          <Image src="/Powered_by_Salvage_Black.webp" alt="Powered by Salvage" h="12" w="auto" />
+        </Flex>
+      </Box>
     )
   }
 
   if (variant === 'landing') {
     return (
-      <footer className="bg-transparent py-3 mt-auto">
-        <div className="max-w-7xl mx-auto text-[var(--color-su-black)] text-xs flex items-center justify-center gap-4">
-          <div className="text-center">
-            <p>
+      <Box as="footer" bg="transparent" py={3} mt="auto">
+        <Flex
+          maxW="7xl"
+          mx="auto"
+          color="su.black"
+          fontSize="xs"
+          alignItems="center"
+          justifyContent="center"
+          gap={4}
+        >
+          <Box textAlign="center">
+            <Text>
               Salvage Union is copyrighted by{' '}
-              <a
+              <Link
                 href="https://leyline.press"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-[var(--color-su-brick)]"
+                textDecoration="underline"
+                _hover={{ color: 'su.brick' }}
               >
                 Leyline Press
-              </a>
+              </Link>
               .
-            </p>
-            <p>
+            </Text>
+            <Text>
               Salvage Union and the "Powered by Salvage" logo are used with permission of Leyline
               Press, under the{' '}
-              <a
+              <Link
                 href="https://leyline.press/pages/salvage-union-open-game-licence-1-0b"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-[var(--color-su-brick)]"
+                textDecoration="underline"
+                _hover={{ color: 'su.brick' }}
               >
                 Salvage Union Open Game Licence 1.0b
-              </a>
+              </Link>
               .
-            </p>
-          </div>
-          <img
-            src="/Powered_by_Salvage_Black.webp"
-            alt="Powered by Salvage"
-            className="h-12 w-auto"
-          />
-        </div>
-      </footer>
+            </Text>
+          </Box>
+          <Image src="/Powered_by_Salvage_Black.webp" alt="Powered by Salvage" h="12" w="auto" />
+        </Flex>
+      </Box>
     )
   }
 
   return (
-    <footer className="bg-[var(--color-su-green)] border-t border-[var(--color-su-black)] py-3 mt-auto">
-      <div className="max-w-7xl mx-auto text-[var(--color-su-black)] text-xs flex items-center justify-center gap-4">
-        <div className="text-center">
-          <p>
+    <Box as="footer" bg="su.green" borderTopWidth="1px" borderTopColor="su.black" py={3} mt="auto">
+      <Flex
+        maxW="7xl"
+        mx="auto"
+        color="su.black"
+        fontSize="xs"
+        alignItems="center"
+        justifyContent="center"
+        gap={4}
+      >
+        <Box textAlign="center">
+          <Text>
             Salvage Union is copyrighted by{' '}
-            <a
+            <Link
               href="https://leyline.press"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-[var(--color-su-brick)]"
+              textDecoration="underline"
+              _hover={{ color: 'su.brick' }}
             >
               Leyline Press
-            </a>
+            </Link>
             .
-          </p>
-          <p>
+          </Text>
+          <Text>
             Salvage Union and the "Powered by Salvage" logo are used with permission of Leyline
             Press, under the{' '}
-            <a
+            <Link
               href="https://leyline.press/pages/salvage-union-open-game-licence-1-0b"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-[var(--color-su-brick)]"
+              textDecoration="underline"
+              _hover={{ color: 'su.brick' }}
             >
               Salvage Union Open Game Licence 1.0b
-            </a>
+            </Link>
             .
-          </p>
-        </div>
-        <img
-          src="/Powered_by_Salvage_Black.webp"
-          alt="Powered by Salvage"
-          className="h-12 w-auto"
-        />
-      </div>
-    </footer>
+          </Text>
+        </Box>
+        <Image src="/Powered_by_Salvage_Black.webp" alt="Powered by Salvage" h="12" w="auto" />
+      </Flex>
+    </Box>
   )
 }

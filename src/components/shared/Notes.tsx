@@ -1,3 +1,5 @@
+import { Box, Heading, Textarea } from '@chakra-ui/react'
+
 interface NotesProps {
   notes: string
   onChange: (value: string) => void
@@ -5,7 +7,7 @@ interface NotesProps {
   backgroundColor?: string // Default to green (#6b8e7f)
   borderWidth?: 4 | 8 // Default to 8
   placeholder?: string // Default to "Add notes..."
-  height?: string // Default to 'h-96'
+  height?: string // Default to '96' (24rem)
 }
 
 export function Notes({
@@ -15,29 +17,52 @@ export function Notes({
   backgroundColor = '#6b8e7f',
   borderWidth = 8,
   placeholder = 'Add notes...',
-  height = 'h-96',
+  height = '96',
 }: NotesProps) {
-  const borderClass = borderWidth === 8 ? 'border-8' : 'border-4'
-  const roundedClass = borderWidth === 8 ? 'rounded-3xl' : 'rounded-2xl'
-  const paddingClass = borderWidth === 8 ? 'p-6' : 'p-4'
-  const titleClass = borderWidth === 8 ? 'text-xl mb-4' : 'text-lg mb-3'
-  const textareaRoundedClass = borderWidth === 8 ? 'rounded-2xl' : 'rounded-lg'
-  const textareaPaddingClass = borderWidth === 8 ? 'p-4' : 'p-3'
+  const borderW = borderWidth === 8 ? '8px' : '4px'
+  const borderR = borderWidth === 8 ? '3xl' : '2xl'
+  const padding = borderWidth === 8 ? 6 : 4
+  const titleSize = borderWidth === 8 ? 'xl' : 'lg'
+  const titleMb = borderWidth === 8 ? 4 : 3
+  const textareaR = borderWidth === 8 ? '2xl' : 'lg'
+  const textareaP = borderWidth === 8 ? 4 : 3
 
   return (
-    <div
-      className={`${borderClass} ${roundedClass} ${paddingClass} shadow-lg`}
-      style={{ backgroundColor, borderColor: backgroundColor }}
+    <Box
+      borderWidth={borderW}
+      borderRadius={borderR}
+      p={padding}
+      shadow="lg"
+      bg={backgroundColor}
+      borderColor={backgroundColor}
     >
-      <h2 className={`${titleClass} font-bold text-[#e8e5d8] uppercase`}>Notes</h2>
+      <Heading
+        as="h2"
+        fontSize={titleSize}
+        mb={titleMb}
+        fontWeight="bold"
+        color="#e8e5d8"
+        textTransform="uppercase"
+      >
+        Notes
+      </Heading>
 
-      <textarea
+      <Textarea
         value={notes}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
         placeholder={placeholder}
-        className={`w-full ${height} ${textareaPaddingClass} border-0 ${textareaRoundedClass} bg-[#e8e5d8] text-[#2d3e36] font-semibold resize-none disabled:opacity-50 disabled:cursor-not-allowed`}
+        w="full"
+        h={height}
+        p={textareaP}
+        borderWidth={0}
+        borderRadius={textareaR}
+        bg="#e8e5d8"
+        color="#2d3e36"
+        fontWeight="semibold"
+        resize="none"
+        _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
       />
-    </div>
+    </Box>
   )
 }

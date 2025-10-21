@@ -1,4 +1,7 @@
 import { useMemo } from 'react'
+import { Box, Flex, Grid, Input, Text } from '@chakra-ui/react'
+import { Checkbox as ChakraCheckbox } from '@chakra-ui/react'
+import { NativeSelectField, NativeSelectRoot } from '@chakra-ui/react'
 import { DiceRollButton } from '../shared/DiceRollButton'
 import { rollTable } from '@randsum/salvageunion'
 import type { Class } from 'salvageunion-reference'
@@ -84,45 +87,95 @@ export function PilotInfoInputs({
   }
 
   return (
-    <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
-      <div className="grid grid-cols-2 gap-4">
+    <Box
+      bg="var(--color-su-orange)"
+      borderWidth="8px"
+      borderColor="var(--color-su-orange)"
+      borderRadius="3xl"
+      p={6}
+      shadow="lg"
+    >
+      <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
         {/* Callsign */}
-        <div>
-          <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Callsign</label>
-          <input
+        <Box>
+          <Text
+            as="label"
+            display="block"
+            fontSize="sm"
+            fontWeight="bold"
+            color="#e8e5d8"
+            mb={2}
+            textTransform="uppercase"
+          >
+            Callsign
+          </Text>
+          <Input
             type="text"
             value={callsign}
             onChange={(e) => onCallsignChange(e.target.value)}
             disabled={disabled}
             placeholder="Enter callsign"
-            className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            w="full"
+            p={3}
+            borderWidth={0}
+            borderRadius="2xl"
+            bg="#e8e5d8"
+            color="#2d3e36"
+            fontWeight="semibold"
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           />
-        </div>
+        </Box>
 
         {/* Motto */}
-        <div>
-          <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase flex items-center justify-between">
-            <span>Motto</span>
-            <label className="flex items-center gap-2 text-xs normal-case font-normal">
-              <span>Used</span>
-              <input
-                type="checkbox"
+        <Box>
+          <Flex
+            as="label"
+            display="flex"
+            fontSize="sm"
+            fontWeight="bold"
+            color="#e8e5d8"
+            mb={2}
+            textTransform="uppercase"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Text as="span">Motto</Text>
+            <Flex
+              as="label"
+              alignItems="center"
+              gap={2}
+              fontSize="xs"
+              textTransform="none"
+              fontWeight="normal"
+            >
+              <Text as="span">Used</Text>
+              <ChakraCheckbox.Root
                 checked={mottoUsed}
-                onChange={(e) => onMottoUsedChange(e.target.checked)}
+                onCheckedChange={(e: { checked: boolean | 'indeterminate' }) =>
+                  onMottoUsedChange(e.checked === true)
+                }
                 disabled={disabled}
-                className="w-4 h-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="MottoUsed"
-              />
-            </label>
-          </label>
-          <div className="flex gap-2">
-            <input
+              >
+                <ChakraCheckbox.HiddenInput aria-label="MottoUsed" />
+                <ChakraCheckbox.Control />
+              </ChakraCheckbox.Root>
+            </Flex>
+          </Flex>
+          <Flex gap={2}>
+            <Input
               type="text"
               value={motto}
               onChange={(e) => onMottoChange(e.target.value)}
               disabled={disabled}
               placeholder="Enter motto"
-              className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              w="full"
+              p={3}
+              borderWidth={0}
+              borderRadius="2xl"
+              bg="#e8e5d8"
+              color="#2d3e36"
+              fontWeight="semibold"
+              _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
             />
             <DiceRollButton
               onClick={handleMottoRoll}
@@ -130,78 +183,135 @@ export function PilotInfoInputs({
               ariaLabel="Roll on the Motto table"
               title="Roll on the Motto table"
             />
-          </div>
-        </div>
+          </Flex>
+        </Box>
 
         {/* Class and Advanced Class - Together take same width as Callsign */}
-        <div className="flex gap-4">
+        <Flex gap={4}>
           {/* Class */}
-          <div className="flex-1">
-            <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Class</label>
-            <select
-              value={classId || ''}
-              onChange={(e) => onClassChange(e.target.value)}
-              disabled={disabled}
-              className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          <Box flex="1">
+            <Text
+              as="label"
+              display="block"
+              fontSize="sm"
+              fontWeight="bold"
+              color="#e8e5d8"
+              mb={2}
+              textTransform="uppercase"
             >
-              <option value="">Select a class...</option>
-              {basicClasses.map((cls) => (
-                <option key={cls.id} value={cls.id}>
-                  {cls.name}
-                </option>
-              ))}
-            </select>
-          </div>
+              Class
+            </Text>
+            <NativeSelectRoot disabled={disabled}>
+              <NativeSelectField
+                value={classId || ''}
+                onChange={(e) => onClassChange(e.target.value)}
+                w="full"
+                p={3}
+                borderWidth={0}
+                borderRadius="2xl"
+                bg="#e8e5d8"
+                color="#2d3e36"
+                fontWeight="semibold"
+                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+              >
+                <option value="">Select a class...</option>
+                {basicClasses.map((cls) => (
+                  <option key={cls.id} value={cls.id}>
+                    {cls.name}
+                  </option>
+                ))}
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Box>
 
           {/* Advanced Class */}
-          <div className="flex-1">
-            <label
-              htmlFor="advanced-class-select"
-              className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase"
+          <Box flex="1">
+            <Text
+              as="label"
+              display="block"
+              fontSize="sm"
+              fontWeight="bold"
+              color="#e8e5d8"
+              mb={2}
+              textTransform="uppercase"
             >
               Advanced Class
-            </label>
-            <select
-              id="advanced-class-select"
-              value={advancedClassId || ''}
-              onChange={(e) => onAdvancedClassChange(e.target.value)}
-              disabled={disabled || availableAdvancedClasses.length === 0}
-              className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <option value="">Select an advanced class...</option>
-              {availableAdvancedClasses.map((option) => (
-                <option key={`${option.id}-${option.isAdvancedVersion}`} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+            </Text>
+            <NativeSelectRoot disabled={disabled || availableAdvancedClasses.length === 0}>
+              <NativeSelectField
+                id="advanced-class-select"
+                value={advancedClassId || ''}
+                onChange={(e) => onAdvancedClassChange(e.target.value)}
+                w="full"
+                p={3}
+                borderWidth={0}
+                borderRadius="2xl"
+                bg="#e8e5d8"
+                color="#2d3e36"
+                fontWeight="semibold"
+                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+              >
+                <option value="">Select an advanced class...</option>
+                {availableAdvancedClasses.map((option) => (
+                  <option key={`${option.id}-${option.isAdvancedVersion}`} value={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Box>
+        </Flex>
 
         {/* Keepsake */}
-        <div>
-          <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase flex items-center justify-between">
-            <span>Keepsake</span>
-            <label className="flex items-center gap-2 text-xs normal-case font-normal">
-              <span>Used</span>
-              <input
-                type="checkbox"
+        <Box>
+          <Flex
+            as="label"
+            display="flex"
+            fontSize="sm"
+            fontWeight="bold"
+            color="#e8e5d8"
+            mb={2}
+            textTransform="uppercase"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Text as="span">Keepsake</Text>
+            <Flex
+              as="label"
+              alignItems="center"
+              gap={2}
+              fontSize="xs"
+              textTransform="none"
+              fontWeight="normal"
+            >
+              <Text as="span">Used</Text>
+              <ChakraCheckbox.Root
                 checked={keepsakeUsed}
-                onChange={(e) => onKeepsakeUsedChange(e.target.checked)}
+                onCheckedChange={(e: { checked: boolean | 'indeterminate' }) =>
+                  onKeepsakeUsedChange(e.checked === true)
+                }
                 disabled={disabled}
-                className="w-4 h-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="KeepsakeUsed"
-              />
-            </label>
-          </label>
-          <div className="flex gap-2">
-            <input
+              >
+                <ChakraCheckbox.HiddenInput aria-label="KeepsakeUsed" />
+                <ChakraCheckbox.Control />
+              </ChakraCheckbox.Root>
+            </Flex>
+          </Flex>
+          <Flex gap={2}>
+            <Input
               type="text"
               value={keepsake}
               onChange={(e) => onKeepsakeChange(e.target.value)}
               disabled={disabled}
               placeholder="Enter keepsake"
-              className="flex-1 p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              flex="1"
+              p={3}
+              borderWidth={0}
+              borderRadius="2xl"
+              bg="#e8e5d8"
+              color="#2d3e36"
+              fontWeight="semibold"
+              _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
             />
             <DiceRollButton
               onClick={handleKeepsakeRoll}
@@ -209,22 +319,37 @@ export function PilotInfoInputs({
               ariaLabel="Roll on the Keepsake table"
               title="Roll on the Keepsake table"
             />
-          </div>
-        </div>
+          </Flex>
+        </Box>
 
         {/* Appearance */}
-        <div>
-          <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">
+        <Box>
+          <Text
+            as="label"
+            display="block"
+            fontSize="sm"
+            fontWeight="bold"
+            color="#e8e5d8"
+            mb={2}
+            textTransform="uppercase"
+          >
             Appearance
-          </label>
-          <div className="flex gap-2">
-            <input
+          </Text>
+          <Flex gap={2}>
+            <Input
               type="text"
               value={appearance}
               onChange={(e) => onAppearanceChange(e.target.value)}
               disabled={disabled}
               placeholder="Enter appearance"
-              className="flex-1 p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              flex="1"
+              p={3}
+              borderWidth={0}
+              borderRadius="2xl"
+              bg="#e8e5d8"
+              color="#2d3e36"
+              fontWeight="semibold"
+              _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
             />
             <DiceRollButton
               onClick={handleAppearanceRoll}
@@ -232,35 +357,61 @@ export function PilotInfoInputs({
               ariaLabel="Roll on the Pilot Appearance table"
               title="Roll on the Pilot Appearance table"
             />
-          </div>
-        </div>
+          </Flex>
+        </Box>
 
         {/* Background */}
-        <div>
-          <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase flex items-center justify-between">
-            <span>Background</span>
-            <label className="flex items-center gap-2 text-xs normal-case font-normal">
-              <span>Used</span>
-              <input
-                type="checkbox"
+        <Box>
+          <Flex
+            as="label"
+            display="flex"
+            fontSize="sm"
+            fontWeight="bold"
+            color="#e8e5d8"
+            mb={2}
+            textTransform="uppercase"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Text as="span">Background</Text>
+            <Flex
+              as="label"
+              alignItems="center"
+              gap={2}
+              fontSize="xs"
+              textTransform="none"
+              fontWeight="normal"
+            >
+              <Text as="span">Used</Text>
+              <ChakraCheckbox.Root
                 checked={backgroundUsed}
-                onChange={(e) => onBackgroundUsedChange(e.target.checked)}
+                onCheckedChange={(e: { checked: boolean | 'indeterminate' }) =>
+                  onBackgroundUsedChange(e.checked === true)
+                }
                 disabled={disabled}
-                className="w-4 h-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="BackgroundUsed"
-              />
-            </label>
-          </label>
-          <input
+              >
+                <ChakraCheckbox.HiddenInput aria-label="BackgroundUsed" />
+                <ChakraCheckbox.Control />
+              </ChakraCheckbox.Root>
+            </Flex>
+          </Flex>
+          <Input
             type="text"
             value={background}
             onChange={(e) => onBackgroundChange(e.target.value)}
             disabled={disabled}
             placeholder="Enter background"
-            className="w-full p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            w="full"
+            p={3}
+            borderWidth={0}
+            borderRadius="2xl"
+            bg="#e8e5d8"
+            color="#2d3e36"
+            fontWeight="semibold"
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Grid>
+    </Box>
   )
 }

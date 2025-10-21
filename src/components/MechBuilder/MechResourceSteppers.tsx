@@ -1,3 +1,4 @@
+import { VStack } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
 import type { Chassis } from 'salvageunion-reference'
 
@@ -24,7 +25,7 @@ export function MechResourceSteppers({
   const currentSP = maxSP - currentDamage
 
   return (
-    <div className="flex flex-col items-center space-y-2">
+    <VStack alignItems="center" gap={2}>
       <NumericStepper
         label="SP"
         value={currentSP}
@@ -44,6 +45,6 @@ export function MechResourceSteppers({
         onChange={onHeatChange}
         max={stats?.heat_cap || 0}
       />
-    </div>
+    </VStack>
   )
 }

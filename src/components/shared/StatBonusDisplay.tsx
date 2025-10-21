@@ -1,3 +1,4 @@
+import { Box, Text } from '@chakra-ui/react'
 import { formatStatName } from '../../utils/displayUtils'
 
 interface StatBonusDisplayProps {
@@ -7,11 +8,13 @@ interface StatBonusDisplayProps {
 
 export function StatBonusDisplay({ bonus, stat }: StatBonusDisplayProps) {
   return (
-    <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-      <span className="font-bold text-[var(--color-su-brick)]">Stat Bonus: </span>
-      <span className="text-[var(--color-su-black)]">
+    <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+      <Text as="span" fontWeight="bold" color="su.brick">
+        Stat Bonus:{' '}
+      </Text>
+      <Text as="span" color="su.black">
         +{bonus} {formatStatName(stat)}
-      </span>
-    </div>
+      </Text>
+    </Box>
   )
 }

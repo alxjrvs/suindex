@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Box, Button, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import type { Equipment } from 'salvageunion-reference'
 import Modal from '../Modal'
 import { EquipmentDisplay } from '../EquipmentDisplay'
@@ -48,60 +49,76 @@ export function EquipmentSelector({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add Equipment">
-      <div className="space-y-4">
-        <input
+      <VStack gap={4} alignItems="stretch">
+        <Input
           type="text"
           placeholder="Search by name or description..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+          w="full"
+          px={4}
+          py={2}
+          borderWidth="2px"
+          borderColor="su.black"
+          borderRadius="md"
+          bg="su.white"
+          color="su.black"
         />
 
-        <div className="flex gap-2">
+        <Flex gap={2}>
           {techLevels.map((tl) => (
-            <button
+            <Button
               key={tl}
               onClick={() => setTechLevelFilter(tl)}
-              className={`px-3 py-2 rounded font-bold text-sm ${
-                techLevelFilter === tl
-                  ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                  : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
-              }`}
+              px={3}
+              py={2}
+              borderRadius="md"
+              fontWeight="bold"
+              fontSize="sm"
+              bg={techLevelFilter === tl ? 'su.orange' : 'su.lightBlue'}
+              color={techLevelFilter === tl ? 'su.white' : 'su.black'}
             >
               TL{tl}
-            </button>
+            </Button>
           ))}
-          <button
+          <Button
             onClick={() => setTechLevelFilter(null)}
-            className={`px-3 py-2 rounded font-bold text-sm ${
-              techLevelFilter === null
-                ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
-            }`}
+            px={3}
+            py={2}
+            borderRadius="md"
+            fontWeight="bold"
+            fontSize="sm"
+            bg={techLevelFilter === null ? 'su.orange' : 'su.lightBlue'}
+            color={techLevelFilter === null ? 'su.white' : 'su.black'}
           >
             All
-          </button>
-        </div>
+          </Button>
+        </Flex>
 
-        <div className="space-y-2 max-h-96 overflow-y-auto">
+        <VStack gap={2} maxH="96" overflowY="auto" alignItems="stretch">
           {filteredEquipment.length === 0 ? (
-            <p className="text-center text-[var(--color-su-black)] py-8">
+            <Text textAlign="center" color="su.black" py={8}>
               No equipment found matching your criteria.
-            </p>
+            </Text>
           ) : (
             filteredEquipment.map((item) => (
-              <button
+              <Box
+                as="button"
                 key={item.id}
                 onClick={() => handleSelect(item.id)}
-                className="w-full text-left transition-all hover:shadow-lg hover:scale-[1.01] cursor-pointer"
+                w="full"
+                textAlign="left"
+                transition="all 0.2s"
+                _hover={{ shadow: 'lg', transform: 'scale(1.01)' }}
+                cursor="pointer"
                 aria-label={item.name}
               >
                 <EquipmentDisplay data={item} />
-              </button>
+              </Box>
             ))
           )}
-        </div>
-      </div>
+        </VStack>
+      </VStack>
     </Modal>
   )
 }

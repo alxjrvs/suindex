@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react'
+import { Box, Button, Flex, Grid, Heading, VStack } from '@chakra-ui/react'
 import type { Ability, Class } from 'salvageunion-reference'
 import { AbilityDisplay } from '../AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
@@ -241,24 +242,58 @@ export function AbilitySelector({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-[var(--color-su-white)] rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] flex flex-col">
+    <Flex
+      position="fixed"
+      inset="0"
+      bg="blackAlpha.500"
+      alignItems="center"
+      justifyContent="center"
+      zIndex="50"
+      p={4}
+    >
+      <Flex
+        bg="su.white"
+        borderRadius="2xl"
+        shadow="2xl"
+        maxW="7xl"
+        w="full"
+        maxH="90vh"
+        flexDirection="column"
+      >
         {/* Header */}
-        <div className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-4 rounded-t-2xl flex items-center justify-between">
-          <h2 className="text-2xl font-bold uppercase">Select Ability</h2>
+        <Flex
+          bg="su.orange"
+          color="su.white"
+          px={6}
+          py={4}
+          borderTopRadius="2xl"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Heading as="h2" fontSize="2xl" fontWeight="bold" textTransform="uppercase">
+            Select Ability
+          </Heading>
           <StatDisplay label="TP" value={currentTP} />
-        </div>
+        </Flex>
 
         {/* Abilities Grid */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <Box flex="1" overflowY="auto" p={4}>
           {/* Core Trees - Three Columns */}
-          <div className="grid grid-cols-3 gap-4 mb-4">
+          <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} mb={4}>
             {coreTreeNames.map((treeName) => (
-              <div key={treeName} className="flex flex-col">
-                <h3 className="text-lg font-bold text-[var(--color-su-brick)] uppercase mb-2 text-center">
+              <Flex key={treeName} flexDirection="column">
+                <Heading
+                  as="h3"
+                  fontSize="lg"
+                  fontWeight="bold"
+                  color="su.brick"
+                  textTransform="uppercase"
+                  mb={2}
+                  textAlign="center"
+                >
                   {treeName}
-                </h3>
-                <div className="space-y-2">
+                </Heading>
+                <VStack gap={2} alignItems="stretch">
                   {coreTreeAbilities[treeName]?.map((ability) => {
                     const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
                     const canAfford = currentTP >= cost
@@ -281,25 +316,33 @@ export function AbilitySelector({
                       />
                     )
                   })}
-                </div>
-              </div>
+                </VStack>
+              </Flex>
             ))}
-          </div>
+          </Grid>
 
           {/* Advanced Class Abilities */}
           {selectedAdvancedClass && (
             <>
               {/* For advanced version, show advanced/legendary from base class */}
               {isAdvancedVersion ? (
-                <div className="flex justify-center mb-4">
-                  <div className="grid grid-cols-2 gap-4 max-w-4xl">
+                <Flex justifyContent="center" mb={4}>
+                  <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} maxW="4xl">
                     {/* Advanced Tree from base class */}
                     {advancedTreeAbilities.length > 0 && (
-                      <div className="flex flex-col">
-                        <h3 className="text-lg font-bold text-[var(--color-su-brick)] uppercase mb-2 text-center">
+                      <Flex flexDirection="column">
+                        <Heading
+                          as="h3"
+                          fontSize="lg"
+                          fontWeight="bold"
+                          color="su.brick"
+                          textTransform="uppercase"
+                          mb={2}
+                          textAlign="center"
+                        >
                           {advancedTreeName}
-                        </h3>
-                        <div className="space-y-2">
+                        </Heading>
+                        <VStack gap={2} alignItems="stretch">
                           {advancedTreeAbilities.map((ability) => {
                             const cost = getAbilityCost(
                               ability,
@@ -326,17 +369,25 @@ export function AbilitySelector({
                               />
                             )
                           })}
-                        </div>
-                      </div>
+                        </VStack>
+                      </Flex>
                     )}
 
                     {/* Legendary Abilities from base class */}
                     {legendaryAbilities.length > 0 && advancedTreeAbilities.length > 0 && (
-                      <div className="flex flex-col">
-                        <h3 className="text-lg font-bold text-[var(--color-su-pink)] uppercase mb-2 text-center">
+                      <Flex flexDirection="column">
+                        <Heading
+                          as="h3"
+                          fontSize="lg"
+                          fontWeight="bold"
+                          color="su.pink"
+                          textTransform="uppercase"
+                          mb={2}
+                          textAlign="center"
+                        >
                           Legendary Abilities
-                        </h3>
-                        <div className="space-y-2">
+                        </Heading>
+                        <VStack gap={2} alignItems="stretch">
                           {legendaryAbilities.map((ability) => {
                             const cost = 3 // Legendary abilities always cost 3 TP
                             const canAfford = currentTP >= cost
@@ -369,21 +420,29 @@ export function AbilitySelector({
                               />
                             )
                           })}
-                        </div>
-                      </div>
+                        </VStack>
+                      </Flex>
                     )}
-                  </div>
-                </div>
+                  </Grid>
+                </Flex>
               ) : (
-                <div className="flex justify-center mb-4">
-                  <div className="grid grid-cols-2 gap-4 max-w-4xl">
+                <Flex justifyContent="center" mb={4}>
+                  <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} maxW="4xl">
                     {/* For hybrid classes, show advanced class tree abilities */}
                     {advancedClassTreeAbilities.length > 0 && (
-                      <div className="flex flex-col">
-                        <h3 className="text-lg font-bold text-[var(--color-su-brick)] uppercase mb-2 text-center">
+                      <Flex flexDirection="column">
+                        <Heading
+                          as="h3"
+                          fontSize="lg"
+                          fontWeight="bold"
+                          color="su.brick"
+                          textTransform="uppercase"
+                          mb={2}
+                          textAlign="center"
+                        >
                           {selectedAdvancedClass.advancedAbilities}
-                        </h3>
-                        <div className="space-y-2">
+                        </Heading>
+                        <VStack gap={2} alignItems="stretch">
                           {advancedClassTreeAbilities.map((ability) => {
                             const cost = getAbilityCost(
                               ability,
@@ -412,17 +471,25 @@ export function AbilitySelector({
                               />
                             )
                           })}
-                        </div>
-                      </div>
+                        </VStack>
+                      </Flex>
                     )}
 
                     {/* Legendary Abilities from advanced class */}
                     {advancedClassLegendaryAbilities.length > 0 && (
-                      <div className="flex flex-col">
-                        <h3 className="text-lg font-bold text-[var(--color-su-pink)] uppercase mb-2 text-center">
+                      <Flex flexDirection="column">
+                        <Heading
+                          as="h3"
+                          fontSize="lg"
+                          fontWeight="bold"
+                          color="su.pink"
+                          textTransform="uppercase"
+                          mb={2}
+                          textAlign="center"
+                        >
                           Legendary Abilities
-                        </h3>
-                        <div className="space-y-2">
+                        </Heading>
+                        <VStack gap={2} alignItems="stretch">
                           {advancedClassLegendaryAbilities.map((ability) => {
                             const cost = 3 // Legendary abilities always cost 3 TP
                             const canAfford = currentTP >= cost
@@ -455,26 +522,33 @@ export function AbilitySelector({
                               />
                             )
                           })}
-                        </div>
-                      </div>
+                        </VStack>
+                      </Flex>
                     )}
-                  </div>
-                </div>
+                  </Grid>
+                </Flex>
               )}
             </>
           )}
-        </div>
+        </Box>
 
         {/* Footer */}
-        <div className="p-4 border-t border-[var(--color-su-black)]">
-          <button
+        <Box p={4} borderTopWidth="1px" borderTopColor="su.black">
+          <Button
             onClick={onClose}
-            className="w-full bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-6 py-3 rounded-lg font-bold hover:bg-[var(--color-su-black)] transition-colors"
+            w="full"
+            bg="su.brick"
+            color="su.white"
+            px={6}
+            py={3}
+            borderRadius="lg"
+            fontWeight="bold"
+            _hover={{ bg: 'su.black' }}
           >
             Close
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Box>
+      </Flex>
+    </Flex>
   )
 }

@@ -1,13 +1,18 @@
+import { Box, Container, VStack } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
+
 interface BuilderLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function BuilderLayout({ children }: BuilderLayoutProps) {
   return (
-    <div className="bg-white min-h-screen px-6 pt-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="space-y-6">{children}</div>
-      </div>
-    </div>
+    <Box bg="white" minH="100vh" px={6} pt={6}>
+      <Container maxW="7xl">
+        <VStack gap={6} alignItems="stretch">
+          {children}
+        </VStack>
+      </Container>
+    </Box>
   )
 }

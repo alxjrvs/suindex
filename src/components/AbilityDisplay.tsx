@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import { ActionDisplay } from './shared/ActionDisplay'
 import type { Ability } from 'salvageunion-reference'
@@ -42,47 +43,67 @@ function generateAbilityDetails(ability: Ability): DataValue[] {
 
 function AbilityContent({ data }: { data: Ability }) {
   return (
-    <div className="space-y-4">
+    <VStack gap={4} alignItems="stretch">
       {data.description && (
-        <div>
-          <h4 className="font-bold text-[var(--color-su-black)] mb-2">Description:</h4>
-          <p className="text-[var(--color-su-black)] leading-relaxed">{data.description}</p>
-        </div>
+        <Box>
+          <Heading as="h4" fontWeight="bold" color="su.black" mb={2} fontSize="md">
+            Description:
+          </Heading>
+          <Text color="su.black" lineHeight="relaxed">
+            {data.description}
+          </Text>
+        </Box>
       )}
 
       {data.effect && (
-        <div>
-          <h4 className="font-bold text-[var(--color-su-black)] mb-2">Effect:</h4>
-          <p className="text-[var(--color-su-black)] leading-relaxed whitespace-pre-line">
+        <Box>
+          <Heading as="h4" fontWeight="bold" color="su.black" mb={2} fontSize="md">
+            Effect:
+          </Heading>
+          <Text color="su.black" lineHeight="relaxed" whiteSpace="pre-line">
             {data.effect}
-          </p>
-        </div>
+          </Text>
+        </Box>
       )}
 
       {data.subAbilities && data.subAbilities.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="font-bold text-[var(--color-su-black)] mb-2">Sub-Abilities:</h4>
+        <VStack gap={3} alignItems="stretch">
+          <Heading as="h4" fontWeight="bold" color="su.black" mb={2} fontSize="md">
+            Sub-Abilities:
+          </Heading>
           {data.subAbilities.map((subAbility, index) => (
             <ActionDisplay key={index} action={subAbility} activationCurrency="AP" />
           ))}
-        </div>
+        </VStack>
       )}
 
-      <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-[var(--color-su-brick)]">Tree:</span>
-          <span className="text-[var(--color-su-black)]">{data.tree}</span>
-        </div>
-        <div className="flex items-center gap-2 mt-1">
-          <span className="font-bold text-[var(--color-su-brick)]">Source:</span>
-          <span className="text-[var(--color-su-black)] capitalize">{data.source}</span>
-        </div>
-        <div className="flex items-center gap-2 mt-1">
-          <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
-          <span className="text-[var(--color-su-black)]">{data.page}</span>
-        </div>
-      </div>
-    </div>
+      <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+        <Flex alignItems="center" gap={2}>
+          <Text as="span" fontWeight="bold" color="su.brick">
+            Tree:
+          </Text>
+          <Text as="span" color="su.black">
+            {data.tree}
+          </Text>
+        </Flex>
+        <Flex alignItems="center" gap={2} mt={1}>
+          <Text as="span" fontWeight="bold" color="su.brick">
+            Source:
+          </Text>
+          <Text as="span" color="su.black" textTransform="capitalize">
+            {data.source}
+          </Text>
+        </Flex>
+        <Flex alignItems="center" gap={2} mt={1}>
+          <Text as="span" fontWeight="bold" color="su.brick">
+            Page:
+          </Text>
+          <Text as="span" color="su.black">
+            {data.page}
+          </Text>
+        </Flex>
+      </Box>
+    </VStack>
   )
 }
 
@@ -134,9 +155,6 @@ export function AbilityDisplay({
   }
 
   // Compact mode for selector/list
-  // Only apply hover effect if not dimmed (i.e., selectable)
-  const opacityClass = dimmed ? 'opacity-50' : 'opacity-100 hover:opacity-100'
-
   // Handler for clicking on the component (only for toggle when showSelectButton is false)
   const handleClick = () => {
     if (showSelectButton) {
@@ -155,70 +173,121 @@ export function AbilityDisplay({
   }
 
   return (
-    <div
-      className={`w-full border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] ${opacityClass} ${showRemoveButton ? 'relative' : ''} ${!showSelectButton && onClick && !dimmed ? 'cursor-pointer' : collapsible ? 'cursor-pointer' : ''}`}
+    <Box
+      w="full"
+      borderWidth="2px"
+      borderColor="su.black"
+      bg="su.white"
+      opacity={dimmed ? 0.5 : 1}
+      _hover={dimmed ? {} : { opacity: 1 }}
+      position={showRemoveButton ? 'relative' : undefined}
+      cursor={
+        !showSelectButton && onClick && !dimmed ? 'pointer' : collapsible ? 'pointer' : undefined
+      }
       onClick={handleClick}
     >
       {/* Header */}
-      <div
-        className="text-[var(--color-su-white)] px-3 py-2 font-bold uppercase flex items-center gap-2 flex-wrap"
-        style={{ backgroundColor: headerColor }}
+      <Flex
+        color="su.white"
+        px={3}
+        py={2}
+        fontWeight="bold"
+        textTransform="uppercase"
+        alignItems="center"
+        gap={2}
+        flexWrap="wrap"
+        bg={headerColor}
       >
         {/* Expand/Collapse Icon */}
         {collapsible && (
-          <span className="text-[var(--color-su-white)] text-lg">{isExpanded ? '▼' : '▶'}</span>
+          <Text as="span" color="su.white" fontSize="lg">
+            {isExpanded ? '▼' : '▶'}
+          </Text>
         )}
 
-        <span className="bg-[var(--color-su-white)] text-[var(--color-su-black)] font-bold px-2 py-1 rounded min-w-[30px] text-center">
+        <Text
+          as="span"
+          bg="su.white"
+          color="su.black"
+          fontWeight="bold"
+          px={2}
+          py={1}
+          borderRadius="md"
+          minW="30px"
+          textAlign="center"
+        >
           {data.level}
-        </span>
-        <span className="flex-1">{data.name}</span>
+        </Text>
+        <Text as="span" flex="1">
+          {data.name}
+        </Text>
 
         {data.activationCost && (
-          <div className="flex items-center" style={{ overflow: 'visible' }}>
-            <div
-              className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold uppercase flex items-center justify-center whitespace-nowrap"
-              style={{
-                fontSize: '13px',
-                paddingLeft: '6px',
-                paddingRight: '6px',
-                paddingTop: '2px',
-                paddingBottom: '2px',
-                height: '20px',
-                minWidth: '50px',
-                zIndex: 2,
-              }}
+          <Flex alignItems="center" overflow="visible">
+            <Box
+              bg="su.black"
+              color="su.white"
+              fontWeight="bold"
+              textTransform="uppercase"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              whiteSpace="nowrap"
+              fontSize="13px"
+              pl="6px"
+              pr="6px"
+              pt="2px"
+              pb="2px"
+              h="20px"
+              minW="50px"
+              zIndex={2}
             >
               {data.activationCost === 'Variable' ? 'X AP' : `${data.activationCost} AP`}
-            </div>
-            <div
-              style={{
-                width: 0,
-                height: 0,
-                borderTop: '10px solid transparent',
-                borderBottom: '10px solid transparent',
-                borderLeft: '10px solid var(--color-su-black)',
-                marginLeft: '0px',
-                zIndex: 1,
-              }}
+            </Box>
+            <Box
+              w={0}
+              h={0}
+              borderTop="10px solid transparent"
+              borderBottom="10px solid transparent"
+              borderLeft="10px solid var(--color-su-black)"
+              ml={0}
+              zIndex={1}
             />
-          </div>
+          </Flex>
         )}
 
         {/* Tags in header */}
         {data.range && (
-          <span className="bg-[var(--color-su-white)] text-[var(--color-su-black)] px-2 py-1 rounded text-xs font-bold">
+          <Text
+            as="span"
+            bg="su.white"
+            color="su.black"
+            px={2}
+            py={1}
+            borderRadius="md"
+            fontSize="xs"
+            fontWeight="bold"
+          >
             {data.range}
-          </span>
+          </Text>
         )}
         {data.actionType && (
-          <span className="bg-[var(--color-su-white)] text-[var(--color-su-black)] px-2 py-1 rounded text-xs font-bold">
+          <Text
+            as="span"
+            bg="su.white"
+            color="su.black"
+            px={2}
+            py={1}
+            borderRadius="md"
+            fontSize="xs"
+            fontWeight="bold"
+          >
             {data.actionType}
-          </span>
+          </Text>
         )}
 
         {showRemoveButton && onRemove && (
-          <button
+          <Button
             onClick={(e) => {
               e.stopPropagation()
               if (disableRemove) return
@@ -232,53 +301,69 @@ export function AbilityDisplay({
               }
             }}
             disabled={disableRemove}
-            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-1 rounded font-bold hover:bg-[var(--color-su-black)] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-su-brick)]"
+            bg="su.brick"
+            color="su.white"
+            px={3}
+            py={1}
+            borderRadius="md"
+            fontWeight="bold"
+            _hover={{ bg: 'su.black' }}
+            fontSize="sm"
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed', _hover: { bg: 'su.brick' } }}
             aria-label="Remove ability"
           >
             ✕
-          </button>
+          </Button>
         )}
-      </div>
+      </Flex>
 
       {(!collapsible || isExpanded) && (
-        <div className="p-3 space-y-2">
+        <VStack gap={2} p={3} alignItems="stretch">
           {data.description && (
-            <div>
-              <p className="text-[var(--color-su-black)] text-sm">{data.description}</p>
-            </div>
+            <Box>
+              <Text color="su.black" fontSize="sm">
+                {data.description}
+              </Text>
+            </Box>
           )}
 
           {data.effect && (
-            <div>
-              <p className="text-[var(--color-su-black)] text-sm leading-relaxed whitespace-pre-line">
+            <Box>
+              <Text color="su.black" fontSize="sm" lineHeight="relaxed" whiteSpace="pre-line">
                 {data.effect}
-              </p>
-            </div>
+              </Text>
+            </Box>
           )}
 
           {data.subAbilities && data.subAbilities.length > 0 && (
-            <div className="space-y-2 pt-2">
+            <VStack gap={2} pt={2} alignItems="stretch">
               {data.subAbilities.map((subAbility, index) => (
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 <ActionDisplay key={index} action={subAbility as any} activationCurrency="AP" />
               ))}
-            </div>
+            </VStack>
           )}
 
           {/* Footer - Source, Page */}
-          <div className="pt-2 border-t border-[var(--color-su-black)] text-xs text-[var(--color-su-brick)]">
-            <div className="flex items-center gap-2">
-              <span className="font-bold">Source:</span>
-              <span className="capitalize">{data.source}</span>
-              <span>•</span>
-              <span className="font-bold">Page:</span>
-              <span>{data.page}</span>
-            </div>
-          </div>
+          <Box pt={2} borderTopWidth="1px" borderTopColor="su.black" fontSize="xs" color="su.brick">
+            <Flex alignItems="center" gap={2}>
+              <Text as="span" fontWeight="bold">
+                Source:
+              </Text>
+              <Text as="span" textTransform="capitalize">
+                {data.source}
+              </Text>
+              <Text as="span">•</Text>
+              <Text as="span" fontWeight="bold">
+                Page:
+              </Text>
+              <Text as="span">{data.page}</Text>
+            </Flex>
+          </Box>
 
           {/* Select Button - Only shown in modal */}
           {showSelectButton && onClick && (
-            <button
+            <Button
               onClick={(e) => {
                 e.stopPropagation()
                 if (!dimmed) {
@@ -286,13 +371,22 @@ export function AbilityDisplay({
                 }
               }}
               disabled={dimmed}
-              className="w-full mt-3 bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded font-bold hover:bg-[var(--color-su-black)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-su-orange)]"
+              w="full"
+              mt={3}
+              bg="su.orange"
+              color="su.white"
+              px={4}
+              py={2}
+              borderRadius="md"
+              fontWeight="bold"
+              _hover={{ bg: 'su.black' }}
+              _disabled={{ opacity: 0.5, cursor: 'not-allowed', _hover: { bg: 'su.orange' } }}
             >
               Add to Pilot{selectButtonCost !== undefined ? ` (${selectButtonCost} TP)` : ''}
-            </button>
+            </Button>
           )}
-        </div>
+        </VStack>
       )}
-    </div>
+    </Box>
   )
 }

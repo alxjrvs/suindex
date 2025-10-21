@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { Box, Flex, Grid, Text } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
@@ -75,9 +76,11 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
   if (loading) {
     return (
       <BuilderLayout>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-xl font-mono">Loading crawler...</p>
-        </div>
+        <Flex alignItems="center" justifyContent="center" h="64">
+          <Text fontSize="xl" fontFamily="mono">
+            Loading crawler...
+          </Text>
+        </Flex>
       </BuilderLayout>
     )
   }
@@ -85,12 +88,16 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
   if (error) {
     return (
       <BuilderLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <p className="text-xl font-mono text-red-600 mb-4">Error loading crawler</p>
-            <p className="text-sm font-mono text-gray-600">{error}</p>
-          </div>
-        </div>
+        <Flex alignItems="center" justifyContent="center" h="64">
+          <Box textAlign="center">
+            <Text fontSize="xl" fontFamily="mono" color="red.600" mb={4}>
+              Error loading crawler
+            </Text>
+            <Text fontSize="sm" fontFamily="mono" color="gray.600">
+              {error}
+            </Text>
+          </Box>
+        </Flex>
       </BuilderLayout>
     )
   }
@@ -119,9 +126,16 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
         />
       )}
       {/* Header Section */}
-      <div className="flex gap-6">
-        <div className="flex-1">
-          <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl p-6 shadow-lg">
+      <Flex gap={6}>
+        <Box flex="1">
+          <Box
+            bg="#c97d9e"
+            borderWidth="4px"
+            borderColor="#c97d9e"
+            borderRadius="3xl"
+            p={6}
+            shadow="lg"
+          >
             <CrawlerHeaderInputs
               name={crawler.name}
               crawlerTypeId={crawler.crawler_type_id ?? null}
@@ -131,11 +145,22 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
               onCrawlerTypeChange={handleCrawlerTypeChange}
               onDescriptionChange={(value) => updateCrawler({ description: value })}
             />
-          </div>
-        </div>
+          </Box>
+        </Box>
 
         {/* Resource Steppers */}
-        <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl px-2 py-6 shadow-lg flex items-center justify-center">
+        <Box
+          bg="#c97d9e"
+          borderWidth="4px"
+          borderColor="#c97d9e"
+          borderRadius="3xl"
+          px={2}
+          py={6}
+          shadow="lg"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <CrawlerResourceSteppers
             currentDamage={crawler.current_damage ?? 0}
             maxSP={maxSP}
@@ -149,17 +174,24 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
             onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
             onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
           />
-        </div>
-      </div>
+        </Box>
+      </Flex>
 
       {/* Abilities Section - Full Width */}
-      <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl p-6 shadow-lg">
+      <Box
+        bg="#c97d9e"
+        borderWidth="4px"
+        borderColor="#c97d9e"
+        borderRadius="3xl"
+        p={6}
+        shadow="lg"
+      >
         <CrawlerAbilities crawler={selectedCrawlerType} />
-      </div>
+      </Box>
 
       {/* Bays Grid - First Row */}
       {firstRowBays.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
+        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
           {firstRowBays.map((bay) => (
             <BayCard
               key={bay.id}
@@ -167,12 +199,12 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
               onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
             />
           ))}
-        </div>
+        </Grid>
       )}
 
       {/* Bays Grid - Second Row */}
       {secondRowBays.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
+        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
           {secondRowBays.map((bay) => (
             <BayCard
               key={bay.id}
@@ -180,12 +212,12 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
               onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
             />
           ))}
-        </div>
+        </Grid>
       )}
 
       {/* Bays Grid - Third Row */}
       {thirdRowBays.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
+        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
           {thirdRowBays.map((bay) => (
             <BayCard
               key={bay.id}
@@ -193,11 +225,11 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
               onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
             />
           ))}
-        </div>
+        </Grid>
       )}
 
       {/* Storage Bay and Notes - Side by Side */}
-      <div className="grid grid-cols-2 gap-4">
+      <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
         {/* Storage Bay */}
         {storageBay && (
           <StorageBay
@@ -220,7 +252,7 @@ export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
           placeholder="Add notes about your crawler..."
           height="flex-1"
         />
-      </div>
+      </Grid>
 
       {/* Cargo Modal */}
       <CargoModal

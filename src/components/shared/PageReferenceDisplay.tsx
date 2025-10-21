@@ -1,3 +1,5 @@
+import { Box, Text } from '@chakra-ui/react'
+
 interface PageReferenceDisplayProps {
   source: string
   page: number
@@ -5,8 +7,18 @@ interface PageReferenceDisplayProps {
 
 export function PageReferenceDisplay({ source, page }: PageReferenceDisplayProps) {
   return (
-    <div className="mt-4 pt-3 border-t-2 border-[var(--color-su-black)] text-sm text-[var(--color-su-black)]">
-      <span className="font-bold uppercase">{source}</span> • Page {page}
-    </div>
+    <Box
+      mt={4}
+      pt={3}
+      borderTopWidth="2px"
+      borderTopColor="su.black"
+      fontSize="sm"
+      color="su.black"
+    >
+      <Text as="span" fontWeight="bold" textTransform="uppercase">
+        {source}
+      </Text>{' '}
+      • Page {page}
+    </Box>
   )
 }

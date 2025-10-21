@@ -1,3 +1,4 @@
+import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import type { Crawler } from 'salvageunion-reference'
 
 interface CrawlerAbilitiesProps {
@@ -6,9 +7,19 @@ interface CrawlerAbilitiesProps {
 
 export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
   return (
-    <div className="mb-6">
-      <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Ability</label>
-      <div className="space-y-3">
+    <Box mb={6}>
+      <Text
+        as="label"
+        display="block"
+        fontSize="sm"
+        fontWeight="bold"
+        color="#e8e5d8"
+        mb={2}
+        textTransform="uppercase"
+      >
+        Ability
+      </Text>
+      <VStack gap={3} alignItems="stretch">
         {(
           crawler?.abilities || [
             {
@@ -17,16 +28,27 @@ export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
             },
           ]
         ).map((ability, idx) => (
-          <div key={idx} className="bg-[#e8e5d8] border-2 border-[#2d3e36] rounded-2xl p-4">
+          <Box
+            key={idx}
+            bg="#e8e5d8"
+            borderWidth="2px"
+            borderColor="#2d3e36"
+            borderRadius="2xl"
+            p={4}
+          >
             {ability.name && (
-              <h3 className="font-bold text-[#2d3e36] text-lg mb-2">{ability.name}</h3>
+              <Heading as="h3" fontWeight="bold" color="#2d3e36" fontSize="lg" mb={2}>
+                {ability.name}
+              </Heading>
             )}
             {ability.description && (
-              <p className="text-[#2d3e36] leading-relaxed">{ability.description}</p>
+              <Text color="#2d3e36" lineHeight="relaxed">
+                {ability.description}
+              </Text>
             )}
-          </div>
+          </Box>
         ))}
-      </div>
-    </div>
+      </VStack>
+    </Box>
   )
 }

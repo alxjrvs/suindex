@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { SystemModuleSelector } from './SystemModuleSelector'
 import { ChassisSelector } from './ChassisSelector'
@@ -91,9 +92,11 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
   if (loading) {
     return (
       <BuilderLayout>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-xl font-mono">Loading mech...</p>
-        </div>
+        <Flex alignItems="center" justifyContent="center" h="64">
+          <Text fontSize="xl" fontFamily="mono">
+            Loading mech...
+          </Text>
+        </Flex>
       </BuilderLayout>
     )
   }
@@ -101,12 +104,16 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
   if (error) {
     return (
       <BuilderLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <p className="text-xl font-mono text-red-600 mb-4">Error loading mech</p>
-            <p className="text-sm font-mono text-gray-600">{error}</p>
-          </div>
-        </div>
+        <Flex alignItems="center" justifyContent="center" h="64">
+          <VStack textAlign="center">
+            <Text fontSize="xl" fontFamily="mono" color="red.600" mb={4}>
+              Error loading mech
+            </Text>
+            <Text fontSize="sm" fontFamily="mono" color="gray.600">
+              {error}
+            </Text>
+          </VStack>
+        </Flex>
       </BuilderLayout>
     )
   }
@@ -125,11 +132,18 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
           hasUnsavedChanges={hasUnsavedChanges}
         />
       )}
-      <div className="flex gap-6">
-        <div className="flex-1 space-y-6">
-          <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
-            <div className="bg-[#6b8e7f] rounded-2xl p-4">
-              <div className="grid grid-cols-2 gap-4">
+      <Flex gap={6}>
+        <VStack flex="1" gap={6} alignItems="stretch">
+          <Box
+            bg="#6b8e7f"
+            borderWidth="8px"
+            borderColor="#6b8e7f"
+            borderRadius="3xl"
+            p={6}
+            shadow="lg"
+          >
+            <Box bg="#6b8e7f" borderRadius="2xl" p={4}>
+              <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                 <ChassisSelector
                   chassisId={mech.chassis_id ?? null}
                   allChassis={allChassis}
@@ -141,23 +155,40 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
                   selectedChassis={selectedChassis}
                   onChange={handlePatternChange}
                 />
-              </div>
-            </div>
-          </div>
+              </Grid>
+            </Box>
+          </Box>
 
-          <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-4 shadow-lg">
-            <div className="bg-[#6b8e7f] rounded-2xl p-2">
+          <Box
+            bg="#6b8e7f"
+            borderWidth="8px"
+            borderColor="#6b8e7f"
+            borderRadius="3xl"
+            p={4}
+            shadow="lg"
+          >
+            <Box bg="#6b8e7f" borderRadius="2xl" p={2}>
               <ChassisStatsGrid
                 stats={stats}
                 usedSystemSlots={usedSystemSlots}
                 usedModuleSlots={usedModuleSlots}
                 totalCargo={totalCargo}
               />
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </VStack>
 
-        <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl px-2 py-6 shadow-lg flex items-center justify-center">
+        <Flex
+          bg="#6b8e7f"
+          borderWidth="8px"
+          borderColor="#6b8e7f"
+          borderRadius="3xl"
+          px={2}
+          py={6}
+          shadow="lg"
+          alignItems="center"
+          justifyContent="center"
+        >
           <MechResourceSteppers
             stats={stats}
             currentDamage={mech.current_damage ?? 0}
@@ -168,11 +199,18 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
             onHeatChange={(value) => updateMech({ current_heat: value })}
           />
 
-          {stats && <div className="flex flex-col gap-3 bg-[#6b8e7f] rounded-2xl p-4"></div>}
-        </div>
-      </div>
+          {stats && <VStack gap={3} bg="#6b8e7f" borderRadius="2xl" p={4}></VStack>}
+        </Flex>
+      </Flex>
 
-      <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
+      <Box
+        bg="#6b8e7f"
+        borderWidth="8px"
+        borderColor="#6b8e7f"
+        borderRadius="3xl"
+        p={6}
+        shadow="lg"
+      >
         <ChassisAbilities chassis={selectedChassis} />
 
         <QuirkAppearanceInputs
@@ -182,7 +220,7 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
           onQuirkChange={(value) => updateMech({ quirk: value })}
           onAppearanceChange={(value) => updateMech({ appearance: value })}
         />
-      </div>
+      </Box>
 
       <SystemsModulesList
         systems={mech.systems ?? []}
@@ -197,7 +235,7 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
         onAddClick={() => setIsSelectorOpen(true)}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
         <CargoList
           cargo={mech.cargo ?? []}
           totalCargo={totalCargo}
@@ -211,11 +249,11 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
           notes={mech.notes ?? ''}
           onChange={(value) => updateMech({ notes: value })}
           disabled={!selectedChassis}
-          backgroundColor="var(--color-su-green)"
+          backgroundColor="#6b8e7f"
           borderWidth={8}
           placeholder="Add notes about your mech..."
         />
-      </div>
+      </Grid>
 
       <SystemModuleSelector
         availableSystemSlots={Number(stats?.system_slots) - usedSystemSlots || 0}

@@ -1,4 +1,5 @@
 import { rollTable } from '@randsum/salvageunion'
+import { Grid, Box, Text, Input, Flex } from '@chakra-ui/react'
 import { DiceRollButton } from '../shared/DiceRollButton'
 
 interface QuirkAppearanceInputsProps {
@@ -29,17 +30,34 @@ export function QuirkAppearanceInputs({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Quirk</label>
-        <div className="flex gap-2 items-center">
-          <input
+    <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
+      <Box>
+        <Text
+          as="label"
+          display="block"
+          fontSize="sm"
+          fontWeight="bold"
+          color="#e8e5d8"
+          mb={2}
+          textTransform="uppercase"
+        >
+          Quirk
+        </Text>
+        <Flex gap={2} alignItems="center">
+          <Input
             type="text"
             value={quirk}
             onChange={(e) => onQuirkChange(e.target.value)}
             placeholder="Enter quirk..."
             disabled={disabled}
-            className="flex-1 p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            flex="1"
+            p={3}
+            borderWidth={0}
+            borderRadius="2xl"
+            bg="#e8e5d8"
+            color="#2d3e36"
+            fontWeight="semibold"
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           />
           <DiceRollButton
             onClick={handleRollQuirk}
@@ -47,19 +65,36 @@ export function QuirkAppearanceInputs({
             ariaLabel="Roll for quirk"
             title="Roll on the Quirks table"
           />
-        </div>
-      </div>
+        </Flex>
+      </Box>
 
-      <div>
-        <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">Appearance</label>
-        <div className="flex gap-2 items-center">
-          <input
+      <Box>
+        <Text
+          as="label"
+          display="block"
+          fontSize="sm"
+          fontWeight="bold"
+          color="#e8e5d8"
+          mb={2}
+          textTransform="uppercase"
+        >
+          Appearance
+        </Text>
+        <Flex gap={2} alignItems="center">
+          <Input
             type="text"
             value={appearance}
             onChange={(e) => onAppearanceChange(e.target.value)}
             placeholder="Enter appearance..."
             disabled={disabled}
-            className="flex-1 p-3 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            flex="1"
+            p={3}
+            borderWidth={0}
+            borderRadius="2xl"
+            bg="#e8e5d8"
+            color="#2d3e36"
+            fontWeight="semibold"
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           />
           <DiceRollButton
             onClick={handleRollAppearance}
@@ -67,8 +102,8 @@ export function QuirkAppearanceInputs({
             ariaLabel="Roll for appearance"
             title="Roll on the Mech Appearance table"
           />
-        </div>
-      </div>
-    </div>
+        </Flex>
+      </Box>
+    </Grid>
   )
 }

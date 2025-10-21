@@ -1,3 +1,5 @@
+import { Box, Flex, Text } from '@chakra-ui/react'
+
 interface Stat {
   label: string
   value: string | number | undefined
@@ -11,22 +13,23 @@ interface StatListProps {
 
 export function StatList({ stats, notes, up = false }: StatListProps) {
   return (
-    <div>
+    <Box>
       {!up && notes && (
-        <div className="text-sm font-bold text-[var(--color-su-black)] mb-2">{notes}</div>
+        <Text fontSize="sm" fontWeight="bold" color="su.black" mb={2}>
+          {notes}
+        </Text>
       )}
-      <div
-        className={`flex flex-row overflow-visible ${up ? 'pt-20' : ''}`}
-        style={{ overflow: 'visible' }}
-      >
+      <Flex flexDirection="row" overflow="visible" pt={up ? 20 : 0}>
         {stats.map((stat, index) => (
           <StatItem key={index} label={stat.label} value={stat.value} up={up} />
         ))}
-      </div>
+      </Flex>
       {up && notes && (
-        <div className="text-sm font-bold text-[var(--color-su-black)] mt-2">{notes}</div>
+        <Text fontSize="sm" fontWeight="bold" color="su.black" mt={2}>
+          {notes}
+        </Text>
       )}
-    </div>
+    </Box>
   )
 }
 
@@ -40,68 +43,69 @@ function StatItem({
   up: boolean
 }) {
   return (
-    <div className="flex flex-row relative" style={{ overflow: 'visible' }}>
+    <Flex flexDirection="row" position="relative" overflow="visible">
       <StatLabel up={up}>{label}</StatLabel>
       <StatValue>{value ?? '-'}</StatValue>
-    </div>
+    </Flex>
   )
 }
 
 function StatValue({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="bg-[var(--color-su-white)] border-2 border-[var(--color-su-black)] flex items-center justify-center font-bold text-[var(--color-su-black)]"
-      style={{
-        width: '30px',
-        height: '30px',
-        minWidth: '30px',
-        minHeight: '30px',
-        maxWidth: '30px',
-        maxHeight: '30px',
-        zIndex: 3,
-        overflow: 'visible',
-      }}
+    <Box
+      bg="su.white"
+      borderWidth="2px"
+      borderColor="su.black"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      fontWeight="bold"
+      color="su.black"
+      w="30px"
+      h="30px"
+      minW="30px"
+      minH="30px"
+      maxW="30px"
+      maxH="30px"
+      zIndex={3}
+      overflow="visible"
     >
       {children}
-    </div>
+    </Box>
   )
 }
 
 function StatLabel({ children, up }: { children: React.ReactNode; up: boolean }) {
   return (
-    <div
-      className="absolute flex items-center justify-center"
-      style={{
-        transform: 'rotate(-45deg)',
-        transformOrigin: 'left',
-        minWidth: '140px',
-        height: '14px',
-        zIndex: 2,
-        overflow: 'visible',
-        ...(up
-          ? {
-              top: '0',
-              left: '9px',
-              justifyContent: 'flex-start',
-            }
-          : {
-              bottom: '-95px',
-              left: '-75px',
-              justifyContent: 'flex-end',
-            }),
-      }}
+    <Box
+      position="absolute"
+      display="flex"
+      alignItems="center"
+      justifyContent={up ? 'flex-start' : 'flex-end'}
+      transform="rotate(-45deg)"
+      transformOrigin="left"
+      minW="140px"
+      h="14px"
+      zIndex={2}
+      overflow="visible"
+      top={up ? '0' : undefined}
+      left={up ? '9px' : '-75px'}
+      bottom={up ? undefined : '-95px'}
     >
-      <div
-        className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-black text-[11px] uppercase whitespace-nowrap"
-        style={{
-          paddingRight: up ? '5px' : '22px',
-          paddingLeft: up ? '22px' : '5px',
-          paddingTop: '1px',
-          textAlign: 'right',
-        }}
+      <Box
+        bg="su.black"
+        color="su.white"
+        fontWeight="black"
+        fontSize="11px"
+        textTransform="uppercase"
+        whiteSpace="nowrap"
+        pr={up ? '5px' : '22px'}
+        pl={up ? '22px' : '5px'}
+        pt="1px"
+        textAlign="right"
       >
         {children}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }

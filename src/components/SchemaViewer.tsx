@@ -1,3 +1,4 @@
+import { Box, Flex, Heading, Text } from '@chakra-ui/react'
 import type { SchemaInfo } from '../types/schema'
 import DataTable from './DataTable'
 import { useSchemaData } from '../hooks/useSchemaData'
@@ -15,29 +16,35 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-xl">Loading data...</div>
-      </div>
+      <Flex alignItems="center" justifyContent="center" h="full">
+        <Text fontSize="xl">Loading data...</Text>
+      </Flex>
     )
   }
 
   if (error || !currentSchema) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-xl text-red-600">Error: {error || 'Schema not found'}</div>
-      </div>
+      <Flex alignItems="center" justifyContent="center" h="full">
+        <Text fontSize="xl" color="red.600">
+          Error: {error || 'Schema not found'}
+        </Text>
+      </Flex>
     )
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="bg-[var(--color-su-white)] shadow-sm border-b border-[var(--color-su-light-blue)] p-6">
-        <h2 className="text-2xl font-bold text-[var(--color-su-black)]">{currentSchema.title}</h2>
-        <p className="text-[var(--color-su-brick)] mt-1">{currentSchema.description}</p>
-      </div>
-      <div className="flex-1 overflow-auto">
+    <Flex h="full" flexDirection="column">
+      <Box bg="su.white" shadow="sm" borderBottomWidth="1px" borderColor="su.lightBlue" p={6}>
+        <Heading as="h2" fontSize="2xl" fontWeight="bold" color="su.black">
+          {currentSchema.title}
+        </Heading>
+        <Text color="su.brick" mt={1}>
+          {currentSchema.description}
+        </Text>
+      </Box>
+      <Box flex="1" overflowY="auto">
         <DataTable data={data} schema={currentSchema} />
-      </div>
-    </div>
+      </Box>
+    </Flex>
   )
 }

@@ -1,3 +1,5 @@
+import { IconButton } from '@chakra-ui/react'
+
 interface DiceRollButtonProps {
   onClick: () => void
   disabled?: boolean
@@ -7,12 +9,20 @@ interface DiceRollButtonProps {
 
 export function DiceRollButton({ onClick, disabled, ariaLabel, title }: DiceRollButtonProps) {
   return (
-    <button
+    <IconButton
       onClick={onClick}
       disabled={disabled}
-      className="text-[#e8e5d8] hover:text-[var(--color-su-white)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-2 border-[#e8e5d8] hover:border-[var(--color-su-white)] rounded-lg p-1"
+      color="#e8e5d8"
+      _hover={{ color: 'su.white', borderColor: 'su.white' }}
+      _disabled={{ opacity: 0.3, cursor: 'not-allowed' }}
+      borderWidth="2px"
+      borderColor="#e8e5d8"
+      borderRadius="lg"
+      p={1}
       aria-label={ariaLabel}
       title={title}
+      variant="outline"
+      bg="transparent"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -23,6 +33,6 @@ export function DiceRollButton({ onClick, disabled, ariaLabel, title }: DiceRoll
       >
         <path d="M240-120q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM240-600q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240 240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />
       </svg>
-    </button>
+    </IconButton>
   )
 }

@@ -1,3 +1,4 @@
+import { Box, Text, VStack } from '@chakra-ui/react'
 import { ActionDisplay } from './ActionDisplay'
 import type { BioTitan, NPC } from 'salvageunion-reference'
 
@@ -10,31 +11,37 @@ interface AbilityCardProps {
 
 export function AbilityCard({ ability, headerColor = 'var(--color-su-brick)' }: AbilityCardProps) {
   return (
-    <div className="border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)]">
-      <div
-        className="text-[var(--color-su-white)] px-3 py-2 font-bold uppercase"
-        style={{ backgroundColor: headerColor }}
+    <Box borderWidth="2px" borderColor="su.black" bg="su.white">
+      <Box
+        color="su.white"
+        px={3}
+        py={2}
+        fontWeight="bold"
+        textTransform="uppercase"
+        bg={headerColor}
       >
         {ability.name}
-      </div>
+      </Box>
 
-      <div className="p-3 space-y-2">
+      <VStack gap={2} p={3} alignItems="stretch">
         <ActionDisplay action={ability} />
 
         {'description' in ability &&
         ability.description &&
         typeof ability.description === 'string' ? (
-          <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
-            <p className="text-[var(--color-su-black)]">{ability.description}</p>
-          </div>
+          <Box pt={2} borderTopWidth="2px" borderTopColor="su.black">
+            <Text color="su.black">{ability.description}</Text>
+          </Box>
         ) : null}
 
         {'effect' in ability && ability.effect && typeof ability.effect === 'string' ? (
-          <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
-            <p className="text-[var(--color-su-black)] italic">{ability.effect}</p>
-          </div>
+          <Box pt={2} borderTopWidth="2px" borderTopColor="su.black">
+            <Text color="su.black" fontStyle="italic">
+              {ability.effect}
+            </Text>
+          </Box>
         ) : null}
-      </div>
-    </div>
+      </VStack>
+    </Box>
   )
 }

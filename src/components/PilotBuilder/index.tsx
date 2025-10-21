@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { Box, Flex, Heading, Text, Textarea, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -79,9 +80,11 @@ export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
   if (loading) {
     return (
       <BuilderLayout>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-xl font-mono">Loading pilot...</p>
-        </div>
+        <Flex alignItems="center" justifyContent="center" h="64">
+          <Text fontSize="xl" fontFamily="mono">
+            Loading pilot...
+          </Text>
+        </Flex>
       </BuilderLayout>
     )
   }
@@ -89,12 +92,16 @@ export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
   if (error) {
     return (
       <BuilderLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <p className="text-xl font-mono text-red-600 mb-4">Error loading pilot</p>
-            <p className="text-sm font-mono text-gray-600">{error}</p>
-          </div>
-        </div>
+        <Flex alignItems="center" justifyContent="center" h="64">
+          <VStack textAlign="center">
+            <Text fontSize="xl" fontFamily="mono" color="red.600" mb={4}>
+              Error loading pilot
+            </Text>
+            <Text fontSize="sm" fontFamily="mono" color="gray.600">
+              {error}
+            </Text>
+          </VStack>
+        </Flex>
       </BuilderLayout>
     )
   }
@@ -114,9 +121,9 @@ export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
         />
       )}
       {/* Top Section: Pilot Info and Resources */}
-      <div className="flex gap-6">
+      <Flex gap={6}>
         {/* Middle: Pilot Info */}
-        <div className="flex-1">
+        <Box flex="1">
           <PilotInfoInputs
             callsign={pilot.callsign}
             motto={pilot.motto ?? ''}
@@ -142,10 +149,10 @@ export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
             onClassChange={handleClassChange}
             onAdvancedClassChange={(value) => updatePilot({ advanced_class_id: value })}
           />
-        </div>
+        </Box>
 
         {/* Right: Resource Steppers */}
-        <div className="w-40">
+        <Box w="40">
           <PilotResourceSteppers
             maxHP={pilot.max_hp ?? 10}
             currentDamage={pilot.current_damage ?? 0}
@@ -157,8 +164,8 @@ export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
             onTPChange={(value) => updatePilot({ current_tp: value })}
             disabled={!selectedClass}
           />
-        </div>
-      </div>
+        </Box>
+      </Flex>
 
       {/* Abilities Section */}
       <AbilitiesList
@@ -184,16 +191,41 @@ export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
       />
 
       {/* Notes Section */}
-      <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
-        <h2 className="text-xl font-bold text-[#e8e5d8] uppercase mb-4">Notes</h2>
-        <textarea
+      <Box
+        bg="var(--color-su-orange)"
+        borderWidth="8px"
+        borderColor="var(--color-su-orange)"
+        borderRadius="3xl"
+        p={6}
+        shadow="lg"
+      >
+        <Heading
+          as="h2"
+          fontSize="xl"
+          fontWeight="bold"
+          color="#e8e5d8"
+          textTransform="uppercase"
+          mb={4}
+        >
+          Notes
+        </Heading>
+        <Textarea
           value={pilot.notes ?? ''}
           onChange={(e) => updatePilot({ notes: e.target.value })}
           disabled={false}
           placeholder="Add notes about your pilot..."
-          className="w-full h-96 p-4 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+          w="full"
+          h={96}
+          p={4}
+          borderWidth={0}
+          borderRadius="2xl"
+          bg="#e8e5d8"
+          color="#2d3e36"
+          fontWeight="semibold"
+          resize="none"
+          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
         />
-      </div>
+      </Box>
 
       {/* Ability Selector Modal */}
       <AbilitySelector

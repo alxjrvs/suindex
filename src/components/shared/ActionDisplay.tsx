@@ -1,3 +1,4 @@
+import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { DataList } from './DataList'
 import type { DataValue } from '../../types/common'
 import type { ReactNode } from 'react'
@@ -31,13 +32,15 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
 
   const dataList: ReactNode =
     dataListValues.length > 0 ? (
-      <div>
+      <Box>
         <DataList values={dataListValues} />
-      </div>
+      </Box>
     ) : null
 
   const descriptionElement: ReactNode = description ? (
-    <p className="text-[var(--color-su-black)] whitespace-pre-line">{description}</p>
+    <Text color="su.black" whiteSpace="pre-line">
+      {description}
+    </Text>
   ) : null
 
   const optionsElement: ReactNode =
@@ -45,13 +48,13 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
     action.options &&
     Array.isArray(action.options) &&
     action.options.length > 0 ? (
-      <div className="space-y-1 ml-4">
+      <VStack gap={1} ml={4} alignItems="stretch">
         {action.options.map((option, index) => (
-          <div key={index} className="text-[var(--color-su-black)]">
+          <Box key={index} color="su.black">
             • {option}
-          </div>
+          </Box>
         ))}
-      </div>
+      </VStack>
     ) : null
 
   const subAbilitiesElement: ReactNode =
@@ -59,78 +62,101 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
     action.subAbilities &&
     Array.isArray(action.subAbilities) &&
     action.subAbilities.length > 0 ? (
-      <div className="space-y-2 mt-2 border-t-2 border-[var(--color-su-black)] pt-2">
+      <VStack
+        gap={2}
+        mt={2}
+        borderTopWidth="2px"
+        borderTopColor="su.black"
+        pt={2}
+        alignItems="stretch"
+      >
         {action.subAbilities.map((subAbility, index) => (
-          <div key={index} className="ml-2">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-[var(--color-su-black)]">{subAbility.name}</span>
+          <Box key={index} ml={2}>
+            <Flex alignItems="center" gap={2}>
+              <Text as="span" fontWeight="bold" color="su.black">
+                {subAbility.name}
+              </Text>
               {subAbility.actionType && (
-                <span className="text-sm text-[var(--color-su-brick)]">
+                <Text as="span" fontSize="sm" color="su.brick">
                   ({subAbility.actionType})
-                </span>
+                </Text>
               )}
               {subAbility.activationCost && (
-                <span className="text-sm text-[var(--color-su-brick)]">
+                <Text as="span" fontSize="sm" color="su.brick">
                   {subAbility.activationCost} AP
-                </span>
+                </Text>
               )}
-            </div>
+            </Flex>
             {subAbility.description && (
-              <p className="text-sm text-[var(--color-su-black)] mt-1">{subAbility.description}</p>
+              <Text fontSize="sm" color="su.black" mt={1}>
+                {subAbility.description}
+              </Text>
             )}
-          </div>
+          </Box>
         ))}
-      </div>
+      </VStack>
     ) : null
 
   const notesElement: ReactNode =
     'notes' in action && action.notes && typeof action.notes === 'string' ? (
-      <p className="text-sm text-[var(--color-su-black)] italic mt-2">{action.notes}</p>
+      <Text fontSize="sm" color="su.black" fontStyle="italic" mt={2}>
+        {action.notes}
+      </Text>
     ) : null
 
   return (
-    <div className="border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] p-3 space-y-2">
-      <div className="flex items-center gap-1">
+    <VStack
+      borderWidth="2px"
+      borderColor="su.black"
+      bg="su.white"
+      p={3}
+      gap={2}
+      alignItems="stretch"
+    >
+      <Flex alignItems="center" gap={1}>
         {'activationCost' in action && action.activationCost && (
-          <div className="flex items-center" style={{ overflow: 'visible' }}>
-            <div
-              className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold uppercase flex items-center justify-center whitespace-nowrap"
-              style={{
-                fontSize: '15px',
-                paddingLeft: '6px',
-                paddingRight: '6px',
-                paddingTop: '2px',
-                paddingBottom: '2px',
-                height: '20px',
-                minWidth: '50px',
-                zIndex: 2,
-              }}
+          <Flex alignItems="center" overflow="visible">
+            <Flex
+              bg="su.black"
+              color="su.white"
+              fontWeight="bold"
+              textTransform="uppercase"
+              alignItems="center"
+              justifyContent="center"
+              whiteSpace="nowrap"
+              fontSize="15px"
+              px="6px"
+              py="2px"
+              h="20px"
+              minW="50px"
+              zIndex={2}
             >
               {`${action.activationCost === 'Variable' ? 'X' : action.activationCost} ${activationCurrency}`}
-            </div>
-            <div
-              style={{
-                width: 0,
-                height: 0,
-                borderTop: '10px solid transparent',
-                borderBottom: '10px solid transparent',
-                borderLeft: '10px solid var(--color-su-black)',
-                marginLeft: '0px',
-                zIndex: 1,
-              }}
+            </Flex>
+            <Box
+              w={0}
+              h={0}
+              borderTop="10px solid transparent"
+              borderBottom="10px solid transparent"
+              borderLeft="10px solid"
+              borderLeftColor="su.black"
+              ml={0}
+              zIndex={1}
             />
-          </div>
+          </Flex>
         )}
         {'name' in action && action.name && (
-          <span className="font-bold text-[var(--color-su-black)] text-[17px]">{action.name}</span>
+          <Text as="span" fontWeight="bold" color="su.black" fontSize="17px">
+            {action.name}
+          </Text>
         )}
-      </div>
+      </Flex>
 
       {dataList}
       {descriptionElement}
       {optionsElement}
       {subAbilitiesElement}
       {notesElement}
-    </div>
+    </VStack>
   )
 }

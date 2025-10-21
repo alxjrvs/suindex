@@ -1,3 +1,4 @@
+import { VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import { ActionDisplay } from './shared/ActionDisplay'
 import type { Equipment } from 'salvageunion-reference'
@@ -43,11 +44,11 @@ export function EquipmentDisplay({ data }: EquipmentDisplayProps) {
       showSidebar={false}
     >
       {data.actions && data.actions.length > 0 && (
-        <div className="space-y-3">
+        <VStack gap={3} alignItems="stretch">
           {data.actions.map((action, index) => (
             <ActionDisplay key={index} action={action} activationCurrency="AP" />
           ))}
-        </div>
+        </VStack>
       )}
     </Frame>
   )

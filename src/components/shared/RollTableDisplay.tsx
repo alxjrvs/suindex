@@ -1,3 +1,4 @@
+import { Box, Flex, Text } from '@chakra-ui/react'
 import type { Table } from 'salvageunion-reference'
 
 interface DigestedRollTable {
@@ -39,37 +40,46 @@ export function RollTableDisplay({ rollTable, showCommand = false }: RollTableDi
   const digestedTable = digestRollTable(rollTable)
 
   return (
-    <div>
+    <Box>
       {showCommand && (
-        <div className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold uppercase text-center self-center p-2 mb-2">
+        <Box
+          bg="su.black"
+          color="su.white"
+          fontWeight="bold"
+          textTransform="uppercase"
+          textAlign="center"
+          alignSelf="center"
+          p={2}
+          mb={2}
+        >
           ROLL THE DIE:
-        </div>
+        </Box>
       )}
       {digestedTable.map(({ name, description, key }, index) => {
         if (key === 'type') return null
         const showTitle = name !== description
-        const bgColor = index % 2 === 0 ? 'var(--color-su-light-orange)' : 'var(--color-su-white)'
+        const bgColor = index % 2 === 0 ? 'su.lightOrange' : 'su.white'
 
         return (
-          <div
-            key={key + name + index}
-            className="flex flex-row flex-wrap"
-            style={{ backgroundColor: bgColor }}
-          >
-            <div className="flex-1 flex items-center justify-center self-center">
-              <span className="text-xl font-bold text-[var(--color-su-black)] text-center">
+          <Flex key={key + name + index} flexDirection="row" flexWrap="wrap" bg={bgColor}>
+            <Flex flex="1" alignItems="center" justifyContent="center" alignSelf="center">
+              <Text fontSize="xl" fontWeight="bold" color="su.black" textAlign="center">
                 {key}
-              </span>
-            </div>
-            <div className="flex-[4] flex flex-row flex-wrap py-1">
-              <p className="text-[var(--color-su-black)]">
-                {showTitle && <span className="font-bold">{name}: </span>}
+              </Text>
+            </Flex>
+            <Flex flex="4" flexDirection="row" flexWrap="wrap" py={1}>
+              <Text color="su.black">
+                {showTitle && (
+                  <Text as="span" fontWeight="bold">
+                    {name}:{' '}
+                  </Text>
+                )}
                 {description}
-              </p>
-            </div>
-          </div>
+              </Text>
+            </Flex>
+          </Flex>
         )
       })}
-    </div>
+    </Box>
   )
 }

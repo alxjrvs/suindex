@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Box, Flex, Heading, VStack, Button } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { System, Module } from 'salvageunion-reference'
 import { SystemDisplay } from '../SystemDisplay'
@@ -58,64 +59,125 @@ export function SystemsModulesList({
   }, [modules, allModules])
 
   return (
-    <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-[#e8e5d8] uppercase">Systems & Modules</h2>
-        <div className="flex gap-3">
+    <Box bg="#6b8e7f" borderWidth="8px" borderColor="#6b8e7f" borderRadius="3xl" p={6} shadow="lg">
+      <Flex alignItems="center" justifyContent="space-between" mb={4}>
+        <Heading as="h2" fontSize="xl" fontWeight="bold" color="#e8e5d8" textTransform="uppercase">
+          Systems & Modules
+        </Heading>
+        <Flex gap={3}>
           <StatDisplay label="System Slots" value={`${usedSystemSlots}/${totalSystemSlots}`} />
           <StatDisplay label="Module Slots" value={`${usedModuleSlots}/${totalModuleSlots}`} />
-        </div>
-      </div>
+        </Flex>
+      </Flex>
 
-      <div className="space-y-4">
+      <VStack gap={4} alignItems="stretch">
         {sortedSystems.length > 0 && (
-          <div className="space-y-3">
-            <h3 className="text-lg font-bold text-[#e8e5d8] uppercase">Systems</h3>
-            <div className="columns-1 md:columns-2 gap-4 space-y-4">
+          <VStack gap={3} alignItems="stretch">
+            <Heading
+              as="h3"
+              fontSize="lg"
+              fontWeight="bold"
+              color="#e8e5d8"
+              textTransform="uppercase"
+            >
+              Systems
+            </Heading>
+            <Box
+              css={{
+                columns: '1',
+                '@media (min-width: 768px)': { columns: '2' },
+                gap: '1rem',
+              }}
+            >
               {sortedSystems.map((system) => (
-                <div key={system.id} className="relative break-inside-avoid mb-4">
-                  <button
+                <Box key={system.id} position="relative" css={{ breakInside: 'avoid' }} mb={4}>
+                  <Button
                     onClick={() => onRemoveSystem(system.id)}
-                    className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
+                    position="absolute"
+                    top={2}
+                    right={2}
+                    zIndex={10}
+                    bg="su.brick"
+                    color="su.white"
+                    px={3}
+                    py={2}
+                    borderRadius="md"
+                    fontWeight="bold"
+                    _hover={{ bg: 'su.black' }}
+                    fontSize="sm"
                     aria-label="Remove"
                   >
                     ✕ Remove
-                  </button>
+                  </Button>
                   <SystemDisplay data={system} />
-                </div>
+                </Box>
               ))}
-            </div>
-          </div>
+            </Box>
+          </VStack>
         )}
 
         {sortedModules.length > 0 && (
-          <div className="space-y-3">
-            <h3 className="text-lg font-bold text-[#e8e5d8] uppercase">Modules</h3>
-            <div className="columns-1 md:columns-2 gap-4 space-y-4">
+          <VStack gap={3} alignItems="stretch">
+            <Heading
+              as="h3"
+              fontSize="lg"
+              fontWeight="bold"
+              color="#e8e5d8"
+              textTransform="uppercase"
+            >
+              Modules
+            </Heading>
+            <Box
+              css={{
+                columns: '1',
+                '@media (min-width: 768px)': { columns: '2' },
+                gap: '1rem',
+              }}
+            >
               {sortedModules.map((module) => (
-                <div key={module.id} className="relative break-inside-avoid mb-4">
-                  <button
+                <Box key={module.id} position="relative" css={{ breakInside: 'avoid' }} mb={4}>
+                  <Button
                     onClick={() => onRemoveModule(module.id)}
-                    className="absolute top-2 right-2 z-10 bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 rounded font-bold hover:bg-[var(--color-su-black)] text-sm"
+                    position="absolute"
+                    top={2}
+                    right={2}
+                    zIndex={10}
+                    bg="su.brick"
+                    color="su.white"
+                    px={3}
+                    py={2}
+                    borderRadius="md"
+                    fontWeight="bold"
+                    _hover={{ bg: 'su.black' }}
+                    fontSize="sm"
                     aria-label="Remove"
                   >
                     ✕ Remove
-                  </button>
+                  </Button>
                   <ModuleDisplay data={module} />
-                </div>
+                </Box>
               ))}
-            </div>
-          </div>
+            </Box>
+          </VStack>
         )}
 
-        <button
+        <Button
           onClick={onAddClick}
           disabled={!canAddMore}
-          className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-3 rounded-2xl font-bold hover:bg-[var(--color-su-light-orange)] transition-colors text-lg disabled:opacity-50 disabled:cursor-not-allowed w-full"
+          bg="su.orange"
+          color="su.white"
+          px={6}
+          py={3}
+          borderRadius="2xl"
+          fontWeight="bold"
+          _hover={{ bg: 'su.lightOrange' }}
+          fontSize="lg"
+          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+          w="full"
         >
           + Add System/Module
-        </button>
-      </div>
-    </div>
+        </Button>
+      </VStack>
+    </Box>
   )
 }

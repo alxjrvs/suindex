@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Box, Button, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import type { System, Module } from 'salvageunion-reference'
 import Modal from '../Modal'
 import { SystemDisplay } from '../SystemDisplay'
@@ -113,112 +114,139 @@ export function SystemModuleSelector({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add System or Module">
-      <div className="space-y-4">
-        <input
+      <VStack gap={4} alignItems="stretch">
+        <Input
           type="text"
           placeholder="Search by name or description..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+          w="full"
+          px={4}
+          py={2}
+          borderWidth="2px"
+          borderColor="su.black"
+          borderRadius="md"
+          bg="su.white"
+          color="su.black"
         />
 
-        <div className="flex justify-between gap-4 flex-wrap">
-          <div className="flex gap-2">
-            <button
+        <Flex justifyContent="space-between" gap={4} flexWrap="wrap">
+          <Flex gap={2}>
+            <Button
               onClick={() => setTypeFilter('all')}
-              className={`px-4 py-2 rounded font-bold ${
-                typeFilter === 'all'
-                  ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                  : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
-              }`}
+              px={4}
+              py={2}
+              borderRadius="md"
+              fontWeight="bold"
+              bg={typeFilter === 'all' ? 'su.orange' : 'su.lightBlue'}
+              color={typeFilter === 'all' ? 'su.white' : 'su.black'}
             >
               Both
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setTypeFilter('systems')}
-              className={`px-4 py-2 rounded font-bold ${
-                typeFilter === 'systems'
-                  ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                  : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
-              }`}
+              px={4}
+              py={2}
+              borderRadius="md"
+              fontWeight="bold"
+              bg={typeFilter === 'systems' ? 'su.orange' : 'su.lightBlue'}
+              color={typeFilter === 'systems' ? 'su.white' : 'su.black'}
             >
               Systems
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setTypeFilter('modules')}
-              className={`px-4 py-2 rounded font-bold ${
-                typeFilter === 'modules'
-                  ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                  : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
-              }`}
+              px={4}
+              py={2}
+              borderRadius="md"
+              fontWeight="bold"
+              bg={typeFilter === 'modules' ? 'su.orange' : 'su.lightBlue'}
+              color={typeFilter === 'modules' ? 'su.white' : 'su.black'}
             >
               Modules
-            </button>
-          </div>
+            </Button>
+          </Flex>
 
-          <div className="flex gap-2">
+          <Flex gap={2}>
             {techLevels.map((tl) => (
-              <button
+              <Button
                 key={tl}
                 onClick={() => setTechLevelFilter(tl)}
-                className={`px-3 py-2 rounded font-bold text-sm ${
-                  techLevelFilter === tl
-                    ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                    : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
-                }`}
+                px={3}
+                py={2}
+                borderRadius="md"
+                fontWeight="bold"
+                fontSize="sm"
+                bg={techLevelFilter === tl ? 'su.orange' : 'su.lightBlue'}
+                color={techLevelFilter === tl ? 'su.white' : 'su.black'}
               >
                 TL{tl}
-              </button>
+              </Button>
             ))}
-            <button
+            <Button
               onClick={() => setTechLevelFilter(null)}
-              className={`px-3 py-2 rounded font-bold text-sm ${
-                techLevelFilter === null
-                  ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                  : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)]'
-              }`}
+              px={3}
+              py={2}
+              borderRadius="md"
+              fontWeight="bold"
+              fontSize="sm"
+              bg={techLevelFilter === null ? 'su.orange' : 'su.lightBlue'}
+              color={techLevelFilter === null ? 'su.white' : 'su.black'}
             >
               All
-            </button>
-          </div>
-        </div>
+            </Button>
+          </Flex>
+        </Flex>
 
-        <div className="space-y-2 max-h-96 overflow-y-auto">
+        <VStack gap={2} maxH="96" overflowY="auto" alignItems="stretch">
           {filteredItems.length === 0 ? (
-            <p className="text-center text-[var(--color-su-black)] py-8">
+            <Text textAlign="center" color="su.black" py={8}>
               No items found matching your criteria.
-            </p>
+            </Text>
           ) : (
             filteredItems.map((item, index) => (
-              <button
+              <Button
                 key={`${item.type}-${item.data.id}-${index}`}
                 onClick={() => handleSelect(item)}
                 disabled={!item.canAfford}
-                className={`w-full text-left transition-all ${
-                  item.canAfford
-                    ? 'hover:shadow-lg hover:scale-[1.01] cursor-pointer'
-                    : 'opacity-60 cursor-not-allowed'
-                }`}
+                w="full"
+                textAlign="left"
+                transition="all 0.2s"
+                _hover={item.canAfford ? { shadow: 'lg', transform: 'scale(1.01)' } : undefined}
+                opacity={item.canAfford ? 1 : 0.6}
+                cursor={item.canAfford ? 'pointer' : 'not-allowed'}
+                variant="ghost"
+                h="auto"
+                p={0}
               >
-                <div className="relative">
+                <Box position="relative" w="full">
                   {!item.canAfford && (
-                    <div className="absolute top-2 right-2 z-10">
-                      <span className="text-xs px-2 py-1 rounded bg-[var(--color-su-brick)] text-[var(--color-su-white)] font-bold">
+                    <Box position="absolute" top={2} right={2} zIndex={10}>
+                      <Text
+                        as="span"
+                        fontSize="xs"
+                        px={2}
+                        py={1}
+                        borderRadius="md"
+                        bg="su.brick"
+                        color="su.white"
+                        fontWeight="bold"
+                      >
                         TOO LARGE
-                      </span>
-                    </div>
+                      </Text>
+                    </Box>
                   )}
                   {item.type === 'system' ? (
                     <SystemDisplay data={item.data as System} />
                   ) : (
                     <ModuleDisplay data={item.data as Module} />
                   )}
-                </div>
-              </button>
+                </Box>
+              </Button>
             ))
           )}
-        </div>
-      </div>
+        </VStack>
+      </VStack>
     </Modal>
   )
 }

@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
+import { Box, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { DataList } from './DataList'
 import type { DataValue } from '../../types/common'
+import { techLevelColors } from '../../theme'
 
 interface FrameProps {
   header: string
@@ -17,15 +19,6 @@ interface FrameProps {
   salvageValue?: number
 }
 
-const techLevelColors: Record<number, string> = {
-  1: 'var(--color-su-one-blue)',
-  2: 'var(--color-su-two-blue)',
-  3: 'var(--color-su-three-blue)',
-  4: 'var(--color-su-four-blue)',
-  5: 'var(--color-su-five-blue)',
-  6: 'var(--color-su-six-blue)',
-}
-
 export function Frame({
   header,
   headerColor,
@@ -40,119 +33,136 @@ export function Frame({
   slotsRequired,
   salvageValue,
 }: FrameProps) {
-  const backgroundColor =
-    headerColor || (techLevel ? techLevelColors[techLevel] : 'var(--color-su-orange)')
+  const backgroundColor = headerColor || (techLevel ? techLevelColors[techLevel] : 'su.orange')
 
   return (
-    <div
-      className="bg-[var(--color-su-light-blue)] w-full rounded-lg shadow-lg"
-      style={{ overflow: 'visible' }}
-    >
-      <div className="p-3 z-10" style={{ backgroundColor, overflow: 'visible' }}>
-        <div className="flex items-start gap-3" style={{ overflow: 'visible' }}>
+    <Box bg="su.lightBlue" w="full" borderRadius="lg" shadow="lg" overflow="visible">
+      <Box p={3} zIndex={10} bg={backgroundColor} overflow="visible">
+        <Flex alignItems="flex-start" gap={3} overflow="visible">
           {level && (
-            <div className="flex items-center justify-center min-w-[35px] max-w-[35px]">
-              <span className="text-[var(--color-su-white)] text-2xl font-bold">{level}</span>
-            </div>
+            <Flex alignItems="center" justifyContent="center" minW="35px" maxW="35px">
+              <Text color="su.white" fontSize="2xl" fontWeight="bold">
+                {level}
+              </Text>
+            </Flex>
           )}
-          <div className="flex-1" style={{ overflow: 'visible' }}>
-            <div className="flex justify-between items-start" style={{ overflow: 'visible' }}>
+          <Box flex="1" overflow="visible">
+            <Flex justifyContent="space-between" alignItems="flex-start" overflow="visible">
               {header && (
-                <h3 className="text-2xl font-bold text-[var(--color-su-white)] max-w-[80%] flex-wrap">
+                <Heading
+                  as="h3"
+                  fontSize="2xl"
+                  fontWeight="bold"
+                  color="su.white"
+                  maxW="80%"
+                  flexWrap="wrap"
+                >
                   {header}
-                </h3>
+                </Heading>
               )}
               {headerContent}
-            </div>
-            <div className="min-h-[15px] mt-1">
-              <DataList textColor="var(--color-su-white)" values={details || []} />
-            </div>
-          </div>
-        </div>
-      </div>
+            </Flex>
+            <Box minH="15px" mt={1}>
+              <DataList textColor="su.white" values={details || []} />
+            </Box>
+          </Box>
+        </Flex>
+      </Box>
 
-      <div className="flex" style={{ backgroundColor }}>
+      <Flex bg={backgroundColor}>
         {showSidebar && (techLevel || slotsRequired || salvageValue) && (
-          <div
-            className="flex flex-col items-center justify-start pb-1 gap-1 min-w-[35px] max-w-[35px]"
-            style={{ backgroundColor, overflow: 'visible' }}
+          <VStack
+            alignItems="center"
+            justifyContent="flex-start"
+            pb={1}
+            gap={1}
+            minW="35px"
+            maxW="35px"
+            bg={backgroundColor}
+            overflow="visible"
           >
             {techLevel && (
-              <div
-                className="bg-[var(--color-su-black)] border border-[var(--color-su-black)] text-[var(--color-su-white)] font-bold text-center flex items-center justify-center"
-                style={{
-                  minWidth: '25px',
-                  height: '25px',
-                  borderRadius: '5px',
-                  paddingTop: '2px',
-                }}
+              <Flex
+                bg="su.black"
+                borderWidth="1px"
+                borderColor="su.black"
+                color="su.white"
+                fontWeight="bold"
+                textAlign="center"
+                alignItems="center"
+                justifyContent="center"
+                minW="25px"
+                h="25px"
+                borderRadius="5px"
+                pt="2px"
                 title="Tech level"
               >
                 T{techLevel}
-              </div>
+              </Flex>
             )}
             {slotsRequired && (
-              <div
-                className="relative flex items-center justify-center"
-                style={{ width: '30px', height: '25px' }}
-                title="Slots"
-              >
-                <div
-                  className="border-solid absolute"
-                  style={{
-                    width: 0,
-                    height: 0,
-                    borderLeft: '15px solid transparent',
-                    borderRight: '15px solid transparent',
-                    borderBottom: '25px solid var(--color-su-black)',
-                    top: -2,
-                    left: 0,
-                  }}
+              <Box position="relative" w="30px" h="25px" title="Slots">
+                <Box
+                  position="absolute"
+                  w={0}
+                  h={0}
+                  borderLeft="15px solid transparent"
+                  borderRight="15px solid transparent"
+                  borderBottom="25px solid"
+                  borderBottomColor="su.black"
+                  top="-2px"
+                  left={0}
                 />
-                <div
-                  className="absolute text-[var(--color-su-white)] font-bold text-center flex items-center justify-center"
-                  style={{
-                    width: '30px',
-                    top: '4coppx',
-                  }}
+                <Flex
+                  position="absolute"
+                  color="su.white"
+                  fontWeight="bold"
+                  textAlign="center"
+                  alignItems="center"
+                  justifyContent="center"
+                  w="30px"
+                  top="4px"
                 >
                   {slotsRequired}
-                </div>
-              </div>
+                </Flex>
+              </Box>
             )}
             {salvageValue && (
-              <div
-                className="bg-[var(--color-su-black)] text-[var(--color-su-white)] font-bold text-center flex items-center justify-center"
-                style={{
-                  width: '25px',
-                  height: '25px',
-                  borderRadius: '30px',
-                  paddingTop: '4px',
-                }}
+              <Flex
+                bg="su.black"
+                color="su.white"
+                fontWeight="bold"
+                textAlign="center"
+                alignItems="center"
+                justifyContent="center"
+                w="25px"
+                h="25px"
+                borderRadius="30px"
+                pt="4px"
                 title="Salvage value"
               >
                 {salvageValue}
-              </div>
+              </Flex>
             )}
-          </div>
+          </VStack>
         )}
 
-        <div className="flex-1 bg-[var(--color-su-light-blue)] p-3 space-y-6">
+        <VStack flex="1" bg="su.lightBlue" p={3} gap={6} alignItems="stretch">
           {description && (
-            <p className="text-[var(--color-su-black)] font-medium leading-relaxed">
+            <Text color="su.black" fontWeight="medium" lineHeight="relaxed">
               {description}
-            </p>
+            </Text>
           )}
 
           {children}
 
           {notes && (
-            <div className="border border-[var(--color-su-black)] p-3 rounded bg-[var(--color-su-white)]">
-              <p className="text-[var(--color-su-black)]">{notes}</p>
-            </div>
+            <Box borderWidth="1px" borderColor="su.black" p={3} borderRadius="md" bg="su.white">
+              <Text color="su.black">{notes}</Text>
+            </Box>
           )}
-        </div>
-      </div>
-    </div>
+        </VStack>
+      </Flex>
+    </Box>
   )
 }

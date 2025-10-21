@@ -1,5 +1,6 @@
 import { Suspense, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
 import type { SchemaInfo } from '../types/schema'
 import { getDisplayComponent } from './componentRegistry'
@@ -20,58 +21,70 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
 
   const formatValue = useCallback((value: unknown): ReactElement => {
     if (value === undefined || value === null) {
-      return <span className="text-[var(--color-su-brick)] opacity-50">-</span>
+      return (
+        <Text as="span" color="su.brick" opacity={0.5}>
+          -
+        </Text>
+      )
     }
 
     if (Array.isArray(value)) {
       return (
-        <ul className="list-square ml-6 space-y-2">
-          {value.map((v, i) => (
-            <li key={i} className="pl-2">
-              {formatValue(v)}
-            </li>
-          ))}
-        </ul>
+        <Box as="ul" listStyleType="square" ml={6}>
+          <VStack gap={2} alignItems="stretch">
+            {value.map((v, i) => (
+              <Box as="li" key={i} pl={2}>
+                {formatValue(v)}
+              </Box>
+            ))}
+          </VStack>
+        </Box>
       )
     }
 
     if (typeof value === 'object') {
       return (
-        <div className="ml-6 space-y-2 border-l-2 border-[var(--color-su-light-blue)] pl-4">
-          {Object.entries(value).map(([k, v]) => (
-            <div key={k}>
-              <span className="font-medium text-[var(--color-su-black)]">{k}: </span>
-              {formatValue(v)}
-            </div>
-          ))}
-        </div>
+        <Box ml={6} borderLeftWidth="2px" borderColor="su.lightBlue" pl={4}>
+          <VStack gap={2} alignItems="stretch">
+            {Object.entries(value).map(([k, v]) => (
+              <Box key={k}>
+                <Text as="span" fontWeight="medium" color="su.black">
+                  {k}:{' '}
+                </Text>
+                {formatValue(v)}
+              </Box>
+            ))}
+          </VStack>
+        </Box>
       )
     }
 
     if (typeof value === 'boolean') {
       return (
-        <span className={value ? 'text-[var(--color-su-green)]' : 'text-[var(--color-su-brick)]'}>
+        <Text as="span" color={value ? 'su.green' : 'su.brick'}>
           {value ? 'Yes' : 'No'}
-        </span>
+        </Text>
       )
     }
 
-    return <span>{String(value)}</span>
+    return <Text as="span">{String(value)}</Text>
   }, [])
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-xl">Loading...</div>
-      </div>
+      <Flex alignItems="center" justifyContent="center" h="full">
+        <Text fontSize="xl">Loading...</Text>
+      </Flex>
     )
   }
 
   if (error || !currentSchema || !item) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-xl text-red-600">Error: {error || 'Item not found'}</div>
-      </div>
+      <Flex alignItems="center" justifyContent="center" h="full">
+        <Text fontSize="xl" color="red.600">
+          Error: {error || 'Item not found'}
+        </Text>
+      </Flex>
     )
   }
 
@@ -82,9 +95,9 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
     return (
       <Suspense
         fallback={
-          <div className="flex items-center justify-center h-full">
-            <div className="text-xl">Loading component...</div>
-          </div>
+          <Flex alignItems="center" justifyContent="center" h="full">
+            <Text fontSize="xl">Loading component...</Text>
+          </Flex>
         }
       >
         <DisplayComponent data={item} />
@@ -95,29 +108,41 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
   const specializedContent = renderSpecializedContent()
 
   return (
-    <div className="h-full flex flex-col bg-[var(--color-su-white)]">
-      <div className="bg-[var(--color-su-white)] shadow-sm border-b border-[var(--color-su-light-blue)] p-6">
-        <div className="flex items-center gap-4 mb-4">
-          <button
+    <Flex h="full" flexDirection="column" bg="su.white">
+      <Box bg="su.white" shadow="sm" borderBottomWidth="1px" borderColor="su.lightBlue" p={6}>
+        <Flex alignItems="center" gap={4} mb={4}>
+          <Button
             onClick={() => navigate(`/reference/schema/${schemaId}`)}
-            className="text-[var(--color-su-orange)] hover:text-[var(--color-su-brick)] font-medium"
+            color="su.orange"
+            _hover={{ color: 'su.brick' }}
+            fontWeight="medium"
+            variant="plain"
           >
             ← Back to {currentSchema.title}
-          </button>
-        </div>
-        <h2 className="text-3xl font-bold text-[var(--color-su-black)]">
+          </Button>
+        </Flex>
+        <Heading as="h2" fontSize="3xl" fontWeight="bold" color="su.black">
           {(item.name as string) || 'Item Details'}
-        </h2>
-        <p className="text-[var(--color-su-brick)] mt-2">{currentSchema.description}</p>
-      </div>
+        </Heading>
+        <Text color="su.brick" mt={2}>
+          {currentSchema.description}
+        </Text>
+      </Box>
 
-      <div className="flex-1 overflow-auto p-6">
-        <div className="max-w-6xl mx-auto">
+      <Box flex="1" overflowY="auto" p={6}>
+        <Box maxW="6xl" mx="auto">
           {specializedContent ? (
             specializedContent
           ) : (
-            <div className="bg-[var(--color-su-white)] rounded-lg shadow-lg p-8 border border-[var(--color-su-light-blue)]">
-              <div className="space-y-6">
+            <Box
+              bg="su.white"
+              borderRadius="lg"
+              shadow="lg"
+              p={8}
+              borderWidth="1px"
+              borderColor="su.lightBlue"
+            >
+              <VStack gap={6} alignItems="stretch">
                 {Object.entries(item)
                   .sort(([a], [b]) => {
                     if (a === 'name') return -1
@@ -125,23 +150,32 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
                     return a.localeCompare(b)
                   })
                   .map(([key, value]) => (
-                    <div
+                    <Box
                       key={key}
-                      className="border-b border-[var(--color-su-light-blue)] pb-6 last:border-b-0"
+                      borderBottomWidth="1px"
+                      borderColor="su.lightBlue"
+                      pb={6}
+                      _last={{ borderBottomWidth: 0 }}
                     >
-                      <div className="font-semibold text-[var(--color-su-black)] mb-3 text-lg capitalize">
+                      <Text
+                        fontWeight="semibold"
+                        color="su.black"
+                        mb={3}
+                        fontSize="lg"
+                        textTransform="capitalize"
+                      >
                         {key.replace(/([A-Z])/g, ' $1').trim()}
-                      </div>
-                      <div className="text-[var(--color-su-black)] text-base">
+                      </Text>
+                      <Box color="su.black" fontSize="base">
                         {formatValue(value)}
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   ))}
-              </div>
-            </div>
+              </VStack>
+            </Box>
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Flex>
   )
 }

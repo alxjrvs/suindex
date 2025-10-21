@@ -1,3 +1,4 @@
+import { Box, Text, VStack, Heading } from '@chakra-ui/react'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisAbilitiesProps {
@@ -6,11 +7,19 @@ interface ChassisAbilitiesProps {
 
 export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
   return (
-    <div className="mb-6">
-      <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">
+    <Box mb={6}>
+      <Text
+        as="label"
+        display="block"
+        fontSize="sm"
+        fontWeight="bold"
+        color="#e8e5d8"
+        mb={2}
+        textTransform="uppercase"
+      >
         Chassis Ability
-      </label>
-      <div className="space-y-3">
+      </Text>
+      <VStack gap={3} alignItems="stretch">
         {(
           chassis?.chassis_abilities || [
             {
@@ -20,32 +29,43 @@ export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
             },
           ]
         ).map((ability, idx) => (
-          <div key={idx} className="bg-[#e8e5d8] border-2 border-[#2d3e36] rounded-2xl p-4">
+          <Box
+            key={idx}
+            bg="#e8e5d8"
+            borderWidth="2px"
+            borderColor="#2d3e36"
+            borderRadius="2xl"
+            p={4}
+          >
             {ability.name && (
-              <h3 className="font-bold text-[#2d3e36] text-lg mb-2">{ability.name}</h3>
+              <Heading as="h3" fontWeight="bold" color="#2d3e36" fontSize="lg" mb={2}>
+                {ability.name}
+              </Heading>
             )}
             {ability.description && (
-              <p className="text-[#2d3e36] leading-relaxed">{ability.description}</p>
+              <Text color="#2d3e36" lineHeight="relaxed">
+                {ability.description}
+              </Text>
             )}
             {'options' in ability &&
               ability.options &&
               Array.isArray(ability.options) &&
               ability.options.length > 0 && (
-                <div className="mt-3 ml-4 space-y-1">
+                <VStack mt={3} ml={4} gap={1} alignItems="stretch">
                   {ability.options.map((option, optIndex) => (
-                    <div key={optIndex} className="text-[#2d3e36]">
-                      <span className="font-bold">
+                    <Box key={optIndex} color="#2d3e36">
+                      <Text as="span" fontWeight="bold">
                         {option.label}
                         {option.label.includes('•') || option.label.length === 0 ? '' : ':'}
-                      </span>{' '}
+                      </Text>{' '}
                       {option.value}
-                    </div>
+                    </Box>
                   ))}
-                </div>
+                </VStack>
               )}
-          </div>
+          </Box>
         ))}
-      </div>
-    </div>
+      </VStack>
+    </Box>
   )
 }

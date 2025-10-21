@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Box, Button, Flex, Input, Text } from '@chakra-ui/react'
 import Modal from '../Modal'
 
 interface CargoModalProps {
@@ -49,12 +50,21 @@ export function CargoModal({
       title="Add Cargo"
       backgroundColor={backgroundColor}
     >
-      <div className="space-y-2">
+      <Flex direction="column" gap={2}>
         {hasCargoTracking ? (
-          <div className="flex gap-2 items-end">
-            <div className="w-24">
-              <label className="block text-xs font-bold text-[#e8e5d8] mb-1">Amount</label>
-              <input
+          <Flex gap={2} alignItems="flex-end">
+            <Box w="24">
+              <Text
+                as="label"
+                display="block"
+                fontSize="xs"
+                fontWeight="bold"
+                color="#e8e5d8"
+                mb={1}
+              >
+                Amount
+              </Text>
+              <Input
                 type="number"
                 min="0"
                 max={availableCargo}
@@ -62,51 +72,94 @@ export function CargoModal({
                 onChange={(e) =>
                   setAmount(Math.max(0, Math.min(availableCargo, parseInt(e.target.value) || 0)))
                 }
-                className="w-full p-1.5 border-0 rounded-lg bg-[#e8e5d8] text-[#2d3e36] font-semibold text-center"
+                w="full"
+                p={1.5}
+                borderWidth={0}
+                borderRadius="lg"
+                bg="#e8e5d8"
+                color="#2d3e36"
+                fontWeight="semibold"
+                textAlign="center"
               />
-            </div>
-            <div className="flex-1">
-              <label className="block text-xs font-bold text-[#e8e5d8] mb-1">
+            </Box>
+            <Box flex="1">
+              <Text
+                as="label"
+                display="block"
+                fontSize="xs"
+                fontWeight="bold"
+                color="#e8e5d8"
+                mb={1}
+              >
                 Description (Available: {availableCargo})
-              </label>
-              <input
+              </Text>
+              <Input
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter cargo description..."
-                className="w-full p-1.5 border-0 rounded-lg bg-[#e8e5d8] text-[#2d3e36] font-semibold"
+                w="full"
+                p={1.5}
+                borderWidth={0}
+                borderRadius="lg"
+                bg="#e8e5d8"
+                color="#2d3e36"
+                fontWeight="semibold"
               />
-            </div>
-          </div>
+            </Box>
+          </Flex>
         ) : (
-          <div>
-            <label className="block text-xs font-bold text-[#e8e5d8] mb-1">Description</label>
-            <input
+          <Box>
+            <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1}>
+              Description
+            </Text>
+            <Input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter cargo description..."
-              className="w-full p-1.5 border-0 rounded-lg bg-[#e8e5d8] text-[#2d3e36] font-semibold"
+              w="full"
+              p={1.5}
+              borderWidth={0}
+              borderRadius="lg"
+              bg="#e8e5d8"
+              color="#2d3e36"
+              fontWeight="semibold"
             />
-          </div>
+          </Box>
         )}
 
-        <div className="flex gap-2 justify-end pt-1">
-          <button
+        <Flex gap={2} justifyContent="flex-end" pt={1}>
+          <Button
             onClick={handleClose}
-            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-1.5 rounded-lg font-bold hover:bg-[var(--color-su-black)] transition-colors text-sm"
+            bg="su.brick"
+            color="su.white"
+            px={3}
+            py={1.5}
+            borderRadius="lg"
+            fontWeight="bold"
+            _hover={{ bg: 'su.black' }}
+            fontSize="sm"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleSubmit}
             disabled={!isValid}
-            className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-3 py-1.5 rounded-lg font-bold hover:bg-[var(--color-su-light-orange)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            bg="su.orange"
+            color="su.white"
+            px={3}
+            py={1.5}
+            borderRadius="lg"
+            fontWeight="bold"
+            _hover={{ bg: 'su.lightOrange' }}
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+            fontSize="sm"
           >
             {hasCargoTracking ? 'Add Cargo' : 'Add'}
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Flex>
+      </Flex>
     </Modal>
   )
 }

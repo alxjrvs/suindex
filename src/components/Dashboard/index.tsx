@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { User } from '@supabase/supabase-js'
 import { Auth } from './Auth'
@@ -39,9 +40,11 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[var(--color-su-white)]">
-        <div className="text-lg text-[var(--color-su-black)]">Loading...</div>
-      </div>
+      <Flex alignItems="center" justifyContent="center" minH="100vh" bg="su.white">
+        <Text fontSize="lg" color="su.black">
+          Loading...
+        </Text>
+      </Flex>
     )
   }
 
@@ -50,9 +53,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-[var(--color-su-white)] overflow-hidden">
+    <Flex flexDirection={{ base: 'column', md: 'row' }} h="100vh" bg="su.white" overflow="hidden">
       <DashboardNavigation user={user} />
-      <main className="flex-1 overflow-auto pt-16 md:pt-0">
+      <Box as="main" flex="1" overflowY="auto" pt={{ base: 16, md: 0 }}>
         <Routes>
           <Route path="/" element={<DashboardContent />} />
           <Route path="/games" element={<GamesGrid />} />
@@ -66,7 +69,7 @@ export default function Dashboard() {
           <Route path="/mechs" element={<MechsGrid />} />
           <Route path="/mechs/:id" element={<MechEdit />} />
         </Routes>
-      </main>
-    </div>
+      </Box>
+    </Flex>
   )
 }

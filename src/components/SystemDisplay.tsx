@@ -1,3 +1,4 @@
+import { VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import { RollTableDisplay } from './shared/RollTableDisplay'
 import { ActionDisplay } from './shared/ActionDisplay'
@@ -28,11 +29,11 @@ export function SystemDisplay({ data }: SystemDisplayProps) {
       )}
 
       {data.actions && data.actions.length > 0 && (
-        <div className="space-y-3">
+        <VStack gap={3} alignItems="stretch">
           {data.actions.map((action, index) => (
             <ActionDisplay key={index} action={action} activationCurrency="EP" />
           ))}
-        </div>
+        </VStack>
       )}
 
       {data.rollTable && <RollTableDisplay rollTable={data.rollTable} />}
