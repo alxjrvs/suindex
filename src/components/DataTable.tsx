@@ -1,5 +1,7 @@
 import { useMemo, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Box, Button, Flex, Grid, Input, Text } from '@chakra-ui/react'
+import { NativeSelect } from '@chakra-ui/react'
 import type { SchemaInfo, DataItem } from '../types/schema'
 import { useDataTableFilters } from '../hooks/useDataTableFilters'
 import { useSchemaId } from '../hooks/useSchemaParams'
@@ -158,45 +160,66 @@ export default function DataTable({ data, schema }: DataTableProps) {
   }, [allFields, schema.requiredFields])
 
   return (
-    <div className="p-6">
-      <div className="mb-6 bg-[var(--color-su-white)] p-4 rounded-lg shadow border border-[var(--color-su-light-blue)]">
-        <div className="mb-4">
-          <input
+    <Box p={6}>
+      <Box
+        mb={6}
+        bg="su.white"
+        p={4}
+        borderRadius="lg"
+        shadow="md"
+        borderWidth="1px"
+        borderColor="su.lightBlue"
+      >
+        <Box mb={4}>
+          <Input
             type="text"
             placeholder="Search by name or description..."
             value={filterState.searchTerm}
             onChange={(e) => dispatch({ type: 'SET_SEARCH', payload: e.target.value })}
-            className="w-full px-4 py-2 border border-[var(--color-su-light-blue)] rounded-lg focus:ring-2 focus:ring-[var(--color-su-orange)] focus:border-transparent bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            borderColor="su.lightBlue"
+            focusRingColor="su.orange"
+            bg="su.white"
+            color="su.black"
           />
-        </div>
+        </Box>
 
         {allFields.includes('techLevel') && fieldValues['techLevel'].size > 1 && (
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-[var(--color-su-black)] mb-2">
+          <Box mb={4}>
+            <Box
+              as="label"
+              display="block"
+              fontSize="sm"
+              fontWeight="medium"
+              color="su.black"
+              mb={2}
+            >
               Tech Level
-            </label>
-            <div className="flex flex-wrap gap-2">
-              <button
+            </Box>
+            <Flex flexWrap="wrap" gap={2}>
+              <Button
                 onClick={() => {
                   dispatch({
                     type: 'SET_TECH_LEVEL_FILTERS',
                     payload: new Set(),
                   })
                 }}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  filterState.techLevelFilters.size === 0
-                    ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                    : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)] border border-[var(--color-su-light-blue)] hover:bg-[var(--color-su-light-orange)]'
-                }`}
+                px={4}
+                py={2}
+                fontWeight="medium"
+                bg={filterState.techLevelFilters.size === 0 ? 'su.orange' : 'su.lightBlue'}
+                color={filterState.techLevelFilters.size === 0 ? 'su.white' : 'su.black'}
+                borderWidth={filterState.techLevelFilters.size === 0 ? '0' : '1px'}
+                borderColor="su.lightBlue"
+                _hover={filterState.techLevelFilters.size === 0 ? {} : { bg: 'su.lightOrange' }}
               >
                 All
-              </button>
+              </Button>
               {Array.from(fieldValues['techLevel'])
                 .sort()
                 .map((value) => {
                   const isSelected = filterState.techLevelFilters.has(String(value))
                   return (
-                    <button
+                    <Button
                       key={String(value)}
                       onClick={() => {
                         dispatch({
@@ -204,103 +227,141 @@ export default function DataTable({ data, schema }: DataTableProps) {
                           payload: String(value),
                         })
                       }}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        isSelected
-                          ? 'bg-[var(--color-su-orange)] text-[var(--color-su-white)]'
-                          : 'bg-[var(--color-su-light-blue)] text-[var(--color-su-black)] border border-[var(--color-su-light-blue)] hover:bg-[var(--color-su-light-orange)]'
-                      }`}
+                      px={4}
+                      py={2}
+                      fontWeight="medium"
+                      bg={isSelected ? 'su.orange' : 'su.lightBlue'}
+                      color={isSelected ? 'su.white' : 'su.black'}
+                      borderWidth={isSelected ? '0' : '1px'}
+                      borderColor="su.lightBlue"
+                      _hover={isSelected ? {} : { bg: 'su.lightOrange' }}
                     >
                       T{String(value)}
-                    </button>
+                    </Button>
                   )
                 })}
-            </div>
-          </div>
+            </Flex>
+          </Box>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }} gap={4}>
           {allFields
             .filter((field) => {
               return field === 'class' && fieldValues[field].size > 1
             })
             .map((field) => (
-              <div key={field}>
-                <label className="block text-sm font-medium text-[var(--color-su-black)] mb-1 capitalize">
-                  {field.replace(/([A-Z])/g, ' $1').trim()}
-                </label>
-                <select
-                  value={filterState.filters[field] || ''}
-                  onChange={(e) =>
-                    dispatch({
-                      type: 'SET_FILTER',
-                      payload: { field, value: e.target.value },
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-[var(--color-su-light-blue)] rounded-lg focus:ring-2 focus:ring-[var(--color-su-orange)] focus:border-transparent text-sm bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+              <Box key={field}>
+                <Box
+                  as="label"
+                  display="block"
+                  fontSize="sm"
+                  fontWeight="medium"
+                  color="su.black"
+                  mb={1}
+                  textTransform="capitalize"
                 >
-                  <option value="">All</option>
-                  {Array.from(fieldValues[field])
-                    .sort()
-                    .map((value) => (
-                      <option key={String(value)} value={String(value)}>
-                        {String(value)}
-                      </option>
-                    ))}
-                </select>
-              </div>
+                  {field.replace(/([A-Z])/g, ' $1').trim()}
+                </Box>
+                <NativeSelect.Root size="sm">
+                  <NativeSelect.Field
+                    value={filterState.filters[field] || ''}
+                    onChange={(e) =>
+                      dispatch({
+                        type: 'SET_FILTER',
+                        payload: { field, value: e.currentTarget.value },
+                      })
+                    }
+                    borderColor="su.lightBlue"
+                    focusRingColor="su.orange"
+                    bg="su.white"
+                    color="su.black"
+                  >
+                    <option value="">All</option>
+                    {Array.from(fieldValues[field])
+                      .sort()
+                      .map((value) => (
+                        <option key={String(value)} value={String(value)}>
+                          {String(value)}
+                        </option>
+                      ))}
+                  </NativeSelect.Field>
+                  <NativeSelect.Indicator />
+                </NativeSelect.Root>
+              </Box>
             ))}
-        </div>
+        </Grid>
 
-        <div className="mt-4 text-sm text-[var(--color-su-brick)]">
+        <Text mt={4} fontSize="sm" color="su.brick">
           Showing {sortedData.length} of {data.length} items
-        </div>
-      </div>
+        </Text>
+      </Box>
 
-      <div className="bg-[var(--color-su-white)] rounded-lg shadow overflow-hidden border border-[var(--color-su-light-blue)]">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-[var(--color-su-light-blue)]">
-            <thead className="bg-[var(--color-su-light-blue)]">
-              <tr>
+      <Box
+        bg="su.white"
+        borderRadius="lg"
+        shadow="md"
+        overflow="hidden"
+        borderWidth="1px"
+        borderColor="su.lightBlue"
+      >
+        <Box overflowX="auto">
+          <Box as="table" minW="full" css={{ borderCollapse: 'collapse' }}>
+            <Box as="thead" bg="su.lightBlue">
+              <Box as="tr">
                 {displayFields.map((field) => (
-                  <th
+                  <Box
+                    as="th"
                     key={field}
                     onClick={() => handleSort(field)}
-                    className="px-6 py-3 text-left text-xs font-medium text-[var(--color-su-black)] uppercase tracking-wider cursor-pointer hover:bg-[var(--color-su-blue)]"
+                    px={6}
+                    py={3}
+                    textAlign="left"
+                    fontSize="xs"
+                    fontWeight="medium"
+                    color="su.black"
+                    textTransform="uppercase"
+                    letterSpacing="wider"
+                    cursor="pointer"
+                    _hover={{ bg: 'su.blue' }}
                   >
-                    <div className="flex items-center gap-1">
+                    <Flex align="center" gap={1}>
                       {field.replace(/([A-Z])/g, ' $1').trim()}
                       {filterState.sortField === field && (
-                        <span>{filterState.sortDirection === 'asc' ? '↑' : '↓'}</span>
+                        <Text as="span">{filterState.sortDirection === 'asc' ? '↑' : '↓'}</Text>
                       )}
-                    </div>
-                  </th>
+                    </Flex>
+                  </Box>
                 ))}
-              </tr>
-            </thead>
-            <tbody className="bg-[var(--color-su-white)] divide-y divide-[var(--color-su-light-blue)]">
+              </Box>
+            </Box>
+            <Box as="tbody" bg="su.white">
               {sortedData.map((item, index) => {
                 return (
-                  <tr
+                  <Box
+                    as="tr"
                     key={item.id || index}
-                    className="hover:bg-[var(--color-su-light-orange)] cursor-pointer transition-colors"
+                    cursor="pointer"
+                    _hover={{ bg: 'su.lightOrange' }}
                     onClick={() => {
                       navigate(`/reference/schema/${schemaId}/item/${item.id}`)
                     }}
+                    borderTopWidth={index > 0 ? '1px' : '0'}
+                    borderColor="su.lightBlue"
                   >
                     {displayFields.map((field) => (
-                      <td key={field} className="px-6 py-6 text-sm text-[var(--color-su-black)]">
-                        <div className="max-w-xs truncate" title={formatValue(item[field])}>
+                      <Box as="td" key={field} px={6} py={6} fontSize="sm" color="su.black">
+                        <Box maxW="xs" truncate title={formatValue(item[field])}>
                           {formatValue(item[field])}
-                        </div>
-                      </td>
+                        </Box>
+                      </Box>
                     ))}
-                  </tr>
+                  </Box>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   )
 }

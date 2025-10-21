@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Box, Button, Flex, Input, NativeSelect, Text, VStack } from '@chakra-ui/react'
 import Modal from '../Modal'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { supabase } from '../../lib/supabase'
@@ -140,85 +141,119 @@ export function NewCrawlerModal({ isOpen, onClose, onSuccess }: NewCrawlerModalP
       title="Create New Crawler"
       backgroundColor="#c97d9e"
     >
-      <div className="space-y-4">
+      <VStack gap={4} alignItems="stretch">
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <Box
+            bg="red.100"
+            borderWidth="1px"
+            borderColor="red.400"
+            color="red.700"
+            px={4}
+            py={3}
+            borderRadius="md"
+          >
             {error}
-          </div>
+          </Box>
         )}
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Name *
-          </label>
-          <input
+          </Text>
+          <Input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter crawler name..."
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            bg="su.white"
+            color="su.black"
+            borderWidth="2px"
+            borderColor="su.black"
           />
-        </div>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Type *
-          </label>
-          <select
-            value={crawlerTypeId}
-            onChange={(e) => setCrawlerTypeId(e.target.value)}
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
-          >
-            <option value="">Select a crawler type...</option>
-            {crawlerTypes.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          </Text>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              value={crawlerTypeId}
+              onChange={(e) => setCrawlerTypeId(e.currentTarget.value)}
+              bg="su.white"
+              color="su.black"
+              borderWidth="2px"
+              borderColor="su.black"
+            >
+              <option value="">Select a crawler type...</option>
+              {crawlerTypes.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Game (Optional)
-          </label>
-          <select
-            value={gameId}
-            onChange={(e) => setGameId(e.target.value)}
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
-          >
-            <option value="">No game (personal crawler)</option>
-            {availableGames.map((game) => (
-              <option key={game.id} value={game.id}>
-                {game.name}
-              </option>
-            ))}
-          </select>
+          </Text>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              value={gameId}
+              onChange={(e) => setGameId(e.currentTarget.value)}
+              bg="su.white"
+              color="su.black"
+              borderWidth="2px"
+              borderColor="su.black"
+            >
+              <option value="">No game (personal crawler)</option>
+              {availableGames.map((game) => (
+                <option key={game.id} value={game.id}>
+                  {game.name}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
           {availableGames.length === 0 && (
-            <p className="text-xs text-[var(--color-su-white)] mt-1 opacity-75">
+            <Text fontSize="xs" color="su.white" mt={1} opacity={0.75}>
               No games available. You must be a mediator of a game without a crawler to assign one.
-            </p>
+            </Text>
           )}
-        </div>
+        </Box>
 
-        <div className="flex gap-2 justify-end pt-2">
-          <button
+        <Flex gap={2} justifyContent="flex-end" pt={2}>
+          <Button
             onClick={handleClose}
             disabled={loading}
-            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+            bg="su.brick"
+            color="su.white"
+            px={4}
+            py={2}
+            fontWeight="bold"
+            _hover={{ opacity: 0.9 }}
+            _disabled={{ opacity: 0.5 }}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleSubmit}
             disabled={!isValid || loading}
-            className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            bg="su.orange"
+            color="su.white"
+            px={4}
+            py={2}
+            fontWeight="bold"
+            _hover={{ opacity: 0.9 }}
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           >
             {loading ? 'Creating...' : 'Create Crawler'}
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Flex>
+      </VStack>
     </Modal>
   )
 }
-

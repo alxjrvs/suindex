@@ -1,3 +1,4 @@
+import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import { ActionDisplay } from './shared/ActionDisplay'
@@ -33,62 +34,82 @@ export function MeldDisplay({ data }: MeldDisplayProps) {
       header={data.name}
       headerContent={
         stats.length > 0 ? (
-          <div className="ml-auto pb-24" style={{ overflow: 'visible' }}>
+          <Box ml="auto" pb={24} overflow="visible">
             <StatList stats={stats} up={false} />
-          </div>
+          </Box>
         ) : undefined
       }
       showSidebar={false}
     >
       {traitsText && (
-        <div className="mb-4 p-3 border-2 border-[var(--color-su-black)] bg-[var(--color-su-light-orange)]">
-          <p className="text-[var(--color-su-black)] font-bold uppercase text-sm">
-            Traits: <span className="font-normal capitalize">{traitsText}</span>
-          </p>
-        </div>
+        <Box mb={4} p={3} borderWidth="2px" borderColor="su.black" bg="su.lightOrange">
+          <Text color="su.black" fontWeight="bold" textTransform="uppercase" fontSize="sm">
+            Traits:{' '}
+            <Text as="span" fontWeight="normal" textTransform="capitalize">
+              {traitsText}
+            </Text>
+          </Text>
+        </Box>
       )}
 
       {data.description && (
-        <div className="mb-4 p-3 border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)]">
-          <p className="text-[var(--color-su-black)]">{data.description}</p>
-        </div>
+        <Box mb={4} p={3} borderWidth="2px" borderColor="su.black" bg="su.white">
+          <Text color="su.black">{data.description}</Text>
+        </Box>
       )}
 
       {data.abilities && data.abilities.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-bold text-[var(--color-su-black)] uppercase">Abilities</h3>
+        <VStack gap={3} alignItems="stretch">
+          <Heading
+            as="h3"
+            fontSize="lg"
+            fontWeight="bold"
+            color="su.black"
+            textTransform="uppercase"
+          >
+            Abilities
+          </Heading>
           {data.abilities.map((ability, index) => (
-            <div
-              key={index}
-              className="border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)]"
-            >
-              <div className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-3 py-2 font-bold uppercase">
+            <Box key={index} borderWidth="2px" borderColor="su.black" bg="su.white">
+              <Box
+                bg="su.brick"
+                color="su.white"
+                px={3}
+                py={2}
+                fontWeight="bold"
+                textTransform="uppercase"
+              >
                 {ability.name}
-              </div>
+              </Box>
 
-              <div className="p-3 space-y-2">
+              <VStack gap={2} alignItems="stretch" p={3}>
                 <ActionDisplay action={ability} />
 
                 {ability.description ? (
-                  <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
-                    <p className="text-[var(--color-su-black)]">{ability.description}</p>
-                  </div>
+                  <Box pt={2} borderTopWidth="2px" borderColor="su.black">
+                    <Text color="su.black">{ability.description}</Text>
+                  </Box>
                 ) : null}
 
                 {'effect' in ability && ability.effect && typeof ability.effect === 'string' ? (
-                  <div className="pt-2 border-t-2 border-[var(--color-su-black)]">
-                    <p className="text-[var(--color-su-black)] italic">{ability.effect}</p>
-                  </div>
+                  <Box pt={2} borderTopWidth="2px" borderColor="su.black">
+                    <Text color="su.black" fontStyle="italic">
+                      {ability.effect}
+                    </Text>
+                  </Box>
                 ) : null}
-              </div>
-            </div>
+              </VStack>
+            </Box>
           ))}
-        </div>
+        </VStack>
       )}
 
-      <div className="mt-4 pt-3 border-t-2 border-[var(--color-su-black)] text-sm text-[var(--color-su-black)]">
-        <span className="font-bold uppercase">{data.source}</span> • Page {data.page}
-      </div>
+      <Box mt={4} pt={3} borderTopWidth="2px" borderColor="su.black" fontSize="sm" color="su.black">
+        <Text as="span" fontWeight="bold" textTransform="uppercase">
+          {data.source}
+        </Text>{' '}
+        • Page {data.page}
+      </Box>
     </Frame>
   )
 }

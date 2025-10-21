@@ -1,3 +1,4 @@
+import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import type { Creature } from 'salvageunion-reference'
@@ -19,65 +20,89 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
       headerColor="var(--color-su-orange)"
       description={data.description}
       headerContent={
-        <div className="ml-auto pb-6" style={{ overflow: 'visible' }}>
+        <Box ml="auto" pb={6} overflow="visible">
           <StatList stats={[{ label: 'Hit Points', value: data.hitPoints }]} up={false} />
-        </div>
+        </Box>
       }
       showSidebar={false}
     >
       {data.traits && data.traits.length > 0 && (
-        <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-          <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
-          <span className="text-[var(--color-su-black)]">{formatTraits(data.traits)}</span>
-        </div>
+        <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+          <Text as="span" fontWeight="bold" color="su.brick">
+            Traits:{' '}
+          </Text>
+          <Text as="span" color="su.black">
+            {formatTraits(data.traits)}
+          </Text>
+        </Box>
       )}
 
       {data.abilities && data.abilities.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-bold text-[var(--color-su-brick)]">Abilities</h3>
+        <VStack gap={3} alignItems="stretch">
+          <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+            Abilities
+          </Heading>
           {data.abilities.map((ability, index) => (
-            <div
+            <VStack
               key={index}
-              className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2"
+              gap={2}
+              alignItems="stretch"
+              bg="su.white"
+              borderWidth="1px"
+              borderColor="su.black"
+              borderRadius="md"
+              p={3}
             >
-              <div className="font-bold text-[var(--color-su-black)] text-lg">{ability.name}</div>
+              <Text fontWeight="bold" color="su.black" fontSize="lg">
+                {ability.name}
+              </Text>
 
-              <div className="space-y-1">
+              <VStack gap={1} alignItems="stretch">
                 {ability.range && (
-                  <div className="text-[var(--color-su-black)]">
-                    <span className="font-bold text-[var(--color-su-brick)]">Range: </span>
+                  <Text color="su.black">
+                    <Text as="span" fontWeight="bold" color="su.brick">
+                      Range:{' '}
+                    </Text>
                     {ability.range}
-                  </div>
+                  </Text>
                 )}
                 {ability.damage && (
-                  <div className="text-[var(--color-su-black)]">
-                    <span className="font-bold text-[var(--color-su-brick)]">Damage: </span>
+                  <Text color="su.black">
+                    <Text as="span" fontWeight="bold" color="su.brick">
+                      Damage:{' '}
+                    </Text>
                     {ability.damage.amount}
                     {ability.damage.type}
-                  </div>
+                  </Text>
                 )}
                 {'traits' in ability && ability.traits && ability.traits.length > 0 && (
-                  <div className="text-[var(--color-su-black)]">
-                    <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
+                  <Text color="su.black">
+                    <Text as="span" fontWeight="bold" color="su.brick">
+                      Traits:{' '}
+                    </Text>
                     {formatTraits(ability.traits)}
-                  </div>
+                  </Text>
                 )}
-              </div>
+              </VStack>
 
               {'description' in ability && ability.description && (
-                <div className="text-[var(--color-su-black)] pt-2 border-t border-[var(--color-su-black)]">
+                <Text color="su.black" pt={2} borderTopWidth="1px" borderColor="su.black">
                   {ability.description}
-                </div>
+                </Text>
               )}
-            </div>
+            </VStack>
           ))}
-        </div>
+        </VStack>
       )}
 
-      <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-        <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
-        <span className="text-[var(--color-su-black)] ml-2">{data.page}</span>
-      </div>
+      <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+        <Text as="span" fontWeight="bold" color="su.brick">
+          Page:
+        </Text>
+        <Text as="span" color="su.black" ml={2}>
+          {data.page}
+        </Text>
+      </Box>
     </Frame>
   )
 }

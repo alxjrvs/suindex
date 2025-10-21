@@ -1,3 +1,4 @@
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { StatDisplay } from './StatDisplay'
 
 interface CrawlerCardProps {
@@ -12,17 +13,32 @@ export function CrawlerCard({ name, typeName, maxSP, currentDamage }: CrawlerCar
   const spDisplay = `${currentSP}/${maxSP}`
 
   return (
-    <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl p-4 shadow-lg flex items-center justify-between h-[120px]">
-      <div className="flex-1 pr-4">
-        <div className="text-xl font-bold text-[var(--color-su-white)] leading-tight">{name}</div>
-        <div className="text-sm text-[var(--color-su-white)] opacity-90 mt-1">
-          <span className="capitalize">{typeName}</span> Crawler
-        </div>
-      </div>
-      <div className="min-w-[80px]">
+    <Flex
+      bg="#c97d9e"
+      borderWidth="4px"
+      borderColor="#c97d9e"
+      borderRadius="3xl"
+      p={4}
+      shadow="lg"
+      alignItems="center"
+      justifyContent="space-between"
+      h="120px"
+    >
+      <Box flex="1" pr={4}>
+        <Text fontSize="xl" fontWeight="bold" color="su.white" lineHeight="tight">
+          {name}
+        </Text>
+        <Text fontSize="sm" color="su.white" opacity={0.9} mt={1}>
+          <Text as="span" textTransform="capitalize">
+            {typeName}
+          </Text>{' '}
+          Crawler
+        </Text>
+      </Box>
+      <Box minW="80px">
         <StatDisplay label="SP" value={spDisplay} />
-      </div>
-    </div>
+      </Box>
+    </Flex>
   )
 }
 

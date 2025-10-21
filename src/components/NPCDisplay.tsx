@@ -1,3 +1,4 @@
+import { Box, Heading, VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import { AbilityCard } from './shared/AbilityCard'
@@ -14,7 +15,7 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
     <Frame
       header={data.name}
       headerContent={
-        <div className="ml-auto pb-6" style={{ overflow: 'visible' }}>
+        <Box ml="auto" pb={6} overflow="visible">
           <StatList
             stats={[
               {
@@ -24,19 +25,27 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
             ]}
             up={false}
           />
-        </div>
+        </Box>
       }
       showSidebar={false}
     >
       {data.description && <DescriptionBox description={data.description} />}
 
       {data.abilities && data.abilities.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-bold text-[var(--color-su-black)] uppercase">Abilities</h3>
+        <VStack gap={3} alignItems="stretch">
+          <Heading
+            as="h3"
+            fontSize="lg"
+            fontWeight="bold"
+            color="su.black"
+            textTransform="uppercase"
+          >
+            Abilities
+          </Heading>
           {data.abilities.map((ability, index) => (
             <AbilityCard key={index} ability={ability} />
           ))}
-        </div>
+        </VStack>
       )}
 
       <PageReferenceDisplay source={data.source} page={data.page} />

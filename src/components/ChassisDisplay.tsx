@@ -1,3 +1,4 @@
+import { Box, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import type { Chassis } from 'salvageunion-reference'
@@ -10,14 +11,14 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
   const stats = data.stats
 
   return (
-    <div className="space-y-6">
+    <VStack gap={6} alignItems="stretch">
       <Frame
         header={data.name}
         techLevel={stats.tech_level}
         description={data.description}
         showSidebar={false}
         headerContent={
-          <div className="ml-auto pb-6" style={{ overflow: 'visible' }}>
+          <Box ml="auto" pb={6} overflow="visible">
             <StatList
               stats={[
                 { label: 'Structure Pts.', value: stats.structure_pts },
@@ -32,42 +33,50 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
               notes={'notes' in stats && typeof stats.notes === 'string' ? stats.notes : undefined}
               up={false}
             />
-          </div>
+          </Box>
         }
       >
         {data.chassis_abilities && data.chassis_abilities.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="text-lg font-bold text-[var(--color-su-black)] uppercase">
+          <VStack gap={3} alignItems="stretch">
+            <Heading
+              as="h4"
+              fontSize="lg"
+              fontWeight="bold"
+              color="su.black"
+              textTransform="uppercase"
+            >
               Chassis Abilities
-            </h4>
-            <div className="border border-[var(--color-su-black)] p-3 space-y-3">
+            </Heading>
+            <VStack gap={3} alignItems="stretch" borderWidth="1px" borderColor="su.black" p={3}>
               {data.chassis_abilities.map((ability, index) => (
-                <div key={index} className="space-y-2">
-                  <div>
+                <VStack key={index} gap={2} alignItems="stretch">
+                  <Box>
                     {ability.name && (
-                      <span className="font-bold text-[var(--color-su-black)]">
+                      <Text as="span" fontWeight="bold" color="su.black">
                         {ability.name}:{' '}
-                      </span>
+                      </Text>
                     )}
-                    <span className="text-[var(--color-su-black)]">{ability.description}</span>
-                  </div>
+                    <Text as="span" color="su.black">
+                      {ability.description}
+                    </Text>
+                  </Box>
 
                   {'options' in ability && ability.options && ability.options.length > 0 && (
-                    <div className="ml-4 space-y-1">
+                    <VStack gap={1} alignItems="stretch" ml={4}>
                       {ability.options.map((option, optIndex) => (
-                        <div key={optIndex} className="text-[var(--color-su-black)]">
-                          <span className="font-bold">
+                        <Text key={optIndex} color="su.black">
+                          <Text as="span" fontWeight="bold">
                             {option.label}
                             {option.label.includes('•') || option.label.length === 0 ? '' : ':'}
-                          </span>{' '}
+                          </Text>{' '}
                           {option.value}
-                        </div>
+                        </Text>
                       ))}
-                    </div>
+                    </VStack>
                   )}
 
                   {'stats' in ability && ability.stats && (
-                    <div className="mt-2" style={{ overflow: 'visible' }}>
+                    <Box mt={2} overflow="visible">
                       <StatList
                         stats={[
                           {
@@ -103,62 +112,95 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                         notes={'notes' in ability.stats ? ability.stats.notes : undefined}
                         up
                       />
-                    </div>
+                    </Box>
                   )}
-                </div>
+                </VStack>
               ))}
-            </div>
-          </div>
+            </VStack>
+          </VStack>
         )}
       </Frame>
 
       {data.patterns && data.patterns.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-2xl font-bold text-[var(--color-su-black)] uppercase">Patterns</h3>
+        <VStack gap={4} alignItems="stretch">
+          <Heading
+            as="h3"
+            fontSize="2xl"
+            fontWeight="bold"
+            color="su.black"
+            textTransform="uppercase"
+          >
+            Patterns
+          </Heading>
           {data.patterns.map((pattern, index) => (
-            <div
+            <VStack
               key={index}
-              className="bg-[var(--color-su-light-blue)] border border-[var(--color-su-black)] rounded-lg p-4 space-y-3"
+              gap={3}
+              alignItems="stretch"
+              bg="su.lightBlue"
+              borderWidth="1px"
+              borderColor="su.black"
+              borderRadius="lg"
+              p={4}
             >
-              <div className="flex items-center gap-2">
-                <h4 className="text-xl font-bold text-[var(--color-su-black)]">{pattern.name}</h4>
+              <Flex alignItems="center" gap={2}>
+                <Heading as="h4" fontSize="xl" fontWeight="bold" color="su.black">
+                  {pattern.name}
+                </Heading>
                 {'legalStarting' in pattern && pattern.legalStarting && (
-                  <span className="bg-[var(--color-su-green)] text-[var(--color-su-white)] text-xs font-bold px-2 py-1 rounded">
+                  <Text
+                    as="span"
+                    bg="su.green"
+                    color="su.white"
+                    fontSize="xs"
+                    fontWeight="bold"
+                    px={2}
+                    py={1}
+                    borderRadius="md"
+                  >
                     LEGAL STARTING
-                  </span>
+                  </Text>
                 )}
-              </div>
-              <p className="text-[var(--color-su-black)]">{pattern.description}</p>
+              </Flex>
+              <Text color="su.black">{pattern.description}</Text>
 
               {pattern.systems && pattern.systems.length > 0 && (
-                <div>
-                  <h5 className="font-bold text-[var(--color-su-brick)] mb-2">Systems:</h5>
-                  <ul className="list-disc ml-6 space-y-1">
-                    {pattern.systems.map((system, sysIndex) => (
-                      <li key={sysIndex} className="text-[var(--color-su-black)]">
-                        {system}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <Box>
+                  <Heading as="h5" fontWeight="bold" color="su.brick" mb={2} fontSize="md">
+                    Systems:
+                  </Heading>
+                  <Box as="ul" listStyleType="disc" ml={6}>
+                    <VStack gap={1} alignItems="stretch">
+                      {pattern.systems.map((system, sysIndex) => (
+                        <Text as="li" key={sysIndex} color="su.black">
+                          {system}
+                        </Text>
+                      ))}
+                    </VStack>
+                  </Box>
+                </Box>
               )}
 
               {pattern.modules && pattern.modules.length > 0 && (
-                <div>
-                  <h5 className="font-bold text-[var(--color-su-brick)] mb-2">Modules:</h5>
-                  <ul className="list-disc ml-6 space-y-1">
-                    {pattern.modules.map((module, modIndex) => (
-                      <li key={modIndex} className="text-[var(--color-su-black)]">
-                        {module}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <Box>
+                  <Heading as="h5" fontWeight="bold" color="su.brick" mb={2} fontSize="md">
+                    Modules:
+                  </Heading>
+                  <Box as="ul" listStyleType="disc" ml={6}>
+                    <VStack gap={1} alignItems="stretch">
+                      {pattern.modules.map((module, modIndex) => (
+                        <Text as="li" key={modIndex} color="su.black">
+                          {module}
+                        </Text>
+                      ))}
+                    </VStack>
+                  </Box>
+                </Box>
               )}
-            </div>
+            </VStack>
           ))}
-        </div>
+        </VStack>
       )}
-    </div>
+    </VStack>
   )
 }

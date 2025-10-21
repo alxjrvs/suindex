@@ -1,3 +1,4 @@
+import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import type { Crawler } from 'salvageunion-reference'
 
@@ -14,24 +15,38 @@ export function CrawlerDisplay({ data }: CrawlerDisplayProps) {
       showSidebar={false}
     >
       {data.abilities && data.abilities.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-bold text-[var(--color-su-brick)]">Crawler Abilities</h3>
+        <VStack gap={3} alignItems="stretch">
+          <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+            Crawler Abilities
+          </Heading>
           {data.abilities.map((ability, index) => (
-            <div
+            <VStack
               key={index}
-              className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2"
+              gap={2}
+              alignItems="stretch"
+              bg="su.white"
+              borderWidth="1px"
+              borderColor="su.black"
+              borderRadius="md"
+              p={3}
             >
-              <div className="font-bold text-[var(--color-su-black)] text-lg">{ability.name}</div>
-              <div className="text-[var(--color-su-black)]">{ability.description}</div>
-            </div>
+              <Text fontWeight="bold" color="su.black" fontSize="lg">
+                {ability.name}
+              </Text>
+              <Text color="su.black">{ability.description}</Text>
+            </VStack>
           ))}
-        </div>
+        </VStack>
       )}
 
-      <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-        <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
-        <span className="text-[var(--color-su-black)] ml-2">{data.page}</span>
-      </div>
+      <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+        <Text as="span" fontWeight="bold" color="su.brick">
+          Page:
+        </Text>
+        <Text as="span" color="su.black" ml={2}>
+          {data.page}
+        </Text>
+      </Box>
     </Frame>
   )
 }

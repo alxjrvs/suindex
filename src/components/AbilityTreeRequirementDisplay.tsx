@@ -1,3 +1,4 @@
+import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 
 interface AbilityTreeRequirementData {
@@ -25,29 +26,37 @@ export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDi
 
   return (
     <Frame header={`${data.tree} Tree`} headerColor={getHeaderColor()} showSidebar={false}>
-      <div className="space-y-3">
-        <h3 className="text-lg font-bold text-[var(--color-su-brick)]">Requirements</h3>
-        <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-          <div className="text-[var(--color-su-black)]">
-            <span className="font-bold text-[var(--color-su-brick)]">
+      <VStack gap={3} alignItems="stretch">
+        <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+          Requirements
+        </Heading>
+        <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+          <Text color="su.black">
+            <Text as="span" fontWeight="bold" color="su.brick">
               Must have all abilities from:{' '}
-            </span>
+            </Text>
             {data.requirement.map((req, index) => (
-              <span key={index}>
+              <Text as="span" key={index}>
                 {index > 0 && ', '}
-                <span className="font-bold">{req}</span>
-              </span>
+                <Text as="span" fontWeight="bold">
+                  {req}
+                </Text>
+              </Text>
             ))}
             {' tree'}
             {data.requirement.length > 1 ? 's' : ''}
-          </div>
-        </div>
-      </div>
+          </Text>
+        </Box>
+      </VStack>
 
-      <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-        <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
-        <span className="text-[var(--color-su-black)] ml-2">{data.page}</span>
-      </div>
+      <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+        <Text as="span" fontWeight="bold" color="su.brick">
+          Page:
+        </Text>
+        <Text as="span" color="su.black" ml={2}>
+          {data.page}
+        </Text>
+      </Box>
     </Frame>
   )
 }

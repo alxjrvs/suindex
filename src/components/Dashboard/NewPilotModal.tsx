@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Box, Button, Flex, Input, NativeSelect, Text, Textarea, VStack } from '@chakra-ui/react'
 import Modal from '../Modal'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { supabase } from '../../lib/supabase'
@@ -166,157 +167,207 @@ export function NewPilotModal({ isOpen, onClose, onSuccess }: NewPilotModalProps
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Create New Pilot" backgroundColor="#6b8e7f">
-      <div className="space-y-4">
+      <VStack gap={4} align="stretch">
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <Box
+            bg="red.100"
+            borderWidth="1px"
+            borderColor="red.400"
+            color="red.700"
+            px={4}
+            py={3}
+            borderRadius="md"
+          >
             {error}
-          </div>
+          </Box>
         )}
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Callsign *
-          </label>
-          <input
-            type="text"
+          </Text>
+          <Input
             value={callsign}
             onChange={(e) => setCallsign(e.target.value)}
             placeholder="Enter pilot callsign..."
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            bg="su.white"
+            color="su.black"
+            borderWidth="2px"
+            borderColor="su.black"
           />
-        </div>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Class (Optional)
-          </label>
-          <select
-            value={classId}
-            onChange={(e) => setClassId(e.target.value)}
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
-          >
-            <option value="">Select a class...</option>
-            {classes.map((cls) => (
-              <option key={cls.id} value={cls.id}>
-                {cls.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          </Text>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              value={classId}
+              onChange={(e) => setClassId(e.currentTarget.value)}
+              bg="su.white"
+              color="su.black"
+              borderWidth="2px"
+              borderColor="su.black"
+            >
+              <option value="">Select a class...</option>
+              {classes.map((cls) => (
+                <option key={cls.id} value={cls.id}>
+                  {cls.name}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Keepsake (Optional)
-          </label>
-          <input
-            type="text"
+          </Text>
+          <Input
             value={keepsake}
             onChange={(e) => setKeepsake(e.target.value)}
             placeholder="Enter keepsake..."
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            bg="su.white"
+            color="su.black"
+            borderWidth="2px"
+            borderColor="su.black"
           />
-        </div>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Motto (Optional)
-          </label>
-          <input
-            type="text"
+          </Text>
+          <Input
             value={motto}
             onChange={(e) => setMotto(e.target.value)}
             placeholder="Enter motto..."
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            bg="su.white"
+            color="su.black"
+            borderWidth="2px"
+            borderColor="su.black"
           />
-        </div>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Background (Optional)
-          </label>
-          <textarea
+          </Text>
+          <Textarea
             value={background}
             onChange={(e) => setBackground(e.target.value)}
             placeholder="Enter background..."
             rows={3}
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            bg="su.white"
+            color="su.black"
+            borderWidth="2px"
+            borderColor="su.black"
           />
-        </div>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Appearance (Optional)
-          </label>
-          <textarea
+          </Text>
+          <Textarea
             value={appearance}
             onChange={(e) => setAppearance(e.target.value)}
             placeholder="Enter appearance..."
             rows={3}
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            bg="su.white"
+            color="su.black"
+            borderWidth="2px"
+            borderColor="su.black"
           />
-        </div>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Game (Optional)
-          </label>
-          <select
-            value={gameId}
-            onChange={(e) => {
-              setGameId(e.target.value)
-              setCrawlerId('') // Reset crawler when game changes
-            }}
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
-          >
-            <option value="">No game (personal pilot)</option>
-            {availableGames.map((game) => (
-              <option key={game.id} value={game.id}>
-                {game.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          </Text>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              value={gameId}
+              onChange={(e) => {
+                setGameId(e.currentTarget.value)
+                setCrawlerId('') // Reset crawler when game changes
+              }}
+              bg="su.white"
+              color="su.black"
+              borderWidth="2px"
+              borderColor="su.black"
+            >
+              <option value="">No game (personal pilot)</option>
+              {availableGames.map((game) => (
+                <option key={game.id} value={game.id}>
+                  {game.name}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Crawler (Optional)
-          </label>
-          <select
-            value={crawlerId}
-            onChange={(e) => setCrawlerId(e.target.value)}
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
-          >
-            <option value="">No crawler</option>
-            {availableCrawlers.map((crawler) => (
-              <option key={crawler.id} value={crawler.id}>
-                {crawler.name}
-              </option>
-            ))}
-          </select>
+          </Text>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              value={crawlerId}
+              onChange={(e) => setCrawlerId(e.currentTarget.value)}
+              bg="su.white"
+              color="su.black"
+              borderWidth="2px"
+              borderColor="su.black"
+            >
+              <option value="">No crawler</option>
+              {availableCrawlers.map((crawler) => (
+                <option key={crawler.id} value={crawler.id}>
+                  {crawler.name}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
           {gameId && availableCrawlers.length === 0 && (
-            <p className="text-xs text-[var(--color-su-white)] mt-1 opacity-75">
+            <Text fontSize="xs" color="su.white" mt={1} opacity={0.75}>
               No crawlers available for this game.
-            </p>
+            </Text>
           )}
-        </div>
+        </Box>
 
-        <div className="flex gap-2 justify-end pt-2">
-          <button
+        <Flex gap={2} justifyContent="flex-end" pt={2}>
+          <Button
             onClick={handleClose}
             disabled={loading}
-            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+            bg="su.brick"
+            color="su.white"
+            px={4}
+            py={2}
+            fontWeight="bold"
+            _hover={{ opacity: 0.9 }}
+            _disabled={{ opacity: 0.5 }}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleSubmit}
             disabled={!isValid || loading}
-            className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            bg="su.orange"
+            color="su.white"
+            px={4}
+            py={2}
+            fontWeight="bold"
+            _hover={{ opacity: 0.9 }}
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           >
             {loading ? 'Creating...' : 'Create Pilot'}
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Flex>
+      </VStack>
     </Modal>
   )
 }

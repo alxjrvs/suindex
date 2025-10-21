@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Box, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability } from 'salvageunion-reference'
 import { Frame } from './shared/Frame'
@@ -27,11 +28,19 @@ function AbilitySection({
   if (abilityKeys.length === 0) return null
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-xl font-bold uppercase text-center py-2" style={{ color: headerColor }}>
+    <VStack gap={3} alignItems="stretch">
+      <Heading
+        as="h3"
+        fontSize="xl"
+        fontWeight="bold"
+        textTransform="uppercase"
+        textAlign="center"
+        py={2}
+        color={headerColor}
+      >
         {title}
-      </h3>
-      <div className="space-y-4">
+      </Heading>
+      <VStack gap={4} alignItems="stretch">
         {abilityKeys.map((key) => (
           <AbilityList
             key={key}
@@ -40,8 +49,8 @@ function AbilitySection({
             headerColor={headerColor}
           />
         ))}
-      </div>
-    </div>
+      </VStack>
+    </VStack>
   )
 }
 
@@ -57,19 +66,16 @@ function AbilityList({
   if (abilities.length === 0) return null
 
   return (
-    <div className="border border-[var(--color-su-black)] rounded-lg overflow-hidden">
-      <div
-        className="p-2 font-bold text-[var(--color-su-white)]"
-        style={{ backgroundColor: headerColor }}
-      >
+    <Box borderWidth="1px" borderColor="su.black" borderRadius="lg" overflow="hidden">
+      <Box p={2} fontWeight="bold" color="su.white" bg={headerColor}>
         {treeKey}
-      </div>
-      <div className="bg-[var(--color-su-light-blue)] p-3 space-y-3">
+      </Box>
+      <VStack gap={3} alignItems="stretch" bg="su.lightBlue" p={3}>
         {abilities.map((ability, index) => (
           <AbilityItem key={index} ability={ability} />
         ))}
-      </div>
-    </div>
+      </VStack>
+    </Box>
   )
 }
 
@@ -91,29 +97,53 @@ function AbilityItem({ ability }: { ability: Ability }) {
   }
 
   return (
-    <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2">
-      <div className="flex items-start gap-2">
-        <span className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] font-bold px-2 py-1 rounded min-w-[30px] text-center">
+    <VStack
+      gap={2}
+      alignItems="stretch"
+      bg="su.white"
+      borderWidth="1px"
+      borderColor="su.black"
+      borderRadius="md"
+      p={3}
+    >
+      <Flex alignItems="start" gap={2}>
+        <Text
+          as="span"
+          bg="su.orange"
+          color="su.white"
+          fontWeight="bold"
+          px={2}
+          py={1}
+          borderRadius="md"
+          minW="30px"
+          textAlign="center"
+        >
           {ability.level}
-        </span>
-        <div className="flex-1">
-          <h5 className="font-bold text-[var(--color-su-black)]">{ability.name}</h5>
+        </Text>
+        <Box flex="1">
+          <Heading as="h5" fontWeight="bold" color="su.black" fontSize="md">
+            {ability.name}
+          </Heading>
           {details.length > 0 && (
-            <div className="mt-1">
+            <Box mt={1}>
               <DataList values={details} textColor="var(--color-su-brick)" />
-            </div>
+            </Box>
           )}
-        </div>
-      </div>
+        </Box>
+      </Flex>
 
       {ability.description && (
-        <p className="text-[var(--color-su-black)] text-sm italic">{ability.description}</p>
+        <Text color="su.black" fontSize="sm" fontStyle="italic">
+          {ability.description}
+        </Text>
       )}
 
       {ability.effect && (
-        <p className="text-[var(--color-su-black)] leading-relaxed">{ability.effect}</p>
+        <Text color="su.black" lineHeight="relaxed">
+          {ability.effect}
+        </Text>
       )}
-    </div>
+    </VStack>
   )
 }
 
@@ -133,9 +163,11 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-lg text-[var(--color-su-black)]">Loading abilities...</div>
-      </div>
+      <Flex alignItems="center" justifyContent="center" p={8}>
+        <Text fontSize="lg" color="su.black">
+          Loading abilities...
+        </Text>
+      </Flex>
     )
   }
 
@@ -167,33 +199,61 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
       description={data.description}
       showSidebar={false}
     >
-      <div className="space-y-6">
-        <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-[var(--color-su-brick)]">Type:</span>
-            <span className="text-[var(--color-su-black)] capitalize">{data.type}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-[var(--color-su-brick)]">Source:</span>
-            <span className="text-[var(--color-su-black)] capitalize">{data.source}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-[var(--color-su-brick)]">Page:</span>
-            <span className="text-[var(--color-su-black)]">{data.page}</span>
-          </div>
+      <VStack gap={6} alignItems="stretch">
+        <VStack
+          gap={2}
+          alignItems="stretch"
+          bg="su.white"
+          borderWidth="1px"
+          borderColor="su.black"
+          borderRadius="md"
+          p={3}
+        >
+          <Flex alignItems="center" gap={2}>
+            <Text as="span" fontWeight="bold" color="su.brick">
+              Type:
+            </Text>
+            <Text as="span" color="su.black" textTransform="capitalize">
+              {data.type}
+            </Text>
+          </Flex>
+          <Flex alignItems="center" gap={2}>
+            <Text as="span" fontWeight="bold" color="su.brick">
+              Source:
+            </Text>
+            <Text as="span" color="su.black" textTransform="capitalize">
+              {data.source}
+            </Text>
+          </Flex>
+          <Flex alignItems="center" gap={2}>
+            <Text as="span" fontWeight="bold" color="su.brick">
+              Page:
+            </Text>
+            <Text as="span" color="su.black">
+              {data.page}
+            </Text>
+          </Flex>
           {data.hybridClasses && data.hybridClasses.length > 0 && (
-            <div className="flex items-start gap-2">
-              <span className="font-bold text-[var(--color-su-brick)]">Hybrid Classes:</span>
-              <span className="text-[var(--color-su-black)]">{data.hybridClasses.join(', ')}</span>
-            </div>
+            <Flex alignItems="start" gap={2}>
+              <Text as="span" fontWeight="bold" color="su.brick">
+                Hybrid Classes:
+              </Text>
+              <Text as="span" color="su.black">
+                {data.hybridClasses.join(', ')}
+              </Text>
+            </Flex>
           )}
           {data.coreClasses && data.coreClasses.length > 0 && (
-            <div className="flex items-start gap-2">
-              <span className="font-bold text-[var(--color-su-brick)]">Core Classes:</span>
-              <span className="text-[var(--color-su-black)]">{data.coreClasses.join(', ')}</span>
-            </div>
+            <Flex alignItems="start" gap={2}>
+              <Text as="span" fontWeight="bold" color="su.brick">
+                Core Classes:
+              </Text>
+              <Text as="span" color="su.black">
+                {data.coreClasses.join(', ')}
+              </Text>
+            </Flex>
           )}
-        </div>
+        </VStack>
 
         <AbilitySection
           title="Core Abilities"
@@ -216,7 +276,7 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
             headerColor="var(--color-su-pink)"
           />
         )}
-      </div>
+      </VStack>
     </Frame>
   )
 }

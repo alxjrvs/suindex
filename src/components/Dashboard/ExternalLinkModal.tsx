@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Box, Button, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import Modal from '../Modal'
 
 interface ExternalLinkModalProps {
@@ -30,48 +31,65 @@ export function ExternalLinkModal({ isOpen, onClose, onAdd }: ExternalLinkModalP
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Add External Link">
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">
+      <VStack gap={4} alignItems="stretch">
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
             Title
-          </label>
-          <input
-            type="text"
+          </Text>
+          <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter link title..."
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            bg="su.white"
+            color="su.black"
+            borderWidth="2px"
+            borderColor="su.black"
           />
-        </div>
+        </Box>
 
-        <div>
-          <label className="block text-sm font-bold text-[var(--color-su-white)] mb-2">URL</label>
-          <input
+        <Box>
+          <Text as="label" display="block" fontSize="sm" fontWeight="bold" color="su.white" mb={2}>
+            URL
+          </Text>
+          <Input
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://example.com"
-            className="w-full p-2 border-2 border-[var(--color-su-black)] rounded bg-[var(--color-su-white)] text-[var(--color-su-black)]"
+            bg="su.white"
+            color="su.black"
+            borderWidth="2px"
+            borderColor="su.black"
           />
-        </div>
+        </Box>
 
-        <div className="flex gap-2 justify-end pt-2">
-          <button
+        <Flex gap={2} justifyContent="flex-end" pt={2}>
+          <Button
             onClick={handleClose}
-            className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity"
+            bg="su.brick"
+            color="su.white"
+            px={4}
+            py={2}
+            fontWeight="bold"
+            _hover={{ opacity: 0.9 }}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleSubmit}
             disabled={!isValid}
-            className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            bg="su.orange"
+            color="su.white"
+            px={4}
+            py={2}
+            fontWeight="bold"
+            _hover={{ opacity: 0.9 }}
+            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           >
             Add Link
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Flex>
+      </VStack>
     </Modal>
   )
 }
-

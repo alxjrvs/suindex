@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Box, Button, Heading, Input, Text, VStack } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 
 export function JoinGame() {
@@ -56,38 +57,68 @@ export function JoinGame() {
   }, [searchParams])
 
   return (
-    <div className="p-8 max-w-xl mx-auto">
-      <button
+    <Box p={8} maxW="xl" mx="auto">
+      <Button
         onClick={() => navigate('/dashboard')}
-        className="text-[var(--color-su-brick)] hover:underline mb-4"
+        variant="plain"
+        color="su.brick"
+        mb={4}
+        _hover={{ textDecoration: 'underline' }}
       >
         ← Back to Dashboard
-      </button>
-      <h1 className="text-3xl font-bold text-[var(--color-su-black)] mb-6">Join a Game</h1>
-      <form
+      </Button>
+      <Heading as="h1" size="2xl" color="su.black" mb={6}>
+        Join a Game
+      </Heading>
+      <Box
+        as="form"
         onSubmit={handleSubmit}
-        className="bg-[var(--color-su-white)] border border-[var(--color-su-light-blue)] rounded-lg p-6"
+        bg="su.white"
+        borderWidth="1px"
+        borderColor="su.lightBlue"
+        borderRadius="lg"
+        p={6}
       >
-        <label className="block text-sm font-medium text-[var(--color-su-black)] mb-2">
-          Invite Code
-        </label>
-        <input
-          type="text"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="Enter invite code"
-          className="w-full p-3 border border-[var(--color-su-light-blue)] rounded-lg mb-4"
-          required
-        />
-        {error && <div className="text-red-600 mb-3 text-sm">{error}</div>}
-        <button
-          type="submit"
-          disabled={loading || !code.trim()}
-          className="bg-[var(--color-su-brick)] hover:opacity-90 disabled:opacity-50 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity"
-        >
-          {loading ? 'Joining…' : 'Join Game'}
-        </button>
-      </form>
-    </div>
+        <VStack gap={4} align="stretch">
+          <Box>
+            <Text
+              as="label"
+              display="block"
+              fontSize="sm"
+              fontWeight="medium"
+              color="su.black"
+              mb={2}
+            >
+              Invite Code
+            </Text>
+            <Input
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="Enter invite code"
+              borderColor="su.lightBlue"
+              required
+            />
+          </Box>
+          {error && (
+            <Text color="red.600" fontSize="sm">
+              {error}
+            </Text>
+          )}
+          <Button
+            type="submit"
+            disabled={loading || !code.trim()}
+            bg="su.brick"
+            color="su.white"
+            fontWeight="bold"
+            py={2}
+            px={6}
+            _hover={{ opacity: 0.9 }}
+            _disabled={{ opacity: 0.5 }}
+          >
+            {loading ? 'Joining…' : 'Join Game'}
+          </Button>
+        </VStack>
+      </Box>
+    </Box>
   )
 }

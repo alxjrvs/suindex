@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom'
+import { Flex, Text } from '@chakra-ui/react'
 import CrawlerBuilder from '../CrawlerBuilder'
 
 export function CrawlerEdit() {
@@ -6,12 +7,13 @@ export function CrawlerEdit() {
 
   if (!id) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-xl text-red-600">Error: No crawler ID provided</div>
-      </div>
+      <Flex align="center" justify="center" minH="100vh">
+        <Text fontSize="xl" color="red.600">
+          Error: No crawler ID provided
+        </Text>
+      </Flex>
     )
   }
 
   return <CrawlerBuilder id={id} />
 }
-

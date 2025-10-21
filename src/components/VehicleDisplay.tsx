@@ -1,3 +1,4 @@
+import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import type { Vehicle } from 'salvageunion-reference'
@@ -20,58 +21,76 @@ export function VehicleDisplay({ data }: VehicleDisplayProps) {
       description={data.description}
       headerContent={
         data.structurePoints !== undefined ? (
-          <div className="ml-auto pb-6" style={{ overflow: 'visible' }}>
+          <Box ml="auto" pb={6} overflow="visible">
             <StatList
               stats={[{ label: 'Structure Pts.', value: data.structurePoints }]}
               up={false}
             />
-          </div>
+          </Box>
         ) : undefined
       }
       showSidebar
       salvageValue={data.salvageValue}
     >
       {data.traits && data.traits.length > 0 && (
-        <div className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3">
-          <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
-          <span className="text-[var(--color-su-black)]">{formatTraits(data.traits)}</span>
-        </div>
+        <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+          <Text as="span" fontWeight="bold" color="su.brick">
+            Traits:{' '}
+          </Text>
+          <Text as="span" color="su.black">
+            {formatTraits(data.traits)}
+          </Text>
+        </Box>
       )}
 
       {data.systems && data.systems.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-bold text-[var(--color-su-brick)]">Systems</h3>
+        <VStack gap={3} alignItems="stretch">
+          <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+            Systems
+          </Heading>
           {data.systems.map((system, index) => (
-            <div
+            <VStack
               key={index}
-              className="bg-[var(--color-su-white)] border border-[var(--color-su-black)] rounded p-3 space-y-2"
+              gap={2}
+              alignItems="stretch"
+              bg="su.white"
+              borderWidth="1px"
+              borderColor="su.black"
+              borderRadius="md"
+              p={3}
             >
-              <div className="font-bold text-[var(--color-su-black)]">
+              <Text fontWeight="bold" color="su.black">
                 {system.name}
                 {'count' in system && system.count && system.count > 1 && ` (×${system.count})`}
-              </div>
+              </Text>
               {'range' in system && system.range && (
-                <div className="text-[var(--color-su-black)]">
-                  <span className="font-bold text-[var(--color-su-brick)]">Range: </span>
+                <Text color="su.black">
+                  <Text as="span" fontWeight="bold" color="su.brick">
+                    Range:{' '}
+                  </Text>
                   {system.range}
-                </div>
+                </Text>
               )}
               {'damage' in system && system.damage && (
-                <div className="text-[var(--color-su-black)]">
-                  <span className="font-bold text-[var(--color-su-brick)]">Damage: </span>
+                <Text color="su.black">
+                  <Text as="span" fontWeight="bold" color="su.brick">
+                    Damage:{' '}
+                  </Text>
                   {system.damage.amount}
                   {system.damage.type}
-                </div>
+                </Text>
               )}
               {'traits' in system && system.traits && system.traits.length > 0 && (
-                <div className="text-[var(--color-su-black)]">
-                  <span className="font-bold text-[var(--color-su-brick)]">Traits: </span>
+                <Text color="su.black">
+                  <Text as="span" fontWeight="bold" color="su.brick">
+                    Traits:{' '}
+                  </Text>
                   {formatTraits(system.traits)}
-                </div>
+                </Text>
               )}
-            </div>
+            </VStack>
           ))}
-        </div>
+        </VStack>
       )}
     </Frame>
   )

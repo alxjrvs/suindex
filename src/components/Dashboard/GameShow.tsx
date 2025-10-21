@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router'
+import { Box, Button, Flex, Grid, Heading, Input, Text, Textarea, VStack } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -379,27 +380,36 @@ export function GameShow() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-xl text-[var(--color-su-brick)]">Loading game...</div>
-        </div>
-      </div>
+      <Box p={8}>
+        <Flex align="center" justify="center" minH="60vh">
+          <Text fontSize="xl" color="su.brick">
+            Loading game...
+          </Text>
+        </Flex>
+      </Box>
     )
   }
 
   if (error || !game) {
     return (
-      <div className="p-8">
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="text-xl text-red-600 mb-4">{error || 'Game not found'}</div>
-          <button
+      <Box p={8}>
+        <VStack align="center" justify="center" minH="60vh" gap={4}>
+          <Text fontSize="xl" color="red.600">
+            {error || 'Game not found'}
+          </Text>
+          <Button
             onClick={() => navigate('/dashboard')}
-            className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity"
+            bg="su.brick"
+            color="su.white"
+            fontWeight="bold"
+            py={2}
+            px={6}
+            _hover={{ opacity: 0.9 }}
           >
             Back to Dashboard
-          </button>
-        </div>
-      </div>
+          </Button>
+        </VStack>
+      </Box>
     )
   }
 
@@ -415,85 +425,128 @@ export function GameShow() {
     : 20
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <Box p={4} maxW="6xl" mx="auto">
       {/* Header */}
-      <div className="mb-4">
-        <button
+      <Box mb={4}>
+        <Button
           onClick={() => navigate('/dashboard')}
-          className="text-[var(--color-su-brick)] hover:underline mb-4"
+          variant="plain"
+          color="su.brick"
+          mb={4}
+          _hover={{ textDecoration: 'underline' }}
         >
           ← Back to Dashboard
-        </button>
+        </Button>
 
         {isEditingGame ? (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-[var(--color-su-black)] mb-2">
+          <VStack gap={4} align="stretch">
+            <Box>
+              <Box
+                as="label"
+                display="block"
+                fontSize="sm"
+                fontWeight="medium"
+                color="su.black"
+                mb={2}
+              >
                 Game Name
-              </label>
-              <input
-                type="text"
+              </Box>
+              <Input
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
-                className="w-full px-4 py-2 border border-[var(--color-su-light-blue)] rounded-lg text-[var(--color-su-black)] focus:outline-none focus:ring-2 focus:ring-[var(--color-su-brick)]"
+                borderColor="su.lightBlue"
+                color="su.black"
+                focusRingColor="su.brick"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--color-su-black)] mb-2">
+            </Box>
+            <Box>
+              <Box
+                as="label"
+                display="block"
+                fontSize="sm"
+                fontWeight="medium"
+                color="su.black"
+                mb={2}
+              >
                 Description
-              </label>
-              <textarea
+              </Box>
+              <Textarea
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
                 rows={4}
-                className="w-full px-4 py-2 border border-[var(--color-su-light-blue)] rounded-lg text-[var(--color-su-black)] focus:outline-none focus:ring-2 focus:ring-[var(--color-su-brick)]"
+                borderColor="su.lightBlue"
+                color="su.black"
+                focusRingColor="su.brick"
               />
-            </div>
-            {saveGameError && <div className="text-red-600 text-sm">{saveGameError}</div>}
-            <div className="flex gap-2">
-              <button
+            </Box>
+            {saveGameError && (
+              <Text color="red.600" fontSize="sm">
+                {saveGameError}
+              </Text>
+            )}
+            <Flex gap={2}>
+              <Button
                 onClick={handleSaveGame}
                 disabled={saveGameLoading}
-                className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                bg="su.brick"
+                color="su.white"
+                fontWeight="bold"
+                py={2}
+                px={6}
+                _hover={{ opacity: 0.9 }}
+                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
               >
                 {saveGameLoading ? 'Saving...' : 'Save'}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleCancelEdit}
                 disabled={saveGameLoading}
-                className="bg-gray-500 hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                bg="gray.500"
+                color="su.white"
+                fontWeight="bold"
+                py={2}
+                px={6}
+                _hover={{ opacity: 0.9 }}
+                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
               >
                 Cancel
-              </button>
-            </div>
-          </div>
+              </Button>
+            </Flex>
+          </VStack>
         ) : (
-          <div>
-            <div className="flex items-center gap-4 mb-4">
-              <h1 className="text-4xl font-bold text-[var(--color-su-black)]">{game.name}</h1>
+          <Box>
+            <Flex align="center" gap={4} mb={4}>
+              <Heading as="h1" size="3xl" color="su.black">
+                {game.name}
+              </Heading>
               {isMediator && (
-                <button
+                <Button
                   onClick={() => setIsEditingGame(true)}
-                  className="text-[var(--color-su-brick)] hover:underline text-sm"
+                  variant="plain"
+                  color="su.brick"
+                  fontSize="sm"
+                  _hover={{ textDecoration: 'underline' }}
                 >
                   Edit
-                </button>
+                </Button>
               )}
-            </div>
+            </Flex>
             {game.description && (
-              <p className="text-lg text-[var(--color-su-black)] whitespace-pre-wrap">
+              <Text fontSize="lg" color="su.black" whiteSpace="pre-wrap">
                 {game.description}
-              </p>
+              </Text>
             )}
-          </div>
+          </Box>
         )}
-      </div>
+      </Box>
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <Grid templateColumns={{ base: '1fr', lg: 'repeat(3, 1fr)' }} gap={4}>
         {/* Left: The Union (2/3) */}
-        <div className="lg:col-span-2">
-          <div className="bg-[var(--color-su-white)] border border-[var(--color-su-light-blue)] rounded-lg p-4">
-            <h2 className="text-2xl font-bold text-[var(--color-su-black)] mb-3">The Union</h2>
+        <Box gridColumn={{ base: '1', lg: 'span 2' }}>
+          <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
+            <Heading as="h2" size="xl" color="su.black" mb={3}>
+              The Union
+            </Heading>
             {crawler ? (
               <>
                 <CrawlerCard
@@ -505,10 +558,14 @@ export function GameShow() {
 
                 {/* Pilots and Mechs */}
                 {pilotsLoading ? (
-                  <div className="mt-4 text-[var(--color-su-brick)]">Loading pilots...</div>
+                  <Text mt={4} color="su.brick">
+                    Loading pilots...
+                  </Text>
                 ) : pilots.length > 0 ? (
-                  <div className="mt-4 space-y-3">
-                    <h3 className="text-xl font-bold text-[var(--color-su-black)]">Pilots</h3>
+                  <VStack mt={4} gap={3} align="stretch">
+                    <Heading as="h3" size="lg" color="su.black">
+                      Pilots
+                    </Heading>
                     {pilots.map((pilot) => {
                       const pilotMech = mechs.find((m) => m.pilot_id === pilot.id)
                       const className = pilot.class_id
@@ -525,142 +582,192 @@ export function GameShow() {
                         : null
 
                       return (
-                        <div
+                        <Flex
                           key={pilot.id}
-                          className="flex items-center justify-between p-3 bg-[var(--color-su-light-orange)] rounded-lg"
+                          align="center"
+                          justify="space-between"
+                          p={3}
+                          bg="su.lightOrange"
+                          borderRadius="lg"
                         >
-                          <div className="flex-1">
-                            <div className="font-bold text-[var(--color-su-black)]">
+                          <Box flex={1}>
+                            <Text fontWeight="bold" color="su.black">
                               {pilot.callsign}
-                            </div>
-                            <div className="text-sm text-[var(--color-su-brick)]">{className}</div>
-                          </div>
+                            </Text>
+                            <Text fontSize="sm" color="su.brick">
+                              {className}
+                            </Text>
+                          </Box>
                           {mechDisplayName ? (
-                            <div className="flex-1 text-right">
-                              <div className="font-bold text-[var(--color-su-black)]">
+                            <Box flex={1} textAlign="right">
+                              <Text fontWeight="bold" color="su.black">
                                 {mechDisplayName}
-                              </div>
+                              </Text>
                               {pilotMech?.pattern && chassisName && (
-                                <div className="text-sm text-[var(--color-su-brick)]">
+                                <Text fontSize="sm" color="su.brick">
                                   {chassisName}
-                                </div>
+                                </Text>
                               )}
-                            </div>
+                            </Box>
                           ) : (
-                            <div className="text-sm text-[var(--color-su-brick)] italic">
+                            <Text fontSize="sm" color="su.brick" fontStyle="italic">
                               No mech assigned
-                            </div>
+                            </Text>
                           )}
-                        </div>
+                        </Flex>
                       )
                     })}
-                  </div>
+                  </VStack>
                 ) : (
-                  <div className="mt-4 text-[var(--color-su-brick)]">
+                  <Text mt={4} color="su.brick">
                     No pilots assigned to this crawler yet.
-                  </div>
+                  </Text>
                 )}
               </>
             ) : (
-              <button className="bg-[#c97d9e] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-4 rounded-lg transition-opacity">
+              <Button
+                bg="su.pink"
+                color="su.white"
+                fontWeight="bold"
+                py={2}
+                px={4}
+                _hover={{ opacity: 0.9 }}
+              >
                 Create Crawler
-              </button>
+              </Button>
             )}
-            {crawlerError && <div className="text-red-600 text-sm mt-2">{crawlerError}</div>}
-          </div>
-        </div>
+            {crawlerError && (
+              <Text color="red.600" fontSize="sm" mt={2}>
+                {crawlerError}
+              </Text>
+            )}
+          </Box>
+        </Box>
 
         {/* Right: Members + Invites */}
-        <div className="lg:col-span-1 space-y-4">
-          <div className="bg-[var(--color-su-white)] border border-[var(--color-su-light-blue)] rounded-lg p-4">
-            <h2 className="text-2xl font-bold text-[var(--color-su-black)] mb-3">Members</h2>
+        <VStack gridColumn={{ base: '1', lg: '3' }} gap={4} align="stretch">
+          <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
+            <Heading as="h2" size="xl" color="su.black" mb={3}>
+              Members
+            </Heading>
             {game.members.length === 0 ? (
-              <p className="text-[var(--color-su-brick)]">No members in this game yet.</p>
+              <Text color="su.brick">No members in this game yet.</Text>
             ) : (
-              <div className="space-y-3">
+              <VStack gap={3} align="stretch">
                 {game.members.map((member) => (
-                  <div
+                  <Flex
                     key={member.id}
-                    className="flex items-center justify-between p-3 bg-[var(--color-su-light-orange)] rounded-lg"
+                    align="center"
+                    justify="space-between"
+                    p={3}
+                    bg="su.lightOrange"
+                    borderRadius="lg"
                   >
-                    <div>
-                      <div className="font-medium text-[var(--color-su-black)]">
+                    <Box>
+                      <Text fontWeight="medium" color="su.black">
                         {member.user_name ||
                           member.user_email ||
                           `User ${member.user_id.slice(0, 8)}`}
-                      </div>
+                      </Text>
                       {member.user_email && (
-                        <div className="text-sm text-[var(--color-su-brick)]">
+                        <Text fontSize="sm" color="su.brick">
                           {member.user_email}
-                        </div>
+                        </Text>
                       )}
-                    </div>
-                    <div>
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          member.role === 'mediator'
-                            ? 'bg-[var(--color-su-brick)] text-[var(--color-su-white)]'
-                            : 'bg-[var(--color-su-green)] text-[var(--color-su-white)]'
-                        }`}
+                    </Box>
+                    <Box>
+                      <Box
+                        px={3}
+                        py={1}
+                        borderRadius="full"
+                        fontSize="sm"
+                        fontWeight="medium"
+                        bg={member.role === 'mediator' ? 'su.brick' : 'su.green'}
+                        color="su.white"
                       >
                         {member.role.toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
+                      </Box>
+                    </Box>
+                  </Flex>
                 ))}
-              </div>
+              </VStack>
             )}
-          </div>
+          </Box>
 
           {isMediator && (
-            <div className="bg-[var(--color-su-white)] border border-[var(--color-su-light-blue)] rounded-lg p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-2xl font-bold text-[var(--color-su-black)]">Invites</h2>
+            <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
+              <Flex align="center" justify="space-between" mb={3}>
+                <Heading as="h2" size="xl" color="su.black">
+                  Invites
+                </Heading>
                 {invites.length === 0 && (
-                  <button
+                  <Button
                     onClick={createInvite}
-                    className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-4 rounded-lg transition-opacity"
+                    bg="su.brick"
+                    color="su.white"
+                    fontWeight="bold"
+                    py={2}
+                    px={4}
+                    _hover={{ opacity: 0.9 }}
                   >
                     Create Invite
-                  </button>
+                  </Button>
                 )}
-              </div>
-              {inviteError && <div className="text-red-600 mb-3 text-sm">{inviteError}</div>}
+              </Flex>
+              {inviteError && (
+                <Text color="red.600" mb={3} fontSize="sm">
+                  {inviteError}
+                </Text>
+              )}
               {invitesLoading ? (
-                <div className="text-[var(--color-su-brick)]">Loading invites…</div>
+                <Text color="su.brick">Loading invites…</Text>
               ) : invites.length === 0 ? (
-                <p className="text-[var(--color-su-brick)]">
-                  No invites yet. Create one to invite players.
-                </p>
+                <Text color="su.brick">No invites yet. Create one to invite players.</Text>
               ) : (
-                <div className="space-y-3">
+                <VStack gap={3} align="stretch">
                   {invites.map((inv) => (
-                    <div
+                    <Flex
                       key={inv.id}
-                      className="flex items-center justify-between p-3 bg-[var(--color-su-light-orange)] rounded-lg"
+                      align="center"
+                      justify="space-between"
+                      p={3}
+                      bg="su.lightOrange"
+                      borderRadius="lg"
                     >
-                      <div>
-                        <div className="text-sm text-[var(--color-su-brick)]">
+                      <Box>
+                        <Text fontSize="sm" color="su.brick">
                           Uses: {inv.uses}
                           {inv.max_uses ? ` / ${inv.max_uses}` : ''}
                           {inv.expires_at
                             ? ` · Expires ${new Date(inv.expires_at).toLocaleString()}`
                             : ''}
-                        </div>
-                        <div className="text-xs text-[var(--color-su-black)] font-mono break-all mt-1">
+                        </Text>
+                        <Text
+                          fontSize="xs"
+                          color="su.black"
+                          fontFamily="mono"
+                          wordBreak="break-all"
+                          mt={1}
+                        >
                           {`${window.location.origin}/dashboard/join?code=${inv.code}`}
-                          <button
+                          <Button
+                            as="button"
                             type="button"
                             onClick={() =>
                               navigator.clipboard.writeText(
                                 `${window.location.origin}/dashboard/join?code=${inv.code}`
                               )
                             }
-                            className="ml-2 text-[var(--color-su-brick)] hover:underline cursor-pointer"
+                            variant="plain"
+                            ml={2}
+                            color="su.brick"
+                            cursor="pointer"
+                            _hover={{ textDecoration: 'underline' }}
                           >
                             Copy
-                          </button>
-                          <button
+                          </Button>
+                          <Button
+                            as="button"
                             type="button"
                             onClick={async () => {
                               try {
@@ -679,92 +786,138 @@ export function GameShow() {
                                 }
                               }
                             }}
-                            className="ml-2 text-[var(--color-su-brick)] hover:underline cursor-pointer"
+                            variant="plain"
+                            ml={2}
+                            color="su.brick"
+                            cursor="pointer"
+                            _hover={{ textDecoration: 'underline' }}
                           >
                             Expire
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                          </Button>
+                        </Text>
+                      </Box>
+                    </Flex>
                   ))}
-                </div>
+                </VStack>
               )}
-            </div>
+            </Box>
           )}
 
           {/* Resources Section */}
-          <div className="bg-[var(--color-su-white)] border border-[var(--color-su-light-blue)] rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-2xl font-bold text-[var(--color-su-black)]">Resources</h2>
+          <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
+            <Flex align="center" justify="space-between" mb={3}>
+              <Heading as="h2" size="xl" color="su.black">
+                Resources
+              </Heading>
               {isMediator && (
-                <button
+                <Button
                   onClick={() => setIsLinkModalOpen(true)}
-                  className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold w-8 h-8 rounded-lg transition-opacity text-xl leading-none"
+                  bg="su.brick"
+                  color="su.white"
+                  fontWeight="bold"
+                  w={8}
+                  h={8}
+                  fontSize="xl"
+                  lineHeight="none"
+                  _hover={{ opacity: 0.9 }}
                   aria-label="Add external link"
                 >
                   +
-                </button>
+                </Button>
               )}
-            </div>
-            {linksError && <div className="text-red-600 mb-3 text-sm">{linksError}</div>}
+            </Flex>
+            {linksError && (
+              <Text color="red.600" mb={3} fontSize="sm">
+                {linksError}
+              </Text>
+            )}
             {linksLoading ? (
-              <div className="text-[var(--color-su-brick)]">Loading resources…</div>
+              <Text color="su.brick">Loading resources…</Text>
             ) : externalLinks.length === 0 ? (
-              <p className="text-[var(--color-su-brick)]">No external links yet.</p>
+              <Text color="su.brick">No external links yet.</Text>
             ) : (
-              <div className="space-y-2">
+              <VStack gap={2} align="stretch">
                 {externalLinks.map((link) => (
-                  <div
+                  <Flex
                     key={link.id}
-                    className="flex items-center justify-between p-2 bg-[var(--color-su-light-orange)] rounded-lg"
+                    align="center"
+                    justify="space-between"
+                    p={2}
+                    bg="su.lightOrange"
+                    borderRadius="lg"
                   >
                     <a
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[var(--color-su-brick)] hover:underline font-medium flex-1"
+                      style={{
+                        color: 'var(--color-su-brick)',
+                        fontWeight: 'medium',
+                        flex: 1,
+                        textDecoration: 'none',
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+                      onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
                     >
                       {link.name}
                     </a>
                     {isMediator && (
-                      <button
+                      <Button
                         onClick={() => {
                           if (window.confirm(`Delete "${link.name}"?`)) {
                             deleteExternalLink(link.id)
                           }
                         }}
-                        className="text-[var(--color-su-brick)] hover:text-red-700 font-bold text-sm ml-2"
+                        variant="plain"
+                        color="su.brick"
+                        fontWeight="bold"
+                        fontSize="sm"
+                        ml={2}
+                        _hover={{ color: 'red.700' }}
                         aria-label="Delete link"
                       >
                         ✕
-                      </button>
+                      </Button>
                     )}
-                  </div>
+                  </Flex>
                 ))}
-              </div>
+              </VStack>
             )}
-          </div>
+          </Box>
 
           {/* Delete Game Section */}
           {isMediator && (
-            <div className="bg-[var(--color-su-white)] border border-red-600 rounded-lg p-4">
-              <h2 className="text-2xl font-bold text-red-600 mb-3">Danger Zone</h2>
-              {deleteError && <div className="text-red-600 mb-3 text-sm">{deleteError}</div>}
-              <button
+            <Box bg="su.white" borderWidth="1px" borderColor="red.600" borderRadius="lg" p={4}>
+              <Heading as="h2" size="xl" color="red.600" mb={3}>
+                Danger Zone
+              </Heading>
+              {deleteError && (
+                <Text color="red.600" mb={3} fontSize="sm">
+                  {deleteError}
+                </Text>
+              )}
+              <Button
                 onClick={handleDeleteGame}
                 disabled={deleteLoading}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                w="full"
+                bg="red.600"
+                color="white"
+                fontWeight="bold"
+                py={3}
+                px={4}
+                _hover={{ bg: 'red.700' }}
+                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
               >
                 {deleteLoading ? 'Deleting...' : 'DELETE THIS GAME'}
-              </button>
-              <p className="text-xs text-[var(--color-su-brick)] mt-2">
+              </Button>
+              <Text fontSize="xs" color="su.brick" mt={2}>
                 This will permanently delete this game and all associated data. This action cannot
                 be undone.
-              </p>
-            </div>
+              </Text>
+            </Box>
           )}
-        </div>
-      </div>
+        </VStack>
+      </Grid>
 
       {/* External Link Modal */}
       <ExternalLinkModal
@@ -772,6 +925,6 @@ export function GameShow() {
         onClose={() => setIsLinkModalOpen(false)}
         onAdd={createExternalLink}
       />
-    </div>
+    </Box>
   )
 }

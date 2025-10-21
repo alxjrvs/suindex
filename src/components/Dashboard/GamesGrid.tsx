@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import { Box, Button, Flex, Grid, Heading, Text, VStack } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 
@@ -83,103 +84,145 @@ export function GamesGrid() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-xl text-[var(--color-su-brick)]">Loading games...</div>
-        </div>
-      </div>
+      <Box p={8}>
+        <Flex align="center" justify="center" minH="60vh">
+          <Text fontSize="xl" color="su.brick">
+            Loading games...
+          </Text>
+        </Flex>
+      </Box>
     )
   }
 
   if (error) {
     return (
-      <div className="p-8">
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="text-xl text-red-600 mb-4">{error}</div>
-          <button
+      <Box p={8}>
+        <VStack align="center" justify="center" minH="60vh" gap={4}>
+          <Text fontSize="xl" color="red.600">
+            {error}
+          </Text>
+          <Button
             onClick={loadGames}
-            className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity"
+            bg="su.brick"
+            color="su.white"
+            fontWeight="bold"
+            py={2}
+            px={6}
+            _hover={{ opacity: 0.9 }}
           >
             Retry
-          </button>
-        </div>
-      </div>
+          </Button>
+        </VStack>
+      </Box>
     )
   }
 
   // If no games, show the centered "Create Game" button
   if (games.length === 0) {
     return (
-      <div className="p-8">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-[var(--color-su-black)] mb-8">Your Games</h2>
-            <p className="text-lg text-[var(--color-su-brick)] mb-8">
+      <Box p={8}>
+        <Flex align="center" justify="center" minH="60vh">
+          <VStack textAlign="center" gap={8}>
+            <Heading as="h2" size="2xl" color="su.black">
+              Your Games
+            </Heading>
+            <Text fontSize="lg" color="su.brick">
               You don't have any games yet. Create your first game to get started!
-            </p>
-            <button
+            </Text>
+            <Button
               onClick={handleCreateGame}
-              className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-4 px-8 rounded-lg text-xl transition-opacity shadow-lg"
+              bg="su.brick"
+              color="su.white"
+              fontWeight="bold"
+              py={4}
+              px={8}
+              fontSize="xl"
+              _hover={{ opacity: 0.9 }}
+              boxShadow="lg"
             >
               Create Game
-            </button>
-          </div>
-        </div>
-      </div>
+            </Button>
+          </VStack>
+        </Flex>
+      </Box>
     )
   }
 
   // Show games grid
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[var(--color-su-black)]">Your Games</h1>
-      </div>
+    <Box p={8}>
+      <Box mb={8}>
+        <Heading as="h1" size="2xl" color="su.black">
+          Your Games
+        </Heading>
+      </Box>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
         {/* Existing games */}
         {games.map((game) => (
-          <button
+          <Button
             key={game.id}
             onClick={() => handleGameClick(game.id)}
-            className="bg-[var(--color-su-white)] border-2 border-[var(--color-su-light-blue)] rounded-lg p-6 hover:border-[var(--color-su-brick)] transition-colors text-left h-48 flex flex-col"
+            bg="su.white"
+            borderWidth="2px"
+            borderColor="su.lightBlue"
+            borderRadius="lg"
+            p={6}
+            h="48"
+            display="flex"
+            flexDirection="column"
+            textAlign="left"
+            _hover={{ borderColor: 'su.brick' }}
           >
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="text-xl font-bold text-[var(--color-su-black)] flex-1 pr-2">
+            <Flex align="flex-start" justify="space-between" mb={3}>
+              <Heading as="h3" size="lg" color="su.black" flex={1} pr={2}>
                 {game.name}
-              </h3>
-              <span
-                className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${
-                  game.role === 'mediator'
-                    ? 'bg-[var(--color-su-brick)] text-[var(--color-su-white)]'
-                    : 'bg-[var(--color-su-green)] text-[var(--color-su-white)]'
-                }`}
+              </Heading>
+              <Box
+                px={2}
+                py={1}
+                borderRadius="md"
+                fontSize="xs"
+                fontWeight="medium"
+                whiteSpace="nowrap"
+                bg={game.role === 'mediator' ? 'su.brick' : 'su.green'}
+                color="su.white"
               >
                 {game.role.toUpperCase()}
-              </span>
-            </div>
+              </Box>
+            </Flex>
             {game.description && (
-              <p className="text-sm text-[var(--color-su-black)] line-clamp-4 flex-1">
+              <Text fontSize="sm" color="su.black" lineClamp={4} flex={1}>
                 {game.description}
-              </p>
+              </Text>
             )}
-          </button>
+          </Button>
         ))}
 
         {/* New Game cell */}
-        <button
+        <Button
           onClick={handleCreateGame}
-          className="bg-[var(--color-su-light-orange)] border-2 border-dashed border-[var(--color-su-brick)] rounded-lg p-6 hover:bg-[var(--color-su-brick)] hover:border-solid transition-all h-48 flex flex-col items-center justify-center group"
+          bg="su.lightOrange"
+          borderWidth="2px"
+          borderStyle="dashed"
+          borderColor="su.brick"
+          borderRadius="lg"
+          p={6}
+          h="48"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          _hover={{ bg: 'su.brick', borderStyle: 'solid', '& > *': { color: 'su.white' } }}
         >
-          <div className="text-6xl text-[var(--color-su-brick)] group-hover:text-[var(--color-su-white)] mb-2">
+          <Text fontSize="6xl" color="su.brick" mb={2}>
             +
-          </div>
-          <div className="text-xl font-bold text-[var(--color-su-brick)] group-hover:text-[var(--color-su-white)]">
+          </Text>
+          <Text fontSize="xl" fontWeight="bold" color="su.brick">
             New Game
-          </div>
-        </button>
-      </div>
-    </div>
+          </Text>
+        </Button>
+      </Grid>
+    </Box>
   )
 }
-

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -293,11 +293,11 @@ describe('PilotBuilder - Integration Tests', () => {
 
       // Step 5: Select advanced class
       await waitFor(() => {
-        const advancedClassSelect = screen.getByLabelText(/advanced class/i)
+        const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
         expect(advancedClassSelect).not.toBeDisabled()
       })
 
-      const advancedClassSelect = screen.getByLabelText(/advanced class/i)
+      const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, 'class-smuggler')
 
       // Step 6: Select hybrid class ability

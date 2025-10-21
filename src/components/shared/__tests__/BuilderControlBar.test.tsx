@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '../../../test/chakra-utils'
 import { BrowserRouter } from 'react-router-dom'
 import { BuilderControlBar } from '../BuilderControlBar'
 import { supabase } from '../../../lib/supabase'

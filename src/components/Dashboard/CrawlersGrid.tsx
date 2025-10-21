@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import { Box, Button, Flex, Grid, Heading, Text, VStack } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -62,66 +63,86 @@ export function CrawlersGrid() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-xl text-[var(--color-su-brick)]">Loading crawlers...</div>
-        </div>
-      </div>
+      <Box p={8}>
+        <Flex align="center" justify="center" minH="60vh">
+          <Text fontSize="xl" color="su.brick">
+            Loading crawlers...
+          </Text>
+        </Flex>
+      </Box>
     )
   }
 
   if (error) {
     return (
-      <div className="p-8">
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="text-xl text-red-600 mb-4">{error}</div>
-          <button
+      <Box p={8}>
+        <VStack align="center" justify="center" minH="60vh" gap={4}>
+          <Text fontSize="xl" color="red.600">
+            {error}
+          </Text>
+          <Button
             onClick={loadCrawlers}
-            className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity"
+            bg="su.brick"
+            color="su.white"
+            fontWeight="bold"
+            py={2}
+            px={6}
+            _hover={{ opacity: 0.9 }}
           >
             Retry
-          </button>
-        </div>
-      </div>
+          </Button>
+        </VStack>
+      </Box>
     )
   }
 
   // If no crawlers, show the centered "Create Crawler" button
   if (crawlers.length === 0) {
     return (
-      <div className="p-8">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-[var(--color-su-black)] mb-8">Your Crawlers</h2>
-            <p className="text-lg text-[var(--color-su-brick)] mb-8">
+      <Box p={8}>
+        <Flex align="center" justify="center" minH="60vh">
+          <VStack textAlign="center" gap={8}>
+            <Heading as="h2" size="2xl" color="su.black">
+              Your Crawlers
+            </Heading>
+            <Text fontSize="lg" color="su.brick">
               You don't have any crawlers yet. Create your first crawler to get started!
-            </p>
-            <button
+            </Text>
+            <Button
               onClick={handleCreateCrawler}
-              className="bg-[#c97d9e] hover:opacity-90 text-[var(--color-su-white)] font-bold py-4 px-8 rounded-lg text-xl transition-opacity shadow-lg"
+              bg="su.pink"
+              color="su.white"
+              fontWeight="bold"
+              py={4}
+              px={8}
+              fontSize="xl"
+              _hover={{ opacity: 0.9 }}
+              boxShadow="lg"
             >
               Create Crawler
-            </button>
-          </div>
-        </div>
+            </Button>
+          </VStack>
+        </Flex>
 
         <NewCrawlerModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSuccess={handleModalSuccess}
         />
-      </div>
+      </Box>
     )
   }
 
   // Show crawlers grid
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[var(--color-su-black)]">Your Crawlers</h1>
-      </div>
+    <Box p={8}>
+      <Box mb={8}>
+        <Heading as="h1" size="2xl" color="su.black">
+          Your Crawlers
+        </Heading>
+      </Box>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
         {/* Existing crawlers */}
         {crawlers.map((crawler) => {
           const crawlerTypeName = crawler.crawler_type_id
@@ -136,10 +157,13 @@ export function CrawlersGrid() {
             : 20
 
           return (
-            <button
+            <Button
               key={crawler.id}
               onClick={() => handleCrawlerClick(crawler.id)}
-              className="hover:scale-105 transition-transform"
+              variant="plain"
+              p={0}
+              _hover={{ transform: 'scale(1.05)' }}
+              transition="transform 0.2s"
             >
               <CrawlerCard
                 name={crawler.name}
@@ -147,29 +171,40 @@ export function CrawlersGrid() {
                 maxSP={maxSP}
                 currentDamage={crawler.current_damage ?? 0}
               />
-            </button>
+            </Button>
           )
         })}
 
         {/* Create Crawler cell */}
-        <button
+        <Button
           onClick={handleCreateCrawler}
-          className="bg-[#f5c1a3] border-2 border-dashed border-[#c97d9e] rounded-lg p-6 hover:bg-[#c97d9e] hover:border-solid transition-all h-[120px] flex flex-col items-center justify-center group"
+          bg="#f5c1a3"
+          borderWidth="2px"
+          borderStyle="dashed"
+          borderColor="su.pink"
+          borderRadius="lg"
+          p={6}
+          h="120px"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          _hover={{ bg: 'su.pink', borderStyle: 'solid', '& > *': { color: 'su.white' } }}
         >
-          <div className="text-5xl text-[#c97d9e] group-hover:text-[var(--color-su-white)] mb-2">
+          <Text fontSize="5xl" color="su.pink" mb={2}>
             +
-          </div>
-          <div className="text-lg font-bold text-[#c97d9e] group-hover:text-[var(--color-su-white)]">
+          </Text>
+          <Text fontSize="lg" fontWeight="bold" color="su.pink">
             Create Crawler
-          </div>
-        </button>
-      </div>
+          </Text>
+        </Button>
+      </Grid>
 
       <NewCrawlerModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={handleModalSuccess}
       />
-    </div>
+    </Box>
   )
 }

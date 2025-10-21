@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
+import { Box, Button, Flex, Heading, Input, Text, Textarea, VStack } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { TablesInsert } from '../../types/database'
 
@@ -60,73 +61,115 @@ export function NewGame() {
   }
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[var(--color-su-black)] mb-2">Create New Game</h1>
-        <p className="text-[var(--color-su-brick)]">Start a new Salvage Union game session</p>
-      </div>
+    <Box p={8} maxW="2xl" mx="auto">
+      <Box mb={8}>
+        <Heading as="h1" size="2xl" color="su.black" mb={2}>
+          Create New Game
+        </Heading>
+        <Text color="su.brick">Start a new Salvage Union game session</Text>
+      </Box>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        <Box
+          mb={6}
+          p={4}
+          bg="red.100"
+          borderWidth="1px"
+          borderColor="red.400"
+          color="red.700"
+          borderRadius="md"
+        >
           {error}
-        </div>
+        </Box>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-[var(--color-su-black)] mb-2"
-          >
-            Game Name *
-          </label>
-          <input
-            id="name"
-            type="text"
-            {...register('name', { required: 'Game name is required' })}
-            className="w-full px-4 py-2 border border-[var(--color-su-light-blue)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-su-brick)]"
-            placeholder="Enter game name"
-          />
-          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
-        </div>
+      <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+        <VStack gap={6} align="stretch">
+          <Box>
+            <Box
+              as="label"
+              display="block"
+              fontSize="sm"
+              fontWeight="medium"
+              color="su.black"
+              mb={2}
+            >
+              Game Name *
+            </Box>
+            <Input
+              id="name"
+              type="text"
+              {...register('name', { required: 'Game name is required' })}
+              placeholder="Enter game name"
+              borderColor="su.lightBlue"
+              focusRingColor="su.brick"
+            />
+            {errors.name && (
+              <Text mt={1} fontSize="sm" color="red.600">
+                {errors.name.message}
+              </Text>
+            )}
+          </Box>
 
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-[var(--color-su-black)] mb-2"
-          >
-            Description
-          </label>
-          <textarea
-            id="description"
-            {...register('description')}
-            rows={6}
-            className="w-full px-4 py-2 border border-[var(--color-su-light-blue)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-su-brick)]"
-            placeholder="Enter game description (optional)"
-          />
-          {errors.description && (
-            <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
-          )}
-        </div>
+          <Box>
+            <Box
+              as="label"
+              display="block"
+              fontSize="sm"
+              fontWeight="medium"
+              color="su.black"
+              mb={2}
+            >
+              Description
+            </Box>
+            <Textarea
+              id="description"
+              {...register('description')}
+              rows={6}
+              placeholder="Enter game description (optional)"
+              borderColor="su.lightBlue"
+              focusRingColor="su.brick"
+            />
+            {errors.description && (
+              <Text mt={1} fontSize="sm" color="red.600">
+                {errors.description.message}
+              </Text>
+            )}
+          </Box>
 
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="flex-1 bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-3 px-6 rounded-lg transition-opacity disabled:opacity-50"
-          >
-            {isSubmitting ? 'Creating...' : 'Create Game'}
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/dashboard')}
-            disabled={isSubmitting}
-            className="flex-1 bg-[var(--color-su-light-blue)] hover:opacity-90 text-[var(--color-su-black)] font-bold py-3 px-6 rounded-lg transition-opacity disabled:opacity-50"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+          <Flex gap={4}>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              flex={1}
+              bg="su.brick"
+              color="su.white"
+              fontWeight="bold"
+              py={3}
+              px={6}
+              _hover={{ opacity: 0.9 }}
+              _disabled={{ opacity: 0.5 }}
+            >
+              {isSubmitting ? 'Creating...' : 'Create Game'}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              disabled={isSubmitting}
+              flex={1}
+              bg="su.lightBlue"
+              color="su.black"
+              fontWeight="bold"
+              py={3}
+              px={6}
+              _hover={{ opacity: 0.9 }}
+              _disabled={{ opacity: 0.5 }}
+            >
+              Cancel
+            </Button>
+          </Flex>
+        </VStack>
+      </Box>
+    </Box>
   )
 }

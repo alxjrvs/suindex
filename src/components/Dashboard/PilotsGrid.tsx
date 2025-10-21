@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import { Box, Button, Flex, Grid, Heading, Text, VStack } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { NewPilotModal } from './NewPilotModal'
@@ -61,66 +62,86 @@ export function PilotsGrid() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-xl text-[var(--color-su-brick)]">Loading pilots...</div>
-        </div>
-      </div>
+      <Box p={8}>
+        <Flex align="center" justify="center" minH="60vh">
+          <Text fontSize="xl" color="su.brick">
+            Loading pilots...
+          </Text>
+        </Flex>
+      </Box>
     )
   }
 
   if (error) {
     return (
-      <div className="p-8">
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="text-xl text-red-600 mb-4">{error}</div>
-          <button
+      <Box p={8}>
+        <VStack align="center" justify="center" minH="60vh" gap={4}>
+          <Text fontSize="xl" color="red.600">
+            {error}
+          </Text>
+          <Button
             onClick={loadPilots}
-            className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity"
+            bg="su.brick"
+            color="su.white"
+            fontWeight="bold"
+            py={2}
+            px={6}
+            _hover={{ opacity: 0.9 }}
           >
             Retry
-          </button>
-        </div>
-      </div>
+          </Button>
+        </VStack>
+      </Box>
     )
   }
 
   // If no pilots, show the centered "Create Pilot" button
   if (pilots.length === 0) {
     return (
-      <div className="p-8">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-[var(--color-su-black)] mb-8">Your Pilots</h2>
-            <p className="text-lg text-[var(--color-su-brick)] mb-8">
+      <Box p={8}>
+        <Flex align="center" justify="center" minH="60vh">
+          <VStack textAlign="center" gap={8}>
+            <Heading as="h2" size="2xl" color="su.black">
+              Your Pilots
+            </Heading>
+            <Text fontSize="lg" color="su.brick">
               You don't have any pilots yet. Create your first pilot to get started!
-            </p>
-            <button
+            </Text>
+            <Button
               onClick={handleCreatePilot}
-              className="bg-[var(--color-su-orange)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-4 px-8 rounded-lg text-xl transition-opacity shadow-lg"
+              bg="su.orange"
+              color="su.white"
+              fontWeight="bold"
+              py={4}
+              px={8}
+              fontSize="xl"
+              _hover={{ opacity: 0.9 }}
+              boxShadow="lg"
             >
               Create Pilot
-            </button>
-          </div>
-        </div>
+            </Button>
+          </VStack>
+        </Flex>
 
         <NewPilotModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSuccess={handleModalSuccess}
         />
-      </div>
+      </Box>
     )
   }
 
   // Show pilots grid
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[var(--color-su-black)]">Your Pilots</h1>
-      </div>
+    <Box p={8}>
+      <Box mb={8}>
+        <Heading as="h1" size="2xl" color="su.black">
+          Your Pilots
+        </Heading>
+      </Box>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
         {/* Existing pilots */}
         {pilots.map((pilot) => {
           const className = pilot.class_id
@@ -129,52 +150,79 @@ export function PilotsGrid() {
             : null
 
           return (
-            <button
+            <Button
               key={pilot.id}
               onClick={() => handlePilotClick(pilot.id)}
-              className="hover:scale-105 transition-transform"
+              variant="plain"
+              p={0}
+              _hover={{ transform: 'scale(1.05)' }}
+              transition="transform 0.2s"
             >
-              <div className="bg-[var(--color-su-orange)] border-4 border-[var(--color-su-black)] rounded-lg p-6 h-[120px] flex flex-col justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-[var(--color-su-white)] mb-1">
+              <Box
+                bg="su.orange"
+                borderWidth="4px"
+                borderColor="su.black"
+                borderRadius="lg"
+                p={6}
+                h="120px"
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
+                w="full"
+              >
+                <Box>
+                  <Heading as="h3" size="lg" color="su.white" mb={1}>
                     {pilot.callsign}
-                  </h3>
+                  </Heading>
                   {className && (
-                    <p className="text-sm text-[var(--color-su-white)] opacity-90">{className}</p>
+                    <Text fontSize="sm" color="su.white" opacity={0.9}>
+                      {className}
+                    </Text>
                   )}
-                </div>
-                <div className="flex justify-between text-xs text-[var(--color-su-white)] opacity-75">
-                  <span>
+                </Box>
+                <Flex justify="space-between" fontSize="xs" color="su.white" opacity={0.75}>
+                  <Text>
                     HP: {pilot.current_damage ?? 0}/{pilot.max_hp ?? 10}
-                  </span>
-                  <span>
+                  </Text>
+                  <Text>
                     AP: {pilot.current_ap ?? 0}/{pilot.max_ap ?? 3}
-                  </span>
-                </div>
-              </div>
-            </button>
+                  </Text>
+                </Flex>
+              </Box>
+            </Button>
           )
         })}
 
         {/* Create Pilot cell */}
-        <button
+        <Button
           onClick={handleCreatePilot}
-          className="bg-[var(--color-su-light-orange)] border-2 border-dashed border-[var(--color-su-orange)] rounded-lg p-6 hover:bg-[var(--color-su-orange)] hover:border-solid transition-all h-[120px] flex flex-col items-center justify-center group"
+          bg="su.lightOrange"
+          borderWidth="2px"
+          borderStyle="dashed"
+          borderColor="su.orange"
+          borderRadius="lg"
+          p={6}
+          h="120px"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          _hover={{ bg: 'su.orange', borderStyle: 'solid', '& > *': { color: 'su.white' } }}
         >
-          <div className="text-5xl text-[var(--color-su-orange)] group-hover:text-[var(--color-su-white)] mb-2">
+          <Text fontSize="5xl" color="su.orange" mb={2}>
             +
-          </div>
-          <div className="text-lg font-bold text-[var(--color-su-orange)] group-hover:text-[var(--color-su-white)]">
+          </Text>
+          <Text fontSize="lg" fontWeight="bold" color="su.orange">
             Create Pilot
-          </div>
-        </button>
-      </div>
+          </Text>
+        </Button>
+      </Grid>
 
       <NewPilotModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={handleModalSuccess}
       />
-    </div>
+    </Box>
   )
 }

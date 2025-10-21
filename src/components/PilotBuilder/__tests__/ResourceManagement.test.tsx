@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
