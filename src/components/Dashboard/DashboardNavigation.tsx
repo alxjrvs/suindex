@@ -85,6 +85,18 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
             </li>
             <li>
               <button
+                onClick={() => handleNavigate('/dashboard/games')}
+                className={`w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer ${
+                  isActive('/dashboard/games')
+                    ? 'bg-[var(--color-su-light-blue)] border-l-4 border-[var(--color-su-orange)] text-[var(--color-su-black)] font-medium'
+                    : 'text-[var(--color-su-black)]'
+                }`}
+              >
+                Games
+              </button>
+            </li>
+            <li>
+              <button
                 onClick={() => handleNavigate('/dashboard/crawlers')}
                 className={`w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer ${
                   isActive('/dashboard/crawlers')

@@ -103,7 +103,7 @@ export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
     <BuilderLayout>
       {id && (
         <BuilderControlBar
-          backgroundColor="#6b8e7f"
+          backgroundColor="var(--color-su-orange)"
           entityType="pilot"
           crawlerId={pilot.crawler_id}
           savedCrawlerId={savedCrawlerId}

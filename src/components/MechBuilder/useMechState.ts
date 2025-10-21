@@ -14,7 +14,6 @@ export function useMechState(id?: string) {
   const [mech, setMech] = useState<MechState>({
     id: id || '',
     user_id: '',
-    crawler_id: null,
     pilot_id: null,
     chassis_id: null,
     pattern: null,

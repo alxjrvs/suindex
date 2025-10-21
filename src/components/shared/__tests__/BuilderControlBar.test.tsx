@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import { userEvent } from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { BuilderControlBar } from '../BuilderControlBar'
 import { supabase } from '../../../lib/supabase'
@@ -22,7 +21,6 @@ describe('BuilderControlBar', () => {
   const mockOnSave = vi.fn()
   const mockOnResetChanges = vi.fn()
   const mockOnGameChange = vi.fn()
-  const mockOnCrawlerChange = vi.fn()
   const mockOnPilotChange = vi.fn()
 
   beforeEach(() => {
@@ -124,32 +122,10 @@ describe('BuilderControlBar', () => {
   })
 
   describe('Mech Builder', () => {
-    it('fetches crawlers filtered by game_id when set', async () => {
-      const mockCrawlers = [{ id: 'crawler-1', name: 'Crawler 1', game_id: 'game-1' }]
+    it('shows pilot dropdown and link button when pilot is assigned', async () => {
       const mockPilots = [{ id: 'pilot-1', callsign: 'Pilot 1' }]
 
       mockSupabase.from.mockImplementation((table: string) => {
-        if (table === 'crawlers') {
-          return {
-            select: () => ({
-              eq: (field: string) => {
-                if (field === 'user_id') {
-                  return {
-                    eq: (field2: string, value2: string) => {
-                      if (field2 === 'game_id' && value2 === 'game-1') {
-                        return {
-                          order: () => Promise.resolve({ data: mockCrawlers }),
-                        }
-                      }
-                      return { order: () => Promise.resolve({ data: [] }) }
-                    },
-                  }
-                }
-                return {}
-              },
-            }),
-          }
-        }
         if (table === 'pilots') {
           return {
             select: () => ({
@@ -167,117 +143,8 @@ describe('BuilderControlBar', () => {
           <BuilderControlBar
             backgroundColor="#6b8e7f"
             entityType="mech"
-            gameId="game-1"
-            crawlerId={null}
-            pilotId={null}
-            onCrawlerChange={mockOnCrawlerChange}
-            onPilotChange={mockOnPilotChange}
-            onSave={mockOnSave}
-            onResetChanges={mockOnResetChanges}
-            hasUnsavedChanges={false}
-          />
-        </BrowserRouter>
-      )
-
-      await waitFor(() => {
-        expect(screen.getByText('Crawler:')).toBeInTheDocument()
-      })
-    })
-
-    it('auto-sets game_id when crawler with game_id is selected', async () => {
-      const user = userEvent.setup()
-      const mockCrawlers = [
-        { id: 'crawler-1', name: 'Crawler 1', game_id: 'game-1' },
-        { id: 'crawler-2', name: 'Crawler 2', game_id: null },
-      ]
-      const mockPilots = [{ id: 'pilot-1', callsign: 'Pilot 1' }]
-
-      mockSupabase.from.mockImplementation((table: string) => {
-        if (table === 'crawlers') {
-          return {
-            select: () => ({
-              eq: () => ({
-                order: () => Promise.resolve({ data: mockCrawlers }),
-              }),
-            }),
-          }
-        }
-        if (table === 'pilots') {
-          return {
-            select: () => ({
-              eq: () => ({
-                order: () => Promise.resolve({ data: mockPilots }),
-              }),
-            }),
-          }
-        }
-        return {}
-      })
-
-      render(
-        <BrowserRouter>
-          <BuilderControlBar
-            backgroundColor="#6b8e7f"
-            entityType="mech"
-            crawlerId={null}
-            pilotId={null}
-            onGameChange={mockOnGameChange}
-            onCrawlerChange={mockOnCrawlerChange}
-            onPilotChange={mockOnPilotChange}
-            onSave={mockOnSave}
-            onResetChanges={mockOnResetChanges}
-            hasUnsavedChanges={false}
-          />
-        </BrowserRouter>
-      )
-
-      await waitFor(() => {
-        expect(screen.getByText('Crawler:')).toBeInTheDocument()
-      })
-
-      const crawlerSelect = screen.getByRole('combobox', { name: 'Crawler' })
-      await user.selectOptions(crawlerSelect, 'crawler-1')
-
-      expect(mockOnCrawlerChange).toHaveBeenCalledWith('crawler-1')
-      expect(mockOnGameChange).toHaveBeenCalledWith('game-1')
-    })
-
-    it('shows link buttons when crawler and pilot are assigned', async () => {
-      const mockCrawlers = [{ id: 'crawler-1', name: 'Crawler 1', game_id: null }]
-      const mockPilots = [{ id: 'pilot-1', callsign: 'Pilot 1' }]
-
-      mockSupabase.from.mockImplementation((table: string) => {
-        if (table === 'crawlers') {
-          return {
-            select: () => ({
-              eq: () => ({
-                order: () => Promise.resolve({ data: mockCrawlers }),
-              }),
-            }),
-          }
-        }
-        if (table === 'pilots') {
-          return {
-            select: () => ({
-              eq: () => ({
-                order: () => Promise.resolve({ data: mockPilots }),
-              }),
-            }),
-          }
-        }
-        return {}
-      })
-
-      render(
-        <BrowserRouter>
-          <BuilderControlBar
-            backgroundColor="#6b8e7f"
-            entityType="mech"
-            crawlerId="crawler-1"
             pilotId="pilot-1"
-            savedCrawlerId="crawler-1"
             savedPilotId="pilot-1"
-            onCrawlerChange={mockOnCrawlerChange}
             onPilotChange={mockOnPilotChange}
             onSave={mockOnSave}
             onResetChanges={mockOnResetChanges}
@@ -287,7 +154,7 @@ describe('BuilderControlBar', () => {
       )
 
       await waitFor(() => {
-        expect(screen.getByText('→ Crawler')).toBeInTheDocument()
+        expect(screen.getByText('Pilot:')).toBeInTheDocument()
         expect(screen.getByText('→ Pilot')).toBeInTheDocument()
       })
     })

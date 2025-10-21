@@ -130,9 +130,9 @@ export function BuilderControlBar({
     }
   }, [entityType, onGameChange])
 
-  // Fetch crawlers if needed (filter by game_id if set)
+  // Fetch crawlers if needed (filter by game_id if set) - only for pilots
   useEffect(() => {
-    if ((entityType === 'mech' || entityType === 'pilot') && onCrawlerChange) {
+    if (entityType === 'pilot' && onCrawlerChange) {
       const fetchCrawlers = async () => {
         try {
           setLoadingCrawlers(true)
@@ -240,7 +240,7 @@ export function BuilderControlBar({
             disabled={isLoading}
           />
         )}
-        {(entityType === 'mech' || entityType === 'pilot') && onCrawlerChange && (
+        {entityType === 'pilot' && onCrawlerChange && (
           <AssignmentDropdown
             label="Crawler"
             value={crawlerId ?? null}
@@ -273,7 +273,7 @@ export function BuilderControlBar({
             → Game
           </Link>
         )}
-        {savedCrawlerId && (
+        {savedCrawlerId && entityType === 'pilot' && (
           <Link
             to={`/dashboard/crawlers/${savedCrawlerId}`}
             className="px-3 py-2 bg-white border-2 border-black rounded-lg font-mono text-sm font-semibold hover:bg-gray-100 transition-colors"

@@ -51,7 +51,6 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
   // Track initial state for detecting changes
   const initialStateRef = useRef<string | null>(null)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const [savedCrawlerId, setSavedCrawlerId] = useState<string | null>(null)
   const [savedPilotId, setSavedPilotId] = useState<string | null>(null)
 
   // Set initial state after loading completes
@@ -59,7 +58,6 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
     if (!id || loading) return
     if (initialStateRef.current === null) {
       initialStateRef.current = JSON.stringify(mech)
-      setSavedCrawlerId(mech.crawler_id ?? null)
       setSavedPilotId(mech.pilot_id ?? null)
     }
   }, [id, loading, mech])
@@ -75,7 +73,6 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
   const handleSave = async () => {
     await save()
     initialStateRef.current = JSON.stringify(mech)
-    setSavedCrawlerId(mech.crawler_id ?? null)
     setSavedPilotId(mech.pilot_id ?? null)
     setHasUnsavedChanges(false)
   }
@@ -118,13 +115,10 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
     <BuilderLayout>
       {id && (
         <BuilderControlBar
-          backgroundColor="#6b8e7f"
+          backgroundColor="var(--color-su-green)"
           entityType="mech"
-          crawlerId={mech.crawler_id}
           pilotId={mech.pilot_id}
-          savedCrawlerId={savedCrawlerId}
           savedPilotId={savedPilotId}
-          onCrawlerChange={(crawlerId) => updateMech({ crawler_id: crawlerId })}
           onPilotChange={(pilotId) => updateMech({ pilot_id: pilotId })}
           onSave={handleSave}
           onResetChanges={handleResetChanges}
@@ -217,7 +211,7 @@ export default function MechBuilder({ id }: MechBuilderProps = {}) {
           notes={mech.notes ?? ''}
           onChange={(value) => updateMech({ notes: value })}
           disabled={!selectedChassis}
-          backgroundColor="#6b8e7f"
+          backgroundColor="var(--color-su-green)"
           borderWidth={8}
           placeholder="Add notes about your mech..."
         />

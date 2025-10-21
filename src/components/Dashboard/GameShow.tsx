@@ -33,9 +33,23 @@ export function GameShow() {
   const [invitesLoading, setInvitesLoading] = useState(false)
   const [inviteError, setInviteError] = useState<string | null>(null)
 
+  // Editable game fields
+  const [isEditingGame, setIsEditingGame] = useState(false)
+  const [editedName, setEditedName] = useState('')
+  const [editedDescription, setEditedDescription] = useState('')
+  const [saveGameLoading, setSaveGameLoading] = useState(false)
+  const [saveGameError, setSaveGameError] = useState<string | null>(null)
+
   // One-to-one crawler for this game
   const [crawler, setCrawler] = useState<CrawlerRow | null>(null)
   const [crawlerError, setCrawlerError] = useState<string | null>(null)
+
+  // Pilots and mechs for this crawler
+  type PilotRow = Tables<'pilots'>
+  type MechRow = Tables<'mechs'>
+  const [pilots, setPilots] = useState<PilotRow[]>([])
+  const [mechs, setMechs] = useState<MechRow[]>([])
+  const [pilotsLoading, setPilotsLoading] = useState(false)
 
   // External links
   const [externalLinks, setExternalLinks] = useState<ExternalLinkRow[]>([])
@@ -46,6 +60,40 @@ export function GameShow() {
   // Danger zone
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+
+  const loadPilotsAndMechs = useCallback(async (crawlerId: string) => {
+    try {
+      setPilotsLoading(true)
+
+      // Fetch pilots for this crawler
+      const { data: pilotsData, error: pilotsError } = await supabase
+        .from('pilots')
+        .select('*')
+        .eq('crawler_id', crawlerId)
+        .order('callsign')
+
+      if (pilotsError) throw pilotsError
+      setPilots((pilotsData || []) as PilotRow[])
+
+      // Fetch all mechs for these pilots
+      const pilotIds = (pilotsData || []).map((p) => p.id)
+      if (pilotIds.length > 0) {
+        const { data: mechsData, error: mechsError } = await supabase
+          .from('mechs')
+          .select('*')
+          .in('pilot_id', pilotIds)
+
+        if (mechsError) throw mechsError
+        setMechs((mechsData || []) as MechRow[])
+      } else {
+        setMechs([])
+      }
+    } catch (err) {
+      console.error('Error loading pilots and mechs:', err)
+    } finally {
+      setPilotsLoading(false)
+    }
+  }, [])
 
   const loadExternalLinks = useCallback(async () => {
     if (!gameId) return
@@ -116,7 +164,7 @@ export function GameShow() {
         !!uid && (membersData || []).some((m) => m.user_id === uid && m.role === 'mediator')
       setIsMediator(mediator)
 
-      setGame({
+      const gameWithMembers = {
         ...gameData,
         members: (membersData || []).map((m) => ({
           id: m.id,
@@ -125,7 +173,12 @@ export function GameShow() {
           user_email: m.user_email || undefined,
           user_name: m.user_name || undefined,
         })),
-      })
+      }
+      setGame(gameWithMembers)
+
+      // Initialize edited fields
+      setEditedName(gameData.name)
+      setEditedDescription(gameData.description || '')
 
       // Fetch crawler (enforce one-to-one via maybeSingle)
       const { data: crawlerRow, error: crawlerFetchError } = await supabase
@@ -141,6 +194,11 @@ export function GameShow() {
       } else {
         setCrawler(crawlerRow)
         setCrawlerError(null)
+
+        // Load pilots and mechs if crawler exists
+        if (crawlerRow) {
+          await loadPilotsAndMechs(crawlerRow.id)
+        }
       }
 
       // Load invites if mediator
@@ -158,7 +216,7 @@ export function GameShow() {
     } finally {
       setLoading(false)
     }
-  }, [gameId, navigate, loadInvites, loadExternalLinks])
+  }, [gameId, navigate, loadInvites, loadExternalLinks, loadPilotsAndMechs])
 
   const isInviteActive = (inv: GameInviteRow) => {
     const now = new Date()
@@ -220,6 +278,44 @@ export function GameShow() {
       console.error('Error deleting external link:', err)
       setLinksError(err instanceof Error ? err.message : 'Failed to delete external link')
     }
+  }
+
+  const handleSaveGame = async () => {
+    if (!gameId || !game) return
+    try {
+      setSaveGameLoading(true)
+      setSaveGameError(null)
+
+      const { error } = await supabase
+        .from('games')
+        .update({
+          name: editedName,
+          description: editedDescription,
+        })
+        .eq('id', gameId)
+
+      if (error) throw error
+
+      // Update local state
+      setGame({
+        ...game,
+        name: editedName,
+        description: editedDescription,
+      })
+      setIsEditingGame(false)
+    } catch (err) {
+      console.error('Error saving game:', err)
+      setSaveGameError(err instanceof Error ? err.message : 'Failed to save game')
+    } finally {
+      setSaveGameLoading(false)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditingGame(false)
+    setEditedName(game?.name || '')
+    setEditedDescription(game?.description || '')
+    setSaveGameError(null)
   }
 
   const handleDeleteGame = async () => {
@@ -328,26 +424,143 @@ export function GameShow() {
         >
           ← Back to Dashboard
         </button>
-        <h1 className="text-4xl font-bold text-[var(--color-su-black)] mb-4">{game.name}</h1>
-        {game.description && (
-          <p className="text-lg text-[var(--color-su-black)] whitespace-pre-wrap">
-            {game.description}
-          </p>
+
+        {isEditingGame ? (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-[var(--color-su-black)] mb-2">
+                Game Name
+              </label>
+              <input
+                type="text"
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+                className="w-full px-4 py-2 border border-[var(--color-su-light-blue)] rounded-lg text-[var(--color-su-black)] focus:outline-none focus:ring-2 focus:ring-[var(--color-su-brick)]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[var(--color-su-black)] mb-2">
+                Description
+              </label>
+              <textarea
+                value={editedDescription}
+                onChange={(e) => setEditedDescription(e.target.value)}
+                rows={4}
+                className="w-full px-4 py-2 border border-[var(--color-su-light-blue)] rounded-lg text-[var(--color-su-black)] focus:outline-none focus:ring-2 focus:ring-[var(--color-su-brick)]"
+              />
+            </div>
+            {saveGameError && <div className="text-red-600 text-sm">{saveGameError}</div>}
+            <div className="flex gap-2">
+              <button
+                onClick={handleSaveGame}
+                disabled={saveGameLoading}
+                className="bg-[var(--color-su-brick)] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {saveGameLoading ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={handleCancelEdit}
+                disabled={saveGameLoading}
+                className="bg-gray-500 hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-6 rounded-lg transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center gap-4 mb-4">
+              <h1 className="text-4xl font-bold text-[var(--color-su-black)]">{game.name}</h1>
+              {isMediator && (
+                <button
+                  onClick={() => setIsEditingGame(true)}
+                  className="text-[var(--color-su-brick)] hover:underline text-sm"
+                >
+                  Edit
+                </button>
+              )}
+            </div>
+            {game.description && (
+              <p className="text-lg text-[var(--color-su-black)] whitespace-pre-wrap">
+                {game.description}
+              </p>
+            )}
+          </div>
         )}
       </div>
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left: Crawler (2/3) */}
+        {/* Left: The Union (2/3) */}
         <div className="lg:col-span-2">
           <div className="bg-[var(--color-su-white)] border border-[var(--color-su-light-blue)] rounded-lg p-4">
-            <h2 className="text-2xl font-bold text-[var(--color-su-black)] mb-3">Crawler</h2>
+            <h2 className="text-2xl font-bold text-[var(--color-su-black)] mb-3">The Union</h2>
             {crawler ? (
-              <CrawlerCard
-                name={crawler.name}
-                typeName={crawlerTypeName}
-                maxSP={crawlerMaxSP}
-                currentDamage={crawler.current_damage ?? 0}
-              />
+              <>
+                <CrawlerCard
+                  name={crawler.name}
+                  typeName={crawlerTypeName}
+                  maxSP={crawlerMaxSP}
+                  currentDamage={crawler.current_damage ?? 0}
+                />
+
+                {/* Pilots and Mechs */}
+                {pilotsLoading ? (
+                  <div className="mt-4 text-[var(--color-su-brick)]">Loading pilots...</div>
+                ) : pilots.length > 0 ? (
+                  <div className="mt-4 space-y-3">
+                    <h3 className="text-xl font-bold text-[var(--color-su-black)]">Pilots</h3>
+                    {pilots.map((pilot) => {
+                      const pilotMech = mechs.find((m) => m.pilot_id === pilot.id)
+                      const className = pilot.class_id
+                        ? SalvageUnionReference.Classes.all().find((c) => c.id === pilot.class_id)
+                            ?.name || 'Unknown Class'
+                        : 'No Class'
+                      const chassisName = pilotMech?.chassis_id
+                        ? SalvageUnionReference.Chassis.all().find(
+                            (c) => c.id === pilotMech.chassis_id
+                          )?.name || 'Unknown Chassis'
+                        : null
+                      const mechDisplayName = pilotMech
+                        ? pilotMech.pattern || chassisName || 'Unnamed Mech'
+                        : null
+
+                      return (
+                        <div
+                          key={pilot.id}
+                          className="flex items-center justify-between p-3 bg-[var(--color-su-light-orange)] rounded-lg"
+                        >
+                          <div className="flex-1">
+                            <div className="font-bold text-[var(--color-su-black)]">
+                              {pilot.callsign}
+                            </div>
+                            <div className="text-sm text-[var(--color-su-brick)]">{className}</div>
+                          </div>
+                          {mechDisplayName ? (
+                            <div className="flex-1 text-right">
+                              <div className="font-bold text-[var(--color-su-black)]">
+                                {mechDisplayName}
+                              </div>
+                              {pilotMech?.pattern && chassisName && (
+                                <div className="text-sm text-[var(--color-su-brick)]">
+                                  {chassisName}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="text-sm text-[var(--color-su-brick)] italic">
+                              No mech assigned
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className="mt-4 text-[var(--color-su-brick)]">
+                    No pilots assigned to this crawler yet.
+                  </div>
+                )}
+              </>
             ) : (
               <button className="bg-[#c97d9e] hover:opacity-90 text-[var(--color-su-white)] font-bold py-2 px-4 rounded-lg transition-opacity">
                 Create Crawler

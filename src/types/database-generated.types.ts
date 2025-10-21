@@ -207,7 +207,6 @@ export type Database = {
           cargo: Json | null
           chassis_ability: string | null
           chassis_id: string | null
-          crawler_id: string | null
           created_at: string | null
           current_damage: number | null
           current_ep: number | null
@@ -227,7 +226,6 @@ export type Database = {
           cargo?: Json | null
           chassis_ability?: string | null
           chassis_id?: string | null
-          crawler_id?: string | null
           created_at?: string | null
           current_damage?: number | null
           current_ep?: number | null
@@ -247,7 +245,6 @@ export type Database = {
           cargo?: Json | null
           chassis_ability?: string | null
           chassis_id?: string | null
-          crawler_id?: string | null
           created_at?: string | null
           current_damage?: number | null
           current_ep?: number | null
@@ -264,16 +261,9 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "mechs_crawler_id_fkey"
-            columns: ["crawler_id"]
-            isOneToOne: false
-            referencedRelation: "crawlers"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "mechs_pilot_id_fkey"
             columns: ["pilot_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "pilots"
             referencedColumns: ["id"]
           },
