@@ -50,7 +50,7 @@ export default function LandingPage() {
             >
               unofficial Salvage Union Reference
             </a>
-            , so it's always up to date.
+            .
           </p>
         </div>
 
