@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import SchemaViewer from './components/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
