@@ -363,6 +363,8 @@ export function AbilitySelector({
                                     return next
                                   })
                                 }}
+                                showSelectButton={true}
+                                selectButtonCost={cost}
                               />
                             )
                           })}
@@ -371,7 +373,7 @@ export function AbilitySelector({
                     )}
 
                     {/* Legendary Abilities from base class */}
-                    {legendaryAbilities.length > 0 && (
+                    {legendaryAbilities.length > 0 && advancedTreeAbilities.length > 0 && (
                       <div className="flex flex-col">
                         <h3 className="text-lg font-bold text-[var(--color-su-pink)] uppercase mb-2 text-center">
                           Legendary Abilities
@@ -406,7 +408,9 @@ export function AbilitySelector({
                                   !allAdvancedSelected
                                 }
                                 collapsible={true}
-                                defaultExpanded={false}
+                                defaultExpanded={true}
+                                showSelectButton={true}
+                                selectButtonCost={cost}
                               />
                             )
                           })}
@@ -507,7 +511,7 @@ export function AbilitySelector({
                                   !allAdvancedSelected
                                 }
                                 collapsible={true}
-                                defaultExpanded={false}
+                                defaultExpanded={true}
                                 showSelectButton={true}
                                 selectButtonCost={cost}
                               />

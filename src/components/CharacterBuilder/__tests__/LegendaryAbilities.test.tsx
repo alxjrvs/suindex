@@ -232,12 +232,19 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         })
       }
 
+      // Wait for advanced class to be enabled
+      await waitFor(() => {
+        const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
+        expect(advancedClassSelect).not.toBeDisabled()
+      })
+
       // Select advanced class
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, 'class-hacker')
 
       // Select only 2 advanced abilities (not all 3)
       await user.click(addButton)
+
       const addToCharacterButtons1 = await screen.findAllByRole('button', {
         name: /Add to Character \(2 TP\)/i,
       })
@@ -253,6 +260,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       })
 
       await user.click(addButton)
+
       const addToCharacterButtons2 = await screen.findAllByRole('button', {
         name: /Add to Character \(2 TP\)/i,
       })
@@ -267,11 +275,21 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
       })
 
-      // Open modal - legendary should NOT be visible yet
+      // Open modal - legendary should be visible but NOT selectable yet
       await user.click(addButton)
+
+      // Wait for modal to open
       await waitFor(() => {
-        expect(screen.queryByText('Ultimate Hack')).not.toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument()
       })
+
+      // Legendary ability should be visible
+      expect(screen.getByText('Ultimate Hack')).toBeInTheDocument()
+
+      // But the "Add to Character (3 TP)" button should NOT be present (hidden when not selectable)
+      expect(
+        screen.queryByRole('button', { name: /Add to Character \(3 TP\)/i })
+      ).not.toBeInTheDocument()
     })
 
     it('shows legendary abilities after all advanced abilities are selected', async () => {
@@ -328,6 +346,12 @@ describe('CharacterBuilder - Legendary Abilities', () => {
           expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
         })
       }
+
+      // Wait for advanced class to be enabled
+      await waitFor(() => {
+        const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
+        expect(advancedClassSelect).not.toBeDisabled()
+      })
 
       // Select advanced class
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
@@ -413,6 +437,12 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         })
       }
 
+      // Wait for advanced class to be enabled
+      await waitFor(() => {
+        const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
+        expect(advancedClassSelect).not.toBeDisabled()
+      })
+
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, 'class-hacker')
 
@@ -443,9 +473,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Ultimate Hack'))
 
-      // Verify it shows 3 TP cost
-      expect(screen.getByText(/3 TP/i)).toBeInTheDocument()
-
+      // Find and click the "Add to Character (3 TP)" button
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Character \(3 TP\)/i,
       })
@@ -522,6 +550,12 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         })
       }
 
+      // Wait for advanced class to be enabled
+      await waitFor(() => {
+        const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
+        expect(advancedClassSelect).not.toBeDisabled()
+      })
+
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, 'class-hacker')
 
@@ -551,7 +585,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       await user.click(addToCharacterButtons[0])
 
       // Close the modal
-      let closeButton = screen.getByRole('button', { name: /close/i })
+      const closeButton = screen.getByRole('button', { name: /close/i })
       await user.click(closeButton)
 
       // Wait for modal to close
@@ -564,13 +598,19 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         expect(screen.getByText('Ultimate Hack')).toBeInTheDocument()
       })
 
-      // Open modal again - legendary section should not appear (already selected one)
+      // Open modal again - legendary section should be visible but button should not be present (already selected one)
       await user.click(addButton)
       await waitFor(() => {
-        // The modal should be open but legendary section should not be visible
-        const legendarySection = screen.queryByText(/legendary abilities/i)
-        expect(legendarySection).not.toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument()
       })
+
+      // Legendary section should be visible
+      expect(screen.getByText(/legendary abilities/i)).toBeInTheDocument()
+
+      // But the "Add to Character (3 TP)" button should NOT be present (already selected one)
+      expect(
+        screen.queryByRole('button', { name: /Add to Character \(3 TP\)/i })
+      ).not.toBeInTheDocument()
     })
   })
 })
