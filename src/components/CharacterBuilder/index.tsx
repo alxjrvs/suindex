@@ -164,7 +164,6 @@ export default function CharacterBuilder() {
             onClose={() => setIsEquipmentSelectorOpen(false)}
             equipment={allEquipment}
             onSelectEquipment={handleAddEquipment}
-            selectedEquipmentIds={character.equipment.map((e) => e.equipment.id)}
           />
         </div>
       </div>

@@ -79,6 +79,9 @@ describe('CharacterBuilder - Equipment Inventory', () => {
     vi.mocked(SalvageUnionReference.Abilities.all).mockReturnValue(mockAbilities)
     vi.mocked(SalvageUnionReference.Equipment.all).mockReturnValue(mockEquipment)
     vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
+
+    // Mock window.confirm for equipment removal
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
 
   describe('Inventory Display', () => {
