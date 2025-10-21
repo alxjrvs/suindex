@@ -50,7 +50,7 @@ export default function Navigation({ schemas }: NavigationProps) {
           className="w-full text-left block p-4 border-b border-[var(--color-su-light-blue)] hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer"
         >
           <h1 className="text-xl font-bold text-[var(--color-su-black)]">Salvage Union</h1>
-          <p className="text-sm text-[var(--color-su-brick)]">Data Viewer</p>
+          <p className="text-sm text-[var(--color-su-brick)]">Index</p>
         </button>
         <button
           onClick={() => handleNavigate('/mech-builder')}

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import SchemaViewer from './components/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
 import MechBuilder from './components/MechBuilder'
 import PilotBuilder from './components/PilotBuilder'
 import CrawlerBuilder from './components/CrawlerBuilder'
+import LandingPage from './components/LandingPage'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 
@@ -41,28 +42,32 @@ function AppContent() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-[var(--color-su-white)]">
-      <Navigation schemas={schemaIndex.schemas} />
-      <main className="flex-1 overflow-auto pt-16 md:pt-0">
-        <Routes>
-          <Route
-            path="/"
-            element={<Navigate to={`/schema/${schemaIndex.schemas[0]?.id || ''}`} replace />}
-          />
-          <Route path="/mech-builder" element={<MechBuilder />} />
-          <Route path="/pilot-builder" element={<PilotBuilder />} />
-          <Route path="/crawler-builder" element={<CrawlerBuilder />} />
-          <Route
-            path="/schema/:schemaId"
-            element={<SchemaViewer schemas={schemaIndex.schemas} />}
-          />
-          <Route
-            path="/schema/:schemaId/item/:itemId"
-            element={<ItemShowPage schemas={schemaIndex.schemas} />}
-          />
-        </Routes>
-      </main>
-    </div>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route
+        path="/*"
+        element={
+          <div className="flex flex-col md:flex-row h-screen bg-[var(--color-su-white)]">
+            <Navigation schemas={schemaIndex.schemas} />
+            <main className="flex-1 overflow-auto pt-16 md:pt-0">
+              <Routes>
+                <Route path="/mech-builder" element={<MechBuilder />} />
+                <Route path="/pilot-builder" element={<PilotBuilder />} />
+                <Route path="/crawler-builder" element={<CrawlerBuilder />} />
+                <Route
+                  path="/schema/:schemaId"
+                  element={<SchemaViewer schemas={schemaIndex.schemas} />}
+                />
+                <Route
+                  path="/schema/:schemaId/item/:itemId"
+                  element={<ItemShowPage schemas={schemaIndex.schemas} />}
+                />
+              </Routes>
+            </main>
+          </div>
+        }
+      />
+    </Routes>
   )
 }
 

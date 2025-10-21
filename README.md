@@ -1,4 +1,4 @@
-# Salvage Union Data Viewer
+# Salvage Union Index
 
 A dynamic web application for viewing and exploring Salvage Union game data.
 
