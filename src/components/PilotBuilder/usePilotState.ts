@@ -43,7 +43,7 @@ export function usePilotState(
 
   // Calculate available advanced classes
   const availableAdvancedClasses = useMemo(() => {
-    if (pilot.abilities.length < 6) {
+    if ((pilot.abilities ?? []).length < 6) {
       return []
     }
 
@@ -53,7 +53,7 @@ export function usePilotState(
     }
 
     const abilitiesByTree: Record<string, number> = {}
-    pilot.abilities.forEach((charAbility) => {
+    ;(pilot.abilities ?? []).forEach((charAbility) => {
       const tree = charAbility.ability.tree
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
     })
@@ -163,7 +163,7 @@ export function usePilotState(
         ...prev,
         current_tp: (prev.current_tp ?? 0) - cost,
         abilities: [
-          ...prev.abilities,
+          ...(prev.abilities ?? []),
           {
             id: `${ability.id}-${Date.now()}`,
             ability,
@@ -179,7 +179,7 @@ export function usePilotState(
     setPilot((prev) => ({
       ...prev,
       current_tp: (prev.current_tp ?? 0) - 1,
-      abilities: prev.abilities.filter((a) => a.id !== id),
+      abilities: (prev.abilities ?? []).filter((a) => a.id !== id),
     }))
   }, [])
 
@@ -219,7 +219,7 @@ export function usePilotState(
       if (!equipment) return
 
       // Check if inventory is full (max 6 slots)
-      if (pilot.equipment.length >= 6) {
+      if ((pilot.equipment ?? []).length >= 6) {
         alert('Inventory is full! You can only carry 6 items.')
         return
       }
@@ -227,7 +227,7 @@ export function usePilotState(
       setPilot((prev) => ({
         ...prev,
         equipment: [
-          ...prev.equipment,
+          ...(prev.equipment ?? []),
           {
             id: `${equipment.id}-${Date.now()}`,
             equipment,
@@ -235,12 +235,12 @@ export function usePilotState(
         ],
       }))
     },
-    [allEquipment, pilot.equipment.length]
+    [allEquipment, pilot.equipment]
   )
 
   const handleRemoveEquipment = useCallback(
     (id: string) => {
-      const equipmentToRemove = pilot.equipment.find((e) => e.id === id)
+      const equipmentToRemove = (pilot.equipment ?? []).find((e) => e.id === id)
       if (!equipmentToRemove) return
 
       const equipmentName = equipmentToRemove.equipment.name
@@ -248,7 +248,7 @@ export function usePilotState(
       if (window.confirm(`Are you sure you want to remove ${equipmentName}?`)) {
         setPilot((prev) => ({
           ...prev,
-          equipment: prev.equipment.filter((e) => e.id !== id),
+          equipment: (prev.equipment ?? []).filter((e) => e.id !== id),
         }))
       }
     },

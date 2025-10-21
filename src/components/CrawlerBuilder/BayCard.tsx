@@ -1,8 +1,8 @@
-import type { CrawlerBayState } from './types'
+import type { CrawlerBay } from './types'
 
 interface BayCardProps {
-  bay: CrawlerBayState
-  onUpdate: (updates: Partial<CrawlerBayState>) => void
+  bay: CrawlerBay
+  onUpdate: (updates: Partial<CrawlerBay>) => void
 }
 
 export function BayCard({ bay, onUpdate }: BayCardProps) {

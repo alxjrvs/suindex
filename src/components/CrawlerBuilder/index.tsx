@@ -30,8 +30,8 @@ export default function CrawlerBuilder() {
   } = useCrawlerState(allCrawlers, allBays)
 
   // Separate storage bay from other bays
-  const storageBay = crawler.bays.find((bay) => bay.bayId === 'storage-bay')
-  const regularBays = crawler.bays.filter((bay) => bay.bayId !== 'storage-bay')
+  const storageBay = (crawler.bays ?? []).find((bay) => bay.bayId === 'storage-bay')
+  const regularBays = (crawler.bays ?? []).filter((bay) => bay.bayId !== 'storage-bay')
 
   // Split regular bays into two groups for the grid layout
   const firstRowBays = regularBays.slice(0, 3)
@@ -125,7 +125,7 @@ export default function CrawlerBuilder() {
           <StorageBay
             operator={crawler.storage_bay_operator ?? ''}
             description={crawler.storage_bay_description ?? ''}
-            cargo={crawler.cargo}
+            cargo={crawler.cargo ?? []}
             onOperatorChange={(value) => updateCrawler({ storage_bay_operator: value })}
             onDescriptionChange={(value) => updateCrawler({ storage_bay_description: value })}
             onAddCargo={() => setIsCargoModalOpen(true)}

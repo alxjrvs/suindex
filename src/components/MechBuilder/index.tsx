@@ -106,8 +106,8 @@ export default function MechBuilder() {
       </div>
 
       <SystemsModulesList
-        systems={mech.systems}
-        modules={mech.modules}
+        systems={mech.systems ?? []}
+        modules={mech.modules ?? []}
         usedSystemSlots={usedSystemSlots}
         usedModuleSlots={usedModuleSlots}
         totalSystemSlots={stats?.system_slots || 0}
@@ -120,7 +120,7 @@ export default function MechBuilder() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CargoList
-          cargo={mech.cargo}
+          cargo={mech.cargo ?? []}
           totalCargo={totalCargo}
           maxCargo={stats?.cargo_cap || 0}
           canAddCargo={!!selectedChassis}
@@ -147,8 +147,8 @@ export default function MechBuilder() {
         modules={allModules}
         onSelectSystem={handleAddSystem}
         onSelectModule={handleAddModule}
-        selectedSystemIds={mech.systems.map((s) => s.id)}
-        selectedModuleIds={mech.modules.map((m) => m.id)}
+        selectedSystemIds={(mech.systems ?? []).map((s) => s.id)}
+        selectedModuleIds={(mech.modules ?? []).map((m) => m.id)}
       />
 
       <CargoModal

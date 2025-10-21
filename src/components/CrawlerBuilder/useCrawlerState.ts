@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Crawler, CrawlerBay } from 'salvageunion-reference'
-import type { LocalCrawlerState, CrawlerBayState } from './types'
+import type { LocalCrawlerState, CrawlerBay as CrawlerBayState } from './types'
 
 const INITIAL_TECH_LEVEL = 1
 const MAX_UPGRADE = 25
@@ -27,7 +27,7 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
 
   // Initialize all bays on mount
   useEffect(() => {
-    if (allBays.length > 0 && crawler.bays.length === 0) {
+    if (allBays.length > 0 && (crawler.bays ?? []).length === 0) {
       const initialBays: CrawlerBayState[] = allBays.map((bay) => ({
         id: `${bay.id}-${Date.now()}-${Math.random()}`,
         bayId: bay.id,
@@ -113,7 +113,7 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
   const handleUpdateBay = useCallback((bayId: string, updates: Partial<CrawlerBayState>) => {
     setCrawler((prev) => ({
       ...prev,
-      bays: prev.bays.map((bay) => (bay.id === bayId ? { ...bay, ...updates } : bay)),
+      bays: (prev.bays ?? []).map((bay) => (bay.id === bayId ? { ...bay, ...updates } : bay)),
     }))
   }, [])
 
@@ -125,7 +125,7 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
     setCrawler((prev) => ({
       ...prev,
       cargo: [
-        ...prev.cargo,
+        ...(prev.cargo ?? []),
         {
           id: `cargo-${Date.now()}-${Math.random()}`,
           amount,
@@ -138,7 +138,7 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
   const handleRemoveCargo = useCallback((cargoId: string) => {
     setCrawler((prev) => ({
       ...prev,
-      cargo: prev.cargo.filter((c) => c.id !== cargoId),
+      cargo: (prev.cargo ?? []).filter((c) => c.id !== cargoId),
     }))
   }, [])
 

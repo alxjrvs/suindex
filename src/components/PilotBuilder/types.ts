@@ -1,15 +1,7 @@
-import type { Ability, Equipment } from 'salvageunion-reference'
-import type { TablesInsert } from '../../types/database'
+import type { TablesInsert, PilotAbility, PilotEquipment } from '../../types/database'
 
-export interface PilotAbility {
-  id: string
-  ability: Ability
-}
-
-export interface PilotEquipment {
-  id: string
-  equipment: Equipment
-}
+// Re-export the centralized types for convenience
+export type { PilotAbility, PilotEquipment }
 
 export interface AdvancedClassOption {
   id: string
@@ -17,12 +9,9 @@ export interface AdvancedClassOption {
   isAdvancedVersion: boolean
 }
 
-// Use database Insert type, omitting fields managed by the database and fields we'll override
+// Use database Insert type, omitting only fields managed by the database
+// The JSON fields (abilities, equipment) are already properly typed in the centralized database types
 export type PilotState = Omit<
   TablesInsert<'pilots'>,
-  'id' | 'user_id' | 'crawler_id' | 'created_at' | 'updated_at' | 'abilities' | 'equipment'
-> & {
-  // Override abilities and equipment to use typed arrays instead of Json
-  abilities: PilotAbility[]
-  equipment: PilotEquipment[]
-}
+  'id' | 'user_id' | 'crawler_id' | 'created_at' | 'updated_at'
+>

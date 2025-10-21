@@ -83,7 +83,7 @@ export default function PilotBuilder() {
 
       {/* Abilities Section */}
       <AbilitiesList
-        abilities={pilot.abilities}
+        abilities={pilot.abilities ?? []}
         legendaryAbility={
           pilot.legendary_ability_id
             ? allAbilities.find((a) => a.id === pilot.legendary_ability_id) || null
@@ -99,7 +99,7 @@ export default function PilotBuilder() {
 
       {/* Equipment Section */}
       <PilotInventory
-        equipment={pilot.equipment}
+        equipment={pilot.equipment ?? []}
         onAddClick={() => setIsEquipmentSelectorOpen(true)}
         onRemove={handleRemoveEquipment}
       />
@@ -123,7 +123,7 @@ export default function PilotBuilder() {
         abilities={allAbilities}
         onSelectAbility={handleAddAbility}
         onSelectLegendaryAbility={handleAddLegendaryAbility}
-        selectedAbilityIds={pilot.abilities.map((a) => a.ability.id)}
+        selectedAbilityIds={(pilot.abilities ?? []).map((a) => a.ability.id)}
         selectedLegendaryAbilityId={pilot.legendary_ability_id ?? null}
         selectedClass={selectedClass}
         selectedAdvancedClass={selectedAdvancedClass}

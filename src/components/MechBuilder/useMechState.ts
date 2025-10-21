@@ -26,17 +26,17 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
   )
 
   const usedSystemSlots = useMemo(
-    () => mech.systems.reduce((sum, sys) => sum + sys.slotsRequired, 0),
+    () => (mech.systems ?? []).reduce((sum, sys) => sum + sys.slotsRequired, 0),
     [mech.systems]
   )
 
   const usedModuleSlots = useMemo(
-    () => mech.modules.reduce((sum, mod) => sum + mod.slotsRequired, 0),
+    () => (mech.modules ?? []).reduce((sum, mod) => sum + mod.slotsRequired, 0),
     [mech.modules]
   )
 
   const totalCargo = useMemo(
-    () => mech.cargo.reduce((sum, item) => sum + item.amount, 0),
+    () => (mech.cargo ?? []).reduce((sum, item) => sum + item.amount, 0),
     [mech.cargo]
   )
 
@@ -98,7 +98,8 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
       )
 
       if (matchingPattern) {
-        const hasExistingSystems = mech.systems.length > 0 || mech.modules.length > 0
+        const hasExistingSystems =
+          (mech.systems ?? []).length > 0 || (mech.modules ?? []).length > 0
         const message = hasExistingSystems
           ? `Do you want to apply the "${matchingPattern.name}" pattern? This will replace your current systems and modules.`
           : `Do you want to apply the "${matchingPattern.name}" pattern? This will add the pattern's systems and modules.`
@@ -154,7 +155,7 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
         }))
       }
     },
-    [selectedChassis, allSystems, allModules, mech.systems.length, mech.modules.length]
+    [selectedChassis, allSystems, allModules, mech.systems, mech.modules]
   )
 
   const handleAddSystem = useCallback(
@@ -164,7 +165,7 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
         setMech((prev) => ({
           ...prev,
           systems: [
-            ...prev.systems,
+            ...(prev.systems ?? []),
             {
               id: system.id,
               name: system.name,
@@ -181,13 +182,13 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
 
   const handleRemoveSystem = useCallback(
     (systemId: string) => {
-      const systemToRemove = mech.systems.find((s) => s.id === systemId)
+      const systemToRemove = (mech.systems ?? []).find((s) => s.id === systemId)
       const systemName = systemToRemove?.name || 'this system'
 
       if (window.confirm(`Are you sure you want to remove ${systemName}?`)) {
         setMech((prev) => ({
           ...prev,
-          systems: prev.systems.filter((s) => s.id !== systemId),
+          systems: (prev.systems ?? []).filter((s) => s.id !== systemId),
         }))
       }
     },
@@ -201,7 +202,7 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
         setMech((prev) => ({
           ...prev,
           modules: [
-            ...prev.modules,
+            ...(prev.modules ?? []),
             {
               id: module.id,
               name: module.name,
@@ -218,13 +219,13 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
 
   const handleRemoveModule = useCallback(
     (moduleId: string) => {
-      const moduleToRemove = mech.modules.find((m) => m.id === moduleId)
+      const moduleToRemove = (mech.modules ?? []).find((m) => m.id === moduleId)
       const moduleName = moduleToRemove?.name || 'this module'
 
       if (window.confirm(`Are you sure you want to remove ${moduleName}?`)) {
         setMech((prev) => ({
           ...prev,
-          modules: prev.modules.filter((m) => m.id !== moduleId),
+          modules: (prev.modules ?? []).filter((m) => m.id !== moduleId),
         }))
       }
     },
@@ -235,7 +236,7 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     setMech((prev) => ({
       ...prev,
       cargo: [
-        ...prev.cargo,
+        ...(prev.cargo ?? []),
         {
           id: `cargo-${Date.now()}-${Math.random()}`,
           amount,
@@ -247,13 +248,13 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
 
   const handleRemoveCargo = useCallback(
     (cargoId: string) => {
-      const cargoToRemove = mech.cargo.find((c) => c.id === cargoId)
+      const cargoToRemove = (mech.cargo ?? []).find((c) => c.id === cargoId)
       const cargoDescription = cargoToRemove?.description || 'this cargo'
 
       if (window.confirm(`Are you sure you want to remove ${cargoDescription}?`)) {
         setMech((prev) => ({
           ...prev,
-          cargo: prev.cargo.filter((c) => c.id !== cargoId),
+          cargo: (prev.cargo ?? []).filter((c) => c.id !== cargoId),
         }))
       }
     },
