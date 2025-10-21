@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Navigation from './components/Navigation'
+import ReferenceNavigation from './components/ReferenceNavigation'
+import BuilderNavigation from './components/BuilderNavigation'
 import SchemaViewer from './components/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
 import MechBuilder from './components/MechBuilder'
 import PilotBuilder from './components/PilotBuilder'
 import CrawlerBuilder from './components/CrawlerBuilder'
 import LandingPage from './components/LandingPage'
-import Footer from './components/Footer'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 
@@ -15,28 +15,37 @@ function AppContent() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route
-        path="/index/*"
+        path="/reference/*"
         element={
-          <div className="flex flex-col h-screen bg-[var(--color-su-white)]">
-            <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-              <Navigation schemas={schemaIndexData.schemas} />
-              <main className="flex-1 overflow-auto pt-16 md:pt-0">
-                <Routes>
-                  <Route path="/mech-builder" element={<MechBuilder />} />
-                  <Route path="/pilot-builder" element={<PilotBuilder />} />
-                  <Route path="/crawler-builder" element={<CrawlerBuilder />} />
-                  <Route
-                    path="/schema/:schemaId"
-                    element={<SchemaViewer schemas={schemaIndexData.schemas} />}
-                  />
-                  <Route
-                    path="/schema/:schemaId/item/:itemId"
-                    element={<ItemShowPage schemas={schemaIndexData.schemas} />}
-                  />
-                </Routes>
-              </main>
-            </div>
-            <Footer />
+          <div className="flex flex-col md:flex-row h-screen bg-[var(--color-su-white)] overflow-hidden">
+            <ReferenceNavigation schemas={schemaIndexData.schemas} />
+            <main className="flex-1 overflow-auto pt-16 md:pt-0">
+              <Routes>
+                <Route
+                  path="/schema/:schemaId"
+                  element={<SchemaViewer schemas={schemaIndexData.schemas} />}
+                />
+                <Route
+                  path="/schema/:schemaId/item/:itemId"
+                  element={<ItemShowPage schemas={schemaIndexData.schemas} />}
+                />
+              </Routes>
+            </main>
+          </div>
+        }
+      />
+      <Route
+        path="/builders/*"
+        element={
+          <div className="flex flex-col md:flex-row h-screen bg-[var(--color-su-white)] overflow-hidden">
+            <BuilderNavigation />
+            <main className="flex-1 overflow-auto pt-16 md:pt-0">
+              <Routes>
+                <Route path="/mech-builder" element={<MechBuilder />} />
+                <Route path="/pilot-builder" element={<PilotBuilder />} />
+                <Route path="/crawler-builder" element={<CrawlerBuilder />} />
+              </Routes>
+            </main>
           </div>
         }
       />

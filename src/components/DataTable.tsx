@@ -284,7 +284,7 @@ export default function DataTable({ data, schema }: DataTableProps) {
                     key={item.id || index}
                     className="hover:bg-[var(--color-su-light-orange)] cursor-pointer transition-colors"
                     onClick={() => {
-                      navigate(`/index/schema/${schemaId}/item/${item.id}`)
+                      navigate(`/reference/schema/${schemaId}/item/${item.id}`)
                     }}
                   >
                     {displayFields.map((field) => (
