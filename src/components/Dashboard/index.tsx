@@ -7,6 +7,7 @@ import { DashboardContent } from './DashboardContent'
 import { DashboardNavigation } from './DashboardNavigation'
 import { NewGame } from './NewGame'
 import { GameShow } from './GameShow'
+import { JoinGame } from './JoinGame'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
@@ -49,6 +50,7 @@ export default function Dashboard() {
           <Route path="/" element={<DashboardContent />} />
           <Route path="/games/new" element={<NewGame />} />
           <Route path="/games/:gameId" element={<GameShow />} />
+          <Route path="/join" element={<JoinGame />} />
         </Routes>
       </main>
     </div>

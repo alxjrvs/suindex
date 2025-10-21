@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { supabase } from '../../lib/supabase'
-import type { Game } from '../../types/database'
+import type { Tables } from '../../types/database'
 
-interface GameWithRole extends Game {
-  role: 'MEDIATOR' | 'PLAYER'
+type GameRow = Tables<'games'>
+type MemberRole = Tables<'game_members'>['role']
+interface GameWithRole extends GameRow {
+  role: MemberRole
 }
 
 export function DashboardContent() {
@@ -28,34 +30,38 @@ export function DashboardContent() {
       } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Fetch games the user is a player in
-      const { data: gamePlayers, error: gamePlayersError } = await supabase
-        .from('game_players')
+      // Fetch games the user is a member of
+      const { data: gameMembersData, error: gameMembersError } = await supabase
+        .from('game_members')
         .select('game_id, role')
         .eq('user_id', user.id)
 
-      if (gamePlayersError) throw gamePlayersError
+      if (gameMembersError) throw gameMembersError
 
-      if (!gamePlayers || gamePlayers.length === 0) {
+      const gameMembers = (gameMembersData || []) as Array<{ game_id: string; role: MemberRole }>
+
+      if (gameMembers.length === 0) {
         setGames([])
         return
       }
 
       // Fetch the actual game data
-      const gameIds = gamePlayers.map((gp) => gp.game_id)
-      const { data: gamesData, error: gamesError } = await supabase
+      const gameIds = gameMembers.map((gm) => gm.game_id)
+      const { data: gamesDataRaw, error: gamesError } = await supabase
         .from('games')
         .select('*')
         .in('id', gameIds)
 
       if (gamesError) throw gamesError
 
+      const gamesData = (gamesDataRaw || []) as GameRow[]
+
       // Combine games with roles
-      const gamesWithRoles = (gamesData || []).map((game) => {
-        const gamePlayer = gamePlayers.find((gp) => gp.game_id === game.id)
+      const gamesWithRoles = gamesData.map((game) => {
+        const gameMember = gameMembers.find((gm) => gm.game_id === game.id)
         return {
           ...game,
-          role: gamePlayer?.role || 'PLAYER',
+          role: gameMember?.role || ('player' as MemberRole),
         }
       })
 
@@ -147,12 +153,12 @@ export function DashboardContent() {
               </h3>
               <span
                 className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${
-                  game.role === 'MEDIATOR'
+                  game.role === 'mediator'
                     ? 'bg-[var(--color-su-brick)] text-[var(--color-su-white)]'
                     : 'bg-[var(--color-su-green)] text-[var(--color-su-white)]'
                 }`}
               >
-                {game.role}
+                {game.role.toUpperCase()}
               </span>
             </div>
             {game.description && (

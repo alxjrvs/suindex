@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { supabase } from '../../lib/supabase'
-import type { GameInsert } from '../../types/database'
+import type { TablesInsert } from '../../types/database'
 
 interface GameFormData {
   name: string
@@ -32,9 +32,10 @@ export function NewGame() {
       if (!user) throw new Error('Not authenticated')
 
       // Create the game
-      const gameData: GameInsert = {
+      const gameData: TablesInsert<'games'> = {
         name: data.name,
         description: data.description || null,
+        created_by: user.id,
       }
 
       const { data: game, error: gameError } = await supabase
@@ -45,14 +46,8 @@ export function NewGame() {
 
       if (gameError) throw gameError
 
-      // Create the game_player relationship with MEDIATOR role
-      const { error: playerError } = await supabase.from('game_players').insert({
-        game_id: game.id,
-        user_id: user.id,
-        role: 'MEDIATOR',
-      })
-
-      if (playerError) throw playerError
+      // The trigger will automatically add the creator as a mediator
+      // No need to manually create the game_member relationship
 
       // Navigate to the game show page
       navigate(`/dashboard/games/${game.id}`)
