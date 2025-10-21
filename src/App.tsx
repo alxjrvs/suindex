@@ -6,6 +6,7 @@ import ItemShowPage from './components/ItemShowPage'
 import MechBuilder from './components/MechBuilder'
 import PilotBuilder from './components/PilotBuilder'
 import CrawlerBuilder from './components/CrawlerBuilder'
+import Dashboard from './components/Dashboard'
 import LandingPage from './components/LandingPage'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
@@ -14,6 +15,7 @@ function AppContent() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route
         path="/reference/*"
         element={

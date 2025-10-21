@@ -57,30 +57,24 @@ export default function LandingPage() {
         {/* Quick Links */}
         <div className="bg-[var(--color-su-white)] rounded-lg shadow-lg p-8 border-4 border-[var(--color-su-black)]">
           <h2 className="text-3xl font-bold text-[var(--color-su-brick)] mb-6">Get Started</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link
+              to="/dashboard"
+              className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/builders/"
+              className="bg-[var(--color-su-green)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
+            >
+              Playground
+            </Link>
             <Link
               to="/reference/schema/abilities"
               className="bg-[var(--color-su-light-blue)] text-[var(--color-su-black)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
             >
               Rules Reference
-            </Link>
-            <Link
-              to="/builders/mech-builder"
-              className="bg-[#6b8e7f] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
-            >
-              Build a Mech
-            </Link>
-            <Link
-              to="/builders/pilot-builder"
-              className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
-            >
-              Build a Pilot
-            </Link>
-            <Link
-              to="/builders/crawler-builder"
-              className="bg-[#c97d9e] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
-            >
-              Build a Crawler
             </Link>
           </div>
         </div>
