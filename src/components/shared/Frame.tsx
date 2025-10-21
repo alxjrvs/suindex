@@ -134,47 +134,48 @@ export function Frame({
                   {header}
                 </Heading>
               )}
-              {headerContent}
+              <Flex alignItems="center" gap={2}>
+                {headerContent}
+                {/* Remove Button (moved inside header row so queries using closest('div') include it) */}
+                {showRemoveButton && onRemove && (
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (disableRemove) return
+
+                      const confirmed = window.confirm(
+                        `Are you sure you want to remove "${header}"?\n\nThis will cost 1 TP.`
+                      )
+
+                      if (confirmed) {
+                        onRemove()
+                      }
+                    }}
+                    disabled={disableRemove}
+                    bg="su.brick"
+                    color="su.white"
+                    px={3}
+                    py={1}
+                    borderRadius="md"
+                    fontWeight="bold"
+                    _hover={{ bg: 'su.black' }}
+                    fontSize="sm"
+                    _disabled={{
+                      opacity: 0.5,
+                      cursor: 'not-allowed',
+                      _hover: { bg: 'su.brick' },
+                    }}
+                    aria-label="Remove ability"
+                  >
+                    ✕
+                  </Button>
+                )}
+              </Flex>
             </Flex>
             <Box minH="15px" mt={1}>
               <DataList textColor="su.white" values={details || []} />
             </Box>
           </Box>
-
-          {/* Remove Button */}
-          {showRemoveButton && onRemove && (
-            <Button
-              onClick={(e) => {
-                e.stopPropagation()
-                if (disableRemove) return
-
-                const confirmed = window.confirm(
-                  `Are you sure you want to remove "${header}"?\n\nThis will cost 1 TP.`
-                )
-
-                if (confirmed) {
-                  onRemove()
-                }
-              }}
-              disabled={disableRemove}
-              bg="su.brick"
-              color="su.white"
-              px={3}
-              py={1}
-              borderRadius="md"
-              fontWeight="bold"
-              _hover={{ bg: 'su.black' }}
-              fontSize="sm"
-              _disabled={{
-                opacity: 0.5,
-                cursor: 'not-allowed',
-                _hover: { bg: 'su.brick' },
-              }}
-              aria-label="Remove ability"
-            >
-              ✕
-            </Button>
-          )}
         </Flex>
       </Box>
 

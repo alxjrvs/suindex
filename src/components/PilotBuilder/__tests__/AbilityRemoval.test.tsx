@@ -129,7 +129,14 @@ describe('PilotBuilder - Ability Removal', () => {
 
       // Ability should be displayed with remove button
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /remove ability/i })).toBeInTheDocument()
+        screen.debug()
+        const abilityCards = screen.getAllByText('Hack 1')
+        // Find the one in the selected abilities list (not in the modal)
+        const selectedAbilityCard = abilityCards[0].closest('div')
+        const removeButton = within(selectedAbilityCard!).getByRole('button', {
+          name: /remove ability/i,
+        })
+        expect(removeButton).toBeInTheDocument()
       })
     })
 
@@ -329,11 +336,7 @@ describe('PilotBuilder - Ability Removal', () => {
       })
 
       // Click remove button
-      const abilityCards = screen.getAllByText('Hack 1')
-      const selectedAbilityCard = abilityCards[0].closest('div')
-      const removeButton = within(selectedAbilityCard!).getByRole('button', {
-        name: /remove ability/i,
-      })
+      const removeButton = screen.getByRole('button', { name: /remove ability/i })
 
       // Mock window.confirm
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
@@ -451,11 +454,7 @@ describe('PilotBuilder - Ability Removal', () => {
       })
 
       // Remove the ability
-      const abilityCards = screen.getAllByText('Hack 1')
-      const selectedAbilityCard = abilityCards[0].closest('div')
-      const removeButton = within(selectedAbilityCard!).getByRole('button', {
-        name: /remove ability/i,
-      })
+      const removeButton = screen.getByRole('button', { name: /remove ability/i })
 
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
