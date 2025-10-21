@@ -7,6 +7,7 @@ export const modelMap = {
   chassis: SalvageUnionReference.Chassis,
   classes: SalvageUnionReference.Classes,
   crawlers: SalvageUnionReference.Crawlers,
+  'crawler-bays': SalvageUnionReference.CrawlerBays,
   creatures: SalvageUnionReference.Creatures,
   drones: SalvageUnionReference.Drones,
   equipment: SalvageUnionReference.Equipment,

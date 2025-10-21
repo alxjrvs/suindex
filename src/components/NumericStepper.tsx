@@ -35,7 +35,7 @@ export default function NumericStepper({
   const labelId = `stepper-label-${label.toLowerCase().replace(/\s+/g, '-')}`
 
   return (
-    <div className="flex items-end gap-2" role="group" aria-labelledby={labelId}>
+    <div className="flex items-end gap-1" role="group" aria-labelledby={labelId}>
       <StatDisplay label={label} value={displayValue} labelId={labelId} />
       <div className="flex flex-col gap-1 pb-2.5">
         <button

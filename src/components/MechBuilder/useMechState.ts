@@ -49,14 +49,41 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
   }, [selectedChassis])
 
   const handleChassisChange = useCallback((chassisId: string) => {
-    setMech((prev) => ({
-      ...prev,
-      chassisId,
-      pattern: '',
-      systems: [],
-      modules: [],
-      chassisAbility: '',
-    }))
+    setMech((prev) => {
+      // If there's already a chassis selected and user is changing it, show confirmation
+      if (prev.chassisId && prev.chassisId !== chassisId) {
+        const confirmed = window.confirm(
+          'Alert - changing this will reset all data. Change chassis and reset mech data?'
+        )
+        if (!confirmed) {
+          return prev
+        }
+        // Reset to initial state but keep the new chassisId
+        return {
+          chassisId,
+          pattern: '',
+          quirk: '',
+          appearance: '',
+          chassisAbility: '',
+          systems: [],
+          modules: [],
+          cargo: [],
+          currentSP: 0,
+          currentEP: 0,
+          currentHeat: 0,
+          notes: '',
+        }
+      }
+      // First time selection or same selection
+      return {
+        ...prev,
+        chassisId,
+        pattern: '',
+        systems: [],
+        modules: [],
+        chassisAbility: '',
+      }
+    })
   }, [])
 
   const handlePatternChange = useCallback(

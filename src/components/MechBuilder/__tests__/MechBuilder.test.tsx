@@ -193,35 +193,96 @@ describe('MechBuilder', () => {
       })
     })
 
-    it('resets mech state when changing chassis', async () => {
+    it('does not show confirmation alert on first chassis selection', async () => {
       const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm')
+      render(<MechBuilder />)
+
+      const chassisSelect = screen.getByRole('combobox')
+      await user.selectOptions(chassisSelect, 'chassis-1')
+
+      await waitFor(() => {
+        expect(screen.getAllByText(/0\/10/).length).toBeGreaterThan(0)
+      })
+
+      expect(confirmSpy).not.toHaveBeenCalled()
+      confirmSpy.mockRestore()
+    })
+
+    it('shows confirmation alert when changing chassis after initial selection', async () => {
+      const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
       render(<MechBuilder />)
 
       const chassisSelect = screen.getByRole('combobox')
 
+      // First selection - no alert
       await user.selectOptions(chassisSelect, 'chassis-1')
-      await waitFor(
-        () => {
-          // Check for chassis-1 stats: 4 system slots, 3 module slots
-          const systemSlots = screen.getAllByText(/0\/4/)
-          const moduleSlots = screen.getAllByText(/0\/3/)
-          expect(systemSlots.length).toBeGreaterThan(0)
-          expect(moduleSlots.length).toBeGreaterThan(0)
-        },
-        { timeout: 5000 }
-      )
+      await waitFor(() => {
+        expect(screen.getAllByText(/0\/10/).length).toBeGreaterThan(0)
+      })
 
+      // Second selection - should show alert
       await user.selectOptions(chassisSelect, 'chassis-2')
-      await waitFor(
-        () => {
-          // Check for chassis-2 stats: 5 system slots, 4 module slots
-          const systemSlots = screen.getAllByText(/0\/5/)
-          const moduleSlots = screen.getAllByText(/0\/4/)
-          expect(systemSlots.length).toBeGreaterThan(0)
-          expect(moduleSlots.length).toBeGreaterThan(0)
-        },
-        { timeout: 5000 }
+
+      expect(confirmSpy).toHaveBeenCalledWith(
+        'Alert - changing this will reset all data. Change chassis and reset mech data?'
       )
+      confirmSpy.mockRestore()
+    })
+
+    it('cancels chassis change when user declines confirmation', async () => {
+      const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
+      render(<MechBuilder />)
+
+      const chassisSelect = screen.getByRole('combobox')
+
+      // First selection
+      await user.selectOptions(chassisSelect, 'chassis-1')
+      await waitFor(() => {
+        expect(screen.getAllByText(/0\/10/).length).toBeGreaterThan(0)
+      })
+
+      // Try to change - user cancels
+      await user.selectOptions(chassisSelect, 'chassis-2')
+
+      // Should still show chassis-1 stats
+      await waitFor(() => {
+        expect(screen.getAllByText(/0\/10/).length).toBeGreaterThan(0)
+      })
+
+      confirmSpy.mockRestore()
+    })
+
+    it('resets all mech data when chassis change is confirmed', async () => {
+      const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+      render(<MechBuilder />)
+
+      const chassisSelect = screen.getByRole('combobox')
+
+      // Select first chassis and add some data
+      await user.selectOptions(chassisSelect, 'chassis-1')
+      await waitFor(() => {
+        expect(screen.getAllByText(/0\/10/).length).toBeGreaterThan(0)
+      })
+
+      const quirkInput = screen.getByPlaceholderText(/enter quirk/i)
+      await user.type(quirkInput, 'Test quirk')
+      expect(quirkInput).toHaveValue('Test quirk')
+
+      // Change chassis and confirm
+      await user.selectOptions(chassisSelect, 'chassis-2')
+
+      await waitFor(() => {
+        // Quirk should be reset
+        expect(quirkInput).toHaveValue('')
+        // Confirm was called
+        expect(confirmSpy).toHaveBeenCalled()
+      })
+
+      confirmSpy.mockRestore()
     })
   })
 

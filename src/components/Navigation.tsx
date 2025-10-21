@@ -64,6 +64,12 @@ export default function Navigation({ schemas }: NavigationProps) {
         >
           👤 Pilot Builder
         </button>
+        <button
+          onClick={() => handleNavigate('/crawler-builder')}
+          className="w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer text-[var(--color-su-black)] font-semibold"
+        >
+          🚚 Crawler Builder
+        </button>
         <ul className="py-2">
           {schemas.map((schema) => (
             <li key={schema.id}>

@@ -26,7 +26,6 @@ export function SelectableAbilityItem({
   onToggleExpanded,
 }: SelectableAbilityItemProps) {
   const isSelectable = isAvailable && canAfford && !alreadySelected
-  const isDisabled = alreadySelected || !canAfford || !isAvailable
 
   return (
     <AbilityDisplay
@@ -34,7 +33,6 @@ export function SelectableAbilityItem({
       data={ability}
       compact
       onClick={isSelectable ? onSelect : undefined}
-      disabled={isDisabled}
       dimmed={alreadySelected || !canAfford || !isAvailable}
       collapsible
       expanded={isExpanded}

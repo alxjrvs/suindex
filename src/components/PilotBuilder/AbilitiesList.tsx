@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import type { Ability } from 'salvageunion-reference'
-import type { CharacterAbility } from './types'
+import type { PilotAbility } from './types'
 import { AbilityDisplay } from '../AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
 
 interface AbilitiesListProps {
-  abilities: CharacterAbility[]
+  abilities: PilotAbility[]
   legendaryAbility: Ability | null
   onRemove: (id: string) => void
   onRemoveLegendary: () => void
@@ -27,8 +27,8 @@ export function AbilitiesList({
 }: AbilitiesListProps) {
   // Organize selected abilities by tree, separating core from advanced/hybrid
   const { coreAbilitiesByTree, advancedAbilitiesByTree } = useMemo(() => {
-    const coreByTree: Record<string, CharacterAbility[]> = {}
-    const advancedByTree: Record<string, CharacterAbility[]> = {}
+    const coreByTree: Record<string, PilotAbility[]> = {}
+    const advancedByTree: Record<string, PilotAbility[]> = {}
 
     abilities.forEach((charAbility) => {
       const tree = charAbility.ability.tree

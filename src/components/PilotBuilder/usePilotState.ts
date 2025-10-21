@@ -109,11 +109,45 @@ export function usePilotState(
   }, [allClasses, pilot.abilities, selectedClass])
 
   const handleClassChange = useCallback((classId: string) => {
-    setPilot((prev) => ({
-      ...prev,
-      classId,
-      abilities: [],
-    }))
+    setPilot((prev) => {
+      // If there's already a class selected and user is changing it, show confirmation
+      if (prev.classId && prev.classId !== classId) {
+        const confirmed = window.confirm(
+          'Alert - changing this will reset all data. Change class and reset pilot data?'
+        )
+        if (!confirmed) {
+          return prev
+        }
+        // Reset to initial state but keep the new classId
+        return {
+          classId,
+          advancedClassId: null,
+          callsign: '',
+          motto: '',
+          mottoUsed: false,
+          keepsake: '',
+          keepsakeUsed: false,
+          background: '',
+          backgroundUsed: false,
+          appearance: '',
+          legendaryAbilityId: null,
+          abilities: [],
+          equipment: [],
+          maxHP: 10,
+          currentHP: 10,
+          maxAP: 5,
+          currentAP: 5,
+          currentTP: 0,
+          notes: '',
+        }
+      }
+      // First time selection or same selection
+      return {
+        ...prev,
+        classId,
+        abilities: [],
+      }
+    })
   }, [])
 
   const handleAddAbility = useCallback(

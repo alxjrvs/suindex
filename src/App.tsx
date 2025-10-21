@@ -5,6 +5,7 @@ import SchemaViewer from './components/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
 import MechBuilder from './components/MechBuilder'
 import PilotBuilder from './components/PilotBuilder'
+import CrawlerBuilder from './components/CrawlerBuilder'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 
@@ -50,6 +51,7 @@ function AppContent() {
           />
           <Route path="/mech-builder" element={<MechBuilder />} />
           <Route path="/pilot-builder" element={<PilotBuilder />} />
+          <Route path="/crawler-builder" element={<CrawlerBuilder />} />
           <Route
             path="/schema/:schemaId"
             element={<SchemaViewer schemas={schemaIndex.schemas} />}

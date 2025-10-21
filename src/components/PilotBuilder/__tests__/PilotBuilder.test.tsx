@@ -266,6 +266,7 @@ describe('PilotBuilder', () => {
 
     it('resets character state when changing class', async () => {
       const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
       render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
@@ -281,7 +282,99 @@ describe('PilotBuilder', () => {
         const tpStepper = screen.getByRole('group', { name: /TP/i })
         expect(tpStepper).toBeInTheDocument()
         expect(within(tpStepper).getByText('0')).toBeInTheDocument()
+        // Confirm should have been called
+        expect(confirmSpy).toHaveBeenCalled()
       })
+
+      confirmSpy.mockRestore()
+    })
+
+    it('does not show confirmation alert on first class selection', async () => {
+      const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm')
+      render(<PilotBuilder />)
+
+      const classSelect = screen.getAllByRole('combobox')[0]
+      await user.selectOptions(classSelect, 'class-hacker')
+
+      await waitFor(() => {
+        const tpStepper = screen.getByRole('group', { name: /TP/i })
+        expect(within(tpStepper).getByText('0')).toBeInTheDocument()
+      })
+
+      expect(confirmSpy).not.toHaveBeenCalled()
+      confirmSpy.mockRestore()
+    })
+
+    it('shows confirmation alert when changing class after initial selection', async () => {
+      const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+      render(<PilotBuilder />)
+
+      const classSelect = screen.getAllByRole('combobox')[0]
+
+      await user.selectOptions(classSelect, 'class-hacker')
+      await waitFor(() => {
+        const tpStepper = screen.getByRole('group', { name: /TP/i })
+        expect(within(tpStepper).getByText('0')).toBeInTheDocument()
+      })
+
+      await user.selectOptions(classSelect, 'class-salvager')
+
+      expect(confirmSpy).toHaveBeenCalledWith(
+        'Alert - changing this will reset all data. Change class and reset pilot data?'
+      )
+      confirmSpy.mockRestore()
+    })
+
+    it('cancels class change when user declines confirmation', async () => {
+      const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
+      render(<PilotBuilder />)
+
+      const classSelect = screen.getAllByRole('combobox')[0]
+
+      await user.selectOptions(classSelect, 'class-hacker')
+      await waitFor(() => {
+        const tpStepper = screen.getByRole('group', { name: /TP/i })
+        expect(within(tpStepper).getByText('0')).toBeInTheDocument()
+      })
+
+      const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
+      await user.type(callsignInput, 'Test Pilot')
+      expect(callsignInput).toHaveValue('Test Pilot')
+
+      await user.selectOptions(classSelect, 'class-salvager')
+
+      expect(callsignInput).toHaveValue('Test Pilot')
+
+      confirmSpy.mockRestore()
+    })
+
+    it('resets all pilot data when class change is confirmed', async () => {
+      const user = userEvent.setup()
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+      render(<PilotBuilder />)
+
+      const classSelect = screen.getAllByRole('combobox')[0]
+
+      await user.selectOptions(classSelect, 'class-hacker')
+      await waitFor(() => {
+        const tpStepper = screen.getByRole('group', { name: /TP/i })
+        expect(within(tpStepper).getByText('0')).toBeInTheDocument()
+      })
+
+      const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
+      await user.type(callsignInput, 'Test Pilot')
+      expect(callsignInput).toHaveValue('Test Pilot')
+
+      await user.selectOptions(classSelect, 'class-salvager')
+
+      await waitFor(() => {
+        expect(callsignInput).toHaveValue('')
+      })
+
+      confirmSpy.mockRestore()
     })
   })
 })

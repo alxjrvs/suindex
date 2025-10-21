@@ -1,9 +1,9 @@
-import type { CharacterEquipment } from './types'
+import type { PilotEquipment } from './types'
 import { EquipmentDisplay } from '../EquipmentDisplay'
 import { StatDisplay } from '../StatDisplay'
 
 interface PilotInventoryProps {
-  equipment: CharacterEquipment[]
+  equipment: PilotEquipment[]
   onAddClick: () => void
   onRemove: (id: string) => void
 }
