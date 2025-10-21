@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { SystemModuleSelector } from './SystemModuleSelector'
 import { ChassisSelector } from './ChassisSelector'
@@ -12,15 +12,16 @@ import { CargoList } from './CargoList'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { BuilderLayout } from '../shared/BuilderLayout'
+import { BuilderControlBar } from '../shared/BuilderControlBar'
 import { useMechState } from './useMechState'
 
-export default function MechBuilder() {
+interface MechBuilderProps {
+  id?: string
+}
+
+export default function MechBuilder({ id }: MechBuilderProps = {}) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false)
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
-
-  const allChassis = SalvageUnionReference.Chassis.all()
-  const allSystems = SalvageUnionReference.Systems.all()
-  const allModules = SalvageUnionReference.Modules.all()
 
   const {
     mech,
@@ -37,15 +38,99 @@ export default function MechBuilder() {
     handleAddCargo,
     handleRemoveCargo,
     updateMech,
-  } = useMechState(allSystems, allModules, allChassis)
+    save,
+    resetChanges,
+    loading,
+    error,
+  } = useMechState(id)
+
+  const allChassis = SalvageUnionReference.Chassis.all()
+  const allSystems = SalvageUnionReference.Systems.all()
+  const allModules = SalvageUnionReference.Modules.all()
+
+  // Track initial state for detecting changes
+  const initialStateRef = useRef<string | null>(null)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [savedCrawlerId, setSavedCrawlerId] = useState<string | null>(null)
+  const [savedPilotId, setSavedPilotId] = useState<string | null>(null)
+
+  // Set initial state after loading completes
+  useEffect(() => {
+    if (!id || loading) return
+    if (initialStateRef.current === null) {
+      initialStateRef.current = JSON.stringify(mech)
+      setSavedCrawlerId(mech.crawler_id ?? null)
+      setSavedPilotId(mech.pilot_id ?? null)
+    }
+  }, [id, loading, mech])
+
+  // Detect changes
+  useEffect(() => {
+    if (!id || initialStateRef.current === null) return
+    const currentState = JSON.stringify(mech)
+    setHasUnsavedChanges(currentState !== initialStateRef.current)
+  }, [mech, id])
+
+  // Update initial state ref after save or reset
+  const handleSave = async () => {
+    await save()
+    initialStateRef.current = JSON.stringify(mech)
+    setSavedCrawlerId(mech.crawler_id ?? null)
+    setSavedPilotId(mech.pilot_id ?? null)
+    setHasUnsavedChanges(false)
+  }
+
+  const handleResetChanges = async () => {
+    await resetChanges()
+    initialStateRef.current = JSON.stringify(mech)
+    setHasUnsavedChanges(false)
+  }
 
   const stats = selectedChassis?.stats
 
   const canAddMore =
     stats && (usedSystemSlots < stats.system_slots || usedModuleSlots < stats.module_slots)
 
+  if (loading) {
+    return (
+      <BuilderLayout>
+        <div className="flex items-center justify-center h-64">
+          <p className="text-xl font-mono">Loading mech...</p>
+        </div>
+      </BuilderLayout>
+    )
+  }
+
+  if (error) {
+    return (
+      <BuilderLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <p className="text-xl font-mono text-red-600 mb-4">Error loading mech</p>
+            <p className="text-sm font-mono text-gray-600">{error}</p>
+          </div>
+        </div>
+      </BuilderLayout>
+    )
+  }
+
   return (
     <BuilderLayout>
+      {id && (
+        <BuilderControlBar
+          backgroundColor="#6b8e7f"
+          entityType="mech"
+          crawlerId={mech.crawler_id}
+          pilotId={mech.pilot_id}
+          savedCrawlerId={savedCrawlerId}
+          savedPilotId={savedPilotId}
+          onCrawlerChange={(crawlerId) => updateMech({ crawler_id: crawlerId })}
+          onPilotChange={(pilotId) => updateMech({ pilot_id: pilotId })}
+          onSave={handleSave}
+          onResetChanges={handleResetChanges}
+          hasUnsavedChanges={hasUnsavedChanges}
+        />
+      )}
       <div className="flex gap-6">
         <div className="flex-1 space-y-6">
           <div className="bg-[#6b8e7f] border-8 border-[#6b8e7f] rounded-3xl p-6 shadow-lg">
@@ -147,8 +232,8 @@ export default function MechBuilder() {
         modules={allModules}
         onSelectSystem={handleAddSystem}
         onSelectModule={handleAddModule}
-        selectedSystemIds={(mech.systems ?? []).map((s) => s.id)}
-        selectedModuleIds={(mech.modules ?? []).map((m) => m.id)}
+        selectedSystemIds={mech.systems ?? []}
+        selectedModuleIds={mech.modules ?? []}
       />
 
       <CargoModal

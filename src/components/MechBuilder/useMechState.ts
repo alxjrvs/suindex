@@ -1,11 +1,21 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
-import type { Chassis, System, Module } from 'salvageunion-reference'
-import type { MechState, SelectedItem } from './types'
+import { SalvageUnionReference } from 'salvageunion-reference'
+import type { MechState } from './types'
+import { supabase } from '../../lib/supabase'
 
-export function useMechState(allSystems: System[], allModules: Module[], allChassis: Chassis[]) {
+export function useMechState(id?: string) {
+  const allChassis = SalvageUnionReference.Chassis.all()
+  const allSystems = SalvageUnionReference.Systems.all()
+  const allModules = SalvageUnionReference.Modules.all()
   const isResettingRef = useRef(false)
+  const [loading, setLoading] = useState(!!id)
+  const [error, setError] = useState<string | null>(null)
 
   const [mech, setMech] = useState<MechState>({
+    id: id || '',
+    user_id: '',
+    crawler_id: null,
+    pilot_id: null,
     chassis_id: null,
     pattern: null,
     quirk: null,
@@ -20,20 +30,106 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     notes: null,
   })
 
+  // Load from database if id is provided
+  useEffect(() => {
+    if (!id) return
+
+    const loadMech = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const { data, error: fetchError } = await supabase
+          .from('mechs')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (fetchError) throw fetchError
+        if (!data) throw new Error('Mech not found')
+
+        setMech(data)
+      } catch (err) {
+        console.error('Error loading mech:', err)
+        setError(err instanceof Error ? err.message : 'Failed to load mech')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadMech()
+  }, [id])
+
+  // Manual save function
+  const save = useCallback(async () => {
+    if (!id) {
+      // Noop when no ID - return resolved promise
+      return Promise.resolve()
+    }
+
+    try {
+      const { error: updateError } = await supabase.from('mechs').update(mech).eq('id', id)
+
+      if (updateError) {
+        console.error('Failed to update mech:', updateError)
+        setError(updateError.message)
+        throw updateError
+      }
+
+      setError(null)
+    } catch (err) {
+      console.error('Error saving mech:', err)
+      throw err
+    }
+  }, [id, mech])
+
+  // Reset changes function - reload from database
+  const resetChanges = useCallback(async () => {
+    if (!id) {
+      // Noop when no ID
+      return
+    }
+
+    try {
+      setLoading(true)
+      setError(null)
+
+      const { data, error: fetchError } = await supabase
+        .from('mechs')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (fetchError) throw fetchError
+      if (!data) throw new Error('Mech not found')
+
+      setMech(data)
+    } catch (err) {
+      console.error('Error resetting mech:', err)
+      setError(err instanceof Error ? err.message : 'Failed to reset mech')
+    } finally {
+      setLoading(false)
+    }
+  }, [id])
+
   const selectedChassis = useMemo(
     () => allChassis.find((c) => c.id === mech.chassis_id),
     [mech.chassis_id, allChassis]
   )
 
-  const usedSystemSlots = useMemo(
-    () => (mech.systems ?? []).reduce((sum, sys) => sum + sys.slotsRequired, 0),
-    [mech.systems]
-  )
+  const usedSystemSlots = useMemo(() => {
+    return (mech.systems ?? []).reduce((sum, systemId) => {
+      const system = allSystems.find((s) => s.id === systemId)
+      return sum + (system?.slotsRequired ?? 0)
+    }, 0)
+  }, [mech.systems, allSystems])
 
-  const usedModuleSlots = useMemo(
-    () => (mech.modules ?? []).reduce((sum, mod) => sum + mod.slotsRequired, 0),
-    [mech.modules]
-  )
+  const usedModuleSlots = useMemo(() => {
+    return (mech.modules ?? []).reduce((sum, moduleId) => {
+      const module = allModules.find((m) => m.id === moduleId)
+      return sum + (module?.slotsRequired ?? 0)
+    }, 0)
+  }, [mech.modules, allModules])
 
   const totalCargo = useMemo(
     () => (mech.cargo ?? []).reduce((sum, item) => sum + item.amount, 0),
@@ -63,6 +159,7 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
 
           // Reset to initial state but keep the new chassis_id and set initial stats
           return {
+            ...prev,
             chassis_id: chassisId,
             pattern: null,
             quirk: null,
@@ -107,32 +204,20 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
         const confirmed = window.confirm(message)
 
         if (confirmed) {
-          const patternSystems: SelectedItem[] = []
-          const patternModules: SelectedItem[] = []
+          const patternSystems: string[] = []
+          const patternModules: string[] = []
 
           matchingPattern.systems?.forEach((systemName) => {
             const system = allSystems.find((s) => s.name === systemName)
             if (system) {
-              patternSystems.push({
-                id: `${system.id}-${Date.now()}-${Math.random()}`,
-                name: system.name,
-                slotsRequired: system.slotsRequired,
-                type: 'system',
-                data: system,
-              })
+              patternSystems.push(system.id)
             }
           })
 
           matchingPattern.modules?.forEach((moduleName) => {
             const module = allModules.find((m) => m.name === moduleName)
             if (module) {
-              patternModules.push({
-                id: `${module.id}-${Date.now()}-${Math.random()}`,
-                name: module.name,
-                slotsRequired: module.slotsRequired,
-                type: 'module',
-                data: module,
-              })
+              patternModules.push(module.id)
             }
           })
 
@@ -164,16 +249,7 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
       if (system) {
         setMech((prev) => ({
           ...prev,
-          systems: [
-            ...(prev.systems ?? []),
-            {
-              id: system.id,
-              name: system.name,
-              slotsRequired: system.slotsRequired,
-              type: 'system' as const,
-              data: system,
-            },
-          ],
+          systems: [...(prev.systems ?? []), systemId],
         }))
       }
     },
@@ -182,17 +258,17 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
 
   const handleRemoveSystem = useCallback(
     (systemId: string) => {
-      const systemToRemove = (mech.systems ?? []).find((s) => s.id === systemId)
-      const systemName = systemToRemove?.name || 'this system'
+      const system = allSystems.find((s) => s.id === systemId)
+      const systemName = system?.name || 'this system'
 
       if (window.confirm(`Are you sure you want to remove ${systemName}?`)) {
         setMech((prev) => ({
           ...prev,
-          systems: (prev.systems ?? []).filter((s) => s.id !== systemId),
+          systems: (prev.systems ?? []).filter((id) => id !== systemId),
         }))
       }
     },
-    [mech.systems]
+    [allSystems]
   )
 
   const handleAddModule = useCallback(
@@ -201,16 +277,7 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
       if (module) {
         setMech((prev) => ({
           ...prev,
-          modules: [
-            ...(prev.modules ?? []),
-            {
-              id: module.id,
-              name: module.name,
-              slotsRequired: module.slotsRequired,
-              type: 'module' as const,
-              data: module,
-            },
-          ],
+          modules: [...(prev.modules ?? []), moduleId],
         }))
       }
     },
@@ -219,17 +286,17 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
 
   const handleRemoveModule = useCallback(
     (moduleId: string) => {
-      const moduleToRemove = (mech.modules ?? []).find((m) => m.id === moduleId)
-      const moduleName = moduleToRemove?.name || 'this module'
+      const module = allModules.find((m) => m.id === moduleId)
+      const moduleName = module?.name || 'this module'
 
       if (window.confirm(`Are you sure you want to remove ${moduleName}?`)) {
         setMech((prev) => ({
           ...prev,
-          modules: (prev.modules ?? []).filter((m) => m.id !== moduleId),
+          modules: (prev.modules ?? []).filter((id) => id !== moduleId),
         }))
       }
     },
-    [mech.modules]
+    [allModules]
   )
 
   const handleAddCargo = useCallback((amount: number, description: string) => {
@@ -280,5 +347,9 @@ export function useMechState(allSystems: System[], allModules: Module[], allChas
     handleAddCargo,
     handleRemoveCargo,
     updateMech,
+    save,
+    resetChanges,
+    loading,
+    error,
   }
 }

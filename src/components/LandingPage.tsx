@@ -3,7 +3,7 @@ import Footer from './Footer'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[var(--color-su-green)] px-6 pt-6">
+    <div className="min-h-screen bg-[var(--color-su-light-blue)] px-6 pt-6">
       <div className="max-w-4xl mx-auto">
         {/* Hero Section */}
         <div className="bg-[var(--color-su-white)] rounded-lg shadow-lg p-8 mb-6 border-4 border-[var(--color-su-black)]">
@@ -60,7 +60,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
               to="/dashboard"
-              className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
+              className="bg-[var(--color-su-brick)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg border-4 border-[var(--color-su-black)]"
             >
               Dashboard
             </Link>
@@ -72,7 +72,7 @@ export default function LandingPage() {
             </Link>
             <Link
               to="/reference/schema/abilities"
-              className="bg-[var(--color-su-light-blue)] text-[var(--color-su-black)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
+              className="bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-6 py-4 rounded-lg font-bold text-center hover:opacity-90 transition-opacity text-lg"
             >
               Rules Reference
             </Link>

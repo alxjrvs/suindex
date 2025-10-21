@@ -4,7 +4,7 @@
 @theme {
   /* Salvage Union Color Palette */
   --color-su-blue: rgb(143, 195, 216);
-  --color-su-military-green: rgb(122, 151, 138);
+  --color-su-green: rgb(122, 151, 138);
   --color-su-orange: rgb(239, 137, 79);
   --color-su-light-orange: rgb(245, 193, 163);
   --color-su-light-blue: rgb(199, 223, 231);
@@ -14,8 +14,8 @@
   --color-su-four-blue: rgb(48, 107, 128);
   --color-su-five-blue: rgb(30, 83, 100);
   --color-su-six-blue: rgb(6, 52, 65);
-  --color-su-brick: rgb(173, 84, 60);
   --color-su-pink: rgb(206, 88, 152);
+  --color-su-brick: rgb(168, 89, 71);
   --color-su-black: rgb(40, 32, 25);
   --color-su-white: rgb(251, 248, 243);
 

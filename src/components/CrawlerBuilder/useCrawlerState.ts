@@ -1,16 +1,23 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Crawler, CrawlerBay } from 'salvageunion-reference'
 import type { LocalCrawlerState, CrawlerBay as CrawlerBayState } from './types'
+import { supabase } from '../../lib/supabase'
 
 const INITIAL_TECH_LEVEL = 1
 const MAX_UPGRADE = 25
 
-export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
+export function useCrawlerState(id?: string) {
   const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
+  const allBays = SalvageUnionReference.CrawlerBays.all()
+  const allCrawlers = SalvageUnionReference.Crawlers.all()
   const isResettingRef = useRef(false)
+  const [loading, setLoading] = useState(!!id)
+  const [error, setError] = useState<string | null>(null)
 
   const [crawler, setCrawler] = useState<LocalCrawlerState>({
+    id: id || '',
+    user_id: '',
+    game_id: null,
     name: '',
     crawler_type_id: null,
     description: null,
@@ -25,6 +32,88 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
     notes: null,
   })
 
+  // Load from database if id is provided
+  useEffect(() => {
+    if (!id) return
+
+    const loadCrawler = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const { data, error: fetchError } = await supabase
+          .from('crawlers')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (fetchError) throw fetchError
+        if (!data) throw new Error('Crawler not found')
+
+        setCrawler(data)
+      } catch (err) {
+        console.error('Error loading crawler:', err)
+        setError(err instanceof Error ? err.message : 'Failed to load crawler')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadCrawler()
+  }, [id])
+
+  // Manual save function
+  const save = useCallback(async () => {
+    if (!id) {
+      // Noop when no ID - return resolved promise
+      return Promise.resolve()
+    }
+
+    try {
+      const { error: updateError } = await supabase.from('crawlers').update(crawler).eq('id', id)
+
+      if (updateError) {
+        console.error('Failed to update crawler:', updateError)
+        setError(updateError.message)
+        throw updateError
+      }
+
+      setError(null)
+    } catch (err) {
+      console.error('Error saving crawler:', err)
+      throw err
+    }
+  }, [id, crawler])
+
+  // Reset changes function - reload from database
+  const resetChanges = useCallback(async () => {
+    if (!id) {
+      // Noop when no ID
+      return
+    }
+
+    try {
+      setLoading(true)
+      setError(null)
+
+      const { data, error: fetchError } = await supabase
+        .from('crawlers')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (fetchError) throw fetchError
+      if (!data) throw new Error('Crawler not found')
+
+      setCrawler(data)
+    } catch (err) {
+      console.error('Error resetting crawler:', err)
+      setError(err instanceof Error ? err.message : 'Failed to reset crawler')
+    } finally {
+      setLoading(false)
+    }
+  }, [id])
+
   // Initialize all bays on mount
   useEffect(() => {
     if (allBays.length > 0 && (crawler.bays ?? []).length === 0) {
@@ -38,7 +127,7 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
       }))
       setCrawler((prev) => ({ ...prev, bays: initialBays }))
     }
-  }, [allBays, crawler.bays?.length])
+  }, [allBays, crawler.bays])
 
   const selectedCrawlerType = useMemo(
     () => allCrawlers.find((c) => c.id === crawler.crawler_type_id),
@@ -79,9 +168,8 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
 
           // Reset to initial state but keep the new crawler_type_id
           return {
-            name: '',
+            ...prev,
             crawler_type_id: crawlerTypeId,
-            description: null,
             current_damage: 0,
             tech_level: INITIAL_TECH_LEVEL,
             upgrade: 0,
@@ -97,7 +185,6 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
             storage_bay_operator: null,
             storage_bay_description: null,
             cargo: [],
-            notes: null,
           }
         }
         // First time selection or same selection
@@ -153,5 +240,9 @@ export function useCrawlerState(allCrawlers: Crawler[], allBays: CrawlerBay[]) {
     handleAddCargo,
     handleRemoveCargo,
     updateCrawler,
+    save,
+    resetChanges,
+    loading,
+    error,
   }
 }

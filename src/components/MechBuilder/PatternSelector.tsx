@@ -50,7 +50,7 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
               <div className="flex items-center gap-2">
                 <span>{p.name}</span>
                 {'legalStarting' in p && (
-                  <span className="bg-[var(--color-su-military-green)] text-[var(--color-su-white)] text-xs font-bold px-2 py-1 rounded">
+                  <span className="bg-[var(--color-su-green)] text-[var(--color-su-white)] text-xs font-bold px-2 py-1 rounded">
                     LEGAL STARTING PATTERN
                   </span>
                 )}

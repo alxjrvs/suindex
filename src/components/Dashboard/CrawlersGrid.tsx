@@ -154,12 +154,12 @@ export function CrawlersGrid() {
         {/* Create Crawler cell */}
         <button
           onClick={handleCreateCrawler}
-          className="bg-[#f5c1a3] border-2 border-dashed border-[#c97d9e] rounded-lg p-6 hover:bg-[#c97d9e] hover:border-solid transition-all h-48 flex flex-col items-center justify-center group"
+          className="bg-[#f5c1a3] border-2 border-dashed border-[#c97d9e] rounded-lg p-6 hover:bg-[#c97d9e] hover:border-solid transition-all h-[120px] flex flex-col items-center justify-center group"
         >
-          <div className="text-6xl text-[#c97d9e] group-hover:text-[var(--color-su-white)] mb-2">
+          <div className="text-5xl text-[#c97d9e] group-hover:text-[var(--color-su-white)] mb-2">
             +
           </div>
-          <div className="text-xl font-bold text-[#c97d9e] group-hover:text-[var(--color-su-white)]">
+          <div className="text-lg font-bold text-[#c97d9e] group-hover:text-[var(--color-su-white)]">
             Create Crawler
           </div>
         </button>

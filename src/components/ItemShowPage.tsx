@@ -50,11 +50,7 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
 
     if (typeof value === 'boolean') {
       return (
-        <span
-          className={
-            value ? 'text-[var(--color-su-military-green)]' : 'text-[var(--color-su-brick)]'
-          }
-        >
+        <span className={value ? 'text-[var(--color-su-green)]' : 'text-[var(--color-su-brick)]'}>
           {value ? 'Yes' : 'No'}
         </span>
       )

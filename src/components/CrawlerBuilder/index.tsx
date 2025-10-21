@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
@@ -8,12 +8,16 @@ import { StorageBay } from './StorageBay'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { BuilderLayout } from '../shared/BuilderLayout'
+import { BuilderControlBar } from '../shared/BuilderControlBar'
 import { useCrawlerState } from './useCrawlerState'
 
-export default function CrawlerBuilder() {
+interface CrawlerBuilderProps {
+  id?: string
+}
+
+export default function CrawlerBuilder({ id }: CrawlerBuilderProps = {}) {
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
 
-  const allBays = SalvageUnionReference.CrawlerBays.all()
   const allCrawlers = SalvageUnionReference.Crawlers.all()
 
   const {
@@ -27,7 +31,69 @@ export default function CrawlerBuilder() {
     handleAddCargo,
     handleRemoveCargo,
     updateCrawler,
-  } = useCrawlerState(allCrawlers, allBays)
+    save,
+    resetChanges,
+    loading,
+    error,
+  } = useCrawlerState(id)
+
+  // Track initial state for detecting changes
+  const initialStateRef = useRef<string | null>(null)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [savedGameId, setSavedGameId] = useState<string | null>(null)
+
+  // Set initial state after loading completes
+  useEffect(() => {
+    if (!id || loading) return
+    if (initialStateRef.current === null) {
+      initialStateRef.current = JSON.stringify(crawler)
+      setSavedGameId(crawler.game_id ?? null)
+    }
+  }, [id, loading, crawler])
+
+  // Detect changes
+  useEffect(() => {
+    if (!id || initialStateRef.current === null) return
+    const currentState = JSON.stringify(crawler)
+    setHasUnsavedChanges(currentState !== initialStateRef.current)
+  }, [crawler, id])
+
+  // Update initial state ref after save or reset
+  const handleSave = async () => {
+    await save()
+    initialStateRef.current = JSON.stringify(crawler)
+    setSavedGameId(crawler.game_id ?? null)
+    setHasUnsavedChanges(false)
+  }
+
+  const handleResetChanges = async () => {
+    await resetChanges()
+    initialStateRef.current = JSON.stringify(crawler)
+    setHasUnsavedChanges(false)
+  }
+
+  if (loading) {
+    return (
+      <BuilderLayout>
+        <div className="flex items-center justify-center h-64">
+          <p className="text-xl font-mono">Loading crawler...</p>
+        </div>
+      </BuilderLayout>
+    )
+  }
+
+  if (error) {
+    return (
+      <BuilderLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <p className="text-xl font-mono text-red-600 mb-4">Error loading crawler</p>
+            <p className="text-sm font-mono text-gray-600">{error}</p>
+          </div>
+        </div>
+      </BuilderLayout>
+    )
+  }
 
   // Separate storage bay from other bays
   const storageBay = (crawler.bays ?? []).find((bay) => bay.bayId === 'storage-bay')
@@ -40,6 +106,18 @@ export default function CrawlerBuilder() {
 
   return (
     <BuilderLayout>
+      {id && (
+        <BuilderControlBar
+          backgroundColor="#c97d9e"
+          entityType="crawler"
+          gameId={crawler.game_id}
+          savedGameId={savedGameId}
+          onGameChange={(gameId) => updateCrawler({ game_id: gameId })}
+          onSave={handleSave}
+          onResetChanges={handleResetChanges}
+          hasUnsavedChanges={hasUnsavedChanges}
+        />
+      )}
       {/* Header Section */}
       <div className="flex gap-6">
         <div className="flex-1">

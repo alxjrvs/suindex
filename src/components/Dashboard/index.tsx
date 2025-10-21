@@ -9,6 +9,7 @@ import { NewGame } from './NewGame'
 import { GameShow } from './GameShow'
 import { JoinGame } from './JoinGame'
 import { CrawlersGrid } from './CrawlersGrid'
+import { CrawlerEdit } from './CrawlerEdit'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
@@ -53,6 +54,7 @@ export default function Dashboard() {
           <Route path="/games/:gameId" element={<GameShow />} />
           <Route path="/join" element={<JoinGame />} />
           <Route path="/crawlers" element={<CrawlersGrid />} />
+          <Route path="/crawlers/:id" element={<CrawlerEdit />} />
         </Routes>
       </main>
     </div>

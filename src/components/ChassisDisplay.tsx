@@ -123,7 +123,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
               <div className="flex items-center gap-2">
                 <h4 className="text-xl font-bold text-[var(--color-su-black)]">{pattern.name}</h4>
                 {'legalStarting' in pattern && pattern.legalStarting && (
-                  <span className="bg-[var(--color-su-military-green)] text-[var(--color-su-white)] text-xs font-bold px-2 py-1 rounded">
+                  <span className="bg-[var(--color-su-green)] text-[var(--color-su-white)] text-xs font-bold px-2 py-1 rounded">
                     LEGAL STARTING
                   </span>
                 )}

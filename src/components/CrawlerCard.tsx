@@ -12,7 +12,7 @@ export function CrawlerCard({ name, typeName, maxSP, currentDamage }: CrawlerCar
   const spDisplay = `${currentSP}/${maxSP}`
 
   return (
-    <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl p-4 shadow-lg flex items-center justify-between">
+    <div className="bg-[#c97d9e] border-4 border-[#c97d9e] rounded-3xl p-4 shadow-lg flex items-center justify-between h-[120px]">
       <div className="flex-1 pr-4">
         <div className="text-xl font-bold text-[var(--color-su-white)] leading-tight">{name}</div>
         <div className="text-sm text-[var(--color-su-white)] opacity-90 mt-1">

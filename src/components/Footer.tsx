@@ -46,7 +46,7 @@ export default function Footer({ variant = 'inner' }: FooterProps) {
 
   if (variant === 'landing') {
     return (
-      <footer className="bg-[var(--color-su-green)] py-3 mt-auto">
+      <footer className="bg-transparent py-3 mt-auto">
         <div className="max-w-7xl mx-auto text-[var(--color-su-black)] text-xs flex items-center justify-center gap-4">
           <div className="text-center">
             <p>

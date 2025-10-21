@@ -213,12 +213,12 @@ export type Database = {
           current_ep: number | null
           current_heat: number | null
           id: string
-          modules: Json | null
+          modules: string[] | null
           notes: string | null
           pattern: string | null
           pilot_id: string | null
           quirk: string | null
-          systems: Json | null
+          systems: string[] | null
           updated_at: string | null
           user_id: string
         }
@@ -233,12 +233,12 @@ export type Database = {
           current_ep?: number | null
           current_heat?: number | null
           id?: string
-          modules?: Json | null
+          modules?: string[] | null
           notes?: string | null
           pattern?: string | null
           pilot_id?: string | null
           quirk?: string | null
-          systems?: Json | null
+          systems?: string[] | null
           updated_at?: string | null
           user_id: string
         }
@@ -253,12 +253,12 @@ export type Database = {
           current_ep?: number | null
           current_heat?: number | null
           id?: string
-          modules?: Json | null
+          modules?: string[] | null
           notes?: string | null
           pattern?: string | null
           pilot_id?: string | null
           quirk?: string | null
-          systems?: Json | null
+          systems?: string[] | null
           updated_at?: string | null
           user_id?: string
         }
@@ -281,7 +281,7 @@ export type Database = {
       }
       pilots: {
         Row: {
-          abilities: Json | null
+          abilities: string[] | null
           advanced_class_id: string | null
           appearance: string | null
           background: string | null
@@ -293,7 +293,7 @@ export type Database = {
           current_ap: number | null
           current_damage: number | null
           current_tp: number | null
-          equipment: Json | null
+          equipment: string[] | null
           id: string
           keepsake: string | null
           keepsake_used: boolean | null
@@ -307,7 +307,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          abilities?: Json | null
+          abilities?: string[] | null
           advanced_class_id?: string | null
           appearance?: string | null
           background?: string | null
@@ -319,7 +319,7 @@ export type Database = {
           current_ap?: number | null
           current_damage?: number | null
           current_tp?: number | null
-          equipment?: Json | null
+          equipment?: string[] | null
           id?: string
           keepsake?: string | null
           keepsake_used?: boolean | null
@@ -333,7 +333,7 @@ export type Database = {
           user_id: string
         }
         Update: {
-          abilities?: Json | null
+          abilities?: string[] | null
           advanced_class_id?: string | null
           appearance?: string | null
           background?: string | null
@@ -345,7 +345,7 @@ export type Database = {
           current_ap?: number | null
           current_damage?: number | null
           current_tp?: number | null
-          equipment?: Json | null
+          equipment?: string[] | null
           id?: string
           keepsake?: string | null
           keepsake_used?: boolean | null

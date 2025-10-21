@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Ability } from 'salvageunion-reference'
-import type { PilotAbility } from './types'
 import { AbilityDisplay } from '../AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
 
 interface AbilitiesListProps {
-  abilities: PilotAbility[]
+  abilities: string[] // Array of Ability IDs
   legendaryAbility: Ability | null
   onRemove: (id: string) => void
   onRemoveLegendary: () => void
@@ -25,38 +25,43 @@ export function AbilitiesList({
   disabled = false,
   coreTreeNames = [],
 }: AbilitiesListProps) {
+  const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
+
   // Organize selected abilities by tree, separating core from advanced/hybrid
   const { coreAbilitiesByTree, advancedAbilitiesByTree } = useMemo(() => {
-    const coreByTree: Record<string, PilotAbility[]> = {}
-    const advancedByTree: Record<string, PilotAbility[]> = {}
+    const coreByTree: Record<string, Ability[]> = {}
+    const advancedByTree: Record<string, Ability[]> = {}
 
-    abilities.forEach((charAbility) => {
-      const tree = charAbility.ability.tree
+    abilities.forEach((abilityId) => {
+      const ability = allAbilities.find((a) => a.id === abilityId)
+      if (!ability) return
+
+      const tree = ability.tree
       const isCore = coreTreeNames.includes(tree)
 
       if (isCore) {
         if (!coreByTree[tree]) {
           coreByTree[tree] = []
         }
-        coreByTree[tree].push(charAbility)
+        coreByTree[tree].push(ability)
       } else {
         if (!advancedByTree[tree]) {
           advancedByTree[tree] = []
         }
-        advancedByTree[tree].push(charAbility)
+        advancedByTree[tree].push(ability)
       }
     })
 
     // Sort abilities by level within each tree
     Object.keys(coreByTree).forEach((tree) => {
-      coreByTree[tree].sort((a, b) => Number(a.ability.level) - Number(b.ability.level))
+      coreByTree[tree].sort((a, b) => Number(a.level) - Number(b.level))
     })
     Object.keys(advancedByTree).forEach((tree) => {
-      advancedByTree[tree].sort((a, b) => Number(a.ability.level) - Number(b.ability.level))
+      advancedByTree[tree].sort((a, b) => Number(a.level) - Number(b.level))
     })
 
     return { coreAbilitiesByTree: coreByTree, advancedAbilitiesByTree: advancedByTree }
-  }, [abilities, coreTreeNames])
+  }, [abilities, coreTreeNames, allAbilities])
 
   const coreTreeNamesDisplay = Object.keys(coreAbilitiesByTree).sort()
   const advancedTreeNamesDisplay = Object.keys(advancedAbilitiesByTree).sort()
@@ -89,14 +94,14 @@ export function AbilitiesList({
                 {treeName}
               </h3>
               <div className="space-y-2">
-                {coreAbilitiesByTree[treeName].map((charAbility) => (
+                {coreAbilitiesByTree[treeName].map((ability) => (
                   <AbilityDisplay
-                    key={charAbility.id}
-                    data={charAbility.ability}
+                    key={ability.id}
+                    data={ability}
                     compact
                     showRemoveButton
                     disableRemove={currentTP < 1}
-                    onRemove={() => onRemove(charAbility.id)}
+                    onRemove={() => onRemove(ability.id)}
                     collapsible
                     defaultExpanded={false}
                   />
@@ -115,14 +120,14 @@ export function AbilitiesList({
                 {treeName}
               </h3>
               <div className="space-y-2">
-                {advancedAbilitiesByTree[treeName].map((charAbility) => (
+                {advancedAbilitiesByTree[treeName].map((ability) => (
                   <AbilityDisplay
-                    key={charAbility.id}
-                    data={charAbility.ability}
+                    key={ability.id}
+                    data={ability}
                     compact
                     showRemoveButton
                     disableRemove={currentTP < 1}
-                    onRemove={() => onRemove(charAbility.id)}
+                    onRemove={() => onRemove(ability.id)}
                     collapsible
                     defaultExpanded={false}
                   />

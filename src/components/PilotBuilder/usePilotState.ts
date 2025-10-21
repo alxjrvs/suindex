@@ -1,15 +1,20 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Class, Ability, Equipment } from 'salvageunion-reference'
 import type { PilotState, AdvancedClassOption } from './types'
 import { getAbilityCost } from './utils/getAbilityCost'
+import { supabase } from '../../lib/supabase'
 
-export function usePilotState(
-  allClasses: Class[],
-  allAbilities: Ability[],
-  allEquipment: Equipment[]
-) {
+export function usePilotState(id?: string) {
+  const allClasses = SalvageUnionReference.Classes.all()
+  const allAbilities = SalvageUnionReference.Abilities.all()
+  const allEquipment = SalvageUnionReference.Equipment.all()
+  const [loading, setLoading] = useState(!!id)
+  const [error, setError] = useState<string | null>(null)
+
   const [pilot, setPilot] = useState<PilotState>({
+    id: id || '',
+    user_id: '',
+    crawler_id: null,
     class_id: null,
     advanced_class_id: null,
     callsign: '',
@@ -30,6 +35,87 @@ export function usePilotState(
     current_tp: 0,
     notes: null,
   })
+
+  // Load from database if id is provided
+  useEffect(() => {
+    if (!id) return
+
+    const loadPilot = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const { data, error: fetchError } = await supabase
+          .from('pilots')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (fetchError) throw fetchError
+        if (!data) throw new Error('Pilot not found')
+        setPilot(data)
+      } catch (err) {
+        console.error('Error loading pilot:', err)
+        setError(err instanceof Error ? err.message : 'Failed to load pilot')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadPilot()
+  }, [id])
+
+  // Manual save function
+  const save = useCallback(async () => {
+    if (!id) {
+      // Noop when no ID - return resolved promise
+      return Promise.resolve()
+    }
+
+    try {
+      const { error: updateError } = await supabase.from('pilots').update(pilot).eq('id', id)
+
+      if (updateError) {
+        console.error('Failed to update pilot:', updateError)
+        setError(updateError.message)
+        throw updateError
+      }
+
+      setError(null)
+    } catch (err) {
+      console.error('Error saving pilot:', err)
+      throw err
+    }
+  }, [id, pilot])
+
+  // Reset changes function - reload from database
+  const resetChanges = useCallback(async () => {
+    if (!id) {
+      // Noop when no ID
+      return
+    }
+
+    try {
+      setLoading(true)
+      setError(null)
+
+      const { data, error: fetchError } = await supabase
+        .from('pilots')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (fetchError) throw fetchError
+      if (!data) throw new Error('Pilot not found')
+
+      setPilot(data)
+    } catch (err) {
+      console.error('Error resetting pilot:', err)
+      setError(err instanceof Error ? err.message : 'Failed to reset pilot')
+    } finally {
+      setLoading(false)
+    }
+  }, [id])
 
   const selectedClass = useMemo(
     () => allClasses.find((c) => c.id === pilot.class_id),
@@ -53,8 +139,10 @@ export function usePilotState(
     }
 
     const abilitiesByTree: Record<string, number> = {}
-    ;(pilot.abilities ?? []).forEach((charAbility) => {
-      const tree = charAbility.ability.tree
+    ;(pilot.abilities ?? []).forEach((abilityId) => {
+      const ability = allAbilities.find((a) => a.id === abilityId)
+      if (!ability) return
+      const tree = ability.tree
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
     })
 
@@ -114,6 +202,8 @@ export function usePilotState(
       if (prev.class_id && prev.class_id !== classId) {
         // Reset to initial state but keep the new class_id
         return {
+          ...prev,
+          id: id || '',
           class_id: classId,
           advanced_class_id: null,
           callsign: '',
@@ -162,24 +252,18 @@ export function usePilotState(
       setPilot((prev) => ({
         ...prev,
         current_tp: (prev.current_tp ?? 0) - cost,
-        abilities: [
-          ...(prev.abilities ?? []),
-          {
-            id: `${ability.id}-${Date.now()}`,
-            ability,
-          },
-        ],
+        abilities: [...(prev.abilities ?? []), abilityId],
       }))
     },
     [allAbilities, selectedClass, selectedAdvancedClass, pilot.current_tp]
   )
 
-  const handleRemoveAbility = useCallback((id: string) => {
+  const handleRemoveAbility = useCallback((abilityId: string) => {
     // Removing an ability costs 1 TP (confirmation handled in AbilityDisplay)
     setPilot((prev) => ({
       ...prev,
       current_tp: (prev.current_tp ?? 0) - 1,
-      abilities: (prev.abilities ?? []).filter((a) => a.id !== id),
+      abilities: (prev.abilities ?? []).filter((id) => id !== abilityId),
     }))
   }, [])
 
@@ -226,33 +310,28 @@ export function usePilotState(
 
       setPilot((prev) => ({
         ...prev,
-        equipment: [
-          ...(prev.equipment ?? []),
-          {
-            id: `${equipment.id}-${Date.now()}`,
-            equipment,
-          },
-        ],
+        equipment: [...(prev.equipment ?? []), equipmentId],
       }))
     },
     [allEquipment, pilot.equipment]
   )
 
   const handleRemoveEquipment = useCallback(
-    (id: string) => {
-      const equipmentToRemove = (pilot.equipment ?? []).find((e) => e.id === id)
-      if (!equipmentToRemove) return
+    (index: number) => {
+      const equipmentId = (pilot.equipment ?? [])[index]
+      if (!equipmentId) return
 
-      const equipmentName = equipmentToRemove.equipment.name
+      const equipment = allEquipment.find((e) => e.id === equipmentId)
+      const equipmentName = equipment?.name || 'this equipment'
 
       if (window.confirm(`Are you sure you want to remove ${equipmentName}?`)) {
         setPilot((prev) => ({
           ...prev,
-          equipment: (prev.equipment ?? []).filter((e) => e.id !== id),
+          equipment: (prev.equipment ?? []).filter((_, i) => i !== index),
         }))
       }
     },
-    [pilot.equipment]
+    [allEquipment, pilot.equipment]
   )
 
   const updatePilot = useCallback((updates: Partial<PilotState>) => {
@@ -272,5 +351,9 @@ export function usePilotState(
     handleAddEquipment,
     handleRemoveEquipment,
     updatePilot,
+    save,
+    resetChanges,
+    loading,
+    error,
   }
 }

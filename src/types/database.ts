@@ -1,5 +1,4 @@
 import type { MergeDeep } from 'type-fest'
-import type { System, Module, Ability, Equipment } from 'salvageunion-reference'
 import type { Database as DatabaseGenerated } from './database-generated.types'
 
 // Re-export the Json type
@@ -9,7 +8,7 @@ export type { Json } from './database-generated.types'
 // Custom JSON Type Definitions
 // ============================================================================
 
-// Crawler Types
+// Crawler Types - Custom data not from salvageunion-reference
 export interface CrawlerBay {
   id: string
   bayId: string
@@ -23,26 +22,6 @@ export interface CargoItem {
   id: string
   amount: number
   description: string
-}
-
-// Mech Types
-export interface SelectedItem {
-  id: string
-  name: string
-  slotsRequired: number
-  type: 'system' | 'module'
-  data: System | Module
-}
-
-// Pilot Types
-export interface PilotAbility {
-  id: string
-  ability: Ability
-}
-
-export interface PilotEquipment {
-  id: string
-  equipment: Equipment
 }
 
 // ============================================================================
@@ -70,33 +49,13 @@ export type Database = MergeDeep<
         }
         mechs: {
           Row: {
-            systems: SelectedItem[] | null
-            modules: SelectedItem[] | null
             cargo: CargoItem[] | null
           }
           Insert: {
-            systems?: SelectedItem[] | null
-            modules?: SelectedItem[] | null
             cargo?: CargoItem[] | null
           }
           Update: {
-            systems?: SelectedItem[] | null
-            modules?: SelectedItem[] | null
             cargo?: CargoItem[] | null
-          }
-        }
-        pilots: {
-          Row: {
-            abilities: PilotAbility[] | null
-            equipment: PilotEquipment[] | null
-          }
-          Insert: {
-            abilities?: PilotAbility[] | null
-            equipment?: PilotEquipment[] | null
-          }
-          Update: {
-            abilities?: PilotAbility[] | null
-            equipment?: PilotEquipment[] | null
           }
         }
       }

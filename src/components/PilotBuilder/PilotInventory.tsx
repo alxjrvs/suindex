@@ -1,16 +1,28 @@
-import type { PilotEquipment } from './types'
+import { useMemo } from 'react'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import { EquipmentDisplay } from '../EquipmentDisplay'
 import { StatDisplay } from '../StatDisplay'
 
 interface PilotInventoryProps {
-  equipment: PilotEquipment[]
+  equipment: string[] // Array of Equipment IDs
   onAddClick: () => void
-  onRemove: (id: string) => void
+  onRemove: (index: number) => void
 }
 
 export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInventoryProps) {
   const MAX_SLOTS = 6
   const isFull = equipment.length >= MAX_SLOTS
+
+  const allEquipment = useMemo(() => SalvageUnionReference.Equipment.all(), [])
+
+  const equipmentItems = useMemo(() => {
+    return equipment
+      .map((id, index) => {
+        const item = allEquipment.find((e) => e.id === id)
+        return item ? { id, equipment: item, index } : null
+      })
+      .filter((item): item is { id: string; equipment: any; index: number } => item !== null)
+  }, [equipment, allEquipment])
 
   return (
     <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
@@ -33,11 +45,11 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
       </div>
 
       <div className="columns-2 gap-3 space-y-3">
-        {equipment.map((item) => (
-          <div key={item.id} className="relative break-inside-avoid mb-3">
+        {equipmentItems.map((item) => (
+          <div key={`${item.id}-${item.index}`} className="relative break-inside-avoid mb-3">
             <EquipmentDisplay data={item.equipment} />
             <button
-              onClick={() => onRemove(item.id)}
+              onClick={() => onRemove(item.index)}
               className="absolute top-2 right-2 bg-[var(--color-su-brick)] text-[var(--color-su-white)] w-6 h-6 rounded font-bold hover:bg-[var(--color-su-black)] transition-colors text-xs flex items-center justify-center z-10"
               aria-label="Remove equipment"
             >

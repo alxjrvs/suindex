@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -7,9 +7,14 @@ import { AbilitySelector } from './AbilitySelector'
 import { PilotInventory } from './PilotInventory'
 import { EquipmentSelector } from './EquipmentSelector'
 import { BuilderLayout } from '../shared/BuilderLayout'
+import { BuilderControlBar } from '../shared/BuilderControlBar'
 import { usePilotState } from './usePilotState'
 
-export default function PilotBuilder() {
+interface PilotBuilderProps {
+  id?: string
+}
+
+export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
   const [isAbilitySelectorOpen, setIsAbilitySelectorOpen] = useState(false)
   const [isEquipmentSelectorOpen, setIsEquipmentSelectorOpen] = useState(false)
 
@@ -30,10 +35,84 @@ export default function PilotBuilder() {
     handleAddEquipment,
     handleRemoveEquipment,
     updatePilot,
-  } = usePilotState(allClasses, allAbilities, allEquipment)
+    save,
+    resetChanges,
+    loading,
+    error,
+  } = usePilotState(id)
+
+  // Track initial state for detecting changes
+  const initialStateRef = useRef<string | null>(null)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [savedCrawlerId, setSavedCrawlerId] = useState<string | null>(null)
+
+  // Set initial state after loading completes
+  useEffect(() => {
+    if (!id || loading) return
+    if (initialStateRef.current === null) {
+      initialStateRef.current = JSON.stringify(pilot)
+      setSavedCrawlerId(pilot.crawler_id ?? null)
+    }
+  }, [id, loading, pilot])
+
+  // Detect changes
+  useEffect(() => {
+    if (!id || initialStateRef.current === null) return
+    const currentState = JSON.stringify(pilot)
+    setHasUnsavedChanges(currentState !== initialStateRef.current)
+  }, [pilot, id])
+
+  // Update initial state ref after save or reset
+  const handleSave = async () => {
+    await save()
+    initialStateRef.current = JSON.stringify(pilot)
+    setSavedCrawlerId(pilot.crawler_id ?? null)
+    setHasUnsavedChanges(false)
+  }
+
+  const handleResetChanges = async () => {
+    await resetChanges()
+    initialStateRef.current = JSON.stringify(pilot)
+    setHasUnsavedChanges(false)
+  }
+
+  if (loading) {
+    return (
+      <BuilderLayout>
+        <div className="flex items-center justify-center h-64">
+          <p className="text-xl font-mono">Loading pilot...</p>
+        </div>
+      </BuilderLayout>
+    )
+  }
+
+  if (error) {
+    return (
+      <BuilderLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <p className="text-xl font-mono text-red-600 mb-4">Error loading pilot</p>
+            <p className="text-sm font-mono text-gray-600">{error}</p>
+          </div>
+        </div>
+      </BuilderLayout>
+    )
+  }
 
   return (
     <BuilderLayout>
+      {id && (
+        <BuilderControlBar
+          backgroundColor="#6b8e7f"
+          entityType="pilot"
+          crawlerId={pilot.crawler_id}
+          savedCrawlerId={savedCrawlerId}
+          onCrawlerChange={(crawlerId) => updatePilot({ crawler_id: crawlerId })}
+          onSave={handleSave}
+          onResetChanges={handleResetChanges}
+          hasUnsavedChanges={hasUnsavedChanges}
+        />
+      )}
       {/* Top Section: Pilot Info and Resources */}
       <div className="flex gap-6">
         {/* Middle: Pilot Info */}
@@ -123,7 +202,7 @@ export default function PilotBuilder() {
         abilities={allAbilities}
         onSelectAbility={handleAddAbility}
         onSelectLegendaryAbility={handleAddLegendaryAbility}
-        selectedAbilityIds={(pilot.abilities ?? []).map((a) => a.ability.id)}
+        selectedAbilityIds={pilot.abilities ?? []}
         selectedLegendaryAbilityId={pilot.legendary_ability_id ?? null}
         selectedClass={selectedClass}
         selectedAdvancedClass={selectedAdvancedClass}
