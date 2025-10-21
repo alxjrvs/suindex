@@ -32,6 +32,7 @@ export default function CharacterBuilder() {
   const {
     character,
     selectedClass,
+    selectedAdvancedClass,
     availableAdvancedClasses,
     handleClassChange,
     handleAddAbility,
@@ -42,11 +43,6 @@ export default function CharacterBuilder() {
     handleRemoveEquipment,
     updateCharacter,
   } = useCharacterState(allClasses, allAbilities, allEquipment)
-
-  const selectedAdvancedClass = useMemo(
-    () => allClasses.find((c) => c.id === character.advancedClassId),
-    [allClasses, character.advancedClassId]
-  )
 
   if (loading) {
     return (
@@ -64,33 +60,31 @@ export default function CharacterBuilder() {
           <div className="flex gap-6">
             {/* Middle: Pilot Info */}
             <div className="flex-1">
-              <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
-                <PilotInfoInputs
-                  callsign={character.callsign}
-                  motto={character.motto}
-                  mottoUsed={character.mottoUsed}
-                  keepsake={character.keepsake}
-                  keepsakeUsed={character.keepsakeUsed}
-                  background={character.background}
-                  backgroundUsed={character.backgroundUsed}
-                  appearance={character.appearance}
-                  classId={character.classId}
-                  advancedClassId={character.advancedClassId}
-                  allClasses={allClasses}
-                  availableAdvancedClasses={availableAdvancedClasses}
-                  disabled={false}
-                  onCallsignChange={(value) => updateCharacter({ callsign: value })}
-                  onMottoChange={(value) => updateCharacter({ motto: value })}
-                  onMottoUsedChange={(value) => updateCharacter({ mottoUsed: value })}
-                  onKeepsakeChange={(value) => updateCharacter({ keepsake: value })}
-                  onKeepsakeUsedChange={(value) => updateCharacter({ keepsakeUsed: value })}
-                  onBackgroundChange={(value) => updateCharacter({ background: value })}
-                  onBackgroundUsedChange={(value) => updateCharacter({ backgroundUsed: value })}
-                  onAppearanceChange={(value) => updateCharacter({ appearance: value })}
-                  onClassChange={handleClassChange}
-                  onAdvancedClassChange={(value) => updateCharacter({ advancedClassId: value })}
-                />
-              </div>
+              <PilotInfoInputs
+                callsign={character.callsign}
+                motto={character.motto}
+                mottoUsed={character.mottoUsed}
+                keepsake={character.keepsake}
+                keepsakeUsed={character.keepsakeUsed}
+                background={character.background}
+                backgroundUsed={character.backgroundUsed}
+                appearance={character.appearance}
+                classId={character.classId}
+                advancedClassId={character.advancedClassId}
+                allClasses={allClasses}
+                availableAdvancedClasses={availableAdvancedClasses}
+                disabled={false}
+                onCallsignChange={(value) => updateCharacter({ callsign: value })}
+                onMottoChange={(value) => updateCharacter({ motto: value })}
+                onMottoUsedChange={(value) => updateCharacter({ mottoUsed: value })}
+                onKeepsakeChange={(value) => updateCharacter({ keepsake: value })}
+                onKeepsakeUsedChange={(value) => updateCharacter({ keepsakeUsed: value })}
+                onBackgroundChange={(value) => updateCharacter({ background: value })}
+                onBackgroundUsedChange={(value) => updateCharacter({ backgroundUsed: value })}
+                onAppearanceChange={(value) => updateCharacter({ appearance: value })}
+                onClassChange={handleClassChange}
+                onAdvancedClassChange={(value) => updateCharacter({ advancedClassId: value })}
+              />
             </div>
 
             {/* Right: Resource Steppers */}

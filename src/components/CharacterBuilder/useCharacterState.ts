@@ -1,39 +1,8 @@
 import { useState, useCallback, useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
-import type { CharacterState } from './types'
-
-// Helper function to calculate ability cost
-function getAbilityCost(
-  ability: Ability,
-  selectedClass: Class | undefined,
-  selectedAdvancedClass?: Class | undefined
-): number {
-  if (!selectedClass) return 0
-
-  // Check if it's a legendary ability from either class
-  const baseLegendaryAbilities = (selectedClass.legendaryAbilities || []) as string[]
-  const advancedLegendaryAbilities = (selectedAdvancedClass?.legendaryAbilities || []) as string[]
-  const isLegendary =
-    baseLegendaryAbilities.includes(ability.name) ||
-    advancedLegendaryAbilities.includes(ability.name)
-  if (isLegendary) return 3
-
-  // Check if it's an advanced ability from the base class
-  const isAdvanced = selectedClass.advancedAbilities === ability.tree
-  if (isAdvanced) return 2
-
-  // Check if it's an advanced ability from the hybrid class
-  const isHybridAdvanced = selectedAdvancedClass?.advancedAbilities === ability.tree
-  if (isHybridAdvanced) return 2
-
-  // Check if it's a core ability
-  const isCore = selectedClass.coreAbilities.includes(ability.tree)
-  if (isCore) return 1
-
-  // Default to 1 for any other ability
-  return 1
-}
+import type { CharacterState, AdvancedClassOption } from './types'
+import { getAbilityCost } from './utils/getAbilityCost'
 
 export function useCharacterState(
   allClasses: Class[],
@@ -96,7 +65,7 @@ export function useCharacterState(
     }
 
     const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
-    const results: Array<{ id: string; name: string; isAdvancedVersion: boolean }> = []
+    const results: AdvancedClassOption[] = []
 
     // Check hybrid classes
     const hybridClasses = allClasses.filter((cls) => cls.type === 'hybrid')
@@ -265,6 +234,7 @@ export function useCharacterState(
   return {
     character,
     selectedClass,
+    selectedAdvancedClass,
     availableAdvancedClasses,
     handleClassChange,
     handleAddAbility,

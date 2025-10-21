@@ -10,6 +10,12 @@ export interface CharacterEquipment {
   equipment: Equipment
 }
 
+export interface AdvancedClassOption {
+  id: string
+  name: string
+  isAdvancedVersion: boolean
+}
+
 export interface CharacterState {
   classId: string | null
   advancedClassId: string | null

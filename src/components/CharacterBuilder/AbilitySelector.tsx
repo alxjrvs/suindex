@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react'
 import type { Ability, Class } from 'salvageunion-reference'
 import { AbilityDisplay } from '../AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
+import { getAbilityCost } from './utils/getAbilityCost'
 
 interface AbilitySelectorProps {
   isOpen: boolean
@@ -14,38 +15,6 @@ interface AbilitySelectorProps {
   selectedClass: Class | undefined
   selectedAdvancedClass: Class | undefined
   currentTP: number
-}
-
-// Helper function to calculate ability cost
-function getAbilityCost(
-  ability: Ability,
-  selectedClass: Class | undefined,
-  selectedAdvancedClass?: Class | undefined
-): number {
-  if (!selectedClass) return 0
-
-  // Check if it's a legendary ability from either class
-  const baseLegendaryAbilities = (selectedClass.legendaryAbilities || []) as string[]
-  const advancedLegendaryAbilities = (selectedAdvancedClass?.legendaryAbilities || []) as string[]
-  const isLegendary =
-    baseLegendaryAbilities.includes(ability.name) ||
-    advancedLegendaryAbilities.includes(ability.name)
-  if (isLegendary) return 3
-
-  // Check if it's an advanced ability from the base class
-  const isAdvanced = selectedClass.advancedAbilities === ability.tree
-  if (isAdvanced) return 2
-
-  // Check if it's an advanced ability from the hybrid class
-  const isHybridAdvanced = selectedAdvancedClass?.advancedAbilities === ability.tree
-  if (isHybridAdvanced) return 2
-
-  // Check if it's a core ability
-  const isCore = selectedClass.coreAbilities.includes(ability.tree)
-  if (isCore) return 1
-
-  // Default to 1 for any other ability
-  return 1
 }
 
 export function AbilitySelector({
