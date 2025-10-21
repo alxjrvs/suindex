@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
+import { Routes, Route } from 'react-router'
 import { supabase } from '../../lib/supabase'
 import type { User } from '@supabase/supabase-js'
 import { Auth } from './Auth'
 import { DashboardContent } from './DashboardContent'
 import { DashboardNavigation } from './DashboardNavigation'
+import { NewGame } from './NewGame'
+import { GameShow } from './GameShow'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
@@ -42,7 +45,11 @@ export default function Dashboard() {
     <div className="flex flex-col md:flex-row h-screen bg-[var(--color-su-white)] overflow-hidden">
       <DashboardNavigation user={user} />
       <main className="flex-1 overflow-auto pt-16 md:pt-0">
-        <DashboardContent user={user} />
+        <Routes>
+          <Route path="/" element={<DashboardContent />} />
+          <Route path="/games/new" element={<NewGame />} />
+          <Route path="/games/:gameId" element={<GameShow />} />
+        </Routes>
       </main>
     </div>
   )

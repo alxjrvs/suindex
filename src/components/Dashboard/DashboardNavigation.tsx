@@ -70,20 +70,6 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
             <p className="text-sm text-[var(--color-su-brick)]">Dashboard</p>
           </button>
 
-          {/* User Info */}
-          <div className="p-4 border-b border-[var(--color-su-light-blue)] bg-[var(--color-su-light-orange)]">
-            <div className="text-sm text-[var(--color-su-black)] font-medium mb-1">
-              {user.user_metadata?.full_name || user.email || 'User'}
-            </div>
-            <button
-              onClick={handleSignOut}
-              disabled={signingOut}
-              className="text-xs text-[var(--color-su-brick)] hover:text-[var(--color-su-orange)] transition-colors disabled:opacity-50"
-            >
-              {signingOut ? 'Signing out...' : 'Sign Out'}
-            </button>
-          </div>
-
           <ul className="py-2">
             <li>
               <button
@@ -136,10 +122,22 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
           </ul>
         </div>
         <div className="mt-auto">
+          {/* User Info & Sign Out */}
+          <div className="p-4 border-t border-[var(--color-su-light-blue)] bg-[var(--color-su-light-orange)]">
+            <div className="text-sm text-[var(--color-su-black)] font-medium mb-2">
+              {user.user_metadata?.full_name || user.email || 'User'}
+            </div>
+            <button
+              onClick={handleSignOut}
+              disabled={signingOut}
+              className="w-full text-left text-sm text-[var(--color-su-brick)] hover:text-[var(--color-su-orange)] transition-colors disabled:opacity-50 bg-transparent border-none cursor-pointer"
+            >
+              {signingOut ? 'Signing out...' : 'Sign Out'}
+            </button>
+          </div>
           <Footer variant="nav" />
         </div>
       </nav>
     </>
   )
 }
-

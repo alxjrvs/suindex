@@ -3,6 +3,21 @@
 export interface Database {
   public: {
     Tables: {
+      games: {
+        Row: Game
+        Insert: GameInsert
+        Update: GameUpdate
+      }
+      game_players: {
+        Row: GamePlayer
+        Insert: GamePlayerInsert
+        Update: GamePlayerUpdate
+      }
+      external_links: {
+        Row: ExternalLink
+        Insert: ExternalLinkInsert
+        Update: ExternalLinkUpdate
+      }
       crawlers: {
         Row: Crawler
         Insert: CrawlerInsert
@@ -22,8 +37,48 @@ export interface Database {
   }
 }
 
+// Game types
+export interface Game {
+  id: string
+  name: string
+  description: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type GameInsert = Omit<Game, 'id' | 'created_at' | 'updated_at'>
+export type GameUpdate = Partial<GameInsert>
+
+// GamePlayer types (junction table)
+export type PlayerRole = 'MEDIATOR' | 'PLAYER'
+
+export interface GamePlayer {
+  id: string
+  game_id: string
+  user_id: string
+  role: PlayerRole
+  created_at: string
+}
+
+export type GamePlayerInsert = Omit<GamePlayer, 'id' | 'created_at'>
+export type GamePlayerUpdate = Partial<Pick<GamePlayer, 'role'>>
+
+// ExternalLink types
+export interface ExternalLink {
+  id: string
+  game_id: string
+  name: string
+  url: string
+  created_at: string
+  updated_at: string
+}
+
+export type ExternalLinkInsert = Omit<ExternalLink, 'id' | 'created_at' | 'updated_at'>
+export type ExternalLinkUpdate = Partial<ExternalLinkInsert>
+
 // Crawler types
 export interface Crawler {
+  game_id: string | null
   id: string
   user_id: string
   name: string
@@ -141,4 +196,3 @@ export interface MechModule {
 
 export type MechInsert = Omit<Mech, 'id' | 'created_at' | 'updated_at'>
 export type MechUpdate = Partial<MechInsert>
-
