@@ -172,6 +172,8 @@ describe('CharacterBuilder - Legendary Abilities', () => {
     vi.mocked(SalvageUnionReference.Abilities.all).mockReturnValue(mockAbilities)
     vi.mocked(SalvageUnionReference.Equipment.all).mockReturnValue(mockEquipment)
     vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
+    // Mock window.confirm to always return true
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
 
   describe('Legendary Ability Requirements', () => {
@@ -200,14 +202,12 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Hack ${i + 1}`))
         await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Tech ${i + 1}`))
         await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       // Select advanced class
@@ -218,12 +218,10 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Adv Hack 1'))
       await user.click(screen.getByText('Adv Hack 1').closest('div')!)
-      await user.click(screen.getByRole('button', { name: /ok/i }))
 
       await user.click(addButton)
       await waitFor(() => screen.getByText('Adv Hack 2'))
       await user.click(screen.getByText('Adv Hack 2').closest('div')!)
-      await user.click(screen.getByRole('button', { name: /ok/i }))
 
       // Open modal - legendary should NOT be visible yet
       await user.click(addButton)
@@ -257,14 +255,12 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Hack ${i + 1}`))
         await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Tech ${i + 1}`))
         await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       // Select advanced class
@@ -276,7 +272,6 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Adv Hack ${i + 1}`))
         await user.click(screen.getByText(`Adv Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       // Open modal - legendary should now be visible
@@ -294,8 +289,10 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       await user.selectOptions(classSelect, 'class-hacker')
 
       // Set TP to 30 by clicking increment button
-      const incrementButtons = screen.getAllByLabelText('Increment')
-      const tpIncrementButton = incrementButtons[2] // Third stepper is TP (HP, AP, TP)
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
 
       for (let i = 0; i < 30; i++) {
         await user.click(tpIncrementButton)
@@ -309,14 +306,12 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Hack ${i + 1}`))
         await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Tech ${i + 1}`))
         await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       const advancedClassSelect = screen.getByLabelText(/advanced class/i)
@@ -326,7 +321,6 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Adv Hack ${i + 1}`))
         await user.click(screen.getByText(`Adv Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       // Check current TP (30 - 6 core - 6 advanced = 18)
@@ -342,7 +336,6 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       expect(screen.getByText(/3 TP/i)).toBeInTheDocument()
 
       await user.click(screen.getByText('Ultimate Hack').closest('div')!)
-      await user.click(screen.getByRole('button', { name: /ok/i }))
 
       // TP should be reduced by 3 (18 - 3 = 15)
       await waitFor(() => {
@@ -375,14 +368,12 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Hack ${i + 1}`))
         await user.click(screen.getByText(`Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Tech ${i + 1}`))
         await user.click(screen.getByText(`Tech ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       const advancedClassSelect = screen.getByLabelText(/advanced class/i)
@@ -392,14 +383,12 @@ describe('CharacterBuilder - Legendary Abilities', () => {
         await user.click(addButton)
         await waitFor(() => screen.getByText(`Adv Hack ${i + 1}`))
         await user.click(screen.getByText(`Adv Hack ${i + 1}`).closest('div')!)
-        await user.click(screen.getByRole('button', { name: /ok/i }))
       }
 
       // Select legendary ability
       await user.click(addButton)
       await waitFor(() => screen.getByText('Ultimate Hack'))
       await user.click(screen.getByText('Ultimate Hack').closest('div')!)
-      await user.click(screen.getByRole('button', { name: /ok/i }))
 
       // Legendary ability should now be displayed in the abilities list
       await waitFor(() => {

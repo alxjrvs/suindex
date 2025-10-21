@@ -159,10 +159,14 @@ export function PilotInfoInputs({
 
         {/* Advanced Class */}
         <div className="flex-1">
-          <label className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase">
+          <label
+            htmlFor="advanced-class-select"
+            className="block text-sm font-bold text-[#e8e5d8] mb-2 uppercase"
+          >
             Advanced Class
           </label>
           <select
+            id="advanced-class-select"
             value={advancedClassId || ''}
             onChange={(e) => onAdvancedClassChange(e.target.value)}
             disabled={disabled || availableAdvancedClasses.length === 0}

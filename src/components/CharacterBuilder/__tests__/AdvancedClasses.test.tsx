@@ -267,8 +267,10 @@ describe('CharacterBuilder - Advanced Classes', () => {
       await user.selectOptions(classSelect, 'class-hacker')
 
       // Set TP to 6 by clicking increment button
-      const incrementButtons = screen.getAllByLabelText('Increment')
-      const tpIncrementButton = incrementButtons[2] // Third stepper is TP (HP, AP, TP)
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
 
       for (let i = 0; i < 6; i++) {
         await user.click(tpIncrementButton)
@@ -323,8 +325,10 @@ describe('CharacterBuilder - Advanced Classes', () => {
       await user.selectOptions(classSelect, 'class-hacker')
 
       // Set TP to 20 by clicking increment button
-      const incrementButtons = screen.getAllByLabelText('Increment')
-      const tpIncrementButton = incrementButtons[2] // Third stepper is TP (HP, AP, TP)
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
 
       for (let i = 0; i < 20; i++) {
         await user.click(tpIncrementButton)
@@ -374,8 +378,10 @@ describe('CharacterBuilder - Advanced Classes', () => {
       await user.selectOptions(classSelect, 'class-hacker')
 
       // Set TP to 20 by clicking increment button
-      const incrementButtons = screen.getAllByLabelText('Increment')
-      const tpIncrementButton = incrementButtons[2] // Third stepper is TP (HP, AP, TP)
+      const tpStepper = screen.getByRole('group', { name: /TP/i })
+      const tpIncrementButton = tpStepper.querySelector(
+        'button[aria-label="Increment TP"]'
+      ) as HTMLButtonElement
 
       for (let i = 0; i < 20; i++) {
         await user.click(tpIncrementButton)

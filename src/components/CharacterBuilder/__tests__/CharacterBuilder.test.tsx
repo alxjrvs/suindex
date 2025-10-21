@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CharacterBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -252,9 +252,10 @@ describe('CharacterBuilder', () => {
       await user.selectOptions(classSelect, 'class-hacker')
 
       await waitFor(() => {
-        // TP label and value are separate elements
-        expect(screen.getByText('TP')).toBeInTheDocument()
-        expect(screen.getByText('0')).toBeInTheDocument()
+        // Check TP stepper shows 0
+        const tpStepper = screen.getByRole('group', { name: /TP/i })
+        expect(tpStepper).toBeInTheDocument()
+        expect(within(tpStepper).getByText('0')).toBeInTheDocument()
       })
     })
 
@@ -278,9 +279,10 @@ describe('CharacterBuilder', () => {
       await user.selectOptions(classSelect, 'class-salvager')
 
       await waitFor(() => {
-        // Should reset TP to 0 (label and value are separate)
-        expect(screen.getByText('TP')).toBeInTheDocument()
-        expect(screen.getByText('0')).toBeInTheDocument()
+        // Should reset TP to 0
+        const tpStepper = screen.getByRole('group', { name: /TP/i })
+        expect(tpStepper).toBeInTheDocument()
+        expect(within(tpStepper).getByText('0')).toBeInTheDocument()
       })
     })
   })

@@ -17,6 +17,8 @@ interface AbilityDisplayProps {
   defaultExpanded?: boolean
   expanded?: boolean
   onToggleExpanded?: () => void
+  showSelectButton?: boolean
+  selectButtonCost?: number
 }
 
 function generateAbilityDetails(ability: Ability): DataValue[] {
@@ -97,6 +99,8 @@ export function AbilityDisplay({
   defaultExpanded = false,
   expanded,
   onToggleExpanded,
+  showSelectButton = false,
+  selectButtonCost,
 }: AbilityDisplayProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
 
@@ -134,15 +138,32 @@ export function AbilityDisplay({
   // Only apply hover effect if not dimmed (i.e., selectable)
   const opacityClass = dimmed ? 'opacity-50' : 'opacity-100 hover:opacity-100'
 
+  // Handler for clicking on the component (only for toggle when showSelectButton is false)
+  const handleClick = () => {
+    if (showSelectButton) {
+      // When showSelectButton is true, only toggle on click
+      if (collapsible) {
+        handleToggle()
+      }
+    } else {
+      // Original behavior: onClick takes precedence, then toggle
+      if (onClick && !dimmed) {
+        onClick()
+      } else if (collapsible) {
+        handleToggle()
+      }
+    }
+  }
+
   return (
     <div
-      className={`w-full border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] ${opacityClass} ${showRemoveButton ? 'relative' : ''}`}
+      className={`w-full border-2 border-[var(--color-su-black)] bg-[var(--color-su-white)] ${opacityClass} ${showRemoveButton ? 'relative' : ''} ${!showSelectButton && onClick && !dimmed ? 'cursor-pointer' : collapsible ? 'cursor-pointer' : ''}`}
+      onClick={handleClick}
     >
       {/* Header */}
       <div
-        className="text-[var(--color-su-white)] px-3 py-2 font-bold uppercase flex items-center gap-2 flex-wrap cursor-pointer"
+        className="text-[var(--color-su-white)] px-3 py-2 font-bold uppercase flex items-center gap-2 flex-wrap"
         style={{ backgroundColor: headerColor }}
-        onClick={collapsible ? handleToggle : undefined}
       >
         {/* Expand/Collapse Icon */}
         {collapsible && (
@@ -221,10 +242,7 @@ export function AbilityDisplay({
       </div>
 
       {(!collapsible || isExpanded) && (
-        <div
-          className={`p-3 space-y-2 ${onClick && collapsible ? 'cursor-pointer hover:bg-[#f5f5f0] transition-colors' : ''}`}
-          onClick={onClick && collapsible ? onClick : undefined}
-        >
+        <div className="p-3 space-y-2">
           {data.description && (
             <div>
               <p className="text-[var(--color-su-black)] text-sm">{data.description}</p>
@@ -258,6 +276,22 @@ export function AbilityDisplay({
               <span>{data.page}</span>
             </div>
           </div>
+
+          {/* Select Button - Only shown in modal */}
+          {showSelectButton && onClick && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                if (!dimmed) {
+                  onClick()
+                }
+              }}
+              disabled={dimmed}
+              className="w-full mt-3 bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded font-bold hover:bg-[var(--color-su-black)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-su-orange)]"
+            >
+              Add to Character{selectButtonCost !== undefined ? ` (${selectButtonCost} TP)` : ''}
+            </button>
+          )}
         </div>
       )}
     </div>

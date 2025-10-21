@@ -296,6 +296,8 @@ export function AbilitySelector({
                             return next
                           })
                         }}
+                        showSelectButton={true}
+                        selectButtonCost={cost}
                       />
                     )
                   })}
@@ -452,6 +454,8 @@ export function AbilitySelector({
                                     return next
                                   })
                                 }}
+                                showSelectButton={true}
+                                selectButtonCost={cost}
                               />
                             )
                           })}
@@ -496,6 +500,8 @@ export function AbilitySelector({
                                 }
                                 collapsible={true}
                                 defaultExpanded={false}
+                                showSelectButton={true}
+                                selectButtonCost={cost}
                               />
                             )
                           })}
