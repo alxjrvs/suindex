@@ -8,7 +8,6 @@ interface AbilityDisplayProps {
   data: Ability
   compact?: boolean
   onClick?: () => void
-  disabled?: boolean
   dimmed?: boolean
   showRemoveButton?: boolean
   disableRemove?: boolean

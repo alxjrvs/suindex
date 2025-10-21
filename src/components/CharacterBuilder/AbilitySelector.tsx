@@ -347,8 +347,6 @@ export function AbilitySelector({
                               advancedTreeAbilities.length > 0 &&
                               advancedTreeAbilities.every((adv) => isSelected(adv.id))
                             const isSelectable = canAfford && !hasLegendary && allAdvancedSelected
-                            const isDisabled =
-                              alreadySelected || !canAfford || hasLegendary || !allAdvancedSelected
 
                             return (
                               <AbilityDisplay
@@ -358,7 +356,6 @@ export function AbilitySelector({
                                 onClick={
                                   isSelectable ? () => handleSelect(ability.id, true) : undefined
                                 }
-                                disabled={isDisabled}
                                 dimmed={
                                   alreadySelected ||
                                   !canAfford ||
@@ -436,8 +433,6 @@ export function AbilitySelector({
                               advancedClassTreeAbilities.length > 0 &&
                               advancedClassTreeAbilities.every((adv) => isSelected(adv.id))
                             const isSelectable = canAfford && !hasLegendary && allAdvancedSelected
-                            const isDisabled =
-                              alreadySelected || !canAfford || hasLegendary || !allAdvancedSelected
 
                             return (
                               <AbilityDisplay
@@ -447,7 +442,6 @@ export function AbilitySelector({
                                 onClick={
                                   isSelectable ? () => handleSelect(ability.id, true) : undefined
                                 }
-                                disabled={isDisabled}
                                 dimmed={
                                   alreadySelected ||
                                   !canAfford ||
