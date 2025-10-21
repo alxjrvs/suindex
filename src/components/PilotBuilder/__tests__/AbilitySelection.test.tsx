@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder - Ability Selection', () => {
+describe('PilotBuilder - Ability Selection', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -129,7 +129,7 @@ describe('CharacterBuilder - Ability Selection', () => {
   describe('Ability Modal', () => {
     it('opens ability selector modal when Add button is clicked', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       // Select a class first
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
@@ -157,7 +157,7 @@ describe('CharacterBuilder - Ability Selection', () => {
 
     it('displays only level 1 abilities initially', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -181,7 +181,7 @@ describe('CharacterBuilder - Ability Selection', () => {
         expect(screen.getByText('Basic Hack')).toBeInTheDocument()
         expect(screen.getByText('Basic Tech')).toBeInTheDocument()
 
-        // Higher level abilities are shown but their "Add to Character" buttons should be disabled
+        // Higher level abilities are shown but their "Add to Pilot" buttons should be disabled
         expect(screen.getByText('Intermediate Hack')).toBeInTheDocument()
         expect(screen.getByText('Expert Hack')).toBeInTheDocument()
       })
@@ -189,7 +189,7 @@ describe('CharacterBuilder - Ability Selection', () => {
 
     it('shows ability cost in TP', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -217,7 +217,7 @@ describe('CharacterBuilder - Ability Selection', () => {
 
     it('closes modal when clicking outside or cancel', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -253,7 +253,7 @@ describe('CharacterBuilder - Ability Selection', () => {
   describe('Progressive Ability Unlocking', () => {
     it('only allows selecting level 1 abilities initially', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -281,15 +281,15 @@ describe('CharacterBuilder - Ability Selection', () => {
         expect(screen.getByText('Intermediate Hack')).toBeInTheDocument()
       })
 
-      // Verify that level 1 abilities have enabled "Add to Character" buttons
-      const level1Buttons = screen.getAllByRole('button', { name: /Add to Character \(1 TP\)/i })
+      // Verify that level 1 abilities have enabled "Add to Pilot" buttons
+      const level1Buttons = screen.getAllByRole('button', { name: /Add to Pilot \(1 TP\)/i })
       expect(level1Buttons.length).toBeGreaterThan(0)
       expect(level1Buttons[0]).not.toBeDisabled()
     })
 
     it('unlocks level 2 abilities after selecting level 1 from same tree', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -315,7 +315,7 @@ describe('CharacterBuilder - Ability Selection', () => {
 
       await waitFor(() => screen.getByText('Basic Hack'))
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
@@ -341,7 +341,7 @@ describe('CharacterBuilder - Ability Selection', () => {
 
     it('requires all abilities from a tree to be selected before level 3', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -363,7 +363,7 @@ describe('CharacterBuilder - Ability Selection', () => {
       await user.click(addButton)
       await waitFor(() => expect(screen.getByText('Basic Hack')).toBeInTheDocument())
       const addToCharacterButtons1 = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons1[0])
 
@@ -380,7 +380,7 @@ describe('CharacterBuilder - Ability Selection', () => {
       await user.click(addButton)
       await waitFor(() => expect(screen.getByText('Intermediate Hack')).toBeInTheDocument())
       const addToCharacterButtons2 = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons2[0])
 
@@ -404,7 +404,7 @@ describe('CharacterBuilder - Ability Selection', () => {
   describe('TP Cost System', () => {
     it('deducts 1 TP when selecting a core ability', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -433,9 +433,9 @@ describe('CharacterBuilder - Ability Selection', () => {
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
-      // Wait for the "Add to Character" buttons to appear in the modal
+      // Wait for the "Add to Pilot" buttons to appear in the modal
       const addButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       // Click the first available button
       await user.click(addButtons[0])

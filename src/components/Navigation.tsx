@@ -59,10 +59,10 @@ export default function Navigation({ schemas }: NavigationProps) {
           🤖 Mech Builder
         </button>
         <button
-          onClick={() => handleNavigate('/character-builder')}
+          onClick={() => handleNavigate('/pilot-builder')}
           className="w-full text-left block px-4 py-3 hover:bg-[var(--color-su-light-orange)] transition-colors bg-transparent border-none cursor-pointer text-[var(--color-su-black)] font-semibold"
         >
-          👤 Character Builder
+          👤 Pilot Builder
         </button>
         <ul className="py-2">
           {schemas.map((schema) => (

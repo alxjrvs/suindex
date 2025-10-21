@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder - Pilot Information', () => {
+describe('PilotBuilder - Pilot Information', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -51,35 +51,35 @@ describe('CharacterBuilder - Pilot Information', () => {
 
   describe('Input Fields', () => {
     it('shows callsign input field', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
       expect(callsignInput).toBeInTheDocument()
     })
 
     it('shows motto input field', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const mottoInput = screen.getByPlaceholderText(/enter motto/i)
       expect(mottoInput).toBeInTheDocument()
     })
 
     it('shows keepsake input field', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const keepsakeInput = screen.getByPlaceholderText(/enter keepsake/i)
       expect(keepsakeInput).toBeInTheDocument()
     })
 
     it('shows background input field', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const backgroundInput = screen.getByPlaceholderText(/enter background/i)
       expect(backgroundInput).toBeInTheDocument()
     })
 
     it('shows appearance textarea', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
       expect(appearanceInput).toBeInTheDocument()
@@ -87,7 +87,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows typing in callsign field', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
       await user.type(callsignInput, 'Ghost')
@@ -97,7 +97,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows typing in motto field', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const mottoInput = screen.getByPlaceholderText(/enter motto/i)
       await user.type(mottoInput, 'Never give up')
@@ -107,7 +107,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows typing in keepsake field', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const keepsakeInput = screen.getByPlaceholderText(/enter keepsake/i)
       await user.type(keepsakeInput, 'Lucky coin')
@@ -117,7 +117,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows typing in background field', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const backgroundInput = screen.getByPlaceholderText(/enter background/i)
       await user.type(backgroundInput, 'Former soldier')
@@ -127,7 +127,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows typing in appearance textarea', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
       await user.type(appearanceInput, 'Tall with dark hair')
@@ -138,21 +138,21 @@ describe('CharacterBuilder - Pilot Information', () => {
 
   describe('Used Checkboxes', () => {
     it('shows "Used" checkbox for motto', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const usedCheckbox = screen.getByRole('checkbox', { name: /mottoused/i })
       expect(usedCheckbox).toBeInTheDocument()
     })
 
     it('shows "Used" checkbox for keepsake', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const usedCheckbox = screen.getByRole('checkbox', { name: /keepsakeused/i })
       expect(usedCheckbox).toBeInTheDocument()
     })
 
     it('shows "Used" checkbox for background', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const usedCheckbox = screen.getByRole('checkbox', { name: /backgroundused/i })
       expect(usedCheckbox).toBeInTheDocument()
@@ -160,7 +160,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows checking motto "Used" checkbox', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /mottoused/i,
@@ -175,7 +175,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows checking keepsake "Used" checkbox', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /keepsakeused/i,
@@ -190,7 +190,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows checking background "Used" checkbox', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /backgroundused/i,
@@ -205,7 +205,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows unchecking "Used" checkbox', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /mottoused/i,
@@ -223,17 +223,17 @@ describe('CharacterBuilder - Pilot Information', () => {
 
   describe('Notes Section', () => {
     it('shows notes textarea', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
-      const notesTextarea = screen.getByPlaceholderText(/add notes about your character/i)
+      const notesTextarea = screen.getByPlaceholderText(/add notes about your pilot/i)
       expect(notesTextarea).toBeInTheDocument()
     })
 
     it('allows typing in notes textarea', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
-      const notesTextarea = screen.getByPlaceholderText(/add notes about your character/i)
+      const notesTextarea = screen.getByPlaceholderText(/add notes about your pilot/i)
       await user.type(notesTextarea, 'This character is brave and loyal')
 
       expect(notesTextarea).toHaveValue('This character is brave and loyal')
@@ -241,9 +241,9 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('allows multiline text in notes', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
-      const notesTextarea = screen.getByPlaceholderText(/add notes about your character/i)
+      const notesTextarea = screen.getByPlaceholderText(/add notes about your pilot/i)
       await user.type(notesTextarea, 'Line 1{Enter}Line 2{Enter}Line 3')
 
       expect(notesTextarea).toHaveValue('Line 1\nLine 2\nLine 3')
@@ -253,7 +253,7 @@ describe('CharacterBuilder - Pilot Information', () => {
   describe('Field Persistence', () => {
     it('retains callsign value when selecting a class', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
       await user.type(callsignInput, 'Ghost')
@@ -266,7 +266,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('retains motto value when selecting a class', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const mottoInput = screen.getByPlaceholderText(/enter motto/i)
       await user.type(mottoInput, 'Never give up')
@@ -279,7 +279,7 @@ describe('CharacterBuilder - Pilot Information', () => {
 
     it('retains appearance value when selecting a class', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
       await user.type(appearanceInput, 'Tall and strong')

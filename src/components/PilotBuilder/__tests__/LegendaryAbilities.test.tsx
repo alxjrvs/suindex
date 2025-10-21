@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder - Legendary Abilities', () => {
+describe('PilotBuilder - Legendary Abilities', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -179,7 +179,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
   describe('Legendary Ability Requirements', () => {
     it('does not show legendary abilities until all advanced abilities are selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -201,7 +201,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -218,7 +218,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -246,7 +246,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       await user.click(addButton)
 
       const addToCharacterButtons1 = await screen.findAllByRole('button', {
-        name: /Add to Character \(2 TP\)/i,
+        name: /Add to Pilot \(2 TP\)/i,
       })
       await user.click(addToCharacterButtons1[0])
 
@@ -262,7 +262,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       await user.click(addButton)
 
       const addToCharacterButtons2 = await screen.findAllByRole('button', {
-        name: /Add to Character \(2 TP\)/i,
+        name: /Add to Pilot \(2 TP\)/i,
       })
       await user.click(addToCharacterButtons2[0])
 
@@ -286,15 +286,15 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       // Legendary ability should be visible
       expect(screen.getByText('Ultimate Hack')).toBeInTheDocument()
 
-      // But the "Add to Character (3 TP)" button should NOT be present (hidden when not selectable)
+      // But the "Add to Pilot (3 TP)" button should NOT be present (hidden when not selectable)
       expect(
-        screen.queryByRole('button', { name: /Add to Character \(3 TP\)/i })
+        screen.queryByRole('button', { name: /Add to Pilot \(3 TP\)/i })
       ).not.toBeInTheDocument()
     })
 
     it('shows legendary abilities after all advanced abilities are selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -316,7 +316,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -333,7 +333,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -361,7 +361,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(2 TP\)/i,
+          name: /Add to Pilot \(2 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -384,7 +384,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
 
     it('requires 3 TP to select legendary ability', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -406,7 +406,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -423,7 +423,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -449,7 +449,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(2 TP\)/i,
+          name: /Add to Pilot \(2 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -473,9 +473,9 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Ultimate Hack'))
 
-      // Find and click the "Add to Character (3 TP)" button
+      // Find and click the "Add to Pilot (3 TP)" button
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(3 TP\)/i,
+        name: /Add to Pilot \(3 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
@@ -497,7 +497,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
 
     it('only allows one legendary ability to be selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -519,7 +519,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -536,7 +536,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -562,7 +562,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(2 TP\)/i,
+          name: /Add to Pilot \(2 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -580,7 +580,7 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Ultimate Hack'))
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(3 TP\)/i,
+        name: /Add to Pilot \(3 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
@@ -607,9 +607,9 @@ describe('CharacterBuilder - Legendary Abilities', () => {
       // Legendary section should be visible
       expect(screen.getByText(/legendary abilities/i)).toBeInTheDocument()
 
-      // But the "Add to Character (3 TP)" button should NOT be present (already selected one)
+      // But the "Add to Pilot (3 TP)" button should NOT be present (already selected one)
       expect(
-        screen.queryByRole('button', { name: /Add to Character \(3 TP\)/i })
+        screen.queryByRole('button', { name: /Add to Pilot \(3 TP\)/i })
       ).not.toBeInTheDocument()
     })
   })

@@ -2,14 +2,14 @@ import { useState, useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
-import { CharacterResourceSteppers } from './CharacterResourceSteppers'
+import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { AbilitiesList } from './AbilitiesList'
 import { AbilitySelector } from './AbilitySelector'
 import { PilotInventory } from './PilotInventory'
 import { EquipmentSelector } from './EquipmentSelector'
-import { useCharacterState } from './useCharacterState'
+import { usePilotState } from './usePilotState'
 
-export default function CharacterBuilder() {
+export default function PilotBuilder() {
   const [allClasses, setAllClasses] = useState<Class[]>([])
   const [allAbilities, setAllAbilities] = useState<Ability[]>([])
   const [allEquipment, setAllEquipment] = useState<Equipment[]>([])
@@ -24,13 +24,13 @@ export default function CharacterBuilder() {
       setAllEquipment(SalvageUnionReference.Equipment.all())
       setLoading(false)
     } catch (err) {
-      console.error('Failed to load character builder data:', err)
+      console.error('Failed to load pilot builder data:', err)
       setLoading(false)
     }
   }, [])
 
   const {
-    character,
+    pilot,
     selectedClass,
     selectedAdvancedClass,
     availableAdvancedClasses,
@@ -41,13 +41,13 @@ export default function CharacterBuilder() {
     handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
-    updateCharacter,
-  } = useCharacterState(allClasses, allAbilities, allEquipment)
+    updatePilot,
+  } = usePilotState(allClasses, allAbilities, allEquipment)
 
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-lg text-[var(--color-su-black)]">Loading character builder...</div>
+        <div className="text-lg text-[var(--color-su-black)]">Loading pilot builder...</div>
       </div>
     )
   }
@@ -61,43 +61,43 @@ export default function CharacterBuilder() {
             {/* Middle: Pilot Info */}
             <div className="flex-1">
               <PilotInfoInputs
-                callsign={character.callsign}
-                motto={character.motto}
-                mottoUsed={character.mottoUsed}
-                keepsake={character.keepsake}
-                keepsakeUsed={character.keepsakeUsed}
-                background={character.background}
-                backgroundUsed={character.backgroundUsed}
-                appearance={character.appearance}
-                classId={character.classId}
-                advancedClassId={character.advancedClassId}
+                callsign={pilot.callsign}
+                motto={pilot.motto}
+                mottoUsed={pilot.mottoUsed}
+                keepsake={pilot.keepsake}
+                keepsakeUsed={pilot.keepsakeUsed}
+                background={pilot.background}
+                backgroundUsed={pilot.backgroundUsed}
+                appearance={pilot.appearance}
+                classId={pilot.classId}
+                advancedClassId={pilot.advancedClassId}
                 allClasses={allClasses}
                 availableAdvancedClasses={availableAdvancedClasses}
                 disabled={false}
-                onCallsignChange={(value) => updateCharacter({ callsign: value })}
-                onMottoChange={(value) => updateCharacter({ motto: value })}
-                onMottoUsedChange={(value) => updateCharacter({ mottoUsed: value })}
-                onKeepsakeChange={(value) => updateCharacter({ keepsake: value })}
-                onKeepsakeUsedChange={(value) => updateCharacter({ keepsakeUsed: value })}
-                onBackgroundChange={(value) => updateCharacter({ background: value })}
-                onBackgroundUsedChange={(value) => updateCharacter({ backgroundUsed: value })}
-                onAppearanceChange={(value) => updateCharacter({ appearance: value })}
+                onCallsignChange={(value) => updatePilot({ callsign: value })}
+                onMottoChange={(value) => updatePilot({ motto: value })}
+                onMottoUsedChange={(value) => updatePilot({ mottoUsed: value })}
+                onKeepsakeChange={(value) => updatePilot({ keepsake: value })}
+                onKeepsakeUsedChange={(value) => updatePilot({ keepsakeUsed: value })}
+                onBackgroundChange={(value) => updatePilot({ background: value })}
+                onBackgroundUsedChange={(value) => updatePilot({ backgroundUsed: value })}
+                onAppearanceChange={(value) => updatePilot({ appearance: value })}
                 onClassChange={handleClassChange}
-                onAdvancedClassChange={(value) => updateCharacter({ advancedClassId: value })}
+                onAdvancedClassChange={(value) => updatePilot({ advancedClassId: value })}
               />
             </div>
 
             {/* Right: Resource Steppers */}
             <div className="w-40">
-              <CharacterResourceSteppers
-                maxHP={character.maxHP}
-                currentHP={character.currentHP}
-                maxAP={character.maxAP}
-                currentAP={character.currentAP}
-                currentTP={character.currentTP}
-                onHPChange={(value) => updateCharacter({ currentHP: value })}
-                onAPChange={(value) => updateCharacter({ currentAP: value })}
-                onTPChange={(value) => updateCharacter({ currentTP: value })}
+              <PilotResourceSteppers
+                maxHP={pilot.maxHP}
+                currentHP={pilot.currentHP}
+                maxAP={pilot.maxAP}
+                currentAP={pilot.currentAP}
+                currentTP={pilot.currentTP}
+                onHPChange={(value) => updatePilot({ currentHP: value })}
+                onAPChange={(value) => updatePilot({ currentAP: value })}
+                onTPChange={(value) => updatePilot({ currentTP: value })}
                 disabled={!selectedClass}
               />
             </div>
@@ -105,23 +105,23 @@ export default function CharacterBuilder() {
 
           {/* Abilities Section */}
           <AbilitiesList
-            abilities={character.abilities}
+            abilities={pilot.abilities}
             legendaryAbility={
-              character.legendaryAbilityId
-                ? allAbilities.find((a) => a.id === character.legendaryAbilityId) || null
+              pilot.legendaryAbilityId
+                ? allAbilities.find((a) => a.id === pilot.legendaryAbilityId) || null
                 : null
             }
             onRemove={handleRemoveAbility}
             onRemoveLegendary={handleRemoveLegendaryAbility}
             onAddClick={() => setIsAbilitySelectorOpen(true)}
-            currentTP={character.currentTP}
+            currentTP={pilot.currentTP}
             disabled={!selectedClass}
             coreTreeNames={selectedClass?.coreAbilities || []}
           />
 
           {/* Equipment Section */}
           <PilotInventory
-            equipment={character.equipment}
+            equipment={pilot.equipment}
             onAddClick={() => setIsEquipmentSelectorOpen(true)}
             onRemove={handleRemoveEquipment}
           />
@@ -130,10 +130,10 @@ export default function CharacterBuilder() {
           <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
             <h2 className="text-xl font-bold text-[#e8e5d8] uppercase mb-4">Notes</h2>
             <textarea
-              value={character.notes}
-              onChange={(e) => updateCharacter({ notes: e.target.value })}
+              value={pilot.notes}
+              onChange={(e) => updatePilot({ notes: e.target.value })}
               disabled={false}
-              placeholder="Add notes about your character..."
+              placeholder="Add notes about your pilot..."
               className="w-full h-96 p-4 border-0 rounded-2xl bg-[#e8e5d8] text-[#2d3e36] font-semibold resize-none disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
@@ -145,11 +145,11 @@ export default function CharacterBuilder() {
             abilities={allAbilities}
             onSelectAbility={handleAddAbility}
             onSelectLegendaryAbility={handleAddLegendaryAbility}
-            selectedAbilityIds={character.abilities.map((a) => a.ability.id)}
-            selectedLegendaryAbilityId={character.legendaryAbilityId}
+            selectedAbilityIds={pilot.abilities.map((a) => a.ability.id)}
+            selectedLegendaryAbilityId={pilot.legendaryAbilityId}
             selectedClass={selectedClass}
             selectedAdvancedClass={selectedAdvancedClass}
-            currentTP={character.currentTP}
+            currentTP={pilot.currentTP}
           />
 
           {/* Equipment Selector Modal */}

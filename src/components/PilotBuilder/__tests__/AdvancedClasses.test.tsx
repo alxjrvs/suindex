@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment, AbilityTreeRequirement } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder - Advanced Classes', () => {
+describe('PilotBuilder - Advanced Classes', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -253,7 +253,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
   describe('Advanced Class Requirements', () => {
     it('disables advanced class dropdown when less than 6 abilities', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -264,7 +264,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
 
     it('disables advanced class dropdown when no complete tree (3+ abilities)', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -287,7 +287,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -305,7 +305,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -328,7 +328,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
 
     it('prevents Salvager class from taking advanced classes', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-salvager')
@@ -342,7 +342,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
   describe('Hybrid Class Abilities', () => {
     it('shows hybrid class abilities when hybrid class is selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -364,7 +364,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -382,7 +382,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -415,7 +415,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
 
     it('charges 2 TP for hybrid class abilities', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -437,7 +437,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -454,7 +454,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
 
@@ -487,7 +487,7 @@ describe('CharacterBuilder - Advanced Classes', () => {
 
       await waitFor(() => screen.getByText('Smuggle 1'))
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(2 TP\)/i,
+        name: /Add to Pilot \(2 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 

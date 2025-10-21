@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder - Equipment Inventory', () => {
+describe('PilotBuilder - Equipment Inventory', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -83,20 +83,20 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
   describe('Inventory Display', () => {
     it('shows inventory section', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       expect(screen.getByText(/^inventory$/i)).toBeInTheDocument()
     })
 
     it('shows equipment count as 0/6 initially', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       expect(within(inventorySection!).getByText(/0\/6/)).toBeInTheDocument()
     })
 
     it('shows Add button for equipment', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -104,7 +104,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
     })
 
     it('does not show empty slot placeholders', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       // Should not show dashed boxes or "—" symbols for empty slots
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
@@ -116,7 +116,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
   describe('Adding Equipment', () => {
     it('opens equipment selector modal when Add button is clicked', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -129,7 +129,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
     it('displays available equipment in modal', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -144,7 +144,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
     it('adds equipment to inventory when selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -167,7 +167,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
     it('updates equipment count when adding equipment', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -193,7 +193,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
     it('closes modal after selecting equipment', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -211,7 +211,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
   describe('Inventory Capacity', () => {
     it('disables Add button when inventory is full (6/6)', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -253,7 +253,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
     it('shows 6/6 when inventory is full', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -282,7 +282,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
     it('enables Add button after removing equipment from full inventory', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -323,7 +323,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
   describe('Removing Equipment', () => {
     it('shows remove button on each equipment item', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -346,7 +346,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
     it('removes equipment when remove button is clicked', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -370,7 +370,7 @@ describe('CharacterBuilder - Equipment Inventory', () => {
 
     it('updates equipment count when removing equipment', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })

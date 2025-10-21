@@ -288,7 +288,7 @@ export function AbilityDisplay({
               disabled={dimmed}
               className="w-full mt-3 bg-[var(--color-su-orange)] text-[var(--color-su-white)] px-4 py-2 rounded font-bold hover:bg-[var(--color-su-black)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-su-orange)]"
             >
-              Add to Character{selectButtonCost !== undefined ? ` (${selectButtonCost} TP)` : ''}
+              Add to Pilot{selectButtonCost !== undefined ? ` (${selectButtonCost} TP)` : ''}
             </button>
           )}
         </div>

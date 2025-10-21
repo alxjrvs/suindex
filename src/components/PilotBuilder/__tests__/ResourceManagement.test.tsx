@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder - Resource Management', () => {
+describe('PilotBuilder - Resource Management', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -51,20 +51,20 @@ describe('CharacterBuilder - Resource Management', () => {
 
   describe('HP (Hit Points)', () => {
     it('shows HP stepper', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const hpLabel = screen.getByText(/HP/i)
       expect(hpLabel).toBeInTheDocument()
     })
 
     it('initializes HP to 10/10', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       expect(screen.getByText(/10\/10/)).toBeInTheDocument()
     })
 
     it('disables HP stepper when no class is selected', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const hpStepper = screen.getByRole('group', { name: /HP/i })
       const incrementButton = hpStepper.querySelector('button[aria-label="Increment HP"]')
@@ -73,7 +73,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
     it('enables HP stepper when class is selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -88,7 +88,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
     it('allows adjusting current HP', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -118,20 +118,20 @@ describe('CharacterBuilder - Resource Management', () => {
 
   describe('AP (Action Points)', () => {
     it('shows AP stepper', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const apLabel = screen.getByText(/^AP$/i)
       expect(apLabel).toBeInTheDocument()
     })
 
     it('initializes AP to 5/5', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       expect(screen.getByText(/5\/5/)).toBeInTheDocument()
     })
 
     it('disables AP stepper when no class is selected', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const apStepper = screen.getByRole('group', { name: /^AP$/i })
       const incrementButton = apStepper.querySelector('button[aria-label="Increment AP"]')
@@ -140,7 +140,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
     it('enables AP stepper when class is selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -155,7 +155,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
     it('allows adjusting current AP', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -185,7 +185,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
   describe('TP (Training Points)', () => {
     it('shows TP display', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const tpLabels = screen.getAllByText('TP')
       expect(tpLabels.length).toBeGreaterThan(0)
@@ -194,7 +194,7 @@ describe('CharacterBuilder - Resource Management', () => {
     })
 
     it('initializes TP to 0', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const tpLabels = screen.getAllByText('TP')
       expect(tpLabels.length).toBeGreaterThan(0)
@@ -203,7 +203,7 @@ describe('CharacterBuilder - Resource Management', () => {
     })
 
     it('disables TP stepper when no class is selected', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const tpStepper = screen.getByRole('group', { name: /TP/i })
       const incrementButton = tpStepper.querySelector('button[aria-label="Increment TP"]')
@@ -212,7 +212,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
     it('enables TP stepper when class is selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -226,7 +226,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
     it('allows adjusting TP', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -254,7 +254,7 @@ describe('CharacterBuilder - Resource Management', () => {
     })
 
     it('shows TP as single value (not current/max format)', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       // Should show "TP" label and "0" value (not "0/X" format)
       const tpLabels = screen.getAllByText('TP')
@@ -273,7 +273,7 @@ describe('CharacterBuilder - Resource Management', () => {
   describe('Resource Stepper Behavior', () => {
     it('prevents negative values in HP', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -300,7 +300,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
     it('prevents negative values in AP', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -327,7 +327,7 @@ describe('CharacterBuilder - Resource Management', () => {
 
     it('prevents negative values in TP', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')

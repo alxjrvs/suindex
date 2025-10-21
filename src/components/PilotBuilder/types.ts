@@ -1,11 +1,11 @@
 import type { Ability, Equipment } from 'salvageunion-reference'
 
-export interface CharacterAbility {
+export interface PilotAbility {
   id: string
   ability: Ability
 }
 
-export interface CharacterEquipment {
+export interface PilotEquipment {
   id: string
   equipment: Equipment
 }
@@ -16,7 +16,7 @@ export interface AdvancedClassOption {
   isAdvancedVersion: boolean
 }
 
-export interface CharacterState {
+export interface PilotState {
   classId: string | null
   advancedClassId: string | null
   callsign: string
@@ -27,8 +27,8 @@ export interface CharacterState {
   background: string
   backgroundUsed: boolean
   appearance: string
-  abilities: CharacterAbility[]
-  equipment: CharacterEquipment[]
+  abilities: PilotAbility[]
+  equipment: PilotEquipment[]
   legendaryAbilityId: string | null
   maxHP: number
   currentHP: number

@@ -1,15 +1,15 @@
 import { useState, useCallback, useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
-import type { CharacterState, AdvancedClassOption } from './types'
+import type { PilotState, AdvancedClassOption } from './types'
 import { getAbilityCost } from './utils/getAbilityCost'
 
-export function useCharacterState(
+export function usePilotState(
   allClasses: Class[],
   allAbilities: Ability[],
   allEquipment: Equipment[]
 ) {
-  const [character, setCharacter] = useState<CharacterState>({
+  const [pilot, setPilot] = useState<PilotState>({
     classId: null,
     advancedClassId: null,
     callsign: '',
@@ -32,18 +32,18 @@ export function useCharacterState(
   })
 
   const selectedClass = useMemo(
-    () => allClasses.find((c) => c.id === character.classId),
-    [character.classId, allClasses]
+    () => allClasses.find((c) => c.id === pilot.classId),
+    [pilot.classId, allClasses]
   )
 
   const selectedAdvancedClass = useMemo(
-    () => allClasses.find((c) => c.id === character.advancedClassId),
-    [character.advancedClassId, allClasses]
+    () => allClasses.find((c) => c.id === pilot.advancedClassId),
+    [pilot.advancedClassId, allClasses]
   )
 
   // Calculate available advanced classes
   const availableAdvancedClasses = useMemo(() => {
-    if (character.abilities.length < 6) {
+    if (pilot.abilities.length < 6) {
       return []
     }
 
@@ -53,7 +53,7 @@ export function useCharacterState(
     }
 
     const abilitiesByTree: Record<string, number> = {}
-    character.abilities.forEach((charAbility) => {
+    pilot.abilities.forEach((charAbility) => {
       const tree = charAbility.ability.tree
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
     })
@@ -106,10 +106,10 @@ export function useCharacterState(
     }
 
     return results
-  }, [allClasses, character.abilities, selectedClass])
+  }, [allClasses, pilot.abilities, selectedClass])
 
   const handleClassChange = useCallback((classId: string) => {
-    setCharacter((prev) => ({
+    setPilot((prev) => ({
       ...prev,
       classId,
       abilities: [],
@@ -124,14 +124,14 @@ export function useCharacterState(
       const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
 
       // Check if user has enough TP
-      if (character.currentTP < cost) {
+      if (pilot.currentTP < cost) {
         alert(
-          `Not enough TP! This ability costs ${cost} TP, but you only have ${character.currentTP} TP.`
+          `Not enough TP! This ability costs ${cost} TP, but you only have ${pilot.currentTP} TP.`
         )
         return
       }
 
-      setCharacter((prev) => ({
+      setPilot((prev) => ({
         ...prev,
         currentTP: prev.currentTP - cost,
         abilities: [
@@ -143,12 +143,12 @@ export function useCharacterState(
         ],
       }))
     },
-    [allAbilities, selectedClass, selectedAdvancedClass, character.currentTP]
+    [allAbilities, selectedClass, selectedAdvancedClass, pilot.currentTP]
   )
 
   const handleRemoveAbility = useCallback((id: string) => {
     // Removing an ability costs 1 TP (confirmation handled in AbilityDisplay)
-    setCharacter((prev) => ({
+    setPilot((prev) => ({
       ...prev,
       currentTP: prev.currentTP - 1,
       abilities: prev.abilities.filter((a) => a.id !== id),
@@ -162,23 +162,23 @@ export function useCharacterState(
 
       const cost = 3 // Legendary abilities always cost 3 TP
 
-      if (character.currentTP < cost) {
+      if (pilot.currentTP < cost) {
         alert(`Not enough TP! You need ${cost} TP to select this legendary ability.`)
         return
       }
 
-      setCharacter((prev) => ({
+      setPilot((prev) => ({
         ...prev,
         currentTP: prev.currentTP - cost,
         legendaryAbilityId: abilityId,
       }))
     },
-    [allAbilities, character.currentTP]
+    [allAbilities, pilot.currentTP]
   )
 
   const handleRemoveLegendaryAbility = useCallback(() => {
     // Removing a legendary ability costs 1 TP (confirmation handled in AbilityDisplay)
-    setCharacter((prev) => ({
+    setPilot((prev) => ({
       ...prev,
       currentTP: prev.currentTP - 1,
       legendaryAbilityId: null,
@@ -191,12 +191,12 @@ export function useCharacterState(
       if (!equipment) return
 
       // Check if inventory is full (max 6 slots)
-      if (character.equipment.length >= 6) {
+      if (pilot.equipment.length >= 6) {
         alert('Inventory is full! You can only carry 6 items.')
         return
       }
 
-      setCharacter((prev) => ({
+      setPilot((prev) => ({
         ...prev,
         equipment: [
           ...prev.equipment,
@@ -207,32 +207,32 @@ export function useCharacterState(
         ],
       }))
     },
-    [allEquipment, character.equipment.length]
+    [allEquipment, pilot.equipment.length]
   )
 
   const handleRemoveEquipment = useCallback(
     (id: string) => {
-      const equipmentToRemove = character.equipment.find((e) => e.id === id)
+      const equipmentToRemove = pilot.equipment.find((e) => e.id === id)
       if (!equipmentToRemove) return
 
       const equipmentName = equipmentToRemove.equipment.name
 
       if (window.confirm(`Are you sure you want to remove ${equipmentName}?`)) {
-        setCharacter((prev) => ({
+        setPilot((prev) => ({
           ...prev,
           equipment: prev.equipment.filter((e) => e.id !== id),
         }))
       }
     },
-    [character.equipment]
+    [pilot.equipment]
   )
 
-  const updateCharacter = useCallback((updates: Partial<CharacterState>) => {
-    setCharacter((prev) => ({ ...prev, ...updates }))
+  const updatePilot = useCallback((updates: Partial<PilotState>) => {
+    setPilot((prev) => ({ ...prev, ...updates }))
   }, [])
 
   return {
-    character,
+    pilot,
     selectedClass,
     selectedAdvancedClass,
     availableAdvancedClasses,
@@ -243,6 +243,6 @@ export function useCharacterState(
     handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
-    updateCharacter,
+    updatePilot,
   }
 }

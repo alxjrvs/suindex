@@ -1,6 +1,6 @@
 import NumericStepper from '../NumericStepper'
 
-interface CharacterResourceSteppersProps {
+interface PilotResourceSteppersProps {
   maxHP: number
   currentHP: number
   maxAP: number
@@ -12,7 +12,7 @@ interface CharacterResourceSteppersProps {
   disabled?: boolean
 }
 
-export function CharacterResourceSteppers({
+export function PilotResourceSteppers({
   maxHP,
   currentHP,
   maxAP,
@@ -22,7 +22,7 @@ export function CharacterResourceSteppers({
   onAPChange,
   onTPChange,
   disabled = false,
-}: CharacterResourceSteppersProps) {
+}: PilotResourceSteppersProps) {
   return (
     <div className="bg-[var(--color-su-orange)] border-8 border-[var(--color-su-orange)] rounded-3xl p-6 shadow-lg">
       <div className="flex flex-col items-center space-y-2">

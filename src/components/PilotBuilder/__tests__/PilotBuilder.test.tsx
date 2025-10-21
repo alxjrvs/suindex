@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder', () => {
+describe('PilotBuilder', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -167,8 +167,8 @@ describe('CharacterBuilder', () => {
   })
 
   describe('Initial Render', () => {
-    it('renders the character builder interface', () => {
-      render(<CharacterBuilder />)
+    it('renders the pilot builder interface', () => {
+      render(<PilotBuilder />)
 
       // Check for main sections by their content
       expect(screen.getByPlaceholderText(/enter callsign/i)).toBeInTheDocument()
@@ -178,7 +178,7 @@ describe('CharacterBuilder', () => {
     })
 
     it('displays all main sections', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       expect(screen.getByPlaceholderText(/enter callsign/i)).toBeInTheDocument()
       expect(screen.getByPlaceholderText(/enter motto/i)).toBeInTheDocument()
@@ -188,7 +188,7 @@ describe('CharacterBuilder', () => {
     })
 
     it('shows class dropdown with core classes only', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       expect(classSelect).toBeInTheDocument()
@@ -199,7 +199,7 @@ describe('CharacterBuilder', () => {
     })
 
     it('disables resource steppers when no class is selected', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       // HP, AP, and TP stepper buttons should be disabled
       const hpStepper = screen.getByRole('group', { name: /HP/i })
@@ -215,17 +215,17 @@ describe('CharacterBuilder', () => {
     })
 
     it('shows notes section', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       expect(screen.getByText(/^notes$/i)).toBeInTheDocument()
-      expect(screen.getByPlaceholderText(/add notes about your character/i)).toBeInTheDocument()
+      expect(screen.getByPlaceholderText(/add notes about your pilot/i)).toBeInTheDocument()
     })
   })
 
   describe('Class Selection', () => {
     it('enables resource steppers when class is selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -244,7 +244,7 @@ describe('CharacterBuilder', () => {
 
     it('initializes TP to 0 when class is selected', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -258,7 +258,7 @@ describe('CharacterBuilder', () => {
     })
 
     it('shows advanced class dropdown as disabled initially', () => {
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       expect(advancedClassSelect).toBeDisabled()
@@ -266,7 +266,7 @@ describe('CharacterBuilder', () => {
 
     it('resets character state when changing class', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
 

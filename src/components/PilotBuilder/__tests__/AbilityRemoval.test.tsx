@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder - Ability Removal', () => {
+describe('PilotBuilder - Ability Removal', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -92,7 +92,7 @@ describe('CharacterBuilder - Ability Removal', () => {
   describe('Remove Button Behavior', () => {
     it('shows remove button on selected abilities', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -114,7 +114,7 @@ describe('CharacterBuilder - Ability Removal', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Hack 1'))
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
@@ -141,7 +141,7 @@ describe('CharacterBuilder - Ability Removal', () => {
 
     it('disables remove button when TP is less than 1', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -160,7 +160,7 @@ describe('CharacterBuilder - Ability Removal', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Hack 1'))
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
@@ -192,7 +192,7 @@ describe('CharacterBuilder - Ability Removal', () => {
 
     it('enables remove button when TP is 1 or more', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -214,7 +214,7 @@ describe('CharacterBuilder - Ability Removal', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Hack 1'))
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
@@ -242,7 +242,7 @@ describe('CharacterBuilder - Ability Removal', () => {
   describe('Removal Cost', () => {
     it('costs 1 TP to remove an ability', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -264,7 +264,7 @@ describe('CharacterBuilder - Ability Removal', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Hack 1'))
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
@@ -299,7 +299,7 @@ describe('CharacterBuilder - Ability Removal', () => {
 
     it('shows confirmation dialog when removing ability', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -321,7 +321,7 @@ describe('CharacterBuilder - Ability Removal', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Hack 1'))
       const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
@@ -353,7 +353,7 @@ describe('CharacterBuilder - Ability Removal', () => {
 
     it('does not remove ability if confirmation is cancelled', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -375,7 +375,7 @@ describe('CharacterBuilder - Ability Removal', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Hack 1'))
       const addToCharacterButtons2 = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons2[0])
 
@@ -416,7 +416,7 @@ describe('CharacterBuilder - Ability Removal', () => {
 
     it('removes ability from the list after confirmation', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -438,7 +438,7 @@ describe('CharacterBuilder - Ability Removal', () => {
       await user.click(addButton)
       await waitFor(() => screen.getByText('Hack 1'))
       const addToCharacterButtons3 = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons3[0])
 
@@ -479,7 +479,7 @@ describe('CharacterBuilder - Ability Removal', () => {
   describe('Legendary Ability Removal', () => {
     it('can remove legendary ability', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')

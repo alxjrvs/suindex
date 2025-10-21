@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CharacterBuilder from '../index'
+import PilotBuilder from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability, Equipment, AbilityTreeRequirement } from 'salvageunion-reference'
 
@@ -23,7 +23,7 @@ vi.mock('salvageunion-reference', () => ({
   },
 }))
 
-describe('CharacterBuilder - Integration Tests', () => {
+describe('PilotBuilder - Integration Tests', () => {
   const mockClasses: Class[] = [
     {
       id: 'class-hacker',
@@ -232,10 +232,10 @@ describe('CharacterBuilder - Integration Tests', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
 
-  describe('Complete Character Creation Flow', () => {
+  describe('Complete Pilot Creation Flow', () => {
     it('creates a complete character from start to finish', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       // Step 1: Fill in pilot information
       await user.type(screen.getByPlaceholderText(/enter callsign/i), 'Ghost')
@@ -272,9 +272,9 @@ describe('CharacterBuilder - Integration Tests', () => {
       // Select 3 from Hacking tree
       for (let i = 0; i < 3; i++) {
         await user.click(addAbilityButton)
-        // Wait for the "Add to Character" buttons to appear in the modal
+        // Wait for the "Add to Pilot" buttons to appear in the modal
         const addButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         // Click the first available button
         await user.click(addButtons[0])
@@ -283,9 +283,9 @@ describe('CharacterBuilder - Integration Tests', () => {
       // Select 3 from Tech tree
       for (let i = 0; i < 3; i++) {
         await user.click(addAbilityButton)
-        // Wait for the "Add to Character" buttons to appear in the modal
+        // Wait for the "Add to Pilot" buttons to appear in the modal
         const addButtons = await screen.findAllByRole('button', {
-          name: /Add to Character \(1 TP\)/i,
+          name: /Add to Pilot \(1 TP\)/i,
         })
         // Click the first available button
         await user.click(addButtons[0])
@@ -303,9 +303,9 @@ describe('CharacterBuilder - Integration Tests', () => {
       // Step 6: Select hybrid class ability
       await user.click(addAbilityButton)
       await waitFor(() => screen.getByText('Smuggle 1'))
-      // Click the "Add to Character" button (advanced ability costs 2 TP)
+      // Click the "Add to Pilot" button (advanced ability costs 2 TP)
       const smuggleAddButton = await screen.findByRole('button', {
-        name: /Add to Character \(2 TP\)/i,
+        name: /Add to Pilot \(2 TP\)/i,
       })
       await user.click(smuggleAddButton)
 
@@ -329,7 +329,7 @@ describe('CharacterBuilder - Integration Tests', () => {
 
       // Step 8: Add notes
       await user.type(
-        screen.getByPlaceholderText(/add notes about your character/i),
+        screen.getByPlaceholderText(/add notes about your pilot/i),
         'A skilled hacker turned smuggler'
       )
 
@@ -359,7 +359,7 @@ describe('CharacterBuilder - Integration Tests', () => {
         expect(within(tpStepper).getByText('12')).toBeInTheDocument()
 
         // Notes
-        expect(screen.getByPlaceholderText(/add notes about your character/i)).toHaveValue(
+        expect(screen.getByPlaceholderText(/add notes about your pilot/i)).toHaveValue(
           'A skilled hacker turned smuggler'
         )
       })
@@ -367,7 +367,7 @@ describe('CharacterBuilder - Integration Tests', () => {
 
     it('handles ability selection with insufficient TP', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, 'class-hacker')
@@ -393,9 +393,9 @@ describe('CharacterBuilder - Integration Tests', () => {
 
       // Select first ability (costs 1 TP)
       await user.click(addButton)
-      // Wait for the "Add to Character" buttons to appear in the modal
+      // Wait for the "Add to Pilot" buttons to appear in the modal
       const hack1AddButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(hack1AddButtons[0])
 
@@ -415,7 +415,7 @@ describe('CharacterBuilder - Integration Tests', () => {
   describe('State Consistency', () => {
     it('maintains consistent state when changing classes', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       // Select first class and add abilities
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
@@ -432,9 +432,9 @@ describe('CharacterBuilder - Integration Tests', () => {
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
 
       await user.click(addButton)
-      // Wait for the "Add to Character" buttons to appear in the modal
+      // Wait for the "Add to Pilot" buttons to appear in the modal
       const hack1AddButtons = await screen.findAllByRole('button', {
-        name: /Add to Character \(1 TP\)/i,
+        name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(hack1AddButtons[0])
 
@@ -467,7 +467,7 @@ describe('CharacterBuilder - Integration Tests', () => {
 
     it('preserves pilot information when changing classes', async () => {
       const user = userEvent.setup()
-      render(<CharacterBuilder />)
+      render(<PilotBuilder />)
 
       // Fill in pilot info
       await user.type(screen.getByPlaceholderText(/enter callsign/i), 'Ghost')
