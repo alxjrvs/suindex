@@ -1,8 +1,6 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
-import { DataList } from './DataList'
 import { ActivationCostBox } from './ActivationCostBox'
 import { ItemDetailsDisplay } from './ItemDetailsDisplay'
-import type { DataValue } from '../../types/common'
 import type { ReactNode } from 'react'
 import type { Action } from '../types'
 
@@ -11,45 +9,19 @@ interface ActionDisplayProps {
   activationCurrency?: string
 }
 
-function generateDataListValues(action: Action): DataValue[] {
-  const details: DataValue[] = []
-
-  if ('range' in action && action.range) {
-    details.push({ value: action.range })
-  }
-
-  if ('actionType' in action && action.actionType) {
-    details.push({ value: action.actionType })
-  }
-
-  return details
-}
-
 export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDisplayProps) {
-  // Check if this is a sub-ability (has damage, range, or traits but no activationCost or actionType at top level)
-  const isSubAbility = 'damage' in action || ('range' in action && !('activationCost' in action))
-
-  const dataListValues = generateDataListValues(action)
   const description =
     'description' in action && action.description
       ? action.description.replaceAll('•', '\n•')
       : undefined
 
-  // Skip dataList for sub-abilities since ItemDetailsDisplay shows all details
-  const dataList: ReactNode =
-    !isSubAbility && dataListValues.length > 0 ? (
-      <Box>
-        <DataList values={dataListValues} />
-      </Box>
-    ) : null
-
+  // Only show ItemDetailsDisplay if there's damage or traits (range/actionType already in dataList)
   const itemDetailsElement: ReactNode = (
     <ItemDetailsDisplay
       damage={'damage' in action ? action.damage : undefined}
       range={'range' in action ? action.range : undefined}
       actionType={'actionType' in action ? action.actionType : undefined}
       traits={'traits' in action ? action.traits : undefined}
-      compact
     />
   )
 
@@ -106,7 +78,6 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
               range={'range' in subAbility ? subAbility.range : undefined}
               actionType={undefined}
               traits={'traits' in subAbility ? subAbility.traits : undefined}
-              compact
             />
             {subAbility.description && (
               <Text fontSize="sm" color="su.black" mt={1}>
@@ -145,7 +116,6 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
         )}
       </Flex>
 
-      {dataList}
       {itemDetailsElement}
       {descriptionElement}
       {optionsElement}

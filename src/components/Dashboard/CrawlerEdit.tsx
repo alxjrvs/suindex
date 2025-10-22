@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { Flex, Text } from '@chakra-ui/react'
-import CrawlerBuilder from '../CrawlerBuilder'
+import CrawlerLiveSheet from '../CrawlerLiveSheet'
 
 export function CrawlerEdit() {
   const { id } = useParams<{ id: string }>()
@@ -15,5 +15,5 @@ export function CrawlerEdit() {
     )
   }
 
-  return <CrawlerBuilder id={id} />
+  return <CrawlerLiveSheet id={id} />
 }

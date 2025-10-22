@@ -68,7 +68,7 @@ const config = defineConfig({
         mono: { value: "'Fira Code', Monaco, Consolas, 'Ubuntu Mono', monospace" },
       },
       sizes: {
-        // Builder component sizes
+        // LiveSheet component sizes
         'builder.border': { value: '8px' },
         'builder.border.sm': { value: '4px' },
         'builder.radius': { value: '24px' }, // rounded-3xl

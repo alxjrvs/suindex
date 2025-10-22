@@ -6,6 +6,7 @@ import type {
   NPC,
   Meld,
   Squad,
+  Creature,
   Ability,
 } from 'salvageunion-reference'
 
@@ -18,3 +19,4 @@ export type Action =
   | NPC['abilities'][number]
   | NonNullable<Meld['abilities']>[number]
   | NonNullable<Squad['abilities']>[number]
+  | Creature['abilities'][number]

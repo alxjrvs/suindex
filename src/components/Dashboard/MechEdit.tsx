@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { Flex, Text } from '@chakra-ui/react'
-import MechBuilder from '../MechBuilder'
+import MechLiveSheet from '../MechLiveSheet'
 
 export function MechEdit() {
   const { id } = useParams<{ id: string }>()
@@ -15,5 +15,5 @@ export function MechEdit() {
     )
   }
 
-  return <MechBuilder id={id} />
+  return <MechLiveSheet id={id} />
 }

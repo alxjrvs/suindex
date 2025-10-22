@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Box, Flex } from '@chakra-ui/react'
 import ReferenceNavigation from './components/ReferenceNavigation'
-import BuilderNavigation from './components/BuilderNavigation'
+import LiveSheetNavigation from './components/LiveSheetNavigation'
 import SchemaViewer from './components/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
-import MechBuilder from './components/MechBuilder'
-import PilotBuilder from './components/PilotBuilder'
-import CrawlerBuilder from './components/CrawlerBuilder'
+import MechLiveSheet from './components/MechLiveSheet'
+import PilotLiveSheet from './components/PilotLiveSheet'
+import CrawlerLiveSheet from './components/CrawlerLiveSheet'
 import Dashboard from './components/Dashboard'
 import LandingPage from './components/LandingPage'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -43,7 +43,7 @@ function AppContent() {
         }
       />
       <Route
-        path="/builders/*"
+        path="/playground/*"
         element={
           <Flex
             flexDirection={{ base: 'column', md: 'row' }}
@@ -51,12 +51,12 @@ function AppContent() {
             bg="su.white"
             overflow="hidden"
           >
-            <BuilderNavigation />
+            <LiveSheetNavigation />
             <Box as="main" flex="1" overflowY="auto" pt={{ base: 16, md: 0 }}>
               <Routes>
-                <Route path="/mech-builder" element={<MechBuilder />} />
-                <Route path="/pilot-builder" element={<PilotBuilder />} />
-                <Route path="/crawler-builder" element={<CrawlerBuilder />} />
+                <Route path="/mech-builder" element={<MechLiveSheet />} />
+                <Route path="/pilot-builder" element={<PilotLiveSheet />} />
+                <Route path="/crawler-builder" element={<CrawlerLiveSheet />} />
               </Routes>
             </Box>
           </Flex>

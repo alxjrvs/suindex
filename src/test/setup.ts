@@ -13,6 +13,23 @@ afterEach(() => {
 process.env.VITE_SUPABASE_URL = 'https://test.supabase.co'
 process.env.VITE_SUPABASE_ANON_KEY = 'test-anon-key'
 
+// Mock Supabase globally for all tests
+vi.mock('../lib/supabase', () => ({
+  supabase: {
+    auth: {
+      getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+    },
+    from: vi.fn(() => ({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: null, error: null }),
+      insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      update: vi.fn().mockReturnThis(),
+      delete: vi.fn().mockReturnThis(),
+    })),
+  },
+}))
+
 // IntersectionObserver mock
 const IntersectionObserverMock = vi.fn(
   () =>

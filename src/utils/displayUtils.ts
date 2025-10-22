@@ -34,13 +34,9 @@ export function generateDetails(
   }
 
   if ('damage' in data && data.damage) {
-    if (typeof data.damage === 'string') {
-      details.push({ value: `Damage:${data.damage}` })
-    } else {
-      details.push({
-        value: `Damage:${data.damage.amount}${data.damage.type}`,
-      })
-    }
+    details.push({
+      value: `Damage:${data.damage.amount}${data.damage.type}`,
+    })
   }
 
   const traits = 'traits' in data ? formatTraits(data.traits) : []

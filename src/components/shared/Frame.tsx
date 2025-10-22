@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { DataList } from './DataList'
+import { StatDisplay } from '../StatDisplay'
 import type { DataValue } from '../../types/common'
 import { techLevelColors } from '../../theme'
 
@@ -178,76 +179,17 @@ export function Frame({
           <VStack
             alignItems="center"
             justifyContent="flex-start"
-            pb={1}
-            gap={1}
-            minW="35px"
-            maxW="35px"
+            pb={3}
+            pt={3}
+            gap={3}
+            minW="80px"
+            maxW="80px"
             bg={backgroundColor}
             overflow="visible"
           >
-            {techLevel && (
-              <Flex
-                bg="su.black"
-                borderWidth="1px"
-                borderColor="su.black"
-                color="su.white"
-                fontWeight="bold"
-                textAlign="center"
-                alignItems="center"
-                justifyContent="center"
-                minW="25px"
-                h="25px"
-                borderRadius="5px"
-                pt="2px"
-                title="Tech level"
-              >
-                T{techLevel}
-              </Flex>
-            )}
-            {slotsRequired && (
-              <Box position="relative" w="30px" h="25px" title="Slots">
-                <Box
-                  position="absolute"
-                  w={0}
-                  h={0}
-                  borderLeft="15px solid transparent"
-                  borderRight="15px solid transparent"
-                  borderBottom="25px solid"
-                  borderBottomColor="su.black"
-                  top="-2px"
-                  left={0}
-                />
-                <Flex
-                  position="absolute"
-                  color="su.white"
-                  fontWeight="bold"
-                  textAlign="center"
-                  alignItems="center"
-                  justifyContent="center"
-                  w="30px"
-                  top="4px"
-                >
-                  {slotsRequired}
-                </Flex>
-              </Box>
-            )}
-            {salvageValue && (
-              <Flex
-                bg="su.black"
-                color="su.white"
-                fontWeight="bold"
-                textAlign="center"
-                alignItems="center"
-                justifyContent="center"
-                w="25px"
-                h="25px"
-                borderRadius="30px"
-                pt="4px"
-                title="Salvage value"
-              >
-                {salvageValue}
-              </Flex>
-            )}
+            {slotsRequired && <StatDisplay label="Slots" value={slotsRequired} />}
+            {salvageValue && <StatDisplay label="SV" value={salvageValue} />}
+            {techLevel && <StatDisplay label="TL" value={techLevel} />}
           </VStack>
         )}
 

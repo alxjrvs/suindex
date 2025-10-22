@@ -97,7 +97,7 @@ export default function LandingPage() {
                   Dashboard
                 </Button>
               </RouterLink>
-              <RouterLink to="/builders/" style={{ textDecoration: 'none' }}>
+              <RouterLink to="/playground/" style={{ textDecoration: 'none' }}>
                 <Button
                   w="full"
                   bg="su.green"

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { Flex, Text } from '@chakra-ui/react'
-import PilotBuilder from '../PilotBuilder'
+import PilotLiveSheet from '../PilotLiveSheet'
 
 export function PilotEdit() {
   const { id } = useParams<{ id: string }>()
@@ -15,5 +15,5 @@ export function PilotEdit() {
     )
   }
 
-  return <PilotBuilder id={id} />
+  return <PilotLiveSheet id={id} />
 }

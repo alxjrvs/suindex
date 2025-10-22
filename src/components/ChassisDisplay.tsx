@@ -1,7 +1,7 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
-import { StatList } from './shared/StatList'
+import { StatDisplay } from './StatDisplay'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisDisplayProps {
@@ -19,22 +19,16 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
         description={data.description}
         showSidebar={false}
         headerContent={
-          <Box ml="auto" pb={6} overflow="visible">
-            <StatList
-              stats={[
-                { label: 'Structure Pts.', value: stats.structure_pts },
-                { label: 'Energy Pts.', value: stats.energy_pts },
-                { label: 'Heat Cap.', value: stats.heat_cap },
-                { label: 'System Slots', value: stats.system_slots },
-                { label: 'Module Slots', value: stats.module_slots },
-                { label: 'Cargo Cap.', value: stats.cargo_cap },
-                { label: 'Tech Level', value: stats.tech_level },
-                { label: 'Salvage Value', value: stats.salvage_value },
-              ]}
-              notes={'notes' in stats && typeof stats.notes === 'string' ? stats.notes : undefined}
-              up={false}
-            />
-          </Box>
+          <Flex ml="auto" gap={2} flexWrap="wrap" justifyContent="flex-end">
+            <StatDisplay label="SP" value={stats.structure_pts} />
+            <StatDisplay label="EP" value={stats.energy_pts} />
+            <StatDisplay label="Heat" value={stats.heat_cap} />
+            <StatDisplay label="Sys. Slots" value={stats.system_slots} />
+            <StatDisplay label="Mod. Slots" value={stats.module_slots} />
+            <StatDisplay label="Cargo Cap" value={stats.cargo_cap} />
+            <StatDisplay label="TL" value={stats.tech_level} />
+            <StatDisplay label="SV" value={stats.salvage_value} />
+          </Flex>
         }
       >
         {data.chassis_abilities && data.chassis_abilities.length > 0 && (
@@ -68,46 +62,6 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
                         </Text>
                       ))}
                     </VStack>
-                  )}
-
-                  {'stats' in ability && ability.stats && (
-                    <Box mt={2} overflow="visible">
-                      <StatList
-                        stats={[
-                          {
-                            label: 'Structure Pts.',
-                            value: ability.stats.structure_pts,
-                          },
-                          {
-                            label: 'Energy Pts.',
-                            value: ability.stats.energy_pts,
-                          },
-                          { label: 'Heat Cap.', value: ability.stats.heat_cap },
-                          {
-                            label: 'System Slots',
-                            value: ability.stats.system_slots,
-                          },
-                          {
-                            label: 'Module Slots',
-                            value: ability.stats.module_slots,
-                          },
-                          {
-                            label: 'Cargo Cap.',
-                            value: ability.stats.cargo_cap,
-                          },
-                          {
-                            label: 'Tech Level',
-                            value: ability.stats.tech_level,
-                          },
-                          {
-                            label: 'Salvage Value',
-                            value: ability.stats.salvage_value,
-                          },
-                        ]}
-                        notes={'notes' in ability.stats ? ability.stats.notes : undefined}
-                        up
-                      />
-                    </Box>
                   )}
                 </VStack>
               ))}
