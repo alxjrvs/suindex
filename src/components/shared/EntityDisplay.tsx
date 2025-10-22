@@ -245,9 +245,7 @@ export function EntityDisplay({
           ))}
         </VStack>
       )}
-      {/* Spacer to push page reference to bottom */}
       {hasPageReference && 'source' in data && 'page' in data && <Box flex="1" minHeight="1rem" />}
-      {/* Page Reference - Anchored to bottom */}var(--color-su-orange)use
       {hasPageReference && 'source' in data && 'page' in data && (
         <PageReferenceDisplay source={data.source} page={data.page} schemaName={schemaName} />
       )}
