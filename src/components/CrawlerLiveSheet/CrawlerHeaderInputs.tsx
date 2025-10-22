@@ -44,7 +44,7 @@ export function CrawlerHeaderInputs({
             w="full"
             p={2}
             borderWidth={0}
-            borderRadius="builder.radius.sm"
+            borderRadius="lg"
             bg="bg.input"
             color="fg.input"
             fontWeight="semibold"
@@ -70,7 +70,7 @@ export function CrawlerHeaderInputs({
               w="full"
               p={2}
               borderWidth={0}
-              borderRadius="builder.radius.sm"
+              borderRadius="lg"
               bg="bg.input"
               color="fg.input"
               fontWeight="semibold"
@@ -105,7 +105,7 @@ export function CrawlerHeaderInputs({
           w="full"
           p={2}
           borderWidth={0}
-          borderRadius="builder.radius.sm"
+          borderRadius="lg"
           bg="bg.input"
           color="fg.input"
           fontWeight="semibold"

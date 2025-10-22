@@ -130,9 +130,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         <Box flex="1">
           <Box
             bg="bg.builder.crawler"
-            borderWidth="builder.border.sm"
+            borderWidth="4px"
             borderColor="border.builder.crawler"
-            borderRadius="builder.radius"
+            borderRadius="3xl"
             p={6}
             shadow="lg"
           >
@@ -151,9 +151,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         {/* Resource Steppers */}
         <Box
           bg="bg.builder.crawler"
-          borderWidth="builder.border.sm"
+          borderWidth="4px"
           borderColor="border.builder.crawler"
-          borderRadius="builder.radius"
+          borderRadius="3xl"
           px={2}
           py={6}
           shadow="lg"
@@ -180,9 +180,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
       {/* Abilities Section - Full Width */}
       <Box
         bg="bg.builder.crawler"
-        borderWidth="builder.border.sm"
+        borderWidth="4px"
         borderColor="border.builder.crawler"
-        borderRadius="builder.radius"
+        borderRadius="3xl"
         p={6}
         shadow="lg"
       >

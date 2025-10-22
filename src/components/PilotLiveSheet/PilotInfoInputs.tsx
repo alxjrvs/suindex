@@ -89,10 +89,10 @@ export function PilotInfoInputs({
   return (
     <Box
       bg="bg.builder.pilot"
-      borderWidth="builder.border"
+      borderWidth="8px"
       borderColor="border.builder.pilot"
-      borderRadius="builder.radius"
-      p="builder.padding"
+      borderRadius="3xl"
+      p={6}
       shadow="lg"
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
@@ -118,7 +118,7 @@ export function PilotInfoInputs({
             w="full"
             p={3}
             borderWidth={0}
-            borderRadius="builder.radius.md"
+            borderRadius="2xl"
             bg="bg.input"
             color="fg.input"
             fontWeight="semibold"
@@ -171,7 +171,7 @@ export function PilotInfoInputs({
               w="full"
               p={3}
               borderWidth={0}
-              borderRadius="builder.radius.md"
+              borderRadius="2xl"
               bg="bg.input"
               color="fg.input"
               fontWeight="semibold"
@@ -208,7 +208,7 @@ export function PilotInfoInputs({
                 w="full"
                 p={3}
                 borderWidth={0}
-                borderRadius="builder.radius.md"
+                borderRadius="2xl"
                 bg="bg.input"
                 color="fg.input"
                 fontWeight="semibold"
@@ -245,7 +245,7 @@ export function PilotInfoInputs({
                 w="full"
                 p={3}
                 borderWidth={0}
-                borderRadius="builder.radius.md"
+                borderRadius="2xl"
                 bg="bg.input"
                 color="fg.input"
                 fontWeight="semibold"
@@ -307,7 +307,7 @@ export function PilotInfoInputs({
               flex="1"
               p={3}
               borderWidth={0}
-              borderRadius="builder.radius.md"
+              borderRadius="2xl"
               bg="bg.input"
               color="fg.input"
               fontWeight="semibold"
@@ -345,7 +345,7 @@ export function PilotInfoInputs({
               flex="1"
               p={3}
               borderWidth={0}
-              borderRadius="builder.radius.md"
+              borderRadius="2xl"
               bg="bg.input"
               color="fg.input"
               fontWeight="semibold"
@@ -404,7 +404,7 @@ export function PilotInfoInputs({
             w="full"
             p={3}
             borderWidth={0}
-            borderRadius="builder.radius.md"
+            borderRadius="2xl"
             bg="bg.input"
             color="fg.input"
             fontWeight="semibold"
