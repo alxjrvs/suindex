@@ -2,10 +2,10 @@ import { Box, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
-import { AbilityCard } from './shared/AbilityCard'
 import { DescriptionBox } from './shared/DescriptionBox'
 import { PageReferenceDisplay } from './shared/PageReferenceDisplay'
 import type { BioTitan } from 'salvageunion-reference'
+import { ActionDisplay } from './shared/ActionDisplay'
 
 interface BioTitanDisplayProps {
   data: BioTitan
@@ -44,7 +44,12 @@ export function BioTitanDisplay({ data }: BioTitanDisplayProps) {
             Abilities
           </Heading>
           {data.abilities.map((ability, index) => (
-            <AbilityCard key={index} ability={ability} />
+            <ActionDisplay
+              key={index}
+              action={ability}
+              headerBgColor="su.orange"
+              headerTextColor="su.white"
+            />
           ))}
         </VStack>
       )}

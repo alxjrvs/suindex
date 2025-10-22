@@ -7,9 +7,16 @@ import type { Action } from '../types'
 interface ActionDisplayProps {
   action: Action
   activationCurrency?: string
+  headerBgColor?: string
+  headerTextColor?: string
 }
 
-export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDisplayProps) {
+export function ActionDisplay({
+  action,
+  activationCurrency = 'AP',
+  headerBgColor = 'su.lightBlue',
+  headerTextColor = 'su.black',
+}: ActionDisplayProps) {
   const description =
     'description' in action && action.description
       ? action.description.replaceAll('•', '\n•')
@@ -97,30 +104,31 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
     ) : null
 
   return (
-    <VStack
-      borderWidth="2px"
-      borderColor="su.black"
-      bg="su.white"
-      p={3}
-      gap={2}
-      alignItems="stretch"
-    >
-      <Flex alignItems="center" gap={1}>
-        {'activationCost' in action && action.activationCost && (
-          <ActivationCostBox cost={action.activationCost} currency={activationCurrency} />
-        )}
-        {'name' in action && action.name && (
-          <Text as="span" fontWeight="bold" color="su.black" fontSize="17px">
-            {action.name}
-          </Text>
-        )}
-      </Flex>
+    <VStack borderWidth="2px" borderColor="su.black" bg="su.white" gap={0} alignItems="stretch">
+      {/* Header */}
+      {'name' in action && action.name && (
+        <Box bg={headerBgColor || 'su.lightBlue'} px={3} py={2}>
+          <Flex alignItems="center" gap={2}>
+            {'activationCost' in action && action.activationCost && (
+              <ActivationCostBox cost={action.activationCost} currency={activationCurrency} />
+            )}
+            <Text as="span" fontWeight="bold" color={headerTextColor || 'su.white'} fontSize="17px">
+              {action.name}
+            </Text>
+          </Flex>
+        </Box>
+      )}
 
-      {itemDetailsElement}
-      {descriptionElement}
-      {optionsElement}
-      {subAbilitiesElement}
-      {notesElement}
+      {/* Content */}
+      <Box p={3}>
+        <VStack gap={2} alignItems="stretch">
+          {itemDetailsElement}
+          {descriptionElement}
+          {optionsElement}
+          {subAbilitiesElement}
+          {notesElement}
+        </VStack>
+      </Box>
     </VStack>
   )
 }

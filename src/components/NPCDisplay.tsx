@@ -2,7 +2,7 @@ import { Box, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
-import { AbilityCard } from './shared/AbilityCard'
+import { ActionDisplay } from './shared/ActionDisplay'
 import { DescriptionBox } from './shared/DescriptionBox'
 import { PageReferenceDisplay } from './shared/PageReferenceDisplay'
 import type { NPC } from 'salvageunion-reference'
@@ -38,7 +38,7 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
             Abilities
           </Heading>
           {data.abilities.map((ability, index) => (
-            <AbilityCard key={index} ability={ability} />
+            <ActionDisplay key={index} action={ability} />
           ))}
         </VStack>
       )}
