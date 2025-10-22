@@ -24,6 +24,9 @@ import type {
   Table,
   Crawler,
   CrawlerTechLevel,
+  Class,
+  CrawlerBay,
+  Chassis,
 } from 'salvageunion-reference'
 import type { DataValue } from '../../types/common'
 import { formatTraits } from '../../utils/displayUtils'
@@ -45,6 +48,9 @@ type EntityData =
   | Table
   | Crawler
   | CrawlerTechLevel
+  | Class
+  | CrawlerBay
+  | Chassis
 
 interface EntityDisplayProps {
   data: EntityData
@@ -66,6 +72,23 @@ function getSchemaName(data: EntityData): string {
   // CrawlerTechLevel has techLevel, structurePoints, and population fields
   if ('techLevel' in data && 'populationMin' in data && 'populationMax' in data) {
     return 'Crawler Tech Level'
+  }
+  // Chassis has stats object with structure_pts
+  if (
+    'stats' in data &&
+    typeof data.stats === 'object' &&
+    data.stats &&
+    'structure_pts' in data.stats
+  ) {
+    return 'Chassis'
+  }
+  // CrawlerBay has operatorPosition and operatorHitPoints
+  if ('operatorPosition' in data && 'operatorHitPoints' in data) {
+    return 'Crawler Bay'
+  }
+  // Class has coreAbilities array
+  if ('coreAbilities' in data && Array.isArray(data.coreAbilities)) {
+    return 'Class'
   }
   // Crawler has abilities but no hitPoints/structurePoints
   if ('abilities' in data && !('hitPoints' in data) && !('slotsRequired' in data)) {
@@ -159,18 +182,72 @@ export function EntityDisplay({
   // Build stats array for entities (Vehicles, Creatures, etc.)
   // Note: SV (Salvage Value) is NOT shown in header, only in sidebar
   const stats = []
-  if ('hitPoints' in data && data.hitPoints !== undefined) {
-    stats.push({ label: 'HP', value: data.hitPoints })
-  }
-  if ('structurePoints' in data && data.structurePoints !== undefined) {
-    stats.push({ label: 'SP', value: data.structurePoints })
+
+  // Chassis has nested stats object
+  if ('stats' in data && typeof data.stats === 'object' && data.stats) {
+    const chassisStats = data.stats as {
+      structure_pts?: number
+      energy_pts?: number
+      heat_cap?: number
+      system_slots?: number
+      module_slots?: number
+      cargo_cap?: number
+      tech_level?: number
+      salvage_value?: number
+    }
+    if (chassisStats.structure_pts !== undefined) {
+      stats.push({ label: 'SP', value: chassisStats.structure_pts })
+    }
+    if (chassisStats.energy_pts !== undefined) {
+      stats.push({ label: 'EP', value: chassisStats.energy_pts })
+    }
+    if (chassisStats.heat_cap !== undefined) {
+      stats.push({ label: 'Heat', value: chassisStats.heat_cap })
+    }
+    if (chassisStats.system_slots !== undefined) {
+      stats.push({ label: 'Sys. Slots', value: chassisStats.system_slots })
+    }
+    if (chassisStats.module_slots !== undefined) {
+      stats.push({ label: 'Mod. Slots', value: chassisStats.module_slots })
+    }
+    if (chassisStats.cargo_cap !== undefined) {
+      stats.push({ label: 'Cargo Cap', value: chassisStats.cargo_cap })
+    }
+  } else {
+    // Regular entities
+    if ('hitPoints' in data && data.hitPoints !== undefined) {
+      stats.push({ label: 'HP', value: data.hitPoints })
+    }
+    if ('structurePoints' in data && data.structurePoints !== undefined) {
+      stats.push({ label: 'SP', value: data.structurePoints })
+    }
   }
 
   // Determine tech level
-  const techLevel = 'techLevel' in data ? data.techLevel : undefined
+  let techLevel: number | undefined
+  if (
+    'stats' in data &&
+    typeof data.stats === 'object' &&
+    data.stats &&
+    'tech_level' in data.stats
+  ) {
+    techLevel = (data.stats as { tech_level?: number }).tech_level
+  } else if ('techLevel' in data) {
+    techLevel = data.techLevel as number | undefined
+  }
 
   // Determine salvage value for sidebar
-  const salvageValue = 'salvageValue' in data ? data.salvageValue : undefined
+  let salvageValue: number | undefined
+  if (
+    'stats' in data &&
+    typeof data.stats === 'object' &&
+    data.stats &&
+    'salvage_value' in data.stats
+  ) {
+    salvageValue = (data.stats as { salvage_value?: number }).salvage_value
+  } else if ('salvageValue' in data) {
+    salvageValue = data.salvageValue as number | undefined
+  }
 
   // Determine slots required for sidebar
   const slotsRequired = 'slotsRequired' in data ? data.slotsRequired : undefined
@@ -196,7 +273,6 @@ export function EntityDisplay({
       header={header}
       headerColor={headerColor}
       description={'description' in data ? data.description : undefined}
-      notes={'notes' in data ? data.notes : undefined}
       details={details.length > 0 ? details : undefined}
       headerContent={
         stats.length > 0 ? (
@@ -222,7 +298,7 @@ export function EntityDisplay({
           ))}
         </VStack>
       )}
-      {/* Roll Table (for Systems/Modules/Equipment) */}
+      {/* Roll Table (for Sytems/Modules/Equipment) */}
       {showRollTable && 'rollTable' in data && data.rollTable && (
         <RollTableDisplay rollTable={data.rollTable} showCommand />
       )}
@@ -250,7 +326,7 @@ export function EntityDisplay({
           ))}
         </VStack>
       )}
-      {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds) */}
+      {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds, Crawlers) */}
       {'abilities' in data && data.abilities && data.abilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
           <Heading
@@ -271,6 +347,12 @@ export function EntityDisplay({
             />
           ))}
         </VStack>
+      )}
+      {/* Notes (for Equipment, CrawlerBay) */}
+      {'notes' in data && data.notes && (
+        <Box borderWidth="1px" borderColor="su.black" p={3} borderRadius="md" bg="su.white">
+          <Text color="su.black">{data.notes}</Text>
+        </Box>
       )}
       {/* Custom children (for special cases like AbilityTreeRequirement) */}
       {children}

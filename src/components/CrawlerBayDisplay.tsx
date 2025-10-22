@@ -1,6 +1,6 @@
 import { Box, Grid, Text, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
-import { Frame } from './shared/Frame'
+import { EntityDisplay } from './shared/EntityDisplay'
 import type { CrawlerBay } from 'salvageunion-reference'
 
 interface CrawlerBayDisplayProps {
@@ -9,14 +9,8 @@ interface CrawlerBayDisplayProps {
 
 export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
   return (
-    <Frame
-      header={data.name}
-      headerColor="var(--color-su-pink)"
-      description={data.description}
-      showSidebar={false}
-    >
+    <EntityDisplay data={data} headerColor="su.pink">
       <VStack gap={4} alignItems="stretch">
-        {/* Operator Information */}
         <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
           <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
             <Box>
@@ -38,7 +32,6 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
           </Grid>
         </Box>
 
-        {/* Damaged Effect */}
         {data.damagedEffect && (
           <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
             <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
@@ -48,33 +41,6 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
           </Box>
         )}
 
-        {/* Abilities */}
-        {data.abilities && data.abilities.length > 0 && (
-          <VStack gap={3} alignItems="stretch">
-            <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
-              Abilities
-            </Heading>
-            {data.abilities.map((ability, index) => (
-              <VStack
-                key={index}
-                gap={2}
-                alignItems="stretch"
-                bg="su.white"
-                borderWidth="1px"
-                borderColor="su.black"
-                borderRadius="md"
-                p={3}
-              >
-                <Text fontWeight="bold" color="su.black" fontSize="lg">
-                  {ability.name}
-                </Text>
-                <Text color="su.black">{ability.description}</Text>
-              </VStack>
-            ))}
-          </VStack>
-        )}
-
-        {/* Tech Level Effects */}
         {data.techLevelEffects && data.techLevelEffects.length > 0 && (
           <VStack gap={3} alignItems="stretch">
             <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
@@ -100,38 +66,7 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
             ))}
           </VStack>
         )}
-
-        {/* Roll Table */}
-        {data.rollTable && (
-          <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
-            <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
-              Roll Table
-            </Heading>
-            <VStack gap={1} alignItems="stretch">
-              {Object.entries(data.rollTable)
-                .filter(([key]) => key !== 'type')
-                .map(([roll, result]) => (
-                  <Text key={roll} color="su.black">
-                    <Text as="span" fontWeight="bold">
-                      {roll}:{' '}
-                    </Text>
-                    {result}
-                  </Text>
-                ))}
-            </VStack>
-          </Box>
-        )}
-
-        {/* Notes */}
-        {data.notes && (
-          <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
-            <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
-              Notes
-            </Heading>
-            <Text color="su.black">{data.notes}</Text>
-          </Box>
-        )}
       </VStack>
-    </Frame>
+    </EntityDisplay>
   )
 }

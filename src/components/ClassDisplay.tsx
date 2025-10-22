@@ -3,7 +3,7 @@ import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability } from 'salvageunion-reference'
-import { Frame } from './shared/Frame'
+import { EntityDisplay } from './shared/EntityDisplay'
 import { DataList } from './shared/DataList'
 import type { DataValue } from '../types/common'
 
@@ -184,68 +184,11 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
   }
 
   return (
-    <Frame
-      header={data.name}
+    <EntityDisplay
+      data={data}
       headerColor={data.type === 'core' ? 'var(--color-su-orange)' : 'var(--color-su-pink)'}
-      description={data.description}
-      showSidebar={false}
     >
       <VStack gap={6} alignItems="stretch">
-        <VStack
-          gap={2}
-          alignItems="stretch"
-          bg="su.white"
-          borderWidth="1px"
-          borderColor="su.black"
-          borderRadius="md"
-          p={3}
-        >
-          <Flex alignItems="center" gap={2}>
-            <Text as="span" fontWeight="bold" color="su.brick">
-              Type:
-            </Text>
-            <Text as="span" color="su.black" textTransform="capitalize">
-              {data.type}
-            </Text>
-          </Flex>
-          <Flex alignItems="center" gap={2}>
-            <Text as="span" fontWeight="bold" color="su.brick">
-              Source:
-            </Text>
-            <Text as="span" color="su.black" textTransform="capitalize">
-              {data.source}
-            </Text>
-          </Flex>
-          <Flex alignItems="center" gap={2}>
-            <Text as="span" fontWeight="bold" color="su.brick">
-              Page:
-            </Text>
-            <Text as="span" color="su.black">
-              {data.page}
-            </Text>
-          </Flex>
-          {data.hybridClasses && data.hybridClasses.length > 0 && (
-            <Flex alignItems="start" gap={2}>
-              <Text as="span" fontWeight="bold" color="su.brick">
-                Hybrid Classes:
-              </Text>
-              <Text as="span" color="su.black">
-                {data.hybridClasses.join(', ')}
-              </Text>
-            </Flex>
-          )}
-          {data.coreClasses && data.coreClasses.length > 0 && (
-            <Flex alignItems="start" gap={2}>
-              <Text as="span" fontWeight="bold" color="su.brick">
-                Core Classes:
-              </Text>
-              <Text as="span" color="su.black">
-                {data.coreClasses.join(', ')}
-              </Text>
-            </Flex>
-          )}
-        </VStack>
-
         <AbilitySection
           title="Core Abilities"
           abilities={coreAbilities}
@@ -268,6 +211,6 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
           />
         )}
       </VStack>
-    </Frame>
+    </EntityDisplay>
   )
 }

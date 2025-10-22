@@ -219,12 +219,6 @@ export function Frame({
 
             {children}
 
-            {notes && (
-              <Box borderWidth="1px" borderColor="su.black" p={3} borderRadius="md" bg="su.white">
-                <Text color="su.black">{notes}</Text>
-              </Box>
-            )}
-
             {/* Select Button - Only shown in modal */}
             {showSelectButton && onClick && (
               <Button
