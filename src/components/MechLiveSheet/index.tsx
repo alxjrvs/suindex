@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { suColors } from '../../theme'
 import { SystemModuleSelector } from './SystemModuleSelector'
 import { ChassisSelector } from './ChassisSelector'
 import { PatternSelector } from './PatternSelector'
@@ -123,7 +122,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     <LiveSheetLayout>
       {id && (
         <LiveSheetControlBar
-          backgroundColor="var(--color-su-green)"
+          backgroundColor="bg.builder.mech"
           entityType="mech"
           pilotId={mech.pilot_id}
           savedPilotId={savedPilotId}
@@ -250,7 +249,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           notes={mech.notes ?? ''}
           onChange={(value) => updateMech({ notes: value })}
           disabled={!selectedChassis}
-          backgroundColor={suColors.green}
+          backgroundColor="bg.builder.mech"
           borderWidth={8}
           placeholder="Add notes about your mech..."
         />

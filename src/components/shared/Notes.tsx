@@ -1,6 +1,5 @@
 import { Box, Textarea } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
-import { suColors } from '../../theme'
 
 interface NotesProps {
   notes: string
@@ -16,17 +15,17 @@ export function Notes({
   notes,
   onChange,
   disabled = false,
-  backgroundColor = suColors.green,
+  backgroundColor = 'bg.builder',
   borderWidth = 8,
   placeholder = 'Add notes...',
   height = '96',
 }: NotesProps) {
-  const borderW = borderWidth === 8 ? '8px' : '4px'
-  const borderR = borderWidth === 8 ? '3xl' : '2xl'
-  const padding = borderWidth === 8 ? 6 : 4
+  const borderW = borderWidth === 8 ? 'builder.border' : 'builder.border.sm'
+  const borderR = borderWidth === 8 ? 'builder.radius' : 'builder.radius.md'
+  const padding = borderWidth === 8 ? 'builder.padding' : 'builder.padding.md'
   const titleMb = borderWidth === 8 ? 4 : 3
-  const textareaR = borderWidth === 8 ? '2xl' : 'lg'
-  const textareaP = borderWidth === 8 ? 4 : 3
+  const textareaR = borderWidth === 8 ? 'builder.radius.md' : 'builder.radius.sm'
+  const textareaP = borderWidth === 8 ? 'builder.padding.md' : 'builder.padding.sm'
 
   return (
     <Box
@@ -51,8 +50,8 @@ export function Notes({
         p={textareaP}
         borderWidth={0}
         borderRadius={textareaR}
-        bg="su.inputBg"
-        color="su.inputText"
+        bg="bg.input"
+        color="fg.input"
         fontWeight="semibold"
         resize="none"
         _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}

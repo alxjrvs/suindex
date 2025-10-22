@@ -23,14 +23,14 @@ export function StorageBay({
   onRemoveCargo,
 }: StorageBayProps) {
   return (
-    <Box bg="#c97d9e" borderWidth="4px" borderColor="#c97d9e" borderRadius="2xl" p={4}>
+    <Box bg="bg.builder.crawler" borderWidth="builder.border.sm" borderColor="border.builder.crawler" borderRadius="2xl" p={4}>
       <Heading level="h2" textTransform="uppercase" mb={3}>
         Storage Bay
       </Heading>
 
       <VStack gap={3} mb={4} alignItems="stretch">
         <Box>
-          <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1}>
+          <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="fg.input.label" mb={1}>
             Bullwhacker
           </Text>
           <Input
@@ -42,15 +42,15 @@ export function StorageBay({
             p={1.5}
             borderWidth={0}
             borderRadius="lg"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            bg="bg.input"
+            color="fg.input"
             fontWeight="semibold"
             fontSize="sm"
           />
         </Box>
 
         <Box>
-          <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1}>
+          <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="fg.input.label" mb={1}>
             Description
           </Text>
           <Textarea
@@ -61,8 +61,8 @@ export function StorageBay({
             p={1.5}
             borderWidth={0}
             borderRadius="lg"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            bg="bg.input"
+            color="fg.input"
             fontWeight="semibold"
             resize="none"
             h="20"
@@ -82,9 +82,9 @@ export function StorageBay({
             <Box
               key={item.id}
               position="relative"
-              bg="#e8e5d8"
+              bg="bg.input"
               borderWidth="2px"
-              borderColor="#2d3e36"
+              borderColor="fg.input"
               borderRadius="lg"
               p={1}
               aspectRatio="1"
@@ -113,10 +113,10 @@ export function StorageBay({
                 ✕
               </Button>
               <Flex flex="1" flexDirection="column" alignItems="center" justifyContent="center">
-                <Text fontSize="lg" fontWeight="bold" color="#2d3e36">
+                <Text fontSize="lg" fontWeight="bold" color="fg.input">
                   {item.amount}
                 </Text>
-                <Text fontSize="10px" color="#2d3e36" textAlign="center" lineClamp={1} px={0.5}>
+                <Text fontSize="10px" color="fg.input" textAlign="center" lineClamp={1} px={0.5}>
                   {item.description}
                 </Text>
               </Flex>

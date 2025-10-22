@@ -26,7 +26,7 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
         display="block"
         fontSize="sm"
         fontWeight="bold"
-        color="#e8e5d8"
+        color="fg.input.label"
         mb={2}
         textTransform="uppercase"
       >
@@ -49,8 +49,8 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
         p={3}
         borderWidth={0}
         borderRadius="2xl"
-        bg="#e8e5d8"
-        color="#2d3e36"
+        bg="bg.input"
+        color="fg.input"
         fontWeight="semibold"
         _disabled={{ opacity: 0.5 }}
       />
@@ -60,9 +60,9 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
           zIndex={10}
           w="full"
           mt={1}
-          bg="#e8e5d8"
+          bg="bg.input"
           borderWidth="2px"
-          borderColor="#2d3e36"
+          borderColor="fg.input"
           borderRadius="2xl"
           shadow="lg"
           maxH="60"
@@ -83,9 +83,9 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
               p={3}
               _hover={{ bg: 'su.lightBlue' }}
               fontWeight="semibold"
-              color="#2d3e36"
+              color="fg.input"
               borderBottomWidth={index < filteredPatterns.length - 1 ? '1px' : 0}
-              borderBottomColor="#2d3e36"
+              borderBottomColor="fg.input"
               borderRadius={0}
               justifyContent="flex-start"
               h="auto"

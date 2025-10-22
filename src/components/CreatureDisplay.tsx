@@ -6,6 +6,6 @@ interface CreatureDisplayProps {
 }
 
 export function CreatureDisplay({ data }: CreatureDisplayProps) {
-  return <EntityDisplay data={data} headerColor="var(--color-su-orange)" />
+  return <EntityDisplay data={data} headerColor="su.orange" />
 }
 

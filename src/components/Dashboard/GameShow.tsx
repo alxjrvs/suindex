@@ -845,7 +845,7 @@ export function GameShow() {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        color: 'var(--color-su-brick)',
+                        color: 'su.brick',
                         fontWeight: 'medium',
                         flex: 1,
                         textDecoration: 'none',

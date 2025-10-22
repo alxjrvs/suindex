@@ -155,7 +155,7 @@ export function CrawlersGrid() {
         {/* Create Crawler cell */}
         <Button
           onClick={handleCreateCrawler}
-          bg="#f5c1a3"
+          bg="su.lightPeach"
           borderWidth="2px"
           borderStyle="dashed"
           borderColor="su.pink"

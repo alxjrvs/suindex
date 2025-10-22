@@ -71,9 +71,9 @@ export function AbilitiesList({
 
   return (
     <Box
-      bg="var(--color-su-orange)"
-      borderWidth="8px"
-      borderColor="var(--color-su-orange)"
+      bg="bg.builder.pilot"
+      borderWidth="builder.border"
+      borderColor="border.builder.pilot"
       borderRadius="3xl"
       p={6}
       shadow="lg"
@@ -85,7 +85,7 @@ export function AbilitiesList({
         </Heading>
         <Flex alignItems="center" gap={4}>
           <Flex flexDirection="column" alignItems="center">
-            <Text as="label" fontSize="xs" fontWeight="bold" color="#e8e5d8" mb={1} display="block">
+            <Text as="label" fontSize="xs" fontWeight="bold" color="fg.input.label" mb={1} display="block">
               Add
             </Text>
             <Button
@@ -100,7 +100,7 @@ export function AbilitiesList({
               _hover={{ bg: 'su.brick' }}
               borderWidth="2px"
               borderStyle="dashed"
-              borderColor="#e8e5d8"
+              borderColor="fg.input.label"
               _disabled={{
                 opacity: 0.5,
                 cursor: 'not-allowed',

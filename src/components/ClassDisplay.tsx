@@ -117,7 +117,7 @@ function AbilityItem({ ability }: { ability: Ability }) {
           <Heading level="h5">{ability.name}</Heading>
           {details.length > 0 && (
             <Box mt={1}>
-              <DataList values={details} textColor="var(--color-su-brick)" />
+              <DataList values={details} textColor="su.brick" />
             </Box>
           )}
         </Box>
@@ -186,20 +186,20 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
   return (
     <EntityDisplay
       data={data}
-      headerColor={data.type === 'core' ? 'var(--color-su-orange)' : 'var(--color-su-pink)'}
+      headerColor={data.type === 'core' ? 'su.orange' : 'su.pink'}
     >
       <VStack gap={6} alignItems="stretch">
         <AbilitySection
           title="Core Abilities"
           abilities={coreAbilities}
-          headerColor="var(--color-su-brick)"
+          headerColor="su.brick"
         />
 
         {Object.keys(advancedAbilities).length > 0 && (
           <AbilitySection
             title="Advanced Abilities"
             abilities={advancedAbilities}
-            headerColor="var(--color-su-orange)"
+            headerColor="su.orange"
           />
         )}
 
@@ -207,7 +207,7 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
           <AbilitySection
             title="Legendary Abilities"
             abilities={legendaryAbilities}
-            headerColor="var(--color-su-pink)"
+            headerColor="su.pink"
           />
         )}
       </VStack>

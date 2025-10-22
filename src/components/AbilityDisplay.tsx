@@ -34,7 +34,7 @@ export function AbilityDisplay({
   selectButtonText,
 }: AbilityDisplayProps) {
   const isLegendary = String(data.level).toUpperCase() === 'L' || data.tree.includes('Legendary')
-  const headerColor = isLegendary ? 'var(--color-su-pink)' : 'var(--color-su-orange)'
+  const headerColor = isLegendary ? 'su.pink' : 'su.orange'
 
   return (
     <EntityDisplay

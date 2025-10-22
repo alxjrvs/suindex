@@ -14,7 +14,7 @@ export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
         display="block"
         fontSize="sm"
         fontWeight="bold"
-        color="#e8e5d8"
+        color="fg.input.label"
         mb={2}
         textTransform="uppercase"
       >
@@ -32,19 +32,19 @@ export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
         ).map((ability, idx) => (
           <Box
             key={idx}
-            bg="#e8e5d8"
+            bg="bg.input"
             borderWidth="2px"
-            borderColor="#2d3e36"
+            borderColor="fg.input"
             borderRadius="2xl"
             p={4}
           >
             {ability.name && (
-              <Heading level="h3" fontWeight="bold" color="#2d3e36" fontSize="lg" mb={2}>
+              <Heading level="h3" fontWeight="bold" color="fg.input" fontSize="lg" mb={2}>
                 {ability.name}
               </Heading>
             )}
             {ability.description && (
-              <Text color="#2d3e36" lineHeight="relaxed">
+              <Text color="fg.input" lineHeight="relaxed">
                 {ability.description}
               </Text>
             )}
@@ -54,7 +54,7 @@ export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
               ability.options.length > 0 && (
                 <VStack mt={3} ml={4} gap={1} alignItems="stretch">
                   {ability.options.map((option, optIndex) => (
-                    <Box key={optIndex} color="#2d3e36">
+                    <Box key={optIndex} color="fg.input">
                       <Text as="span" fontWeight="bold">
                         {option.label}
                         {option.label.includes('•') || option.label.length === 0 ? '' : ':'}

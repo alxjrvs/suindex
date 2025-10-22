@@ -61,13 +61,13 @@ export function SystemsModulesList({
   }, [modules, allModules])
 
   return (
-    <Box bg="#6b8e7f" borderWidth="8px" borderColor="#6b8e7f" borderRadius="3xl" p={6} shadow="lg">
+    <Box bg="bg.builder.mech" borderWidth="builder.border" borderColor="border.builder" borderRadius="builder.radius" p="builder.padding" shadow="lg">
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
         <Heading
           level="h2"
           fontSize="xl"
           fontWeight="bold"
-          color="#e8e5d8"
+          color="fg.input.label"
           textTransform="uppercase"
         >
           Systems & Modules
@@ -85,7 +85,7 @@ export function SystemsModulesList({
               level="h3"
               fontSize="lg"
               fontWeight="bold"
-              color="#e8e5d8"
+              color="fg.input.label"
               textTransform="uppercase"
             >
               Systems
@@ -130,7 +130,7 @@ export function SystemsModulesList({
               level="h3"
               fontSize="lg"
               fontWeight="bold"
-              color="#e8e5d8"
+              color="fg.input.label"
               textTransform="uppercase"
             >
               Modules

@@ -21,9 +21,9 @@ export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
         ).map((ability, idx) => (
           <Box
             key={idx}
-            bg="#e8e5d8"
+            bg="bg.input"
             borderWidth="2px"
-            borderColor="#2d3e36"
+            borderColor="fg.input"
             borderRadius="2xl"
             p={4}
           >
@@ -33,7 +33,7 @@ export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
               </Heading>
             )}
             {ability.description && (
-              <Text color="#2d3e36" lineHeight="relaxed">
+              <Text color="fg.input" lineHeight="relaxed">
                 {ability.description}
               </Text>
             )}

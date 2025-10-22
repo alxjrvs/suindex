@@ -88,11 +88,11 @@ export function PilotInfoInputs({
 
   return (
     <Box
-      bg="var(--color-su-orange)"
-      borderWidth="8px"
-      borderColor="var(--color-su-orange)"
-      borderRadius="3xl"
-      p={6}
+      bg="bg.builder.pilot"
+      borderWidth="builder.border"
+      borderColor="border.builder.pilot"
+      borderRadius="builder.radius"
+      p="builder.padding"
       shadow="lg"
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
@@ -103,7 +103,7 @@ export function PilotInfoInputs({
             display="block"
             fontSize="sm"
             fontWeight="bold"
-            color="#e8e5d8"
+            color="fg.input.label"
             mb={2}
             textTransform="uppercase"
           >
@@ -118,9 +118,9 @@ export function PilotInfoInputs({
             w="full"
             p={3}
             borderWidth={0}
-            borderRadius="2xl"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            borderRadius="builder.radius.md"
+            bg="bg.input"
+            color="fg.input"
             fontWeight="semibold"
             _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           />
@@ -133,7 +133,7 @@ export function PilotInfoInputs({
             display="flex"
             fontSize="sm"
             fontWeight="bold"
-            color="#e8e5d8"
+            color="fg.input.label"
             mb={2}
             textTransform="uppercase"
             alignItems="center"
@@ -171,9 +171,9 @@ export function PilotInfoInputs({
               w="full"
               p={3}
               borderWidth={0}
-              borderRadius="2xl"
-              bg="#e8e5d8"
-              color="#2d3e36"
+              borderRadius="builder.radius.md"
+              bg="bg.input"
+              color="fg.input"
               fontWeight="semibold"
               _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
             />
@@ -195,7 +195,7 @@ export function PilotInfoInputs({
               display="block"
               fontSize="sm"
               fontWeight="bold"
-              color="#e8e5d8"
+              color="fg.input.label"
               mb={2}
               textTransform="uppercase"
             >
@@ -208,9 +208,9 @@ export function PilotInfoInputs({
                 w="full"
                 p={3}
                 borderWidth={0}
-                borderRadius="2xl"
-                bg="#e8e5d8"
-                color="#2d3e36"
+                borderRadius="builder.radius.md"
+                bg="bg.input"
+                color="fg.input"
                 fontWeight="semibold"
                 _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
               >
@@ -231,7 +231,7 @@ export function PilotInfoInputs({
               display="block"
               fontSize="sm"
               fontWeight="bold"
-              color="#e8e5d8"
+              color="fg.input.label"
               mb={2}
               textTransform="uppercase"
             >
@@ -245,9 +245,9 @@ export function PilotInfoInputs({
                 w="full"
                 p={3}
                 borderWidth={0}
-                borderRadius="2xl"
-                bg="#e8e5d8"
-                color="#2d3e36"
+                borderRadius="builder.radius.md"
+                bg="bg.input"
+                color="fg.input"
                 fontWeight="semibold"
                 _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
               >
@@ -269,7 +269,7 @@ export function PilotInfoInputs({
             display="flex"
             fontSize="sm"
             fontWeight="bold"
-            color="#e8e5d8"
+            color="fg.input.label"
             mb={2}
             textTransform="uppercase"
             alignItems="center"
@@ -307,9 +307,9 @@ export function PilotInfoInputs({
               flex="1"
               p={3}
               borderWidth={0}
-              borderRadius="2xl"
-              bg="#e8e5d8"
-              color="#2d3e36"
+              borderRadius="builder.radius.md"
+              bg="bg.input"
+              color="fg.input"
               fontWeight="semibold"
               _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
             />
@@ -329,7 +329,7 @@ export function PilotInfoInputs({
             display="block"
             fontSize="sm"
             fontWeight="bold"
-            color="#e8e5d8"
+            color="fg.input.label"
             mb={2}
             textTransform="uppercase"
           >
@@ -345,9 +345,9 @@ export function PilotInfoInputs({
               flex="1"
               p={3}
               borderWidth={0}
-              borderRadius="2xl"
-              bg="#e8e5d8"
-              color="#2d3e36"
+              borderRadius="builder.radius.md"
+              bg="bg.input"
+              color="fg.input"
               fontWeight="semibold"
               _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
             />
@@ -367,7 +367,7 @@ export function PilotInfoInputs({
             display="flex"
             fontSize="sm"
             fontWeight="bold"
-            color="#e8e5d8"
+            color="fg.input.label"
             mb={2}
             textTransform="uppercase"
             alignItems="center"
@@ -404,9 +404,9 @@ export function PilotInfoInputs({
             w="full"
             p={3}
             borderWidth={0}
-            borderRadius="2xl"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            borderRadius="builder.radius.md"
+            bg="bg.input"
+            color="fg.input"
             fontWeight="semibold"
             _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
           />

@@ -115,7 +115,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     <LiveSheetLayout>
       {id && (
         <LiveSheetControlBar
-          backgroundColor="#c97d9e"
+          backgroundColor="bg.builder.crawler"
           entityType="crawler"
           gameId={crawler.game_id}
           savedGameId={savedGameId}
@@ -129,10 +129,10 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
       <Flex gap={6}>
         <Box flex="1">
           <Box
-            bg="#c97d9e"
-            borderWidth="4px"
-            borderColor="#c97d9e"
-            borderRadius="3xl"
+            bg="bg.builder.crawler"
+            borderWidth="builder.border.sm"
+            borderColor="border.builder.crawler"
+            borderRadius="builder.radius"
             p={6}
             shadow="lg"
           >
@@ -150,10 +150,10 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
         {/* Resource Steppers */}
         <Box
-          bg="#c97d9e"
-          borderWidth="4px"
-          borderColor="#c97d9e"
-          borderRadius="3xl"
+          bg="bg.builder.crawler"
+          borderWidth="builder.border.sm"
+          borderColor="border.builder.crawler"
+          borderRadius="builder.radius"
           px={2}
           py={6}
           shadow="lg"
@@ -179,10 +179,10 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
       {/* Abilities Section - Full Width */}
       <Box
-        bg="#c97d9e"
-        borderWidth="4px"
-        borderColor="#c97d9e"
-        borderRadius="3xl"
+        bg="bg.builder.crawler"
+        borderWidth="builder.border.sm"
+        borderColor="border.builder.crawler"
+        borderRadius="builder.radius"
         p={6}
         shadow="lg"
       >
@@ -247,7 +247,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         <Notes
           notes={crawler.notes ?? ''}
           onChange={(value) => updateCrawler({ notes: value })}
-          backgroundColor="#c97d9e"
+          backgroundColor="bg.builder.crawler"
           borderWidth={4}
           placeholder="Add notes about your crawler..."
           height="flex-1"
@@ -259,7 +259,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         isOpen={isCargoModalOpen}
         onClose={() => setIsCargoModalOpen(false)}
         onAdd={handleAddCargo}
-        backgroundColor="#c97d9e"
+        backgroundColor="bg.builder.crawler"
       />
     </LiveSheetLayout>
   )

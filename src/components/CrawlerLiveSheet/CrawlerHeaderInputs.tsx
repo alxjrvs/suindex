@@ -30,7 +30,7 @@ export function CrawlerHeaderInputs({
             display="block"
             fontSize="sm"
             fontWeight="bold"
-            color="#e8e5d8"
+            color="fg.input.label"
             mb={2}
             textTransform="uppercase"
           >
@@ -44,9 +44,9 @@ export function CrawlerHeaderInputs({
             w="full"
             p={2}
             borderWidth={0}
-            borderRadius="lg"
-            bg="#e8e5d8"
-            color="#2d3e36"
+            borderRadius="builder.radius.sm"
+            bg="bg.input"
+            color="fg.input"
             fontWeight="semibold"
           />
         </Box>
@@ -57,7 +57,7 @@ export function CrawlerHeaderInputs({
             display="block"
             fontSize="sm"
             fontWeight="bold"
-            color="#e8e5d8"
+            color="fg.input.label"
             mb={2}
             textTransform="uppercase"
           >
@@ -70,9 +70,9 @@ export function CrawlerHeaderInputs({
               w="full"
               p={2}
               borderWidth={0}
-              borderRadius="lg"
-              bg="#e8e5d8"
-              color="#2d3e36"
+              borderRadius="builder.radius.sm"
+              bg="bg.input"
+              color="fg.input"
               fontWeight="semibold"
             >
               <option value="">Select crawler type...</option>
@@ -92,7 +92,7 @@ export function CrawlerHeaderInputs({
           display="block"
           fontSize="sm"
           fontWeight="bold"
-          color="#e8e5d8"
+          color="fg.input.label"
           mb={2}
           textTransform="uppercase"
         >
@@ -105,9 +105,9 @@ export function CrawlerHeaderInputs({
           w="full"
           p={2}
           borderWidth={0}
-          borderRadius="lg"
-          bg="#e8e5d8"
-          color="#2d3e36"
+          borderRadius="builder.radius.sm"
+          bg="bg.input"
+          color="fg.input"
           fontWeight="semibold"
           resize="none"
           h="24"

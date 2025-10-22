@@ -38,7 +38,7 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
         display="block"
         fontSize="sm"
         fontWeight="bold"
-        color="#e8e5d8"
+        color="fg.input.label"
         mb={2}
         textTransform="uppercase"
       >
@@ -52,8 +52,8 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
           p={3}
           borderWidth={0}
           borderRadius="2xl"
-          bg="#e8e5d8"
-          color="#2d3e36"
+          bg="bg.input"
+          color="fg.input"
           fontWeight="semibold"
         >
           <option value="">Select a chassis...</option>

@@ -22,6 +22,10 @@ export const suColors = {
   inputBg: 'rgb(232, 229, 216)', // #e8e5d8
   inputText: 'rgb(45, 62, 54)', // #2d3e36
   crawlerPink: 'rgb(201, 125, 158)', // #c97d9e
+  lightPeach: 'rgb(245, 193, 163)', // #f5c1a3
+  // External brand colors
+  discordBlurple: 'rgb(88, 101, 242)', // #5865F2
+  discordBlurpleHover: 'rgb(71, 82, 196)', // #4752C4
 }
 
 // Tech level color mapping
@@ -60,6 +64,9 @@ const config = defineConfig({
           inputBg: { value: suColors.inputBg },
           inputText: { value: suColors.inputText },
           crawlerPink: { value: suColors.crawlerPink },
+          lightPeach: { value: suColors.lightPeach },
+          discordBlurple: { value: suColors.discordBlurple },
+          discordBlurpleHover: { value: suColors.discordBlurpleHover },
         },
       },
       fonts: {

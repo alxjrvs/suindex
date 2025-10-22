@@ -111,7 +111,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
     <LiveSheetLayout>
       {id && (
         <LiveSheetControlBar
-          backgroundColor="var(--color-su-orange)"
+          backgroundColor="bg.builder.pilot"
           entityType="pilot"
           crawlerId={pilot.crawler_id}
           savedCrawlerId={savedCrawlerId}
@@ -193,10 +193,10 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
 
       {/* Notes Section */}
       <Box
-        bg="var(--color-su-orange)"
-        borderWidth="8px"
-        borderColor="var(--color-su-orange)"
-        borderRadius="3xl"
+        bg="bg.builder.pilot"
+        borderWidth="builder.border"
+        borderColor="border.builder.pilot"
+        borderRadius="builder.radius"
         p={6}
         shadow="lg"
       >
@@ -213,8 +213,8 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           p={4}
           borderWidth={0}
           borderRadius="2xl"
-          bg="#e8e5d8"
-          color="#2d3e36"
+          bg="bg.input"
+          color="fg.input"
           fontWeight="semibold"
           resize="none"
           _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}

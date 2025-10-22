@@ -64,6 +64,9 @@ export type Database = MergeDeep<
 // Helper Types
 // ============================================================================
 
+// Derive valid table names from the database schema
+export type ValidTable = keyof Database['public']['Tables']
+
 export type Tables<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Row']
 

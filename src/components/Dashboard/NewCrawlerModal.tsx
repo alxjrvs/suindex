@@ -140,7 +140,7 @@ export function NewCrawlerModal({ isOpen, onClose, onSuccess }: NewCrawlerModalP
       isOpen={isOpen}
       onClose={handleClose}
       title="Create New Crawler"
-      backgroundColor="#c97d9e"
+      backgroundColor="bg.builder.crawler"
     >
       <VStack gap={4} alignItems="stretch">
         {error && (

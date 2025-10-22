@@ -47,16 +47,16 @@ export default function NumericStepper({
           h={5}
           minW={5}
           minH={5}
-          bg="#e8e5d8"
-          color="#2d3e36"
+          bg="bg.input"
+          color="fg.input"
           fontSize="xs"
           fontWeight="bold"
           borderRadius="md"
-          _hover={{ bg: '#d8d5c8' }}
+          _hover={{ bg: 'bg.muted' }}
           _disabled={{
             opacity: 0.3,
             cursor: 'not-allowed',
-            _hover: { bg: '#e8e5d8' },
+            _hover: { bg: 'bg.input' },
           }}
           aria-label={`Increment ${label}`}
         >
@@ -70,16 +70,16 @@ export default function NumericStepper({
           h={5}
           minW={5}
           minH={5}
-          bg="#e8e5d8"
-          color="#2d3e36"
+          bg="bg.input"
+          color="fg.input"
           fontSize="xs"
           fontWeight="bold"
           borderRadius="md"
-          _hover={{ bg: '#d8d5c8' }}
+          _hover={{ bg: 'bg.muted' }}
           _disabled={{
             opacity: 0.3,
             cursor: 'not-allowed',
-            _hover: { bg: '#e8e5d8' },
+            _hover: { bg: 'bg.input' },
           }}
           aria-label={`Decrement ${label}`}
         >

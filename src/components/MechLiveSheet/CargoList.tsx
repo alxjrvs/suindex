@@ -22,7 +22,7 @@ export function CargoList({
   onAddClick,
 }: CargoListProps) {
   return (
-    <Box bg="#6b8e7f" borderWidth="8px" borderColor="#6b8e7f" borderRadius="3xl" p={6} shadow="lg">
+    <Box bg="bg.builder.mech" borderWidth="builder.border" borderColor="border.builder" borderRadius="builder.radius" p="builder.padding" shadow="lg">
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
         <Heading level="h2" textTransform="uppercase">
           Cargo
@@ -35,9 +35,9 @@ export function CargoList({
           <Box
             key={item.id}
             position="relative"
-            bg="#e8e5d8"
+            bg="bg.input"
             borderWidth="2px"
-            borderColor="#2d3e36"
+            borderColor="fg.input"
             borderRadius="lg"
             p={2}
             aspectRatio="1"
@@ -68,12 +68,12 @@ export function CargoList({
               ✕
             </Button>
             <Flex flex="1" flexDirection="column" alignItems="center" justifyContent="center">
-              <Text fontSize="3xl" fontWeight="bold" color="#2d3e36">
+              <Text fontSize="3xl" fontWeight="bold" color="fg.input">
                 {item.amount}
               </Text>
               <Text
                 fontSize="xs"
-                color="#2d3e36"
+                color="fg.input"
                 textAlign="center"
                 px={2}
                 css={{

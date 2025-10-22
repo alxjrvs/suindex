@@ -28,9 +28,9 @@ export function PilotResourceSteppers({
 
   return (
     <Box
-      bg="var(--color-su-orange)"
-      borderWidth="8px"
-      borderColor="var(--color-su-orange)"
+      bg="bg.builder.pilot"
+      borderWidth="builder.border"
+      borderColor="border.builder.pilot"
       borderRadius="3xl"
       p={6}
       shadow="lg"

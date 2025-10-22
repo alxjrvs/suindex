@@ -295,7 +295,7 @@ export function DashboardContent() {
                   variant="plain"
                 >
                   <Box
-                    bg="#c97d9e"
+                    bg="su.crawlerPink"
                     borderWidth="4px"
                     borderColor="su.black"
                     borderRadius="lg"
@@ -322,13 +322,13 @@ export function DashboardContent() {
             })}
             <Button
               onClick={() => navigate('/dashboard/crawlers')}
-              bg="#f5c1a3"
+              bg="su.lightPeach"
               borderWidth="2px"
               borderStyle="dashed"
-              borderColor="#c97d9e"
+              borderColor="su.crawlerPink"
               borderRadius="lg"
               p={4}
-              _hover={{ bg: '#c97d9e', borderStyle: 'solid' }}
+              _hover={{ bg: 'su.crawlerPink', borderStyle: 'solid' }}
               h="32"
               display="flex"
               flexDirection="column"
@@ -336,13 +336,13 @@ export function DashboardContent() {
               justifyContent="center"
               variant="outline"
             >
-              <Text fontSize="4xl" color="#c97d9e" _groupHover={{ color: 'su.white' }} mb={1}>
+              <Text fontSize="4xl" color="su.crawlerPink" _groupHover={{ color: 'su.white' }} mb={1}>
                 +
               </Text>
               <Text
                 fontSize="sm"
                 fontWeight="bold"
-                color="#c97d9e"
+                color="su.crawlerPink"
                 _groupHover={{ color: 'su.white' }}
               >
                 New Crawler

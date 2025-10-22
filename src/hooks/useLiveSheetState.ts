@@ -1,14 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
-
-type ValidTable =
-  | 'crawlers'
-  | 'external_links'
-  | 'game_invites'
-  | 'game_members'
-  | 'games'
-  | 'mechs'
-  | 'pilots'
+import type { ValidTable } from '../types/database'
 
 export interface UseLiveSheetStateConfig<T> {
   table: ValidTable

@@ -8,7 +8,6 @@ import {
   DialogBackdrop,
   DialogCloseTrigger,
 } from '@chakra-ui/react'
-import { suColors } from '../theme'
 
 interface ModalProps {
   isOpen: boolean
@@ -23,7 +22,7 @@ export default function Modal({
   onClose,
   title,
   children,
-  backgroundColor = suColors.green,
+  backgroundColor = 'bg.builder',
 }: ModalProps) {
   return (
     <DialogRoot open={isOpen} onOpenChange={(e) => !e.open && onClose()} size="xl">
