@@ -1,5 +1,6 @@
-import { Box, Flex, Grid, Button, Text } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Grid, Text } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Heading } from '../base/Heading'
 import { StatDisplay } from '../StatDisplay'
 import type { CargoItem } from './types'
 
@@ -23,7 +24,7 @@ export function CargoList({
   return (
     <Box bg="#6b8e7f" borderWidth="8px" borderColor="#6b8e7f" borderRadius="3xl" p={6} shadow="lg">
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading as="h2" textTransform="uppercase">
+        <Heading level="h2" textTransform="uppercase">
           Cargo
         </Heading>
         <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} />

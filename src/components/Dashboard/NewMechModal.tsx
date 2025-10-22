@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Box, Button, Flex, NativeSelect, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, NativeSelect, Text, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import Modal from '../Modal'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { supabase } from '../../lib/supabase'

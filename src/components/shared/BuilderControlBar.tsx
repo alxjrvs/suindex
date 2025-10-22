@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { HStack, Text, Button, Box } from '@chakra-ui/react'
-import { NativeSelectRoot, NativeSelectField } from '@chakra-ui/react'
+import { HStack, Text, Box, Button, NativeSelectRoot, NativeSelectField } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 
 interface AssignmentDropdownProps {

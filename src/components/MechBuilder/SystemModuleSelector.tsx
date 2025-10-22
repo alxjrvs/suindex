@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
-import { Box, Button, Flex, Input, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import type { System, Module } from 'salvageunion-reference'
 import Modal from '../Modal'
 import { SystemDisplay } from '../SystemDisplay'

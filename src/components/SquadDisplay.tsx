@@ -1,5 +1,5 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import { ActionDisplay } from './shared/ActionDisplay'
@@ -38,7 +38,7 @@ export function SquadDisplay({ data }: SquadDisplayProps) {
 
       {data.abilities && data.abilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
-          <Heading as="h3" textTransform="uppercase">
+          <Heading level="h3" textTransform="uppercase">
             Abilities
           </Heading>
           {data.abilities.map((ability, index) => (

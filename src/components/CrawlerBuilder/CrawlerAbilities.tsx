@@ -1,6 +1,6 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
 import type { Crawler } from 'salvageunion-reference'
+import { Heading } from '../base/Heading'
 
 interface CrawlerAbilitiesProps {
   crawler: Crawler | undefined
@@ -10,7 +10,7 @@ export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
   return (
     <Box mb={6}>
       <VStack gap={3} alignItems="stretch">
-        <Heading as="h2">Abilities</Heading>
+        <Heading level="h2">Abilities</Heading>
         {(
           crawler?.abilities || [
             {
@@ -28,7 +28,7 @@ export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
             p={4}
           >
             {ability.name && (
-              <Heading as="h3" mb={2}>
+              <Heading level="h3" mb={2}>
                 {ability.name}
               </Heading>
             )}

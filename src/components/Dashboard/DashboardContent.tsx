@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import { Box, Button, Flex, Grid, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
+import { Heading } from '../base/Heading'
 
 type GameRow = Tables<'games'>
 type CrawlerRow = Tables<'crawlers'>
@@ -166,7 +167,7 @@ export function DashboardContent() {
         {/* Games Section */}
         <Box>
           <Flex alignItems="center" justifyContent="space-between" mb={4}>
-            <Heading as="h2">Games</Heading>
+            <Heading level="h2">Games</Heading>
             <Button
               onClick={() => navigate('/dashboard/games')}
               fontSize="sm"
@@ -199,7 +200,7 @@ export function DashboardContent() {
                 variant="outline"
               >
                 <Flex alignItems="start" justifyContent="space-between" mb={2}>
-                  <Heading as="h3" flex="1" pr={2} lineClamp={1}>
+                  <Heading level="h3" flex="1" pr={2} lineClamp={1}>
                     {game.name}
                   </Heading>
                   <Text
@@ -257,7 +258,7 @@ export function DashboardContent() {
         {/* Crawlers Section */}
         <Box>
           <Flex alignItems="center" justifyContent="space-between" mb={4}>
-            <Heading as="h2">Crawlers</Heading>
+            <Heading level="h2">Crawlers</Heading>
             <Button
               onClick={() => navigate('/dashboard/crawlers')}
               fontSize="sm"
@@ -305,7 +306,7 @@ export function DashboardContent() {
                     justifyContent="space-between"
                   >
                     <Box>
-                      <Heading as="h3" mb={1} lineClamp={1}>
+                      <Heading level="h3" mb={1} lineClamp={1}>
                         {crawler.name}
                       </Heading>
                       <Text fontSize="xs" color="su.white" opacity={0.9} lineClamp={1}>
@@ -353,7 +354,7 @@ export function DashboardContent() {
         {/* Pilots Section */}
         <Box>
           <Flex alignItems="center" justifyContent="space-between" mb={4}>
-            <Heading as="h2">Pilots</Heading>
+            <Heading level="h2">Pilots</Heading>
             <Button
               onClick={() => navigate('/dashboard/pilots')}
               fontSize="sm"
@@ -394,7 +395,7 @@ export function DashboardContent() {
                     justifyContent="space-between"
                   >
                     <Box>
-                      <Heading as="h3" mb={1} lineClamp={1}>
+                      <Heading level="h3" mb={1} lineClamp={1}>
                         {pilot.callsign}
                       </Heading>
                       {className && (
@@ -454,7 +455,7 @@ export function DashboardContent() {
         {/* Mechs Section */}
         <Box>
           <Flex alignItems="center" justifyContent="space-between" mb={4}>
-            <Heading as="h2">Mechs</Heading>
+            <Heading level="h2">Mechs</Heading>
             <Button
               onClick={() => navigate('/dashboard/mechs')}
               fontSize="sm"
@@ -495,7 +496,7 @@ export function DashboardContent() {
                     justifyContent="space-between"
                   >
                     <Box>
-                      <Heading as="h3" mb={1} lineClamp={1}>
+                      <Heading level="h3" mb={1} lineClamp={1}>
                         {mech.pattern || chassisName}
                       </Heading>
                       {mech.pattern && (

@@ -1,4 +1,5 @@
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react'
+import { headingRecipe } from './recipes/heading.recipe'
 
 // Salvage Union color palette - raw values
 export const suColors = {
@@ -35,6 +36,9 @@ export const techLevelColors: Record<number, string> = {
 
 const config = defineConfig({
   theme: {
+    recipes: {
+      heading: headingRecipe,
+    },
     tokens: {
       colors: {
         su: {
@@ -115,86 +119,7 @@ const config = defineConfig({
     code: {
       fontFamily: 'mono',
     },
-    h1: {
-      color: 'su.white',
-      bg: 'su.black',
-      padding: '12px',
-      fontWeight: 'bold',
-      display: 'inline-block',
-    },
-    h2: {
-      color: 'su.white',
-      bg: 'su.black',
-      fontWeight: 'bold',
-      padding: '8px',
-      display: 'inline-block',
-    },
-    h3: {
-      color: 'su.black',
-      fontWeight: 'bold',
-      bg: 'transparent',
-    },
-    h4: {
-      color: 'su.black',
-      fontWeight: 'bold',
-      bg: 'transparent',
-    },
-    h5: {
-      color: 'su.black',
-      bg: 'transparent',
-    },
-    h6: {
-      color: 'su.black',
-      bg: 'transparent',
-    },
   },
 })
 
 export const system = createSystem(defaultConfig, config)
-
-// Export heading styles for use in components
-// Font sizes match HTML defaults: h1=2em, h2=1.5em, h3=1.17em, h4=1em, h5=0.83em, h6=0.67em
-export const headingStyles = {
-  h1: {
-    color: 'su.white',
-    bg: 'su.black',
-    fontWeight: 'bold',
-    fontSize: '2em',
-    alignSelf: 'flex-start',
-  },
-  h2: {
-    color: 'su.white',
-    bg: 'su.black',
-    fontWeight: 'bold',
-    fontSize: '1.5em',
-    alignSelf: 'flex-start',
-  },
-  h3: {
-    color: 'su.black',
-    bg: 'transparent',
-    fontWeight: 'bold',
-    fontSize: '1.17em',
-    alignSelf: 'flex-start',
-  },
-  h4: {
-    color: 'su.black',
-    bg: 'transparent',
-    fontWeight: 'bold',
-    fontSize: '1em',
-    alignSelf: 'flex-start',
-  },
-  h5: {
-    color: 'su.black',
-    bg: 'transparent',
-    fontWeight: 'bold',
-    fontSize: '0.83em',
-    alignSelf: 'flex-start',
-  },
-  h6: {
-    color: 'su.black',
-    bg: 'transparent',
-    fontWeight: 'bold',
-    fontSize: '0.67em',
-    alignSelf: 'flex-start',
-  },
-} as const

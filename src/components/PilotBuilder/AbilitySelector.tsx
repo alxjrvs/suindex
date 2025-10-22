@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useCallback } from 'react'
-import { Box, Button, Flex, Grid, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Grid, VStack, Button } from '@chakra-ui/react'
+import { Heading } from '../base/Heading'
 import type { Ability, Class } from 'salvageunion-reference'
 import { AbilityDisplay } from '../AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
@@ -271,7 +271,7 @@ export function AbilitySelector({
           alignItems="center"
           justifyContent="space-between"
         >
-          <Heading as="h2" textTransform="uppercase">
+          <Heading level="h2" textTransform="uppercase">
             Select Ability
           </Heading>
           <StatDisplay label="TP" value={currentTP} />
@@ -283,7 +283,7 @@ export function AbilitySelector({
           <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} mb={4}>
             {coreTreeNames.map((treeName) => (
               <Flex key={treeName} flexDirection="column">
-                <Heading as="h3" textTransform="uppercase" mb={2} textAlign="center">
+                <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
                   {treeName}
                 </Heading>
                 <VStack gap={2} alignItems="stretch">
@@ -324,7 +324,7 @@ export function AbilitySelector({
                     {/* Advanced Tree from base class */}
                     {advancedTreeAbilities.length > 0 && (
                       <Flex flexDirection="column">
-                        <Heading as="h3" textTransform="uppercase" mb={2} textAlign="center">
+                        <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
                           {advancedTreeName}
                         </Heading>
                         <VStack gap={2} alignItems="stretch">
@@ -361,7 +361,7 @@ export function AbilitySelector({
                     {/* Legendary Abilities from base class */}
                     {legendaryAbilities.length > 0 && advancedTreeAbilities.length > 0 && (
                       <Flex flexDirection="column">
-                        <Heading as="h3" textTransform="uppercase" mb={2} textAlign="center">
+                        <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
                           Legendary Abilities
                         </Heading>
                         <VStack gap={2} alignItems="stretch">
@@ -407,7 +407,7 @@ export function AbilitySelector({
                     {/* For hybrid classes, show advanced class tree abilities */}
                     {advancedClassTreeAbilities.length > 0 && (
                       <Flex flexDirection="column">
-                        <Heading as="h3" textTransform="uppercase" mb={2} textAlign="center">
+                        <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
                           {selectedAdvancedClass.advancedAbilities}
                         </Heading>
                         <VStack gap={2} alignItems="stretch">
@@ -446,7 +446,7 @@ export function AbilitySelector({
                     {/* Legendary Abilities from advanced class */}
                     {advancedClassLegendaryAbilities.length > 0 && (
                       <Flex flexDirection="column">
-                        <Heading as="h3" textTransform="uppercase" mb={2} textAlign="center">
+                        <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
                           Legendary Abilities
                         </Heading>
                         <VStack gap={2} alignItems="stretch">

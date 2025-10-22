@@ -1,7 +1,8 @@
 import { Link as RouterLink } from 'react-router-dom'
-import { Box, Container, Text, Link, Button, Grid } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Box, Container, Text, Link, Grid } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import Footer from './Footer'
+import { Heading } from './base/Heading'
 
 export default function LandingPage() {
   return (
@@ -9,10 +10,9 @@ export default function LandingPage() {
       <Box px={6} pt={6} flex="1">
         <Container maxW="4xl">
           <Box display="flex" justifyContent="center">
-            <Heading as="h1">Salvage Union Index</Heading>
+            <Heading level="h1">Salvage Union Index</Heading>
           </Box>
 
-          {/* What This Is */}
           <Box
             bg="su.white"
             borderRadius="lg"
@@ -22,7 +22,7 @@ export default function LandingPage() {
             borderWidth="4px"
             borderColor="su.black"
           >
-            <Heading as="h2" mb={4}>
+            <Heading level="h2" mb={4}>
               What This Is
             </Heading>
             <Text fontSize="lg" color="su.black" mb={4}>
@@ -76,55 +76,61 @@ export default function LandingPage() {
             borderWidth="4px"
             borderColor="su.black"
           >
-            <Heading as="h2" mb={6}>
+            <Heading level="h2" mb={6}>
               Get Started
             </Heading>
             <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={4}>
-              <Button
-                asChild
-                bg="su.brick"
-                color="su.white"
-                px={6}
-                py={4}
-                borderRadius="lg"
-                fontWeight="bold"
-                textAlign="center"
-                fontSize="lg"
-                h="auto"
-                _hover={{ opacity: 0.9 }}
-              >
-                <RouterLink to="/dashboard">Dashboard</RouterLink>
-              </Button>
-              <Button
-                asChild
-                bg="su.green"
-                color="su.white"
-                px={6}
-                py={4}
-                borderRadius="lg"
-                fontWeight="bold"
-                textAlign="center"
-                fontSize="lg"
-                h="auto"
-                _hover={{ opacity: 0.9 }}
-              >
-                <RouterLink to="/builders/">Playground</RouterLink>
-              </Button>
-              <Button
-                asChild
-                bg="su.orange"
-                color="su.white"
-                px={6}
-                py={4}
-                borderRadius="lg"
-                fontWeight="bold"
-                textAlign="center"
-                fontSize="lg"
-                h="auto"
-                _hover={{ opacity: 0.9 }}
-              >
-                <RouterLink to="/reference/schema/abilities">Rules Reference</RouterLink>
-              </Button>
+              <RouterLink to="/dashboard" style={{ textDecoration: 'none' }}>
+                <Button
+                  w="full"
+                  bg="su.brick"
+                  color="su.white"
+                  px={6}
+                  py={4}
+                  borderRadius="lg"
+                  fontWeight="bold"
+                  textAlign="center"
+                  fontSize="lg"
+                  h="auto"
+                  _hover={{ opacity: 0.9 }}
+                >
+                  Dashboard
+                </Button>
+              </RouterLink>
+              <RouterLink to="/builders/" style={{ textDecoration: 'none' }}>
+                <Button
+                  w="full"
+                  bg="su.green"
+                  color="su.white"
+                  px={6}
+                  py={4}
+                  borderRadius="lg"
+                  fontWeight="bold"
+                  textAlign="center"
+                  fontSize="lg"
+                  h="auto"
+                  _hover={{ opacity: 0.9 }}
+                >
+                  Playground
+                </Button>
+              </RouterLink>
+              <RouterLink to="/reference/schema/abilities" style={{ textDecoration: 'none' }}>
+                <Button
+                  w="full"
+                  bg="su.orange"
+                  color="su.white"
+                  px={6}
+                  py={4}
+                  borderRadius="lg"
+                  fontWeight="bold"
+                  textAlign="center"
+                  fontSize="lg"
+                  h="auto"
+                  _hover={{ opacity: 0.9 }}
+                >
+                  Rules Reference
+                </Button>
+              </RouterLink>
             </Grid>
           </Box>
         </Container>

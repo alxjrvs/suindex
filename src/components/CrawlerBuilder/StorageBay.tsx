@@ -1,5 +1,6 @@
-import { Box, Button, Flex, Grid, Input, Text, Textarea, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Grid, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Heading } from '../base/Heading'
 import type { CargoItem } from './types'
 
 interface StorageBayProps {
@@ -23,7 +24,7 @@ export function StorageBay({
 }: StorageBayProps) {
   return (
     <Box bg="#c97d9e" borderWidth="4px" borderColor="#c97d9e" borderRadius="2xl" p={4}>
-      <Heading as="h2" textTransform="uppercase" mb={3}>
+      <Heading level="h2" textTransform="uppercase" mb={3}>
         Storage Bay
       </Heading>
 
@@ -72,7 +73,7 @@ export function StorageBay({
 
       {/* Cargo Grid */}
       <Box>
-        <Heading as="h4" textTransform="uppercase" mb={2}>
+        <Heading level="h4" textTransform="uppercase" mb={2}>
           Cargo
         </Heading>
 

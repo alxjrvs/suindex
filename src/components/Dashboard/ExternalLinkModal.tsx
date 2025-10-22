@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Box, Button, Flex, Input, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import Modal from '../Modal'
 
 interface ExternalLinkModalProps {

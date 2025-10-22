@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
-import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Text, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Ability } from 'salvageunion-reference'
 import { AbilityDisplay } from '../AbilityDisplay'
@@ -79,7 +80,7 @@ export function AbilitiesList({
     >
       {/* Header with Add Button and TP Display */}
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading as="h2" textTransform="uppercase">
+        <Heading level="h2" textTransform="uppercase">
           Abilities
         </Heading>
         <Flex alignItems="center" gap={4}>
@@ -121,7 +122,7 @@ export function AbilitiesList({
         <Box mb={4}>
           {coreTreeNamesDisplay.map((treeName) => (
             <Box key={treeName} mb={4}>
-              <Heading as="h3" textTransform="uppercase" mb={2} textAlign="center">
+              <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
                 {treeName}
               </Heading>
               <VStack gap={2} alignItems="stretch">
@@ -146,7 +147,7 @@ export function AbilitiesList({
         <Box mb={4}>
           {advancedTreeNamesDisplay.map((treeName) => (
             <Box key={treeName} mb={4}>
-              <Heading as="h3" textTransform="uppercase" mb={2} textAlign="center">
+              <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
                 {treeName}
               </Heading>
               <VStack gap={2} alignItems="stretch">
@@ -169,7 +170,7 @@ export function AbilitiesList({
 
       {legendaryAbility && (
         <Box>
-          <Heading as="h3" textTransform="uppercase" mb={2} textAlign="center">
+          <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
             Legendary Ability
           </Heading>
           <AbilityDisplay

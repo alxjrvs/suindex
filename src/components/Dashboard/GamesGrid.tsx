@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import { Box, Button, Flex, Grid, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Heading } from '.././base/Heading'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 
@@ -124,7 +125,7 @@ export function GamesGrid() {
       <Box p={8}>
         <Flex align="center" justify="center" minH="60vh">
           <VStack textAlign="center" gap={8}>
-            <Heading as="h2" size="2xl" color="su.black">
+            <Heading level="h2" size="2xl" color="su.black">
               Your Games
             </Heading>
             <Text fontSize="lg" color="su.brick">
@@ -153,7 +154,7 @@ export function GamesGrid() {
   return (
     <Box p={8}>
       <Box mb={8}>
-        <Heading as="h1" size="2xl" color="su.black">
+        <Heading level="h1" size="2xl" color="su.black">
           Your Games
         </Heading>
       </Box>
@@ -176,7 +177,7 @@ export function GamesGrid() {
             _hover={{ borderColor: 'su.brick' }}
           >
             <Flex align="flex-start" justify="space-between" mb={3}>
-              <Heading as="h3" size="lg" color="su.black" flex={1} pr={2}>
+              <Heading level="h3" size="lg" color="su.black" flex={1} pr={2}>
                 {game.name}
               </Heading>
               <Box

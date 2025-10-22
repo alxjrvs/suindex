@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import { Box, Button, Flex, Grid, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Heading } from '.././base/Heading'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { NewPilotModal } from './NewPilotModal'
@@ -102,7 +103,7 @@ export function PilotsGrid() {
       <Box p={8}>
         <Flex align="center" justify="center" minH="60vh">
           <VStack textAlign="center" gap={8}>
-            <Heading as="h2" size="2xl" color="su.black">
+            <Heading level="h2" size="2xl" color="su.black">
               Your Pilots
             </Heading>
             <Text fontSize="lg" color="su.brick">
@@ -137,7 +138,7 @@ export function PilotsGrid() {
   return (
     <Box p={8}>
       <Box mb={8}>
-        <Heading as="h1" size="2xl" color="su.black">
+        <Heading level="h1" size="2xl" color="su.black">
           Your Pilots
         </Heading>
       </Box>
@@ -172,7 +173,7 @@ export function PilotsGrid() {
                 w="full"
               >
                 <Box>
-                  <Heading as="h3" size="lg" color="su.white" mb={1}>
+                  <Heading level="h3" size="lg" color="su.white" mb={1}>
                     {pilot.callsign}
                   </Heading>
                   {className && (

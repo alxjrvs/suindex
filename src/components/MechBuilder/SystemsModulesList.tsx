@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
-import { Box, Flex, VStack, Button } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { System, Module } from 'salvageunion-reference'
 import { SystemDisplay } from '../SystemDisplay'
@@ -62,7 +63,13 @@ export function SystemsModulesList({
   return (
     <Box bg="#6b8e7f" borderWidth="8px" borderColor="#6b8e7f" borderRadius="3xl" p={6} shadow="lg">
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading as="h2" fontSize="xl" fontWeight="bold" color="#e8e5d8" textTransform="uppercase">
+        <Heading
+          level="h2"
+          fontSize="xl"
+          fontWeight="bold"
+          color="#e8e5d8"
+          textTransform="uppercase"
+        >
           Systems & Modules
         </Heading>
         <Flex gap={3}>
@@ -75,7 +82,7 @@ export function SystemsModulesList({
         {sortedSystems.length > 0 && (
           <VStack gap={3} alignItems="stretch">
             <Heading
-              as="h3"
+              level="h3"
               fontSize="lg"
               fontWeight="bold"
               color="#e8e5d8"
@@ -120,7 +127,7 @@ export function SystemsModulesList({
         {sortedModules.length > 0 && (
           <VStack gap={3} alignItems="stretch">
             <Heading
-              as="h3"
+              level="h3"
               fontSize="lg"
               fontWeight="bold"
               color="#e8e5d8"

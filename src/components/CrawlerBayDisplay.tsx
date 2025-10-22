@@ -1,5 +1,5 @@
 import { Box, Grid, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import type { CrawlerBay } from 'salvageunion-reference'
 
@@ -41,7 +41,7 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
         {/* Damaged Effect */}
         {data.damagedEffect && (
           <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
-            <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
+            <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
               Damaged Effect
             </Heading>
             <Text color="su.black">{data.damagedEffect}</Text>
@@ -51,7 +51,7 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
         {/* Abilities */}
         {data.abilities && data.abilities.length > 0 && (
           <VStack gap={3} alignItems="stretch">
-            <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+            <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
               Abilities
             </Heading>
             {data.abilities.map((ability, index) => (
@@ -77,7 +77,7 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
         {/* Tech Level Effects */}
         {data.techLevelEffects && data.techLevelEffects.length > 0 && (
           <VStack gap={3} alignItems="stretch">
-            <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+            <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
               Tech Level Effects
             </Heading>
             {data.techLevelEffects.map((effect, index) => (
@@ -104,7 +104,7 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
         {/* Roll Table */}
         {data.rollTable && (
           <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
-            <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
+            <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
               Roll Table
             </Heading>
             <VStack gap={1} alignItems="stretch">
@@ -125,7 +125,7 @@ export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
         {/* Notes */}
         {data.notes && (
           <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
-            <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
+            <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick" mb={2}>
               Notes
             </Heading>
             <Text color="su.black">{data.notes}</Text>

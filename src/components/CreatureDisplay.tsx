@@ -1,5 +1,5 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import type { Creature } from 'salvageunion-reference'
@@ -40,7 +40,7 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
 
       {data.abilities && data.abilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
-          <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+          <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
             Abilities
           </Heading>
           {data.abilities.map((ability, index) => (

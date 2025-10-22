@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Heading } from './base/Heading'
 import type { SchemaInfo } from '../types/schema'
 import DataTable from './DataTable'
 import { useSchemaData } from '../hooks/useSchemaData'
@@ -36,7 +36,7 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
   return (
     <Flex h="full" flexDirection="column">
       <Box bg="su.white" shadow="sm" borderBottomWidth="1px" borderColor="su.lightBlue" p={6}>
-        <Heading as="h2">{currentSchema.title}</Heading>
+        <Heading level="h2">{currentSchema.title}</Heading>
         <Text color="su.brick" mt={1}>
           {currentSchema.description}
         </Text>

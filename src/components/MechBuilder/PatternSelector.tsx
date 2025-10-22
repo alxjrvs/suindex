@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
-import { Box, Text, Input, VStack, Button, Flex, Badge } from '@chakra-ui/react'
+import { Box, Text, Input, VStack, Flex, Badge } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import type { Chassis } from 'salvageunion-reference'
 
 interface PatternSelectorProps {

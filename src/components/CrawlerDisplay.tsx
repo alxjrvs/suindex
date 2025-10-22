@@ -1,7 +1,7 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
 import { Frame } from './shared/Frame'
 import type { Crawler } from 'salvageunion-reference'
+import { Heading } from './base/Heading'
 
 interface CrawlerDisplayProps {
   data: Crawler
@@ -17,7 +17,7 @@ export function CrawlerDisplay({ data }: CrawlerDisplayProps) {
     >
       {data.abilities && data.abilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
-          <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+          <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
             Crawler Abilities
           </Heading>
           {data.abilities.map((ability, index) => (

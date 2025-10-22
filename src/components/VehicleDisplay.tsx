@@ -1,5 +1,5 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import type { Vehicle } from 'salvageunion-reference'
@@ -46,7 +46,7 @@ export function VehicleDisplay({ data }: VehicleDisplayProps) {
 
       {data.systems && data.systems.length > 0 && (
         <VStack gap={3} alignItems="stretch">
-          <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+          <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
             Systems
           </Heading>
           {data.systems.map((system, index) => (

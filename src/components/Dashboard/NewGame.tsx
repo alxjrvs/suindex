@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
-import { Box, Button, Flex, Input, Text, Textarea, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Heading } from '.././base/Heading'
 import { supabase } from '../../lib/supabase'
 import type { TablesInsert } from '../../types/database'
 
@@ -64,7 +65,7 @@ export function NewGame() {
   return (
     <Box p={8} maxW="2xl" mx="auto">
       <Box mb={8}>
-        <Heading as="h1" size="2xl" color="su.black" mb={2}>
+        <Heading level="h1" size="2xl" color="su.black" mb={2}>
           Create New Game
         </Heading>
         <Text color="su.brick">Start a new Salvage Union game session</Text>

@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Box, Button, Flex, IconButton, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
 import { supabase } from '../../lib/supabase'
 import Footer from '../Footer'
 import type { User } from '@supabase/supabase-js'
+import { Heading } from '../base/Heading'
 
 interface DashboardNavigationProps {
   user: User
@@ -105,7 +105,7 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
             variant="ghost"
             h="auto"
           >
-            <Heading as="h1">Salvage Union</Heading>
+            <Heading level="h1">Salvage Union</Heading>
             <Text fontSize="sm" color="su.brick">
               Dashboard
             </Text>

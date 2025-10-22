@@ -1,7 +1,8 @@
 import React from 'react'
-import { Box, Button, Flex, Text } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
+import { Heading } from './base/Heading'
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -40,7 +41,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             borderWidth="1px"
             borderColor="su.brick"
           >
-            <Heading as="h1" fontSize="2xl" fontWeight="bold" color="su.brick" mb={4}>
+            <Heading level="h1" fontSize="2xl" fontWeight="bold" color="su.brick" mb={4}>
               Oops! Something went wrong
             </Heading>
             <Text color="su.black" mb={4}>

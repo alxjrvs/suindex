@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Box, Flex, Text, Textarea, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -200,7 +200,7 @@ export default function PilotBuilder({ id }: PilotBuilderProps = {}) {
         p={6}
         shadow="lg"
       >
-        <Heading as="h2" textTransform="uppercase" mb={4}>
+        <Heading level="h2" textTransform="uppercase" mb={4}>
           Notes
         </Heading>
         <Textarea

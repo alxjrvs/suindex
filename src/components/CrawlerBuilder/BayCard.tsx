@@ -1,6 +1,6 @@
 import { Box, Input, Text, Textarea, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
 import type { CrawlerBay } from '../../types/database'
+import { Heading } from '../base/Heading'
 
 interface BayCardProps {
   bay: CrawlerBay
@@ -17,7 +17,7 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
       p={4}
     >
       <VStack gap={3} alignItems="stretch">
-        <Heading as="h2" textTransform="uppercase" alignSelf="flex-start">
+        <Heading level="h2" textTransform="uppercase" alignSelf="flex-start">
           {bay.name}
         </Heading>
 

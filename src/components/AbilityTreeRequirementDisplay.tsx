@@ -1,5 +1,5 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 
 interface AbilityTreeRequirementData {
@@ -28,7 +28,7 @@ export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDi
   return (
     <Frame header={`${data.tree} Tree`} headerColor={getHeaderColor()} showSidebar={false}>
       <VStack gap={3} alignItems="stretch">
-        <Heading as="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+        <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
           Requirements
         </Heading>
         <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>

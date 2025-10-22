@@ -1,5 +1,5 @@
 import { Box, Textarea } from '@chakra-ui/react'
-import { Heading } from './StyledHeading'
+import { Heading } from '../base/Heading'
 import { suColors } from '../../theme'
 
 interface NotesProps {
@@ -37,7 +37,7 @@ export function Notes({
       bg={backgroundColor}
       borderColor={backgroundColor}
     >
-      <Heading as="h2" mb={titleMb} textTransform="uppercase">
+      <Heading level="h2" mb={titleMb} textTransform="uppercase">
         Notes
       </Heading>
 

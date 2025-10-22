@@ -1,5 +1,5 @@
 import { Box, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import { AbilityCard } from './shared/AbilityCard'
@@ -35,7 +35,7 @@ export function BioTitanDisplay({ data }: BioTitanDisplayProps) {
       {data.abilities && data.abilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
           <Heading
-            as="h3"
+            level="h3"
             fontSize="lg"
             fontWeight="bold"
             color="su.black"

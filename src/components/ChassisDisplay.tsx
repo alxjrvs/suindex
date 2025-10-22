@@ -1,5 +1,5 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
+import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import type { Chassis } from 'salvageunion-reference'
@@ -39,7 +39,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
       >
         {data.chassis_abilities && data.chassis_abilities.length > 0 && (
           <VStack gap={3} alignItems="stretch">
-            <Heading as="h4" textTransform="uppercase">
+            <Heading level="h4" textTransform="uppercase">
               Chassis Abilities
             </Heading>
             <VStack gap={3} alignItems="stretch" borderWidth="1px" borderColor="su.black" p={3}>
@@ -118,7 +118,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
 
       {data.patterns && data.patterns.length > 0 && (
         <VStack gap={4} alignItems="stretch">
-          <Heading as="h3" textTransform="uppercase">
+          <Heading level="h3" textTransform="uppercase">
             Patterns
           </Heading>
           {data.patterns.map((pattern, index) => (
@@ -133,7 +133,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
               p={4}
             >
               <Flex alignItems="center" gap={2}>
-                <Heading as="h4">{pattern.name}</Heading>
+                <Heading level="h4">{pattern.name}</Heading>
                 {'legalStarting' in pattern && pattern.legalStarting && (
                   <Text
                     as="span"
@@ -153,7 +153,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
 
               {pattern.systems && pattern.systems.length > 0 && (
                 <Box>
-                  <Heading as="h5">Systems:</Heading>
+                  <Heading level="h5">Systems:</Heading>
                   <Box as="ul" listStyleType="disc" ml={6}>
                     <VStack gap={1} alignItems="stretch">
                       {pattern.systems.map((system, sysIndex) => (
@@ -168,7 +168,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
 
               {pattern.modules && pattern.modules.length > 0 && (
                 <Box>
-                  <Heading as="h5">Modules:</Heading>
+                  <Heading level="h5">Modules:</Heading>
                   <Box as="ul" listStyleType="disc" ml={6}>
                     <VStack gap={1} alignItems="stretch">
                       {pattern.modules.map((module, modIndex) => (

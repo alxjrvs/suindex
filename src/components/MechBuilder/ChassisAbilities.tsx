@@ -1,5 +1,5 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Heading } from '../base/Heading'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisAbilitiesProps {
@@ -39,7 +39,7 @@ export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
             p={4}
           >
             {ability.name && (
-              <Heading as="h3" fontWeight="bold" color="#2d3e36" fontSize="lg" mb={2}>
+              <Heading level="h3" fontWeight="bold" color="#2d3e36" fontSize="lg" mb={2}>
                 {ability.name}
               </Heading>
             )}

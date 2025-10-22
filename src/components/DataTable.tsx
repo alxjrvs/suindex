@@ -1,6 +1,7 @@
 import { useMemo, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Button, Flex, Grid, Input, Text } from '@chakra-ui/react'
+import { Box, Flex, Grid, Input, Text } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { NativeSelect } from '@chakra-ui/react'
 import type { SchemaInfo, DataItem } from '../types/schema'
 import { useDataTableFilters } from '../hooks/useDataTableFilters'

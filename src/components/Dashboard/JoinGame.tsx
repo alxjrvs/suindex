@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Box, Button, Input, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Input, Text, VStack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Heading } from '.././base/Heading'
 import { supabase } from '../../lib/supabase'
 
 export function JoinGame() {
@@ -71,7 +72,7 @@ export function JoinGame() {
       >
         ← Back to Dashboard
       </Button>
-      <Heading as="h1" mb={6}>
+      <Heading level="h1" mb={6}>
         Join a Game
       </Heading>
       <Box

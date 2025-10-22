@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
-import { Box, Button, Flex, Text } from '@chakra-ui/react'
-import { Heading } from '../shared/StyledHeading'
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { SalvageUnionReference, type Equipment } from 'salvageunion-reference'
 import { EquipmentDisplay } from '../EquipmentDisplay'
 import { StatDisplay } from '../StatDisplay'
+import { Heading } from '../base/Heading'
 
 interface PilotInventoryProps {
   equipment: string[] // Array of Equipment IDs
@@ -37,7 +38,7 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
     >
       {/* Header with Add Button and Equipment Count */}
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading as="h2" textTransform="uppercase">
+        <Heading level="h2" textTransform="uppercase">
           Inventory
         </Heading>
         <Flex alignItems="center" gap={4}>

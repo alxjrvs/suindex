@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Box, Button, Flex, IconButton, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './shared/StyledHeading'
 import type { SchemaInfo } from '../types/schema'
 import Footer from './Footer'
+import { Heading } from './base/Heading'
 
 interface ReferenceNavigationProps {
   schemas: SchemaInfo[]
@@ -90,7 +90,7 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
             variant="ghost"
             h="auto"
           >
-            <Heading as="h1">Salvage Union</Heading>
+            <Heading level="h1">Salvage Union</Heading>
             <Text fontSize="sm" color="su.brick">
               Index
             </Text>
