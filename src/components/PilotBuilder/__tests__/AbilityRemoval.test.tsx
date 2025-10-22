@@ -129,7 +129,6 @@ describe('PilotBuilder - Ability Removal', () => {
 
       // Ability should be displayed with remove button
       await waitFor(() => {
-        screen.debug()
         const abilityCards = screen.getAllByText('Hack 1')
         // Find the one in the selected abilities list (not in the modal)
         const selectedAbilityCard = abilityCards[0].closest('div')

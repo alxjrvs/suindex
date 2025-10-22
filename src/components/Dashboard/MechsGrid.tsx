@@ -1,54 +1,29 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
-import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { NewMechModal } from './NewMechModal'
+import { useEntityGrid } from '../../hooks/useEntityGrid'
 
 type MechRow = Tables<'mechs'>
 
 export function MechsGrid() {
   const navigate = useNavigate()
-  const [mechs, setMechs] = useState<MechRow[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  useEffect(() => {
-    loadMechs()
-  }, [])
-
-  const loadMechs = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      // Fetch mechs owned by the user
-      const { data: mechsData, error: mechsError } = await supabase
-        .from('mechs')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-
-      if (mechsError) throw mechsError
-
-      setMechs((mechsData || []) as MechRow[])
-    } catch (err) {
-      console.error('Error loading mechs:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load mechs')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const {
+    items: mechs,
+    loading,
+    error,
+    reload,
+  } = useEntityGrid<MechRow>({
+    table: 'mechs',
+    orderBy: 'created_at',
+    orderAscending: false,
+  })
 
   const handleCreateMech = () => {
     setIsModalOpen(true)
@@ -59,7 +34,7 @@ export function MechsGrid() {
   }
 
   const handleModalSuccess = () => {
-    loadMechs()
+    reload()
   }
 
   if (loading) {
@@ -82,7 +57,7 @@ export function MechsGrid() {
             {error}
           </Text>
           <Button
-            onClick={loadMechs}
+            onClick={reload}
             bg="su.brick"
             color="su.white"
             fontWeight="bold"

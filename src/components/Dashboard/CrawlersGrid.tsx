@@ -1,55 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
-import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import CrawlerCard from '../CrawlerCard'
 import { NewCrawlerModal } from './NewCrawlerModal'
+import { useEntityGrid } from '../../hooks/useEntityGrid'
 
 type CrawlerRow = Tables<'crawlers'>
 
 export function CrawlersGrid() {
   const navigate = useNavigate()
-  const [crawlers, setCrawlers] = useState<CrawlerRow[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  useEffect(() => {
-    loadCrawlers()
-  }, [])
-
-  const loadCrawlers = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      // Fetch crawlers owned by the user
-      const { data: crawlersData, error: crawlersError } = await supabase
-        .from('crawlers')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-
-      if (crawlersError) throw crawlersError
-
-      setCrawlers((crawlersData || []) as CrawlerRow[])
-    } catch (err) {
-      console.error('Error loading crawlers:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load crawlers')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const {
+    items: crawlers,
+    loading,
+    error,
+    reload,
+  } = useEntityGrid<CrawlerRow>({
+    table: 'crawlers',
+    orderBy: 'created_at',
+    orderAscending: false,
+  })
 
   const handleCreateCrawler = () => {
     setIsModalOpen(true)
@@ -60,7 +35,7 @@ export function CrawlersGrid() {
   }
 
   const handleModalSuccess = () => {
-    loadCrawlers()
+    reload()
   }
 
   if (loading) {
@@ -83,7 +58,7 @@ export function CrawlersGrid() {
             {error}
           </Text>
           <Button
-            onClick={loadCrawlers}
+            onClick={reload}
             bg="su.brick"
             color="su.white"
             fontWeight="bold"
