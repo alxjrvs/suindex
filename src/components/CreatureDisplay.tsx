@@ -17,7 +17,7 @@ export function CreatureDisplay({ data }: CreatureDisplayProps) {
       description={data.description}
       headerContent={
         <Box ml="auto" pb={6} overflow="visible">
-          <StatList stats={[{ label: 'Hit Points', value: data.hitPoints }]} up={false} />
+          <StatList stats={[{ label: 'Hit Points', value: data.hitPoints }]} />
         </Box>
       }
       showSidebar={false}

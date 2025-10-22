@@ -1,7 +1,7 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
-import { StatDisplay } from './StatDisplay'
+import { StatList } from './shared/StatList'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisDisplayProps {
@@ -19,16 +19,20 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
         description={data.description}
         showSidebar={false}
         headerContent={
-          <Flex ml="auto" gap={2} flexWrap="wrap" justifyContent="flex-end">
-            <StatDisplay label="SP" value={stats.structure_pts} />
-            <StatDisplay label="EP" value={stats.energy_pts} />
-            <StatDisplay label="Heat" value={stats.heat_cap} />
-            <StatDisplay label="Sys. Slots" value={stats.system_slots} />
-            <StatDisplay label="Mod. Slots" value={stats.module_slots} />
-            <StatDisplay label="Cargo Cap" value={stats.cargo_cap} />
-            <StatDisplay label="TL" value={stats.tech_level} />
-            <StatDisplay label="SV" value={stats.salvage_value} />
-          </Flex>
+          <Box ml="auto">
+            <StatList
+              stats={[
+                { label: 'SP', value: stats.structure_pts },
+                { label: 'EP', value: stats.energy_pts },
+                { label: 'Heat', value: stats.heat_cap },
+                { label: 'Sys. Slots', value: stats.system_slots },
+                { label: 'Mod. Slots', value: stats.module_slots },
+                { label: 'Cargo Cap', value: stats.cargo_cap },
+                { label: 'TL', value: stats.tech_level },
+                { label: 'SV', value: stats.salvage_value },
+              ]}
+            />
+          </Box>
         }
       >
         {data.chassis_abilities && data.chassis_abilities.length > 0 && (

@@ -36,7 +36,7 @@ export function MeldDisplay({ data }: MeldDisplayProps) {
       headerContent={
         stats.length > 0 ? (
           <Box ml="auto" pb={24} overflow="visible">
-            <StatList stats={stats} up={false} />
+            <StatList stats={stats} />
           </Box>
         ) : undefined
       }

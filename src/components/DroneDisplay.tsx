@@ -18,10 +18,7 @@ export function DroneDisplay({ data }: DroneDisplayProps) {
       headerContent={
         data.structurePoints !== undefined ? (
           <Box ml="auto" pb={6} overflow="visible">
-            <StatList
-              stats={[{ label: 'Structure Pts.', value: data.structurePoints }]}
-              up={false}
-            />
+            <StatList stats={[{ label: 'Structure Pts.', value: data.structurePoints }]} />
           </Box>
         ) : undefined
       }

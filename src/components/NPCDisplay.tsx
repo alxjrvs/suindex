@@ -24,7 +24,6 @@ export function NPCDisplay({ data }: NPCDisplayProps) {
                 value: data.hitPoints.toString(),
               },
             ]}
-            up={false}
           />
         </Box>
       }

@@ -24,7 +24,7 @@ export function SquadDisplay({ data }: SquadDisplayProps) {
       headerContent={
         stats.length > 0 ? (
           <Box ml="auto" pb={6} overflow="visible">
-            <StatList stats={stats} up={false} />
+            <StatList stats={stats} />
           </Box>
         ) : undefined
       }

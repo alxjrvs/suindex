@@ -17,11 +17,8 @@ export function VehicleDisplay({ data }: VehicleDisplayProps) {
       description={data.description}
       headerContent={
         data.structurePoints !== undefined ? (
-          <Box ml="auto" pb={6} overflow="visible">
-            <StatList
-              stats={[{ label: 'Structure Pts.', value: data.structurePoints }]}
-              up={false}
-            />
+          <Box ml="auto">
+            <StatList stats={[{ label: 'Structure Pts.', value: data.structurePoints }]} />
           </Box>
         ) : undefined
       }

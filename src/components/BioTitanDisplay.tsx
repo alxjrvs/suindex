@@ -24,7 +24,6 @@ export function BioTitanDisplay({ data }: BioTitanDisplayProps) {
                 value: data.structurePoints.toString(),
               },
             ]}
-            up={false}
           />
         </Box>
       }
