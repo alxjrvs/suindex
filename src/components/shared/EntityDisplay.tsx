@@ -5,9 +5,38 @@ import { StatList } from './StatList'
 import { TraitsDisplay } from './TraitsDisplay'
 import { ActionCard } from './ActionCard'
 import { PageReferenceDisplay } from './PageReferenceDisplay'
-import type { Vehicle, Creature, Drone, BioTitan, NPC, Squad, Meld } from 'salvageunion-reference'
+import { StatBonusDisplay } from './StatBonusDisplay'
+import { RollTableDisplay } from './RollTableDisplay'
+import type {
+  Vehicle,
+  Creature,
+  Drone,
+  BioTitan,
+  NPC,
+  Squad,
+  Meld,
+  Keyword,
+  TraitEntry,
+  System,
+  Module,
+  Equipment,
+} from 'salvageunion-reference'
+import type { DataValue } from '../../types/common'
+import { formatTraits } from '../../utils/displayUtils'
 
-type EntityData = Vehicle | Creature | Drone | BioTitan | NPC | Squad | Meld
+type EntityData =
+  | Vehicle
+  | Creature
+  | Drone
+  | BioTitan
+  | NPC
+  | Squad
+  | Meld
+  | Keyword
+  | TraitEntry
+  | System
+  | Module
+  | Equipment
 
 interface EntityDisplayProps {
   data: EntityData
@@ -16,13 +45,89 @@ interface EntityDisplayProps {
   actionHeaderTextColor?: string
 }
 
+// Helper function to determine schema name from entity data
+function getSchemaName(data: EntityData): string {
+  // Check for unique properties to identify entity type
+  if ('slotsRequired' in data) {
+    // Could be System, Module, or Equipment
+    if ('recommended' in data) return 'Module'
+    if ('statBonus' in data || 'rollTable' in data) return 'System'
+    return 'Equipment'
+  }
+  if ('hitPoints' in data) {
+    if ('structurePoints' in data) return 'Vehicle'
+    if ('abilities' in data && Array.isArray(data.abilities)) {
+      // Could be Creature, BioTitan, NPC, Squad, or Meld
+      if ('type' in data && typeof data.type === 'string') {
+        if (data.type === 'bio-titan') return 'Bio-Titan'
+        if (data.type === 'npc') return 'NPC'
+        if (data.type === 'squad') return 'Squad'
+        if (data.type === 'meld') return 'Meld'
+      }
+      return 'Creature'
+    }
+    return 'Drone'
+  }
+  if ('type' in data && typeof data.type === 'string') {
+    return 'Trait'
+  }
+  return 'Keyword'
+}
+
 export function EntityDisplay({
   data,
   headerColor,
   actionHeaderBgColor,
   actionHeaderTextColor,
 }: EntityDisplayProps) {
-  // Build stats array
+  // Auto-detect if this is a System/Module/Equipment
+  const isItem = 'slotsRequired' in data || 'statBonus' in data || 'rollTable' in data
+
+  // Auto-detect currency (Equipment uses AP, Systems/Modules use EP)
+  const activationCurrency = isItem && !('slotsRequired' in data) ? 'AP' : 'EP'
+
+  // Get schema name for display
+  const schemaName = getSchemaName(data)
+
+  // Generate details for items (Systems, Modules, Equipment)
+  const details: DataValue[] = []
+  if (isItem) {
+    if ('activationCost' in data && data.activationCost !== undefined) {
+      const isVariable = String(data.activationCost).toLowerCase() === 'variable'
+      const costValue = isVariable
+        ? `X${activationCurrency}`
+        : `${data.activationCost}${activationCurrency}`
+      details.push({ value: costValue, cost: true })
+    }
+
+    if ('actionType' in data && data.actionType) {
+      const actionType = data.actionType.includes('action')
+        ? data.actionType
+        : `${data.actionType} Action`
+      details.push({ value: actionType })
+    }
+
+    if ('range' in data && data.range) {
+      details.push({ value: `Range:${data.range}` })
+    }
+
+    if ('damage' in data && data.damage) {
+      details.push({
+        value: `Damage:${data.damage.amount}${data.damage.type}`,
+      })
+    }
+
+    const traits = 'traits' in data ? formatTraits(data.traits) : []
+    traits.forEach((t) => {
+      details.push({ value: t })
+    })
+
+    if ('recommended' in data && data.recommended) {
+      details.push({ value: 'Recommended' })
+    }
+  }
+
+  // Build stats array for entities (Vehicles, Creatures, etc.)
   const stats = []
   if ('hitPoints' in data && data.hitPoints !== undefined) {
     stats.push({ label: 'HP', value: data.hitPoints })
@@ -30,7 +135,7 @@ export function EntityDisplay({
   if ('structurePoints' in data && data.structurePoints !== undefined) {
     stats.push({ label: 'SP', value: data.structurePoints })
   }
-  if ('salvageValue' in data && data.salvageValue !== undefined) {
+  if ('salvageValue' in data && data.salvageValue !== undefined && !isItem) {
     stats.push({ label: 'SV', value: data.salvageValue })
   }
 
@@ -40,17 +145,28 @@ export function EntityDisplay({
   // Determine salvage value for sidebar
   const salvageValue = 'salvageValue' in data ? data.salvageValue : undefined
 
+  // Determine slots required for sidebar
+  const slotsRequired = 'slotsRequired' in data ? data.slotsRequired : undefined
+
   // Determine if sidebar should be shown
-  const showSidebar = 'techLevel' in data || 'salvageValue' in data
+  const showSidebar =
+    techLevel !== undefined || salvageValue !== undefined || slotsRequired !== undefined
 
   // Check if page reference should be shown
   const hasPageReference = 'source' in data && 'page' in data
+
+  // Auto-detect what to show
+  const showStatBonus = 'statBonus' in data && data.statBonus !== undefined
+  const showActions = ('actions' in data && data.actions && data.actions.length > 0) || false
+  const showRollTable = 'rollTable' in data && data.rollTable !== undefined
 
   return (
     <Frame
       header={data.name}
       headerColor={headerColor}
       description={'description' in data ? data.description : undefined}
+      notes={'notes' in data ? data.notes : undefined}
+      details={details.length > 0 ? details : undefined}
       headerContent={
         stats.length > 0 ? (
           <Box ml="auto">
@@ -61,12 +177,28 @@ export function EntityDisplay({
       showSidebar={showSidebar}
       techLevel={techLevel as 1 | 2 | 3 | 4 | 5 | 6 | undefined}
       salvageValue={salvageValue}
+      slotsRequired={slotsRequired}
     >
+      {/* Stat Bonus (for Systems/Modules/Equipment) */}
+      {showStatBonus && 'statBonus' in data && data.statBonus && (
+        <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
+      )}
+      {/* Actions (for Systems/Modules/Equipment) */}
+      {showActions && 'actions' in data && data.actions && data.actions.length > 0 && (
+        <VStack gap={3} alignItems="stretch">
+          {data.actions.map((action, index) => (
+            <ActionCard key={index} action={action} activationCurrency={activationCurrency} />
+          ))}
+        </VStack>
+      )}
+      {/* Roll Table (for Systems/Modules/Equipment) */}
+      {showRollTable && 'rollTable' in data && data.rollTable && (
+        <RollTableDisplay rollTable={data.rollTable} />
+      )}
       {/* Traits */}
-      {'traits' in data && data.traits && data.traits.length > 0 && (
+      {'traits' in data && data.traits && data.traits.length > 0 && !isItem && (
         <TraitsDisplay traits={data.traits} />
       )}
-
       {/* Systems (for Vehicles and Drones) */}
       {'systems' in data && data.systems && data.systems.length > 0 && (
         <VStack gap={3} alignItems="stretch">
@@ -91,11 +223,16 @@ export function EntityDisplay({
           ))}
         </VStack>
       )}
-
       {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds) */}
       {'abilities' in data && data.abilities && data.abilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
-          <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.black" textTransform="uppercase">
+          <Heading
+            level="h3"
+            fontSize="lg"
+            fontWeight="bold"
+            color="su.black"
+            textTransform="uppercase"
+          >
             Abilities
           </Heading>
           {data.abilities.map((ability, index) => (
@@ -108,12 +245,12 @@ export function EntityDisplay({
           ))}
         </VStack>
       )}
-
-      {/* Page Reference */}
+      {/* Spacer to push page reference to bottom */}
+      {hasPageReference && 'source' in data && 'page' in data && <Box flex="1" minHeight="1rem" />}
+      {/* Page Reference - Anchored to bottom */}var(--color-su-orange)use
       {hasPageReference && 'source' in data && 'page' in data && (
-        <PageReferenceDisplay source={data.source} page={data.page} />
+        <PageReferenceDisplay source={data.source} page={data.page} schemaName={schemaName} />
       )}
     </Frame>
   )
 }
-

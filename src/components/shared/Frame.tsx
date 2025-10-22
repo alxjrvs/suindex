@@ -31,6 +31,7 @@ export interface FrameProps {
   onToggleExpanded?: () => void
   showSelectButton?: boolean
   selectButtonCost?: number
+  contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
 }
 
 export function Frame({
@@ -48,6 +49,7 @@ export function Frame({
   salvageValue,
   onClick,
   dimmed = false,
+  contentJustify = 'flex-start',
   showRemoveButton = false,
   disableRemove = false,
   onRemove,
@@ -194,7 +196,14 @@ export function Frame({
         )}
 
         {(!collapsible || isExpanded) && (
-          <VStack flex="1" bg="su.lightBlue" p={3} gap={6} alignItems="stretch">
+          <VStack
+            flex="1"
+            bg="su.lightBlue"
+            p={3}
+            gap={6}
+            alignItems="stretch"
+            justifyContent={contentJustify}
+          >
             {description && (
               <Text color="su.black" fontWeight="medium" lineHeight="relaxed">
                 {description}
