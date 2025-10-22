@@ -1,4 +1,5 @@
-import { Box, Grid, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Grid, Text, VStack } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import { Frame } from './shared/Frame'
 import type { CrawlerBay } from 'salvageunion-reference'
 

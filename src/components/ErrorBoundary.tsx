@@ -1,5 +1,6 @@
 import React from 'react'
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import type { ReactNode } from 'react'
 
 interface ErrorBoundaryProps {

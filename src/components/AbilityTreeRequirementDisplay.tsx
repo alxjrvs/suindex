@@ -1,4 +1,5 @@
-import { Box, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Text, VStack } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import { Frame } from './shared/Frame'
 
 interface AbilityTreeRequirementData {

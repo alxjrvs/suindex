@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import { Box, Button, Flex, Grid, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Heading } from '../shared/StyledHeading'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'

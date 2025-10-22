@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
-import { Box, Button, Flex, Heading, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Heading } from '../shared/StyledHeading'
 import { supabase } from '../../lib/supabase'
 import type { TablesInsert } from '../../types/database'
 

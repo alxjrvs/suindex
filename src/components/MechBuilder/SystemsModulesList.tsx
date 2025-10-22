@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
-import { Box, Flex, Heading, VStack, Button } from '@chakra-ui/react'
+import { Box, Flex, VStack, Button } from '@chakra-ui/react'
+import { Heading } from '../shared/StyledHeading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { System, Module } from 'salvageunion-reference'
 import { SystemDisplay } from '../SystemDisplay'

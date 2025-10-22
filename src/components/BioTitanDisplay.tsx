@@ -1,4 +1,5 @@
-import { Box, Heading, VStack } from '@chakra-ui/react'
+import { Box, VStack } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
 import { AbilityCard } from './shared/AbilityCard'

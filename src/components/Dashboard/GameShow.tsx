@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { Box, Button, Flex, Grid, Heading, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Grid, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Heading } from '../shared/StyledHeading'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -516,9 +517,7 @@ export function GameShow() {
         ) : (
           <Box>
             <Flex align="center" gap={4} mb={4}>
-              <Heading as="h1" size="3xl" color="su.black">
-                {game.name}
-              </Heading>
+              <Heading as="h1">{game.name}</Heading>
               {isMediator && (
                 <Button
                   onClick={() => setIsEditingGame(true)}
@@ -544,7 +543,7 @@ export function GameShow() {
         {/* Left: The Union (2/3) */}
         <Box gridColumn={{ base: '1', lg: 'span 2' }}>
           <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
-            <Heading as="h2" size="xl" color="su.black" mb={3}>
+            <Heading as="h2" mb={3}>
               The Union
             </Heading>
             {crawler ? (
@@ -563,9 +562,7 @@ export function GameShow() {
                   </Text>
                 ) : pilots.length > 0 ? (
                   <VStack mt={4} gap={3} align="stretch">
-                    <Heading as="h3" size="lg" color="su.black">
-                      Pilots
-                    </Heading>
+                    <Heading as="h3">Pilots</Heading>
                     {pilots.map((pilot) => {
                       const pilotMech = mechs.find((m) => m.pilot_id === pilot.id)
                       const className = pilot.class_id
@@ -647,7 +644,7 @@ export function GameShow() {
         {/* Right: Members + Invites */}
         <VStack gridColumn={{ base: '1', lg: '3' }} gap={4} align="stretch">
           <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
-            <Heading as="h2" size="xl" color="su.black" mb={3}>
+            <Heading as="h2" mb={3}>
               Members
             </Heading>
             {game.members.length === 0 ? (
@@ -697,9 +694,7 @@ export function GameShow() {
           {isMediator && (
             <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
               <Flex align="center" justify="space-between" mb={3}>
-                <Heading as="h2" size="xl" color="su.black">
-                  Invites
-                </Heading>
+                <Heading as="h2">Invites</Heading>
                 {invites.length === 0 && (
                   <Button
                     onClick={createInvite}
@@ -806,9 +801,7 @@ export function GameShow() {
           {/* Resources Section */}
           <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
             <Flex align="center" justify="space-between" mb={3}>
-              <Heading as="h2" size="xl" color="su.black">
-                Resources
-              </Heading>
+              <Heading as="h2">Resources</Heading>
               {isMediator && (
                 <Button
                   onClick={() => setIsLinkModalOpen(true)}
@@ -888,7 +881,7 @@ export function GameShow() {
           {/* Delete Game Section */}
           {isMediator && (
             <Box bg="su.white" borderWidth="1px" borderColor="red.600" borderRadius="lg" p={4}>
-              <Heading as="h2" size="xl" color="red.600" mb={3}>
+              <Heading as="h2" mb={3}>
                 Danger Zone
               </Heading>
               {deleteError && (

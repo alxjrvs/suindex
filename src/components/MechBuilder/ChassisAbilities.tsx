@@ -1,4 +1,5 @@
-import { Box, Text, VStack, Heading } from '@chakra-ui/react'
+import { Box, Text, VStack } from '@chakra-ui/react'
+import { Heading } from '../shared/StyledHeading'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisAbilitiesProps {

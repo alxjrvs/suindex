@@ -1,6 +1,7 @@
 import { Suspense, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react'
+import { Heading } from './shared/StyledHeading'
 import type { ReactElement } from 'react'
 import type { SchemaInfo } from '../types/schema'
 import { getDisplayComponent } from './componentRegistry'
