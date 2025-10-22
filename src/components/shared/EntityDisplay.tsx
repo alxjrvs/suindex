@@ -1,8 +1,8 @@
+import { type ReactNode } from 'react'
 import { Box, Text, VStack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { Frame } from './Frame'
 import { StatList } from './StatList'
-import { TraitsDisplay } from './TraitsDisplay'
 import { ActionCard } from './ActionCard'
 import { PageReferenceDisplay } from './PageReferenceDisplay'
 import { StatBonusDisplay } from './StatBonusDisplay'
@@ -20,6 +20,8 @@ import type {
   System,
   Module,
   Equipment,
+  AbilityTreeRequirement,
+  Table,
 } from 'salvageunion-reference'
 import type { DataValue } from '../../types/common'
 import { formatTraits } from '../../utils/displayUtils'
@@ -37,17 +39,26 @@ type EntityData =
   | System
   | Module
   | Equipment
+  | AbilityTreeRequirement
+  | Table
 
 interface EntityDisplayProps {
   data: EntityData
   headerColor?: string
   actionHeaderBgColor?: string
   actionHeaderTextColor?: string
+  children?: ReactNode
 }
 
 // Helper function to determine schema name from entity data
 function getSchemaName(data: EntityData): string {
   // Check for unique properties to identify entity type
+  if ('requirement' in data && 'tree' in data && !('name' in data)) {
+    return 'Ability Tree Requirement'
+  }
+  if ('rollTable' in data && 'section' in data) {
+    return 'Table'
+  }
   if ('slotsRequired' in data) {
     // Could be System, Module, or Equipment
     if ('recommended' in data) return 'Module'
@@ -79,6 +90,7 @@ export function EntityDisplay({
   headerColor,
   actionHeaderBgColor,
   actionHeaderTextColor,
+  children,
 }: EntityDisplayProps) {
   // Auto-detect if this is a System/Module/Equipment
   const isItem = 'slotsRequired' in data || 'statBonus' in data || 'rollTable' in data
@@ -89,54 +101,57 @@ export function EntityDisplay({
   // Get schema name for display
   const schemaName = getSchemaName(data)
 
-  // Generate details for items (Systems, Modules, Equipment)
+  // Generate details for ALL entities (activation cost, range, damage, traits in header)
   const details: DataValue[] = []
-  if (isItem) {
-    if ('activationCost' in data && data.activationCost !== undefined) {
-      const isVariable = String(data.activationCost).toLowerCase() === 'variable'
-      const costValue = isVariable
-        ? `X${activationCurrency}`
-        : `${data.activationCost}${activationCurrency}`
-      details.push({ value: costValue, cost: true })
-    }
 
-    if ('actionType' in data && data.actionType) {
-      const actionType = data.actionType.includes('action')
-        ? data.actionType
-        : `${data.actionType} Action`
-      details.push({ value: actionType })
-    }
+  // Activation cost (for ALL entities that have it)
+  if ('activationCost' in data && data.activationCost !== undefined) {
+    const isVariable = String(data.activationCost).toLowerCase() === 'variable'
+    const costValue = isVariable
+      ? `Variable ${activationCurrency}`
+      : `${data.activationCost} ${activationCurrency}`
+    details.push({ value: costValue, cost: true })
+  }
 
-    if ('range' in data && data.range) {
-      details.push({ value: `Range:${data.range}` })
-    }
+  // Action type (for items)
+  if (isItem && 'actionType' in data && data.actionType) {
+    const actionType = data.actionType.includes('action')
+      ? data.actionType
+      : `${data.actionType} Action`
+    details.push({ value: actionType })
+  }
 
-    if ('damage' in data && data.damage) {
-      details.push({
-        value: `Damage:${data.damage.amount}${data.damage.type}`,
-      })
-    }
+  // Range (for ALL entities)
+  if ('range' in data && data.range) {
+    details.push({ value: `Range:${data.range}` })
+  }
 
-    const traits = 'traits' in data ? formatTraits(data.traits) : []
-    traits.forEach((t) => {
-      details.push({ value: t })
+  // Damage (for ALL entities)
+  if ('damage' in data && data.damage) {
+    details.push({
+      value: `Damage:${data.damage.amount}${data.damage.type}`,
     })
+  }
 
-    if ('recommended' in data && data.recommended) {
-      details.push({ value: 'Recommended' })
-    }
+  // Traits (for ALL entities) - displayed in details row on left side
+  const traits = 'traits' in data ? formatTraits(data.traits) : []
+  traits.forEach((t) => {
+    details.push({ value: t })
+  })
+
+  // Recommended (for modules)
+  if ('recommended' in data && data.recommended) {
+    details.push({ value: 'Recommended' })
   }
 
   // Build stats array for entities (Vehicles, Creatures, etc.)
+  // Note: SV (Salvage Value) is NOT shown in header, only in sidebar
   const stats = []
   if ('hitPoints' in data && data.hitPoints !== undefined) {
     stats.push({ label: 'HP', value: data.hitPoints })
   }
   if ('structurePoints' in data && data.structurePoints !== undefined) {
     stats.push({ label: 'SP', value: data.structurePoints })
-  }
-  if ('salvageValue' in data && data.salvageValue !== undefined && !isItem) {
-    stats.push({ label: 'SV', value: data.salvageValue })
   }
 
   // Determine tech level
@@ -152,17 +167,21 @@ export function EntityDisplay({
   const showSidebar =
     techLevel !== undefined || salvageValue !== undefined || slotsRequired !== undefined
 
-  // Check if page reference should be shown
-  const hasPageReference = 'source' in data && 'page' in data
+  // Check if page reference should be shown (some entities like AbilityTreeRequirement only have page, not source)
+  const hasPageReference = 'page' in data
 
   // Auto-detect what to show
   const showStatBonus = 'statBonus' in data && data.statBonus !== undefined
   const showActions = ('actions' in data && data.actions && data.actions.length > 0) || false
   const showRollTable = 'rollTable' in data && data.rollTable !== undefined
 
+  // Get header text - AbilityTreeRequirement uses 'tree' instead of 'name'
+  const header =
+    'tree' in data && !('name' in data) ? `${data.tree} Tree` : (data as { name: string }).name
+
   return (
     <Frame
-      header={data.name}
+      header={header}
       headerColor={headerColor}
       description={'description' in data ? data.description : undefined}
       notes={'notes' in data ? data.notes : undefined}
@@ -193,11 +212,7 @@ export function EntityDisplay({
       )}
       {/* Roll Table (for Systems/Modules/Equipment) */}
       {showRollTable && 'rollTable' in data && data.rollTable && (
-        <RollTableDisplay rollTable={data.rollTable} />
-      )}
-      {/* Traits */}
-      {'traits' in data && data.traits && data.traits.length > 0 && !isItem && (
-        <TraitsDisplay traits={data.traits} />
+        <RollTableDisplay rollTable={data.rollTable} showCommand />
       )}
       {/* Systems (for Vehicles and Drones) */}
       {'systems' in data && data.systems && data.systems.length > 0 && (
@@ -245,9 +260,15 @@ export function EntityDisplay({
           ))}
         </VStack>
       )}
-      {hasPageReference && 'source' in data && 'page' in data && <Box flex="1" minHeight="1rem" />}
-      {hasPageReference && 'source' in data && 'page' in data && (
-        <PageReferenceDisplay source={data.source} page={data.page} schemaName={schemaName} />
+      {/* Custom children (for special cases like AbilityTreeRequirement) */}
+      {children}
+      {hasPageReference && <Box flex="1" minHeight="1rem" />}
+      {hasPageReference && (
+        <PageReferenceDisplay
+          source={'source' in data ? data.source : undefined}
+          page={data.page}
+          schemaName={schemaName}
+        />
       )}
     </Frame>
   )

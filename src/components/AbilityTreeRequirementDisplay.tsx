@@ -1,32 +1,27 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
-import { Frame } from './shared/Frame'
-
-interface AbilityTreeRequirementData {
-  tree: string
-  requirement: string[]
-  page: number
-}
+import { EntityDisplay } from './shared/EntityDisplay'
+import type { AbilityTreeRequirement } from 'salvageunion-reference'
 
 interface AbilityTreeRequirementDisplayProps {
-  data: AbilityTreeRequirementData
+  data: AbilityTreeRequirement
 }
 
 export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDisplayProps) {
   const getHeaderColor = () => {
     if (data.tree.toLowerCase().includes('legendary')) {
-      return 'var(--color-su-pink)'
+      return 'su.pink'
     } else if (
       data.tree.toLowerCase().includes('advanced') ||
       data.tree.toLowerCase().includes('hybrid')
     ) {
-      return 'var(--color-su-brick)'
+      return 'su.brick'
     }
-    return 'var(--color-su-orange)'
+    return 'su.orange'
   }
 
   return (
-    <Frame header={`${data.tree} Tree`} headerColor={getHeaderColor()} showSidebar={false}>
+    <EntityDisplay data={data} headerColor={getHeaderColor()}>
       <VStack gap={3} alignItems="stretch">
         <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
           Requirements
@@ -49,15 +44,6 @@ export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDi
           </Text>
         </Box>
       </VStack>
-
-      <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
-        <Text as="span" fontWeight="bold" color="su.brick">
-          Page:
-        </Text>
-        <Text as="span" color="su.black" ml={2}>
-          {data.page}
-        </Text>
-      </Box>
-    </Frame>
+    </EntityDisplay>
   )
 }

@@ -8,7 +8,7 @@ interface StatDisplayProps {
 
 export function StatDisplay({ label, value, labelId }: StatDisplayProps) {
   return (
-    <VStack gap={1}>
+    <VStack gap={0}>
       <Text
         as="label"
         fontSize="xs"
@@ -16,6 +16,8 @@ export function StatDisplay({ label, value, labelId }: StatDisplayProps) {
         color="su.white"
         bgColor="su.black"
         px={0.5}
+        // mb={-3}
+        zIndex={1}
         id={labelId}
         textAlign="center"
       >
@@ -31,7 +33,6 @@ export function StatDisplay({ label, value, labelId }: StatDisplayProps) {
         display="flex"
         alignItems="center"
         justifyContent="center"
-        pt={0.5}
       >
         <Text fontSize="lg" fontWeight="bold" color="su.black">
           {value}

@@ -124,13 +124,23 @@ export function Frame({
               </Text>
             </Flex>
           )}
-          <Box flex="1" overflow="visible">
+          <Box flex="1" overflow="visible" data-testid="frame-header-container">
             <Flex justifyContent="space-between" alignItems="flex-start" overflow="visible">
-              {header && (
-                <Heading level="h3" maxW="80%" flexWrap="wrap" color="su.white">
-                  {header}
-                </Heading>
-              )}
+              {/* Left side: Title and details in a column */}
+              <VStack alignItems="flex-start" spacing={1} flex="1">
+                {header && (
+                  <Heading level="h3" flexWrap="wrap" color="su.white">
+                    {header}
+                  </Heading>
+                )}
+                {details && details.length > 0 && (
+                  <Box>
+                    <DataList textColor="su.white" values={details} />
+                  </Box>
+                )}
+              </VStack>
+
+              {/* Right side: Stats/traits and remove button */}
               <Flex alignItems="center" gap={2}>
                 {headerContent}
                 {/* Remove Button (moved inside header row so queries using closest('div') include it) */}
@@ -169,9 +179,6 @@ export function Frame({
                 )}
               </Flex>
             </Flex>
-            <Box minH="15px" mt={1}>
-              <DataList textColor="su.white" values={details || []} />
-            </Box>
           </Box>
         </Flex>
       </Box>

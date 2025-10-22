@@ -131,8 +131,10 @@ describe('PilotLiveSheet - Ability Removal', () => {
       await waitFor(() => {
         const abilityCards = screen.getAllByText('Hack 1')
         // Find the one in the selected abilities list (not in the modal)
-        const selectedAbilityCard = abilityCards[0].closest('div')
-        const removeButton = within(selectedAbilityCard!).getByRole('button', {
+        const selectedAbilityCard = abilityCards[0].closest(
+          '[data-testid="frame-header-container"]'
+        ) as HTMLElement
+        const removeButton = within(selectedAbilityCard).getByRole('button', {
           name: /remove ability/i,
         })
         expect(removeButton).toBeInTheDocument()
@@ -182,8 +184,10 @@ describe('PilotLiveSheet - Ability Removal', () => {
       // Remove button should be disabled
       await waitFor(() => {
         const abilityCards = screen.getAllByText('Hack 1')
-        const selectedAbilityCard = abilityCards[0].closest('div')
-        const removeButton = within(selectedAbilityCard!).getByRole('button', {
+        const selectedAbilityCard = abilityCards[0].closest(
+          '[data-testid="frame-header-container"]'
+        ) as HTMLElement
+        const removeButton = within(selectedAbilityCard).getByRole('button', {
           name: /remove ability/i,
         })
         expect(removeButton).toBeDisabled()
@@ -230,8 +234,10 @@ describe('PilotLiveSheet - Ability Removal', () => {
       // Remove button should be enabled (we have 4 TP left)
       await waitFor(() => {
         const abilityCards = screen.getAllByText('Hack 1')
-        const selectedAbilityCard = abilityCards[0].closest('div')
-        const removeButton = within(selectedAbilityCard!).getByRole('button', {
+        const selectedAbilityCard = abilityCards[0].closest(
+          '[data-testid="frame-header-container"]'
+        ) as HTMLElement
+        const removeButton = within(selectedAbilityCard).getByRole('button', {
           name: /remove ability/i,
         })
         expect(removeButton).not.toBeDisabled()
@@ -284,8 +290,10 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Remove the ability
       const abilityCards = screen.getAllByText('Hack 1')
-      const selectedAbilityCard = abilityCards[0].closest('div')
-      const removeButton = within(selectedAbilityCard!).getByRole('button', {
+      const selectedAbilityCard = abilityCards[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+      const removeButton = within(selectedAbilityCard).getByRole('button', {
         name: /remove ability/i,
       })
       await user.click(removeButton)
@@ -391,8 +399,10 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Click remove button but cancel
       const abilityCards = screen.getAllByText('Hack 1')
-      const selectedAbilityCard = abilityCards[0].closest('div')
-      const removeButton = within(selectedAbilityCard!).getByRole('button', {
+      const selectedAbilityCard = abilityCards[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+      const removeButton = within(selectedAbilityCard).getByRole('button', {
         name: /remove ability/i,
       })
 

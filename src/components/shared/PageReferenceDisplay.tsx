@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 
 interface PageReferenceDisplayProps {
-  source: string
+  source?: string
   page: number
   schemaName?: string
 }
@@ -27,10 +27,15 @@ export function PageReferenceDisplay({ source, page, schemaName }: PageReference
 
       {/* Right side - Source and page */}
       <Box ml="auto">
-        <Text as="span" fontWeight="bold" textTransform="uppercase">
-          {source}
-        </Text>{' '}
-        • Page {page}
+        {source && (
+          <>
+            <Text as="span" fontWeight="bold" textTransform="uppercase">
+              {source}
+            </Text>{' '}
+            •{' '}
+          </>
+        )}
+        Page {page}
       </Box>
     </Flex>
   )
