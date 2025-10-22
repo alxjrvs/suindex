@@ -8,6 +8,7 @@ export const modelMap = {
   classes: SalvageUnionReference.Classes,
   crawlers: SalvageUnionReference.Crawlers,
   'crawler-bays': SalvageUnionReference.CrawlerBays,
+  'crawler-tech-levels': SalvageUnionReference.CrawlerTechLevels,
   creatures: SalvageUnionReference.Creatures,
   drones: SalvageUnionReference.Drones,
   equipment: SalvageUnionReference.Equipment,

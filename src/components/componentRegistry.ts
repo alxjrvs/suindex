@@ -24,6 +24,9 @@ const CrawlerDisplay = lazy(() =>
 const CrawlerBayDisplay = lazy(() =>
   import('./CrawlerBayDisplay').then((m) => ({ default: m.CrawlerBayDisplay }))
 )
+const CrawlerTechLevelDisplay = lazy(() =>
+  import('./CrawlerTechLevelDisplay').then((m) => ({ default: m.CrawlerTechLevelDisplay }))
+)
 const CreatureDisplay = lazy(() =>
   import('./CreatureDisplay').then((m) => ({ default: m.CreatureDisplay }))
 )
@@ -57,6 +60,7 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   classes: ClassDisplay as unknown as DisplayComponentType,
   crawlers: CrawlerDisplay as unknown as DisplayComponentType,
   'crawler-bays': CrawlerBayDisplay as unknown as DisplayComponentType,
+  'crawler-tech-levels': CrawlerTechLevelDisplay as unknown as DisplayComponentType,
   creatures: CreatureDisplay as unknown as DisplayComponentType,
   drones: DroneDisplay as unknown as DisplayComponentType,
   equipment: EquipmentDisplay as unknown as DisplayComponentType,

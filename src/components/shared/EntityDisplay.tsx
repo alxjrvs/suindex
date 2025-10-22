@@ -22,6 +22,8 @@ import type {
   Equipment,
   AbilityTreeRequirement,
   Table,
+  Crawler,
+  CrawlerTechLevel,
 } from 'salvageunion-reference'
 import type { DataValue } from '../../types/common'
 import { formatTraits } from '../../utils/displayUtils'
@@ -41,6 +43,8 @@ type EntityData =
   | Equipment
   | AbilityTreeRequirement
   | Table
+  | Crawler
+  | CrawlerTechLevel
 
 interface EntityDisplayProps {
   data: EntityData
@@ -58,6 +62,14 @@ function getSchemaName(data: EntityData): string {
   }
   if ('rollTable' in data && 'section' in data) {
     return 'Table'
+  }
+  // CrawlerTechLevel has techLevel, structurePoints, and population fields
+  if ('techLevel' in data && 'populationMin' in data && 'populationMax' in data) {
+    return 'Crawler Tech Level'
+  }
+  // Crawler has abilities but no hitPoints/structurePoints
+  if ('abilities' in data && !('hitPoints' in data) && !('slotsRequired' in data)) {
+    return 'Crawler'
   }
   if ('slotsRequired' in data) {
     // Could be System, Module, or Equipment
