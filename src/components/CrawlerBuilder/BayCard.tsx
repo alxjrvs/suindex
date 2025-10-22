@@ -1,6 +1,6 @@
 import { Box, Input, Text, Textarea, VStack } from '@chakra-ui/react'
 import { Heading } from '../shared/StyledHeading'
-import type { CrawlerBay } from './types'
+import type { CrawlerBay } from '../../types/database'
 
 interface BayCardProps {
   bay: CrawlerBay
