@@ -925,7 +925,7 @@
 
     "safer-buffer": ["safer-buffer@2.1.2", "", {}, "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="],
 
-    "salvageunion-reference": ["salvageunion-reference@1.18.0", "", {}, "sha512-pyrg5CRnDEcLQvDrJV58KB1cOL4Vh+T2gv2nhkCwD7/aEYHbXQdzZDMOIOZT3d+5BncdtfqwM4fCvhS6I1QkOg=="],
+    "salvageunion-reference": ["salvageunion-reference@1.19.0", "", {}, "sha512-TB6rLrEq5onjCxyMyMufnn32WcBWm8wxUUiW0sSsjHCdNTo7msrkot68eOt9z6vfCFZTCIAIJ5rnv303VGiEOQ=="],
 
     "saxes": ["saxes@6.0.0", "", { "dependencies": { "xmlchars": "^2.2.0" } }, "sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA=="],
 
