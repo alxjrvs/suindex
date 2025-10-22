@@ -17,8 +17,3 @@ export function useSchemaId(): string {
   const { schemaId } = useSchemaParams()
   return schemaId
 }
-
-export function useItemId(): string | undefined {
-  const { itemId } = useSchemaParams()
-  return itemId
-}

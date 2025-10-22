@@ -22,13 +22,13 @@ export function ActionCard({
       ? action.description.replaceAll('•', '\n•')
       : undefined
 
-  // Only show ItemDetailsDisplay if there's damage or traits (range/actionType already in dataList)
   const itemDetailsElement: ReactNode = (
     <ItemDetailsDisplay
       damage={'damage' in action ? action.damage : undefined}
       range={'range' in action ? action.range : undefined}
       actionType={'actionType' in action ? action.actionType : undefined}
       traits={'traits' in action ? action.traits : undefined}
+      color={headerTextColor}
     />
   )
 
@@ -103,6 +103,8 @@ export function ActionCard({
       </Text>
     ) : null
 
+  const hasContent = descriptionElement || optionsElement || subAbilitiesElement || notesElement
+
   return (
     <VStack borderWidth="2px" borderColor="su.black" bg="su.white" gap={0} alignItems="stretch">
       {/* Header */}
@@ -113,7 +115,12 @@ export function ActionCard({
               {'activationCost' in action && action.activationCost && (
                 <ActivationCostBox cost={action.activationCost} currency={activationCurrency} />
               )}
-              <Text as="span" fontWeight="bold" color={headerTextColor || 'su.white'} fontSize="17px">
+              <Text
+                as="span"
+                fontWeight="bold"
+                color={headerTextColor || 'su.white'}
+                fontSize="17px"
+              >
                 {action.name}
               </Text>
             </Flex>
@@ -122,15 +129,17 @@ export function ActionCard({
         </Box>
       )}
 
-      {/* Content */}
-      <Box p={3}>
-        <VStack gap={2} alignItems="stretch">
-          {descriptionElement}
-          {optionsElement}
-          {subAbilitiesElement}
-          {notesElement}
-        </VStack>
-      </Box>
+      {/* Content - only render if there's content to show */}
+      {hasContent && (
+        <Box p={3}>
+          <VStack gap={2} alignItems="stretch">
+            {descriptionElement}
+            {optionsElement}
+            {subAbilitiesElement}
+            {notesElement}
+          </VStack>
+        </Box>
+      )}
     </VStack>
   )
 }

@@ -30,11 +30,3 @@ export function getModel(schemaId: string): (typeof modelMap)[SchemaId] | undefi
   }
   return undefined
 }
-
-export function isValidSchemaId(schemaId: string): schemaId is SchemaId {
-  return schemaId in modelMap
-}
-
-export function getAllSchemaIds(): SchemaId[] {
-  return Object.keys(modelMap) as SchemaId[]
-}

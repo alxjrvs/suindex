@@ -8,15 +8,6 @@ export interface SchemaInfo {
   requiredFields: string[]
 }
 
-export interface SchemaIndex {
-  $schema: string
-  title: string
-  description: string
-  version: string
-  generated: string
-  schemas: SchemaInfo[]
-}
-
 export type DataItem = {
   id: string
   name?: string

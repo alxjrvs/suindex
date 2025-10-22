@@ -1,9 +1,6 @@
 import type { MergeDeep } from 'type-fest'
 import type { Database as DatabaseGenerated } from './database-generated.types'
 
-// Re-export the Json type
-export type { Json } from './database-generated.types'
-
 // ============================================================================
 // Custom JSON Type Definitions
 // ============================================================================
@@ -72,6 +69,3 @@ export type Tables<T extends keyof Database['public']['Tables']> =
 
 export type TablesInsert<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Insert']
-
-export type TablesUpdate<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Update']
