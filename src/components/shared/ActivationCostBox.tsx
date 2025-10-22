@@ -7,7 +7,7 @@ interface ActivationCostBoxProps {
 
 /**
  * Reusable component for displaying activation costs in a "pointed box" style
- * Used in ActionDisplay, AbilityDisplay, and other components that show AP/EP costs
+ * Used in ActionCard, AbilityDisplay, and other components that show AP/EP costs
  * Features a black box with white text and a triangular pointer on the right
  */
 export function ActivationCostBox({ cost, currency = 'AP' }: ActivationCostBoxProps) {

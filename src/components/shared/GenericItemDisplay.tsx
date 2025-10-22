@@ -1,7 +1,7 @@
 import { VStack } from '@chakra-ui/react'
 import { Frame } from './Frame'
 import { RollTableDisplay } from './RollTableDisplay'
-import { ActionDisplay } from './ActionDisplay'
+import { ActionCard } from './ActionCard'
 import { StatBonusDisplay } from './StatBonusDisplay'
 import type { DataValue } from '../../types/common'
 import type { Table } from 'salvageunion-reference'
@@ -58,7 +58,7 @@ export function GenericItemDisplay({
       {showActions && data.actions && data.actions.length > 0 && (
         <VStack gap={3} alignItems="stretch">
           {data.actions.map((action, index) => (
-            <ActionDisplay key={index} action={action} activationCurrency={activationCurrency} />
+            <ActionCard key={index} action={action} activationCurrency={activationCurrency} />
           ))}
         </VStack>
       )}

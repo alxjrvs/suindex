@@ -33,7 +33,7 @@ export function ItemDetailsDisplay({ damage, range, actionType, traits }: ItemDe
   }
 
   return (
-    <Text fontSize="sm" color="su.black">
+    <Text fontSize="sm" color="su.white">
       {parts.join(' • ')}
     </Text>
   )

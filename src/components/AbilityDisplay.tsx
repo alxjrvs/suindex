@@ -1,7 +1,7 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
-import { ActionDisplay } from './shared/ActionDisplay'
+import { ActionCard } from './shared/ActionCard'
 import type { Ability } from 'salvageunion-reference'
 import type { DataValue } from '../types/common'
 
@@ -71,7 +71,7 @@ function AbilityContent({ data }: { data: Ability }) {
             Sub-Abilities:
           </Heading>
           {data.subAbilities.map((subAbility, index) => (
-            <ActionDisplay key={index} action={subAbility} activationCurrency="AP" />
+            <ActionCard key={index} action={subAbility} activationCurrency="AP" />
           ))}
         </VStack>
       )}

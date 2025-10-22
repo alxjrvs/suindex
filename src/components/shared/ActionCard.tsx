@@ -4,19 +4,19 @@ import { ItemDetailsDisplay } from './ItemDetailsDisplay'
 import type { ReactNode } from 'react'
 import type { Action } from '../types'
 
-interface ActionDisplayProps {
+interface ActionCardProps {
   action: Action
   activationCurrency?: string
   headerBgColor?: string
   headerTextColor?: string
 }
 
-export function ActionDisplay({
+export function ActionCard({
   action,
   activationCurrency = 'AP',
   headerBgColor = 'su.lightBlue',
   headerTextColor = 'su.black',
-}: ActionDisplayProps) {
+}: ActionCardProps) {
   const description =
     'description' in action && action.description
       ? action.description.replaceAll('•', '\n•')
@@ -108,13 +108,16 @@ export function ActionDisplay({
       {/* Header */}
       {'name' in action && action.name && (
         <Box bg={headerBgColor || 'su.lightBlue'} px={3} py={2}>
-          <Flex alignItems="center" gap={2}>
-            {'activationCost' in action && action.activationCost && (
-              <ActivationCostBox cost={action.activationCost} currency={activationCurrency} />
-            )}
-            <Text as="span" fontWeight="bold" color={headerTextColor || 'su.white'} fontSize="17px">
-              {action.name}
-            </Text>
+          <Flex alignItems="center" gap={2} justifyContent="space-between">
+            <Flex alignItems="center" gap={2}>
+              {'activationCost' in action && action.activationCost && (
+                <ActivationCostBox cost={action.activationCost} currency={activationCurrency} />
+              )}
+              <Text as="span" fontWeight="bold" color={headerTextColor || 'su.white'} fontSize="17px">
+                {action.name}
+              </Text>
+            </Flex>
+            {itemDetailsElement}
           </Flex>
         </Box>
       )}
@@ -122,7 +125,6 @@ export function ActionDisplay({
       {/* Content */}
       <Box p={3}>
         <VStack gap={2} alignItems="stretch">
-          {itemDetailsElement}
           {descriptionElement}
           {optionsElement}
           {subAbilitiesElement}

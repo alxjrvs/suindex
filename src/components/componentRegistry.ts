@@ -1,5 +1,7 @@
 import type { ComponentType } from 'react'
 import { lazy } from 'react'
+import { EntityDisplay } from './shared/EntityDisplay'
+import type { Vehicle, Creature, Drone, BioTitan, NPC, Squad, Meld } from 'salvageunion-reference'
 
 type DisplayComponentType = ComponentType<{ data: Record<string, unknown> }>
 
@@ -11,9 +13,6 @@ const AbilityTreeRequirementDisplay = lazy(() =>
     default: m.AbilityTreeRequirementDisplay,
   }))
 )
-const BioTitanDisplay = lazy(() =>
-  import('./BioTitanDisplay').then((m) => ({ default: m.BioTitanDisplay }))
-)
 const ChassisDisplay = lazy(() =>
   import('./ChassisDisplay').then((m) => ({ default: m.ChassisDisplay }))
 )
@@ -24,30 +23,39 @@ const CrawlerDisplay = lazy(() =>
 const CrawlerBayDisplay = lazy(() =>
   import('./CrawlerBayDisplay').then((m) => ({ default: m.CrawlerBayDisplay }))
 )
-const CreatureDisplay = lazy(() =>
-  import('./CreatureDisplay').then((m) => ({ default: m.CreatureDisplay }))
-)
-const DroneDisplay = lazy(() => import('./DroneDisplay').then((m) => ({ default: m.DroneDisplay })))
 const EquipmentDisplay = lazy(() =>
   import('./EquipmentDisplay').then((m) => ({ default: m.EquipmentDisplay }))
 )
 const KeywordDisplay = lazy(() =>
   import('./KeywordDisplay').then((m) => ({ default: m.KeywordDisplay }))
 )
-const MeldDisplay = lazy(() => import('./MeldDisplay').then((m) => ({ default: m.MeldDisplay })))
 const ModuleDisplay = lazy(() =>
   import('./ModuleDisplay').then((m) => ({ default: m.ModuleDisplay }))
 )
-const NPCDisplay = lazy(() => import('./NPCDisplay').then((m) => ({ default: m.NPCDisplay })))
-const SquadDisplay = lazy(() => import('./SquadDisplay').then((m) => ({ default: m.SquadDisplay })))
 const SystemDisplay = lazy(() =>
   import('./SystemDisplay').then((m) => ({ default: m.SystemDisplay }))
 )
 const TableDisplay = lazy(() => import('./TableDisplay').then((m) => ({ default: m.TableDisplay })))
 const TraitDisplay = lazy(() => import('./TraitDisplay').then((m) => ({ default: m.TraitDisplay })))
-const VehicleDisplay = lazy(() =>
-  import('./VehicleDisplay').then((m) => ({ default: m.VehicleDisplay }))
+
+// Entity display wrappers
+const BioTitanDisplay: ComponentType<{ data: BioTitan }> = ({ data }) => (
+  <EntityDisplay data={data} actionHeaderBgColor="su.orange" actionHeaderTextColor="su.white" />
 )
+
+const CreatureDisplay: ComponentType<{ data: Creature }> = ({ data }) => (
+  <EntityDisplay data={data} headerColor="var(--color-su-orange)" />
+)
+
+const DroneDisplay: ComponentType<{ data: Drone }> = ({ data }) => <EntityDisplay data={data} />
+
+const MeldDisplay: ComponentType<{ data: Meld }> = ({ data }) => <EntityDisplay data={data} />
+
+const NPCDisplay: ComponentType<{ data: NPC }> = ({ data }) => <EntityDisplay data={data} />
+
+const SquadDisplay: ComponentType<{ data: Squad }> = ({ data }) => <EntityDisplay data={data} />
+
+const VehicleDisplay: ComponentType<{ data: Vehicle }> = ({ data }) => <EntityDisplay data={data} />
 
 export const componentRegistry: Record<string, DisplayComponentType> = {
   abilities: AbilityDisplay as unknown as DisplayComponentType,
