@@ -103,7 +103,7 @@ export function PilotsGrid() {
       <Box p={8}>
         <Flex align="center" justify="center" minH="60vh">
           <VStack textAlign="center" gap={8}>
-            <Heading level="h2" size="2xl" color="su.black">
+            <Heading level="h2" color="su.black">
               Your Pilots
             </Heading>
             <Text fontSize="lg" color="su.brick">
@@ -138,7 +138,7 @@ export function PilotsGrid() {
   return (
     <Box p={8}>
       <Box mb={8}>
-        <Heading level="h1" size="2xl" color="su.black">
+        <Heading level="h1" color="su.black">
           Your Pilots
         </Heading>
       </Box>
@@ -173,7 +173,7 @@ export function PilotsGrid() {
                 w="full"
               >
                 <Box>
-                  <Heading level="h3" size="lg" color="su.white" mb={1}>
+                  <Heading level="h3" color="su.white" mb={1}>
                     {pilot.callsign}
                   </Heading>
                   {className && (

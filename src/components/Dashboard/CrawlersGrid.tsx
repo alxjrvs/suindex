@@ -104,7 +104,7 @@ export function CrawlersGrid() {
       <Box p={8}>
         <Flex align="center" justify="center" minH="60vh">
           <VStack textAlign="center" gap={8}>
-            <Heading level="h2" size="2xl" color="su.black">
+            <Heading level="h2" color="su.black">
               Your Crawlers
             </Heading>
             <Text fontSize="lg" color="su.brick">
@@ -139,7 +139,7 @@ export function CrawlersGrid() {
   return (
     <Box p={8}>
       <Box mb={8}>
-        <Heading level="h1" size="2xl" color="su.black">
+        <Heading level="h1" color="su.black">
           Your Crawlers
         </Heading>
       </Box>
