@@ -20,8 +20,9 @@ import type {
   System,
   Module,
   Equipment,
+  Ability,
   AbilityTreeRequirement,
-  Table,
+  RollTable,
   Crawler,
   CrawlerTechLevel,
   Class,
@@ -44,8 +45,9 @@ type EntityData =
   | System
   | Module
   | Equipment
+  | Ability
   | AbilityTreeRequirement
-  | Table
+  | RollTable
   | Crawler
   | CrawlerTechLevel
   | Class
@@ -58,6 +60,18 @@ interface EntityDisplayProps {
   actionHeaderBgColor?: string
   actionHeaderTextColor?: string
   children?: ReactNode
+  // LiveSheet props (available for all entities, not exclusive to any schema)
+  onClick?: () => void
+  dimmed?: boolean
+  showRemoveButton?: boolean
+  disableRemove?: boolean
+  onRemove?: () => void
+  collapsible?: boolean
+  defaultExpanded?: boolean
+  expanded?: boolean
+  onToggleExpanded?: () => void
+  showSelectButton?: boolean
+  selectButtonText?: string
 }
 
 // Helper function to determine schema name from entity data
@@ -66,8 +80,12 @@ function getSchemaName(data: EntityData): string {
   if ('requirement' in data && 'tree' in data && !('name' in data)) {
     return 'Ability Tree Requirement'
   }
-  if ('rollTable' in data && 'section' in data) {
+  if ('table' in data && 'section' in data) {
     return 'Table'
+  }
+  // Ability has tree, level, and name
+  if ('tree' in data && 'level' in data && 'name' in data) {
+    return 'Ability'
   }
   // CrawlerTechLevel has techLevel, structurePoints, and population fields
   if ('techLevel' in data && 'populationMin' in data && 'populationMax' in data) {
@@ -97,7 +115,7 @@ function getSchemaName(data: EntityData): string {
   if ('slotsRequired' in data) {
     // Could be System, Module, or Equipment
     if ('recommended' in data) return 'Module'
-    if ('statBonus' in data || 'rollTable' in data) return 'System'
+    if ('statBonus' in data || 'table' in data) return 'System'
     return 'Equipment'
   }
   if ('hitPoints' in data) {
@@ -126,12 +144,26 @@ export function EntityDisplay({
   actionHeaderBgColor,
   actionHeaderTextColor,
   children,
+  onClick,
+  dimmed,
+  showRemoveButton,
+  disableRemove,
+  onRemove,
+  collapsible,
+  defaultExpanded = true,
+  expanded,
+  onToggleExpanded,
+  showSelectButton,
+  selectButtonText,
 }: EntityDisplayProps) {
   // Auto-detect if this is a System/Module/Equipment
-  const isItem = 'slotsRequired' in data || 'statBonus' in data || 'rollTable' in data
+  const isItem = 'slotsRequired' in data || 'statBonus' in data || 'table' in data
 
-  // Auto-detect currency (Equipment uses AP, Systems/Modules use EP)
-  const activationCurrency = isItem && !('slotsRequired' in data) ? 'AP' : 'EP'
+  // Auto-detect if this is an Ability
+  const isAbility = 'tree' in data && 'level' in data && 'name' in data
+
+  // Auto-detect currency (Equipment uses AP, Systems/Modules use EP, Abilities use AP)
+  const activationCurrency = isItem && !('slotsRequired' in data) ? 'AP' : isAbility ? 'AP' : 'EP'
 
   // Get schema name for display
   const schemaName = getSchemaName(data)
@@ -148,17 +180,18 @@ export function EntityDisplay({
     details.push({ value: costValue, cost: true })
   }
 
-  // Action type (for items)
-  if (isItem && 'actionType' in data && data.actionType) {
+  // Action type (for items and abilities)
+  if ('actionType' in data && data.actionType) {
     const actionType = data.actionType.includes('action')
       ? data.actionType
       : `${data.actionType} Action`
     details.push({ value: actionType })
   }
 
-  // Range (for ALL entities)
+  // Range (for ALL entities) - no "Range:" prefix for abilities
   if ('range' in data && data.range) {
-    details.push({ value: `Range:${data.range}` })
+    const rangeValue = isAbility ? data.range : `Range:${data.range}`
+    details.push({ value: rangeValue })
   }
 
   // Damage (for ALL entities)
@@ -262,17 +295,25 @@ export function EntityDisplay({
   // Auto-detect what to show
   const showStatBonus = 'statBonus' in data && data.statBonus !== undefined
   const showActions = ('actions' in data && data.actions && data.actions.length > 0) || false
-  const showRollTable = 'rollTable' in data && data.rollTable !== undefined
+  const showRollTable = 'table' in data && data.table !== undefined
 
   // Get header text - AbilityTreeRequirement uses 'tree' instead of 'name'
   const header =
     'tree' in data && !('name' in data) ? `${data.tree} Tree` : (data as { name: string }).name
 
+  // Extract level for abilities
+  const level = 'level' in data ? data.level : undefined
+
+  // Extract notes for display
+  const notes = 'notes' in data ? data.notes : undefined
+
   return (
     <Frame
       header={header}
       headerColor={headerColor}
+      level={level}
       description={'description' in data ? data.description : undefined}
+      notes={notes}
       details={details.length > 0 ? details : undefined}
       headerContent={
         stats.length > 0 ? (
@@ -285,6 +326,17 @@ export function EntityDisplay({
       techLevel={techLevel as 1 | 2 | 3 | 4 | 5 | 6 | undefined}
       salvageValue={salvageValue}
       slotsRequired={slotsRequired}
+      onClick={onClick}
+      dimmed={dimmed}
+      showRemoveButton={showRemoveButton}
+      disableRemove={disableRemove}
+      onRemove={onRemove}
+      collapsible={collapsible}
+      defaultExpanded={defaultExpanded}
+      expanded={expanded}
+      onToggleExpanded={onToggleExpanded}
+      showSelectButton={showSelectButton}
+      selectButtonText={selectButtonText}
     >
       {/* Stat Bonus (for Systems/Modules/Equipment) */}
       {showStatBonus && 'statBonus' in data && data.statBonus && (
@@ -299,8 +351,8 @@ export function EntityDisplay({
         </VStack>
       )}
       {/* Roll Table (for Sytems/Modules/Equipment) */}
-      {showRollTable && 'rollTable' in data && data.rollTable && (
-        <RollTableDisplay rollTable={data.rollTable} showCommand />
+      {showRollTable && 'table' in data && data.table && (
+        <RollTableDisplay table={data.table} showCommand />
       )}
       {/* Systems (for Vehicles and Drones) */}
       {'systems' in data && data.systems && data.systems.length > 0 && (
@@ -348,13 +400,7 @@ export function EntityDisplay({
           ))}
         </VStack>
       )}
-      {/* Notes (for Equipment, CrawlerBay) */}
-      {'notes' in data && data.notes && (
-        <Box borderWidth="1px" borderColor="su.black" p={3} borderRadius="md" bg="su.white">
-          <Text color="su.black">{data.notes}</Text>
-        </Box>
-      )}
-      {/* Custom children (for special cases like AbilityTreeRequirement) */}
+      {/* Custom children (for special cases like AbilityTreeRequirement, AbilityDisplay, etc.) */}
       {children}
       {hasPageReference && <Box flex="1" minHeight="1rem" />}
       {hasPageReference && (

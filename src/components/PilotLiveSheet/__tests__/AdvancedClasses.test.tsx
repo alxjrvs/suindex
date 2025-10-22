@@ -232,6 +232,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
       id: 'req-smuggler',
       tree: 'Smuggling',
       requirement: ['Hacking'],
+      source: "Salvage Union Core Book",
       page: 70,
     },
   ]

@@ -37,7 +37,7 @@ export function SelectableAbilityItem({
       expanded={isExpanded}
       onToggleExpanded={onToggleExpanded}
       showSelectButton
-      selectButtonCost={cost}
+      selectButtonText={`Add to Pilot (${cost} TP)`}
     />
   )
 }

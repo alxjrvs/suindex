@@ -30,7 +30,7 @@ export interface FrameProps {
   expanded?: boolean
   onToggleExpanded?: () => void
   showSelectButton?: boolean
-  selectButtonCost?: number
+  selectButtonText?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
 }
 
@@ -42,7 +42,6 @@ export function Frame({
   techLevel,
   details,
   description,
-  notes,
   children,
   showSidebar = true,
   slotsRequired,
@@ -58,7 +57,7 @@ export function Frame({
   expanded,
   onToggleExpanded,
   showSelectButton = false,
-  selectButtonCost,
+  selectButtonText,
 }: FrameProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
 
@@ -127,7 +126,7 @@ export function Frame({
           <Box flex="1" overflow="visible" data-testid="frame-header-container">
             <Flex justifyContent="space-between" alignItems="flex-start" overflow="visible">
               {/* Left side: Title and details in a column */}
-              <VStack alignItems="flex-start" spacing={1} flex="1">
+              <VStack alignItems="flex-start" gap={1} flex="1">
                 {header && (
                   <Heading level="h3" flexWrap="wrap" color="su.white">
                     {header}
@@ -244,7 +243,7 @@ export function Frame({
                   _hover: { bg: 'su.orange' },
                 }}
               >
-                Add to Pilot{selectButtonCost !== undefined ? ` (${selectButtonCost} TP)` : ''}
+                {selectButtonText || 'Select'}
               </Button>
             )}
           </VStack>

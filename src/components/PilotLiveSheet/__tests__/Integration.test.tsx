@@ -217,6 +217,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
       id: 'req-smuggler',
       tree: 'Smuggling',
       requirement: ['Hacking'],
+      source: "Salvage Union Core Book",
       page: 80,
     },
   ]

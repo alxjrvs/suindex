@@ -392,7 +392,7 @@ export function AbilitySelector({
                                 collapsible
                                 defaultExpanded
                                 showSelectButton
-                                selectButtonCost={cost}
+                                selectButtonText={`Add to Pilot (${cost} TP)`}
                               />
                             )
                           })}
@@ -477,7 +477,7 @@ export function AbilitySelector({
                                 collapsible
                                 defaultExpanded
                                 showSelectButton
-                                selectButtonCost={cost}
+                                selectButtonText={`Add to Pilot (${cost} TP)`}
                               />
                             )
                           })}

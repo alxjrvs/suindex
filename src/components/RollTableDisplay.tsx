@@ -1,10 +1,10 @@
 import { EntityDisplay } from './shared/EntityDisplay'
-import type { Table } from 'salvageunion-reference'
+import type { RollTable } from 'salvageunion-reference'
 
 interface TableDisplayProps {
-  data: Table
+  data: RollTable
 }
 
-export function TableDisplay({ data }: TableDisplayProps) {
+export function RollTableDisplay({ data }: TableDisplayProps) {
   return <EntityDisplay data={data} headerColor="su.orange" />
 }

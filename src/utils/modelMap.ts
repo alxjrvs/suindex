@@ -18,7 +18,7 @@ export const modelMap = {
   npcs: SalvageUnionReference.NPCs,
   squads: SalvageUnionReference.Squads,
   systems: SalvageUnionReference.Systems,
-  tables: SalvageUnionReference.Tables,
+  'roll-tables': SalvageUnionReference.RollTables,
   traits: SalvageUnionReference.Traits,
   vehicles: SalvageUnionReference.Vehicles,
 } as const

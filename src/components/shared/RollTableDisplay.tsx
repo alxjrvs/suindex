@@ -1,5 +1,8 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import type { Table } from 'salvageunion-reference'
+import type { Ability, CrawlerBay,  Equipment,RollTable,  System, } from 'salvageunion-reference'
+
+
+type Table = RollTable['table'] | System['table'] | Equipment['table'] | CrawlerBay['table'] | Ability['table']
 
 interface DigestedRollTable {
   order: number
@@ -9,12 +12,13 @@ interface DigestedRollTable {
 }
 
 interface RollTableDisplayProps {
-  rollTable: Table['rollTable']
+  table: Table
   showCommand?: boolean
 }
 
-function digestRollTable(tables: Table['rollTable']): DigestedRollTable[] {
-  const sorted = Object.keys(tables)
+function digestRollTable(table: Table): DigestedRollTable[] {
+  if (!table) return []
+  const sorted = Object.keys(table)
     .sort((a, b) => {
       const aNum = parseInt(a.split('-')[0])
       const bNum = parseInt(b.split('-')[0])
@@ -23,7 +27,7 @@ function digestRollTable(tables: Table['rollTable']): DigestedRollTable[] {
     .reverse()
 
   return sorted.map((key, order) => {
-    const fullDescription = tables[key as keyof typeof tables] || ''
+    const fullDescription = table[key as keyof typeof table] || ''
     const name = fullDescription.split(':')[0]
     const description = fullDescription.replace(`${name}:`, '').trim()
 
@@ -36,8 +40,8 @@ function digestRollTable(tables: Table['rollTable']): DigestedRollTable[] {
   })
 }
 
-export function RollTableDisplay({ rollTable, showCommand = false }: RollTableDisplayProps) {
-  const digestedTable = digestRollTable(rollTable)
+export function RollTableDisplay({ table, showCommand = false }: RollTableDisplayProps) {
+  const digestedTable = digestRollTable(table)
 
   return (
     <Box>
