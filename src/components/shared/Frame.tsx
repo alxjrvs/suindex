@@ -5,7 +5,7 @@ import { DataList } from './DataList'
 import type { DataValue } from '../../types/common'
 import { techLevelColors } from '../../theme'
 
-interface FrameProps {
+export interface FrameProps {
   header: string
   headerColor?: string
   headerContent?: ReactNode

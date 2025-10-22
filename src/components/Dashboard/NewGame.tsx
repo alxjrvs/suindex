@@ -65,7 +65,7 @@ export function NewGame() {
   return (
     <Box p={8} maxW="2xl" mx="auto">
       <Box mb={8}>
-        <Heading level="h1" size="2xl" color="su.black" mb={2}>
+        <Heading level="h1" mb={2}>
           Create New Game
         </Heading>
         <Text color="su.brick">Start a new Salvage Union game session</Text>

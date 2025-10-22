@@ -2,16 +2,11 @@ import { Box, Text, VStack } from '@chakra-ui/react'
 import { Heading } from './base/Heading'
 import { Frame } from './shared/Frame'
 import { StatList } from './shared/StatList'
+import { TraitsDisplay } from './shared/TraitsDisplay'
 import type { Drone } from 'salvageunion-reference'
-import { formatTraits as formatTraitsArray } from '../utils/displayUtils'
 
 interface DroneDisplayProps {
   data: Drone
-}
-
-function formatTraits(traits?: Array<{ type: string; amount?: number }>): string {
-  if (!traits || traits.length === 0) return ''
-  return formatTraitsArray(traits).join(', ')
 }
 
 export function DroneDisplay({ data }: DroneDisplayProps) {
@@ -34,14 +29,7 @@ export function DroneDisplay({ data }: DroneDisplayProps) {
       salvageValue={data.salvageValue}
     >
       {'traits' in data && data.traits && Array.isArray(data.traits) && data.traits.length > 0 ? (
-        <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
-          <Text as="span" fontWeight="bold" color="su.brick">
-            Traits:{' '}
-          </Text>
-          <Text as="span" color="su.black">
-            {formatTraits(data.traits)}
-          </Text>
-        </Box>
+        <TraitsDisplay traits={data.traits} />
       ) : null}
 
       {data.systems && data.systems.length > 0 && (
@@ -82,12 +70,7 @@ export function DroneDisplay({ data }: DroneDisplayProps) {
                 </Text>
               )}
               {system.traits && system.traits.length > 0 && (
-                <Text color="su.black">
-                  <Text as="span" fontWeight="bold" color="su.brick">
-                    Traits:{' '}
-                  </Text>
-                  {formatTraits(system.traits)}
-                </Text>
+                <TraitsDisplay traits={system.traits} />
               )}
             </VStack>
           ))}

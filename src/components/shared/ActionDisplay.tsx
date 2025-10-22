@@ -1,5 +1,7 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { DataList } from './DataList'
+import { ActivationCostBox } from './ActivationCostBox'
+import { ItemDetailsDisplay } from './ItemDetailsDisplay'
 import type { DataValue } from '../../types/common'
 import type { ReactNode } from 'react'
 import type { Action } from '../types'
@@ -24,18 +26,32 @@ function generateDataListValues(action: Action): DataValue[] {
 }
 
 export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDisplayProps) {
+  // Check if this is a sub-ability (has damage, range, or traits but no activationCost or actionType at top level)
+  const isSubAbility = 'damage' in action || ('range' in action && !('activationCost' in action))
+
   const dataListValues = generateDataListValues(action)
   const description =
     'description' in action && action.description
       ? action.description.replaceAll('•', '\n•')
       : undefined
 
+  // Skip dataList for sub-abilities since ItemDetailsDisplay shows all details
   const dataList: ReactNode =
-    dataListValues.length > 0 ? (
+    !isSubAbility && dataListValues.length > 0 ? (
       <Box>
         <DataList values={dataListValues} />
       </Box>
     ) : null
+
+  const itemDetailsElement: ReactNode = (
+    <ItemDetailsDisplay
+      damage={'damage' in action ? action.damage : undefined}
+      range={'range' in action ? action.range : undefined}
+      actionType={'actionType' in action ? action.actionType : undefined}
+      traits={'traits' in action ? action.traits : undefined}
+      compact
+    />
+  )
 
   const descriptionElement: ReactNode = description ? (
     <Text color="su.black" whiteSpace="pre-line">
@@ -72,21 +88,26 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
       >
         {action.subAbilities.map((subAbility, index) => (
           <Box key={index} ml={2}>
-            <Flex alignItems="center" gap={2}>
+            <Flex alignItems="center" gap={2} flexWrap="wrap">
               <Text as="span" fontWeight="bold" color="su.black">
                 {subAbility.name}
               </Text>
+              {subAbility.activationCost && (
+                <ActivationCostBox cost={subAbility.activationCost} currency={activationCurrency} />
+              )}
               {subAbility.actionType && (
                 <Text as="span" fontSize="sm" color="su.brick">
                   ({subAbility.actionType})
                 </Text>
               )}
-              {subAbility.activationCost && (
-                <Text as="span" fontSize="sm" color="su.brick">
-                  {subAbility.activationCost} AP
-                </Text>
-              )}
             </Flex>
+            <ItemDetailsDisplay
+              damage={'damage' in subAbility ? subAbility.damage : undefined}
+              range={'range' in subAbility ? subAbility.range : undefined}
+              actionType={undefined}
+              traits={'traits' in subAbility ? subAbility.traits : undefined}
+              compact
+            />
             {subAbility.description && (
               <Text fontSize="sm" color="su.black" mt={1}>
                 {subAbility.description}
@@ -115,35 +136,7 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
     >
       <Flex alignItems="center" gap={1}>
         {'activationCost' in action && action.activationCost && (
-          <Flex alignItems="center" overflow="visible">
-            <Flex
-              bg="su.black"
-              color="su.white"
-              fontWeight="bold"
-              textTransform="uppercase"
-              alignItems="center"
-              justifyContent="center"
-              whiteSpace="nowrap"
-              fontSize="15px"
-              px="6px"
-              py="2px"
-              h="20px"
-              minW="50px"
-              zIndex={2}
-            >
-              {`${action.activationCost === 'Variable' ? 'X' : action.activationCost} ${activationCurrency}`}
-            </Flex>
-            <Box
-              w={0}
-              h={0}
-              borderTop="10px solid transparent"
-              borderBottom="10px solid transparent"
-              borderLeft="10px solid"
-              borderLeftColor="su.black"
-              ml={0}
-              zIndex={1}
-            />
-          </Flex>
+          <ActivationCostBox cost={action.activationCost} currency={activationCurrency} />
         )}
         {'name' in action && action.name && (
           <Text as="span" fontWeight="bold" color="su.black" fontSize="17px">
@@ -153,6 +146,7 @@ export function ActionDisplay({ action, activationCurrency = 'AP' }: ActionDispl
       </Flex>
 
       {dataList}
+      {itemDetailsElement}
       {descriptionElement}
       {optionsElement}
       {subAbilitiesElement}

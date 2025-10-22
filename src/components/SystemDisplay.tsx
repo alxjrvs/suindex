@@ -1,8 +1,4 @@
-import { VStack } from '@chakra-ui/react'
-import { Frame } from './shared/Frame'
-import { RollTableDisplay } from './shared/RollTableDisplay'
-import { ActionDisplay } from './shared/ActionDisplay'
-import { StatBonusDisplay } from './shared/StatBonusDisplay'
+import { GenericItemDisplay } from './shared/GenericItemDisplay'
 import type { System } from 'salvageunion-reference'
 import { generateDetails } from '../utils/displayUtils'
 
@@ -14,29 +10,14 @@ export function SystemDisplay({ data }: SystemDisplayProps) {
   const details = generateDetails(data, 'EP')
 
   return (
-    <Frame
-      header={data.name}
-      techLevel={data.techLevel}
+    <GenericItemDisplay
+      data={data}
       details={details}
-      description={data.description}
-      notes={data.notes}
       showSidebar
-      slotsRequired={data.slotsRequired}
-      salvageValue={data.salvageValue}
-    >
-      {data.statBonus && (
-        <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
-      )}
-
-      {data.actions && data.actions.length > 0 && (
-        <VStack gap={3} alignItems="stretch">
-          {data.actions.map((action, index) => (
-            <ActionDisplay key={index} action={action} activationCurrency="EP" />
-          ))}
-        </VStack>
-      )}
-
-      {data.rollTable && <RollTableDisplay rollTable={data.rollTable} />}
-    </Frame>
+      activationCurrency="EP"
+      showStatBonus
+      showActions
+      showRollTable
+    />
   )
 }

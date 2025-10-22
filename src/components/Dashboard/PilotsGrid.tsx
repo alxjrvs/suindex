@@ -1,54 +1,29 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
-import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { NewPilotModal } from './NewPilotModal'
 import { SalvageUnionReference } from 'salvageunion-reference'
+import { useEntityGrid } from '../../hooks/useEntityGrid'
 
 type PilotRow = Tables<'pilots'>
 
 export function PilotsGrid() {
   const navigate = useNavigate()
-  const [pilots, setPilots] = useState<PilotRow[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  useEffect(() => {
-    loadPilots()
-  }, [])
-
-  const loadPilots = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      // Fetch pilots owned by the user
-      const { data: pilotsData, error: pilotsError } = await supabase
-        .from('pilots')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-
-      if (pilotsError) throw pilotsError
-
-      setPilots((pilotsData || []) as PilotRow[])
-    } catch (err) {
-      console.error('Error loading pilots:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load pilots')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const {
+    items: pilots,
+    loading,
+    error,
+    reload,
+  } = useEntityGrid<PilotRow>({
+    table: 'pilots',
+    orderBy: 'created_at',
+    orderAscending: false,
+  })
 
   const handleCreatePilot = () => {
     setIsModalOpen(true)
@@ -59,7 +34,7 @@ export function PilotsGrid() {
   }
 
   const handleModalSuccess = () => {
-    loadPilots()
+    reload()
   }
 
   if (loading) {
@@ -82,7 +57,7 @@ export function PilotsGrid() {
             {error}
           </Text>
           <Button
-            onClick={loadPilots}
+            onClick={reload}
             bg="su.brick"
             color="su.white"
             fontWeight="bold"
