@@ -85,7 +85,14 @@ export function AbilitiesList({
         </Heading>
         <Flex alignItems="center" gap={4}>
           <Flex flexDirection="column" alignItems="center">
-            <Text as="label" fontSize="xs" fontWeight="bold" color="fg.input.label" mb={1} display="block">
+            <Text
+              as="label"
+              fontSize="xs"
+              fontWeight="bold"
+              color="fg.input.label"
+              mb={1}
+              display="block"
+            >
               Add
             </Text>
             <Button

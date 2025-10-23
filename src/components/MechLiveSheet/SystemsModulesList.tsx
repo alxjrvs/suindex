@@ -61,7 +61,14 @@ export function SystemsModulesList({
   }, [modules, allModules])
 
   return (
-    <Box bg="bg.builder.mech" borderWidth="builder.border" borderColor="border.builder" borderRadius="builder.radius" p="builder.padding" shadow="lg">
+    <Box
+      bg="bg.builder.mech"
+      borderWidth="builder.border"
+      borderColor="border.builder"
+      borderRadius="builder.radius"
+      p="builder.padding"
+      shadow="lg"
+    >
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
         <Heading
           level="h2"

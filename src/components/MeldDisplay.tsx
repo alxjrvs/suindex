@@ -8,4 +8,3 @@ interface MeldDisplayProps {
 export function MeldDisplay({ data }: MeldDisplayProps) {
   return <EntityDisplay data={data} />
 }
-

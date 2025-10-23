@@ -92,7 +92,8 @@ export function EntityDisplay({
   }
 
   // Styling (from Frame)
-  const backgroundColor = headerColor || (sidebar.techLevel ? techLevelColors[sidebar.techLevel] : 'su.orange')
+  const backgroundColor =
+    headerColor || (sidebar.techLevel ? techLevelColors[sidebar.techLevel] : 'su.orange')
   const opacityValue = dimmed ? 0.5 : 1
 
   // Click handling (from Frame)
@@ -210,23 +211,24 @@ export function EntityDisplay({
       {/* Body with sidebar and content */}
       <Flex bg={backgroundColor}>
         {/* Sidebar */}
-        {sidebar.showSidebar && (sidebar.techLevel || sidebar.slotsRequired || sidebar.salvageValue) && (
-          <VStack
-            alignItems="center"
-            justifyContent="flex-start"
-            pb={3}
-            pt={3}
-            gap={3}
-            minW="80px"
-            maxW="80px"
-            bg={backgroundColor}
-            overflow="visible"
-          >
-            {sidebar.slotsRequired && <StatDisplay label="Slots" value={sidebar.slotsRequired} />}
-            {sidebar.salvageValue && <StatDisplay label="SV" value={sidebar.salvageValue} />}
-            {sidebar.techLevel && <StatDisplay label="TL" value={sidebar.techLevel} />}
-          </VStack>
-        )}
+        {sidebar.showSidebar &&
+          (sidebar.techLevel || sidebar.slotsRequired || sidebar.salvageValue) && (
+            <VStack
+              alignItems="center"
+              justifyContent="flex-start"
+              pb={3}
+              pt={3}
+              gap={3}
+              minW="80px"
+              maxW="80px"
+              bg={backgroundColor}
+              overflow="visible"
+            >
+              {sidebar.slotsRequired && <StatDisplay label="Slots" value={sidebar.slotsRequired} />}
+              {sidebar.salvageValue && <StatDisplay label="SV" value={sidebar.salvageValue} />}
+              {sidebar.techLevel && <StatDisplay label="TL" value={sidebar.techLevel} />}
+            </VStack>
+          )}
 
         {/* Main content area */}
         {(!collapsible || isExpanded) && (
@@ -258,13 +260,20 @@ export function EntityDisplay({
             )}
 
             {/* Actions (for Systems/Modules/Equipment) */}
-            {sections.showActions && 'actions' in data && data.actions && data.actions.length > 0 && (
-              <VStack gap={3} alignItems="stretch">
-                {data.actions.map((action, index) => (
-                  <ActionCard key={index} action={action} activationCurrency={activationCurrency} />
-                ))}
-              </VStack>
-            )}
+            {sections.showActions &&
+              'actions' in data &&
+              data.actions &&
+              data.actions.length > 0 && (
+                <VStack gap={3} alignItems="stretch">
+                  {data.actions.map((action, index) => (
+                    <ActionCard
+                      key={index}
+                      action={action}
+                      activationCurrency={activationCurrency}
+                    />
+                  ))}
+                </VStack>
+              )}
 
             {/* Roll Table (for Systems/Modules/Equipment) */}
             {sections.showRollTable && 'table' in data && data.table && (
@@ -272,52 +281,58 @@ export function EntityDisplay({
             )}
 
             {/* Systems (for Vehicles and Drones) */}
-            {sections.showSystems && 'systems' in data && data.systems && data.systems.length > 0 && (
-              <VStack gap={3} alignItems="stretch">
-                <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
-                  Systems
-                </Heading>
-                {data.systems.map((system, index) => (
-                  <VStack
-                    key={index}
-                    gap={2}
-                    alignItems="stretch"
-                    bg="su.white"
-                    borderWidth="1px"
-                    borderColor="su.black"
-                    borderRadius="md"
-                    p={3}
-                  >
-                    <Text fontWeight="bold" color="su.black">
-                      {system}
-                    </Text>
-                  </VStack>
-                ))}
-              </VStack>
-            )}
+            {sections.showSystems &&
+              'systems' in data &&
+              data.systems &&
+              data.systems.length > 0 && (
+                <VStack gap={3} alignItems="stretch">
+                  <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+                    Systems
+                  </Heading>
+                  {data.systems.map((system, index) => (
+                    <VStack
+                      key={index}
+                      gap={2}
+                      alignItems="stretch"
+                      bg="su.white"
+                      borderWidth="1px"
+                      borderColor="su.black"
+                      borderRadius="md"
+                      p={3}
+                    >
+                      <Text fontWeight="bold" color="su.black">
+                        {system}
+                      </Text>
+                    </VStack>
+                  ))}
+                </VStack>
+              )}
 
             {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds, Crawlers) */}
-            {sections.showAbilities && 'abilities' in data && data.abilities && data.abilities.length > 0 && (
-              <VStack gap={3} alignItems="stretch">
-                <Heading
-                  level="h3"
-                  fontSize="lg"
-                  fontWeight="bold"
-                  color="su.black"
-                  textTransform="uppercase"
-                >
-                  Abilities
-                </Heading>
-                {data.abilities.map((ability, index) => (
-                  <ActionCard
-                    key={index}
-                    action={ability}
-                    headerBgColor={actionHeaderBgColor}
-                    headerTextColor={actionHeaderTextColor}
-                  />
-                ))}
-              </VStack>
-            )}
+            {sections.showAbilities &&
+              'abilities' in data &&
+              data.abilities &&
+              data.abilities.length > 0 && (
+                <VStack gap={3} alignItems="stretch">
+                  <Heading
+                    level="h3"
+                    fontSize="lg"
+                    fontWeight="bold"
+                    color="su.black"
+                    textTransform="uppercase"
+                  >
+                    Abilities
+                  </Heading>
+                  {data.abilities.map((ability, index) => (
+                    <ActionCard
+                      key={index}
+                      action={ability}
+                      headerBgColor={actionHeaderBgColor}
+                      headerTextColor={actionHeaderTextColor}
+                    />
+                  ))}
+                </VStack>
+              )}
 
             {/* Custom children (for special cases like AbilityTreeRequirement, AbilityDisplay, etc.) */}
             {children}

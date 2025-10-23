@@ -23,14 +23,27 @@ export function StorageBay({
   onRemoveCargo,
 }: StorageBayProps) {
   return (
-    <Box bg="bg.builder.crawler" borderWidth="builder.border.sm" borderColor="border.builder.crawler" borderRadius="2xl" p={4}>
+    <Box
+      bg="bg.builder.crawler"
+      borderWidth="builder.border.sm"
+      borderColor="border.builder.crawler"
+      borderRadius="2xl"
+      p={4}
+    >
       <Heading level="h2" textTransform="uppercase" mb={3}>
         Storage Bay
       </Heading>
 
       <VStack gap={3} mb={4} alignItems="stretch">
         <Box>
-          <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="fg.input.label" mb={1}>
+          <Text
+            as="label"
+            display="block"
+            fontSize="xs"
+            fontWeight="bold"
+            color="fg.input.label"
+            mb={1}
+          >
             Bullwhacker
           </Text>
           <Input
@@ -50,7 +63,14 @@ export function StorageBay({
         </Box>
 
         <Box>
-          <Text as="label" display="block" fontSize="xs" fontWeight="bold" color="fg.input.label" mb={1}>
+          <Text
+            as="label"
+            display="block"
+            fontSize="xs"
+            fontWeight="bold"
+            color="fg.input.label"
+            mb={1}
+          >
             Description
           </Text>
           <Textarea

@@ -1,8 +1,12 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import type { Ability, CrawlerBay,  Equipment,RollTable,  System, } from 'salvageunion-reference'
+import type { Ability, CrawlerBay, Equipment, RollTable, System } from 'salvageunion-reference'
 
-
-type Table = RollTable['table'] | System['table'] | Equipment['table'] | CrawlerBay['table'] | Ability['table']
+type Table =
+  | RollTable['table']
+  | System['table']
+  | Equipment['table']
+  | CrawlerBay['table']
+  | Ability['table']
 
 interface DigestedRollTable {
   order: number

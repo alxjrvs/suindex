@@ -43,4 +43,3 @@ export function PilotGridCard({
     </GridCard>
   )
 }
-

@@ -561,7 +561,13 @@ export function GameShow() {
                   w="full"
                 >
                   <Box>
-                    <Text fontSize="xl" fontWeight="bold" color="su.white" lineHeight="tight" lineClamp={1}>
+                    <Text
+                      fontSize="xl"
+                      fontWeight="bold"
+                      color="su.white"
+                      lineHeight="tight"
+                      lineClamp={1}
+                    >
                       {crawler.name}
                     </Text>
                     <Text fontSize="sm" color="su.white" opacity={0.9} mt={1} lineClamp={1}>
@@ -569,7 +575,7 @@ export function GameShow() {
                     </Text>
                   </Box>
                   <Text fontSize="sm" color="su.white" opacity={0.75}>
-                    SP: {Math.max((crawlerMaxSP - (crawler.current_damage ?? 0)), 0)}/{crawlerMaxSP}
+                    SP: {Math.max(crawlerMaxSP - (crawler.current_damage ?? 0), 0)}/{crawlerMaxSP}
                   </Text>
                 </Box>
 

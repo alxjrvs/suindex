@@ -45,4 +45,3 @@ export function ActivationCostBox({ cost, currency = 'AP' }: ActivationCostBoxPr
     </Flex>
   )
 }
-

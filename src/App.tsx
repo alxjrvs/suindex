@@ -9,6 +9,7 @@ import PilotLiveSheet from './components/PilotLiveSheet'
 import CrawlerLiveSheet from './components/CrawlerLiveSheet'
 import Dashboard from './components/Dashboard'
 import LandingPage from './components/LandingPage'
+import { RulesReferenceLanding } from './components/Reference/RulesReferenceLanding'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 
@@ -29,6 +30,10 @@ function AppContent() {
             <ReferenceNavigation schemas={schemaIndexData.schemas} />
             <Box as="main" flex="1" overflowY="auto" pt={{ base: 16, md: 0 }}>
               <Routes>
+                <Route
+                  index
+                  element={<RulesReferenceLanding schemas={schemaIndexData.schemas} />}
+                />
                 <Route
                   path="/schema/:schemaId"
                   element={<SchemaViewer schemas={schemaIndexData.schemas} />}

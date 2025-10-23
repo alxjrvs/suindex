@@ -8,4 +8,3 @@ interface CreatureDisplayProps {
 export function CreatureDisplay({ data }: CreatureDisplayProps) {
   return <EntityDisplay data={data} headerColor="su.orange" />
 }
-

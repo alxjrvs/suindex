@@ -159,7 +159,12 @@ export function NewMechModal({ isOpen, onClose, onSuccess }: NewMechModalProps) 
   const isValid = chassisId !== ''
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Create New Mech" backgroundColor="bg.builder.mech">
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Create New Mech"
+      backgroundColor="bg.builder.mech"
+    >
       <VStack gap={4} align="stretch">
         {error && (
           <Box

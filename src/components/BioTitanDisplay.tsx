@@ -10,4 +10,3 @@ export function BioTitanDisplay({ data }: BioTitanDisplayProps) {
     <EntityDisplay data={data} actionHeaderBgColor="su.orange" actionHeaderTextColor="su.white" />
   )
 }
-

@@ -8,4 +8,3 @@ interface DroneDisplayProps {
 export function DroneDisplay({ data }: DroneDisplayProps) {
   return <EntityDisplay data={data} />
 }
-

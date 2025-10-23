@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Box, Button, Flex, IconButton, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, IconButton, Text, HStack } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
-import Footer from '../Footer'
 import type { User } from '@supabase/supabase-js'
 import { Heading } from '../base/Heading'
 
@@ -36,13 +35,14 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
 
   return (
     <>
+      {/* Mobile menu button */}
       <IconButton
         onClick={() => setIsOpen(!isOpen)}
         position="fixed"
         top={4}
-        left={4}
+        right={4}
         zIndex={50}
-        display={{ base: 'flex', md: 'none' }}
+        display={{ base: 'flex', lg: 'none' }}
         bg="su.orange"
         color="su.white"
         p={2}
@@ -59,197 +59,187 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
         </svg>
       </IconButton>
 
+      {/* Mobile overlay */}
       {isOpen && (
         <Box
           position="fixed"
           inset={0}
           bg="blackAlpha.500"
           zIndex={30}
-          display={{ base: 'block', md: 'none' }}
+          display={{ base: 'block', lg: 'none' }}
           onClick={() => setIsOpen(false)}
         />
       )}
 
+      {/* Top navigation bar */}
       <Flex
         as="nav"
-        position={{ base: 'fixed', md: 'static' }}
-        top={0}
-        left={0}
-        h="100vh"
-        w="64"
+        position={{ base: 'fixed', lg: 'static' }}
+        top={{ base: 0, lg: 'auto' }}
+        left={{ base: 0, lg: 'auto' }}
+        right={{ base: 0, lg: 'auto' }}
         bg="su.white"
-        shadow="lg"
-        overflowY="auto"
-        borderRightWidth="1px"
-        borderRightColor="su.lightBlue"
+        borderBottomWidth="2px"
+        borderBottomColor="su.lightBlue"
+        px={6}
+        py={3}
+        alignItems="center"
+        justifyContent="space-between"
         zIndex={40}
-        transform={{
-          base: isOpen ? 'translateX(0)' : 'translateX(-100%)',
-          md: 'translateX(0)',
-        }}
-        transition="transform 0.3s ease-in-out"
-        flexDirection="column"
+        flexDirection={{ base: 'column', lg: 'row' }}
+        gap={{ base: 4, lg: 0 }}
+        shadow={{ base: isOpen ? 'lg' : 'none', lg: 'sm' }}
       >
-        <Box flex="1">
-          <Button
-            onClick={() => handleNavigate('/')}
-            w="full"
-            textAlign="left"
-            display="block"
-            p={4}
-            borderBottomWidth="1px"
-            borderBottomColor="su.lightBlue"
-            _hover={{ bg: 'su.lightOrange' }}
-            bg="transparent"
-            borderRadius={0}
-            variant="ghost"
-            h="auto"
-          >
-            <Heading level="h1">Salvage Union</Heading>
-            <Text fontSize="sm" color="su.brick">
-              Dashboard
-            </Text>
-          </Button>
+        {/* Logo/Brand */}
+        <Button
+          onClick={() => handleNavigate('/')}
+          _hover={{ bg: 'su.lightOrange' }}
+          bg="transparent"
+          borderRadius="md"
+          variant="ghost"
+          h="auto"
+          p={2}
+          display={{ base: isOpen ? 'block' : 'none', lg: 'block' }}
+        >
+          <Heading level="h2">Salvage Union</Heading>
+          <Text fontSize="xs" color="su.brick">
+            Dashboard
+          </Text>
+        </Button>
 
-          <VStack as="ul" py={2} gap={0} alignItems="stretch">
-            <Box as="li">
-              <Button
-                onClick={() => handleNavigate('/dashboard')}
-                w="full"
-                textAlign="left"
-                display="block"
-                px={4}
-                py={3}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard') ? 'su.lightBlue' : 'transparent'}
-                borderLeftWidth={isActive('/dashboard') ? '4px' : 0}
-                borderLeftColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard') ? 'medium' : 'normal'}
-                borderRadius={0}
-                variant="ghost"
-                h="auto"
-                justifyContent="flex-start"
-              >
-                Overview
-              </Button>
-            </Box>
-            <Box as="li">
-              <Button
-                onClick={() => handleNavigate('/dashboard/games')}
-                w="full"
-                textAlign="left"
-                display="block"
-                px={4}
-                py={3}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard/games') ? 'su.lightBlue' : 'transparent'}
-                borderLeftWidth={isActive('/dashboard/games') ? '4px' : 0}
-                borderLeftColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard/games') ? 'medium' : 'normal'}
-                borderRadius={0}
-                variant="ghost"
-                h="auto"
-                justifyContent="flex-start"
-              >
-                Games
-              </Button>
-            </Box>
-            <Box as="li">
-              <Button
-                onClick={() => handleNavigate('/dashboard/crawlers')}
-                w="full"
-                textAlign="left"
-                display="block"
-                px={4}
-                py={3}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard/crawlers') ? 'su.lightBlue' : 'transparent'}
-                borderLeftWidth={isActive('/dashboard/crawlers') ? '4px' : 0}
-                borderLeftColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard/crawlers') ? 'medium' : 'normal'}
-                borderRadius={0}
-                variant="ghost"
-                h="auto"
-                justifyContent="flex-start"
-              >
-                Crawlers
-              </Button>
-            </Box>
-            <Box as="li">
-              <Button
-                onClick={() => handleNavigate('/dashboard/pilots')}
-                w="full"
-                textAlign="left"
-                display="block"
-                px={4}
-                py={3}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard/pilots') ? 'su.lightBlue' : 'transparent'}
-                borderLeftWidth={isActive('/dashboard/pilots') ? '4px' : 0}
-                borderLeftColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard/pilots') ? 'medium' : 'normal'}
-                borderRadius={0}
-                variant="ghost"
-                h="auto"
-                justifyContent="flex-start"
-              >
-                Pilots
-              </Button>
-            </Box>
-            <Box as="li">
-              <Button
-                onClick={() => handleNavigate('/dashboard/mechs')}
-                w="full"
-                textAlign="left"
-                display="block"
-                px={4}
-                py={3}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard/mechs') ? 'su.lightBlue' : 'transparent'}
-                borderLeftWidth={isActive('/dashboard/mechs') ? '4px' : 0}
-                borderLeftColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard/mechs') ? 'medium' : 'normal'}
-                borderRadius={0}
-                variant="ghost"
-                h="auto"
-                justifyContent="flex-start"
-              >
-                Mechs
-              </Button>
-            </Box>
-          </VStack>
-        </Box>
-        <Box mt="auto">
-          {/* User Info & Sign Out */}
-          <Box p={4} borderTopWidth="1px" borderTopColor="su.lightBlue" bg="su.lightOrange">
-            <Text fontSize="sm" color="su.black" fontWeight="medium" mb={2}>
-              {user.user_metadata?.full_name || user.email || 'User'}
-            </Text>
+        {/* Navigation links */}
+        <HStack
+          as="ul"
+          gap={2}
+          display={{ base: isOpen ? 'flex' : 'none', lg: 'flex' }}
+          flexDirection={{ base: 'column', lg: 'row' }}
+          w={{ base: 'full', lg: 'auto' }}
+        >
+          <Box as="li">
             <Button
-              onClick={handleSignOut}
-              disabled={signingOut}
-              w="full"
-              textAlign="left"
-              fontSize="sm"
-              color="su.brick"
-              _hover={{ color: 'su.orange' }}
-              _disabled={{ opacity: 0.5 }}
-              bg="transparent"
+              onClick={() => handleNavigate('/dashboard')}
+              px={4}
+              py={2}
+              _hover={{ bg: 'su.lightOrange' }}
+              bg={isActive('/dashboard') ? 'su.lightBlue' : 'transparent'}
+              borderBottomWidth={isActive('/dashboard') ? '3px' : 0}
+              borderBottomColor="su.orange"
+              color="su.black"
+              fontWeight={isActive('/dashboard') ? 'semibold' : 'normal'}
+              borderRadius="md"
               variant="ghost"
               h="auto"
-              p={0}
-              justifyContent="flex-start"
+              w={{ base: 'full', lg: 'auto' }}
             >
-              {signingOut ? 'Signing out...' : 'Sign Out'}
+              Overview
             </Button>
           </Box>
-          <Footer variant="nav" />
-        </Box>
+          <Box as="li">
+            <Button
+              onClick={() => handleNavigate('/dashboard/games')}
+              px={4}
+              py={2}
+              _hover={{ bg: 'su.lightOrange' }}
+              bg={isActive('/dashboard/games') ? 'su.lightBlue' : 'transparent'}
+              borderBottomWidth={isActive('/dashboard/games') ? '3px' : 0}
+              borderBottomColor="su.orange"
+              color="su.black"
+              fontWeight={isActive('/dashboard/games') ? 'semibold' : 'normal'}
+              borderRadius="md"
+              variant="ghost"
+              h="auto"
+              w={{ base: 'full', lg: 'auto' }}
+            >
+              Games
+            </Button>
+          </Box>
+          <Box as="li">
+            <Button
+              onClick={() => handleNavigate('/dashboard/crawlers')}
+              px={4}
+              py={2}
+              _hover={{ bg: 'su.lightOrange' }}
+              bg={isActive('/dashboard/crawlers') ? 'su.lightBlue' : 'transparent'}
+              borderBottomWidth={isActive('/dashboard/crawlers') ? '3px' : 0}
+              borderBottomColor="su.orange"
+              color="su.black"
+              fontWeight={isActive('/dashboard/crawlers') ? 'semibold' : 'normal'}
+              borderRadius="md"
+              variant="ghost"
+              h="auto"
+              w={{ base: 'full', lg: 'auto' }}
+            >
+              Crawlers
+            </Button>
+          </Box>
+          <Box as="li">
+            <Button
+              onClick={() => handleNavigate('/dashboard/pilots')}
+              px={4}
+              py={2}
+              _hover={{ bg: 'su.lightOrange' }}
+              bg={isActive('/dashboard/pilots') ? 'su.lightBlue' : 'transparent'}
+              borderBottomWidth={isActive('/dashboard/pilots') ? '3px' : 0}
+              borderBottomColor="su.orange"
+              color="su.black"
+              fontWeight={isActive('/dashboard/pilots') ? 'semibold' : 'normal'}
+              borderRadius="md"
+              variant="ghost"
+              h="auto"
+              w={{ base: 'full', lg: 'auto' }}
+            >
+              Pilots
+            </Button>
+          </Box>
+          <Box as="li">
+            <Button
+              onClick={() => handleNavigate('/dashboard/mechs')}
+              px={4}
+              py={2}
+              _hover={{ bg: 'su.lightOrange' }}
+              bg={isActive('/dashboard/mechs') ? 'su.lightBlue' : 'transparent'}
+              borderBottomWidth={isActive('/dashboard/mechs') ? '3px' : 0}
+              borderBottomColor="su.orange"
+              color="su.black"
+              fontWeight={isActive('/dashboard/mechs') ? 'semibold' : 'normal'}
+              borderRadius="md"
+              variant="ghost"
+              h="auto"
+              w={{ base: 'full', lg: 'auto' }}
+            >
+              Mechs
+            </Button>
+          </Box>
+        </HStack>
+
+        {/* User info and sign out */}
+        <Flex
+          alignItems="center"
+          gap={4}
+          display={{ base: isOpen ? 'flex' : 'none', lg: 'flex' }}
+          flexDirection={{ base: 'column', lg: 'row' }}
+          w={{ base: 'full', lg: 'auto' }}
+        >
+          <Text fontSize="sm" color="su.black" fontWeight="medium">
+            {user.user_metadata?.full_name || user.email || 'User'}
+          </Text>
+          <Button
+            onClick={handleSignOut}
+            disabled={signingOut}
+            px={4}
+            py={2}
+            fontSize="sm"
+            color="su.white"
+            bg="su.brick"
+            _hover={{ bg: 'su.orange' }}
+            _disabled={{ opacity: 0.5 }}
+            borderRadius="md"
+            h="auto"
+            w={{ base: 'full', lg: 'auto' }}
+          >
+            {signingOut ? 'Signing out...' : 'Sign Out'}
+          </Button>
+        </Flex>
       </Flex>
     </>
   )

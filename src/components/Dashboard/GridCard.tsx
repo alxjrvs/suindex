@@ -18,4 +18,3 @@ export function GridCard({ onClick, children, h = '48', p = 4 }: GridCardProps) 
     </GridTileButton>
   )
 }
-

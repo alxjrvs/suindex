@@ -8,4 +8,3 @@ interface VehicleDisplayProps {
 export function VehicleDisplay({ data }: VehicleDisplayProps) {
   return <EntityDisplay data={data} />
 }
-

@@ -344,7 +344,8 @@ export function extractSidebarData(data: EntityData): SidebarData {
     slotsRequired = data.slotsRequired as number | undefined
   }
 
-  const showSidebar = techLevel !== undefined || salvageValue !== undefined || slotsRequired !== undefined
+  const showSidebar =
+    techLevel !== undefined || salvageValue !== undefined || slotsRequired !== undefined
 
   return {
     showSidebar,
@@ -419,4 +420,3 @@ export function extractPageReference(data: EntityData): {
     page: data.page as number,
   }
 }
-

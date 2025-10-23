@@ -114,7 +114,7 @@ export default function LandingPage() {
                   Playground
                 </Button>
               </RouterLink>
-              <RouterLink to="/reference/schema/abilities" style={{ textDecoration: 'none' }}>
+              <RouterLink to="/reference/" style={{ textDecoration: 'none' }}>
                 <Button
                   w="full"
                   bg="su.orange"

@@ -166,7 +166,12 @@ export function NewPilotModal({ isOpen, onClose, onSuccess }: NewPilotModalProps
   const isValid = callsign.trim() !== ''
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Create New Pilot" backgroundColor="bg.builder">
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Create New Pilot"
+      backgroundColor="bg.builder"
+    >
       <VStack gap={4} align="stretch">
         {error && (
           <Box

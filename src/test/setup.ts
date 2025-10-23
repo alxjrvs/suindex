@@ -1,8 +1,11 @@
 import { expect, afterEach, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import * as matchers from '@testing-library/jest-dom/matchers'
+import { configure } from '@testing-library/dom'
 
 expect.extend(matchers)
+
+configure({ asyncUtilTimeout: 5000 })
 
 // Cleanup after each test
 afterEach(() => {

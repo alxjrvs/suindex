@@ -46,7 +46,9 @@ const SquadDisplay = lazy(() => import('./SquadDisplay').then((m) => ({ default:
 const SystemDisplay = lazy(() =>
   import('./SystemDisplay').then((m) => ({ default: m.SystemDisplay }))
 )
-const RollTableDisplay = lazy(() => import('./RollTableDisplay').then((m) => ({ default: m.RollTableDisplay })))
+const RollTableDisplay = lazy(() =>
+  import('./RollTableDisplay').then((m) => ({ default: m.RollTableDisplay }))
+)
 const TraitDisplay = lazy(() => import('./TraitDisplay').then((m) => ({ default: m.TraitDisplay })))
 const VehicleDisplay = lazy(() =>
   import('./VehicleDisplay').then((m) => ({ default: m.VehicleDisplay }))

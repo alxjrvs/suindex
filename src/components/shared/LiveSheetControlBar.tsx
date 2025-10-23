@@ -355,7 +355,7 @@ export function LiveSheetControlBar({
           _hover={{ bg: 'gray.100' }}
           _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
         >
-          {isLoading ? 'Loading...' : isResetting ? 'Resetting...' : 'Reset Changes'}
+          {isResetting ? 'Resetting...' : 'Reset Changes'}
         </Button>
         <Button
           onClick={handleSave}
@@ -373,7 +373,7 @@ export function LiveSheetControlBar({
           _hover={{ bg: 'gray.800' }}
           _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
         >
-          {isLoading ? 'Loading...' : isSaving ? 'Saving...' : 'Save'}
+          {isSaving ? 'Saving...' : 'Save'}
         </Button>
       </HStack>
     </Box>

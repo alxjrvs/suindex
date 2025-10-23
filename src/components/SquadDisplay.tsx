@@ -8,4 +8,3 @@ interface SquadDisplayProps {
 export function SquadDisplay({ data }: SquadDisplayProps) {
   return <EntityDisplay data={data} />
 }
-

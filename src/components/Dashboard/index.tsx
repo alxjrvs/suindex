@@ -16,6 +16,7 @@ import { PilotsGrid } from './PilotsGrid'
 import { PilotEdit } from './PilotEdit'
 import { MechsGrid } from './MechsGrid'
 import { MechEdit } from './MechEdit'
+import Footer from '../Footer'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
@@ -53,9 +54,9 @@ export default function Dashboard() {
   }
 
   return (
-    <Flex flexDirection={{ base: 'column', md: 'row' }} h="100vh" bg="su.white" overflow="hidden">
+    <Flex flexDirection="column" minH="100vh" bg="su.white">
       <DashboardNavigation user={user} />
-      <Box as="main" flex="1" overflowY="auto" pt={{ base: 16, md: 0 }}>
+      <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
         <Routes>
           <Route path="/" element={<DashboardContent />} />
           <Route path="/games" element={<GamesGrid />} />
@@ -70,6 +71,7 @@ export default function Dashboard() {
           <Route path="/mechs/:id" element={<MechEdit />} />
         </Routes>
       </Box>
+      <Footer variant="landing" />
     </Flex>
   )
 }

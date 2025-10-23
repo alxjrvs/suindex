@@ -22,7 +22,14 @@ export function CargoList({
   onAddClick,
 }: CargoListProps) {
   return (
-    <Box bg="bg.builder.mech" borderWidth="builder.border" borderColor="border.builder" borderRadius="builder.radius" p="builder.padding" shadow="lg">
+    <Box
+      bg="bg.builder.mech"
+      borderWidth="builder.border"
+      borderColor="border.builder"
+      borderRadius="builder.radius"
+      p="builder.padding"
+      shadow="lg"
+    >
       <Flex alignItems="center" justifyContent="space-between" mb={4}>
         <Heading level="h2" textTransform="uppercase">
           Cargo
