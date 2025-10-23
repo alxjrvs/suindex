@@ -37,7 +37,7 @@ export function StorageBay({
       title="Storage Bay"
       rightContent={<AddStatButton onClick={onAddCargo} label="Add Cargo" />}
     >
-      <VStack gap={3} mb={4} alignItems="stretch">
+      <VStack gap={3} mb={4} alignItems="stretch" w="full" h="full">
         <FormInput
           label="Bullwhacker"
           value={operator}

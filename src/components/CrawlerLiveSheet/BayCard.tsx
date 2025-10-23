@@ -27,10 +27,11 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
       bg="su.crawlerPink"
       borderWidth="4px"
       borderRadius="2xl"
+      justifyContent="flex-start"
       padding={4}
       title={bay.name}
     >
-      <VStack justifyContent="space-between" alignItems="space-between">
+      <VStack justifyContent="flex-start" alignItems="space-between">
         <FormInput
           value={bay.operator}
           onChange={(value) => onUpdate({ operator: value })}

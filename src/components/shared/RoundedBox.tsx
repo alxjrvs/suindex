@@ -25,6 +25,7 @@ interface RoundedBoxProps {
   fillHeight?: boolean
   /** Whether to fill full width (default: true) */
   fillWidth?: boolean
+  justifyContent?: 'space-between' | 'flex-start' | 'flex-end' | 'center'
 }
 
 export function RoundedBox({
@@ -39,6 +40,7 @@ export function RoundedBox({
   borderColor,
   fillHeight = false,
   fillWidth = false,
+  justifyContent = 'space-between',
 }: RoundedBoxProps) {
   const actualBorderColor = matchBorder ? bg : borderColor || bg
 
@@ -46,7 +48,7 @@ export function RoundedBox({
     <Flex
       direction="column"
       alignItems="center"
-      justifyContent="space-between"
+      justifyContent={justifyContent}
       bg={bg}
       borderWidth={borderWidth}
       borderColor={actualBorderColor}
