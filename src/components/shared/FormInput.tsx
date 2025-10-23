@@ -54,31 +54,31 @@ export function FormInput({
         <Flex alignItems="center" mb={-2} zIndex={1} gap={2}>
           <Text variant="pseudoheader" fontSize="sm" textTransform="uppercase" ml={3}>
             {label}
-            {hasToggle && (
-              <ChakraCheckbox.Root
-                checked={toggleChecked}
-                onCheckedChange={(e: { checked: boolean | 'indeterminate' }) =>
-                  onToggleChange(e.checked === true)
-                }
-                disabled={disabled}
-              >
-                <ChakraCheckbox.HiddenInput aria-label={`${label} ${toggleLabel}`} />
-                <ChakraCheckbox.Control
-                  bg="su.white"
-                  borderWidth="2px"
-                  mb={-2}
-                  ml={1}
-                  borderColor="su.black"
-                  h="14px"
-                  w="14px"
-                  _checked={{
-                    bg: 'su.brick',
-                    borderColor: 'su.black',
-                  }}
-                />
-              </ChakraCheckbox.Root>
-            )}
           </Text>
+          {hasToggle && (
+            <ChakraCheckbox.Root
+              checked={toggleChecked}
+              onCheckedChange={(e: { checked: boolean | 'indeterminate' }) =>
+                onToggleChange(e.checked === true)
+              }
+              disabled={disabled}
+            >
+              <ChakraCheckbox.HiddenInput aria-label={`${label} ${toggleLabel}`} />
+              <ChakraCheckbox.Control
+                bg="su.white"
+                borderWidth="2px"
+                mb={-2}
+                ml={1}
+                borderColor="su.black"
+                h="14px"
+                w="14px"
+                _checked={{
+                  bg: 'su.brick',
+                  borderColor: 'su.black',
+                }}
+              />
+            </ChakraCheckbox.Root>
+          )}
         </Flex>
       )}
 
