@@ -1,21 +1,37 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
-import { Heading } from '.././base/Heading'
-import { GridTileButton, CreateTileButton } from './GridTile'
+import { GameGridCard } from './GameGridCard'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
+import { GridLayout } from './GridLayout'
 
 type GameRow = Tables<'games'>
+type CrawlerRow = Tables<'crawlers'>
+type PilotRow = Tables<'pilots'>
+type MechRow = Tables<'mechs'>
 type MemberRole = Tables<'game_members'>['role']
-interface GameWithRole extends GameRow {
+
+interface GameMember {
+  user_id: string
+  role: string
+  user_name: string | null
+}
+
+interface PilotWithMech {
+  pilot: PilotRow
+  mech: MechRow | null
+}
+
+interface GameWithData extends GameRow {
   role: MemberRole
+  crawler: CrawlerRow | null
+  pilots: PilotWithMech[]
+  mediator: GameMember | null
 }
 
 export function GamesGrid() {
   const navigate = useNavigate()
-  const [games, setGames] = useState<GameWithRole[]>([])
+  const [games, setGames] = useState<GameWithData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -56,16 +72,84 @@ export function GamesGrid() {
 
         const gamesData = (gamesDataRaw || []) as GameRow[]
 
-        // Combine games with roles
-        const gamesWithRoles = gamesData.map((game) => {
+        // Initialize games with loading state
+        const gamesWithRoles: GameWithData[] = gamesData.map((game) => {
           const gameMember = gameMembers.find((gm) => gm.game_id === game.id)
           return {
             ...game,
             role: gameMember?.role || ('player' as MemberRole),
+            crawler: null,
+            pilots: [],
+            mediator: null,
           }
         })
 
         setGames(gamesWithRoles)
+
+        // Load additional data for each game asynchronously
+        gamesWithRoles.forEach(async (game, index) => {
+          try {
+            // Fetch game members to get mediator
+            const { data: membersData } = await supabase.rpc('get_game_members', {
+              p_game_id: game.id,
+            })
+            const members = (membersData || []) as GameMember[]
+            const mediator = members.find((m) => m.role === 'mediator') || null
+
+            // Fetch crawler for this game
+            const { data: crawlerData } = await supabase
+              .from('crawlers')
+              .select('*')
+              .eq('game_id', game.id)
+              .maybeSingle()
+
+            const crawler = crawlerData as CrawlerRow | null
+
+            // Fetch pilots for this crawler
+            let pilots: PilotWithMech[] = []
+            if (crawler) {
+              const { data: pilotsData } = await supabase
+                .from('pilots')
+                .select('*')
+                .eq('crawler_id', crawler.id)
+                .order('callsign')
+
+              const pilotsArray = (pilotsData || []) as PilotRow[]
+
+              // Fetch mechs for these pilots
+              if (pilotsArray.length > 0) {
+                const pilotIds = pilotsArray.map((p) => p.id)
+                const { data: mechsData } = await supabase
+                  .from('mechs')
+                  .select('*')
+                  .in('pilot_id', pilotIds)
+
+                const mechsArray = (mechsData || []) as MechRow[]
+
+                pilots = pilotsArray.map((pilot) => ({
+                  pilot,
+                  mech: mechsArray.find((m) => m.pilot_id === pilot.id) || null,
+                }))
+              } else {
+                pilots = []
+              }
+            }
+
+            // Update this specific game with the loaded data
+            setGames((prevGames) => {
+              const newGames = [...prevGames]
+              newGames[index] = {
+                ...newGames[index],
+                crawler,
+                pilots,
+                mediator,
+              }
+              return newGames
+            })
+          } catch (err) {
+            console.error(`Error loading data for game ${game.id}:`, err)
+          }
+        })
       } else {
         setGames([])
       }
@@ -85,120 +169,29 @@ export function GamesGrid() {
     navigate(`/dashboard/games/${gameId}`)
   }
 
-  if (loading) {
-    return (
-      <Box p={8}>
-        <Flex align="center" justify="center" minH="60vh">
-          <Text fontSize="xl" color="su.brick">
-            Loading games...
-          </Text>
-        </Flex>
-      </Box>
-    )
-  }
-
-  if (error) {
-    return (
-      <Box p={8}>
-        <VStack align="center" justify="center" minH="60vh" gap={4}>
-          <Text fontSize="xl" color="red.600">
-            {error}
-          </Text>
-          <Button
-            onClick={loadGames}
-            bg="su.brick"
-            color="su.white"
-            fontWeight="bold"
-            py={2}
-            px={6}
-            _hover={{ opacity: 0.9 }}
-          >
-            Retry
-          </Button>
-        </VStack>
-      </Box>
-    )
-  }
-
-  // If no games, show the centered "Create Game" button
-  if (games.length === 0) {
-    return (
-      <Box p={8}>
-        <Flex align="center" justify="center" minH="60vh">
-          <VStack textAlign="center" gap={8}>
-            <Heading level="h2" color="su.black">
-              Your Games
-            </Heading>
-            <Text fontSize="lg" color="su.brick">
-              You don't have any games yet. Create your first game to get started!
-            </Text>
-            <Button
-              onClick={handleCreateGame}
-              bg="su.brick"
-              color="su.white"
-              fontWeight="bold"
-              py={4}
-              px={8}
-              fontSize="xl"
-              _hover={{ opacity: 0.9 }}
-              boxShadow="lg"
-            >
-              Create Game
-            </Button>
-          </VStack>
-        </Flex>
-      </Box>
-    )
-  }
-
-  // Show games grid
   return (
-    <Box p={8}>
-      <Box mb={8}>
-        <Heading level="h1" color="su.black">
-          Your Games
-        </Heading>
-      </Box>
-
-      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
-        {/* Existing games */}
-        {games.map((game) => (
-          <GridTileButton key={game.id} onClick={() => handleGameClick(game.id)} h="48" p={6}>
-            <Flex align="flex-start" justify="space-between" mb={3}>
-              <Heading level="h3" flex={1} pr={2}>
-                {game.name}
-              </Heading>
-              <Box
-                px={2}
-                py={1}
-                borderRadius="md"
-                fontSize="xs"
-                fontWeight="medium"
-                whiteSpace="nowrap"
-                bg={game.role === 'mediator' ? 'su.brick' : 'su.green'}
-                color="su.white"
-              >
-                {game.role.toUpperCase()}
-              </Box>
-            </Flex>
-            {game.description && (
-              <Text fontSize="sm" color="su.black" lineClamp={4} flex={1}>
-                {game.description}
-              </Text>
-            )}
-          </GridTileButton>
-        ))}
-
-        {/* New Game cell */}
-        <CreateTileButton
-          onClick={handleCreateGame}
-          label="New Game"
-          accentColor="su.brick"
-          bgColor="su.lightOrange"
-          h="48"
-          p={6}
+    <GridLayout
+      title="Your Games"
+      loading={loading}
+      error={error}
+      items={games}
+      renderItem={(game) => (
+        <GameGridCard
+          key={game.id}
+          name={game.name}
+          crawlerName={game.crawler?.name}
+          mediatorName={game.mediator?.user_name || game.mediator?.user_id}
+          onClick={() => handleGameClick(game.id)}
+          isLoading={loading}
         />
-      </Grid>
-    </Box>
+      )}
+      createButton={{
+        onClick: handleCreateGame,
+        label: 'New Game',
+        accentColor: 'su.brick',
+        bgColor: 'su.lightOrange',
+      }}
+      onRetry={loadGames}
+    />
   )
 }

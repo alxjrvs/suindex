@@ -1,4 +1,6 @@
-import { Box, Text, VStack } from '@chakra-ui/react'
+import { Box, VStack, } from '@chakra-ui/react'
+import { Text } from './base/Text'
+
 
 interface StatDisplayProps {
   label: string
@@ -10,13 +12,8 @@ export function StatDisplay({ label, value, labelId }: StatDisplayProps) {
   return (
     <VStack gap={0}>
       <Text
-        as="label"
         fontSize="xs"
-        fontWeight="bold"
-        color="su.white"
-        bgColor="su.black"
-        px={0.5}
-        // mb={-3}
+        variant="pseudoheader"
         zIndex={1}
         id={labelId}
         textAlign="center"
