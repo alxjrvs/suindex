@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
+import { GridTileButton, CreateTileButton } from './GridTile'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 
@@ -162,20 +163,7 @@ export function GamesGrid() {
       <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
         {/* Existing games */}
         {games.map((game) => (
-          <Button
-            key={game.id}
-            onClick={() => handleGameClick(game.id)}
-            bg="su.white"
-            borderWidth="2px"
-            borderColor="su.lightBlue"
-            borderRadius="lg"
-            p={6}
-            h="48"
-            display="flex"
-            flexDirection="column"
-            textAlign="left"
-            _hover={{ borderColor: 'su.brick' }}
-          >
+          <GridTileButton key={game.id} onClick={() => handleGameClick(game.id)} h="48" p={6}>
             <Flex align="flex-start" justify="space-between" mb={3}>
               <Heading level="h3" flex={1} pr={2}>
                 {game.name}
@@ -198,32 +186,18 @@ export function GamesGrid() {
                 {game.description}
               </Text>
             )}
-          </Button>
+          </GridTileButton>
         ))}
 
         {/* New Game cell */}
-        <Button
+        <CreateTileButton
           onClick={handleCreateGame}
-          bg="su.lightOrange"
-          borderWidth="2px"
-          borderStyle="dashed"
-          borderColor="su.brick"
-          borderRadius="lg"
-          p={6}
+          label="New Game"
+          accentColor="su.brick"
+          bgColor="su.lightOrange"
           h="48"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          _hover={{ bg: 'su.brick', borderStyle: 'solid', '& > *': { color: 'su.white' } }}
-        >
-          <Text fontSize="6xl" color="su.brick" mb={2}>
-            +
-          </Text>
-          <Text fontSize="xl" fontWeight="bold" color="su.brick">
-            New Game
-          </Text>
-        </Button>
+          p={6}
+        />
       </Grid>
     </Box>
   )

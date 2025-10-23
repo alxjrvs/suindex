@@ -6,7 +6,6 @@ import { Heading } from '.././base/Heading'
 import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import CrawlerCard from '../CrawlerCard'
 import { ExternalLinkModal } from './ExternalLinkModal'
 
 type GameRow = Tables<'games'>
@@ -549,12 +548,30 @@ export function GameShow() {
             </Heading>
             {crawler ? (
               <>
-                <CrawlerCard
-                  name={crawler.name}
-                  typeName={crawlerTypeName}
-                  maxSP={crawlerMaxSP}
-                  currentDamage={crawler.current_damage ?? 0}
-                />
+                <Box
+                  bg="su.crawlerPink"
+                  borderWidth="2px"
+                  borderColor="su.black"
+                  borderRadius="lg"
+                  p={6}
+                  h="48"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="space-between"
+                  w="full"
+                >
+                  <Box>
+                    <Text fontSize="xl" fontWeight="bold" color="su.white" lineHeight="tight" lineClamp={1}>
+                      {crawler.name}
+                    </Text>
+                    <Text fontSize="sm" color="su.white" opacity={0.9} mt={1} lineClamp={1}>
+                      {crawlerTypeName}
+                    </Text>
+                  </Box>
+                  <Text fontSize="sm" color="su.white" opacity={0.75}>
+                    SP: {Math.max((crawlerMaxSP - (crawler.current_damage ?? 0)), 0)}/{crawlerMaxSP}
+                  </Text>
+                </Box>
 
                 {/* Pilots and Mechs */}
                 {pilotsLoading ? (

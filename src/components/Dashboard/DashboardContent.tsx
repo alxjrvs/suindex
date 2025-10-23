@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { Heading } from '../base/Heading'
+import { GridTileButton, CreateTileButton } from './GridTile'
 
 type GameRow = Tables<'games'>
 type CrawlerRow = Tables<'crawlers'>
@@ -184,21 +185,7 @@ export function DashboardContent() {
             gap={4}
           >
             {games.slice(0, 3).map((game) => (
-              <Button
-                key={game.id}
-                onClick={() => handleGameClick(game.id)}
-                bg="su.white"
-                borderWidth="2px"
-                borderColor="su.lightBlue"
-                borderRadius="lg"
-                p={4}
-                _hover={{ borderColor: 'su.brick' }}
-                textAlign="left"
-                h="32"
-                display="flex"
-                flexDirection="column"
-                variant="outline"
-              >
+              <GridTileButton key={game.id} onClick={() => handleGameClick(game.id)}>
                 <Flex alignItems="start" justifyContent="space-between" mb={2}>
                   <Heading level="h3" flex="1" pr={2} lineClamp={1}>
                     {game.name}
@@ -222,36 +209,14 @@ export function DashboardContent() {
                     {game.description}
                   </Text>
                 )}
-              </Button>
+              </GridTileButton>
             ))}
-            <Button
+            <CreateTileButton
               onClick={handleCreateGame}
-              bg="su.lightOrange"
-              borderWidth="2px"
-              borderStyle="dashed"
-              borderColor="su.brick"
-              borderRadius="lg"
-              p={4}
-              _hover={{ bg: 'su.brick', borderStyle: 'solid' }}
-              h="32"
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              variant="outline"
-            >
-              <Text fontSize="4xl" color="su.brick" _groupHover={{ color: 'su.white' }} mb={1}>
-                +
-              </Text>
-              <Text
-                fontSize="sm"
-                fontWeight="bold"
-                color="su.brick"
-                _groupHover={{ color: 'su.white' }}
-              >
-                New Game
-              </Text>
-            </Button>
+              label="New Game"
+              accentColor="su.brick"
+              bgColor="su.lightOrange"
+            />
           </Grid>
         </Box>
 
@@ -276,9 +241,8 @@ export function DashboardContent() {
           >
             {crawlers.slice(0, 3).map((crawler) => {
               const crawlerTypeName = crawler.crawler_type_id
-                ? (SalvageUnionReference.Crawlers.all().find(
-                    (c) => c.id === crawler.crawler_type_id
-                  )?.name ?? 'Unknown')
+                ? (SalvageUnionReference.Crawlers.all().find((c) => c.id === crawler.crawler_type_id)
+                    ?.name ?? 'Unknown')
                 : 'Unknown'
 
               const maxSP = crawler.tech_level
@@ -286,68 +250,31 @@ export function DashboardContent() {
                     (tl) => tl.techLevel === crawler.tech_level
                   )?.structurePoints ?? 20)
                 : 20
+              const currentSP = maxSP - (crawler.current_damage ?? 0)
 
               return (
-                <Button
+                <GridTileButton
                   key={crawler.id}
                   onClick={() => navigate(`/dashboard/crawlers/${crawler.id}`)}
-                  _hover={{ transform: 'scale(1.05)' }}
-                  variant="plain"
                 >
-                  <Box
-                    bg="su.crawlerPink"
-                    borderWidth="4px"
-                    borderColor="su.black"
-                    borderRadius="lg"
-                    p={4}
-                    h="32"
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="space-between"
-                  >
-                    <Box>
-                      <Heading level="h3" mb={1} lineClamp={1}>
-                        {crawler.name}
-                      </Heading>
-                      <Text fontSize="xs" color="su.white" opacity={0.9} lineClamp={1}>
-                        {crawlerTypeName}
-                      </Text>
-                    </Box>
-                    <Text fontSize="xs" color="su.white" opacity={0.75}>
-                      SP: {maxSP - (crawler.current_damage ?? 0)}/{maxSP}
-                    </Text>
-                  </Box>
-                </Button>
+                  <Heading level="h3" lineClamp={1}>
+                    {crawler.name}
+                  </Heading>
+                  <Text fontSize="xs" color="su.black" opacity={0.8} lineClamp={1}>
+                    {crawlerTypeName}
+                  </Text>
+                  <Text fontSize="xs" color="su.black" opacity={0.8} mt="auto">
+                    SP: {currentSP}/{maxSP}
+                  </Text>
+                </GridTileButton>
               )
             })}
-            <Button
+            <CreateTileButton
               onClick={() => navigate('/dashboard/crawlers')}
-              bg="su.lightPeach"
-              borderWidth="2px"
-              borderStyle="dashed"
-              borderColor="su.crawlerPink"
-              borderRadius="lg"
-              p={4}
-              _hover={{ bg: 'su.crawlerPink', borderStyle: 'solid' }}
-              h="32"
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              variant="outline"
-            >
-              <Text fontSize="4xl" color="su.crawlerPink" _groupHover={{ color: 'su.white' }} mb={1}>
-                +
-              </Text>
-              <Text
-                fontSize="sm"
-                fontWeight="bold"
-                color="su.crawlerPink"
-                _groupHover={{ color: 'su.white' }}
-              >
-                New Crawler
-              </Text>
-            </Button>
+              label="New Crawler"
+              accentColor="su.crawlerPink"
+              bgColor="su.lightPeach"
+            />
           </Grid>
         </Box>
 
@@ -375,80 +302,43 @@ export function DashboardContent() {
                 ? (SalvageUnionReference.Classes.all().find((c) => c.id === pilot.class_id)?.name ??
                   'Unknown')
                 : null
+              const currentHP = pilot.current_damage ?? 0
+              const maxHP = pilot.max_hp ?? 10
+              const currentAP = pilot.current_ap ?? 0
+              const maxAP = pilot.max_ap ?? 3
 
               return (
-                <Button
+                <GridTileButton
                   key={pilot.id}
                   onClick={() => navigate(`/dashboard/pilots/${pilot.id}`)}
-                  _hover={{ transform: 'scale(1.05)' }}
-                  variant="plain"
                 >
-                  <Box
-                    bg="su.orange"
-                    borderWidth="4px"
-                    borderColor="su.black"
-                    borderRadius="lg"
-                    p={4}
-                    h="32"
-                    display="flex"
-                    flexDirection="column"
+                  <Heading level="h3" lineClamp={1}>
+                    {pilot.callsign}
+                  </Heading>
+                  {className && (
+                    <Text fontSize="xs" color="su.black" opacity={0.8} lineClamp={1}>
+                      {className}
+                    </Text>
+                  )}
+                  <Flex
                     justifyContent="space-between"
+                    fontSize="xs"
+                    color="su.black"
+                    opacity={0.8}
+                    mt="auto"
                   >
-                    <Box>
-                      <Heading level="h3" mb={1} lineClamp={1}>
-                        {pilot.callsign}
-                      </Heading>
-                      {className && (
-                        <Text fontSize="xs" color="su.white" opacity={0.9} lineClamp={1}>
-                          {className}
-                        </Text>
-                      )}
-                    </Box>
-                    <Flex
-                      justifyContent="space-between"
-                      fontSize="xs"
-                      color="su.white"
-                      opacity={0.75}
-                    >
-                      <Text as="span">
-                        HP: {pilot.current_damage ?? 0}/{pilot.max_hp ?? 10}
-                      </Text>
-                      <Text as="span">
-                        AP: {pilot.current_ap ?? 0}/{pilot.max_ap ?? 3}
-                      </Text>
-                    </Flex>
-                  </Box>
-                </Button>
+                    <Text as="span">HP: {currentHP}/{maxHP}</Text>
+                    <Text as="span">AP: {currentAP}/{maxAP}</Text>
+                  </Flex>
+                </GridTileButton>
               )
             })}
-            <Button
+            <CreateTileButton
               onClick={() => navigate('/dashboard/pilots')}
-              bg="su.lightOrange"
-              borderWidth="2px"
-              borderStyle="dashed"
-              borderColor="su.orange"
-              borderRadius="lg"
-              p={4}
-              _hover={{ bg: 'su.orange', borderStyle: 'solid' }}
-              h="32"
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              variant="outline"
-            >
-              <Text fontSize="4xl" color="su.orange" _groupHover={{ color: 'su.white' }} mb={1}>
-                +
-              </Text>
-              <Text
-                fontSize="sm"
-                fontWeight="bold"
-                color="su.orange"
-                _groupHover={{ color: 'su.white' }}
-              >
-                New Pilot
-              </Text>
-            </Button>
+              label="New Pilot"
+              accentColor="su.orange"
+              bgColor="su.lightOrange"
+            />
           </Grid>
         </Box>
 
@@ -478,74 +368,37 @@ export function DashboardContent() {
                 : 'No Chassis'
 
               return (
-                <Button
+                <GridTileButton
                   key={mech.id}
                   onClick={() => navigate(`/dashboard/mechs/${mech.id}`)}
-                  _hover={{ transform: 'scale(1.05)' }}
-                  variant="plain"
                 >
-                  <Box
-                    bg="su.green"
-                    borderWidth="4px"
-                    borderColor="su.black"
-                    borderRadius="lg"
-                    p={4}
-                    h="32"
-                    display="flex"
-                    flexDirection="column"
+                  <Heading level="h3" lineClamp={1}>
+                    {mech.pattern || chassisName}
+                  </Heading>
+                  {mech.pattern ? (
+                    <Text fontSize="xs" color="su.black" opacity={0.8} lineClamp={1}>
+                      {chassisName}
+                    </Text>
+                  ) : null}
+                  <Flex
                     justifyContent="space-between"
+                    fontSize="xs"
+                    color="su.black"
+                    opacity={0.8}
+                    mt="auto"
                   >
-                    <Box>
-                      <Heading level="h3" mb={1} lineClamp={1}>
-                        {mech.pattern || chassisName}
-                      </Heading>
-                      {mech.pattern && (
-                        <Text fontSize="xs" color="su.white" opacity={0.9} lineClamp={1}>
-                          {chassisName}
-                        </Text>
-                      )}
-                    </Box>
-                    <Flex
-                      justifyContent="space-between"
-                      fontSize="xs"
-                      color="su.white"
-                      opacity={0.75}
-                    >
-                      <Text as="span">Damage: {mech.current_damage ?? 0}</Text>
-                      <Text as="span">Heat: {mech.current_heat ?? 0}</Text>
-                    </Flex>
-                  </Box>
-                </Button>
+                    <Text as="span">Damage: {mech.current_damage ?? 0}</Text>
+                    <Text as="span">Heat: {mech.current_heat ?? 0}</Text>
+                  </Flex>
+                </GridTileButton>
               )
             })}
-            <Button
+            <CreateTileButton
               onClick={() => navigate('/dashboard/mechs')}
-              bg="su.lightBlue"
-              borderWidth="2px"
-              borderStyle="dashed"
-              borderColor="su.green"
-              borderRadius="lg"
-              p={4}
-              _hover={{ bg: 'su.green', borderStyle: 'solid' }}
-              h="32"
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              variant="outline"
-            >
-              <Text fontSize="4xl" color="su.green" _groupHover={{ color: 'su.white' }} mb={1}>
-                +
-              </Text>
-              <Text
-                fontSize="sm"
-                fontWeight="bold"
-                color="su.green"
-                _groupHover={{ color: 'su.white' }}
-              >
-                New Mech
-              </Text>
-            </Button>
+              label="New Mech"
+              accentColor="su.green"
+              bgColor="su.lightBlue"
+            />
           </Grid>
         </Box>
       </VStack>

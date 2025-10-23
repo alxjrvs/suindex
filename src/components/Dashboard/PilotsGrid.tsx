@@ -7,6 +7,7 @@ import type { Tables } from '../../types/database'
 import { NewPilotModal } from './NewPilotModal'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
+import { GridTileButton, CreateTileButton } from './GridTile'
 
 type PilotRow = Tables<'pilots'>
 
@@ -125,74 +126,38 @@ export function PilotsGrid() {
             ? (SalvageUnionReference.Classes.all().find((c) => c.id === pilot.class_id)?.name ??
               'Unknown')
             : null
+          const currentHP = pilot.current_damage ?? 0
+          const maxHP = pilot.max_hp ?? 10
+          const currentAP = pilot.current_ap ?? 0
+          const maxAP = pilot.max_ap ?? 3
 
           return (
-            <Button
-              key={pilot.id}
-              onClick={() => handlePilotClick(pilot.id)}
-              variant="plain"
-              p={0}
-              _hover={{ transform: 'scale(1.05)' }}
-              transition="transform 0.2s"
-            >
-              <Box
-                bg="su.orange"
-                borderWidth="4px"
-                borderColor="su.black"
-                borderRadius="lg"
-                p={6}
-                h="120px"
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-                w="full"
-              >
-                <Box>
-                  <Heading level="h3" color="su.white" mb={1}>
-                    {pilot.callsign}
-                  </Heading>
-                  {className && (
-                    <Text fontSize="sm" color="su.white" opacity={0.9}>
-                      {className}
-                    </Text>
-                  )}
-                </Box>
-                <Flex justify="space-between" fontSize="xs" color="su.white" opacity={0.75}>
-                  <Text>
-                    HP: {pilot.current_damage ?? 0}/{pilot.max_hp ?? 10}
-                  </Text>
-                  <Text>
-                    AP: {pilot.current_ap ?? 0}/{pilot.max_ap ?? 3}
-                  </Text>
-                </Flex>
-              </Box>
-            </Button>
+            <GridTileButton key={pilot.id} onClick={() => handlePilotClick(pilot.id)} h="48" p={6}>
+              <Heading level="h3" lineClamp={1}>
+                {pilot.callsign}
+              </Heading>
+              {className && (
+                <Text fontSize="sm" color="su.black" opacity={0.8} lineClamp={1}>
+                  {className}
+                </Text>
+              )}
+              <Flex justifyContent="space-between" fontSize="sm" color="su.black" opacity={0.8} mt="auto">
+                <Text as="span">HP: {currentHP}/{maxHP}</Text>
+                <Text as="span">AP: {currentAP}/{maxAP}</Text>
+              </Flex>
+            </GridTileButton>
           )
         })}
 
         {/* Create Pilot cell */}
-        <Button
+        <CreateTileButton
           onClick={handleCreatePilot}
-          bg="su.lightOrange"
-          borderWidth="2px"
-          borderStyle="dashed"
-          borderColor="su.orange"
-          borderRadius="lg"
+          label="New Pilot"
+          accentColor="su.orange"
+          bgColor="su.lightOrange"
+          h="48"
           p={6}
-          h="120px"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          _hover={{ bg: 'su.orange', borderStyle: 'solid', '& > *': { color: 'su.white' } }}
-        >
-          <Text fontSize="5xl" color="su.orange" mb={2}>
-            +
-          </Text>
-          <Text fontSize="lg" fontWeight="bold" color="su.orange">
-            Create Pilot
-          </Text>
-        </Button>
+        />
       </Grid>
 
       <NewPilotModal

@@ -7,6 +7,7 @@ import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { NewMechModal } from './NewMechModal'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
+import { GridTileButton, CreateTileButton } from './GridTile'
 
 type MechRow = Tables<'mechs'>
 
@@ -127,68 +128,32 @@ export function MechsGrid() {
             : 'No Chassis'
 
           return (
-            <Button
-              key={mech.id}
-              onClick={() => handleMechClick(mech.id)}
-              variant="plain"
-              p={0}
-              _hover={{ transform: 'scale(1.05)' }}
-              transition="transform 0.2s"
-            >
-              <Box
-                bg="su.green"
-                borderWidth="4px"
-                borderColor="su.black"
-                borderRadius="lg"
-                p={6}
-                h="120px"
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-                w="full"
-              >
-                <Box>
-                  <Heading level="h3" color="su.white" mb={1}>
-                    {mech.pattern || chassisName}
-                  </Heading>
-                  {mech.pattern && (
-                    <Text fontSize="sm" color="su.white" opacity={0.9}>
-                      {chassisName}
-                    </Text>
-                  )}
-                </Box>
-                <Flex justify="space-between" fontSize="xs" color="su.white" opacity={0.75}>
-                  <Text>Damage: {mech.current_damage ?? 0}</Text>
-                  <Text>Heat: {mech.current_heat ?? 0}</Text>
-                </Flex>
-              </Box>
-            </Button>
+            <GridTileButton key={mech.id} onClick={() => handleMechClick(mech.id)} h="48" p={6}>
+              <Heading level="h3" lineClamp={1}>
+                {mech.pattern || chassisName}
+              </Heading>
+              {mech.pattern ? (
+                <Text fontSize="sm" color="su.black" opacity={0.8} lineClamp={1}>
+                  {chassisName}
+                </Text>
+              ) : null}
+              <Flex justifyContent="space-between" fontSize="sm" color="su.black" opacity={0.8} mt="auto">
+                <Text as="span">Damage: {mech.current_damage ?? 0}</Text>
+                <Text as="span">Heat: {mech.current_heat ?? 0}</Text>
+              </Flex>
+            </GridTileButton>
           )
         })}
 
         {/* Create Mech cell */}
-        <Button
+        <CreateTileButton
           onClick={handleCreateMech}
-          bg="su.lightBlue"
-          borderWidth="2px"
-          borderStyle="dashed"
-          borderColor="su.green"
-          borderRadius="lg"
+          label="New Mech"
+          accentColor="su.green"
+          bgColor="su.lightBlue"
+          h="48"
           p={6}
-          h="120px"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          _hover={{ bg: 'su.green', borderStyle: 'solid', '& > *': { color: 'su.white' } }}
-        >
-          <Text fontSize="5xl" color="su.green" mb={2}>
-            +
-          </Text>
-          <Text fontSize="lg" fontWeight="bold" color="su.green">
-            Create Mech
-          </Text>
-        </Button>
+        />
       </Grid>
 
       <NewMechModal

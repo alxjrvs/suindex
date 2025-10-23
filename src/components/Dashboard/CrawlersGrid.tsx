@@ -5,7 +5,7 @@ import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import CrawlerCard from '../CrawlerCard'
+import { GridTileButton, CreateTileButton } from './GridTile'
 import { NewCrawlerModal } from './NewCrawlerModal'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
 
@@ -132,49 +132,32 @@ export function CrawlersGrid() {
                 (tl) => tl.techLevel === crawler.tech_level
               )?.structurePoints ?? 20)
             : 20
+          const currentSP = maxSP - (crawler.current_damage ?? 0)
 
           return (
-            <Button
-              key={crawler.id}
-              onClick={() => handleCrawlerClick(crawler.id)}
-              variant="plain"
-              p={0}
-              _hover={{ transform: 'scale(1.05)' }}
-              transition="transform 0.2s"
-            >
-              <CrawlerCard
-                name={crawler.name}
-                typeName={crawlerTypeName}
-                maxSP={maxSP}
-                currentDamage={crawler.current_damage ?? 0}
-              />
-            </Button>
+            <GridTileButton key={crawler.id} onClick={() => handleCrawlerClick(crawler.id)} h="48" p={6}>
+              <Heading level="h3" lineClamp={1}>
+                {crawler.name}
+              </Heading>
+              <Text fontSize="sm" color="su.black" opacity={0.8} lineClamp={1}>
+                {crawlerTypeName}
+              </Text>
+              <Text fontSize="sm" color="su.black" opacity={0.8} mt="auto">
+                SP: {currentSP}/{maxSP}
+              </Text>
+            </GridTileButton>
           )
         })}
 
         {/* Create Crawler cell */}
-        <Button
+        <CreateTileButton
           onClick={handleCreateCrawler}
-          bg="su.lightPeach"
-          borderWidth="2px"
-          borderStyle="dashed"
-          borderColor="su.pink"
-          borderRadius="lg"
+          label="New Crawler"
+          accentColor="su.crawlerPink"
+          bgColor="su.lightPeach"
+          h="48"
           p={6}
-          h="120px"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          _hover={{ bg: 'su.pink', borderStyle: 'solid', '& > *': { color: 'su.white' } }}
-        >
-          <Text fontSize="5xl" color="su.pink" mb={2}>
-            +
-          </Text>
-          <Text fontSize="lg" fontWeight="bold" color="su.pink">
-            Create Crawler
-          </Text>
-        </Button>
+        />
       </Grid>
 
       <NewCrawlerModal
