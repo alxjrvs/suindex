@@ -1,6 +1,10 @@
-import { Box, Flex, Grid, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
+import { RoundedBox } from '../shared/RoundedBox'
+import { FormInput } from '../shared/FormInput'
+import { FormTextarea } from '../shared/FormTextarea'
+import { AddStatButton } from '../shared/AddStatButton'
 import type { CargoItem } from './types'
 
 interface StorageBayProps {
@@ -23,72 +27,31 @@ export function StorageBay({
   onRemoveCargo,
 }: StorageBayProps) {
   return (
-    <Box
+    <RoundedBox
       bg="bg.builder.crawler"
-      borderWidth="builder.border.sm"
       borderColor="border.builder.crawler"
+      matchBorder={false}
+      borderWidth="4px"
       borderRadius="2xl"
-      p={4}
+      padding={4}
+      title="Storage Bay"
+      rightContent={<AddStatButton onClick={onAddCargo} label="Add Cargo" />}
     >
-      <Heading level="h2" textTransform="uppercase" mb={3}>
-        Storage Bay
-      </Heading>
-
       <VStack gap={3} mb={4} alignItems="stretch">
-        <Box>
-          <Text
-            as="label"
-            display="block"
-            fontSize="xs"
-            fontWeight="bold"
-            color="fg.input.label"
-            mb={1}
-          >
-            Bullwhacker
-          </Text>
-          <Input
-            type="text"
-            value={operator}
-            onChange={(e) => onOperatorChange(e.target.value)}
-            placeholder="Enter Bullwhacker name..."
-            w="full"
-            p={1.5}
-            borderWidth={0}
-            borderRadius="lg"
-            bg="bg.input"
-            color="fg.input"
-            fontWeight="semibold"
-            fontSize="sm"
-          />
-        </Box>
+        <FormInput
+          label="Bullwhacker"
+          value={operator}
+          onChange={onOperatorChange}
+          placeholder="Enter Bullwhacker name..."
+        />
 
-        <Box>
-          <Text
-            as="label"
-            display="block"
-            fontSize="xs"
-            fontWeight="bold"
-            color="fg.input.label"
-            mb={1}
-          >
-            Description
-          </Text>
-          <Textarea
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            placeholder="Enter bay description..."
-            w="full"
-            p={1.5}
-            borderWidth={0}
-            borderRadius="lg"
-            bg="bg.input"
-            color="fg.input"
-            fontWeight="semibold"
-            resize="none"
-            h="20"
-            fontSize="sm"
-          />
-        </Box>
+        <FormTextarea
+          label="Description"
+          value={description}
+          onChange={onDescriptionChange}
+          placeholder="Enter bay description..."
+          height="20"
+        />
       </VStack>
 
       {/* Cargo Grid */}
@@ -142,24 +105,8 @@ export function StorageBay({
               </Flex>
             </Box>
           ))}
-
-          <Button
-            onClick={onAddCargo}
-            bg="su.orange"
-            color="su.white"
-            px={1}
-            py={1}
-            borderRadius="lg"
-            fontWeight="bold"
-            _hover={{ bg: 'su.lightOrange' }}
-            w="full"
-            aspectRatio="1"
-            fontSize="xs"
-          >
-            + Add
-          </Button>
         </Grid>
       </Box>
-    </Box>
+    </RoundedBox>
   )
 }

@@ -1,7 +1,8 @@
 import { Box, Flex, Grid, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
 import { StatDisplay } from '../StatDisplay'
+import { AddStatButton } from '../shared/AddStatButton'
+import { RoundedBox } from '../shared/RoundedBox'
 import type { CargoItem } from './types'
 
 interface CargoListProps {
@@ -22,21 +23,21 @@ export function CargoList({
   onAddClick,
 }: CargoListProps) {
   return (
-    <Box
+    <RoundedBox
       bg="bg.builder.mech"
-      borderWidth="builder.border"
       borderColor="border.builder"
-      borderRadius="builder.radius"
-      p="builder.padding"
-      shadow="lg"
+      matchBorder={false}
+      borderWidth="8px"
+      borderRadius="3xl"
+      padding={6}
+      title="Cargo"
+      rightContent={
+        <Flex gap={2} alignItems="center">
+          <AddStatButton onClick={onAddClick} disabled={!canAddCargo} />
+          <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} />
+        </Flex>
+      }
     >
-      <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading level="h2" textTransform="uppercase">
-          Cargo
-        </Heading>
-        <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} />
-      </Flex>
-
       <Grid templateColumns="repeat(4, 1fr)" gap={3}>
         {cargo.map((item) => (
           <Box
@@ -95,25 +96,7 @@ export function CargoList({
             </Flex>
           </Box>
         ))}
-
-        <Button
-          onClick={onAddClick}
-          disabled={!canAddCargo}
-          bg="su.orange"
-          color="su.white"
-          px={3}
-          py={2}
-          borderRadius="lg"
-          fontWeight="bold"
-          _hover={{ bg: 'su.lightOrange' }}
-          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-          w="full"
-          aspectRatio="1"
-          fontSize="base"
-        >
-          + Add
-        </Button>
       </Grid>
-    </Box>
+    </RoundedBox>
   )
 }

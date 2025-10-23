@@ -188,8 +188,8 @@ export function GamesGrid() {
       createButton={{
         onClick: handleCreateGame,
         label: 'New Game',
-        accentColor: 'su.brick',
-        bgColor: 'su.lightOrange',
+        bgColor: 'su.brick',
+        color: 'su.white',
       }}
       onRetry={loadGames}
     />

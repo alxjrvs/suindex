@@ -1,6 +1,6 @@
 import { rollTable } from '@randsum/salvageunion'
-import { Grid, Box, Text, Input, Flex } from '@chakra-ui/react'
-import { DiceRollButton } from '../shared/DiceRollButton'
+import { Grid } from '@chakra-ui/react'
+import { FormInput } from '../shared/FormInput'
 
 interface QuirkAppearanceInputsProps {
   quirk: string
@@ -30,80 +30,28 @@ export function QuirkAppearanceInputs({
   }
 
   return (
-    <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
-      <Box>
-        <Text
-          as="label"
-          display="block"
-          fontSize="sm"
-          fontWeight="bold"
-          color="su.inputBg"
-          mb={2}
-          textTransform="uppercase"
-        >
-          Quirk
-        </Text>
-        <Flex gap={2} alignItems="center">
-          <Input
-            type="text"
-            value={quirk}
-            onChange={(e) => onQuirkChange(e.target.value)}
-            placeholder="Enter quirk..."
-            disabled={disabled}
-            flex="1"
-            p={3}
-            borderWidth={0}
-            borderRadius="2xl"
-            bg="su.inputBg"
-            color="su.inputText"
-            fontWeight="semibold"
-            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-          />
-          <DiceRollButton
-            onClick={handleRollQuirk}
-            disabled={disabled}
-            ariaLabel="Roll for quirk"
-            title="Roll on the Quirks table"
-          />
-        </Flex>
-      </Box>
+    <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6} w="full">
+      <FormInput
+        label="Quirk"
+        value={quirk}
+        onChange={onQuirkChange}
+        placeholder="Enter quirk..."
+        disabled={disabled}
+        onDiceRoll={handleRollQuirk}
+        diceRollAriaLabel="Roll for quirk"
+        diceRollTitle="Roll on the Quirks table"
+      />
 
-      <Box>
-        <Text
-          as="label"
-          display="block"
-          fontSize="sm"
-          fontWeight="bold"
-          color="su.inputBg"
-          mb={2}
-          textTransform="uppercase"
-        >
-          Appearance
-        </Text>
-        <Flex gap={2} alignItems="center">
-          <Input
-            type="text"
-            value={appearance}
-            onChange={(e) => onAppearanceChange(e.target.value)}
-            placeholder="Enter appearance..."
-            disabled={disabled}
-            flex="1"
-            p={3}
-            borderWidth={0}
-            borderRadius="2xl"
-            bg="su.inputBg"
-            color="su.inputText"
-            fontWeight="semibold"
-            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-          />
-          <DiceRollButton
-            onClick={handleRollAppearance}
-            disabled={disabled}
-            ariaLabel="Roll for appearance"
-            title="Roll on the Mech Appearance table"
-          />
-        </Flex>
-      </Box>
+      <FormInput
+        label="Appearance"
+        value={appearance}
+        onChange={onAppearanceChange}
+        placeholder="Enter appearance..."
+        disabled={disabled}
+        onDiceRoll={handleRollAppearance}
+        diceRollAriaLabel="Roll for appearance"
+        diceRollTitle="Roll on the Mech Appearance table"
+      />
     </Grid>
   )
 }

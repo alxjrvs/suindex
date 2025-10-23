@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
-import { Box, Text, Input, VStack, Flex, Badge } from '@chakra-ui/react'
+import { VStack, Flex, Badge, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
+import { FormInput } from '../shared/FormInput'
 import type { Chassis } from 'salvageunion-reference'
 
 interface PatternSelectorProps {
@@ -20,40 +21,20 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
   }, [selectedChassis, pattern])
 
   return (
-    <Box position="relative">
-      <Text
-        as="label"
-        display="block"
-        fontSize="sm"
-        fontWeight="bold"
-        color="fg.input.label"
-        mb={2}
-        textTransform="uppercase"
-      >
-        Pattern
-      </Text>
-      <Input
-        type="text"
-        value={pattern}
-        onChange={(e) => {
-          onChange(e.target.value)
-          setShowSuggestions(true)
-        }}
-        onFocus={() => setShowSuggestions(true)}
-        onBlur={() => {
-          setTimeout(() => setShowSuggestions(false), 200)
-        }}
-        disabled={!selectedChassis}
-        placeholder="Enter or select a pattern..."
-        w="full"
-        p={3}
-        borderWidth={0}
-        borderRadius="2xl"
-        bg="bg.input"
-        color="fg.input"
-        fontWeight="semibold"
-        _disabled={{ opacity: 0.5 }}
-      />
+    <FormInput
+      label="Pattern"
+      value={pattern}
+      onChange={(value) => {
+        onChange(value)
+        setShowSuggestions(true)
+      }}
+      onFocus={() => setShowSuggestions(true)}
+      onBlur={() => {
+        setTimeout(() => setShowSuggestions(false), 200)
+      }}
+      disabled={!selectedChassis}
+      placeholder="Enter or select a pattern..."
+    >
       {showSuggestions && selectedChassis && filteredPatterns.length > 0 && (
         <VStack
           position="absolute"
@@ -109,6 +90,6 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
           ))}
         </VStack>
       )}
-    </Box>
+    </FormInput>
   )
 }

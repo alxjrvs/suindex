@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { SystemModuleSelector } from './SystemModuleSelector'
 import { ChassisSelector } from './ChassisSelector'
@@ -13,7 +13,8 @@ import { CargoList } from './CargoList'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
+import { MechControlBar } from './MechControlBar'
+import { RoundedBox } from '../shared/RoundedBox'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
 
 interface MechLiveSheetProps {
@@ -39,50 +40,23 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     handleAddCargo,
     handleRemoveCargo,
     updateMech,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   } = useMechLiveSheetState(id)
 
   const allChassis = SalvageUnionReference.Chassis.all()
   const allSystems = SalvageUnionReference.Systems.all()
   const allModules = SalvageUnionReference.Modules.all()
 
-  // Track initial state for detecting changes
-  const initialStateRef = useRef<string | null>(null)
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  // Track saved pilot ID for control bar links
   const [savedPilotId, setSavedPilotId] = useState<string | null>(null)
 
-  // Set initial state after loading completes
+  // Set saved pilot ID after loading completes
   useEffect(() => {
     if (!id || loading) return
-    if (initialStateRef.current === null) {
-      initialStateRef.current = JSON.stringify(mech)
-      setSavedPilotId(mech.pilot_id ?? null)
-    }
-  }, [id, loading, mech])
-
-  // Detect changes
-  useEffect(() => {
-    if (!id || initialStateRef.current === null) return
-    const currentState = JSON.stringify(mech)
-    setHasUnsavedChanges(currentState !== initialStateRef.current)
-  }, [mech, id])
-
-  // Update initial state ref after save or reset
-  const handleSave = async () => {
-    await save()
-    initialStateRef.current = JSON.stringify(mech)
     setSavedPilotId(mech.pilot_id ?? null)
-    setHasUnsavedChanges(false)
-  }
-
-  const handleResetChanges = async () => {
-    await resetChanges()
-    initialStateRef.current = JSON.stringify(mech)
-    setHasUnsavedChanges(false)
-  }
+  }, [id, loading, mech.pilot_id])
 
   const stats = selectedChassis?.stats
 
@@ -121,106 +95,64 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   return (
     <LiveSheetLayout>
       {id && (
-        <LiveSheetControlBar
-          backgroundColor="bg.builder.mech"
-          entityType="mech"
+        <MechControlBar
           pilotId={mech.pilot_id}
           savedPilotId={savedPilotId}
           onPilotChange={(pilotId) => updateMech({ pilot_id: pilotId })}
-          onSave={handleSave}
-          onResetChanges={handleResetChanges}
-          hasUnsavedChanges={hasUnsavedChanges}
+          hasPendingChanges={hasPendingChanges}
         />
       )}
       <Flex gap={6}>
         <VStack flex="1" gap={6} alignItems="stretch">
-          <Box
-            bg="su.green"
-            borderWidth="8px"
-            borderColor="su.green"
-            borderRadius="3xl"
-            p={6}
-            shadow="lg"
-          >
-            <Box bg="su.green" borderRadius="2xl" p={4}>
-              <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-                <ChassisSelector
-                  chassisId={mech.chassis_id ?? null}
-                  allChassis={allChassis}
-                  onChange={handleChassisChange}
-                />
-
-                <PatternSelector
-                  pattern={mech.pattern ?? ''}
-                  selectedChassis={selectedChassis}
-                  onChange={handlePatternChange}
-                />
-              </Grid>
-            </Box>
-          </Box>
-
-          <Box
-            bg="su.green"
-            borderWidth="8px"
-            borderColor="su.green"
-            borderRadius="3xl"
-            p={4}
-            shadow="lg"
-          >
-            <Box bg="su.green" borderRadius="2xl" p={2}>
-              <ChassisStatsGrid
-                stats={stats}
-                usedSystemSlots={usedSystemSlots}
-                usedModuleSlots={usedModuleSlots}
-                totalCargo={totalCargo}
+          <RoundedBox bg="su.green" fillHeight fillWidth>
+            <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
+              <ChassisSelector
+                chassisId={mech.chassis_id ?? null}
+                allChassis={allChassis}
+                onChange={handleChassisChange}
               />
-            </Box>
-          </Box>
+
+              <PatternSelector
+                pattern={mech.pattern ?? ''}
+                selectedChassis={selectedChassis}
+                onChange={handlePatternChange}
+              />
+            </Grid>
+          </RoundedBox>
+
+          <ChassisStatsGrid
+            stats={stats}
+            usedSystemSlots={usedSystemSlots}
+            usedModuleSlots={usedModuleSlots}
+            totalCargo={totalCargo}
+          />
         </VStack>
 
-        <Flex
-          bg="su.green"
-          borderWidth="8px"
-          borderColor="su.green"
-          borderRadius="3xl"
-          px={2}
-          py={6}
-          shadow="lg"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <MechResourceSteppers
-            stats={stats}
-            currentDamage={mech.current_damage ?? 0}
-            currentEP={mech.current_ep ?? 0}
-            currentHeat={mech.current_heat ?? 0}
-            onDamageChange={(value) => updateMech({ current_damage: value })}
-            onEPChange={(value) => updateMech({ current_ep: value })}
-            onHeatChange={(value) => updateMech({ current_heat: value })}
-          />
+        <MechResourceSteppers
+          stats={stats}
+          currentDamage={mech.current_damage ?? 0}
+          currentEP={mech.current_ep ?? 0}
+          currentHeat={mech.current_heat ?? 0}
+          onDamageChange={(value) => updateMech({ current_damage: value })}
+          onEPChange={(value) => updateMech({ current_ep: value })}
+          onHeatChange={(value) => updateMech({ current_heat: value })}
+        />
 
-          {stats && <VStack gap={3} bg="su.green" borderRadius="2xl" p={4}></VStack>}
-        </Flex>
+        {stats && <VStack gap={3} bg="su.green" borderRadius="2xl" p={4}></VStack>}
       </Flex>
 
-      <Box
-        bg="su.green"
-        borderWidth="8px"
-        borderColor="su.green"
-        borderRadius="3xl"
-        p={6}
-        shadow="lg"
-      >
-        <ChassisAbilities chassis={selectedChassis} />
-
-        <QuirkAppearanceInputs
-          quirk={mech.quirk ?? ''}
-          appearance={mech.appearance ?? ''}
-          disabled={!selectedChassis}
-          onQuirkChange={(value) => updateMech({ quirk: value })}
-          onAppearanceChange={(value) => updateMech({ appearance: value })}
-        />
-      </Box>
+      <RoundedBox bg="su.green" title="Abilities">
+        <VStack gap={3} alignItems="stretch" w="full">
+          <QuirkAppearanceInputs
+            quirk={mech.quirk ?? ''}
+            appearance={mech.appearance ?? ''}
+            disabled={!selectedChassis}
+            onQuirkChange={(value) => updateMech({ quirk: value })}
+            onAppearanceChange={(value) => updateMech({ appearance: value })}
+          />
+          <ChassisAbilities chassis={selectedChassis} />
+        </VStack>
+      </RoundedBox>
 
       <SystemsModulesList
         systems={mech.systems ?? []}

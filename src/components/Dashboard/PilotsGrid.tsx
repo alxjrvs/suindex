@@ -69,8 +69,8 @@ export function PilotsGrid() {
         createButton={{
           onClick: handleCreatePilot,
           label: 'New Pilot',
-          accentColor: 'su.orange',
-          bgColor: 'su.lightOrange',
+          bgColor: 'su.orange',
+          color: 'su.white',
         }}
         onRetry={reload}
       />

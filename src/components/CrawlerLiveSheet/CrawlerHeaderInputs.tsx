@@ -1,6 +1,9 @@
-import { Box, Grid, Input, Text, Textarea, VStack } from '@chakra-ui/react'
-import { NativeSelectField, NativeSelectRoot } from '@chakra-ui/react'
+import { Grid, VStack } from '@chakra-ui/react'
+import { FormInput } from '../shared/FormInput'
+import { FormSelect } from '../shared/FormSelect'
+import { FormTextarea } from '../shared/FormTextarea'
 import type { Crawler } from 'salvageunion-reference'
+import { RoundedBox } from '../shared/RoundedBox'
 
 interface CrawlerHeaderInputsProps {
   name: string
@@ -22,97 +25,40 @@ export function CrawlerHeaderInputs({
   onDescriptionChange,
 }: CrawlerHeaderInputsProps) {
   return (
-    <VStack gap={4} alignItems="stretch">
-      <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-        <Box>
-          <Text
-            as="label"
-            display="block"
-            fontSize="sm"
-            fontWeight="bold"
-            color="fg.input.label"
-            mb={2}
-            textTransform="uppercase"
-          >
-            Name
-          </Text>
-          <Input
-            type="text"
+    <RoundedBox
+      bg="bg.builder.crawler"
+      fillWidth
+      borderColor="border.builder.crawler"
+      matchBorder={false}
+      borderWidth="4px"
+    >
+      <VStack gap={4} alignItems="stretch" justifyContent="space-between" w="full" h="full">
+        <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+          <FormInput
+            label="Name"
             value={name}
-            onChange={(e) => onNameChange(e.target.value)}
+            onChange={onNameChange}
             placeholder="Enter crawler name..."
-            w="full"
-            p={2}
-            borderWidth={0}
-            borderRadius="lg"
-            bg="bg.input"
-            color="fg.input"
-            fontWeight="semibold"
           />
-        </Box>
 
-        <Box>
-          <Text
-            as="label"
-            display="block"
-            fontSize="sm"
-            fontWeight="bold"
-            color="fg.input.label"
-            mb={2}
-            textTransform="uppercase"
-          >
-            Type
-          </Text>
-          <NativeSelectRoot>
-            <NativeSelectField
-              value={crawlerTypeId || ''}
-              onChange={(e) => onCrawlerTypeChange(e.target.value)}
-              w="full"
-              p={2}
-              borderWidth={0}
-              borderRadius="lg"
-              bg="bg.input"
-              color="fg.input"
-              fontWeight="semibold"
-            >
-              <option value="">Select crawler type...</option>
-              {allCrawlers.map((crawler) => (
-                <option key={crawler.id} value={crawler.id}>
-                  {crawler.name}
-                </option>
-              ))}
-            </NativeSelectField>
-          </NativeSelectRoot>
-        </Box>
-      </Grid>
+          <FormSelect label="Type" value={crawlerTypeId || ''} onChange={onCrawlerTypeChange}>
+            <option value="">Select crawler type...</option>
+            {allCrawlers.map((crawler) => (
+              <option key={crawler.id} value={crawler.id}>
+                {crawler.name}
+              </option>
+            ))}
+          </FormSelect>
+        </Grid>
 
-      <Box>
-        <Text
-          as="label"
-          display="block"
-          fontSize="sm"
-          fontWeight="bold"
-          color="fg.input.label"
-          mb={2}
-          textTransform="uppercase"
-        >
-          Description
-        </Text>
-        <Textarea
+        <FormTextarea
+          label="Description"
           value={description}
-          onChange={(e) => onDescriptionChange(e.target.value)}
+          onChange={onDescriptionChange}
           placeholder="Enter crawler description..."
-          w="full"
-          p={2}
-          borderWidth={0}
-          borderRadius="lg"
-          bg="bg.input"
-          color="fg.input"
-          fontWeight="semibold"
-          resize="none"
-          h="24"
+          height="24"
         />
-      </Box>
-    </VStack>
+      </VStack>
+    </RoundedBox>
   )
 }

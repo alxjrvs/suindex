@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Flex, Grid, Text } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
@@ -9,7 +9,7 @@ import { StorageBay } from './StorageBay'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
+import { CrawlerControlBar } from './CrawlerControlBar'
 import { useCrawlerLiveSheetState } from './useCrawlerLiveSheetState'
 
 interface CrawlerLiveSheetProps {
@@ -32,46 +32,19 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     handleAddCargo,
     handleRemoveCargo,
     updateCrawler,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   } = useCrawlerLiveSheetState(id)
 
-  // Track initial state for detecting changes
-  const initialStateRef = useRef<string | null>(null)
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  // Track saved game ID for control bar links
   const [savedGameId, setSavedGameId] = useState<string | null>(null)
 
-  // Set initial state after loading completes
+  // Set saved game ID after loading completes
   useEffect(() => {
     if (!id || loading) return
-    if (initialStateRef.current === null) {
-      initialStateRef.current = JSON.stringify(crawler)
-      setSavedGameId(crawler.game_id ?? null)
-    }
-  }, [id, loading, crawler])
-
-  // Detect changes
-  useEffect(() => {
-    if (!id || initialStateRef.current === null) return
-    const currentState = JSON.stringify(crawler)
-    setHasUnsavedChanges(currentState !== initialStateRef.current)
-  }, [crawler, id])
-
-  // Update initial state ref after save or reset
-  const handleSave = async () => {
-    await save()
-    initialStateRef.current = JSON.stringify(crawler)
     setSavedGameId(crawler.game_id ?? null)
-    setHasUnsavedChanges(false)
-  }
-
-  const handleResetChanges = async () => {
-    await resetChanges()
-    initialStateRef.current = JSON.stringify(crawler)
-    setHasUnsavedChanges(false)
-  }
+  }, [id, loading, crawler.game_id])
 
   if (loading) {
     return (
@@ -114,80 +87,41 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
   return (
     <LiveSheetLayout>
       {id && (
-        <LiveSheetControlBar
-          backgroundColor="bg.builder.crawler"
-          entityType="crawler"
+        <CrawlerControlBar
           gameId={crawler.game_id}
           savedGameId={savedGameId}
           onGameChange={(gameId) => updateCrawler({ game_id: gameId })}
-          onSave={handleSave}
-          onResetChanges={handleResetChanges}
-          hasUnsavedChanges={hasUnsavedChanges}
+          hasPendingChanges={hasPendingChanges}
         />
       )}
       {/* Header Section */}
       <Flex gap={6}>
-        <Box flex="1">
-          <Box
-            bg="bg.builder.crawler"
-            borderWidth="4px"
-            borderColor="border.builder.crawler"
-            borderRadius="3xl"
-            p={6}
-            shadow="lg"
-          >
-            <CrawlerHeaderInputs
-              name={crawler.name}
-              crawlerTypeId={crawler.crawler_type_id ?? null}
-              description={crawler.description ?? ''}
-              allCrawlers={allCrawlers}
-              onNameChange={(value) => updateCrawler({ name: value })}
-              onCrawlerTypeChange={handleCrawlerTypeChange}
-              onDescriptionChange={(value) => updateCrawler({ description: value })}
-            />
-          </Box>
-        </Box>
+        <CrawlerHeaderInputs
+          name={crawler.name}
+          crawlerTypeId={crawler.crawler_type_id ?? null}
+          description={crawler.description ?? ''}
+          allCrawlers={allCrawlers}
+          onNameChange={(value) => updateCrawler({ name: value })}
+          onCrawlerTypeChange={handleCrawlerTypeChange}
+          onDescriptionChange={(value) => updateCrawler({ description: value })}
+        />
 
-        {/* Resource Steppers */}
-        <Box
-          bg="bg.builder.crawler"
-          borderWidth="4px"
-          borderColor="border.builder.crawler"
-          borderRadius="3xl"
-          px={2}
-          py={6}
-          shadow="lg"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <CrawlerResourceSteppers
-            currentDamage={crawler.current_damage ?? 0}
-            maxSP={maxSP}
-            techLevel={crawler.tech_level ?? 1}
-            upkeep={upkeep}
-            upgrade={crawler.upgrade ?? 0}
-            maxUpgrade={maxUpgrade}
-            currentScrap={crawler.current_scrap ?? 0}
-            onDamageChange={(value) => updateCrawler({ current_damage: value })}
-            onTechLevelChange={(value) => updateCrawler({ tech_level: value })}
-            onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
-            onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
-          />
-        </Box>
+        <CrawlerResourceSteppers
+          currentDamage={crawler.current_damage ?? 0}
+          maxSP={maxSP}
+          techLevel={crawler.tech_level ?? 1}
+          upkeep={upkeep}
+          upgrade={crawler.upgrade ?? 0}
+          maxUpgrade={maxUpgrade}
+          currentScrap={crawler.current_scrap ?? 0}
+          onDamageChange={(value) => updateCrawler({ current_damage: value })}
+          onTechLevelChange={(value) => updateCrawler({ tech_level: value })}
+          onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
+          onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
+        />
       </Flex>
 
-      {/* Abilities Section - Full Width */}
-      <Box
-        bg="bg.builder.crawler"
-        borderWidth="4px"
-        borderColor="border.builder.crawler"
-        borderRadius="3xl"
-        p={6}
-        shadow="lg"
-      >
-        <CrawlerAbilities crawler={selectedCrawlerType} />
-      </Box>
+      <CrawlerAbilities crawler={selectedCrawlerType} />
 
       {/* Bays Grid - First Row */}
       {firstRowBays.length > 0 && (
@@ -250,7 +184,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           backgroundColor="bg.builder.crawler"
           borderWidth={4}
           placeholder="Add notes about your crawler..."
-          height="flex-1"
         />
       </Grid>
 

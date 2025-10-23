@@ -51,6 +51,8 @@ export default function NumericStepper({
           color="fg.input"
           fontSize="xs"
           fontWeight="bold"
+          borderWidth="3px"
+          borderColor="su.black"
           borderRadius="md"
           _hover={{ bg: 'bg.muted' }}
           _disabled={{
@@ -74,6 +76,8 @@ export default function NumericStepper({
           color="fg.input"
           fontSize="xs"
           fontWeight="bold"
+          borderWidth="3px"
+          borderColor="su.black"
           borderRadius="md"
           _hover={{ bg: 'bg.muted' }}
           _disabled={{

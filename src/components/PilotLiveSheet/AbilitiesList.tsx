@@ -1,11 +1,12 @@
 import { useMemo } from 'react'
-import { Box, Flex, Text, VStack } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
+import { Box, Flex, VStack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Ability } from 'salvageunion-reference'
 import { AbilityDisplay } from '../AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
+import { AddStatButton } from '../shared/AddStatButton'
+import { RoundedBox } from '../shared/RoundedBox'
 
 interface AbilitiesListProps {
   abilities: string[] // Array of Ability IDs
@@ -70,61 +71,18 @@ export function AbilitiesList({
   const advancedTreeNamesDisplay = Object.keys(advancedAbilitiesByTree).sort()
 
   return (
-    <Box
+    <RoundedBox
       bg="bg.builder.pilot"
-      borderWidth="builder.border"
       borderColor="border.builder.pilot"
-      borderRadius="3xl"
-      p={6}
-      shadow="lg"
-    >
-      {/* Header with Add Button and TP Display */}
-      <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading level="h2" textTransform="uppercase">
-          Abilities
-        </Heading>
+      matchBorder={false}
+      title="Abilities"
+      rightContent={
         <Flex alignItems="center" gap={4}>
-          <Flex flexDirection="column" alignItems="center">
-            <Text
-              as="label"
-              fontSize="xs"
-              fontWeight="bold"
-              color="fg.input.label"
-              mb={1}
-              display="block"
-            >
-              Add
-            </Text>
-            <Button
-              onClick={onAddClick}
-              disabled={disabled || currentTP === 0}
-              w="16"
-              h="16"
-              borderRadius="2xl"
-              bg="su.lightOrange"
-              color="su.white"
-              fontWeight="bold"
-              _hover={{ bg: 'su.brick' }}
-              borderWidth="2px"
-              borderStyle="dashed"
-              borderColor="fg.input.label"
-              _disabled={{
-                opacity: 0.5,
-                cursor: 'not-allowed',
-                _hover: { bg: 'su.lightOrange' },
-              }}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              fontSize="2xl"
-            >
-              +
-            </Button>
-          </Flex>
+          <AddStatButton onClick={onAddClick} disabled={disabled || currentTP === 0} />
           <StatDisplay label="TP" value={`${currentTP}`} />
         </Flex>
-      </Flex>
-
+      }
+    >
       {coreTreeNamesDisplay.length > 0 && (
         <Box mb={4}>
           {coreTreeNamesDisplay.map((treeName) => (
@@ -190,6 +148,6 @@ export function AbilitiesList({
           />
         </Box>
       )}
-    </Box>
+    </RoundedBox>
   )
 }

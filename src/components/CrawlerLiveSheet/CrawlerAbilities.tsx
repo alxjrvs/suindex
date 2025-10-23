@@ -1,6 +1,7 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
 import type { Crawler } from 'salvageunion-reference'
 import { Heading } from '../base/Heading'
+import { RoundedBox } from '../shared/RoundedBox'
 
 interface CrawlerAbilitiesProps {
   crawler: Crawler | undefined
@@ -8,8 +9,13 @@ interface CrawlerAbilitiesProps {
 
 export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
   return (
-    <Box mb={6}>
-      <VStack gap={3} alignItems="stretch">
+    <RoundedBox
+      bg="bg.builder.crawler"
+      borderColor="border.builder.crawler"
+      matchBorder={false}
+      borderWidth="4px"
+    >
+      <VStack gap={3} alignItems="stretch" w="full">
         <Heading level="h2">Abilities</Heading>
         {(
           crawler?.abilities || [
@@ -40,6 +46,6 @@ export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
           </Box>
         ))}
       </VStack>
-    </Box>
+    </RoundedBox>
   )
 }

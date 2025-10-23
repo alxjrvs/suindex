@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '../../../test/chakra-utils'
 import { BrowserRouter } from 'react-router-dom'
-import { LiveSheetControlBar } from '../LiveSheetControlBar'
+import { CrawlerControlBar } from '../../CrawlerLiveSheet/CrawlerControlBar'
+import { MechControlBar } from '../../MechLiveSheet/MechControlBar'
 import { supabase } from '../../../lib/supabase'
 
 // Mock supabase
@@ -21,8 +22,6 @@ const mockSupabase = supabase as unknown as {
 
 describe('LiveSheetControlBar', () => {
   const mockUser = { id: 'user-123' }
-  const mockOnSave = vi.fn()
-  const mockOnResetChanges = vi.fn()
   const mockOnGameChange = vi.fn()
   const mockOnPilotChange = vi.fn()
 
@@ -62,15 +61,7 @@ describe('LiveSheetControlBar', () => {
 
       render(
         <BrowserRouter>
-          <LiveSheetControlBar
-            backgroundColor="#c97d9e"
-            entityType="crawler"
-            gameId={null}
-            onGameChange={mockOnGameChange}
-            onSave={mockOnSave}
-            onResetChanges={mockOnResetChanges}
-            hasUnsavedChanges={false}
-          />
+          <CrawlerControlBar gameId={null} onGameChange={mockOnGameChange} />
         </BrowserRouter>
       )
 
@@ -105,16 +96,7 @@ describe('LiveSheetControlBar', () => {
 
       render(
         <BrowserRouter>
-          <LiveSheetControlBar
-            backgroundColor="#c97d9e"
-            entityType="crawler"
-            gameId="game-1"
-            savedGameId="game-1"
-            onGameChange={mockOnGameChange}
-            onSave={mockOnSave}
-            onResetChanges={mockOnResetChanges}
-            hasUnsavedChanges={false}
-          />
+          <CrawlerControlBar gameId="game-1" savedGameId="game-1" onGameChange={mockOnGameChange} />
         </BrowserRouter>
       )
 
@@ -143,15 +125,10 @@ describe('LiveSheetControlBar', () => {
 
       render(
         <BrowserRouter>
-          <LiveSheetControlBar
-            backgroundColor="#6b8e7f"
-            entityType="mech"
+          <MechControlBar
             pilotId="pilot-1"
             savedPilotId="pilot-1"
             onPilotChange={mockOnPilotChange}
-            onSave={mockOnSave}
-            onResetChanges={mockOnResetChanges}
-            hasUnsavedChanges={false}
           />
         </BrowserRouter>
       )
@@ -160,48 +137,6 @@ describe('LiveSheetControlBar', () => {
         expect(screen.getByText('Pilot:')).toBeInTheDocument()
         expect(screen.getByText('→ Pilot')).toBeInTheDocument()
       })
-    })
-  })
-
-  describe('Save and Reset buttons', () => {
-    it('disables save and reset when no unsaved changes', async () => {
-      render(
-        <BrowserRouter>
-          <LiveSheetControlBar
-            backgroundColor="#c97d9e"
-            entityType="crawler"
-            onSave={mockOnSave}
-            onResetChanges={mockOnResetChanges}
-            hasUnsavedChanges={false}
-          />
-        </BrowserRouter>
-      )
-
-      const saveButton = screen.getByRole('button', { name: /save/i })
-      const resetButton = screen.getByRole('button', { name: /reset changes/i })
-
-      expect(saveButton).toBeDisabled()
-      expect(resetButton).toBeDisabled()
-    })
-
-    it('enables save and reset when there are unsaved changes', async () => {
-      render(
-        <BrowserRouter>
-          <LiveSheetControlBar
-            backgroundColor="#c97d9e"
-            entityType="crawler"
-            onSave={mockOnSave}
-            onResetChanges={mockOnResetChanges}
-            hasUnsavedChanges={true}
-          />
-        </BrowserRouter>
-      )
-
-      const saveButton = screen.getByRole('button', { name: /save/i })
-      const resetButton = screen.getByRole('button', { name: /reset changes/i })
-
-      expect(saveButton).not.toBeDisabled()
-      expect(resetButton).not.toBeDisabled()
     })
   })
 })

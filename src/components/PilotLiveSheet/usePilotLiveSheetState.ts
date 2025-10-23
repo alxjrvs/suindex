@@ -36,14 +36,13 @@ export function usePilotLiveSheetState(id?: string) {
   const {
     entity: pilot,
     updateEntity,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   } = useLiveSheetState<PilotLiveSheetState>({
     table: 'pilots',
     initialState: { ...INITIAL_PILOT_STATE, id: id || '' },
-    id: id || '',
+    id,
   })
 
   // Wrapper for partial updates (used by components)
@@ -282,9 +281,8 @@ export function usePilotLiveSheetState(id?: string) {
     handleAddEquipment,
     handleRemoveEquipment,
     updatePilot,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   }
 }

@@ -1,6 +1,12 @@
-import { Box, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { useMemo, useState } from 'react'
+import { Box, VStack, Text, Flex } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import type { CrawlerBay } from '../../types/database'
-import { Heading } from '../base/Heading'
+import { RoundedBox } from '../shared/RoundedBox'
+import { FormInput } from '../shared/FormInput'
+import { FormTextarea } from '../shared/FormTextarea'
+import { Text as StyledText } from '../base/Text'
 
 interface BayCardProps {
   bay: CrawlerBay
@@ -8,74 +14,116 @@ interface BayCardProps {
 }
 
 export function BayCard({ bay, onUpdate }: BayCardProps) {
+  const [isFunctionExpanded, setIsFunctionExpanded] = useState(false)
+  const [isAbilitiesExpanded, setIsAbilitiesExpanded] = useState(false)
+
+  const referenceBay = useMemo(() => {
+    const allBays = SalvageUnionReference.CrawlerBays.all()
+    return allBays.find((b) => b.id === bay.bayId)
+  }, [bay.bayId])
+
   return (
-    <Box
+    <RoundedBox
       bg="su.crawlerPink"
       borderWidth="4px"
-      borderColor="su.crawlerPink"
       borderRadius="2xl"
-      p={4}
+      padding={4}
+      title={bay.name}
     >
-      <VStack gap={3} alignItems="stretch">
-        <Heading level="h2" textTransform="uppercase" alignSelf="flex-start">
-          {bay.name}
-        </Heading>
+      <VStack justifyContent="space-between" alignItems="space-between">
+        <FormInput
+          value={bay.operator}
+          onChange={(value) => onUpdate({ operator: value })}
+          placeholder={`Enter ${bay.operatorPosition} name...`}
+          suffixText={`the ${bay.operatorPosition}`}
+        />
 
-        <Box>
-          <Text
-            as="label"
-            display="block"
-            fontSize="xs"
-            fontWeight="bold"
-            color="su.inputBg"
-            mb={1}
-          >
-            {bay.operatorPosition}
-          </Text>
-          <Input
-            type="text"
-            value={bay.operator}
-            onChange={(e) => onUpdate({ operator: e.target.value })}
-            placeholder={`Enter ${bay.operatorPosition} name...`}
-            w="full"
-            p={1.5}
-            borderWidth={0}
-            borderRadius="lg"
-            bg="su.inputBg"
-            color="su.inputText"
-            fontWeight="semibold"
-            fontSize="sm"
-          />
-        </Box>
+        <FormTextarea
+          label="Description"
+          value={bay.description}
+          onChange={(value) => onUpdate({ description: value })}
+          placeholder="Enter bay description..."
+          height="20"
+        />
 
-        <Box>
-          <Text
-            as="label"
-            display="block"
-            fontSize="xs"
-            fontWeight="bold"
-            color="su.inputBg"
-            mb={1}
-          >
-            Description
-          </Text>
-          <Textarea
-            value={bay.description}
-            onChange={(e) => onUpdate({ description: e.target.value })}
-            placeholder="Enter bay description..."
-            w="full"
-            p={1.5}
-            borderWidth={0}
-            borderRadius="lg"
-            bg="su.inputBg"
-            color="su.inputText"
-            fontWeight="semibold"
-            resize="none"
-            h="20"
-            fontSize="sm"
-          />
-        </Box>
+        {/* Function Section - Expandable */}
+        {referenceBay && referenceBay.description && (
+          <Box>
+            <Flex alignItems="center" justifyContent="space-between" mb={2}>
+              <Flex alignItems="center">
+                <StyledText variant="pseudoheader" fontSize="sm" textTransform="uppercase">
+                  Function
+                </StyledText>
+              </Flex>
+              <Button
+                onClick={() => setIsFunctionExpanded(!isFunctionExpanded)}
+                size="sm"
+                bg="su.black"
+                color="su.white"
+                _hover={{ bg: 'su.brick' }}
+                fontSize="xs"
+                px={3}
+                py={1}
+              >
+                {isFunctionExpanded ? 'Hide' : 'Show'}
+              </Button>
+            </Flex>
+
+            {isFunctionExpanded && (
+              <Box bg="bg.input" borderWidth="3px" borderColor="su.black" borderRadius="2xl" p={3}>
+                <Text color="fg.input">{referenceBay.description}</Text>
+              </Box>
+            )}
+          </Box>
+        )}
+
+        {/* Abilities Section - Expandable */}
+        {referenceBay && referenceBay.abilities && referenceBay.abilities.length > 0 && (
+          <Box>
+            <Flex alignItems="center" justifyContent="space-between" mb={2}>
+              <Flex alignItems="center">
+                <StyledText variant="pseudoheader" fontSize="sm" textTransform="uppercase">
+                  Abilities
+                </StyledText>
+              </Flex>
+              <Button
+                onClick={() => setIsAbilitiesExpanded(!isAbilitiesExpanded)}
+                size="sm"
+                bg="su.black"
+                color="su.white"
+                _hover={{ bg: 'su.brick' }}
+                fontSize="xs"
+                px={3}
+                py={1}
+              >
+                {isAbilitiesExpanded ? 'Hide' : 'Show'}
+              </Button>
+            </Flex>
+
+            {isAbilitiesExpanded && (
+              <VStack gap={2} alignItems="stretch">
+                {referenceBay.abilities.map((ability, idx) => (
+                  <Box
+                    key={idx}
+                    bg="bg.input"
+                    borderWidth="3px"
+                    borderColor="su.black"
+                    borderRadius="2xl"
+                    p={3}
+                  >
+                    <Text fontWeight="bold" color="fg.input" mb={1}>
+                      {ability.name}
+                    </Text>
+                    <Text color="fg.input" fontSize="sm">
+                      {ability.description}
+                    </Text>
+                  </Box>
+                ))}
+              </VStack>
+            )}
+          </Box>
+        )}
       </VStack>
-    </Box>
+    </RoundedBox>
   )
 }

@@ -32,10 +32,9 @@ export function useCrawlerLiveSheetState(id?: string) {
   const {
     entity: crawler,
     updateEntity,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   } = useLiveSheetState<CrawlerLiveSheetState>({
     table: 'crawlers',
     initialState: { ...INITIAL_CRAWLER_STATE, id: id || '' },
@@ -175,9 +174,8 @@ export function useCrawlerLiveSheetState(id?: string) {
     handleAddCargo,
     handleRemoveCargo,
     updateCrawler,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   }
 }

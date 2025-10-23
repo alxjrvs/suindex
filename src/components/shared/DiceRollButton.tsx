@@ -18,7 +18,11 @@ export function DiceRollButton({ onClick, disabled, ariaLabel, title }: DiceRoll
       borderWidth="2px"
       borderColor="su.inputBg"
       borderRadius="lg"
-      p={1}
+      w="auto"
+      h="auto"
+      minW="0"
+      minH="0"
+      p={2}
       aria-label={ariaLabel}
       title={title}
       variant="outline"
@@ -26,9 +30,9 @@ export function DiceRollButton({ onClick, disabled, ariaLabel, title }: DiceRoll
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height="24"
+        height="20"
         viewBox="0 -960 960 960"
-        width="24"
+        width="20"
         fill="currentColor"
       >
         <path d="M240-120q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM240-600q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240 240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />

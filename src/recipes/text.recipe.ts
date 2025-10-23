@@ -8,8 +8,11 @@ export const textRecipe = defineRecipe({
       pseudoheader: {
         fontWeight: 'bold',
         color: 'su.white',
-        bgColor: 'su.black',
+        bg: 'su.black',
         px: 0.5,
+        display: 'inline-block',
+        alignSelf: 'flex-start',
+        lineHeight: 1,
       },
     },
   },

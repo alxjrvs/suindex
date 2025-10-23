@@ -70,15 +70,9 @@ export function CrawlersGrid() {
         createButton={{
           onClick: handleCreateCrawler,
           label: 'New Crawler',
-          accentColor: 'su.crawlerPink',
-          bgColor: 'su.lightPeach',
+          color: 'su.white',
+          bgColor: 'su.crawlerPink',
         }}
-        emptyState={{
-          message: "You don't have any crawlers yet. Create your first crawler to get started!",
-          buttonLabel: 'Create Crawler',
-          buttonColor: 'su.pink',
-        }}
-        loadingMessage="Loading crawlers..."
         onRetry={reload}
       />
 

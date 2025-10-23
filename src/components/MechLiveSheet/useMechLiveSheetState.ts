@@ -30,10 +30,9 @@ export function useMechLiveSheetState(id?: string) {
   const {
     entity: mech,
     updateEntity,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   } = useLiveSheetState<MechLiveSheetState>({
     table: 'mechs',
     initialState: { ...INITIAL_MECH_STATE, id: id || '' },
@@ -238,9 +237,8 @@ export function useMechLiveSheetState(id?: string) {
     handleAddCargo,
     handleRemoveCargo,
     updateMech,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   }
 }

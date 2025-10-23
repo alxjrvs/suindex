@@ -7,6 +7,8 @@ import type { System, Module } from 'salvageunion-reference'
 import { SystemDisplay } from '../SystemDisplay'
 import { ModuleDisplay } from '../ModuleDisplay'
 import { StatDisplay } from '../StatDisplay'
+import { AddStatButton } from '../shared/AddStatButton'
+import { RoundedBox } from '../shared/RoundedBox'
 
 interface SystemsModulesListProps {
   systems: string[] // Array of System IDs
@@ -61,30 +63,22 @@ export function SystemsModulesList({
   }, [modules, allModules])
 
   return (
-    <Box
+    <RoundedBox
       bg="bg.builder.mech"
-      borderWidth="builder.border"
       borderColor="border.builder"
-      borderRadius="builder.radius"
-      p="builder.padding"
-      shadow="lg"
-    >
-      <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading
-          level="h2"
-          fontSize="xl"
-          fontWeight="bold"
-          color="fg.input.label"
-          textTransform="uppercase"
-        >
-          Systems & Modules
-        </Heading>
+      matchBorder={false}
+      borderWidth="8px"
+      borderRadius="3xl"
+      padding={6}
+      title="Systems & Modules"
+      rightContent={
         <Flex gap={3}>
-          <StatDisplay label="System Slots" value={`${usedSystemSlots}/${totalSystemSlots}`} />
-          <StatDisplay label="Module Slots" value={`${usedModuleSlots}/${totalModuleSlots}`} />
+          <AddStatButton onClick={onAddClick} disabled={!canAddMore} />
+          <StatDisplay label="Sys. Slots" value={`${usedSystemSlots}/${totalSystemSlots}`} />
+          <StatDisplay label="Mod. Slots" value={`${usedModuleSlots}/${totalModuleSlots}`} />
         </Flex>
-      </Flex>
-
+      }
+    >
       <VStack gap={4} alignItems="stretch">
         {sortedSystems.length > 0 && (
           <VStack gap={3} alignItems="stretch">
@@ -175,24 +169,7 @@ export function SystemsModulesList({
             </Box>
           </VStack>
         )}
-
-        <Button
-          onClick={onAddClick}
-          disabled={!canAddMore}
-          bg="su.orange"
-          color="su.white"
-          px={6}
-          py={3}
-          borderRadius="2xl"
-          fontWeight="bold"
-          _hover={{ bg: 'su.lightOrange' }}
-          fontSize="lg"
-          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-          w="full"
-        >
-          + Add System/Module
-        </Button>
       </VStack>
-    </Box>
+    </RoundedBox>
   )
 }

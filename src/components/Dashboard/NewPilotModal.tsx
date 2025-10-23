@@ -215,7 +215,7 @@ export function NewPilotModal({ isOpen, onClose, onSuccess }: NewPilotModalProps
               borderWidth="2px"
               borderColor="su.black"
             >
-              <option value="">Select a class...</option>
+              <option value="">Select...</option>
               {classes.map((cls) => (
                 <option key={cls.id} value={cls.id}>
                   {cls.name}

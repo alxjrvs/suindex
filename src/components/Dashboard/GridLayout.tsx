@@ -2,12 +2,11 @@ import { type ReactNode } from 'react'
 import { Box, Flex, Grid, Spinner } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
-import { CreateTileButton } from './GridTile'
 
 interface CreateButtonConfig {
   onClick: () => void
   label: string
-  accentColor: string
+  color: string
   bgColor: string
 }
 
@@ -32,9 +31,20 @@ export function GridLayout<T>({
 }: GridLayoutProps<T>) {
   return (
     <Box p={8}>
-      <Box mb={8}>
+      <Flex mb={8} align="center" justify="space-between" gap={4}>
         <Heading level="h1">{title}</Heading>
-      </Box>
+        <Button
+          onClick={createButton.onClick}
+          bg={createButton.bgColor}
+          color={createButton.color}
+          fontWeight="bold"
+          py={2}
+          px={6}
+          _hover={{ opacity: 0.9 }}
+        >
+          + {createButton.label}
+        </Button>
+      </Flex>
 
       {error && (
         <Flex align="center" justify="center" minH="60vh">
@@ -59,15 +69,6 @@ export function GridLayout<T>({
       {!loading && !error && (
         <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
           {items.map(renderItem)}
-
-          <CreateTileButton
-            onClick={createButton.onClick}
-            label={createButton.label}
-            accentColor={createButton.accentColor}
-            bgColor={createButton.bgColor}
-            h="48"
-            p={6}
-          />
         </Grid>
       )}
     </Box>

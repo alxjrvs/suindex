@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import { Box, Flex, Text, Textarea, VStack } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
+import { useState, useEffect } from 'react'
+import { Flex, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -9,7 +8,8 @@ import { AbilitySelector } from './AbilitySelector'
 import { PilotInventory } from './PilotInventory'
 import { EquipmentSelector } from './EquipmentSelector'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
+import { PilotControlBar } from './PilotControlBar'
+import { Notes } from '../shared/Notes'
 import { usePilotLiveSheetState } from './usePilotLiveSheetState'
 
 interface PilotLiveSheetProps {
@@ -37,46 +37,19 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
     handleAddEquipment,
     handleRemoveEquipment,
     updatePilot,
-    save,
-    resetChanges,
     loading,
     error,
+    hasPendingChanges,
   } = usePilotLiveSheetState(id)
 
-  // Track initial state for detecting changes
-  const initialStateRef = useRef<string | null>(null)
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  // Track saved crawler ID for control bar links
   const [savedCrawlerId, setSavedCrawlerId] = useState<string | null>(null)
 
-  // Set initial state after loading completes
+  // Set saved crawler ID after loading completes
   useEffect(() => {
     if (!id || loading) return
-    if (initialStateRef.current === null) {
-      initialStateRef.current = JSON.stringify(pilot)
-      setSavedCrawlerId(pilot.crawler_id ?? null)
-    }
-  }, [id, loading, pilot])
-
-  // Detect changes
-  useEffect(() => {
-    if (!id || initialStateRef.current === null) return
-    const currentState = JSON.stringify(pilot)
-    setHasUnsavedChanges(currentState !== initialStateRef.current)
-  }, [pilot, id])
-
-  // Update initial state ref after save or reset
-  const handleSave = async () => {
-    await save()
-    initialStateRef.current = JSON.stringify(pilot)
     setSavedCrawlerId(pilot.crawler_id ?? null)
-    setHasUnsavedChanges(false)
-  }
-
-  const handleResetChanges = async () => {
-    await resetChanges()
-    initialStateRef.current = JSON.stringify(pilot)
-    setHasUnsavedChanges(false)
-  }
+  }, [id, loading, pilot.crawler_id])
 
   if (loading) {
     return (
@@ -110,62 +83,51 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
   return (
     <LiveSheetLayout>
       {id && (
-        <LiveSheetControlBar
-          backgroundColor="bg.builder.pilot"
-          entityType="pilot"
+        <PilotControlBar
           crawlerId={pilot.crawler_id}
           savedCrawlerId={savedCrawlerId}
           onCrawlerChange={(crawlerId) => updatePilot({ crawler_id: crawlerId })}
-          onSave={handleSave}
-          onResetChanges={handleResetChanges}
-          hasUnsavedChanges={hasUnsavedChanges}
+          hasPendingChanges={hasPendingChanges}
         />
       )}
-      {/* Top Section: Pilot Info and Resources */}
       <Flex gap={6}>
-        {/* Middle: Pilot Info */}
-        <Box flex="1">
-          <PilotInfoInputs
-            callsign={pilot.callsign}
-            motto={pilot.motto ?? ''}
-            mottoUsed={pilot.motto_used ?? false}
-            keepsake={pilot.keepsake ?? ''}
-            keepsakeUsed={pilot.keepsake_used ?? false}
-            background={pilot.background ?? ''}
-            backgroundUsed={pilot.background_used ?? false}
-            appearance={pilot.appearance ?? ''}
-            classId={pilot.class_id ?? null}
-            advancedClassId={pilot.advanced_class_id ?? null}
-            allClasses={allClasses}
-            availableAdvancedClasses={availableAdvancedClasses}
-            disabled={false}
-            onCallsignChange={(value) => updatePilot({ callsign: value })}
-            onMottoChange={(value) => updatePilot({ motto: value })}
-            onMottoUsedChange={(value) => updatePilot({ motto_used: value })}
-            onKeepsakeChange={(value) => updatePilot({ keepsake: value })}
-            onKeepsakeUsedChange={(value) => updatePilot({ keepsake_used: value })}
-            onBackgroundChange={(value) => updatePilot({ background: value })}
-            onBackgroundUsedChange={(value) => updatePilot({ background_used: value })}
-            onAppearanceChange={(value) => updatePilot({ appearance: value })}
-            onClassChange={handleClassChange}
-            onAdvancedClassChange={(value) => updatePilot({ advanced_class_id: value })}
-          />
-        </Box>
+        <PilotInfoInputs
+          callsign={pilot.callsign}
+          motto={pilot.motto ?? ''}
+          mottoUsed={pilot.motto_used ?? false}
+          keepsake={pilot.keepsake ?? ''}
+          keepsakeUsed={pilot.keepsake_used ?? false}
+          background={pilot.background ?? ''}
+          backgroundUsed={pilot.background_used ?? false}
+          appearance={pilot.appearance ?? ''}
+          classId={pilot.class_id ?? null}
+          advancedClassId={pilot.advanced_class_id ?? null}
+          allClasses={allClasses}
+          availableAdvancedClasses={availableAdvancedClasses}
+          disabled={false}
+          onCallsignChange={(value) => updatePilot({ callsign: value })}
+          onMottoChange={(value) => updatePilot({ motto: value })}
+          onMottoUsedChange={(value) => updatePilot({ motto_used: value })}
+          onKeepsakeChange={(value) => updatePilot({ keepsake: value })}
+          onKeepsakeUsedChange={(value) => updatePilot({ keepsake_used: value })}
+          onBackgroundChange={(value) => updatePilot({ background: value })}
+          onBackgroundUsedChange={(value) => updatePilot({ background_used: value })}
+          onAppearanceChange={(value) => updatePilot({ appearance: value })}
+          onClassChange={handleClassChange}
+          onAdvancedClassChange={(value) => updatePilot({ advanced_class_id: value })}
+        />
 
-        {/* Right: Resource Steppers */}
-        <Box w="40">
-          <PilotResourceSteppers
-            maxHP={pilot.max_hp ?? 10}
-            currentDamage={pilot.current_damage ?? 0}
-            maxAP={pilot.max_ap ?? 5}
-            currentAP={pilot.current_ap ?? 5}
-            currentTP={pilot.current_tp ?? 0}
-            onDamageChange={(value) => updatePilot({ current_damage: value })}
-            onAPChange={(value) => updatePilot({ current_ap: value })}
-            onTPChange={(value) => updatePilot({ current_tp: value })}
-            disabled={!selectedClass}
-          />
-        </Box>
+        <PilotResourceSteppers
+          maxHP={pilot.max_hp ?? 10}
+          currentDamage={pilot.current_damage ?? 0}
+          maxAP={pilot.max_ap ?? 5}
+          currentAP={pilot.current_ap ?? 5}
+          currentTP={pilot.current_tp ?? 0}
+          onDamageChange={(value) => updatePilot({ current_damage: value })}
+          onAPChange={(value) => updatePilot({ current_ap: value })}
+          onTPChange={(value) => updatePilot({ current_tp: value })}
+          disabled={!selectedClass}
+        />
       </Flex>
 
       {/* Abilities Section */}
@@ -192,34 +154,13 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
       />
 
       {/* Notes Section */}
-      <Box
-        bg="bg.builder.pilot"
-        borderWidth="builder.border"
-        borderColor="border.builder.pilot"
-        borderRadius="builder.radius"
-        p={6}
-        shadow="lg"
-      >
-        <Heading level="h2" textTransform="uppercase" mb={4}>
-          Notes
-        </Heading>
-        <Textarea
-          value={pilot.notes ?? ''}
-          onChange={(e) => updatePilot({ notes: e.target.value })}
-          disabled={false}
-          placeholder="Add notes about your pilot..."
-          w="full"
-          h={96}
-          p={4}
-          borderWidth={0}
-          borderRadius="2xl"
-          bg="bg.input"
-          color="fg.input"
-          fontWeight="semibold"
-          resize="none"
-          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-        />
-      </Box>
+      <Notes
+        notes={pilot.notes ?? ''}
+        onChange={(value) => updatePilot({ notes: value })}
+        backgroundColor="bg.builder.pilot"
+        borderWidth={8}
+        placeholder="Add notes about your pilot..."
+      />
 
       {/* Ability Selector Modal */}
       <AbilitySelector

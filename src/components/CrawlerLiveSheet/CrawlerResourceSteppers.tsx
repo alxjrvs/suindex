@@ -1,6 +1,7 @@
 import { Flex, Grid } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
 import { StatDisplay } from '../StatDisplay'
+import { RoundedBox } from '../shared/RoundedBox'
 
 interface CrawlerResourceSteppersProps {
   currentDamage: number
@@ -32,39 +33,46 @@ export function CrawlerResourceSteppers({
   const currentSP = maxSP - currentDamage
 
   return (
-    <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} p={4}>
-      <Flex justifyContent="start" alignItems="end">
-        <NumericStepper
-          label="SP"
-          value={currentSP}
-          onChange={(newSP) => onDamageChange(maxSP - newSP)}
-          max={maxSP}
-          min={0}
-        />
-      </Flex>
-      <Flex justifyContent="start" alignItems="end">
-        <NumericStepper label="TECH LVL" value={techLevel} onChange={onTechLevelChange} min={1} />
-      </Flex>
-      <Flex justifyContent="start" alignItems="end">
-        <NumericStepper
-          label="UPGRADE"
-          value={upgrade}
-          onChange={onUpgradeChange}
-          max={maxUpgrade}
-          step={5}
-        />
-      </Flex>
-      <Flex justifyContent="start" alignItems="end">
-        <NumericStepper
-          label="TL1 SCRAP"
-          value={currentScrap}
-          onChange={onCurrentScrapChange}
-          min={0}
-        />
-      </Flex>
-      <Flex justifyContent="start" alignItems="end">
-        <StatDisplay label="UPKEEP" value={upkeep} />
-      </Flex>
-    </Grid>
+    <RoundedBox
+      bg="bg.builder.crawler"
+      borderColor="border.builder.crawler"
+      matchBorder={false}
+      borderWidth="4px"
+    >
+      <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
+        <Flex justifyContent="start" alignItems="end">
+          <NumericStepper
+            label="SP"
+            value={currentSP}
+            onChange={(newSP) => onDamageChange(maxSP - newSP)}
+            max={maxSP}
+            min={0}
+          />
+        </Flex>
+        <Flex justifyContent="start" alignItems="end">
+          <NumericStepper label="TECH LVL" value={techLevel} onChange={onTechLevelChange} min={1} />
+        </Flex>
+        <Flex justifyContent="start" alignItems="end">
+          <NumericStepper
+            label="UPGRADE"
+            value={upgrade}
+            onChange={onUpgradeChange}
+            max={maxUpgrade}
+            step={5}
+          />
+        </Flex>
+        <Flex justifyContent="start" alignItems="end">
+          <NumericStepper
+            label="TL1 SCRAP"
+            value={currentScrap}
+            onChange={onCurrentScrapChange}
+            min={0}
+          />
+        </Flex>
+        <Flex justifyContent="start" alignItems="end">
+          <StatDisplay label="UPKEEP" value={upkeep} />
+        </Flex>
+      </Grid>
+    </RoundedBox>
   )
 }

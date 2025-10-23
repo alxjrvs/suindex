@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
-import { Box, Text } from '@chakra-ui/react'
-import { NativeSelectRoot, NativeSelectField } from '@chakra-ui/react'
+import { FormSelect } from '../shared/FormSelect'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisSelectorProps {
@@ -32,42 +31,17 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
   }, [allChassis])
 
   return (
-    <Box>
-      <Text
-        as="label"
-        display="block"
-        fontSize="sm"
-        fontWeight="bold"
-        color="fg.input.label"
-        mb={2}
-        textTransform="uppercase"
-      >
-        Chassis
-      </Text>
-      <NativeSelectRoot>
-        <NativeSelectField
-          value={chassisId || ''}
-          onChange={(e) => onChange(e.target.value)}
-          w="full"
-          p={3}
-          borderWidth={0}
-          borderRadius="2xl"
-          bg="bg.input"
-          color="fg.input"
-          fontWeight="semibold"
-        >
-          <option value="">Select a chassis...</option>
-          {groupedChassis.map(({ techLevel, chassis }) => (
-            <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>
-              {chassis.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </optgroup>
+    <FormSelect label="Chassis" value={chassisId || ''} onChange={onChange}>
+      <option value="">Select a chassis...</option>
+      {groupedChassis.map(({ techLevel, chassis }) => (
+        <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>
+          {chassis.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
           ))}
-        </NativeSelectField>
-      </NativeSelectRoot>
-    </Box>
+        </optgroup>
+      ))}
+    </FormSelect>
   )
 }

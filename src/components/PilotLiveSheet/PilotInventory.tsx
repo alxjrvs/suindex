@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { SalvageUnionReference, type Equipment } from 'salvageunion-reference'
 import { EquipmentDisplay } from '../EquipmentDisplay'
 import { StatDisplay } from '../StatDisplay'
-import { Heading } from '../base/Heading'
+import { AddStatButton } from '../shared/AddStatButton'
+import { RoundedBox } from '../shared/RoundedBox'
 
 interface PilotInventoryProps {
   equipment: string[] // Array of Equipment IDs
@@ -28,61 +29,16 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
   }, [equipment, allEquipment])
 
   return (
-    <Box
+    <RoundedBox
       bg="su.orange"
-      borderWidth="8px"
-      borderColor="su.orange"
-      borderRadius="3xl"
-      p={6}
-      shadow="lg"
-    >
-      {/* Header with Add Button and Equipment Count */}
-      <Flex alignItems="center" justifyContent="space-between" mb={4}>
-        <Heading level="h2" textTransform="uppercase">
-          Inventory
-        </Heading>
+      title="Inventory"
+      rightContent={
         <Flex alignItems="center" gap={4}>
-          <Flex flexDirection="column" alignItems="center">
-            <Text
-              as="label"
-              fontSize="xs"
-              fontWeight="bold"
-              color="su.inputBg"
-              mb={1}
-              display="block"
-            >
-              Add
-            </Text>
-            <Button
-              onClick={onAddClick}
-              disabled={isFull}
-              w="16"
-              h="16"
-              borderRadius="2xl"
-              bg="su.lightOrange"
-              color="su.white"
-              fontWeight="bold"
-              _hover={{ bg: 'su.brick' }}
-              borderWidth="2px"
-              borderStyle="dashed"
-              borderColor="su.inputBg"
-              _disabled={{
-                opacity: 0.5,
-                cursor: 'not-allowed',
-                _hover: { bg: 'su.lightOrange' },
-              }}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              fontSize="2xl"
-            >
-              +
-            </Button>
-          </Flex>
+          <AddStatButton onClick={onAddClick} disabled={isFull} />
           <StatDisplay label="Equipment" value={`${equipment.length}/${MAX_SLOTS}`} />
         </Flex>
-      </Flex>
-
+      }
+    >
       <Box css={{ columns: '2', gap: '0.75rem' }}>
         {equipmentItems.map((item) => (
           <Box
@@ -116,6 +72,6 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
           </Box>
         ))}
       </Box>
-    </Box>
+    </RoundedBox>
   )
 }

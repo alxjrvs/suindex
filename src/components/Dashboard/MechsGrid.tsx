@@ -63,8 +63,8 @@ export function MechsGrid() {
         createButton={{
           onClick: handleCreateMech,
           label: 'New Mech',
-          accentColor: 'su.green',
-          bgColor: 'su.lightBlue',
+          bgColor: 'su.green',
+          color: 'su.white',
         }}
         onRetry={reload}
       />

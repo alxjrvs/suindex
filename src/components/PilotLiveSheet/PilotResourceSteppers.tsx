@@ -1,5 +1,6 @@
-import { Box, VStack } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
+import { RoundedBox } from '../shared/RoundedBox'
 
 interface PilotResourceSteppersProps {
   maxHP: number
@@ -27,15 +28,8 @@ export function PilotResourceSteppers({
   const currentHP = maxHP - currentDamage
 
   return (
-    <Box
-      bg="bg.builder.pilot"
-      borderWidth="builder.border"
-      borderColor="border.builder.pilot"
-      borderRadius="3xl"
-      p={6}
-      shadow="lg"
-    >
-      <VStack alignItems="center" gap={2}>
+    <RoundedBox bg="bg.builder.pilot" borderColor="border.builder.pilot" matchBorder={false}>
+      <VStack alignItems="center">
         <NumericStepper
           label="HP"
           value={currentHP}
@@ -53,6 +47,6 @@ export function PilotResourceSteppers({
         />
         <NumericStepper label="TP" value={currentTP} onChange={onTPChange} disabled={disabled} />
       </VStack>
-    </Box>
+    </RoundedBox>
   )
 }

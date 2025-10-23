@@ -27,7 +27,20 @@ export default function Modal({
   return (
     <DialogRoot open={isOpen} onOpenChange={(e) => !e.open && onClose()} size="xl">
       <DialogBackdrop />
-      <DialogContent maxW="4xl" maxH="90vh" bg={backgroundColor} borderRadius="lg">
+      <DialogContent
+        maxW="4xl"
+        maxH="90vh"
+        bg={backgroundColor}
+        borderWidth="8px"
+        borderColor={backgroundColor}
+        borderRadius="24px"
+        shadow="lg"
+        position="fixed"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+        zIndex={1400}
+      >
         <DialogHeader
           bg={backgroundColor}
           borderBottomWidth="4px"
