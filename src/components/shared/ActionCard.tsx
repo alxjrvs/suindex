@@ -1,8 +1,10 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
-import { ItemDetailsDisplay } from './ItemDetailsDisplay'
+import { DataList } from './DataList'
 import type { ReactNode } from 'react'
 import type { Action } from '../types'
+import type { DataValue } from '../../types/common'
+import { formatTraits } from '../../utils/displayUtils'
 
 interface ActionCardProps {
   action: Action
@@ -22,14 +24,29 @@ export function ActionCard({
       ? action.description.replaceAll('•', '\n•')
       : undefined
 
+  // Build details array for DataList
+  const buildDetailsArray = (): DataValue[] => {
+    const details: DataValue[] = []
+
+    if ('damage' in action && action.damage) {
+      details.push({ value: `${action.damage.amount}${action.damage.type}` })
+    }
+    if ('range' in action && action.range) {
+      details.push({ value: `Range: ${action.range}` })
+    }
+    if ('actionType' in action && action.actionType) {
+      details.push({ value: action.actionType })
+    }
+    if ('traits' in action && action.traits && action.traits.length > 0) {
+      const formattedTraits = formatTraits(action.traits).join(', ')
+      details.push({ value: formattedTraits })
+    }
+
+    return details
+  }
+
   const itemDetailsElement: ReactNode = (
-    <ItemDetailsDisplay
-      damage={'damage' in action ? action.damage : undefined}
-      range={'range' in action ? action.range : undefined}
-      actionType={'actionType' in action ? action.actionType : undefined}
-      traits={'traits' in action ? action.traits : undefined}
-      color={headerTextColor}
-    />
+    <DataList values={buildDetailsArray()} textColor={headerTextColor} />
   )
 
   const descriptionElement: ReactNode = description ? (
@@ -80,11 +97,22 @@ export function ActionCard({
                 </Text>
               )}
             </Flex>
-            <ItemDetailsDisplay
-              damage={'damage' in subAbility ? subAbility.damage : undefined}
-              range={'range' in subAbility ? subAbility.range : undefined}
-              actionType={undefined}
-              traits={'traits' in subAbility ? subAbility.traits : undefined}
+            <DataList
+              values={(() => {
+                const details: DataValue[] = []
+                if ('damage' in subAbility && subAbility.damage) {
+                  details.push({ value: `${subAbility.damage.amount}${subAbility.damage.type}` })
+                }
+                if ('range' in subAbility && subAbility.range) {
+                  details.push({ value: `Range: ${subAbility.range}` })
+                }
+                if ('traits' in subAbility && subAbility.traits && subAbility.traits.length > 0) {
+                  const formattedTraits = formatTraits(subAbility.traits).join(', ')
+                  details.push({ value: formattedTraits })
+                }
+                return details
+              })()}
+              textColor="su.black"
             />
             {subAbility.description && (
               <Text fontSize="sm" color="su.black" mt={1}>
