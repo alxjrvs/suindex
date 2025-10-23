@@ -2,13 +2,13 @@ import { Flex, Text, Box } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
 import type { DataValue } from '../../types/common'
 
-interface DataListProps {
+interface DetailsListProps {
   values: DataValue[]
   textColor?: string
   invert?: boolean
 }
 
-export function DataList({ values, textColor = 'su.black', invert = false }: DataListProps) {
+export function DetailsList({ values, textColor = 'su.black', invert = false }: DetailsListProps) {
   if (values.length === 0) return null
 
   return (

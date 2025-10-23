@@ -1,6 +1,6 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
-import { DataList } from './DataList'
+import { DetailsList } from './DetailsList'
 import type { ReactNode } from 'react'
 import type { Action } from '../types'
 import type { DataValue } from '../../types/common'
@@ -24,7 +24,7 @@ export function ActionCard({
       ? action.description.replaceAll('•', '\n•')
       : undefined
 
-  // Build details array for DataList
+  // Build details array for DetailsList
   const buildDetailsArray = (): DataValue[] => {
     const details: DataValue[] = []
 
@@ -46,7 +46,7 @@ export function ActionCard({
   }
 
   const itemDetailsElement: ReactNode = (
-    <DataList values={buildDetailsArray()} textColor={headerTextColor} />
+    <DetailsList values={buildDetailsArray()} textColor={headerTextColor} />
   )
 
   const descriptionElement: ReactNode = description ? (
@@ -97,7 +97,7 @@ export function ActionCard({
                 </Text>
               )}
             </Flex>
-            <DataList
+            <DetailsList
               values={(() => {
                 const details: DataValue[] = []
                 if ('damage' in subAbility && subAbility.damage) {

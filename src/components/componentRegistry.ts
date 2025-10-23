@@ -46,7 +46,7 @@ const SquadDisplay = lazy(() => import('./SquadDisplay').then((m) => ({ default:
 const SystemDisplay = lazy(() =>
   import('./SystemDisplay').then((m) => ({ default: m.SystemDisplay }))
 )
-const TableDisplay = lazy(() => import('./RollTableDisplay').then((m) => ({ default: m.RollTableDisplay })))
+const RollTableDisplay = lazy(() => import('./RollTableDisplay').then((m) => ({ default: m.RollTableDisplay })))
 const TraitDisplay = lazy(() => import('./TraitDisplay').then((m) => ({ default: m.TraitDisplay })))
 const VehicleDisplay = lazy(() =>
   import('./VehicleDisplay').then((m) => ({ default: m.VehicleDisplay }))
@@ -70,7 +70,7 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   npcs: NPCDisplay as unknown as DisplayComponentType,
   squads: SquadDisplay as unknown as DisplayComponentType,
   systems: SystemDisplay as unknown as DisplayComponentType,
-  tables: TableDisplay as unknown as DisplayComponentType,
+  'roll-tables': RollTableDisplay as unknown as DisplayComponentType,
   traits: TraitDisplay as unknown as DisplayComponentType,
   vehicles: VehicleDisplay as unknown as DisplayComponentType,
 }

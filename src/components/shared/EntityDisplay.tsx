@@ -1,13 +1,13 @@
 import { useState, type ReactNode } from 'react'
 import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
-import { DataList } from './DataList'
+import { DetailsList } from './DetailsList'
 import { StatDisplay } from '../StatDisplay'
 import { StatList } from './StatList'
 import { ActionCard } from './ActionCard'
 import { PageReferenceDisplay } from './PageReferenceDisplay'
 import { StatBonusDisplay } from './StatBonusDisplay'
-import { RollTableDisplay } from './RollTableDisplay'
+import { RollTable } from './RollTable'
 import { techLevelColors } from '../../theme'
 import {
   type EntityData,
@@ -156,7 +156,7 @@ export function EntityDisplay({
                 )}
                 {details && details.length > 0 && (
                   <Box>
-                    <DataList textColor="su.white" values={details} />
+                    <DetailsList textColor="su.white" values={details} />
                   </Box>
                 )}
               </VStack>
@@ -268,7 +268,7 @@ export function EntityDisplay({
 
             {/* Roll Table (for Systems/Modules/Equipment) */}
             {sections.showRollTable && 'table' in data && data.table && (
-              <RollTableDisplay table={data.table} showCommand />
+              <RollTable table={data.table} showCommand />
             )}
 
             {/* Systems (for Vehicles and Drones) */}

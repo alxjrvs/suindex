@@ -4,7 +4,7 @@ import { Heading } from './base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { Class, Ability } from 'salvageunion-reference'
 import { EntityDisplay } from './shared/EntityDisplay'
-import { DataList } from './shared/DataList'
+import { DetailsList } from './shared/DetailsList'
 import type { DataValue } from '../types/common'
 
 interface ClassDisplayProps {
@@ -117,7 +117,7 @@ function AbilityItem({ ability }: { ability: Ability }) {
           <Heading level="h5">{ability.name}</Heading>
           {details.length > 0 && (
             <Box mt={1}>
-              <DataList values={details} textColor="su.brick" />
+              <DetailsList values={details} textColor="su.brick" />
             </Box>
           )}
         </Box>

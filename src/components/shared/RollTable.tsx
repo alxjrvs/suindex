@@ -40,7 +40,7 @@ function digestRollTable(table: Table): DigestedRollTable[] {
   })
 }
 
-export function RollTableDisplay({ table, showCommand = false }: RollTableDisplayProps) {
+export function RollTable({ table, showCommand = false }: RollTableDisplayProps) {
   const digestedTable = digestRollTable(table)
 
   return (
