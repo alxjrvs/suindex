@@ -22,4 +22,3 @@ export function AddStatButton({ onClick, disabled = false, label = 'Add' }: AddS
     />
   )
 }
-

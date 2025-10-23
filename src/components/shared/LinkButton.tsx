@@ -26,4 +26,3 @@ export function LinkButton({ to, label }: LinkButtonProps) {
     </Button>
   )
 }
-
