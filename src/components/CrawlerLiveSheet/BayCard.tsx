@@ -31,19 +31,33 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
       padding={4}
       title={bay.name}
     >
-      <VStack justifyContent="flex-start" alignItems="space-between">
+      <VStack justifyContent="flex-start" alignItems="space-between" w="full">
         <SheetInput
-          value={bay.operator}
-          onChange={(value) => onUpdate({ operator: value })}
-          placeholder={`Enter ${bay.operatorPosition} name...`}
-          suffixText={`the ${bay.operatorPosition}`}
+          value={bay.npc.name}
+          onChange={(value) =>
+            onUpdate({
+              npc: {
+                ...bay.npc,
+                name: value,
+              },
+            })
+          }
+          placeholder={`Enter ${referenceBay?.npc.position} name...`}
+          suffixText={`the ${referenceBay?.npc.position}`}
         />
 
         <SheetTextarea
-          label="Description"
-          value={bay.description}
-          onChange={(value) => onUpdate({ description: value })}
-          placeholder="Enter bay description..."
+          label="Notes"
+          value={bay.npc.notes || ''}
+          onChange={(value) =>
+            onUpdate({
+              npc: {
+                ...bay.npc,
+                notes: value,
+              },
+            })
+          }
+          placeholder="Enter operator notes..."
           height="20"
         />
 

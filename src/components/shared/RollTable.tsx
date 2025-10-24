@@ -1,4 +1,6 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { useState } from 'react'
+import { Box, Flex, IconButton, Text } from '@chakra-ui/react'
+import { rollTable } from '@randsum/salvageunion'
 import type { Ability, CrawlerBay, Equipment, RollTable, System } from 'salvageunion-reference'
 
 type Table =
@@ -18,6 +20,7 @@ interface DigestedRollTable {
 interface RollTableDisplayProps {
   table: Table
   showCommand?: boolean
+  tableName?: string
 }
 
 function digestRollTable(table: Table): DigestedRollTable[] {
@@ -44,32 +47,87 @@ function digestRollTable(table: Table): DigestedRollTable[] {
   })
 }
 
-export function RollTable({ table, showCommand = false }: RollTableDisplayProps) {
+export function RollTable({ table, showCommand = false, tableName }: RollTableDisplayProps) {
   const digestedTable = digestRollTable(table)
+  const [highlightedKey, setHighlightedKey] = useState<string | null>(null)
+
+  const handleRoll = () => {
+    if (!tableName) return
+
+    try {
+      const {
+        result: { key },
+      } = rollTable(tableName)
+      const matchingEntry = digestedTable.find((entry) => entry.key === key)
+
+      if (matchingEntry) {
+        setHighlightedKey(matchingEntry.key)
+      }
+    } catch (error) {
+      console.error('Failed to roll table:', error)
+    }
+  }
+
+  const handleClearHighlight = () => {
+    setHighlightedKey(null)
+  }
 
   return (
     <Box>
       {showCommand && (
-        <Box
+        <Flex
           bg="su.black"
           color="su.white"
           fontWeight="bold"
           textTransform="uppercase"
-          textAlign="center"
-          alignSelf="center"
+          alignItems="center"
+          justifyContent="center"
+          gap={2}
           p={2}
           mb={2}
         >
-          ROLL THE DIE:
-        </Box>
+          <Text>ROLL THE DIE:</Text>
+          {tableName && (
+            <IconButton
+              onClick={handleRoll}
+              color="su.white"
+              bg="transparent"
+              _hover={{ bg: 'su.brick' }}
+              borderRadius="md"
+              size="sm"
+              aria-label="Roll on this table"
+              title="Roll on this table"
+              variant="ghost"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="20"
+                viewBox="0 -960 960 960"
+                width="20"
+                fill="currentColor"
+              >
+                <path d="M240-120q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM240-600q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240 240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />
+              </svg>
+            </IconButton>
+          )}
+        </Flex>
       )}
       {digestedTable.map(({ name, description, key }, index) => {
         if (key === 'type') return null
         const showTitle = name !== description
-        const bgColor = index % 2 === 0 ? 'su.lightOrange' : 'su.white'
+        const isHighlighted = highlightedKey === key
+        const bgColor = isHighlighted ? 'su.green' : index % 2 === 0 ? 'su.lightOrange' : 'su.white'
 
         return (
-          <Flex key={key + name + index} flexDirection="row" flexWrap="wrap" bg={bgColor}>
+          <Flex
+            key={key + name + index}
+            flexDirection="row"
+            flexWrap="wrap"
+            bg={bgColor}
+            cursor={isHighlighted ? 'pointer' : 'default'}
+            onClick={isHighlighted ? handleClearHighlight : undefined}
+            position="relative"
+          >
             <Flex flex="1" alignItems="center" justifyContent="center" alignSelf="center">
               <Text fontSize="xl" fontWeight="bold" color="su.black" textAlign="center">
                 {key}

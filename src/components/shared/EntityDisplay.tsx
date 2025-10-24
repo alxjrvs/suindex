@@ -278,7 +278,11 @@ export function EntityDisplay({
 
             {/* Roll Table (for Systems/Modules/Equipment) */}
             {sections.showRollTable && 'table' in data && data.table && (
-              <RollTable table={data.table} showCommand />
+              <RollTable
+                table={data.table}
+                showCommand
+                tableName={'name' in data ? String(data.name) : undefined}
+              />
             )}
 
             {/* Systems (for Vehicles and Drones) */}

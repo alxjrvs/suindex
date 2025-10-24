@@ -57,12 +57,21 @@ describe('CrawlerLiveSheet', () => {
       source: 'Test Source',
       page: 1,
       description: 'Living space for crew',
-      operatorPosition: 'Crew',
+      npc: {
+        id: 'crew-npc',
+        name: 'Crew Member',
+        type: 'npc',
+        source: 'Test Source',
+        page: 1,
+        description: 'A crew member',
+        hitPoints: 10,
+        abilities: [],
+        notes: '',
+        choices: [],
+      },
       damagedEffect: '',
-      operatorHitPoints: 10,
       techLevelEffects: [],
       abilities: [],
-      notes: '',
     } as CrawlerBay,
     {
       id: 'engine-room',
@@ -70,12 +79,21 @@ describe('CrawlerLiveSheet', () => {
       source: 'Test Source',
       page: 2,
       description: 'Powers the crawler',
-      operatorPosition: 'Engineer',
+      npc: {
+        id: 'engineer-npc',
+        name: 'Engineer',
+        type: 'npc',
+        source: 'Test Source',
+        page: 2,
+        description: 'An engineer',
+        hitPoints: 10,
+        abilities: [],
+        notes: '',
+        choices: [],
+      },
       damagedEffect: '',
-      operatorHitPoints: 10,
       techLevelEffects: [],
       abilities: [],
-      notes: '',
     } as CrawlerBay,
     {
       id: 'storage-bay',
@@ -83,12 +101,21 @@ describe('CrawlerLiveSheet', () => {
       source: 'Test Source',
       page: 3,
       description: 'Stores cargo and supplies',
-      operatorPosition: 'Quartermaster',
+      npc: {
+        id: 'quartermaster-npc',
+        name: 'Quartermaster',
+        type: 'npc',
+        source: 'Test Source',
+        page: 3,
+        description: 'A quartermaster',
+        hitPoints: 10,
+        abilities: [],
+        notes: '',
+        choices: [],
+      },
       damagedEffect: '',
-      operatorHitPoints: 10,
       techLevelEffects: [],
       abilities: [],
-      notes: '',
     } as CrawlerBay,
   ]
 
@@ -355,8 +382,8 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
-      // Find the Crew Quarters bay operator input (placeholder is "Enter Crew name...")
-      const operatorInput = screen.getByPlaceholderText(/enter crew name/i)
+      // Find the Crew Quarters bay operator input (placeholder is "Enter Crew Member name...")
+      const operatorInput = screen.getByPlaceholderText(/enter crew member name/i)
 
       await user.type(operatorInput, 'Captain Smith')
       expect(operatorInput).toHaveValue('Captain Smith')
@@ -366,12 +393,12 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
-      // Find bay description inputs (placeholder is "Enter bay description...")
-      const bayDescriptions = screen.getAllByPlaceholderText(/enter bay description/i)
-      const firstBayDescription = bayDescriptions[0]
+      // Find bay notes inputs (placeholder is "Enter operator notes...")
+      const bayNotes = screen.getAllByPlaceholderText(/enter operator notes/i)
+      const firstBayNotes = bayNotes[0]
 
-      await user.type(firstBayDescription, 'Comfortable quarters')
-      expect(firstBayDescription).toHaveValue('Comfortable quarters')
+      await user.type(firstBayNotes, 'Comfortable quarters')
+      expect(firstBayNotes).toHaveValue('Comfortable quarters')
     })
   })
 

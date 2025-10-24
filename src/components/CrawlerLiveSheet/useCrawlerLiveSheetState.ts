@@ -21,6 +21,12 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
   storage_bay_description: null,
   cargo: [],
   notes: null,
+  npc: {
+    name: '',
+    notes: '',
+    hitPoints: 0,
+    damage: 0,
+  },
 }
 
 export function useCrawlerLiveSheetState(id?: string) {
@@ -56,8 +62,12 @@ export function useCrawlerLiveSheetState(id?: string) {
         id: `${bay.id}-${Date.now()}-${Math.random()}`,
         bayId: bay.id,
         name: bay.name,
-        operator: '',
-        operatorPosition: bay.operatorPosition || '',
+        npc: {
+          name: '',
+          notes: '',
+          hitPoints: bay.npc.hitPoints,
+          damage: 0,
+        },
         description: '',
       }))
       updateCrawler({ bays: initialBays })
@@ -117,10 +127,20 @@ export function useCrawlerLiveSheetState(id?: string) {
             id: `${bay.id}-${Date.now()}-${Math.random()}`,
             bayId: bay.id,
             name: bay.name,
-            operator: '',
-            operatorPosition: bay.operatorPosition || '',
+            npc: {
+              name: '',
+              notes: '',
+              hitPoints: bay.npc.hitPoints,
+              damage: 0,
+            },
             description: '',
           })),
+          npc: {
+            name: '',
+            notes: '',
+            hitPoints: selectedCrawlerType?.npc.hitPoints || 0,
+            damage: 0,
+          },
           storage_bay_operator: null,
           storage_bay_description: null,
           cargo: [],
