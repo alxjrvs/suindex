@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Box, Flex, Grid } from '@chakra-ui/react'
-import { FormInput } from '../shared/FormInput'
-import { FormSelect } from '../shared/FormSelect'
+import { SheetInput } from '../shared/SheetInput'
+import { SheetSelect } from '../shared/SheetSelect'
 import { RoundedBox } from '../shared/RoundedBox'
 import { rollTable } from '@randsum/salvageunion'
 import type { Class } from 'salvageunion-reference'
@@ -95,7 +95,7 @@ export function PilotInfoInputs({
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
         {/* Callsign */}
-        <FormInput
+        <SheetInput
           label="Callsign"
           value={callsign}
           onChange={onCallsignChange}
@@ -104,7 +104,7 @@ export function PilotInfoInputs({
         />
 
         {/* Motto */}
-        <FormInput
+        <SheetInput
           label="Motto"
           value={motto}
           onChange={onMottoChange}
@@ -121,7 +121,7 @@ export function PilotInfoInputs({
         <Flex gap={4} h="full">
           {/* Class */}
           <Box flex="1" h="full">
-            <FormSelect
+            <SheetSelect
               label="Class"
               value={classId}
               onChange={onClassChange}
@@ -133,12 +133,12 @@ export function PilotInfoInputs({
                   {cls.name}
                 </option>
               ))}
-            </FormSelect>
+            </SheetSelect>
           </Box>
 
           {/* Advanced Class */}
           <Box flex="1" h="full">
-            <FormSelect
+            <SheetSelect
               label="Advanced"
               value={advancedClassId}
               onChange={onAdvancedClassChange}
@@ -150,12 +150,12 @@ export function PilotInfoInputs({
                   {option.name}
                 </option>
               ))}
-            </FormSelect>
+            </SheetSelect>
           </Box>
         </Flex>
 
         {/* Keepsake */}
-        <FormInput
+        <SheetInput
           label="Keepsake"
           value={keepsake}
           onChange={onKeepsakeChange}
@@ -169,7 +169,7 @@ export function PilotInfoInputs({
         />
 
         {/* Appearance */}
-        <FormInput
+        <SheetInput
           label="Appearance"
           value={appearance}
           onChange={onAppearanceChange}
@@ -181,7 +181,7 @@ export function PilotInfoInputs({
         />
 
         {/* Background */}
-        <FormInput
+        <SheetInput
           label="Background"
           value={background}
           onChange={onBackgroundChange}

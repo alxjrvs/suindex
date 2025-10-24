@@ -1,5 +1,5 @@
 import { rollTable } from '@randsum/salvageunion'
-import { FormInput } from '../shared/FormInput'
+import { SheetInput } from '../shared/SheetInput'
 
 export function QuirkInput({
   quirk,
@@ -17,7 +17,7 @@ export function QuirkInput({
   }
 
   return (
-    <FormInput
+    <SheetInput
       label="Quirk"
       value={quirk}
       onChange={onQuirkChange}

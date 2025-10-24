@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import { FormSelect } from '../shared/FormSelect'
+import { SheetSelect } from '../shared/SheetSelect'
 import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { LinkButton } from '../shared/LinkButton'
 
@@ -61,7 +61,7 @@ export function CrawlerControlBar({
       backgroundColor="bg.builder.crawler"
       hasPendingChanges={hasPendingChanges}
       leftContent={
-        <FormSelect
+        <SheetSelect
           label="Game"
           value={gameId ?? null}
           loading={loadingGames}

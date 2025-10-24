@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { FormSelect } from '../shared/FormSelect'
+import { SheetSelect } from '../shared/SheetSelect'
 import type { Chassis } from 'salvageunion-reference'
 
 interface ChassisSelectorProps {
@@ -31,7 +31,7 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
   }, [allChassis])
 
   return (
-    <FormSelect label="Chassis" value={chassisId} onChange={onChange}>
+    <SheetSelect label="Chassis" value={chassisId} onChange={onChange}>
       <option value="">Select a chassis...</option>
       {groupedChassis.map(({ techLevel, chassis }) => (
         <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>
@@ -42,6 +42,6 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
           ))}
         </optgroup>
       ))}
-    </FormSelect>
+    </SheetSelect>
   )
 }

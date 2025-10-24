@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { VStack, Flex, Badge, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { FormInput } from '../shared/FormInput'
+import { SheetInput } from '../shared/SheetInput'
 import type { Chassis } from 'salvageunion-reference'
 
 interface PatternSelectorProps {
@@ -21,7 +21,7 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
   }, [selectedChassis, pattern])
 
   return (
-    <FormInput
+    <SheetInput
       label="Pattern"
       value={pattern}
       onChange={(value) => {
@@ -90,6 +90,6 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
           ))}
         </VStack>
       )}
-    </FormInput>
+    </SheetInput>
   )
 }

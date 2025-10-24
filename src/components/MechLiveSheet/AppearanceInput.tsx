@@ -1,5 +1,5 @@
 import { rollTable } from '@randsum/salvageunion'
-import { FormInput } from '../shared/FormInput'
+import { SheetInput } from '../shared/SheetInput'
 
 export function AppearanceInput({
   appearance,
@@ -17,7 +17,7 @@ export function AppearanceInput({
   }
 
   return (
-    <FormInput
+    <SheetInput
       label="Appearance"
       value={appearance}
       onChange={onAppearanceChange}

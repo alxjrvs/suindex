@@ -3,7 +3,7 @@ import { Checkbox as ChakraCheckbox } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import type { ReactNode } from 'react'
 
-interface FormInputProps {
+interface SheetInputProps {
   label?: string
   value: string
   onChange: (value: string) => void
@@ -26,7 +26,7 @@ interface FormInputProps {
   children?: ReactNode
 }
 
-export function FormInput({
+export function SheetInput({
   label,
   value,
   onChange,
@@ -42,7 +42,7 @@ export function FormInput({
   onBlur,
   suffixText,
   children,
-}: FormInputProps) {
+}: SheetInputProps) {
   const hasToggle = toggleChecked !== undefined && onToggleChange !== undefined
   const hasDiceRoll = onDiceRoll !== undefined
   const hasSuffix = suffixText !== undefined

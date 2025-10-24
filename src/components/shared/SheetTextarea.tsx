@@ -1,7 +1,7 @@
 import { Flex, Textarea } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 
-interface FormTextareaProps {
+interface SheetTextareaProps {
   label?: string
   value: string
   onChange: (value: string) => void
@@ -11,7 +11,7 @@ interface FormTextareaProps {
   rows?: number
 }
 
-export function FormTextarea({
+export function SheetTextarea({
   label,
   value,
   onChange,
@@ -19,7 +19,7 @@ export function FormTextarea({
   disabled = false,
   height = '20',
   rows,
-}: FormTextareaProps) {
+}: SheetTextareaProps) {
   return (
     <Flex direction="column" w="full">
       {/* Label with pseudoheader styling */}

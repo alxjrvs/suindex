@@ -3,7 +3,7 @@ import { NativeSelectField, NativeSelectRoot } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import type { ReactNode } from 'react'
 
-interface FormSelectProps {
+interface SheetSelectProps {
   label: string
   value: string | null
   onChange: (value: string | null) => void
@@ -14,7 +14,7 @@ interface FormSelectProps {
   children?: ReactNode
 }
 
-export function FormSelect({
+export function SheetSelect({
   label,
   value,
   onChange,
@@ -23,7 +23,7 @@ export function FormSelect({
   loading = false,
   options,
   children,
-}: FormSelectProps) {
+}: SheetSelectProps) {
   return (
     <Flex direction="column">
       {/* Label */}

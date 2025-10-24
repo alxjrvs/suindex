@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import { FormSelect } from '../shared/FormSelect'
+import { SheetSelect } from '../shared/SheetSelect'
 import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { LinkButton } from '../shared/LinkButton'
 
@@ -49,7 +49,7 @@ export function PilotControlBar({
       backgroundColor="bg.builder.pilot"
       hasPendingChanges={hasPendingChanges}
       leftContent={
-        <FormSelect
+        <SheetSelect
           label="Crawler"
           value={crawlerId ?? null}
           loading={loadingCrawlers}

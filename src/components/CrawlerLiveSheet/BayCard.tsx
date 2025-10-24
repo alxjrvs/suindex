@@ -4,8 +4,8 @@ import { Button } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { CrawlerBay } from '../../types/database'
 import { RoundedBox } from '../shared/RoundedBox'
-import { FormInput } from '../shared/FormInput'
-import { FormTextarea } from '../shared/FormTextarea'
+import { SheetInput } from '../shared/SheetInput'
+import { SheetTextarea } from '../shared/SheetTextarea'
 import { Text as StyledText } from '../base/Text'
 
 interface BayCardProps {
@@ -32,14 +32,14 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
       title={bay.name}
     >
       <VStack justifyContent="flex-start" alignItems="space-between">
-        <FormInput
+        <SheetInput
           value={bay.operator}
           onChange={(value) => onUpdate({ operator: value })}
           placeholder={`Enter ${bay.operatorPosition} name...`}
           suffixText={`the ${bay.operatorPosition}`}
         />
 
-        <FormTextarea
+        <SheetTextarea
           label="Description"
           value={bay.description}
           onChange={(value) => onUpdate({ description: value })}

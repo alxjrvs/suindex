@@ -2,8 +2,8 @@ import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { RoundedBox } from '../shared/RoundedBox'
-import { FormInput } from '../shared/FormInput'
-import { FormTextarea } from '../shared/FormTextarea'
+import { SheetInput } from '../shared/SheetInput'
+import { SheetTextarea } from '../shared/SheetTextarea'
 import { AddStatButton } from '../shared/AddStatButton'
 import type { CargoItem } from './types'
 
@@ -38,14 +38,14 @@ export function StorageBay({
       rightContent={<AddStatButton onClick={onAddCargo} label="Add Cargo" />}
     >
       <VStack gap={3} mb={4} alignItems="stretch" w="full" h="full">
-        <FormInput
+        <SheetInput
           label="Bullwhacker"
           value={operator}
           onChange={onOperatorChange}
           placeholder="Enter Bullwhacker name..."
         />
 
-        <FormTextarea
+        <SheetTextarea
           label="Description"
           value={description}
           onChange={onDescriptionChange}

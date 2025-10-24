@@ -1,4 +1,4 @@
-import { FormTextarea } from './FormTextarea'
+import { SheetTextarea } from './SheetTextarea'
 import { RoundedBox } from './RoundedBox'
 
 interface NotesProps {
@@ -21,7 +21,7 @@ export function Notes({
 }: NotesProps) {
   return (
     <RoundedBox title="notes" bg={backgroundColor} borderColor={backgroundColor}>
-      <FormTextarea
+      <SheetTextarea
         value={notes}
         onChange={onChange}
         disabled={disabled}

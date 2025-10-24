@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import { FormSelect } from '../shared/FormSelect'
+import { SheetSelect } from '../shared/SheetSelect'
 import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { LinkButton } from '../shared/LinkButton'
 
@@ -47,7 +47,7 @@ export function MechControlBar({
       backgroundColor="bg.builder.mech"
       hasPendingChanges={hasPendingChanges}
       leftContent={
-        <FormSelect
+        <SheetSelect
           label="Pilot"
           value={pilotId ?? null}
           loading={loadingPilots}
