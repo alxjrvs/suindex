@@ -39,7 +39,7 @@ export function SheetSelect({
       </Text>
 
       {/* Select */}
-      <NativeSelectRoot disabled={disabled}>
+      <NativeSelectRoot disabled={disabled} minW={300}>
         <NativeSelectField
           value={value ?? ''}
           onChange={(e) => onChange(e.target.value || null)}

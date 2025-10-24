@@ -20,7 +20,7 @@ export function GameGridCard({
 }: GameGridCardProps) {
   if (isLoading) {
     return (
-      <GridCard onClick={onClick}>
+      <GridCard onClick={onClick} title={name}>
         <Flex flex={1} alignItems="center" justifyContent="center">
           <Text fontSize="sm" color="su.brick" fontStyle="italic">
             Loading...
@@ -30,12 +30,7 @@ export function GameGridCard({
     )
   }
   return (
-    <GridCard onClick={onClick}>
-      {/* Title */}
-      <Text variant="pseudoheader" fontSize="md" textAlign="center">
-        {name}
-      </Text>
-
+    <GridCard onClick={onClick} title={name}>
       <VStack gap={1} alignItems="stretch" flex={1}>
         {/* Crawler */}
         {crawlerName && (
