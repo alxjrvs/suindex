@@ -14,6 +14,7 @@ interface NotesProps {
 export function Notes({
   notes,
   onChange,
+  placeholder,
   disabled = false,
   backgroundColor = 'bg.builder',
   height = '96',
@@ -24,7 +25,7 @@ export function Notes({
         value={notes}
         onChange={onChange}
         disabled={disabled}
-        placeholder={'Add notes...'}
+        placeholder={placeholder}
         height={height}
       />
     </RoundedBox>

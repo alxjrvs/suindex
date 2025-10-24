@@ -1,4 +1,4 @@
-import { Box, VStack } from '@chakra-ui/react'
+import { Box, Button, VStack } from '@chakra-ui/react'
 import { Text } from './base/Text'
 
 interface StatDisplayProps {
@@ -22,12 +22,13 @@ export function StatDisplay({
   valueColor = 'su.black',
   borderColor = 'su.black',
 }: StatDisplayProps) {
+  const WrapperComponent = onClick ? Button : Box
   return (
     <VStack gap={0} alignItems="center">
       <Text mb={-2} fontSize="xs" alignSelf="center" variant="pseudoheader" zIndex={1} id={labelId}>
         {label}
       </Text>
-      <Box
+      <WrapperComponent
         w={16}
         h={16}
         borderRadius="2xl"
@@ -37,7 +38,8 @@ export function StatDisplay({
         display="flex"
         alignItems="center"
         justifyContent="center"
-        onClick={disabled ? undefined : onClick}
+        disabled={disabled}
+        onClick={onClick}
         cursor={onClick && !disabled ? 'pointer' : 'default'}
         opacity={disabled ? 0.5 : 1}
         _hover={onClick && !disabled ? { opacity: 0.8 } : undefined}
@@ -46,7 +48,7 @@ export function StatDisplay({
         <Text fontSize="lg" fontWeight="bold" color={valueColor}>
           {value}
         </Text>
-      </Box>
+      </WrapperComponent>
     </VStack>
   )
 }

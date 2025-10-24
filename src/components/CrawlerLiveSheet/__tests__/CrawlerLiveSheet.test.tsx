@@ -397,14 +397,14 @@ describe('CrawlerLiveSheet', () => {
     it('shows add cargo button', () => {
       render(<CrawlerLiveSheet />)
 
-      expect(screen.getByRole('button', { name: /\+ add/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /\+/i })).toBeInTheDocument()
     })
 
     it('opens cargo modal when add cargo is clicked', async () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
-      const addCargoButton = screen.getByRole('button', { name: /\+ add/i })
+      const addCargoButton = screen.getByRole('button', { name: /\+/i })
 
       await user.click(addCargoButton)
 

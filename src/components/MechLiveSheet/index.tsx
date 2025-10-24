@@ -7,7 +7,6 @@ import { PatternSelector } from './PatternSelector'
 import { ChassisStatsGrid } from './ChassisStatsGrid'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
-import { QuirkAppearanceInputs } from './QuirkAppearanceInputs'
 import { SystemsModulesList } from './SystemsModulesList'
 import { CargoList } from './CargoList'
 import { CargoModal } from '../shared/CargoModal'
@@ -16,6 +15,8 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { MechControlBar } from './MechControlBar'
 import { RoundedBox } from '../shared/RoundedBox'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
+import { QuirkInput } from './QuirkInput'
+import { AppearanceInput } from './AppearanceInput'
 
 interface MechLiveSheetProps {
   id?: string
@@ -112,10 +113,20 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
                 onChange={handleChassisChange}
               />
 
+              <QuirkInput
+                quirk={mech.quirk ?? ''}
+                disabled={!selectedChassis}
+                onQuirkChange={(value) => updateMech({ quirk: value })}
+              />
               <PatternSelector
                 pattern={mech.pattern ?? ''}
                 selectedChassis={selectedChassis}
                 onChange={handlePatternChange}
+              />
+              <AppearanceInput
+                appearance={mech.appearance ?? ''}
+                disabled={!selectedChassis}
+                onAppearanceChange={(value) => updateMech({ appearance: value })}
               />
             </Grid>
           </RoundedBox>
@@ -137,21 +148,10 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           onEPChange={(value) => updateMech({ current_ep: value })}
           onHeatChange={(value) => updateMech({ current_heat: value })}
         />
-
-        {stats && <VStack gap={3} bg="su.green" borderRadius="2xl" p={4}></VStack>}
       </Flex>
 
       <RoundedBox bg="su.green" title="Abilities">
-        <VStack gap={3} alignItems="stretch" w="full">
-          <QuirkAppearanceInputs
-            quirk={mech.quirk ?? ''}
-            appearance={mech.appearance ?? ''}
-            disabled={!selectedChassis}
-            onQuirkChange={(value) => updateMech({ quirk: value })}
-            onAppearanceChange={(value) => updateMech({ appearance: value })}
-          />
-          <ChassisAbilities chassis={selectedChassis} />
-        </VStack>
+        <ChassisAbilities chassis={selectedChassis} />
       </RoundedBox>
 
       <SystemsModulesList

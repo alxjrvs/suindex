@@ -122,13 +122,13 @@ describe('MechLiveSheet', () => {
 
       expect(screen.getByRole('combobox')).toBeInTheDocument()
       expect(screen.getByPlaceholderText(/enter or select a pattern/i)).toBeInTheDocument()
-      expect(screen.getAllByText(/system slots/i)[0]).toBeInTheDocument()
+      expect(screen.getAllByText(/sys. slots/i)[0]).toBeInTheDocument()
     })
 
     it('displays all main sections', () => {
       render(<MechLiveSheet />)
 
-      expect(screen.getByText(/chassis ability/i)).toBeInTheDocument()
+      expect(screen.getByText(/Abilities/i)).toBeInTheDocument()
       expect(screen.getAllByText(/quirk/i)[0]).toBeInTheDocument()
       expect(screen.getAllByText(/appearance/i)[0]).toBeInTheDocument()
       expect(screen.getByText(/systems & modules/i)).toBeInTheDocument()
@@ -302,8 +302,9 @@ describe('MechLiveSheet', () => {
     it('shows add system/module button disabled when no chassis selected', () => {
       render(<MechLiveSheet />)
 
-      const addButton = screen.getByRole('button', { name: /add system\/module/i })
-      expect(addButton).toBeDisabled()
+      const addButton = screen.getAllByRole('button', { name: /\+/i })
+      const systemModuleButton = addButton[0]
+      expect(systemModuleButton).toBeDisabled()
     })
 
     it('enables add system/module button when chassis is selected', async () => {
@@ -315,8 +316,9 @@ describe('MechLiveSheet', () => {
 
       await waitFor(
         () => {
-          const addButton = screen.getByRole('button', { name: /add system\/module/i })
-          expect(addButton).not.toBeDisabled()
+          const addButton = screen.getAllByRole('button', { name: /\+/i })
+          const systemModuleButton = addButton[0]
+          expect(systemModuleButton).not.toBeDisabled()
         },
         { timeout: 5000 }
       )
@@ -346,7 +348,7 @@ describe('MechLiveSheet', () => {
     it('shows add cargo button disabled when no chassis selected', () => {
       render(<MechLiveSheet />)
 
-      const addButtons = screen.getAllByRole('button', { name: /\+ add/i })
+      const addButtons = screen.getAllByRole('button', { name: /\+/i })
       const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
       expect(cargoButton).toBeDisabled()
     })
@@ -359,7 +361,7 @@ describe('MechLiveSheet', () => {
       await user.selectOptions(chassisSelect, 'chassis-1')
 
       await waitFor(() => {
-        const addButtons = screen.getAllByRole('button', { name: /\+ add/i })
+        const addButtons = screen.getAllByRole('button', { name: /\+/i })
         const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
         expect(cargoButton).not.toBeDisabled()
       })
@@ -390,7 +392,7 @@ describe('MechLiveSheet', () => {
       await user.selectOptions(chassisSelect, 'chassis-1')
 
       await waitFor(async () => {
-        const addButtons = screen.getAllByRole('button', { name: /\+ add/i })
+        const addButtons = screen.getAllByRole('button', { name: /\+/i })
         const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
         await user.click(cargoButton)
       })
@@ -441,11 +443,11 @@ describe('MechLiveSheet', () => {
       await waitFor(
         () => {
           // Check that all stat labels are present
-          const systemSlotsLabels = screen.getAllByText(/system slots/i)
-          const moduleSlotsLabels = screen.getAllByText(/module slots/i)
+          const systemSlotsLabels = screen.getAllByText(/sys. slots/i)
+          const moduleSlotsLabels = screen.getAllByText(/mod. slots/i)
           const cargoCapLabels = screen.getAllByText(/cargo cap/i)
-          const techLevelLabels = screen.getAllByText(/tech level/i)
-          const salvageValueLabels = screen.getAllByText(/salvage value/i)
+          const techLevelLabels = screen.getAllByText(/tl/i)
+          const salvageValueLabels = screen.getAllByText(/sv/i)
 
           expect(systemSlotsLabels.length).toBeGreaterThan(0)
           expect(moduleSlotsLabels.length).toBeGreaterThan(0)

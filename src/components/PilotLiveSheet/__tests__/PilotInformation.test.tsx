@@ -140,21 +140,21 @@ describe('PilotLiveSheet - Pilot Information', () => {
     it('shows "Used" checkbox for motto', () => {
       render(<PilotLiveSheet />)
 
-      const usedCheckbox = screen.getByRole('checkbox', { name: /mottoused/i })
+      const usedCheckbox = screen.getByRole('checkbox', { name: /motto/i })
       expect(usedCheckbox).toBeInTheDocument()
     })
 
     it('shows "Used" checkbox for keepsake', () => {
       render(<PilotLiveSheet />)
 
-      const usedCheckbox = screen.getByRole('checkbox', { name: /keepsakeused/i })
+      const usedCheckbox = screen.getByRole('checkbox', { name: /keepsake/i })
       expect(usedCheckbox).toBeInTheDocument()
     })
 
     it('shows "Used" checkbox for background', () => {
       render(<PilotLiveSheet />)
 
-      const usedCheckbox = screen.getByRole('checkbox', { name: /backgroundused/i })
+      const usedCheckbox = screen.getByRole('checkbox', { name: /background/i })
       expect(usedCheckbox).toBeInTheDocument()
     })
 
@@ -163,7 +163,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
       render(<PilotLiveSheet />)
 
       const usedCheckbox = screen.getByRole('checkbox', {
-        name: /mottoused/i,
+        name: /motto/i,
       }) as HTMLInputElement
 
       expect(usedCheckbox.checked).toBe(false)
@@ -178,7 +178,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
       render(<PilotLiveSheet />)
 
       const usedCheckbox = screen.getByRole('checkbox', {
-        name: /keepsakeused/i,
+        name: /keepsake/i,
       }) as HTMLInputElement
 
       expect(usedCheckbox.checked).toBe(false)
@@ -193,7 +193,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
       render(<PilotLiveSheet />)
 
       const usedCheckbox = screen.getByRole('checkbox', {
-        name: /backgroundused/i,
+        name: /background/i,
       }) as HTMLInputElement
 
       expect(usedCheckbox.checked).toBe(false)
@@ -208,7 +208,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
       render(<PilotLiveSheet />)
 
       const usedCheckbox = screen.getByRole('checkbox', {
-        name: /mottoused/i,
+        name: /motto/i,
       }) as HTMLInputElement
 
       // Check it

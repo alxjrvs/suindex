@@ -27,7 +27,7 @@ export function MechResourceSteppers({
 
   return (
     <RoundedBox bg="su.green">
-      <VStack alignItems="center" gap={2}>
+      <VStack alignItems="center" gap={2} h="full" justifyContent="space-between">
         <NumericStepper
           label="SP"
           value={currentSP}
