@@ -11,6 +11,7 @@ import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { CrawlerControlBar } from './CrawlerControlBar'
 import { useCrawlerLiveSheetState } from './useCrawlerLiveSheetState'
+import { CrawlerNPC } from './CrawlerNPC'
 
 interface CrawlerLiveSheetProps {
   id?: string
@@ -121,11 +122,10 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
       </Flex>
 
-      <CrawlerAbilities
-        crawler={crawler}
-        onUpdate={updateCrawler}
-        crawlerRef={selectedCrawlerType}
-      />
+      <Flex gap={6}>
+        <CrawlerAbilities crawlerRef={selectedCrawlerType} />
+        <CrawlerNPC crawler={crawler} onUpdate={updateCrawler} crawlerRef={selectedCrawlerType} />
+      </Flex>
 
       {/* Bays Grid - First Row */}
       {firstRowBays.length > 0 && (
@@ -171,11 +171,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         {/* Storage Bay */}
         {storageBay && (
           <StorageBay
-            operator={crawler.storage_bay_operator ?? ''}
-            description={crawler.storage_bay_description ?? ''}
+            npc={storageBay.npc}
+            onUpdate={(updates) => handleUpdateBay(storageBay.id, updates)}
             cargo={crawler.cargo ?? []}
-            onOperatorChange={(value) => updateCrawler({ storage_bay_operator: value })}
-            onDescriptionChange={(value) => updateCrawler({ storage_bay_description: value })}
             onAddCargo={() => setIsCargoModalOpen(true)}
             onRemoveCargo={handleRemoveCargo}
           />

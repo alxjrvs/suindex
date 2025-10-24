@@ -28,8 +28,6 @@ export type Database = {
           name: string
           notes: string | null
           npc: Json | null
-          storage_bay_description: string | null
-          storage_bay_operator: string | null
           tech_level: number | null
           updated_at: string | null
           upgrade: number | null
@@ -48,8 +46,6 @@ export type Database = {
           name: string
           notes?: string | null
           npc?: Json | null
-          storage_bay_description?: string | null
-          storage_bay_operator?: string | null
           tech_level?: number | null
           updated_at?: string | null
           upgrade?: number | null
@@ -68,8 +64,6 @@ export type Database = {
           name?: string
           notes?: string | null
           npc?: Json | null
-          storage_bay_description?: string | null
-          storage_bay_operator?: string | null
           tech_level?: number | null
           updated_at?: string | null
           upgrade?: number | null

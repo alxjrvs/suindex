@@ -17,8 +17,6 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
   upgrade: 0,
   current_scrap: 0,
   bays: [],
-  storage_bay_operator: null,
-  storage_bay_description: null,
   cargo: [],
   notes: null,
   npc: {
@@ -141,8 +139,6 @@ export function useCrawlerLiveSheetState(id?: string) {
             hitPoints: selectedCrawlerType?.npc.hitPoints || 0,
             damage: 0,
           },
-          storage_bay_operator: null,
-          storage_bay_description: null,
           cargo: [],
         })
       } else {

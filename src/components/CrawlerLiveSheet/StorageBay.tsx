@@ -1,60 +1,48 @@
-import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { RoundedBox } from '../shared/RoundedBox'
-import { SheetInput } from '../shared/SheetInput'
-import { SheetTextarea } from '../shared/SheetTextarea'
 import { AddStatButton } from '../shared/AddStatButton'
-import type { CargoItem } from './types'
+import type { CargoItem, CrawlerBay, CrawlerNPC } from './types'
+import { NPCCard } from '../shared/NPCCard'
+import { useMemo } from 'react'
+import { SalvageUnionReference } from 'salvageunion-reference'
 
 interface StorageBayProps {
-  operator: string
-  description: string
+  npc: CrawlerNPC
   cargo: CargoItem[]
-  onOperatorChange: (value: string) => void
-  onDescriptionChange: (value: string) => void
+  onUpdate: (updates: Partial<CrawlerBay>) => void
   onAddCargo: () => void
   onRemoveCargo: (id: string) => void
 }
 
-export function StorageBay({
-  operator,
-  description,
-  cargo,
-  onOperatorChange,
-  onDescriptionChange,
-  onAddCargo,
-  onRemoveCargo,
-}: StorageBayProps) {
+export function StorageBay({ cargo, npc, onUpdate, onAddCargo, onRemoveCargo }: StorageBayProps) {
+  const referenceBay = useMemo(() => {
+    const allBays = SalvageUnionReference.CrawlerBays.all()
+    return allBays.find((b) => b.id === 'storage-bay')
+  }, [])
   return (
     <RoundedBox
       bg="bg.builder.crawler"
       borderColor="border.builder.crawler"
       matchBorder={false}
       borderWidth="4px"
+      justifyContent="flex-start"
       borderRadius="2xl"
       padding={4}
       title="Storage Bay"
       rightContent={<AddStatButton onClick={onAddCargo} label="Add Cargo" />}
     >
-      <VStack gap={3} mb={4} alignItems="stretch" w="full" h="full">
-        <SheetInput
-          label="Bullwhacker"
-          value={operator}
-          onChange={onOperatorChange}
-          placeholder="Enter Bullwhacker name..."
-        />
+      <NPCCard
+        npc={npc!}
+        description={referenceBay?.npc.description || ''}
+        maxHP={referenceBay?.npc.hitPoints || 0}
+        onUpdateDamage={(value) => onUpdate({ npc: { ...npc!, damage: value } })}
+        onUpdateName={(value) => onUpdate({ npc: { ...npc!, name: value } })}
+        onUpdateNotes={(value) => onUpdate({ npc: { ...npc!, notes: value } })}
+        position={referenceBay?.npc.position || 'NPC'}
+      />
 
-        <SheetTextarea
-          label="Description"
-          value={description}
-          onChange={onDescriptionChange}
-          placeholder="Enter bay description..."
-          height="20"
-        />
-      </VStack>
-
-      {/* Cargo Grid */}
       <Box>
         <Heading level="h4" textTransform="uppercase" mb={2}>
           Cargo

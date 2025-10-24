@@ -2,6 +2,7 @@ import { Flex, Group, IconButton, Input } from '@chakra-ui/react'
 import { Checkbox as ChakraCheckbox } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import type { ReactNode } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface SheetInputProps {
   label?: string
@@ -47,6 +48,30 @@ export function SheetInput({
   const hasDiceRoll = onDiceRoll !== undefined
   const hasSuffix = suffixText !== undefined
 
+  const inputRef = useRef<HTMLInputElement>(null)
+  const isTypingRef = useRef(false)
+
+  // Sync external value changes to input (but not during typing)
+  useEffect(() => {
+    if (!isTypingRef.current && inputRef.current && inputRef.current.value !== value) {
+      inputRef.current.value = value
+    }
+  }, [value])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    isTypingRef.current = true
+    onChange(e.target.value)
+  }
+
+  const handleBlur = () => {
+    isTypingRef.current = false
+    // Ensure value is synced on blur
+    if (inputRef.current) {
+      inputRef.current.value = value
+    }
+    onBlur?.()
+  }
+
   return (
     <Flex direction="column">
       {/* Label with optional toggle */}
@@ -85,11 +110,12 @@ export function SheetInput({
       {/* Input with optional suffix, dice roller */}
       <Group attached w="full">
         <Input
+          ref={inputRef}
           type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          defaultValue={value}
+          onChange={handleChange}
           onFocus={onFocus}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           disabled={disabled}
           placeholder={placeholder}
           flex="1"

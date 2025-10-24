@@ -63,6 +63,7 @@ describe('CrawlerLiveSheet', () => {
         type: 'npc',
         source: 'Test Source',
         page: 1,
+        position: 'Crew',
         description: 'A crew member',
         hitPoints: 10,
         abilities: [],
@@ -85,6 +86,7 @@ describe('CrawlerLiveSheet', () => {
         type: 'npc',
         source: 'Test Source',
         page: 2,
+        position: 'Engineer',
         description: 'An engineer',
         hitPoints: 10,
         abilities: [],
@@ -107,6 +109,7 @@ describe('CrawlerLiveSheet', () => {
         type: 'npc',
         source: 'Test Source',
         page: 3,
+        position: 'Bullwhacker',
         description: 'A quartermaster',
         hitPoints: 10,
         abilities: [],
@@ -408,17 +411,6 @@ describe('CrawlerLiveSheet', () => {
 
       // Storage Bay should be visible
       expect(screen.getByText('Storage Bay')).toBeInTheDocument()
-    })
-
-    it('allows entering storage bay operator', async () => {
-      const user = userEvent.setup()
-      render(<CrawlerLiveSheet />)
-
-      // Storage bay operator is labeled "Bullwhacker"
-      const operatorInput = screen.getByPlaceholderText(/enter bullwhacker name/i)
-
-      await user.type(operatorInput, 'Quartermaster Jones')
-      expect(operatorInput).toHaveValue('Quartermaster Jones')
     })
 
     it('shows add cargo button', () => {
