@@ -34,6 +34,19 @@ describe('CrawlerLiveSheet', () => {
           description: 'Can carry extra cargo',
         },
       ],
+      npc: {
+        id: 'hauler-npc',
+        name: 'Hauler Operator',
+        type: 'npc',
+        source: 'Test Source',
+        page: 1,
+        position: 'Operator',
+        description: 'Operates the hauler',
+        hitPoints: 10,
+        abilities: [],
+        notes: '',
+        choices: [],
+      },
     } as Crawler,
     {
       id: 'crawler-scout',
@@ -47,6 +60,19 @@ describe('CrawlerLiveSheet', () => {
           description: 'Moves faster than other crawlers',
         },
       ],
+      npc: {
+        id: 'scout-npc',
+        name: 'Scout Operator',
+        type: 'npc',
+        source: 'Test Source',
+        page: 2,
+        position: 'Scout',
+        description: 'Operates the scout',
+        hitPoints: 10,
+        abilities: [],
+        notes: '',
+        choices: [],
+      },
     } as Crawler,
   ]
 
@@ -385,8 +411,8 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
-      // Find the Crew Quarters bay operator input (placeholder is "Enter Crew Member name...")
-      const operatorInput = screen.getByPlaceholderText(/enter crew member name/i)
+      // Find the Crew Quarters bay operator input (placeholder is "Enter Crew name...")
+      const operatorInput = screen.getByPlaceholderText(/enter crew name/i)
 
       await user.type(operatorInput, 'Captain Smith')
       expect(operatorInput).toHaveValue('Captain Smith')

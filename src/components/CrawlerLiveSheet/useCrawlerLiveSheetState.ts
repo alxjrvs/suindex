@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useEffect, useRef } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { CrawlerLiveSheetState, CrawlerBay as CrawlerBayState } from './types'
+import type { CrawlerLiveSheetState } from './types'
+import type { CrawlerBay } from '../../types/database'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
 
 const INITIAL_TECH_LEVEL = 1
@@ -56,7 +57,7 @@ export function useCrawlerLiveSheetState(id?: string) {
   // Initialize all bays on mount
   useEffect(() => {
     if (allBays.length > 0 && (crawler.bays ?? []).length === 0) {
-      const initialBays: CrawlerBayState[] = allBays.map((bay) => ({
+      const initialBays: CrawlerBay[] = allBays.map((bay) => ({
         id: `${bay.id}-${Date.now()}-${Math.random()}`,
         bayId: bay.id,
         name: bay.name,
@@ -152,7 +153,7 @@ export function useCrawlerLiveSheetState(id?: string) {
   )
 
   const handleUpdateBay = useCallback(
-    (bayId: string, updates: Partial<CrawlerBayState>) => {
+    (bayId: string, updates: Partial<CrawlerBay>) => {
       updateCrawler({
         bays: (crawler.bays ?? []).map((bay) => (bay.id === bayId ? { ...bay, ...updates } : bay)),
       })

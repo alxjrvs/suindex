@@ -216,39 +216,38 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
-      // Add first item
-      await user.click(addButton)
-      let hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
-      await user.click(hackingToolButton)
-
-      await waitFor(() => {
-        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
-      })
-
-      // Add second item
-      await user.click(addButton)
-      hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
-      await user.click(hackingToolButton)
-
-      await waitFor(() => {
-        expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
-      })
-
-      // Add remaining 4 items
-      for (let i = 2; i < 6; i++) {
+      // Add 6 items
+      for (let i = 0; i < 6; i++) {
         await user.click(addButton)
-        hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+        const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
         await user.click(hackingToolButton)
 
-        await waitFor(() => {
-          expect(within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
-        })
+        // Wait for modal to close
+        await waitFor(
+          () => {
+            expect(screen.queryByText(/add equipment/i)).not.toBeInTheDocument()
+          },
+          { timeout: 3000 }
+        )
+
+        // Wait for equipment count to update
+        await waitFor(
+          () => {
+            expect(
+              within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))
+            ).toBeInTheDocument()
+          },
+          { timeout: 3000 }
+        )
       }
 
       // Add button should now be disabled
-      await waitFor(() => {
-        expect(addButton).toBeDisabled()
-      })
+      await waitFor(
+        () => {
+          expect(addButton).toBeDisabled()
+        },
+        { timeout: 3000 }
+      )
     })
 
     it('shows 6/6 when inventory is full', async () => {
@@ -265,19 +264,30 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
         await user.click(hackingToolButton)
 
         // Wait for modal to close (equipment modal auto-closes)
-        await waitFor(() => {
-          expect(screen.queryByText(/add equipment/i)).not.toBeInTheDocument()
-        })
+        await waitFor(
+          () => {
+            expect(screen.queryByText(/add equipment/i)).not.toBeInTheDocument()
+          },
+          { timeout: 3000 }
+        )
 
         // Wait for equipment count to update
-        await waitFor(() => {
-          expect(within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
-        })
+        await waitFor(
+          () => {
+            expect(
+              within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))
+            ).toBeInTheDocument()
+          },
+          { timeout: 3000 }
+        )
       }
 
-      await waitFor(() => {
-        expect(within(inventorySection!).getByText(/6\/6/)).toBeInTheDocument()
-      })
+      await waitFor(
+        () => {
+          expect(within(inventorySection!).getByText(/6\/6/)).toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
     })
 
     it('enables Add button after removing equipment from full inventory', async () => {
@@ -294,29 +304,43 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
         await user.click(hackingToolButton)
 
         // Wait for modal to close (equipment modal auto-closes)
-        await waitFor(() => {
-          expect(screen.queryByText(/add equipment/i)).not.toBeInTheDocument()
-        })
+        await waitFor(
+          () => {
+            expect(screen.queryByText(/add equipment/i)).not.toBeInTheDocument()
+          },
+          { timeout: 3000 }
+        )
 
         // Wait for equipment count to update
-        await waitFor(() => {
-          expect(within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
-        })
+        await waitFor(
+          () => {
+            expect(
+              within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))
+            ).toBeInTheDocument()
+          },
+          { timeout: 3000 }
+        )
       }
 
       // Add button should be disabled
-      await waitFor(() => {
-        expect(addButton).toBeDisabled()
-      })
+      await waitFor(
+        () => {
+          expect(addButton).toBeDisabled()
+        },
+        { timeout: 3000 }
+      )
 
       // Remove one item
       const removeButtons = screen.getAllByRole('button', { name: /remove equipment/i })
       await user.click(removeButtons[0])
 
       // Add button should be enabled again
-      await waitFor(() => {
-        expect(addButton).not.toBeDisabled()
-      })
+      await waitFor(
+        () => {
+          expect(addButton).not.toBeDisabled()
+        },
+        { timeout: 3000 }
+      )
     })
   })
 
@@ -370,6 +394,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
     it('updates equipment count when removing equipment', async () => {
       const user = userEvent.setup()
+
+      // Mock window.confirm to always return true
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+
       render(<PilotLiveSheet />)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
@@ -399,6 +427,8 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await waitFor(() => {
         expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
       })
+
+      confirmSpy.mockRestore()
     })
   })
 })

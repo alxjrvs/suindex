@@ -12,7 +12,6 @@ export function CrawlerNPC({
   onUpdate: (updates: Partial<CrawlerLiveSheetState>) => void
   crawlerRef: Crawler | undefined
 }) {
-  console.log(crawlerRef)
   return (
     <RoundedBox
       bg="bg.builder.crawler"

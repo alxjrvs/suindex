@@ -3,10 +3,10 @@ import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { RoundedBox } from '../shared/RoundedBox'
 import { AddStatButton } from '../shared/AddStatButton'
-import type { CargoItem, CrawlerBay, CrawlerNPC } from './types'
 import { NPCCard } from '../shared/NPCCard'
 import { useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
+import type { CrawlerBay, CrawlerNPC, CargoItem } from '../../types/database'
 
 interface StorageBayProps {
   npc: CrawlerNPC
