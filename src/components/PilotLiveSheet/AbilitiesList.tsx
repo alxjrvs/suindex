@@ -2,15 +2,15 @@ import { useMemo } from 'react'
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Ability } from 'salvageunion-reference'
-import { AbilityDisplay } from '../AbilityDisplay'
+import type { SURefAbility } from 'salvageunion-reference'
+import { AbilityDisplay } from '../schema/entities/AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
 
 interface AbilitiesListProps {
   abilities: string[] // Array of Ability IDs
-  legendaryAbility: Ability | null
+  legendaryAbility: SURefAbility | null
   onRemove: (id: string) => void
   onRemoveLegendary: () => void
   onAddClick: () => void
@@ -33,8 +33,8 @@ export function AbilitiesList({
 
   // Organize selected abilities by tree, separating core from advanced/hybrid
   const { coreAbilitiesByTree, advancedAbilitiesByTree } = useMemo(() => {
-    const coreByTree: Record<string, Ability[]> = {}
-    const advancedByTree: Record<string, Ability[]> = {}
+    const coreByTree: Record<string, SURefAbility[]> = {}
+    const advancedByTree: Record<string, SURefAbility[]> = {}
 
     abilities.forEach((abilityId) => {
       const ability = allAbilities.find((a) => a.id === abilityId)

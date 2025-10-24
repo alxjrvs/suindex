@@ -1,11 +1,11 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './base/Heading'
-import { EntityDisplay } from './shared/EntityDisplay'
-import { ActionCard } from './shared/ActionCard'
-import type { Ability } from 'salvageunion-reference'
+import { Heading } from '../../base/Heading'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import { ActionCard } from '../../shared/ActionCard'
+import type { SURefAbility } from 'salvageunion-reference'
 
 interface AbilityDisplayProps {
-  data: Ability
+  data: SURefAbility
   onClick?: () => void
   dimmed?: boolean
   showRemoveButton?: boolean

@@ -1,12 +1,12 @@
-import type { Ability, Class } from 'salvageunion-reference'
+import type { SURefAbility, SURefClass } from 'salvageunion-reference'
 
 /**
  * Calculate the TP cost for selecting an ability based on the character's class(es)
  */
 export function getAbilityCost(
-  ability: Ability,
-  selectedClass: Class | undefined,
-  selectedAdvancedClass?: Class | undefined
+  ability: SURefAbility,
+  selectedClass: SURefClass | undefined,
+  selectedAdvancedClass?: SURefClass | undefined
 ): number {
   if (!selectedClass) return 0
 

@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './base/Heading'
+import { Heading } from '../../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Class, Ability } from 'salvageunion-reference'
-import { EntityDisplay } from './shared/EntityDisplay'
-import { DetailsList } from './shared/DetailsList'
-import type { DataValue } from '../types/common'
+import type { SURefClass, SURefAbility } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import { DetailsList } from '../../shared/DetailsList'
+import type { DataValue } from '../../../types/common'
 
 interface ClassDisplayProps {
-  data: Class
+  data: SURefClass
 }
 
 interface HydratedAbilities {
-  [key: string]: Ability[]
+  [key: string]: SURefAbility[]
 }
 
 function AbilitySection({
@@ -53,7 +53,7 @@ function AbilityList({
   headerColor,
 }: {
   treeKey: string
-  abilities: Ability[]
+  abilities: SURefAbility[]
   headerColor: string
 }) {
   if (abilities.length === 0) return null
@@ -72,7 +72,7 @@ function AbilityList({
   )
 }
 
-function AbilityItem({ ability }: { ability: Ability }) {
+function AbilityItem({ ability }: { ability: SURefAbility }) {
   const details: DataValue[] = []
 
   if (ability.activationCost) {
@@ -139,7 +139,7 @@ function AbilityItem({ ability }: { ability: Ability }) {
 }
 
 export function ClassDisplay({ data }: ClassDisplayProps) {
-  const [abilities, setAbilities] = useState<Ability[]>([])
+  const [abilities, setAbilities] = useState<SURefAbility[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -180,7 +180,7 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
   if (data.legendaryAbilities && data.legendaryAbilities.length > 0) {
     legendaryAbilities['Legendary Abilities'] = data.legendaryAbilities
       .map((name) => abilities.find((a) => a.name === name))
-      .filter((a): a is Ability => a !== undefined)
+      .filter((a): a is SURefAbility => a !== undefined)
   }
 
   return (

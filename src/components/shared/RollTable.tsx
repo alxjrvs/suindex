@@ -1,14 +1,7 @@
 import { useState } from 'react'
 import { Box, Flex, IconButton, Text } from '@chakra-ui/react'
 import { rollTable } from '@randsum/salvageunion'
-import type { Ability, CrawlerBay, Equipment, RollTable, System } from 'salvageunion-reference'
-
-type Table =
-  | RollTable['table']
-  | System['table']
-  | Equipment['table']
-  | CrawlerBay['table']
-  | Ability['table']
+import type { SURefMetaTable } from 'salvageunion-reference'
 
 interface DigestedRollTable {
   order: number
@@ -18,12 +11,12 @@ interface DigestedRollTable {
 }
 
 interface RollTableDisplayProps {
-  table: Table
+  table: SURefMetaTable
   showCommand?: boolean
   tableName?: string
 }
 
-function digestRollTable(table: Table): DigestedRollTable[] {
+function digestRollTable(table: SURefMetaTable): DigestedRollTable[] {
   if (!table) return []
   const sorted = Object.keys(table)
     .sort((a, b) => {

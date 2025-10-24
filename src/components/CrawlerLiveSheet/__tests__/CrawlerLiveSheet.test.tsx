@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import CrawlerLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Crawler, CrawlerBay, CrawlerTechLevel } from 'salvageunion-reference'
+import type { SURefCrawler, SURefCrawlerBay, SURefCrawlerTechLevel } from 'salvageunion-reference'
 
 // Mock the SalvageUnionReference
 vi.mock('salvageunion-reference', () => ({
@@ -21,7 +21,7 @@ vi.mock('salvageunion-reference', () => ({
 }))
 
 describe('CrawlerLiveSheet', () => {
-  const mockCrawlers: Crawler[] = [
+  const mockCrawlers: SURefCrawler[] = [
     {
       id: 'crawler-hauler',
       name: 'Hauler',
@@ -47,7 +47,7 @@ describe('CrawlerLiveSheet', () => {
         notes: '',
         choices: [],
       },
-    } as Crawler,
+    } as SURefCrawler,
     {
       id: 'crawler-scout',
       name: 'Scout',
@@ -73,10 +73,10 @@ describe('CrawlerLiveSheet', () => {
         notes: '',
         choices: [],
       },
-    } as Crawler,
+    } as SURefCrawler,
   ]
 
-  const mockBays: CrawlerBay[] = [
+  const mockBays: SURefCrawlerBay[] = [
     {
       id: 'crew-quarters',
       name: 'Crew Quarters',
@@ -99,7 +99,7 @@ describe('CrawlerLiveSheet', () => {
       damagedEffect: '',
       techLevelEffects: [],
       abilities: [],
-    } as CrawlerBay,
+    } as SURefCrawlerBay,
     {
       id: 'engine-room',
       name: 'Engine Room',
@@ -122,7 +122,7 @@ describe('CrawlerLiveSheet', () => {
       damagedEffect: '',
       techLevelEffects: [],
       abilities: [],
-    } as CrawlerBay,
+    } as SURefCrawlerBay,
     {
       id: 'storage-bay',
       name: 'Storage Bay',
@@ -145,10 +145,10 @@ describe('CrawlerLiveSheet', () => {
       damagedEffect: '',
       techLevelEffects: [],
       abilities: [],
-    } as CrawlerBay,
+    } as SURefCrawlerBay,
   ]
 
-  const mockTechLevels: CrawlerTechLevel[] = [
+  const mockTechLevels: SURefCrawlerTechLevel[] = [
     {
       id: 'tech-level-1',
       name: 'Tech Level 1',

@@ -2,8 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Class, Ability, Equipment } from 'salvageunion-reference'
+import {
+  SalvageUnionReference,
+  type SURefAbility,
+  type SURefClass,
+  type SURefEquipment,
+} from 'salvageunion-reference'
 
 // Mock the SalvageUnionReference
 vi.mock('salvageunion-reference', () => ({
@@ -24,7 +28,7 @@ vi.mock('salvageunion-reference', () => ({
 }))
 
 describe('PilotLiveSheet - Legendary Abilities', () => {
-  const mockClasses: Class[] = [
+  const mockClasses: SURefClass[] = [
     {
       id: 'class-hacker',
       name: 'Hacker',
@@ -39,7 +43,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
     },
   ]
 
-  const mockAbilities: Ability[] = [
+  const mockAbilities: SURefAbility[] = [
     // Core abilities
     {
       id: 'hack-1',
@@ -165,7 +169,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
     },
   ]
 
-  const mockEquipment: Equipment[] = []
+  const mockEquipment: SURefEquipment[] = []
 
   beforeEach(() => {
     vi.mocked(SalvageUnionReference.Classes.all).mockReturnValue(mockClasses)

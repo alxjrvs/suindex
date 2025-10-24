@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { Equipment } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefEquipment } from 'salvageunion-reference'
 
 interface EquipmentDisplayProps {
-  data: Equipment
+  data: SURefEquipment
 }
 
 export function EquipmentDisplay({ data }: EquipmentDisplayProps) {

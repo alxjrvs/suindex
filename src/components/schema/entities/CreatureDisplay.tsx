@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { Creature } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefCreature } from 'salvageunion-reference'
 
 interface CreatureDisplayProps {
-  data: Creature
+  data: SURefCreature
 }
 
 export function CreatureDisplay({ data }: CreatureDisplayProps) {

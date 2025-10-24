@@ -1,10 +1,10 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './base/Heading'
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { AbilityTreeRequirement } from 'salvageunion-reference'
+import { Heading } from '../../base/Heading'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefAbilityTreeRequirement } from 'salvageunion-reference'
 
 interface AbilityTreeRequirementDisplayProps {
-  data: AbilityTreeRequirement
+  data: SURefAbilityTreeRequirement
 }
 
 export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDisplayProps) {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import type { DataItem } from '../types/schema'
-import { getModel } from '../utils/modelMap'
+import type { DataItem } from '../../types/schema'
+import { getModel } from '../../utils/modelMap'
 
 interface UseSchemaDataResult {
   data: DataItem[]

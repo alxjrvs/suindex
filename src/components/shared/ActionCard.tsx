@@ -2,12 +2,12 @@ import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
 import { DetailsList } from './DetailsList'
 import type { ReactNode } from 'react'
-import type { Action } from '../types'
 import type { DataValue } from '../../types/common'
 import { formatTraits } from '../../utils/displayUtils'
+import type { SURefActionMetaList } from 'salvageunion-reference'
 
 interface ActionCardProps {
-  action: Action
+  action: SURefActionMetaList
   activationCurrency?: string
   headerBgColor?: string
   headerTextColor?: string

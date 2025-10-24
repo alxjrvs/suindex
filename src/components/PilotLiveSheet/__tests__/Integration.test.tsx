@@ -3,7 +3,12 @@ import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Class, Ability, Equipment, AbilityTreeRequirement } from 'salvageunion-reference'
+import type {
+  SURefClass,
+  SURefAbility,
+  SURefEquipment,
+  SURefAbilityTreeRequirement,
+} from 'salvageunion-reference'
 
 // Mock the SalvageUnionReference
 vi.mock('salvageunion-reference', () => ({
@@ -24,7 +29,7 @@ vi.mock('salvageunion-reference', () => ({
 }))
 
 describe('PilotLiveSheet - Integration Tests', () => {
-  const mockClasses: Class[] = [
+  const mockClasses: SURefClass[] = [
     {
       id: 'class-hacker',
       name: 'Hacker',
@@ -51,7 +56,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
     },
   ]
 
-  const mockAbilities: Ability[] = [
+  const mockAbilities: SURefAbility[] = [
     // Hacking tree
     {
       id: 'hack-1',
@@ -191,7 +196,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
     },
   ]
 
-  const mockEquipment: Equipment[] = [
+  const mockEquipment: SURefEquipment[] = [
     {
       id: 'eq-1',
       name: 'Tool 1',
@@ -212,7 +217,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
     },
   ]
 
-  const mockTreeRequirements: AbilityTreeRequirement[] = [
+  const mockTreeRequirements: SURefAbilityTreeRequirement[] = [
     {
       id: 'req-smuggler',
       tree: 'Smuggling',

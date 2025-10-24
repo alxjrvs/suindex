@@ -1,6 +1,6 @@
-import type { Traits } from 'salvageunion-reference'
+import type { SURefTraitMetaList } from 'salvageunion-reference'
 
-export function formatTraits(traits?: NonNullable<Traits>): string[] {
+export function formatTraits(traits?: NonNullable<SURefTraitMetaList>): string[] {
   if (!traits) return []
   return traits.map((t) => {
     const type = t.type.charAt(0).toUpperCase() + t.type.slice(1)

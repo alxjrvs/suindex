@@ -4,54 +4,66 @@ import { lazy } from 'react'
 type DisplayComponentType = ComponentType<{ data: Record<string, unknown> }>
 
 const AbilityDisplay = lazy(() =>
-  import('./AbilityDisplay').then((m) => ({ default: m.AbilityDisplay }))
+  import('./schema/entities/AbilityDisplay').then((m) => ({ default: m.AbilityDisplay }))
 )
 const AbilityTreeRequirementDisplay = lazy(() =>
-  import('./AbilityTreeRequirementDisplay').then((m) => ({
+  import('./schema/entities/AbilityTreeRequirementDisplay').then((m) => ({
     default: m.AbilityTreeRequirementDisplay,
   }))
 )
 const BioTitanDisplay = lazy(() =>
-  import('./BioTitanDisplay').then((m) => ({ default: m.BioTitanDisplay }))
+  import('./schema/entities/BioTitanDisplay').then((m) => ({ default: m.BioTitanDisplay }))
 )
 const ChassisDisplay = lazy(() =>
-  import('./ChassisDisplay').then((m) => ({ default: m.ChassisDisplay }))
+  import('./schema/entities/ChassisDisplay').then((m) => ({ default: m.ChassisDisplay }))
 )
-const ClassDisplay = lazy(() => import('./ClassDisplay').then((m) => ({ default: m.ClassDisplay })))
+const ClassDisplay = lazy(() =>
+  import('./schema/entities/ClassDisplay').then((m) => ({ default: m.ClassDisplay }))
+)
 const CrawlerDisplay = lazy(() =>
-  import('./CrawlerDisplay').then((m) => ({ default: m.CrawlerDisplay }))
+  import('./schema/entities/CrawlerDisplay').then((m) => ({ default: m.CrawlerDisplay }))
 )
 const CrawlerBayDisplay = lazy(() =>
-  import('./CrawlerBayDisplay').then((m) => ({ default: m.CrawlerBayDisplay }))
+  import('./schema/entities/CrawlerBayDisplay').then((m) => ({ default: m.CrawlerBayDisplay }))
 )
 const CrawlerTechLevelDisplay = lazy(() =>
   import('./CrawlerTechLevelDisplay').then((m) => ({ default: m.CrawlerTechLevelDisplay }))
 )
 const CreatureDisplay = lazy(() =>
-  import('./CreatureDisplay').then((m) => ({ default: m.CreatureDisplay }))
+  import('./schema/entities/CreatureDisplay').then((m) => ({ default: m.CreatureDisplay }))
 )
-const DroneDisplay = lazy(() => import('./DroneDisplay').then((m) => ({ default: m.DroneDisplay })))
+const DroneDisplay = lazy(() =>
+  import('./schema/entities/DroneDisplay').then((m) => ({ default: m.DroneDisplay }))
+)
 const EquipmentDisplay = lazy(() =>
-  import('./EquipmentDisplay').then((m) => ({ default: m.EquipmentDisplay }))
+  import('./schema/entities/EquipmentDisplay').then((m) => ({ default: m.EquipmentDisplay }))
 )
 const KeywordDisplay = lazy(() =>
-  import('./KeywordDisplay').then((m) => ({ default: m.KeywordDisplay }))
+  import('./schema/entities/KeywordDisplay').then((m) => ({ default: m.KeywordDisplay }))
 )
-const MeldDisplay = lazy(() => import('./MeldDisplay').then((m) => ({ default: m.MeldDisplay })))
+const MeldDisplay = lazy(() =>
+  import('./schema/entities/MeldDisplay').then((m) => ({ default: m.MeldDisplay }))
+)
 const ModuleDisplay = lazy(() =>
-  import('./ModuleDisplay').then((m) => ({ default: m.ModuleDisplay }))
+  import('./schema/entities/ModuleDisplay').then((m) => ({ default: m.ModuleDisplay }))
 )
-const NPCDisplay = lazy(() => import('./NPCDisplay').then((m) => ({ default: m.NPCDisplay })))
-const SquadDisplay = lazy(() => import('./SquadDisplay').then((m) => ({ default: m.SquadDisplay })))
+const NPCDisplay = lazy(() =>
+  import('./schema/entities/NPCDisplay').then((m) => ({ default: m.NPCDisplay }))
+)
+const SquadDisplay = lazy(() =>
+  import('./schema/entities/SquadDisplay').then((m) => ({ default: m.SquadDisplay }))
+)
 const SystemDisplay = lazy(() =>
-  import('./SystemDisplay').then((m) => ({ default: m.SystemDisplay }))
+  import('./schema/entities/SystemDisplay').then((m) => ({ default: m.SystemDisplay }))
 )
 const RollTableDisplay = lazy(() =>
-  import('./RollTableDisplay').then((m) => ({ default: m.RollTableDisplay }))
+  import('./schema/entities/RollTableDisplay').then((m) => ({ default: m.RollTableDisplay }))
 )
-const TraitDisplay = lazy(() => import('./TraitDisplay').then((m) => ({ default: m.TraitDisplay })))
+const TraitDisplay = lazy(() =>
+  import('./schema/entities/TraitDisplay').then((m) => ({ default: m.TraitDisplay }))
+)
 const VehicleDisplay = lazy(() =>
-  import('./VehicleDisplay').then((m) => ({ default: m.VehicleDisplay }))
+  import('./schema/entities/VehicleDisplay').then((m) => ({ default: m.VehicleDisplay }))
 )
 
 export const componentRegistry: Record<string, DisplayComponentType> = {

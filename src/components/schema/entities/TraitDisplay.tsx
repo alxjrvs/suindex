@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { TraitEntry } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefTrait } from 'salvageunion-reference'
 
 interface TraitDisplayProps {
-  data: TraitEntry
+  data: SURefTrait
 }
 
 export function TraitDisplay({ data }: TraitDisplayProps) {

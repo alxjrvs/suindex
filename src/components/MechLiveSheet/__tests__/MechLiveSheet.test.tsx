@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import MechLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Chassis, System, Module } from 'salvageunion-reference'
+import type { SURefChassis, SURefSystem, SURefModule } from 'salvageunion-reference'
 
 // Mock the SalvageUnionReference
 vi.mock('salvageunion-reference', () => ({
@@ -21,7 +21,7 @@ vi.mock('salvageunion-reference', () => ({
 }))
 
 describe('MechLiveSheet', () => {
-  const mockChassis: Chassis[] = [
+  const mockChassis: SURefChassis[] = [
     {
       id: 'chassis-1',
       name: 'Test Chassis Alpha',
@@ -75,7 +75,7 @@ describe('MechLiveSheet', () => {
     },
   ]
 
-  const mockSystems: System[] = [
+  const mockSystems: SURefSystem[] = [
     {
       id: 'system-1',
       name: 'Test System',
@@ -91,7 +91,7 @@ describe('MechLiveSheet', () => {
     },
   ]
 
-  const mockModules: Module[] = [
+  const mockModules: SURefModule[] = [
     {
       id: 'module-1',
       name: 'Test Module',

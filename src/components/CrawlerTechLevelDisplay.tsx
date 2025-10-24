@@ -1,9 +1,9 @@
 import { Box, Text } from '@chakra-ui/react'
 import { EntityDisplay } from './shared/EntityDisplay'
-import type { CrawlerTechLevel } from 'salvageunion-reference'
+import type { SURefCrawlerTechLevel } from 'salvageunion-reference'
 
 interface CrawlerTechLevelDisplayProps {
-  data: CrawlerTechLevel
+  data: SURefCrawlerTechLevel
 }
 
 export function CrawlerTechLevelDisplay({ data }: CrawlerTechLevelDisplayProps) {
