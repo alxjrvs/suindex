@@ -23,7 +23,7 @@ export function ChassisStatsGrid({
         <StatDisplay label="Mod. Slots" value={`${usedModuleSlots}/${stats?.module_slots || 0}`} />
         <StatDisplay label="Cargo Cap" value={`${totalCargo}/${stats?.cargo_cap || 0}`} />
         <StatDisplay label="TL" value={stats?.tech_level || 0} />
-        <StatDisplay label="S" value={stats?.salvage_value || 0} />
+        <StatDisplay label="SV" value={stats?.salvage_value || 0} />
       </Flex>
     </RoundedBox>
   )

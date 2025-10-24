@@ -4,9 +4,8 @@ import { Button } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { CrawlerBay } from '../../types/database'
 import { RoundedBox } from '../shared/RoundedBox'
-import { SheetInput } from '../shared/SheetInput'
-import { SheetTextarea } from '../shared/SheetTextarea'
 import { Text as StyledText } from '../base/Text'
+import { NPCCard } from '../shared/NPCCard'
 
 interface BayCardProps {
   bay: CrawlerBay
@@ -31,37 +30,17 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
       padding={4}
       title={bay.name}
     >
+      <NPCCard
+        npc={bay.npc!}
+        description={referenceBay?.npc.description || ''}
+        maxHP={referenceBay?.npc.hitPoints || 0}
+        onUpdateDamage={(value) => onUpdate({ npc: { ...bay.npc!, damage: value } })}
+        onUpdateName={(value) => onUpdate({ npc: { ...bay.npc!, name: value } })}
+        onUpdateNotes={(value) => onUpdate({ npc: { ...bay.npc!, notes: value } })}
+        position={referenceBay?.npc.position || 'NPC'}
+      />
+
       <VStack justifyContent="flex-start" alignItems="space-between" w="full">
-        <SheetInput
-          value={bay.npc.name}
-          onChange={(value) =>
-            onUpdate({
-              npc: {
-                ...bay.npc,
-                name: value,
-              },
-            })
-          }
-          placeholder={`Enter ${referenceBay?.npc.position} name...`}
-          suffixText={`the ${referenceBay?.npc.position}`}
-        />
-
-        <SheetTextarea
-          label="Notes"
-          value={bay.npc.notes || ''}
-          onChange={(value) =>
-            onUpdate({
-              npc: {
-                ...bay.npc,
-                notes: value,
-              },
-            })
-          }
-          placeholder="Enter operator notes..."
-          height="20"
-        />
-
-        {/* Function Section - Expandable */}
         {referenceBay && referenceBay.description && (
           <Box>
             <Flex alignItems="center" justifyContent="space-between" mb={2}>

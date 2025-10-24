@@ -265,8 +265,6 @@ export function extractHeaderStats(data: EntityData): Stat[] {
 export function extractDetails(data: EntityData, entityType: EntityType): DataValue[] {
   const details: DataValue[] = []
   const currencyInData = 'activationCurrency' in data
-  console.log('Entity type', entityType)
-  console.log('Currency in data', currencyInData)
   const variableCost = 'activationCurrency' in data && entityType === 'Ability'
   const activationCurrency = getActivationCurrency(entityType, variableCost)
 

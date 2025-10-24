@@ -61,7 +61,7 @@ export function RoundedBox({
       {(title || rightContent) && (
         <Flex alignItems="center" justifyContent="space-between" mb={4} w="full">
           {title && (
-            <Heading level="h2" textTransform="uppercase">
+            <Heading level="h2" textTransform="uppercase" alignSelf="center">
               {title}
             </Heading>
           )}
