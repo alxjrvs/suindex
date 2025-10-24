@@ -3,7 +3,7 @@ import { Button } from '@chakra-ui/react'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
-import type { CargoItem } from './types'
+import type { CargoItem } from '../../types/database'
 
 interface CargoListProps {
   cargo: CargoItem[]

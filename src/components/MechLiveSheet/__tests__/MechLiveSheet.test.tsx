@@ -110,7 +110,6 @@ describe('MechLiveSheet', () => {
   ]
 
   beforeEach(() => {
-    vi.clearAllMocks()
     vi.mocked(SalvageUnionReference.Chassis.all).mockReturnValue(mockChassis)
     vi.mocked(SalvageUnionReference.Systems.all).mockReturnValue(mockSystems)
     vi.mocked(SalvageUnionReference.Modules.all).mockReturnValue(mockModules)
@@ -447,13 +446,13 @@ describe('MechLiveSheet', () => {
           const moduleSlotsLabels = screen.getAllByText(/mod. slots/i)
           const cargoCapLabels = screen.getAllByText(/cargo cap/i)
           const techLevelLabels = screen.getAllByText(/tl/i)
-          const salvageValueLabels = screen.getAllByText(/sv/i)
+          const salvageLabels = screen.getAllByText(/^sv$/i)
 
           expect(systemSlotsLabels.length).toBeGreaterThan(0)
           expect(moduleSlotsLabels.length).toBeGreaterThan(0)
           expect(cargoCapLabels.length).toBeGreaterThan(0)
           expect(techLevelLabels.length).toBeGreaterThan(0)
-          expect(salvageValueLabels.length).toBeGreaterThan(0)
+          expect(salvageLabels.length).toBeGreaterThan(0)
         },
         { timeout: 5000 }
       )

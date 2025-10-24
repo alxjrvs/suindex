@@ -10,6 +10,8 @@ configure({ asyncUtilTimeout: 5000 })
 // Cleanup after each test
 afterEach(() => {
   cleanup()
+  vi.clearAllMocks()
+  vi.resetModules()
 })
 
 // Mock Supabase environment variables for tests

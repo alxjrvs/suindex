@@ -1,7 +1,7 @@
 import { Flex, VStack } from '@chakra-ui/react'
 import { SheetInput } from './SheetInput'
 import { SheetTextarea } from './SheetTextarea'
-import type { CrawlerNPC } from '../CrawlerLiveSheet/types'
+import type { CrawlerNPC } from '../../types/database'
 import NumericStepper from '../NumericStepper'
 import { Text } from '../base/Text'
 import { useRef, useEffect, useState } from 'react'
