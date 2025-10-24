@@ -10,7 +10,6 @@ import { StatBonusDisplay } from './StatBonusDisplay'
 import { RollTable } from './RollTable'
 import { techLevelColors } from '../../theme'
 import {
-  type EntityData,
   detectEntityType,
   getSchemaName,
   getActivationCurrency,
@@ -24,9 +23,10 @@ import {
   extractNotes,
   extractPageReference,
 } from './entityDisplayHelpers'
+import type { SURefEntity } from 'salvageunion-reference'
 
 interface EntityDisplayProps {
-  data: EntityData
+  data: SURefEntity
   headerColor?: string
   actionHeaderBgColor?: string
   actionHeaderTextColor?: string

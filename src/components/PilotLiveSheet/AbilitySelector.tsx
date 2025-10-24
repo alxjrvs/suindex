@@ -1,8 +1,8 @@
 import { useMemo, useState, useEffect, useCallback } from 'react'
 import { Box, Flex, Grid, VStack, Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
-import type { Ability, Class } from 'salvageunion-reference'
-import { AbilityDisplay } from '../AbilityDisplay'
+import type { SURefAbility, SURefClass } from 'salvageunion-reference'
+import { AbilityDisplay } from '../schema/entities/AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
 import { SelectableAbilityItem } from './SelectableAbilityItem'
@@ -10,13 +10,13 @@ import { SelectableAbilityItem } from './SelectableAbilityItem'
 interface AbilitySelectorProps {
   isOpen: boolean
   onClose: () => void
-  abilities: Ability[]
+  abilities: SURefAbility[]
   onSelectAbility: (abilityId: string) => void
   onSelectLegendaryAbility: (abilityId: string) => void
   selectedAbilityIds: string[]
   selectedLegendaryAbilityId: string | null
-  selectedClass: Class | undefined
-  selectedAdvancedClass: Class | undefined
+  selectedClass: SURefClass | undefined
+  selectedAdvancedClass: SURefClass | undefined
   currentTP: number
 }
 
@@ -68,17 +68,17 @@ export function AbilitySelector({
       }
     }
 
-    const coreTreeAbilities: Record<string, Ability[]> = {}
-    const advancedTreeAbilities: Ability[] = []
+    const coreTreeAbilities: Record<string, SURefAbility[]> = {}
+    const advancedTreeAbilities: SURefAbility[] = []
     const legendaryAbilityNames = new Set(selectedClass.legendaryAbilities || [])
-    const legendaryAbilities: Ability[] = []
+    const legendaryAbilities: SURefAbility[] = []
 
     // Advanced class abilities
-    const advancedClassTreeAbilities: Ability[] = []
+    const advancedClassTreeAbilities: SURefAbility[] = []
     const advancedClassLegendaryAbilityNames = new Set(
       selectedAdvancedClass?.legendaryAbilities || []
     )
-    const advancedClassLegendaryAbilities: Ability[] = []
+    const advancedClassLegendaryAbilities: SURefAbility[] = []
 
     // Initialize core tree arrays
     selectedClass.coreAbilities.forEach((tree) => {

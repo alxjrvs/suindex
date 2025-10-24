@@ -1,10 +1,10 @@
 import { VStack } from '@chakra-ui/react'
-import { type Crawler } from 'salvageunion-reference'
+import { type SURefCrawler } from 'salvageunion-reference'
 import { Heading } from '../base/Heading'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
 
-export function CrawlerAbilities({ crawlerRef }: { crawlerRef: Crawler | undefined }) {
+export function CrawlerAbilities({ crawlerRef }: { crawlerRef: SURefCrawler | undefined }) {
   return (
     <RoundedBox
       bg="bg.builder.crawler"

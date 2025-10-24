@@ -1,10 +1,10 @@
 import { Flex } from '@chakra-ui/react'
 import { StatDisplay } from '../StatDisplay'
-import type { Chassis } from 'salvageunion-reference'
+import type { SURefChassis } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 
 interface ChassisStatsGridProps {
-  stats: Chassis['stats'] | undefined
+  stats: SURefChassis['stats'] | undefined
   usedSystemSlots: number
   usedModuleSlots: number
   totalCargo: number

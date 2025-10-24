@@ -1,16 +1,16 @@
 import { useMemo } from 'react'
 import { SheetSelect } from '../shared/SheetSelect'
-import type { Chassis } from 'salvageunion-reference'
+import type { SURefChassis } from 'salvageunion-reference'
 
 interface ChassisSelectorProps {
   chassisId: string | null
-  allChassis: Chassis[]
+  allChassis: SURefChassis[]
   onChange: (chassisId: string | null) => void
 }
 
 export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSelectorProps) {
   const groupedChassis = useMemo(() => {
-    const groups = new Map<number, Chassis[]>()
+    const groups = new Map<number, SURefChassis[]>()
 
     allChassis.forEach((chassis) => {
       const techLevel = chassis.stats.tech_level

@@ -2,14 +2,14 @@ import { Grid, VStack } from '@chakra-ui/react'
 import { SheetInput } from '../shared/SheetInput'
 import { SheetSelect } from '../shared/SheetSelect'
 import { SheetTextarea } from '../shared/SheetTextarea'
-import type { Crawler } from 'salvageunion-reference'
+import type { SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 
 interface CrawlerHeaderInputsProps {
   name: string
   crawlerTypeId: string | null
   description: string
-  allCrawlers: Crawler[]
+  allCrawlers: SURefCrawler[]
   onNameChange: (value: string) => void
   onCrawlerTypeChange: (value: string | null) => void
   onDescriptionChange: (value: string) => void

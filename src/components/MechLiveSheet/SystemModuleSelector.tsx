@@ -1,16 +1,16 @@
 import { useState, useMemo } from 'react'
 import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import type { System, Module } from 'salvageunion-reference'
+import type { SURefSystem, SURefModule } from 'salvageunion-reference'
 import Modal from '../Modal'
-import { SystemDisplay } from '../SystemDisplay'
-import { ModuleDisplay } from '../ModuleDisplay'
+import { SystemDisplay } from '../schema/entities/SystemDisplay'
+import { ModuleDisplay } from '../schema/entities/ModuleDisplay'
 
 interface SystemModuleSelectorProps {
   isOpen: boolean
   onClose: () => void
-  systems: System[]
-  modules: Module[]
+  systems: SURefSystem[]
+  modules: SURefModule[]
   onSelectSystem: (systemId: string) => void
   onSelectModule: (moduleId: string) => void
   selectedSystemIds: string[]
@@ -48,7 +48,7 @@ export function SystemModuleSelector({
   const filteredItems = useMemo(() => {
     const items: Array<{
       type: 'system' | 'module'
-      data: System | Module
+      data: SURefSystem | SURefModule
       canAfford: boolean
     }> = []
 
@@ -102,7 +102,7 @@ export function SystemModuleSelector({
     availableModuleSlots,
   ])
 
-  const handleSelect = (item: { type: 'system' | 'module'; data: System | Module }) => {
+  const handleSelect = (item: { type: 'system' | 'module'; data: SURefSystem | SURefModule }) => {
     if (item.type === 'system') {
       onSelectSystem(item.data.id)
     } else {
@@ -238,9 +238,9 @@ export function SystemModuleSelector({
                     </Box>
                   )}
                   {item.type === 'system' ? (
-                    <SystemDisplay data={item.data as System} />
+                    <SystemDisplay data={item.data as SURefSystem} />
                   ) : (
-                    <ModuleDisplay data={item.data as Module} />
+                    <ModuleDisplay data={item.data as SURefModule} />
                   )}
                 </Box>
               </Button>

@@ -1,9 +1,9 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { Heading } from './base/Heading'
-import type { SchemaInfo } from '../types/schema'
-import DataTable from './DataTable'
-import { useSchemaData } from '../hooks/useSchemaData'
-import { useSchemaId } from '../hooks/useSchemaParams'
+import { Heading } from '../base/Heading'
+import type { SchemaInfo } from '../../types/schema'
+import DataTable from '../DataTable'
+import { useSchemaData } from './useSchemaData'
+import { useSchemaId } from '../../hooks/useSchemaParams'
 
 interface SchemaViewerProps {
   schemas: SchemaInfo[]

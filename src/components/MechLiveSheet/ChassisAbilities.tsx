@@ -1,9 +1,9 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import type { Chassis } from 'salvageunion-reference'
+import type { SURefChassis } from 'salvageunion-reference'
 import { SheetDisplay } from '../shared/SheetDisplay'
 
 interface ChassisAbilitiesProps {
-  chassis: Chassis | undefined
+  chassis: SURefChassis | undefined
 }
 
 export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {

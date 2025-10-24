@@ -4,7 +4,7 @@ import { SheetInput } from '../shared/SheetInput'
 import { SheetSelect } from '../shared/SheetSelect'
 import { RoundedBox } from '../shared/RoundedBox'
 import { rollTable } from '@randsum/salvageunion'
-import type { Class } from 'salvageunion-reference'
+import type { SURefClass } from 'salvageunion-reference'
 import type { AdvancedClassOption } from './types'
 
 interface PilotInfoInputsProps {
@@ -18,7 +18,7 @@ interface PilotInfoInputsProps {
   appearance: string
   classId: string | null
   advancedClassId: string | null
-  allClasses: Class[]
+  allClasses: SURefClass[]
   availableAdvancedClasses: AdvancedClassOption[]
   disabled?: boolean
   onCallsignChange: (value: string) => void

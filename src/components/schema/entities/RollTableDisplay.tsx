@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { RollTable } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefRollTable } from 'salvageunion-reference'
 
 interface TableDisplayProps {
-  data: RollTable
+  data: SURefRollTable
 }
 
 export function RollTableDisplay({ data }: TableDisplayProps) {

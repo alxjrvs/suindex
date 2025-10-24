@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { Vehicle } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefVehicle } from 'salvageunion-reference'
 
 interface VehicleDisplayProps {
-  data: Vehicle
+  data: SURefVehicle
 }
 
 export function VehicleDisplay({ data }: VehicleDisplayProps) {

@@ -1,11 +1,11 @@
 import { Box, VStack } from '@chakra-ui/react'
-import { Heading } from './base/Heading'
-import { Text } from './base/Text'
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { CrawlerBay } from 'salvageunion-reference'
+import { Heading } from '../../base/Heading'
+import { Text } from '../../base/Text'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefCrawlerBay } from 'salvageunion-reference'
 
 interface CrawlerBayDisplayProps {
-  data: CrawlerBay
+  data: SURefCrawlerBay
 }
 
 export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {

@@ -3,7 +3,12 @@ import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Class, Ability, Equipment, AbilityTreeRequirement } from 'salvageunion-reference'
+import type {
+  SURefClass,
+  SURefAbility,
+  SURefEquipment,
+  SURefAbilityTreeRequirement,
+} from 'salvageunion-reference'
 
 // Mock the SalvageUnionReference
 vi.mock('salvageunion-reference', () => ({
@@ -24,7 +29,7 @@ vi.mock('salvageunion-reference', () => ({
 }))
 
 describe('PilotLiveSheet - Advanced Classes', () => {
-  const mockClasses: Class[] = [
+  const mockClasses: SURefClass[] = [
     {
       id: 'class-hacker',
       name: 'Hacker',
@@ -75,7 +80,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
     },
   ]
 
-  const mockAbilities: Ability[] = [
+  const mockAbilities: SURefAbility[] = [
     // Hacking tree
     {
       id: 'hack-1',
@@ -227,7 +232,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
     },
   ]
 
-  const mockTreeRequirements: AbilityTreeRequirement[] = [
+  const mockTreeRequirements: SURefAbilityTreeRequirement[] = [
     {
       id: 'req-smuggler',
       tree: 'Smuggling',
@@ -237,7 +242,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
     },
   ]
 
-  const mockEquipment: Equipment[] = []
+  const mockEquipment: SURefEquipment[] = []
 
   beforeEach(() => {
     vi.mocked(SalvageUnionReference.Classes.all).mockReturnValue(mockClasses)

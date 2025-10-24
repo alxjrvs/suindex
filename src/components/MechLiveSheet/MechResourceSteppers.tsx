@@ -1,10 +1,10 @@
 import { VStack } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
-import type { Chassis } from 'salvageunion-reference'
+import type { SURefChassis } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 
 interface MechResourceSteppersProps {
-  stats: Chassis['stats'] | undefined
+  stats: SURefChassis['stats'] | undefined
   currentDamage: number
   currentEP: number
   currentHeat: number

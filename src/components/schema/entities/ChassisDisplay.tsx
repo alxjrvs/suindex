@@ -1,10 +1,10 @@
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
-import { Heading } from './base/Heading'
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { Chassis } from 'salvageunion-reference'
+import { Heading } from '../../base/Heading'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefChassis } from 'salvageunion-reference'
 
 interface ChassisDisplayProps {
-  data: Chassis
+  data: SURefChassis
 }
 
 export function ChassisDisplay({ data }: ChassisDisplayProps) {

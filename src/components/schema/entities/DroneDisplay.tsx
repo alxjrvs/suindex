@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { Drone } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefDrone } from 'salvageunion-reference'
 
 interface DroneDisplayProps {
-  data: Drone
+  data: SURefDrone
 }
 
 export function DroneDisplay({ data }: DroneDisplayProps) {

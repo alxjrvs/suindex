@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { SalvageUnionReference, type Equipment } from 'salvageunion-reference'
-import { EquipmentDisplay } from '../EquipmentDisplay'
+import { SalvageUnionReference, type SURefEquipment } from 'salvageunion-reference'
+import { EquipmentDisplay } from '../schema/entities/EquipmentDisplay'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
@@ -25,7 +25,9 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
         const item = allEquipment.find((e) => e.id === id)
         return item ? { id, equipment: item, index } : null
       })
-      .filter((item): item is { id: string; equipment: Equipment; index: number } => item !== null)
+      .filter(
+        (item): item is { id: string; equipment: SURefEquipment; index: number } => item !== null
+      )
   }, [equipment, allEquipment])
 
   return (

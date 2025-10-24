@@ -3,9 +3,9 @@ import { Box, Flex, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { System, Module } from 'salvageunion-reference'
-import { SystemDisplay } from '../SystemDisplay'
-import { ModuleDisplay } from '../ModuleDisplay'
+import type { SURefSystem, SURefModule } from 'salvageunion-reference'
+import { SystemDisplay } from '../schema/entities/SystemDisplay'
+import { ModuleDisplay } from '../schema/entities/ModuleDisplay'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
@@ -41,7 +41,7 @@ export function SystemsModulesList({
   const sortedSystems = useMemo(() => {
     return systems
       .map((id) => allSystems.find((s) => s.id === id))
-      .filter((s): s is System => s !== undefined)
+      .filter((s): s is SURefSystem => s !== undefined)
       .sort((a, b) => {
         if (a.techLevel !== b.techLevel) {
           return a.techLevel - b.techLevel
@@ -53,7 +53,7 @@ export function SystemsModulesList({
   const sortedModules = useMemo(() => {
     return modules
       .map((id) => allModules.find((m) => m.id === id))
-      .filter((m): m is Module => m !== undefined)
+      .filter((m): m is SURefModule => m !== undefined)
       .sort((a, b) => {
         if (a.techLevel !== b.techLevel) {
           return a.techLevel - b.techLevel

@@ -5,7 +5,7 @@ import { Button } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
 import type { SchemaInfo } from '../types/schema'
 import { getDisplayComponent } from './componentRegistry'
-import { useSchemaData } from '../hooks/useSchemaData'
+import { useSchemaData } from './schema/useSchemaData'
 import { useSchemaParams } from '../hooks/useSchemaParams'
 
 interface ItemShowPageProps {

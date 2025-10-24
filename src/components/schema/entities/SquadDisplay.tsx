@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { Squad } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefSquad } from 'salvageunion-reference'
 
 interface SquadDisplayProps {
-  data: Squad
+  data: SURefSquad
 }
 
 export function SquadDisplay({ data }: SquadDisplayProps) {

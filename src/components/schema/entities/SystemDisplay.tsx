@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { System } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefSystem } from 'salvageunion-reference'
 
 interface SystemDisplayProps {
-  data: System
+  data: SURefSystem
 }
 
 export function SystemDisplay({ data }: SystemDisplayProps) {

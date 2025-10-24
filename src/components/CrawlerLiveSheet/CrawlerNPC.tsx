@@ -1,4 +1,4 @@
-import { type Crawler } from 'salvageunion-reference'
+import { type SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import type { CrawlerLiveSheetState } from './types'
 import { NPCCard } from '../shared/NPCCard'
@@ -10,7 +10,7 @@ export function CrawlerNPC({
 }: {
   crawler: CrawlerLiveSheetState
   onUpdate: (updates: Partial<CrawlerLiveSheetState>) => void
-  crawlerRef: Crawler | undefined
+  crawlerRef: SURefCrawler | undefined
 }) {
   return (
     <RoundedBox

@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { BioTitan } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefBioTitan } from 'salvageunion-reference'
 
 interface BioTitanDisplayProps {
-  data: BioTitan
+  data: SURefBioTitan
 }
 
 export function BioTitanDisplay({ data }: BioTitanDisplayProps) {

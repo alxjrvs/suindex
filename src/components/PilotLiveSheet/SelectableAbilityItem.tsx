@@ -1,8 +1,8 @@
-import type { Ability } from 'salvageunion-reference'
-import { AbilityDisplay } from '../AbilityDisplay'
+import type { SURefAbility } from 'salvageunion-reference'
+import { AbilityDisplay } from '../schema/entities/AbilityDisplay'
 
 interface SelectableAbilityItemProps {
-  ability: Ability
+  ability: SURefAbility
   cost: number
   canAfford: boolean
   alreadySelected: boolean

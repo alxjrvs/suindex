@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { Keyword } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefKeyword } from 'salvageunion-reference'
 
 interface KeywordDisplayProps {
-  data: Keyword
+  data: SURefKeyword
 }
 
 export function KeywordDisplay({ data }: KeywordDisplayProps) {

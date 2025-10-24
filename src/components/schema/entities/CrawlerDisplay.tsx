@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { Crawler } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefCrawler } from 'salvageunion-reference'
 
 interface CrawlerDisplayProps {
-  data: Crawler
+  data: SURefCrawler
 }
 
 export function CrawlerDisplay({ data }: CrawlerDisplayProps) {

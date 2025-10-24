@@ -1,14 +1,14 @@
 import { useState, useMemo } from 'react'
 import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import type { Equipment } from 'salvageunion-reference'
+import type { SURefEquipment } from 'salvageunion-reference'
 import Modal from '../Modal'
-import { EquipmentDisplay } from '../EquipmentDisplay'
+import { EquipmentDisplay } from '../schema/entities/EquipmentDisplay'
 
 interface EquipmentSelectorProps {
   isOpen: boolean
   onClose: () => void
-  equipment: Equipment[]
+  equipment: SURefEquipment[]
   onSelectEquipment: (equipmentId: string) => void
 }
 

@@ -2,11 +2,11 @@ import { useState, useMemo } from 'react'
 import { VStack, Flex, Badge, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { SheetInput } from '../shared/SheetInput'
-import type { Chassis } from 'salvageunion-reference'
+import type { SURefChassis } from 'salvageunion-reference'
 
 interface PatternSelectorProps {
   pattern: string
-  selectedChassis: Chassis | undefined
+  selectedChassis: SURefChassis | undefined
   onChange: (patternName: string) => void
 }
 

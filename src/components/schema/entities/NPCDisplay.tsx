@@ -1,8 +1,8 @@
-import { EntityDisplay } from './shared/EntityDisplay'
-import type { NPC } from 'salvageunion-reference'
+import { EntityDisplay } from '../../shared/EntityDisplay'
+import type { SURefNPC } from 'salvageunion-reference'
 
 interface NPCDisplayProps {
-  data: NPC
+  data: SURefNPC
 }
 
 export function NPCDisplay({ data }: NPCDisplayProps) {

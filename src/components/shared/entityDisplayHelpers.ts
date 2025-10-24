@@ -1,71 +1,6 @@
-import type {
-  Vehicle,
-  Creature,
-  Drone,
-  BioTitan,
-  NPC,
-  Squad,
-  Meld,
-  Keyword,
-  TraitEntry,
-  System,
-  Module,
-  Equipment,
-  Ability,
-  AbilityTreeRequirement,
-  RollTable,
-  Crawler,
-  CrawlerTechLevel,
-  Class,
-  CrawlerBay,
-  Chassis,
-} from 'salvageunion-reference'
+import type { SURefEntity, SURefEntityName } from 'salvageunion-reference'
 import type { DataValue } from '../../types/common'
 import { formatTraits } from '../../utils/displayUtils'
-
-export type EntityData =
-  | Vehicle
-  | Creature
-  | Drone
-  | BioTitan
-  | NPC
-  | Squad
-  | Meld
-  | Keyword
-  | TraitEntry
-  | System
-  | Module
-  | Equipment
-  | Ability
-  | AbilityTreeRequirement
-  | RollTable
-  | Crawler
-  | CrawlerTechLevel
-  | Class
-  | CrawlerBay
-  | Chassis
-
-export type EntityType =
-  | 'Vehicle'
-  | 'Creature'
-  | 'Drone'
-  | 'BioTitan'
-  | 'NPC'
-  | 'Squad'
-  | 'Meld'
-  | 'Keyword'
-  | 'Trait'
-  | 'System'
-  | 'Module'
-  | 'Equipment'
-  | 'Ability'
-  | 'AbilityTreeRequirement'
-  | 'Table'
-  | 'Crawler'
-  | 'CrawlerTechLevel'
-  | 'Class'
-  | 'CrawlerBay'
-  | 'Chassis'
 
 export interface Stat {
   label: string
@@ -90,7 +25,7 @@ export interface ContentSections {
 /**
  * Detect entity type from data properties
  */
-export function detectEntityType(data: EntityData): EntityType {
+export function detectEntityType(data: SURefEntity): SURefEntityName {
   // AbilityTreeRequirement: has requirement and tree but no name
   if ('requirement' in data && 'tree' in data && !('name' in data)) {
     return 'AbilityTreeRequirement'
@@ -170,8 +105,8 @@ export function detectEntityType(data: EntityData): EntityType {
 /**
  * Get schema name for display in page reference
  */
-export function getSchemaName(entityType: EntityType): string {
-  const schemaNames: Record<EntityType, string> = {
+export function getSchemaName(entityType: SURefEntityName): string {
+  const schemaNames: Record<SURefEntityName, string> = {
     Vehicle: 'Vehicle',
     Creature: 'Creature',
     Drone: 'Drone',
@@ -200,7 +135,7 @@ export function getSchemaName(entityType: EntityType): string {
  * Get activation currency based on entity type
  */
 export function getActivationCurrency(
-  entityType: EntityType,
+  entityType: SURefEntityName,
   variable: boolean = false
 ): 'AP' | 'EP' | 'XP' {
   if (variable) return 'XP'
@@ -213,7 +148,7 @@ export function getActivationCurrency(
 /**
  * Extract header stats (HP, SP, chassis stats)
  */
-export function extractHeaderStats(data: EntityData): Stat[] {
+export function extractHeaderStats(data: SURefEntity): Stat[] {
   const stats: Stat[] = []
 
   // Chassis has nested stats object
@@ -262,7 +197,7 @@ export function extractHeaderStats(data: EntityData): Stat[] {
 /**
  * Extract details for header (activation cost, range, damage, traits)
  */
-export function extractDetails(data: EntityData, entityType: EntityType): DataValue[] {
+export function extractDetails(data: SURefEntity, entityType: SURefEntityName): DataValue[] {
   const details: DataValue[] = []
   const variableCost = 'activationCurrency' in data && entityType === 'Ability'
   const activationCurrency = getActivationCurrency(entityType, variableCost)
@@ -327,7 +262,7 @@ export function extractDetails(data: EntityData, entityType: EntityType): DataVa
 /**
  * Extract sidebar data (tech level, salvage value, slots)
  */
-export function extractSidebarData(data: EntityData): SidebarData {
+export function extractSidebarData(data: SURefEntity): SidebarData {
   let techLevel: number | undefined
   let salvageValue: number | undefined
   let slotsRequired: number | undefined
@@ -375,7 +310,7 @@ export function extractSidebarData(data: EntityData): SidebarData {
 /**
  * Determine which content sections to show
  */
-export function extractContentSections(data: EntityData): ContentSections {
+export function extractContentSections(data: SURefEntity): ContentSections {
   return {
     showStatBonus: 'statBonus' in data && data.statBonus !== undefined,
     showActions: 'actions' in data && data.actions !== undefined && data.actions.length > 0,
@@ -388,7 +323,7 @@ export function extractContentSections(data: EntityData): ContentSections {
 /**
  * Extract header text
  */
-export function extractHeader(data: EntityData, entityType: EntityType): string {
+export function extractHeader(data: SURefEntity, entityType: SURefEntityName): string {
   // AbilityTreeRequirement uses 'tree' instead of 'name'
   if (entityType === 'AbilityTreeRequirement' && 'tree' in data) {
     return `${data.tree} Tree`
@@ -399,35 +334,35 @@ export function extractHeader(data: EntityData, entityType: EntityType): string 
 /**
  * Extract level (for abilities)
  */
-export function extractLevel(data: EntityData): string | number | undefined {
+export function extractLevel(data: SURefEntity): string | number | undefined {
   return 'level' in data ? data.level : undefined
 }
 
 /**
  * Extract description
  */
-export function extractDescription(data: EntityData): string | undefined {
+export function extractDescription(data: SURefEntity): string | undefined {
   return 'description' in data ? data.description : undefined
 }
 
 /**
  * Extract notes
  */
-export function extractNotes(data: EntityData): string | undefined {
+export function extractNotes(data: SURefEntity): string | undefined {
   return 'notes' in data ? data.notes : undefined
 }
 
 /**
  * Check if entity has page reference
  */
-export function hasPageReference(data: EntityData): boolean {
+export function hasPageReference(data: SURefEntity): boolean {
   return 'page' in data
 }
 
 /**
  * Extract page reference data
  */
-export function extractPageReference(data: EntityData): {
+export function extractPageReference(data: SURefEntity): {
   source?: string
   page: number
 } | null {
