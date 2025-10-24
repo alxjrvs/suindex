@@ -1,6 +1,6 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
 import type { Chassis } from 'salvageunion-reference'
+import { SheetDisplay } from '../shared/SheetDisplay'
 
 interface ChassisAbilitiesProps {
   chassis: Chassis | undefined
@@ -18,31 +18,15 @@ export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
           },
         ]
       ).map((ability, idx) => (
-        <Box
-          key={idx}
-          bg="bg.input"
-          borderWidth="3px"
-          borderColor="su.black"
-          borderRadius="2xl"
-          p={4}
-        >
-          {ability.name && (
-            <Heading level="h3" fontWeight="bold" color="fg.input" fontSize="lg" mb={2}>
-              {ability.name}
-            </Heading>
-          )}
-          {ability.description && (
-            <Text color="fg.input" lineHeight="relaxed">
-              {ability.description}
-            </Text>
-          )}
+        <SheetDisplay key={idx} label={ability.name || undefined}>
+          <Text lineHeight="relaxed">{ability.description}</Text>
           {'options' in ability &&
             ability.options &&
             Array.isArray(ability.options) &&
             ability.options.length > 0 && (
               <VStack mt={3} ml={4} gap={1} alignItems="stretch">
                 {ability.options.map((option, optIndex) => (
-                  <Box key={optIndex} color="fg.input">
+                  <Box key={optIndex}>
                     <Text as="span" fontWeight="bold">
                       {option.label}
                       {option.label.includes('•') || option.label.length === 0 ? '' : ':'}
@@ -52,7 +36,7 @@ export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
                 ))}
               </VStack>
             )}
-        </Box>
+        </SheetDisplay>
       ))}
     </VStack>
   )

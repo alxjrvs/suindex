@@ -1,7 +1,8 @@
-import { Box, Text, VStack } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
 import type { Crawler } from 'salvageunion-reference'
 import { Heading } from '../base/Heading'
 import { RoundedBox } from '../shared/RoundedBox'
+import { SheetDisplay } from '../shared/SheetDisplay'
 
 interface CrawlerAbilitiesProps {
   crawler: Crawler | undefined
@@ -25,25 +26,7 @@ export function CrawlerAbilities({ crawler }: CrawlerAbilitiesProps) {
             },
           ]
         ).map((ability, idx) => (
-          <Box
-            key={idx}
-            bg="bg.input"
-            borderWidth="2px"
-            borderColor="fg.input"
-            borderRadius="2xl"
-            p={4}
-          >
-            {ability.name && (
-              <Heading level="h3" mb={2}>
-                {ability.name}
-              </Heading>
-            )}
-            {ability.description && (
-              <Text color="fg.input" lineHeight="relaxed">
-                {ability.description}
-              </Text>
-            )}
-          </Box>
+          <SheetDisplay key={idx} label={ability.name || undefined} value={ability.description} />
         ))}
       </VStack>
     </RoundedBox>
