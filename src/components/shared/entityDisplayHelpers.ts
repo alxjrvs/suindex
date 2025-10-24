@@ -121,8 +121,8 @@ export function detectEntityType(data: EntityData): EntityType {
     return 'Chassis'
   }
 
-  // CrawlerBay: has operatorPosition and operatorHitPoints
-  if ('operatorPosition' in data && 'operatorHitPoints' in data) {
+  // CrawlerBay: has NPC with choices
+  if ('npc' in data && typeof data.npc === 'object' && data.npc && 'choices' in data.npc) {
     return 'CrawlerBay'
   }
 

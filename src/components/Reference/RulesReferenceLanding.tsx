@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Flex, Input, VStack } from '@chakra-ui/react'
+import { Box, Flex, Input, VStack, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Heading } from '../base/Heading'
 import type { SchemaInfo, DataItem } from '../../types/schema'
@@ -232,32 +232,40 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       </Box>
 
       <Box flex="1" p={6}>
-        <Box maxW="4xl" mx="auto">
+        <Box maxW="6xl" mx="auto">
           <Heading level="h3" mb={4}>
             Browse by Category
           </Heading>
-          <VStack gap={3} alignItems="stretch">
-            {schemas.map((schema) => (
-              <Box
-                key={schema.id}
-                p={4}
-                bg="su.white"
-                borderWidth="2px"
-                borderColor="su.lightBlue"
-                borderRadius="md"
-                cursor="pointer"
-                _hover={{ bg: 'su.lightOrange', borderColor: 'su.orange' }}
-                onClick={() => navigate(`/reference/schema/${schema.id}`)}
-              >
-                <Text fontWeight="semibold" color="su.black" fontSize="lg">
-                  {schema.title}
-                </Text>
-                <Text fontSize="sm" color="su.brick" mt={1}>
-                  {schema.description} ({schema.itemCount} items)
-                </Text>
-              </Box>
-            ))}
-          </VStack>
+          <Grid
+            templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+            gap={4}
+          >
+            {schemas.map((schema) => {
+              const title = schema.title.replace('Salvage Union ', '')
+              const description = schema.description.replace('Salvage Union ', '')
+
+              return (
+                <Box
+                  key={schema.id}
+                  p={4}
+                  bg="su.white"
+                  borderWidth="2px"
+                  borderColor="su.lightBlue"
+                  borderRadius="md"
+                  cursor="pointer"
+                  _hover={{ bg: 'su.lightOrange', borderColor: 'su.orange' }}
+                  onClick={() => navigate(`/reference/schema/${schema.id}`)}
+                >
+                  <Text fontWeight="semibold" color="su.black" fontSize="lg">
+                    {title}
+                  </Text>
+                  <Text fontSize="sm" color="su.brick" mt={1}>
+                    {description} ({schema.itemCount} items)
+                  </Text>
+                </Box>
+              )
+            })}
+          </Grid>
         </Box>
       </Box>
     </Flex>

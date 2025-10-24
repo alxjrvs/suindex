@@ -121,7 +121,11 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
       </Flex>
 
-      <CrawlerAbilities crawler={selectedCrawlerType} />
+      <CrawlerAbilities
+        crawler={crawler}
+        onUpdate={updateCrawler}
+        crawlerRef={selectedCrawlerType}
+      />
 
       {/* Bays Grid - First Row */}
       {firstRowBays.length > 0 && (

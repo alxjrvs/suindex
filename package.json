@@ -21,7 +21,7 @@
     "@chakra-ui/react": "^3.28.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@randsum/salvageunion": "^0.33.0",
+    "@randsum/salvageunion": "^0.35.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.76.1",
     "framer-motion": "^12.23.24",
@@ -29,7 +29,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.4",
-    "salvageunion-reference": "^1.20.0",
+    "salvageunion-reference": "^1.22.0",
     "type-fest": "^5.1.0"
   },
   "devDependencies": {
@@ -40,11 +40,11 @@
     "@types/node": "^24.9.1",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "@vitejs/plugin-react": "^5.0.4",
+    "@vitejs/plugin-react": "^5.1.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.4.0",
     "jsdom": "^27.0.1",
@@ -56,6 +56,6 @@
     "typescript-eslint": "^8.46.2",
     "vite": "^7.1.12",
     "vite-plugin-compression": "^0.5.1",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.2"
   }
 }

@@ -5,13 +5,20 @@ import type { Database as DatabaseGenerated } from './database-generated.types'
 // Custom JSON Type Definitions
 // ============================================================================
 
+// Standardized NPC structure for crawlers
+export interface CrawlerNPC {
+  name: string
+  notes: string
+  hitPoints: number
+  damage: number
+}
+
 // Crawler Types - Custom data not from salvageunion-reference
 export interface CrawlerBay {
   id: string
   bayId: string
   name: string
-  operator: string
-  operatorPosition: string
+  npc: CrawlerNPC
   description: string
 }
 
@@ -34,14 +41,17 @@ export type Database = MergeDeep<
           Row: {
             bays: CrawlerBay[] | null
             cargo: CargoItem[] | null
+            npc: CrawlerNPC | null
           }
           Insert: {
             bays?: CrawlerBay[] | null
             cargo?: CargoItem[] | null
+            npc?: CrawlerNPC | null
           }
           Update: {
             bays?: CrawlerBay[] | null
             cargo?: CargoItem[] | null
+            npc?: CrawlerNPC | null
           }
         }
         mechs: {
