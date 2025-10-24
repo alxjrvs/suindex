@@ -66,7 +66,7 @@ describe('LiveSheetControlBar', () => {
       )
 
       await waitFor(() => {
-        expect(screen.getByText('Game:')).toBeInTheDocument()
+        expect(screen.getByText('Game')).toBeInTheDocument()
       })
     })
 
@@ -134,7 +134,7 @@ describe('LiveSheetControlBar', () => {
       )
 
       await waitFor(() => {
-        expect(screen.getByText('Pilot:')).toBeInTheDocument()
+        expect(screen.getByText('Pilot')).toBeInTheDocument()
         expect(screen.getByText('→ Pilot')).toBeInTheDocument()
       })
     })

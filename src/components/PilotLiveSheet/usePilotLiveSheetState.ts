@@ -126,7 +126,13 @@ export function usePilotLiveSheetState(id?: string) {
   }, [allClasses, pilot.abilities, selectedClass, allAbilities])
 
   const handleClassChange = useCallback(
-    (classId: string) => {
+    (classId: string | null) => {
+      // If null or empty, just update to null
+      if (!classId) {
+        updatePilot({ class_id: null })
+        return
+      }
+
       // If there's already a class selected and user is changing it, reset data
       if (pilot.class_id && pilot.class_id !== classId) {
         // Reset to initial state but keep the new class_id

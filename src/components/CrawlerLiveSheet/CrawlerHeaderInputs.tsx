@@ -11,7 +11,7 @@ interface CrawlerHeaderInputsProps {
   description: string
   allCrawlers: Crawler[]
   onNameChange: (value: string) => void
-  onCrawlerTypeChange: (value: string) => void
+  onCrawlerTypeChange: (value: string | null) => void
   onDescriptionChange: (value: string) => void
 }
 
@@ -41,7 +41,7 @@ export function CrawlerHeaderInputs({
             placeholder="Enter crawler name..."
           />
 
-          <FormSelect label="Type" value={crawlerTypeId || ''} onChange={onCrawlerTypeChange}>
+          <FormSelect label="Type" value={crawlerTypeId} onChange={onCrawlerTypeChange}>
             <option value="">Select crawler type...</option>
             {allCrawlers.map((crawler) => (
               <option key={crawler.id} value={crawler.id}>

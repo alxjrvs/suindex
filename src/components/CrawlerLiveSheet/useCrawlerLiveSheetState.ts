@@ -93,7 +93,13 @@ export function useCrawlerLiveSheetState(id?: string) {
   }, [currentTechLevel, updateCrawler])
 
   const handleCrawlerTypeChange = useCallback(
-    (crawlerTypeId: string) => {
+    (crawlerTypeId: string | null) => {
+      // If null or empty, just update to null
+      if (!crawlerTypeId) {
+        updateCrawler({ crawler_type_id: null })
+        return
+      }
+
       // If there's already a crawler type selected and user is changing it, reset data
       if (crawler.crawler_type_id && crawler.crawler_type_id !== crawlerTypeId) {
         // Mark that we're resetting to prevent useEffect from triggering additional updates

@@ -73,7 +73,13 @@ export function useMechLiveSheetState(id?: string) {
     }
   }, [selectedChassis, updateMech])
 
-  const handleChassisChange = (chassisId: string) => {
+  const handleChassisChange = (chassisId: string | null) => {
+    // If null or empty, just update to null
+    if (!chassisId) {
+      updateMech({ chassis_id: null })
+      return
+    }
+
     // If there's already a chassis selected and user is changing it, reset data
     if (mech.chassis_id && mech.chassis_id !== chassisId) {
       // Mark that we're resetting to prevent useEffect from triggering additional updates

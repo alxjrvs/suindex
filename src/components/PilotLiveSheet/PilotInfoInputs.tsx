@@ -29,8 +29,8 @@ interface PilotInfoInputsProps {
   onBackgroundChange: (value: string) => void
   onBackgroundUsedChange: (value: boolean) => void
   onAppearanceChange: (value: string) => void
-  onClassChange: (classId: string) => void
-  onAdvancedClassChange: (classId: string) => void
+  onClassChange: (classId: string | null) => void
+  onAdvancedClassChange: (classId: string | null) => void
 }
 
 export function PilotInfoInputs({
@@ -123,7 +123,7 @@ export function PilotInfoInputs({
           <Box flex="1" h="full">
             <FormSelect
               label="Class"
-              value={classId || ''}
+              value={classId}
               onChange={onClassChange}
               disabled={disabled}
               placeholder="Select..."
@@ -140,7 +140,7 @@ export function PilotInfoInputs({
           <Box flex="1" h="full">
             <FormSelect
               label="Advanced"
-              value={advancedClassId || ''}
+              value={advancedClassId}
               onChange={onAdvancedClassChange}
               disabled={disabled || availableAdvancedClasses.length === 0}
               placeholder="Select..."

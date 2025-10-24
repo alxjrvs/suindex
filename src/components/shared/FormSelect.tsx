@@ -5,11 +5,13 @@ import type { ReactNode } from 'react'
 
 interface FormSelectProps {
   label: string
-  value: string
-  onChange: (value: string) => void
+  value: string | null
+  onChange: (value: string | null) => void
   disabled?: boolean
   placeholder?: string
-  children: ReactNode
+  loading?: boolean
+  options?: { id: string; name: string }[]
+  children?: ReactNode
 }
 
 export function FormSelect({
@@ -18,6 +20,8 @@ export function FormSelect({
   onChange,
   disabled = false,
   placeholder = 'Select an option...',
+  loading = false,
+  options,
   children,
 }: FormSelectProps) {
   return (
@@ -37,8 +41,8 @@ export function FormSelect({
       {/* Select */}
       <NativeSelectRoot disabled={disabled}>
         <NativeSelectField
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          value={value ?? ''}
+          onChange={(e) => onChange(e.target.value || null)}
           w="full"
           px={3}
           py={2}
@@ -50,8 +54,14 @@ export function FormSelect({
           fontWeight="semibold"
           _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
         >
-          <option value="">{placeholder}</option>
-          {children}
+          <option value="">{loading ? 'Loading...' : placeholder}</option>
+          {options
+            ? options.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
+                </option>
+              ))
+            : children}
         </NativeSelectField>
       </NativeSelectRoot>
     </Flex>

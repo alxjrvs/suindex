@@ -63,7 +63,7 @@ export function CrawlerResourceSteppers({
         </Flex>
         <Flex justifyContent="start" alignItems="end">
           <NumericStepper
-            label="TL1 SCRAP"
+            label="SCRAP"
             value={currentScrap}
             onChange={onCurrentScrapChange}
             min={0}

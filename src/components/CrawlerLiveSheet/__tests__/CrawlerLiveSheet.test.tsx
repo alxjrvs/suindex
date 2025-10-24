@@ -142,7 +142,7 @@ describe('CrawlerLiveSheet', () => {
       expect(screen.getByText(/TECH LVL/i)).toBeInTheDocument()
       expect(screen.getByText(/UPGRADE/i)).toBeInTheDocument()
       expect(screen.getByText(/UPKEEP/i)).toBeInTheDocument()
-      expect(screen.getByText(/TL1 SCRAP/i)).toBeInTheDocument()
+      expect(screen.getByText(/SCRAP/i)).toBeInTheDocument()
 
       // Notes section
       expect(screen.getByPlaceholderText(/add notes about your crawler/i)).toBeInTheDocument()
@@ -164,7 +164,7 @@ describe('CrawlerLiveSheet', () => {
       expect(within(upgradeStepper).getByText('0/25')).toBeInTheDocument()
 
       // Scrap should start at 0
-      const scrapStepper = screen.getByRole('group', { name: /TL1 SCRAP/i })
+      const scrapStepper = screen.getByRole('group', { name: /SCRAP/i })
       expect(within(scrapStepper).getByText('0')).toBeInTheDocument()
     })
 
@@ -271,9 +271,9 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
-      const scrapStepper = screen.getByRole('group', { name: /TL1 SCRAP/i })
+      const scrapStepper = screen.getByRole('group', { name: /SCRAP/i })
       const incrementButton = within(scrapStepper).getByRole('button', {
-        name: /Increment TL1 SCRAP/i,
+        name: /Increment SCRAP/i,
       })
 
       // Increment scrap

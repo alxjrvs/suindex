@@ -5,7 +5,7 @@ import type { Chassis } from 'salvageunion-reference'
 interface ChassisSelectorProps {
   chassisId: string | null
   allChassis: Chassis[]
-  onChange: (chassisId: string) => void
+  onChange: (chassisId: string | null) => void
 }
 
 export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSelectorProps) {
@@ -31,7 +31,7 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
   }, [allChassis])
 
   return (
-    <FormSelect label="Chassis" value={chassisId || ''} onChange={onChange}>
+    <FormSelect label="Chassis" value={chassisId} onChange={onChange}>
       <option value="">Select a chassis...</option>
       {groupedChassis.map(({ techLevel, chassis }) => (
         <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>
