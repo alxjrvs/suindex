@@ -210,6 +210,25 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
               Mechs
             </Button>
           </Box>
+          <Box as="li">
+            <Button
+              onClick={() => handleNavigate('/reference/')}
+              px={4}
+              py={2}
+              _hover={{ bg: 'su.lightOrange' }}
+              bg={isActive('/reference/') ? 'su.lightBlue' : 'transparent'}
+              borderBottomWidth={isActive('/reference/') ? '3px' : 0}
+              borderBottomColor="su.orange"
+              color="su.black"
+              fontWeight={isActive('/reference/') ? 'semibold' : 'normal'}
+              borderRadius="md"
+              variant="ghost"
+              h="auto"
+              w={{ base: 'full', lg: 'auto' }}
+            >
+              Rules Reference
+            </Button>
+          </Box>
         </HStack>
 
         {/* User info and sign out */}

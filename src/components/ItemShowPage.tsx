@@ -2,7 +2,6 @@ import { Suspense, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { Heading } from './base/Heading'
 import type { ReactElement } from 'react'
 import type { SchemaInfo } from '../types/schema'
 import { getDisplayComponent } from './componentRegistry'
@@ -123,10 +122,6 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
             ← Back to {currentSchema.title}
           </Button>
         </Flex>
-        <Heading level="h2">{(item.name as string) || 'Item Details'}</Heading>
-        <Text color="su.brick" mt={2}>
-          {currentSchema.description}
-        </Text>
       </Box>
 
       <Box flex="1" overflowY="auto" p={6}>

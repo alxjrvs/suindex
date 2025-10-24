@@ -102,7 +102,7 @@ export function detectEntityType(data: EntityData): EntityType {
   }
 
   // Ability: has tree, level, and name
-  if ('tree' in data && 'level' in data && 'name' in data) {
+  if ('tree' in data && 'name' in data) {
     return 'Ability'
   }
 
@@ -199,8 +199,11 @@ export function getSchemaName(entityType: EntityType): string {
 /**
  * Get activation currency based on entity type
  */
-export function getActivationCurrency(entityType: EntityType): 'AP' | 'EP' {
-  // Systems and Modules use EP, everything else uses AP
+export function getActivationCurrency(
+  entityType: EntityType,
+  variable: boolean = false
+): 'AP' | 'EP' | 'XP' {
+  if (variable) return 'XP'
   if (entityType === 'System' || entityType === 'Module') {
     return 'EP'
   }
@@ -261,23 +264,40 @@ export function extractHeaderStats(data: EntityData): Stat[] {
  */
 export function extractDetails(data: EntityData, entityType: EntityType): DataValue[] {
   const details: DataValue[] = []
-  const activationCurrency = getActivationCurrency(entityType)
+  const currencyInData = 'activationCurrency' in data
+  console.log('Entity type', entityType)
+  console.log('Currency in data', currencyInData)
+  const variableCost = 'activationCurrency' in data && entityType === 'Ability'
+  const activationCurrency = getActivationCurrency(entityType, variableCost)
 
   // Activation cost
   if ('activationCost' in data && data.activationCost !== undefined) {
     const isVariable = String(data.activationCost).toLowerCase() === 'variable'
     const costValue = isVariable
-      ? `Variable ${activationCurrency}`
+      ? `X ${activationCurrency}`
       : `${data.activationCost} ${activationCurrency}`
     details.push({ value: costValue, cost: true })
   }
 
   // Action type
   if ('actionType' in data && data.actionType) {
-    const actionType = data.actionType.includes('action')
-      ? data.actionType
-      : `${data.actionType} Action`
-    details.push({ value: actionType })
+    if ('mechActionType' in data && data.mechActionType) {
+      const mechActionType = data.mechActionType.includes('action')
+        ? data.mechActionType
+        : `${data.mechActionType} Action (Mech)`
+
+      const actionType = data.actionType.includes('action')
+        ? data.actionType
+        : `${data.actionType} Action (Pilot)`
+
+      details.push({ value: mechActionType })
+      details.push({ value: actionType })
+    } else {
+      const actionType = data.actionType.includes('action')
+        ? data.actionType
+        : `${data.actionType} Action`
+      details.push({ value: actionType })
+    }
   }
 
   // Range - no "Range:" prefix for abilities

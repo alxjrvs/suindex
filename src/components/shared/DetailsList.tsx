@@ -5,10 +5,9 @@ import type { DataValue } from '../../types/common'
 interface DetailsListProps {
   values: DataValue[]
   textColor?: string
-  invert?: boolean
 }
 
-export function DetailsList({ values, textColor = 'su.black', invert = false }: DetailsListProps) {
+export function DetailsList({ values, textColor = 'su.black' }: DetailsListProps) {
   if (values.length === 0) return null
 
   return (
@@ -16,8 +15,8 @@ export function DetailsList({ values, textColor = 'su.black', invert = false }: 
       {values.map((item, index) => (
         <Flex key={index} display="inline-flex" alignItems="center" gap={1}>
           {index > 0 && (
-            <Text color={textColor} opacity={0.5}>
-              •
+            <Text color={textColor} fontWeight="semibold">
+              //
             </Text>
           )}
           {item.cost ? (
@@ -25,7 +24,7 @@ export function DetailsList({ values, textColor = 'su.black', invert = false }: 
               <ActivationCostBox cost={item.value} currency="" />
             </Box>
           ) : (
-            <Text color={textColor} opacity={invert ? 0.9 : 1}>
+            <Text color={textColor} fontWeight="bold">
               {item.value}
             </Text>
           )}

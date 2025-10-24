@@ -77,7 +77,7 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
       >
         <Box flex="1">
           <Button
-            onClick={() => handleNavigate('/')}
+            onClick={() => handleNavigate('/reference/')}
             w="full"
             textAlign="left"
             display="block"
@@ -93,6 +93,25 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
             <Heading level="h1">Salvage Union</Heading>
             <Text fontSize="sm" color="su.brick">
               Index
+            </Text>
+          </Button>
+          <Button
+            onClick={() => handleNavigate('/dashboard')}
+            w="full"
+            textAlign="center"
+            display="block"
+            px={4}
+            py={3}
+            _hover={{ bg: 'su.lightOrange' }}
+            bg="transparent"
+            borderRadius={0}
+            variant="ghost"
+            h="auto"
+            borderBottomWidth="1px"
+            borderBottomColor="su.lightBlue"
+          >
+            <Text fontWeight="medium" color="su.black">
+              Dashboard
             </Text>
           </Button>
           <VStack as="ul" py={2} gap={0} alignItems="stretch">

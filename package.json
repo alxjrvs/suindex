@@ -29,7 +29,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.4",
-    "salvageunion-reference": "^1.19.0",
+    "salvageunion-reference": "^1.20.0",
     "type-fest": "^5.1.0"
   },
   "devDependencies": {
@@ -54,7 +54,7 @@
     "terser": "^5.44.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.2",
-    "vite": "^7.1.11",
+    "vite": "^7.1.12",
     "vite-plugin-compression": "^0.5.1",
     "vitest": "^3.2.4"
   }

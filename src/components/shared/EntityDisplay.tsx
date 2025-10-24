@@ -68,7 +68,8 @@ export function EntityDisplay({
   // Detect entity type and extract all data using helpers
   const entityType = detectEntityType(data)
   const schemaName = getSchemaName(entityType)
-  const activationCurrency = getActivationCurrency(entityType)
+  const variableCost = 'activationCost' in data && entityType === 'Ability'
+  const activationCurrency = getActivationCurrency(entityType, variableCost)
 
   const header = extractHeader(data, entityType)
   const level = extractLevel(data)
@@ -151,7 +152,7 @@ export function EntityDisplay({
               {/* Left side: Title and details */}
               <VStack alignItems="flex-start" gap={1} flex="1">
                 {header && (
-                  <Heading level="h3" flexWrap="wrap" color="su.white">
+                  <Heading level="h2" flexWrap="wrap" color="su.white">
                     {header}
                   </Heading>
                 )}
