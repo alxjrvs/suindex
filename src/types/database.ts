@@ -19,6 +19,7 @@ export interface CrawlerBay {
   bayId: string
   name: string
   npc: CrawlerNPC
+  damaged: boolean
   description: string
 }
 

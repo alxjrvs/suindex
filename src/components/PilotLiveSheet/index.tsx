@@ -8,7 +8,8 @@ import { AbilitySelector } from './AbilitySelector'
 import { PilotInventory } from './PilotInventory'
 import { EquipmentSelector } from './EquipmentSelector'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { PilotControlBar } from './PilotControlBar'
+import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
+import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
 import { usePilotLiveSheetState } from './usePilotLiveSheetState'
 
@@ -83,10 +84,11 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
   return (
     <LiveSheetLayout>
       {id && (
-        <PilotControlBar
-          crawlerId={pilot.crawler_id}
-          savedCrawlerId={savedCrawlerId}
-          onCrawlerChange={(crawlerId) => updatePilot({ crawler_id: crawlerId })}
+        <LiveSheetControlBar
+          config={PILOT_CONTROL_BAR_CONFIG}
+          relationId={pilot.crawler_id}
+          savedRelationId={savedCrawlerId}
+          onRelationChange={(crawlerId) => updatePilot({ crawler_id: crawlerId })}
           hasPendingChanges={hasPendingChanges}
         />
       )}

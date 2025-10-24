@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Box, Flex, Grid, Text } from '@chakra-ui/react'
+import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
 import { CrawlerResourceSteppers } from './CrawlerResourceSteppers'
 import { BayCard } from './BayCard'
-import { StorageBay } from './StorageBay'
+import { CargoBay } from './CargoBay'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
@@ -166,18 +166,26 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         </Grid>
       )}
 
-      {/* Storage Bay and Notes - Side by Side */}
+      {/* Storage Bay, Cargo Bay, and Notes */}
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-        {/* Storage Bay */}
-        {storageBay && (
-          <StorageBay
-            npc={storageBay.npc}
-            onUpdate={(updates) => handleUpdateBay(storageBay.id, updates)}
+        {/* Storage Bay and Cargo Bay Column */}
+        <VStack gap={4} alignItems="stretch">
+          {/* Storage Bay */}
+          {storageBay && (
+            <BayCard
+              bay={storageBay}
+              onUpdate={(updates) => handleUpdateBay(storageBay.id, updates)}
+            />
+          )}
+
+          {/* Cargo Bay */}
+          <CargoBay
             cargo={crawler.cargo ?? []}
             onAddCargo={() => setIsCargoModalOpen(true)}
             onRemoveCargo={handleRemoveCargo}
+            damaged={storageBay?.damaged}
           />
-        )}
+        </VStack>
 
         {/* Notes */}
         <Notes

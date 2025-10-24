@@ -184,7 +184,11 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
   }
 
   return (
-    <EntityDisplay data={data} headerColor={data.type === 'core' ? 'su.orange' : 'su.pink'}>
+    <EntityDisplay
+      entityName="Class"
+      data={data}
+      headerColor={data.type === 'core' ? 'su.orange' : 'su.pink'}
+    >
       <VStack gap={6} alignItems="stretch">
         <AbilitySection title="Core Abilities" abilities={coreAbilities} headerColor="su.brick" />
 

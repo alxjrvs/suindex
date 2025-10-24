@@ -10,7 +10,6 @@ import { StatBonusDisplay } from './StatBonusDisplay'
 import { RollTable } from './RollTable'
 import { techLevelColors } from '../../theme'
 import {
-  detectEntityType,
   getSchemaName,
   getActivationCurrency,
   extractHeaderStats,
@@ -23,7 +22,7 @@ import {
   extractNotes,
   extractPageReference,
 } from './entityDisplayHelpers'
-import type { SURefEntity } from 'salvageunion-reference'
+import type { SURefEntity, SURefEntityName } from 'salvageunion-reference'
 
 interface EntityDisplayProps {
   data: SURefEntity
@@ -31,7 +30,6 @@ interface EntityDisplayProps {
   actionHeaderBgColor?: string
   actionHeaderTextColor?: string
   children?: ReactNode
-  // LiveSheet props (available for all entities, not exclusive to any schema)
   onClick?: () => void
   dimmed?: boolean
   showRemoveButton?: boolean
@@ -44,6 +42,7 @@ interface EntityDisplayProps {
   showSelectButton?: boolean
   selectButtonText?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
+  entityName: SURefEntityName
 }
 
 export function EntityDisplay({
@@ -64,19 +63,18 @@ export function EntityDisplay({
   showSelectButton = false,
   selectButtonText,
   contentJustify = 'flex-start',
+  entityName,
 }: EntityDisplayProps) {
-  // Detect entity type and extract all data using helpers
-  const entityType = detectEntityType(data)
-  const schemaName = getSchemaName(entityType)
-  const variableCost = 'activationCost' in data && entityType === 'Ability'
-  const activationCurrency = getActivationCurrency(entityType, variableCost)
+  const schemaName = getSchemaName(entityName)
+  const variableCost = 'activationCost' in data && entityName === 'Ability'
+  const activationCurrency = getActivationCurrency(entityName, variableCost)
 
-  const header = extractHeader(data, entityType)
+  const header = extractHeader(data, entityName)
   const level = extractLevel(data)
   const description = extractDescription(data)
   const notes = extractNotes(data)
   const stats = extractHeaderStats(data)
-  const details = extractDetails(data, entityType)
+  const details = extractDetails(data, entityName)
   const sidebar = extractSidebarData(data)
   const sections = extractContentSections(data)
   const pageRef = extractPageReference(data)

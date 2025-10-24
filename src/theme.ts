@@ -19,6 +19,7 @@ export const suColors = {
   brick: 'rgb(168, 89, 71)',
   black: 'rgb(40, 32, 25)',
   white: 'rgb(251, 248, 243)',
+  grey: 'rgb(150, 150, 150)',
   // Derived colors for UI components
   inputBg: 'rgb(232, 229, 216)', // #e8e5d8
   inputText: 'rgb(45, 62, 54)', // #2d3e36
@@ -63,6 +64,7 @@ const config = defineConfig({
           brick: { value: suColors.brick },
           black: { value: suColors.black },
           white: { value: suColors.white },
+          grey: { value: suColors.grey },
           inputBg: { value: suColors.inputBg },
           inputText: { value: suColors.inputText },
           crawlerPink: { value: suColors.crawlerPink },

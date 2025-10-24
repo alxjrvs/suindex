@@ -123,6 +123,7 @@ export function getSchemaName(entityType: SURefEntityName): string {
     AbilityTreeRequirement: 'Ability Tree Requirement',
     Table: 'Table',
     Crawler: 'Crawler',
+    RollTable: 'Roll Table',
     CrawlerTechLevel: 'Crawler Tech Level',
     Class: 'Class',
     CrawlerBay: 'Crawler Bay',

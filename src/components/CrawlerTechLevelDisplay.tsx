@@ -8,7 +8,7 @@ interface CrawlerTechLevelDisplayProps {
 
 export function CrawlerTechLevelDisplay({ data }: CrawlerTechLevelDisplayProps) {
   return (
-    <EntityDisplay data={data} headerColor="su.pink">
+    <EntityDisplay entityName="CrawlerTechLevel" data={data} headerColor="su.pink">
       <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
         <Text color="su.black">
           <Text as="span" fontWeight="bold" color="su.brick">

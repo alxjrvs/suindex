@@ -61,6 +61,7 @@ export function useCrawlerLiveSheetState(id?: string) {
         id: `${bay.id}-${Date.now()}-${Math.random()}`,
         bayId: bay.id,
         name: bay.name,
+        damaged: false,
         npc: {
           name: '',
           notes: '',
@@ -126,6 +127,7 @@ export function useCrawlerLiveSheetState(id?: string) {
             id: `${bay.id}-${Date.now()}-${Math.random()}`,
             bayId: bay.id,
             name: bay.name,
+            damaged: false,
             npc: {
               name: '',
               notes: '',
