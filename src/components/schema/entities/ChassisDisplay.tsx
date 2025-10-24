@@ -9,7 +9,7 @@ interface ChassisDisplayProps {
 
 export function ChassisDisplay({ data }: ChassisDisplayProps) {
   return (
-    <EntityDisplay data={data} headerColor="su.green">
+    <EntityDisplay entityName="Chassis" data={data} headerColor="su.green">
       {/* Chassis Abilities */}
       {data.chassis_abilities && data.chassis_abilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">

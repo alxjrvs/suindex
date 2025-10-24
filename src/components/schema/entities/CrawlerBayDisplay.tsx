@@ -10,7 +10,7 @@ interface CrawlerBayDisplayProps {
 
 export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
   return (
-    <EntityDisplay data={data} headerColor="su.pink">
+    <EntityDisplay entityName="CrawlerBay" data={data} headerColor="su.pink">
       <VStack gap={4} alignItems="stretch">
         {data.damagedEffect && (
           <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>

@@ -1,10 +1,11 @@
-import { Flex, VStack } from '@chakra-ui/react'
+import { Box, Flex, VStack } from '@chakra-ui/react'
 import { SheetInput } from './SheetInput'
 import { SheetTextarea } from './SheetTextarea'
 import type { CrawlerNPC } from '../../types/database'
 import NumericStepper from '../NumericStepper'
 import { Text } from '../base/Text'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
+import { getTiltRotation } from '../../utils/tiltUtils'
 
 export function NPCCard({
   onUpdateName,
@@ -14,6 +15,7 @@ export function NPCCard({
   npc,
   maxHP,
   onUpdateDamage,
+  tilted = false,
 }: {
   npc: CrawlerNPC
   onUpdateName: (value: string) => void
@@ -22,6 +24,7 @@ export function NPCCard({
   maxHP: number
   onUpdateNotes: (value: string) => void
   onUpdateDamage: (value: number) => void
+  tilted?: boolean
 }) {
   const textRef = useRef<HTMLParagraphElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -55,48 +58,74 @@ export function NPCCard({
     return () => window.removeEventListener('resize', adjustFontSize)
   }, [description])
 
+  // Generate tilt rotations for each element
+  const descriptionRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
+  const hpRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
+  const nameRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
+  const notesRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
+
   return (
     <VStack gap={2} alignItems="stretch" mt={2} w="full">
       <Flex ref={containerRef} gap={3} alignItems="stretch" maxH="72px">
-        <Text
-          ref={textRef}
-          fontStyle="italic"
-          flex="1"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          maxH="72px"
-          lineHeight={1.2}
-          style={{ fontSize: `${fontSize}px` }}
+        <Box
+          transform={tilted ? `rotate(${descriptionRotation}deg)` : undefined}
+          transition="transform 0.3s ease"
         >
-          {description}
-        </Text>
+          <Text
+            ref={textRef}
+            fontStyle="italic"
+            flex="1"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            maxH="72px"
+            lineHeight={1.2}
+            style={{ fontSize: `${fontSize}px` }}
+          >
+            {description}
+          </Text>
+        </Box>
         {maxHP > 0 && (
-          <NumericStepper
-            label="NPC HP"
-            max={maxHP}
-            min={0}
-            value={maxHP - (npc?.damage || 0)}
-            onChange={(value) => onUpdateDamage(maxHP - value)}
-          />
+          <Box
+            transform={tilted ? `rotate(${hpRotation}deg)` : undefined}
+            transition="transform 0.3s ease"
+          >
+            <NumericStepper
+              label="NPC HP"
+              max={maxHP}
+              min={0}
+              value={maxHP - (npc?.damage || 0)}
+              onChange={(value) => onUpdateDamage(maxHP - value)}
+            />
+          </Box>
         )}
       </Flex>
 
-      <SheetInput
-        value={npc.name}
-        onChange={(value) => onUpdateName(value)}
-        placeholder={`Enter ${position} name...`}
-        suffixText={`the ${position}`}
-      />
+      <Box
+        transform={tilted ? `rotate(${nameRotation}deg)` : undefined}
+        transition="transform 0.3s ease"
+      >
+        <SheetInput
+          value={npc.name}
+          onChange={(value) => onUpdateName(value)}
+          placeholder={`Enter ${position} name...`}
+          suffixText={`the ${position}`}
+        />
+      </Box>
 
-      <SheetTextarea
-        label="Notes"
-        value={npc.notes}
-        onChange={(value) => onUpdateNotes(value)}
-        placeholder="Enter operator notes..."
-        height="20"
-      />
+      <Box
+        transform={tilted ? `rotate(${notesRotation}deg)` : undefined}
+        transition="transform 0.3s ease"
+      >
+        <SheetTextarea
+          label="Notes"
+          value={npc.notes}
+          onChange={(value) => onUpdateNotes(value)}
+          placeholder="Enter operator notes..."
+          height="20"
+        />
+      </Box>
     </VStack>
   )
 }

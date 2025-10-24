@@ -21,6 +21,7 @@
     "@chakra-ui/react": "^3.28.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@randsum/roller": "^0.27.0",
     "@randsum/salvageunion": "^0.35.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.76.1",
@@ -29,7 +30,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.4",
-    "salvageunion-reference": "^1.29.4",
+    "salvageunion-reference": "^1.29.6",
     "type-fest": "^5.1.0"
   },
   "devDependencies": {
@@ -44,7 +45,7 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.4.0",
     "jsdom": "^27.0.1",

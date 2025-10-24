@@ -26,6 +26,8 @@ interface RoundedBoxProps {
   /** Whether to fill full width (default: true) */
   fillWidth?: boolean
   justifyContent?: 'space-between' | 'flex-start' | 'flex-end' | 'center'
+  /** Optional rotation for the title in degrees */
+  titleRotation?: number
 }
 
 export function RoundedBox({
@@ -41,6 +43,7 @@ export function RoundedBox({
   fillHeight = false,
   fillWidth = false,
   justifyContent = 'space-between',
+  titleRotation = 0,
 }: RoundedBoxProps) {
   const actualBorderColor = matchBorder ? bg : borderColor || bg
 
@@ -61,7 +64,13 @@ export function RoundedBox({
       {(title || rightContent) && (
         <Flex alignItems="center" justifyContent="space-between" mb={4} w="full">
           {title && (
-            <Heading level="h2" textTransform="uppercase" alignSelf="center">
+            <Heading
+              level="h2"
+              textTransform="uppercase"
+              alignSelf="center"
+              transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
+              transition="transform 0.3s ease"
+            >
               {title}
             </Heading>
           )}

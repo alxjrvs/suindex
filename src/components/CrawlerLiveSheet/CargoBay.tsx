@@ -3,50 +3,44 @@ import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { RoundedBox } from '../shared/RoundedBox'
 import { AddStatButton } from '../shared/AddStatButton'
-import { NPCCard } from '../shared/NPCCard'
+import type { CargoItem } from '../../types/database'
 import { useMemo } from 'react'
-import { SalvageUnionReference } from 'salvageunion-reference'
-import type { CrawlerBay, CrawlerNPC, CargoItem } from '../../types/database'
+import { getTiltRotation } from '../../utils/tiltUtils'
 
-interface StorageBayProps {
-  npc: CrawlerNPC
+interface CargoBayProps {
   cargo: CargoItem[]
-  onUpdate: (updates: Partial<CrawlerBay>) => void
   onAddCargo: () => void
   onRemoveCargo: (id: string) => void
+  damaged?: boolean
 }
 
-export function StorageBay({ cargo, npc, onUpdate, onAddCargo, onRemoveCargo }: StorageBayProps) {
-  const referenceBay = useMemo(() => {
-    const allBays = SalvageUnionReference.CrawlerBays.all()
-    return allBays.find((b) => b.id === 'storage-bay')
-  }, [])
+export function CargoBay({ cargo, onAddCargo, onRemoveCargo, damaged = false }: CargoBayProps) {
+  const titleRotation = useMemo(() => getTiltRotation(), [])
+  const cargoRotation = useMemo(() => getTiltRotation(), [])
+
   return (
     <RoundedBox
-      bg="bg.builder.crawler"
+      bg={damaged ? 'su.grey' : 'bg.builder.crawler'}
       borderColor="border.builder.crawler"
       matchBorder={false}
       borderWidth="4px"
       justifyContent="flex-start"
       borderRadius="2xl"
-      padding={4}
-      title="Storage Bay"
+      title="Storage"
+      titleRotation={damaged ? titleRotation : 0}
       rightContent={<AddStatButton onClick={onAddCargo} label="Add Cargo" />}
+      padding={4}
     >
-      <NPCCard
-        npc={npc!}
-        description={referenceBay?.npc.description || ''}
-        maxHP={referenceBay?.npc.hitPoints || 0}
-        onUpdateDamage={(value) => onUpdate({ npc: { ...npc!, damage: value } })}
-        onUpdateName={(value) => onUpdate({ npc: { ...npc!, name: value } })}
-        onUpdateNotes={(value) => onUpdate({ npc: { ...npc!, notes: value } })}
-        position={referenceBay?.npc.position || 'NPC'}
-      />
-
-      <Box>
-        <Heading level="h4" textTransform="uppercase" mb={2}>
-          Cargo
-        </Heading>
+      <Box
+        transform={damaged ? `rotate(${cargoRotation}deg)` : undefined}
+        transition="transform 0.3s ease"
+        opacity={damaged ? 0.5 : 1}
+      >
+        <Flex alignItems="center" justifyContent="space-between" mb={2}>
+          <Heading level="h4" textTransform="uppercase">
+            Cargo
+          </Heading>
+        </Flex>
 
         <Grid gridTemplateColumns="repeat(4, 1fr)" gap={2}>
           {cargo.map((item) => (

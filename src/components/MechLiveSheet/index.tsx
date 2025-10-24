@@ -12,7 +12,8 @@ import { CargoList } from './CargoList'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { MechControlBar } from './MechControlBar'
+import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
+import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { RoundedBox } from '../shared/RoundedBox'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
 import { QuirkInput } from './QuirkInput'
@@ -96,10 +97,11 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   return (
     <LiveSheetLayout>
       {id && (
-        <MechControlBar
-          pilotId={mech.pilot_id}
-          savedPilotId={savedPilotId}
-          onPilotChange={(pilotId) => updateMech({ pilot_id: pilotId })}
+        <LiveSheetControlBar
+          config={MECH_CONTROL_BAR_CONFIG}
+          relationId={mech.pilot_id}
+          savedRelationId={savedPilotId}
+          onRelationChange={(pilotId) => updateMech({ pilot_id: pilotId })}
           hasPendingChanges={hasPendingChanges}
         />
       )}

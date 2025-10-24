@@ -38,6 +38,7 @@ export function AbilityDisplay({
 
   return (
     <EntityDisplay
+      entityName="Ability"
       data={data}
       headerColor={headerColor}
       onClick={onClick}
