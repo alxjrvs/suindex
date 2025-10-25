@@ -20,7 +20,12 @@ export function Notes({
   height = '96',
 }: NotesProps) {
   return (
-    <RoundedBox title="notes" bg={backgroundColor} borderColor={backgroundColor}>
+    <RoundedBox
+      title="notes"
+      bg={backgroundColor}
+      borderColor={backgroundColor}
+      disabled={disabled}
+    >
       <SheetTextarea
         value={notes}
         onChange={onChange}

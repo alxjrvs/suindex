@@ -16,6 +16,7 @@ export function NPCCard({
   maxHP,
   onUpdateDamage,
   tilted = false,
+  disabled = false,
 }: {
   npc: CrawlerNPC
   onUpdateName: (value: string) => void
@@ -25,6 +26,7 @@ export function NPCCard({
   onUpdateNotes: (value: string) => void
   onUpdateDamage: (value: number) => void
   tilted?: boolean
+  disabled?: boolean
 }) {
   const textRef = useRef<HTMLParagraphElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -97,6 +99,7 @@ export function NPCCard({
               min={0}
               value={maxHP - (npc?.damage || 0)}
               onChange={(value) => onUpdateDamage(maxHP - value)}
+              disabled={disabled}
             />
           </Box>
         )}
@@ -111,6 +114,7 @@ export function NPCCard({
           onChange={(value) => onUpdateName(value)}
           placeholder={`Enter ${position} name...`}
           suffixText={`the ${position}`}
+          disabled={disabled}
         />
       </Box>
 
@@ -124,6 +128,7 @@ export function NPCCard({
           onChange={(value) => onUpdateNotes(value)}
           placeholder="Enter operator notes..."
           height="20"
+          disabled={disabled}
         />
       </Box>
     </VStack>

@@ -12,9 +12,10 @@ import { getTiltRotation } from '../../utils/tiltUtils'
 interface BayCardProps {
   bay: CrawlerBay
   onUpdate: (updates: Partial<CrawlerBay>) => void
+  disabled?: boolean
 }
 
-export function BayCard({ bay, onUpdate }: BayCardProps) {
+export function BayCard({ bay, onUpdate, disabled = false }: BayCardProps) {
   const referenceBay = useMemo(() => {
     const allBays = SalvageUnionReference.CrawlerBays.all()
     return allBays.find((b) => b.id === bay.bayId)
@@ -32,6 +33,7 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
       padding={4}
       title={bay.name}
       titleRotation={bay.damaged ? titleRotation : 0}
+      disabled={disabled}
       rightContent={
         <StatDisplay
           label={bay.damaged ? 'Repair' : 'Damage'}
@@ -39,6 +41,7 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
           onClick={() => onUpdate({ damaged: !bay.damaged })}
           bg={bay.damaged ? 'su.brick' : 'su.orange'}
           valueColor="su.white"
+          disabled={disabled}
         />
       }
     >
@@ -69,6 +72,7 @@ export function BayCard({ bay, onUpdate }: BayCardProps) {
               onUpdateNotes={(value) => onUpdate({ npc: { ...bay.npc!, notes: value } })}
               position={referenceBay?.npc.position || 'NPC'}
               tilted={bay.damaged}
+              disabled={disabled}
             />
           </Box>
 

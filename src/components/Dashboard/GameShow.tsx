@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { Box, Flex, Grid, Input, Text, Textarea, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
@@ -7,30 +7,29 @@ import { supabase } from '../../lib/supabase'
 import type { Tables } from '../../types/database'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { ExternalLinkModal } from './ExternalLinkModal'
+import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
 
-type GameRow = Tables<'games'>
-type MemberRole = Tables<'game_members'>['role']
 type GameInviteRow = Tables<'game_invites'>
-type CrawlerRow = Tables<'crawlers'>
 type ExternalLinkRow = Tables<'external_links'>
-
-interface GameWithMembers extends GameRow {
-  members: Array<{
-    id: string
-    role: MemberRole
-    user_id: string
-    user_email?: string
-    user_name?: string
-  }>
-}
 
 export function GameShow() {
   const { gameId } = useParams<{ gameId: string }>()
   const navigate = useNavigate()
-  const [game, setGame] = useState<GameWithMembers | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isMediator, setIsMediator] = useState(false)
+
+  // Load game with all relationships using the hook
+  const {
+    game: gameWithRelationships,
+    loading,
+    error,
+    reload: reloadGame,
+  } = useGameWithRelationships(gameId)
+
+  // Determine if current user is a mediator
+  const isMediator = useMemo(() => {
+    if (!gameWithRelationships) return false
+    return gameWithRelationships.members.some((m) => m.role === 'mediator')
+  }, [gameWithRelationships])
+
   const [invites, setInvites] = useState<GameInviteRow[]>([])
   const [invitesLoading, setInvitesLoading] = useState(false)
   const [inviteError, setInviteError] = useState<string | null>(null)
@@ -42,17 +41,6 @@ export function GameShow() {
   const [saveGameLoading, setSaveGameLoading] = useState(false)
   const [saveGameError, setSaveGameError] = useState<string | null>(null)
 
-  // One-to-one crawler for this game
-  const [crawler, setCrawler] = useState<CrawlerRow | null>(null)
-  const [crawlerError, setCrawlerError] = useState<string | null>(null)
-
-  // Pilots and mechs for this crawler
-  type PilotRow = Tables<'pilots'>
-  type MechRow = Tables<'mechs'>
-  const [pilots, setPilots] = useState<PilotRow[]>([])
-  const [mechs, setMechs] = useState<MechRow[]>([])
-  const [pilotsLoading, setPilotsLoading] = useState(false)
-
   // External links
   const [externalLinks, setExternalLinks] = useState<ExternalLinkRow[]>([])
   const [linksLoading, setLinksLoading] = useState(false)
@@ -62,40 +50,6 @@ export function GameShow() {
   // Danger zone
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
-
-  const loadPilotsAndMechs = useCallback(async (crawlerId: string) => {
-    try {
-      setPilotsLoading(true)
-
-      // Fetch pilots for this crawler
-      const { data: pilotsData, error: pilotsError } = await supabase
-        .from('pilots')
-        .select('*')
-        .eq('crawler_id', crawlerId)
-        .order('callsign')
-
-      if (pilotsError) throw pilotsError
-      setPilots((pilotsData || []) as PilotRow[])
-
-      // Fetch all mechs for these pilots
-      const pilotIds = (pilotsData || []).map((p) => p.id)
-      if (pilotIds.length > 0) {
-        const { data: mechsData, error: mechsError } = await supabase
-          .from('mechs')
-          .select('*')
-          .in('pilot_id', pilotIds)
-
-        if (mechsError) throw mechsError
-        setMechs((mechsData || []) as MechRow[])
-      } else {
-        setMechs([])
-      }
-    } catch (err) {
-      console.error('Error loading pilots and mechs:', err)
-    } finally {
-      setPilotsLoading(false)
-    }
-  }, [])
 
   const loadExternalLinks = useCallback(async () => {
     if (!gameId) return
@@ -138,87 +92,26 @@ export function GameShow() {
     }
   }, [gameId])
 
-  const loadGame = useCallback(async () => {
-    try {
-      if (!gameId) return
-      setLoading(true)
-      setError(null)
-
-      // Fetch game data
-      const { data: gameData, error: gameError } = await supabase
-        .from('games')
-        .select('*')
-        .eq('id', gameId)
-        .single()
-
-      if (gameError) throw gameError
-
-      // Fetch game members with usernames via RPC
-      const { data: membersData, error: membersError } = await supabase.rpc('get_game_members', {
-        p_game_id: gameId,
-      })
-      if (membersError) throw membersError
-
-      // Determine if current user is a mediator
-      const { data: userRes } = await supabase.auth.getUser()
-      const uid = userRes.user?.id
-      const mediator =
-        !!uid && (membersData || []).some((m) => m.user_id === uid && m.role === 'mediator')
-      setIsMediator(mediator)
-
-      const gameWithMembers = {
-        ...gameData,
-        members: (membersData || []).map((m) => ({
-          id: m.id,
-          role: m.role as MemberRole,
-          user_id: m.user_id,
-          user_email: m.user_email || undefined,
-          user_name: m.user_name || undefined,
-        })),
-      }
-      setGame(gameWithMembers)
-
-      // Initialize edited fields
-      setEditedName(gameData.name)
-      setEditedDescription(gameData.description || '')
-
-      // Fetch crawler (enforce one-to-one via maybeSingle)
-      const { data: crawlerRow, error: crawlerFetchError } = await supabase
-        .from('crawlers')
-        .select('*')
-        .eq('game_id', gameId)
-        .maybeSingle()
-
-      if (crawlerFetchError) {
-        console.error('Error loading crawler:', crawlerFetchError)
-        setCrawler(null)
-        setCrawlerError(crawlerFetchError.message)
-      } else {
-        setCrawler(crawlerRow)
-        setCrawlerError(null)
-
-        // Load pilots and mechs if crawler exists
-        if (crawlerRow) {
-          await loadPilotsAndMechs(crawlerRow.id)
-        }
-      }
-
-      // Load invites if mediator
-      if (mediator) {
-        await loadInvites()
-      } else {
-        setInvites([])
-      }
-
-      // Load external links
-      await loadExternalLinks()
-    } catch (err) {
-      console.error('Error loading game:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load game')
-    } finally {
-      setLoading(false)
+  // Initialize edited fields when game loads
+  useEffect(() => {
+    if (gameWithRelationships) {
+      setEditedName(gameWithRelationships.name)
+      setEditedDescription(gameWithRelationships.description || '')
     }
-  }, [gameId, loadInvites, loadExternalLinks, loadPilotsAndMechs])
+  }, [gameWithRelationships])
+
+  // Load invites and external links when game loads
+  useEffect(() => {
+    if (!gameWithRelationships) return
+
+    if (isMediator) {
+      loadInvites()
+    } else {
+      setInvites([])
+    }
+
+    loadExternalLinks()
+  }, [gameWithRelationships, isMediator, loadInvites, loadExternalLinks])
 
   const isInviteActive = (inv: GameInviteRow) => {
     const now = new Date()
@@ -283,7 +176,7 @@ export function GameShow() {
   }
 
   const handleSaveGame = async () => {
-    if (!gameId || !game) return
+    if (!gameId || !gameWithRelationships) return
     try {
       setSaveGameLoading(true)
       setSaveGameError(null)
@@ -298,12 +191,8 @@ export function GameShow() {
 
       if (error) throw error
 
-      // Update local state
-      setGame({
-        ...game,
-        name: editedName,
-        description: editedDescription,
-      })
+      // Reload game data
+      reloadGame()
       setIsEditingGame(false)
     } catch (err) {
       console.error('Error saving game:', err)
@@ -315,8 +204,8 @@ export function GameShow() {
 
   const handleCancelEdit = () => {
     setIsEditingGame(false)
-    setEditedName(game?.name || '')
-    setEditedDescription(game?.description || '')
+    setEditedName(gameWithRelationships?.name || '')
+    setEditedDescription(gameWithRelationships?.description || '')
     setSaveGameError(null)
   }
 
@@ -375,9 +264,7 @@ export function GameShow() {
       navigate('/dashboard')
       return
     }
-
-    loadGame()
-  }, [gameId, loadGame, navigate])
+  }, [gameId, navigate])
 
   if (loading) {
     return (
@@ -391,7 +278,7 @@ export function GameShow() {
     )
   }
 
-  if (error || !game) {
+  if (error || !gameWithRelationships) {
     return (
       <Box p={8}>
         <VStack align="center" justify="center" minH="60vh" gap={4}>
@@ -413,6 +300,8 @@ export function GameShow() {
       </Box>
     )
   }
+
+  const { crawler, pilots } = gameWithRelationships
 
   const crawlerTypeName = crawler?.crawler_type_id
     ? (SalvageUnionReference.Crawlers.all().find((c) => c.id === crawler.crawler_type_id)?.name ??
@@ -517,7 +406,7 @@ export function GameShow() {
         ) : (
           <Box>
             <Flex align="center" gap={4} mb={4}>
-              <Heading level="h1">{game.name}</Heading>
+              <Heading level="h1">{gameWithRelationships.name}</Heading>
               {isMediator && (
                 <Button
                   onClick={() => setIsEditingGame(true)}
@@ -530,9 +419,9 @@ export function GameShow() {
                 </Button>
               )}
             </Flex>
-            {game.description && (
+            {gameWithRelationships.description && (
               <Text fontSize="lg" color="su.black" whiteSpace="pre-wrap">
-                {game.description}
+                {gameWithRelationships.description}
               </Text>
             )}
           </Box>
@@ -580,26 +469,20 @@ export function GameShow() {
                 </Box>
 
                 {/* Pilots and Mechs */}
-                {pilotsLoading ? (
-                  <Text mt={4} color="su.brick">
-                    Loading pilots...
-                  </Text>
-                ) : pilots.length > 0 ? (
+                {pilots.length > 0 ? (
                   <VStack mt={4} gap={3} align="stretch">
                     <Heading level="h3">Pilots</Heading>
-                    {pilots.map((pilot) => {
-                      const pilotMech = mechs.find((m) => m.pilot_id === pilot.id)
+                    {pilots.map(({ pilot, mech }) => {
                       const className = pilot.class_id
                         ? SalvageUnionReference.Classes.all().find((c) => c.id === pilot.class_id)
                             ?.name || 'Unknown Class'
                         : 'No Class'
-                      const chassisName = pilotMech?.chassis_id
-                        ? SalvageUnionReference.Chassis.all().find(
-                            (c) => c.id === pilotMech.chassis_id
-                          )?.name || 'Unknown Chassis'
+                      const chassisName = mech?.chassis_id
+                        ? SalvageUnionReference.Chassis.all().find((c) => c.id === mech.chassis_id)
+                            ?.name || 'Unknown Chassis'
                         : null
-                      const mechDisplayName = pilotMech
-                        ? pilotMech.pattern || chassisName || 'Unnamed Mech'
+                      const mechDisplayName = mech
+                        ? mech.pattern || chassisName || 'Unnamed Mech'
                         : null
 
                       return (
@@ -624,7 +507,7 @@ export function GameShow() {
                               <Text fontWeight="bold" color="su.black">
                                 {mechDisplayName}
                               </Text>
-                              {pilotMech?.pattern && chassisName && (
+                              {mech?.pattern && chassisName && (
                                 <Text fontSize="sm" color="su.brick">
                                   {chassisName}
                                 </Text>
@@ -657,11 +540,6 @@ export function GameShow() {
                 Create Crawler
               </Button>
             )}
-            {crawlerError && (
-              <Text color="red.600" fontSize="sm" mt={2}>
-                {crawlerError}
-              </Text>
-            )}
           </Box>
         </Box>
 
@@ -671,13 +549,13 @@ export function GameShow() {
             <Heading level="h2" mb={3}>
               Members
             </Heading>
-            {game.members.length === 0 ? (
+            {gameWithRelationships.members.length === 0 ? (
               <Text color="su.brick">No members in this game yet.</Text>
             ) : (
               <VStack gap={3} align="stretch">
-                {game.members.map((member) => (
+                {gameWithRelationships.members.map((member) => (
                   <Flex
-                    key={member.id}
+                    key={member.user_id}
                     align="center"
                     justify="space-between"
                     p={3}

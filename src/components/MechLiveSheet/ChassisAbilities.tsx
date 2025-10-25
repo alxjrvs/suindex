@@ -4,9 +4,10 @@ import { SheetDisplay } from '../shared/SheetDisplay'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
+  disabled?: boolean
 }
 
-export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
+export function ChassisAbilities({ chassis, disabled = false }: ChassisAbilitiesProps) {
   return (
     <VStack gap={3} alignItems="stretch" w="full">
       {(
@@ -18,7 +19,7 @@ export function ChassisAbilities({ chassis }: ChassisAbilitiesProps) {
           },
         ]
       ).map((ability, idx) => (
-        <SheetDisplay key={idx} label={ability.name || undefined}>
+        <SheetDisplay key={idx} label={ability.name || undefined} disabled={disabled}>
           <Text lineHeight="relaxed">{ability.description}</Text>
           {'options' in ability &&
             ability.options &&

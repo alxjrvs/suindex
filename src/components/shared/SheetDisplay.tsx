@@ -8,6 +8,7 @@ interface SheetDisplayProps {
   height?: string | number
   minHeight?: string | number
   children?: ReactNode
+  disabled?: boolean
 }
 
 export function SheetDisplay({
@@ -16,13 +17,21 @@ export function SheetDisplay({
   height,
   minHeight = '20',
   children,
+  disabled = false,
 }: SheetDisplayProps) {
   return (
     <Flex direction="column" w="full">
       {/* Label with pseudoheader styling */}
       {label && (
         <Flex alignItems="center" mb={-2} zIndex={1}>
-          <Text variant="pseudoheader" fontSize="sm" textTransform="uppercase" ml={3}>
+          <Text
+            variant="pseudoheader"
+            fontSize="sm"
+            textTransform="uppercase"
+            ml={3}
+            bg={disabled ? 'gray.600' : undefined}
+            color={disabled ? 'gray.300' : undefined}
+          >
             {label}
           </Text>
         </Flex>
@@ -35,10 +44,10 @@ export function SheetDisplay({
         minH={minHeight}
         p={3}
         borderWidth="3px"
-        borderColor="su.black"
+        borderColor={disabled ? 'gray.400' : 'su.black'}
         borderRadius="2xl"
-        bg="su.white"
-        color="su.black"
+        bg={disabled ? 'gray.200' : 'su.white'}
+        color={disabled ? 'gray.600' : 'su.black'}
         fontWeight="semibold"
         whiteSpace="pre-wrap"
         overflowY="auto"

@@ -195,7 +195,7 @@ describe('CrawlerLiveSheet', () => {
 
       // Resource steppers
       expect(screen.getByText(/SP/i)).toBeInTheDocument()
-      expect(screen.getByText(/TECH LVL/i)).toBeInTheDocument()
+      expect(screen.getByText(/TL/i)).toBeInTheDocument()
       expect(screen.getByText(/UPGRADE/i)).toBeInTheDocument()
       expect(screen.getByText(/UPKEEP/i)).toBeInTheDocument()
       expect(screen.getByText(/SCRAP/i)).toBeInTheDocument()
@@ -212,7 +212,7 @@ describe('CrawlerLiveSheet', () => {
       expect(within(spStepper).getByText('20/20')).toBeInTheDocument()
 
       // Tech Level should start at 1
-      const techLevelStepper = screen.getByRole('group', { name: /TECH LVL/i })
+      const techLevelStepper = screen.getByRole('group', { name: /TL/i })
       expect(within(techLevelStepper).getByText('1')).toBeInTheDocument()
 
       // Upgrade should start at 0/25
@@ -299,9 +299,9 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
-      const techLevelStepper = screen.getByRole('group', { name: /TECH LVL/i })
+      const techLevelStepper = screen.getByRole('group', { name: /TL/i })
       const incrementButton = within(techLevelStepper).getByRole('button', {
-        name: /Increment TECH LVL/i,
+        name: /Increment TL/i,
       })
 
       // Increment tech level
@@ -344,9 +344,9 @@ describe('CrawlerLiveSheet', () => {
       // Initial upkeep should be 5 TL1
       expect(screen.getByText('5 TL1')).toBeInTheDocument()
 
-      const techLevelStepper = screen.getByRole('group', { name: /TECH LVL/i })
+      const techLevelStepper = screen.getByRole('group', { name: /TL/i })
       const incrementButton = within(techLevelStepper).getByRole('button', {
-        name: /Increment TECH LVL/i,
+        name: /Increment TL/i,
       })
 
       // Increment tech level
@@ -371,9 +371,9 @@ describe('CrawlerLiveSheet', () => {
       expect(within(upgradeStepper).getByText('5/25')).toBeInTheDocument()
 
       // Now increment tech level
-      const techLevelStepper = screen.getByRole('group', { name: /TECH LVL/i })
+      const techLevelStepper = screen.getByRole('group', { name: /TL/i })
       const techLevelIncrementButton = within(techLevelStepper).getByRole('button', {
-        name: /Increment TECH LVL/i,
+        name: /Increment TL/i,
       })
       await user.click(techLevelIncrementButton)
 

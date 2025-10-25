@@ -28,6 +28,14 @@ interface RoundedBoxProps {
   justifyContent?: 'space-between' | 'flex-start' | 'flex-end' | 'center'
   /** Optional rotation for the title in degrees */
   titleRotation?: number
+  /** Minimum width (e.g., '50%', '200px') */
+  minW?: string
+  /** Flex grow/shrink behavior (e.g., '1', '0 1 auto') */
+  flex?: string
+  /** Alignment of items along the cross axis */
+  alignItems?: 'center' | 'flex-start' | 'flex-end' | 'stretch'
+  /** Whether the box is disabled (grays out background and makes title opaque) */
+  disabled?: boolean
 }
 
 export function RoundedBox({
@@ -44,15 +52,19 @@ export function RoundedBox({
   fillWidth = false,
   justifyContent = 'space-between',
   titleRotation = 0,
+  minW,
+  flex,
+  disabled = false,
 }: RoundedBoxProps) {
-  const actualBorderColor = matchBorder ? bg : borderColor || bg
+  const actualBorderColor = disabled ? 'su.grey' : matchBorder ? bg : borderColor || bg
+  const actualBg = disabled ? 'su.grey' : bg
 
   return (
     <Flex
       direction="column"
       alignItems="center"
       justifyContent={justifyContent}
-      bg={bg}
+      bg={actualBg}
       borderWidth={borderWidth}
       borderColor={actualBorderColor}
       borderRadius={borderRadius}
@@ -60,6 +72,8 @@ export function RoundedBox({
       shadow="lg"
       h={fillHeight ? 'full' : undefined}
       w={fillWidth ? 'full' : undefined}
+      minW={minW}
+      flex={flex}
     >
       {(title || rightContent) && (
         <Flex alignItems="center" justifyContent="space-between" mb={4} w="full">
@@ -70,6 +84,7 @@ export function RoundedBox({
               alignSelf="center"
               transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
               transition="transform 0.3s ease"
+              opacity={disabled ? 0.3 : 1}
             >
               {title}
             </Heading>

@@ -1,4 +1,5 @@
 import { HStack, VStack, IconButton } from '@chakra-ui/react'
+import { useCallback, useMemo } from 'react'
 import { StatDisplay } from './StatDisplay'
 
 interface NumericStepperProps {
@@ -20,24 +21,31 @@ export default function NumericStepper({
   step = 1,
   disabled = false,
 }: NumericStepperProps) {
-  const handleIncrement = () => {
+  const handleIncrement = useCallback(() => {
     if (max === undefined || value < max) {
       onChange(max !== undefined ? Math.min(value + step, max) : value + step)
     }
-  }
+  }, [max, value, step, onChange])
 
-  const handleDecrement = () => {
+  const handleDecrement = useCallback(() => {
     if (value > min) {
       onChange(Math.max(value - step, min))
     }
-  }
+  }, [value, min, step, onChange])
 
-  const displayValue = max !== undefined ? `${value}/${max}` : `${value}`
-  const labelId = `stepper-label-${label.toLowerCase().replace(/\s+/g, '-')}`
+  const displayValue = useMemo(
+    () => (max !== undefined ? `${value}/${max}` : `${value}`),
+    [value, max]
+  )
+
+  const labelId = useMemo(
+    () => `stepper-label-${label.toLowerCase().replace(/\s+/g, '-')}`,
+    [label]
+  )
 
   return (
     <HStack gap={1} alignItems="flex-end" role="group" aria-labelledby={labelId}>
-      <StatDisplay label={label} value={displayValue} labelId={labelId} />
+      <StatDisplay disabled={disabled} label={label} value={displayValue} labelId={labelId} />
       <VStack gap={1} pb={2.5}>
         <IconButton
           onClick={handleIncrement}

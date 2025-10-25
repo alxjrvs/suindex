@@ -7,10 +7,12 @@ export function CrawlerNPC({
   crawler,
   onUpdate,
   crawlerRef,
+  disabled = false,
 }: {
   crawler: CrawlerLiveSheetState
   onUpdate: (updates: Partial<CrawlerLiveSheetState>) => void
   crawlerRef: SURefCrawler | undefined
+  disabled?: boolean
 }) {
   return (
     <RoundedBox
@@ -19,6 +21,7 @@ export function CrawlerNPC({
       matchBorder={false}
       borderWidth="4px"
       title="NPC"
+      disabled={disabled}
       fillWidth
     >
       <NPCCard
@@ -29,6 +32,7 @@ export function CrawlerNPC({
         onUpdateName={(value) => onUpdate({ npc: { ...crawler.npc!, name: value } })}
         onUpdateNotes={(value) => onUpdate({ npc: { ...crawler.npc!, notes: value } })}
         position={crawlerRef?.npc.position || 'NPC'}
+        disabled={!crawlerRef}
       />
     </RoundedBox>
   )

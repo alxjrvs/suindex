@@ -13,6 +13,7 @@ interface CrawlerHeaderInputsProps {
   onNameChange: (value: string) => void
   onCrawlerTypeChange: (value: string | null) => void
   onDescriptionChange: (value: string) => void
+  disabled?: boolean
 }
 
 export function CrawlerHeaderInputs({
@@ -23,22 +24,26 @@ export function CrawlerHeaderInputs({
   onNameChange,
   onCrawlerTypeChange,
   onDescriptionChange,
+  disabled = false,
 }: CrawlerHeaderInputsProps) {
   return (
     <RoundedBox
       bg="bg.builder.crawler"
       fillWidth
+      fillHeight
       borderColor="border.builder.crawler"
       matchBorder={false}
       borderWidth="4px"
+      disabled={disabled}
     >
-      <VStack gap={4} alignItems="stretch" justifyContent="space-between" w="full" h="full">
+      <VStack gap={4} alignItems="stretch" w="full" h="full">
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
           <SheetInput
             label="Name"
             value={name}
             onChange={onNameChange}
             placeholder="Enter crawler name..."
+            disabled={disabled}
           />
 
           <SheetSelect label="Type" value={crawlerTypeId} onChange={onCrawlerTypeChange}>
@@ -57,6 +62,7 @@ export function CrawlerHeaderInputs({
           onChange={onDescriptionChange}
           placeholder="Enter crawler description..."
           height="24"
+          disabled={disabled}
         />
       </VStack>
     </RoundedBox>

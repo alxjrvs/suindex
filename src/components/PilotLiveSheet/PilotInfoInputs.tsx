@@ -92,6 +92,7 @@ export function PilotInfoInputs({
       borderColor="border.builder.pilot"
       matchBorder={false}
       fillWidth
+      disabled={disabled}
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
         {/* Callsign */}
@@ -125,7 +126,7 @@ export function PilotInfoInputs({
               label="Class"
               value={classId}
               onChange={onClassChange}
-              disabled={disabled}
+              disabled={false}
               placeholder="Select..."
             >
               {basicClasses.map((cls) => (

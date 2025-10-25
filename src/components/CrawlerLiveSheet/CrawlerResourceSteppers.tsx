@@ -15,6 +15,7 @@ interface CrawlerResourceSteppersProps {
   onTechLevelChange: (value: number) => void
   onUpgradeChange: (value: number) => void
   onCurrentScrapChange: (value: number) => void
+  disabled?: boolean
 }
 
 export function CrawlerResourceSteppers({
@@ -29,6 +30,7 @@ export function CrawlerResourceSteppers({
   onTechLevelChange,
   onUpgradeChange,
   onCurrentScrapChange,
+  disabled = false,
 }: CrawlerResourceSteppersProps) {
   const currentSP = maxSP - currentDamage
 
@@ -38,6 +40,8 @@ export function CrawlerResourceSteppers({
       borderColor="border.builder.crawler"
       matchBorder={false}
       borderWidth="4px"
+      disabled={disabled}
+      fillHeight
     >
       <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
         <Flex justifyContent="start" alignItems="end">
@@ -47,10 +51,17 @@ export function CrawlerResourceSteppers({
             onChange={(newSP) => onDamageChange(maxSP - newSP)}
             max={maxSP}
             min={0}
+            disabled={disabled}
           />
         </Flex>
         <Flex justifyContent="start" alignItems="end">
-          <NumericStepper label="TECH LVL" value={techLevel} onChange={onTechLevelChange} min={1} />
+          <NumericStepper
+            label="TL"
+            value={techLevel}
+            onChange={onTechLevelChange}
+            min={1}
+            disabled={disabled}
+          />
         </Flex>
         <Flex justifyContent="start" alignItems="end">
           <NumericStepper
@@ -59,6 +70,7 @@ export function CrawlerResourceSteppers({
             onChange={onUpgradeChange}
             max={maxUpgrade}
             step={5}
+            disabled={disabled}
           />
         </Flex>
         <Flex justifyContent="start" alignItems="end">
@@ -67,10 +79,11 @@ export function CrawlerResourceSteppers({
             value={currentScrap}
             onChange={onCurrentScrapChange}
             min={0}
+            disabled={disabled}
           />
         </Flex>
         <Flex justifyContent="start" alignItems="end">
-          <StatDisplay label="UPKEEP" value={upkeep} />
+          <StatDisplay disabled={disabled} label="UPKEEP" value={upkeep} />
         </Flex>
       </Grid>
     </RoundedBox>
