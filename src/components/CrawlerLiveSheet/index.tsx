@@ -12,6 +12,7 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { CrawlerControlBar } from './CrawlerControlBar'
 import { useCrawlerLiveSheetState } from './useCrawlerLiveSheetState'
 import { CrawlerNPC } from './CrawlerNPC'
+import { LiveSheetHeader } from '../shared/LiveSheetHeader'
 
 interface CrawlerLiveSheetProps {
   id?: string
@@ -78,6 +79,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
   return (
     <LiveSheetLayout>
+      {!id && <LiveSheetHeader title="Crawler Live Sheet" />}
       {id && (
         <CrawlerControlBar
           gameId={crawler.game_id}

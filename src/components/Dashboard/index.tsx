@@ -78,7 +78,7 @@ export default function Dashboard() {
           <Route path="/mechs/:id" element={<MechEdit />} />
         </Routes>
       </Box>
-      <Footer variant="landing" />
+      <Footer />
     </Flex>
   )
 }

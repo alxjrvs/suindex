@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
-import { Box, Container, Text, Link, Grid } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
+import { Box, Container, Text, Link } from '@chakra-ui/react'
 import Footer from './Footer'
 import { Heading } from './base/Heading'
 import { TopNavigation } from './TopNavigation'
@@ -28,9 +26,17 @@ export default function LandingPage() {
   return (
     <Box display="flex" flexDirection="column" minH="100vh" bg="su.lightBlue">
       <TopNavigation user={user} />
-      <Box px={6} pt={{ base: 20, lg: 6 }} flex="1">
+      <Box
+        px={6}
+        pt={{ base: 20, lg: 6 }}
+        flex="1"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+      >
         <Container maxW="4xl">
-          <Box display="flex" justifyContent="center">
+          <Box display="flex" justifyContent="center" mb={8}>
             <Heading level="h1">Salvage Union Index</Heading>
           </Box>
 
@@ -39,9 +45,9 @@ export default function LandingPage() {
             borderRadius="lg"
             shadow="lg"
             p={8}
-            m={6}
             borderWidth="4px"
             borderColor="su.black"
+            mx="auto"
           >
             <Heading level="h2" mb={4}>
               What This Is
@@ -87,61 +93,11 @@ export default function LandingPage() {
               .
             </Text>
           </Box>
-
-          {/* Quick Links */}
-          <Box
-            bg="su.white"
-            borderRadius="lg"
-            shadow="lg"
-            p={8}
-            borderWidth="4px"
-            borderColor="su.black"
-          >
-            <Heading level="h2" mb={6}>
-              Get Started
-            </Heading>
-            <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={4}>
-              <RouterLink to="/dashboard" style={{ textDecoration: 'none' }}>
-                <Button
-                  w="full"
-                  bg="su.brick"
-                  color="su.white"
-                  px={6}
-                  py={4}
-                  borderRadius="lg"
-                  fontWeight="bold"
-                  textAlign="center"
-                  fontSize="lg"
-                  h="auto"
-                  _hover={{ opacity: 0.9 }}
-                >
-                  Dashboard
-                </Button>
-              </RouterLink>
-              <RouterLink to="/reference/" style={{ textDecoration: 'none' }}>
-                <Button
-                  w="full"
-                  bg="su.orange"
-                  color="su.white"
-                  px={6}
-                  py={4}
-                  borderRadius="lg"
-                  fontWeight="bold"
-                  textAlign="center"
-                  fontSize="lg"
-                  h="auto"
-                  _hover={{ opacity: 0.9 }}
-                >
-                  Rules Reference
-                </Button>
-              </RouterLink>
-            </Grid>
-          </Box>
         </Container>
       </Box>
 
       <Box>
-        <Footer variant="landing" />
+        <Footer />
       </Box>
     </Box>
   )

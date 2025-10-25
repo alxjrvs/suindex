@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
+import Footer from './Footer'
 import type { SchemaInfo } from '../types/schema'
 import { getDisplayComponent } from './componentRegistry'
 import { useSchemaData } from './schema/useSchemaData'
@@ -171,6 +172,7 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
           )}
         </Box>
       </Box>
+      <Footer />
     </Flex>
   )
 }

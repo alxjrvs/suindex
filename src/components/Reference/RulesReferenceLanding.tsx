@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Flex, Input, VStack, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Heading } from '../base/Heading'
+import Footer from '../Footer'
 import type { SchemaInfo, DataItem } from '../../types/schema'
 import { getModel } from '../../utils/modelMap'
 
@@ -151,7 +152,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   }, [selectedIndex, searchResults])
 
   return (
-    <Flex h="full" flexDirection="column" bg="su.white">
+    <Flex flexDirection="column" bg="su.white" minH="100%">
       <Box
         bg="su.white"
         shadow="sm"
@@ -161,6 +162,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         display="flex"
         flexDirection="column"
         alignItems="center"
+        flex="0 0 auto"
       >
         <Heading level="h1" mb={6} textAlign="center" alignSelf="center">
           Salvage Union Rules Reference
@@ -237,7 +239,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         </Text>
       </Box>
 
-      <Box flex="1" p={6}>
+      <Box flex="1" p={6} overflowY="auto">
         <Box maxW="6xl" mx="auto">
           <Heading level="h3" mb={4}>
             Browse by Category
@@ -274,6 +276,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
           </Grid>
         </Box>
       </Box>
+      <Footer />
     </Flex>
   )
 }

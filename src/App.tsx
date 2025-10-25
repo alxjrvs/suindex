@@ -39,9 +39,9 @@ function AppContent() {
       <Route
         path="/reference/*"
         element={
-          <Flex flexDirection="column" h="100vh" bg="su.white" overflow="hidden">
+          <Flex flexDirection="column" minH="100vh" bg="su.white">
             <TopNavigation user={user} />
-            <Box as="main" flex="1" overflowY="auto" pt={{ base: 16, md: 0 }}>
+            <Box as="main" flex="1" pt={{ base: 16, md: 0 }}>
               <Routes>
                 <Route
                   index

@@ -40,6 +40,7 @@ export function TopNavigation({ user }: TopNavigationProps) {
   // Determine which links to show based on current page
   const showDashboardLinks = isDashboard
   const showReferenceLinks = isReference
+  const showLandingLinks = isLanding
 
   return (
     <>
@@ -92,18 +93,19 @@ export function TopNavigation({ user }: TopNavigationProps) {
         px={6}
         py={3}
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="flex-start"
         zIndex={40}
         flexDirection={{ base: 'column', lg: 'row' }}
         gap={{ base: 4, lg: 0 }}
         shadow={{ base: isOpen ? 'lg' : 'none', lg: 'sm' }}
       >
-        {/* Left section: Logo + Dashboard/Rules Reference */}
+        {/* Left section: Logo + Navigation links */}
         <Flex
           alignItems="center"
           gap={2}
           display={{ base: isOpen ? 'flex' : 'none', lg: 'flex' }}
           flexDirection={{ base: 'column', lg: 'row' }}
+          flex={{ base: 'none', lg: 1 }}
         >
           {/* Logo/Brand */}
           <Button
@@ -172,260 +174,270 @@ export function TopNavigation({ user }: TopNavigationProps) {
               Rules Reference
             </Button>
           )}
+
+          {/* Dashboard link from landing page */}
+          {showLandingLinks && (
+            <Button
+              onClick={() => handleNavigate('/dashboard')}
+              px={4}
+              py={2}
+              _hover={{ bg: 'su.lightOrange' }}
+              bg="transparent"
+              color="su.black"
+              fontWeight="normal"
+              borderRadius="md"
+              variant="ghost"
+              h="auto"
+              w={{ base: 'full', lg: 'auto' }}
+            >
+              Dashboard
+            </Button>
+          )}
+
+          {/* Rules Reference link from landing page */}
+          {showLandingLinks && (
+            <Button
+              onClick={() => handleNavigate('/reference/')}
+              px={4}
+              py={2}
+              _hover={{ bg: 'su.lightOrange' }}
+              bg="transparent"
+              color="su.black"
+              fontWeight="normal"
+              borderRadius="md"
+              variant="ghost"
+              h="auto"
+              w={{ base: 'full', lg: 'auto' }}
+            >
+              Rules Reference
+            </Button>
+          )}
+
+          {/* Navigation links */}
+          <HStack
+            as="ul"
+            gap={2}
+            display={{ base: 'flex', lg: 'flex' }}
+            flexDirection={{ base: 'column', lg: 'row' }}
+            w={{ base: 'full', lg: 'auto' }}
+          >
+            {/* Dashboard Links */}
+            {showDashboardLinks && (
+              <>
+                <Box as="li">
+                  <Button
+                    onClick={() => handleNavigate('/dashboard/games')}
+                    px={4}
+                    py={2}
+                    _hover={{ bg: 'su.lightOrange' }}
+                    bg={isActive('/dashboard/games') ? 'su.lightBlue' : 'transparent'}
+                    borderBottomWidth={isActive('/dashboard/games') ? '3px' : 0}
+                    borderBottomColor="su.orange"
+                    color="su.black"
+                    fontWeight={isActive('/dashboard/games') ? 'semibold' : 'normal'}
+                    borderRadius="md"
+                    variant="ghost"
+                    h="auto"
+                    w={{ base: 'full', lg: 'auto' }}
+                  >
+                    Games
+                  </Button>
+                </Box>
+                <Box as="li">
+                  <Button
+                    onClick={() => handleNavigate('/dashboard/crawlers')}
+                    px={4}
+                    py={2}
+                    _hover={{ bg: 'su.lightOrange' }}
+                    bg={isActive('/dashboard/crawlers') ? 'su.lightBlue' : 'transparent'}
+                    borderBottomWidth={isActive('/dashboard/crawlers') ? '3px' : 0}
+                    borderBottomColor="su.orange"
+                    color="su.black"
+                    fontWeight={isActive('/dashboard/crawlers') ? 'semibold' : 'normal'}
+                    borderRadius="md"
+                    variant="ghost"
+                    h="auto"
+                    w={{ base: 'full', lg: 'auto' }}
+                  >
+                    Crawlers
+                  </Button>
+                </Box>
+                <Box as="li">
+                  <Button
+                    onClick={() => handleNavigate('/dashboard/pilots')}
+                    px={4}
+                    py={2}
+                    _hover={{ bg: 'su.lightOrange' }}
+                    bg={isActive('/dashboard/pilots') ? 'su.lightBlue' : 'transparent'}
+                    borderBottomWidth={isActive('/dashboard/pilots') ? '3px' : 0}
+                    borderBottomColor="su.orange"
+                    color="su.black"
+                    fontWeight={isActive('/dashboard/pilots') ? 'semibold' : 'normal'}
+                    borderRadius="md"
+                    variant="ghost"
+                    h="auto"
+                    w={{ base: 'full', lg: 'auto' }}
+                  >
+                    Pilots
+                  </Button>
+                </Box>
+                <Box as="li">
+                  <Button
+                    onClick={() => handleNavigate('/dashboard/mechs')}
+                    px={4}
+                    py={2}
+                    _hover={{ bg: 'su.lightOrange' }}
+                    bg={isActive('/dashboard/mechs') ? 'su.lightBlue' : 'transparent'}
+                    borderBottomWidth={isActive('/dashboard/mechs') ? '3px' : 0}
+                    borderBottomColor="su.orange"
+                    color="su.black"
+                    fontWeight={isActive('/dashboard/mechs') ? 'semibold' : 'normal'}
+                    borderRadius="md"
+                    variant="ghost"
+                    h="auto"
+                    w={{ base: 'full', lg: 'auto' }}
+                  >
+                    Mechs
+                  </Button>
+                </Box>
+              </>
+            )}
+
+            {/* Reference Links - Dropdowns */}
+            {showReferenceLinks && (
+              <>
+                {/* Schemas Dropdown */}
+                <Box as="li">
+                  <Menu.Root>
+                    <Menu.Trigger asChild>
+                      <Button
+                        px={4}
+                        py={2}
+                        _hover={{ bg: 'su.lightOrange' }}
+                        bg={isActive('/reference/schema') ? 'su.lightBlue' : 'transparent'}
+                        borderBottomWidth={isActive('/reference/schema') ? '3px' : 0}
+                        borderBottomColor="su.orange"
+                        color="su.black"
+                        fontWeight={isActive('/reference/schema') ? 'semibold' : 'normal'}
+                        borderRadius="md"
+                        variant="ghost"
+                        h="auto"
+                        w={{ base: 'full', lg: 'auto' }}
+                      >
+                        Schemas
+                      </Button>
+                    </Menu.Trigger>
+                    <Portal>
+                      <Menu.Positioner>
+                        <Menu.Content maxH="300px" minW="200px">
+                          <Menu.Item
+                            value="abilities"
+                            onSelect={() => handleNavigate('/reference/schema/abilities')}
+                          >
+                            Abilities
+                          </Menu.Item>
+                          <Menu.Item
+                            value="equipment"
+                            onSelect={() => handleNavigate('/reference/schema/equipment')}
+                          >
+                            Equipment
+                          </Menu.Item>
+                          <Menu.Item
+                            value="chassis"
+                            onSelect={() => handleNavigate('/reference/schema/chassis')}
+                          >
+                            Chassis
+                          </Menu.Item>
+                          <Menu.Item
+                            value="patterns"
+                            onSelect={() => handleNavigate('/reference/schema/patterns')}
+                          >
+                            Patterns
+                          </Menu.Item>
+                          <Menu.Item
+                            value="systems"
+                            onSelect={() => handleNavigate('/reference/schema/systems')}
+                          >
+                            Systems
+                          </Menu.Item>
+                          <Menu.Item
+                            value="modules"
+                            onSelect={() => handleNavigate('/reference/schema/modules')}
+                          >
+                            Modules
+                          </Menu.Item>
+                          <Menu.Item
+                            value="classes"
+                            onSelect={() => handleNavigate('/reference/schema/classes')}
+                          >
+                            Classes
+                          </Menu.Item>
+                        </Menu.Content>
+                      </Menu.Positioner>
+                    </Portal>
+                  </Menu.Root>
+                </Box>
+
+                {/* Playground Dropdown */}
+                <Box as="li">
+                  <Menu.Root>
+                    <Menu.Trigger asChild>
+                      <Button
+                        px={4}
+                        py={2}
+                        _hover={{ bg: 'su.lightOrange' }}
+                        bg={isActive('/reference/sheets') ? 'su.lightBlue' : 'transparent'}
+                        borderBottomWidth={isActive('/reference/sheets') ? '3px' : 0}
+                        borderBottomColor="su.orange"
+                        color="su.black"
+                        fontWeight={isActive('/reference/sheets') ? 'semibold' : 'normal'}
+                        borderRadius="md"
+                        variant="ghost"
+                        h="auto"
+                        w={{ base: 'full', lg: 'auto' }}
+                      >
+                        Playground
+                      </Button>
+                    </Menu.Trigger>
+                    <Portal>
+                      <Menu.Positioner>
+                        <Menu.Content minW="200px">
+                          <Menu.Item
+                            value="mech-sheet"
+                            onSelect={() => handleNavigate('/reference/sheets/mech')}
+                          >
+                            Mech Live Sheet
+                          </Menu.Item>
+                          <Menu.Item
+                            value="pilot-sheet"
+                            onSelect={() => handleNavigate('/reference/sheets/pilot')}
+                          >
+                            Pilot Live Sheet
+                          </Menu.Item>
+                          <Menu.Item
+                            value="crawler-sheet"
+                            onSelect={() => handleNavigate('/reference/sheets/crawler')}
+                          >
+                            Crawler Live Sheet
+                          </Menu.Item>
+                        </Menu.Content>
+                      </Menu.Positioner>
+                    </Portal>
+                  </Menu.Root>
+                </Box>
+              </>
+            )}
+          </HStack>
         </Flex>
 
-        {/* Center section: Navigation links */}
-        <HStack
-          as="ul"
-          gap={2}
-          display={{ base: isOpen ? 'flex' : 'none', lg: 'flex' }}
-          flexDirection={{ base: 'column', lg: 'row' }}
-          w={{ base: 'full', lg: 'auto' }}
-        >
-          {/* Dashboard Links */}
-          {showDashboardLinks && (
-            <>
-              <Box as="li">
-                <Button
-                  onClick={() => handleNavigate('/dashboard')}
-                  px={4}
-                  py={2}
-                  _hover={{ bg: 'su.lightOrange' }}
-                  bg={
-                    isActive('/dashboard') && location.pathname === '/dashboard'
-                      ? 'su.lightBlue'
-                      : 'transparent'
-                  }
-                  borderBottomWidth={
-                    isActive('/dashboard') && location.pathname === '/dashboard' ? '3px' : 0
-                  }
-                  borderBottomColor="su.orange"
-                  color="su.black"
-                  fontWeight={
-                    isActive('/dashboard') && location.pathname === '/dashboard'
-                      ? 'semibold'
-                      : 'normal'
-                  }
-                  borderRadius="md"
-                  variant="ghost"
-                  h="auto"
-                  w={{ base: 'full', lg: 'auto' }}
-                >
-                  Overview
-                </Button>
-              </Box>
-              <Box as="li">
-                <Button
-                  onClick={() => handleNavigate('/dashboard/games')}
-                  px={4}
-                  py={2}
-                  _hover={{ bg: 'su.lightOrange' }}
-                  bg={isActive('/dashboard/games') ? 'su.lightBlue' : 'transparent'}
-                  borderBottomWidth={isActive('/dashboard/games') ? '3px' : 0}
-                  borderBottomColor="su.orange"
-                  color="su.black"
-                  fontWeight={isActive('/dashboard/games') ? 'semibold' : 'normal'}
-                  borderRadius="md"
-                  variant="ghost"
-                  h="auto"
-                  w={{ base: 'full', lg: 'auto' }}
-                >
-                  Games
-                </Button>
-              </Box>
-              <Box as="li">
-                <Button
-                  onClick={() => handleNavigate('/dashboard/crawlers')}
-                  px={4}
-                  py={2}
-                  _hover={{ bg: 'su.lightOrange' }}
-                  bg={isActive('/dashboard/crawlers') ? 'su.lightBlue' : 'transparent'}
-                  borderBottomWidth={isActive('/dashboard/crawlers') ? '3px' : 0}
-                  borderBottomColor="su.orange"
-                  color="su.black"
-                  fontWeight={isActive('/dashboard/crawlers') ? 'semibold' : 'normal'}
-                  borderRadius="md"
-                  variant="ghost"
-                  h="auto"
-                  w={{ base: 'full', lg: 'auto' }}
-                >
-                  Crawlers
-                </Button>
-              </Box>
-              <Box as="li">
-                <Button
-                  onClick={() => handleNavigate('/dashboard/pilots')}
-                  px={4}
-                  py={2}
-                  _hover={{ bg: 'su.lightOrange' }}
-                  bg={isActive('/dashboard/pilots') ? 'su.lightBlue' : 'transparent'}
-                  borderBottomWidth={isActive('/dashboard/pilots') ? '3px' : 0}
-                  borderBottomColor="su.orange"
-                  color="su.black"
-                  fontWeight={isActive('/dashboard/pilots') ? 'semibold' : 'normal'}
-                  borderRadius="md"
-                  variant="ghost"
-                  h="auto"
-                  w={{ base: 'full', lg: 'auto' }}
-                >
-                  Pilots
-                </Button>
-              </Box>
-              <Box as="li">
-                <Button
-                  onClick={() => handleNavigate('/dashboard/mechs')}
-                  px={4}
-                  py={2}
-                  _hover={{ bg: 'su.lightOrange' }}
-                  bg={isActive('/dashboard/mechs') ? 'su.lightBlue' : 'transparent'}
-                  borderBottomWidth={isActive('/dashboard/mechs') ? '3px' : 0}
-                  borderBottomColor="su.orange"
-                  color="su.black"
-                  fontWeight={isActive('/dashboard/mechs') ? 'semibold' : 'normal'}
-                  borderRadius="md"
-                  variant="ghost"
-                  h="auto"
-                  w={{ base: 'full', lg: 'auto' }}
-                >
-                  Mechs
-                </Button>
-              </Box>
-            </>
-          )}
-
-          {/* Reference Links - Dropdowns */}
-          {showReferenceLinks && (
-            <>
-              {/* Schemas Dropdown */}
-              <Box as="li">
-                <Menu.Root>
-                  <Menu.Trigger asChild>
-                    <Button
-                      px={4}
-                      py={2}
-                      _hover={{ bg: 'su.lightOrange' }}
-                      bg={isActive('/reference/schema') ? 'su.lightBlue' : 'transparent'}
-                      borderBottomWidth={isActive('/reference/schema') ? '3px' : 0}
-                      borderBottomColor="su.orange"
-                      color="su.black"
-                      fontWeight={isActive('/reference/schema') ? 'semibold' : 'normal'}
-                      borderRadius="md"
-                      variant="ghost"
-                      h="auto"
-                      w={{ base: 'full', lg: 'auto' }}
-                    >
-                      Schemas
-                    </Button>
-                  </Menu.Trigger>
-                  <Portal>
-                    <Menu.Positioner>
-                      <Menu.Content maxH="300px" minW="200px">
-                        <Menu.Item
-                          value="abilities"
-                          onSelect={() => handleNavigate('/reference/schema/abilities')}
-                        >
-                          Abilities
-                        </Menu.Item>
-                        <Menu.Item
-                          value="equipment"
-                          onSelect={() => handleNavigate('/reference/schema/equipment')}
-                        >
-                          Equipment
-                        </Menu.Item>
-                        <Menu.Item
-                          value="chassis"
-                          onSelect={() => handleNavigate('/reference/schema/chassis')}
-                        >
-                          Chassis
-                        </Menu.Item>
-                        <Menu.Item
-                          value="patterns"
-                          onSelect={() => handleNavigate('/reference/schema/patterns')}
-                        >
-                          Patterns
-                        </Menu.Item>
-                        <Menu.Item
-                          value="systems"
-                          onSelect={() => handleNavigate('/reference/schema/systems')}
-                        >
-                          Systems
-                        </Menu.Item>
-                        <Menu.Item
-                          value="modules"
-                          onSelect={() => handleNavigate('/reference/schema/modules')}
-                        >
-                          Modules
-                        </Menu.Item>
-                        <Menu.Item
-                          value="classes"
-                          onSelect={() => handleNavigate('/reference/schema/classes')}
-                        >
-                          Classes
-                        </Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Portal>
-                </Menu.Root>
-              </Box>
-
-              {/* Playground Dropdown */}
-              <Box as="li">
-                <Menu.Root>
-                  <Menu.Trigger asChild>
-                    <Button
-                      px={4}
-                      py={2}
-                      _hover={{ bg: 'su.lightOrange' }}
-                      bg={isActive('/reference/sheets') ? 'su.lightBlue' : 'transparent'}
-                      borderBottomWidth={isActive('/reference/sheets') ? '3px' : 0}
-                      borderBottomColor="su.orange"
-                      color="su.black"
-                      fontWeight={isActive('/reference/sheets') ? 'semibold' : 'normal'}
-                      borderRadius="md"
-                      variant="ghost"
-                      h="auto"
-                      w={{ base: 'full', lg: 'auto' }}
-                    >
-                      Playground
-                    </Button>
-                  </Menu.Trigger>
-                  <Portal>
-                    <Menu.Positioner>
-                      <Menu.Content minW="200px">
-                        <Menu.Item
-                          value="mech-sheet"
-                          onSelect={() => handleNavigate('/reference/sheets/mech')}
-                        >
-                          Mech Live Sheet
-                        </Menu.Item>
-                        <Menu.Item
-                          value="pilot-sheet"
-                          onSelect={() => handleNavigate('/reference/sheets/pilot')}
-                        >
-                          Pilot Live Sheet
-                        </Menu.Item>
-                        <Menu.Item
-                          value="crawler-sheet"
-                          onSelect={() => handleNavigate('/reference/sheets/crawler')}
-                        >
-                          Crawler Live Sheet
-                        </Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Portal>
-                </Menu.Root>
-              </Box>
-            </>
-          )}
-        </HStack>
-
-        {/* User info and sign out / Sign in */}
+        {/* Right section: User info and sign out / Sign in */}
         <Flex
           alignItems="center"
           gap={4}
           display={{ base: isOpen ? 'flex' : 'none', lg: 'flex' }}
           flexDirection={{ base: 'column', lg: 'row' }}
           w={{ base: 'full', lg: 'auto' }}
+          ml={{ base: 0, lg: 'auto' }}
         >
           {user ? (
             <>

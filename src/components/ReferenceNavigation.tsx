@@ -240,7 +240,7 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
           </VStack>
         </Box>
         <Box mt="auto">
-          <Footer variant="nav" />
+          <Footer />
         </Box>
       </Flex>
     </>

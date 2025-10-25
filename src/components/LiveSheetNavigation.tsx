@@ -162,7 +162,7 @@ export default function LiveSheetNavigation() {
           </VStack>
         </Box>
         <Box mt="auto">
-          <Footer variant="nav" />
+          <Footer />
         </Box>
       </Flex>
     </>
