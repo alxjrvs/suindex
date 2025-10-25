@@ -1,4 +1,4 @@
-import { Box, Container, Text, Link, Grid, Flex } from '@chakra-ui/react'
+import { Box, Container, Text, Link, Grid } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import Footer from '../Footer'
 
@@ -53,13 +53,7 @@ export function LandingPageDashboard() {
               </Box>
 
               {/* Pilots */}
-              <Box
-                bg="su.orange"
-                borderRadius="lg"
-                p={6}
-                borderWidth="3px"
-                borderColor="su.black"
-              >
+              <Box bg="su.orange" borderRadius="lg" p={6} borderWidth="3px" borderColor="su.black">
                 <Heading level="h3" mb={3} color="su.white">
                   👤 Create Pilots
                 </Heading>
@@ -70,13 +64,7 @@ export function LandingPageDashboard() {
               </Box>
 
               {/* Mechs */}
-              <Box
-                bg="su.green"
-                borderRadius="lg"
-                p={6}
-                borderWidth="3px"
-                borderColor="su.black"
-              >
+              <Box bg="su.green" borderRadius="lg" p={6} borderWidth="3px" borderColor="su.black">
                 <Heading level="h3" mb={3} color="su.white">
                   ⚙️ Build Mechs
                 </Heading>
@@ -87,19 +75,13 @@ export function LandingPageDashboard() {
               </Box>
 
               {/* Games */}
-              <Box
-                bg="su.blue"
-                borderRadius="lg"
-                p={6}
-                borderWidth="3px"
-                borderColor="su.black"
-              >
+              <Box bg="su.blue" borderRadius="lg" p={6} borderWidth="3px" borderColor="su.black">
                 <Heading level="h3" mb={3} color="su.white">
                   🎮 Organize Games
                 </Heading>
                 <Text color="su.white" mb={2}>
-                  Create and manage campaigns with your friends. Invite players, track progress,
-                  and share your epic stories.
+                  Create and manage campaigns with your friends. Invite players, track progress, and
+                  share your epic stories.
                 </Text>
               </Box>
             </Grid>
@@ -168,4 +150,3 @@ export function LandingPageDashboard() {
     </Box>
   )
 }
-

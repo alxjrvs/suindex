@@ -51,7 +51,9 @@ export function usePilotLiveSheetState(id?: string) {
 
   const selectedClass = SalvageUnionReference.Classes.findById(pilot.class_id ?? '')
 
-  const selectedAdvancedClass = SalvageUnionReference.Classes.findById(pilot.advanced_class_id ?? '')
+  const selectedAdvancedClass = SalvageUnionReference.Classes.findById(
+    pilot.advanced_class_id ?? ''
+  )
 
   const availableAdvancedClasses = useMemo(() => {
     if ((pilot.abilities ?? []).length < 6) {
@@ -83,7 +85,9 @@ export function usePilotLiveSheetState(id?: string) {
     const hybridClasses = SalvageUnionReference.Classes.where((cls) => cls.type === 'hybrid')
 
     hybridClasses.forEach((cls) => {
-      const treeRequirement = SalvageUnionReference.AbilityTreeRequirements.find((req) => req.tree === cls.advancedAbilities)
+      const treeRequirement = SalvageUnionReference.AbilityTreeRequirements.find(
+        (req) => req.tree === cls.advancedAbilities
+      )
 
       if (!treeRequirement || !treeRequirement.requirement) {
         return
@@ -185,13 +189,7 @@ export function usePilotLiveSheetState(id?: string) {
         abilities: [...(pilot.abilities ?? []), abilityId],
       })
     },
-    [
-      selectedClass,
-      selectedAdvancedClass,
-      pilot.current_tp,
-      pilot.abilities,
-      updatePilot,
-    ]
+    [selectedClass, selectedAdvancedClass, pilot.current_tp, pilot.abilities, updatePilot]
   )
 
   const handleRemoveAbility = useCallback(
@@ -265,7 +263,7 @@ export function usePilotLiveSheetState(id?: string) {
         })
       }
     },
-    [allEquipment, pilot.equipment, updatePilot]
+    [pilot.equipment, updatePilot]
   )
 
   return {
