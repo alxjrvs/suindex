@@ -2,13 +2,23 @@ import { useNavigate } from 'react-router'
 import { GameGridCard } from './GameGridCard'
 import { GridLayout } from './GridLayout'
 import { useGamesWithRelationships } from '../../hooks/useGameWithRelationships'
+import { useCreateEntity } from '../../hooks/useCreateEntity'
 
 export function GamesGrid() {
   const navigate = useNavigate()
   const { games, loading, error, reload } = useGamesWithRelationships()
 
-  const handleCreateGame = () => {
-    navigate('/dashboard/games/new')
+  const { createEntity: createGame, isLoading: isCreating } = useCreateEntity({
+    table: 'games',
+    navigationPath: (id) => `/dashboard/games/${id}`,
+  })
+
+  const handleCreateGame = async () => {
+    try {
+      await createGame()
+    } catch (err) {
+      console.error('Failed to create game:', err)
+    }
   }
 
   const handleGameClick = (gameId: string) => {
@@ -36,6 +46,7 @@ export function GamesGrid() {
         label: 'New Game',
         bgColor: 'su.brick',
         color: 'su.white',
+        isLoading: isCreating,
       }}
       onRetry={reload}
     />
