@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Box, Flex } from '@chakra-ui/react'
 import ReferenceNavigation from './components/ReferenceNavigation'
-import LiveSheetNavigation from './components/LiveSheetNavigation'
 import SchemaViewer from './components/schema/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
 import MechLiveSheet from './components/MechLiveSheet'
@@ -34,6 +33,9 @@ function AppContent() {
                   index
                   element={<RulesReferenceLanding schemas={schemaIndexData.schemas} />}
                 />
+                <Route path="/sheets/mech" element={<MechLiveSheet />} />
+                <Route path="/sheets/pilot" element={<PilotLiveSheet />} />
+                <Route path="/sheets/crawler" element={<CrawlerLiveSheet />} />
                 <Route
                   path="/schema/:schemaId"
                   element={<SchemaViewer schemas={schemaIndexData.schemas} />}
@@ -42,26 +44,6 @@ function AppContent() {
                   path="/schema/:schemaId/item/:itemId"
                   element={<ItemShowPage schemas={schemaIndexData.schemas} />}
                 />
-              </Routes>
-            </Box>
-          </Flex>
-        }
-      />
-      <Route
-        path="/playground/*"
-        element={
-          <Flex
-            flexDirection={{ base: 'column', md: 'row' }}
-            h="100vh"
-            bg="su.white"
-            overflow="hidden"
-          >
-            <LiveSheetNavigation />
-            <Box as="main" flex="1" overflowY="auto" pt={{ base: 16, md: 0 }}>
-              <Routes>
-                <Route path="/mech-builder" element={<MechLiveSheet />} />
-                <Route path="/pilot-builder" element={<PilotLiveSheet />} />
-                <Route path="/crawler-builder" element={<CrawlerLiveSheet />} />
               </Routes>
             </Box>
           </Flex>

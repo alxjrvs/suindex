@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Box, Button, Flex, IconButton, Text, VStack } from '@chakra-ui/react'
 import type { SchemaInfo } from '../types/schema'
 import Footer from './Footer'
@@ -12,6 +12,7 @@ interface ReferenceNavigationProps {
 export default function ReferenceNavigation({ schemas }: ReferenceNavigationProps) {
   const { schemaId } = useParams<{ schemaId: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
 
   const handleNavigate = (path: string) => {
@@ -114,7 +115,104 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
               Dashboard
             </Text>
           </Button>
+          <Box
+            px={4}
+            py={2}
+            borderBottomWidth="1px"
+            borderBottomColor="su.lightBlue"
+            fontSize="xs"
+            fontWeight="semibold"
+            color="su.brick"
+            textTransform="uppercase"
+            letterSpacing="wider"
+          >
+            Live Sheets
+          </Box>
           <VStack as="ul" py={2} gap={0} alignItems="stretch">
+            <Box as="li">
+              <Button
+                onClick={() => handleNavigate('/reference/sheets/mech')}
+                w="full"
+                textAlign="left"
+                display="block"
+                px={4}
+                py={3}
+                _hover={{ bg: 'su.lightOrange' }}
+                bg={location.pathname === '/reference/sheets/mech' ? 'su.lightBlue' : 'transparent'}
+                borderLeftWidth={location.pathname === '/reference/sheets/mech' ? '4px' : 0}
+                borderLeftColor="su.orange"
+                color="su.black"
+                fontWeight={location.pathname === '/reference/sheets/mech' ? 'medium' : 'normal'}
+                borderRadius={0}
+                variant="ghost"
+                h="auto"
+                justifyContent="flex-start"
+              >
+                Mech Live Sheet
+              </Button>
+            </Box>
+            <Box as="li">
+              <Button
+                onClick={() => handleNavigate('/reference/sheets/pilot')}
+                w="full"
+                textAlign="left"
+                display="block"
+                px={4}
+                py={3}
+                _hover={{ bg: 'su.lightOrange' }}
+                bg={
+                  location.pathname === '/reference/sheets/pilot' ? 'su.lightBlue' : 'transparent'
+                }
+                borderLeftWidth={location.pathname === '/reference/sheets/pilot' ? '4px' : 0}
+                borderLeftColor="su.orange"
+                color="su.black"
+                fontWeight={location.pathname === '/reference/sheets/pilot' ? 'medium' : 'normal'}
+                borderRadius={0}
+                variant="ghost"
+                h="auto"
+                justifyContent="flex-start"
+              >
+                Pilot Live Sheet
+              </Button>
+            </Box>
+            <Box as="li">
+              <Button
+                onClick={() => handleNavigate('/reference/sheets/crawler')}
+                w="full"
+                textAlign="left"
+                display="block"
+                px={4}
+                py={3}
+                _hover={{ bg: 'su.lightOrange' }}
+                bg={
+                  location.pathname === '/reference/sheets/crawler' ? 'su.lightBlue' : 'transparent'
+                }
+                borderLeftWidth={location.pathname === '/reference/sheets/crawler' ? '4px' : 0}
+                borderLeftColor="su.orange"
+                color="su.black"
+                fontWeight={location.pathname === '/reference/sheets/crawler' ? 'medium' : 'normal'}
+                borderRadius={0}
+                variant="ghost"
+                h="auto"
+                justifyContent="flex-start"
+              >
+                Crawler Live Sheet
+              </Button>
+            </Box>
+            <Box
+              px={4}
+              py={2}
+              borderTopWidth="1px"
+              borderTopColor="su.lightBlue"
+              fontSize="xs"
+              fontWeight="semibold"
+              color="su.brick"
+              textTransform="uppercase"
+              letterSpacing="wider"
+              mt={2}
+            >
+              Schemas
+            </Box>
             {schemas.map((schema) => (
               <Box as="li" key={schema.id}>
                 <Button
