@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
+import { ReferenceHeader } from '../shared/ReferenceHeader'
 import Footer from '../Footer'
 import type { SchemaInfo } from '../../types/schema'
 import DataTable from '../DataTable'
@@ -36,25 +36,11 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
 
   return (
     <Flex flexDirection="column" minH="100%">
-      <Box
-        bg="su.white"
-        shadow="sm"
-        borderBottomWidth="1px"
-        borderColor="su.lightBlue"
-        p={6}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        textAlign="center"
-        flex="0 0 auto"
-      >
-        <Heading level="h2" textAlign="center" alignSelf="center">
-          {currentSchema.title}
-        </Heading>
-        <Text color="su.brick" mt={1} textAlign="center">
+      <ReferenceHeader title={currentSchema.title} textAlign="center">
+        <Text color="su.brick" textAlign="center">
           {currentSchema.description}
         </Text>
-      </Box>
+      </ReferenceHeader>
       <Box flex="1" overflowY="auto">
         <DataTable data={data} schema={currentSchema} />
       </Box>

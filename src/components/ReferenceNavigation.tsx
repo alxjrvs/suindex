@@ -78,7 +78,7 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
       >
         <Box flex="1">
           <Button
-            onClick={() => handleNavigate('/reference/')}
+            onClick={() => handleNavigate('/')}
             w="full"
             textAlign="left"
             display="block"
@@ -131,18 +131,18 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
           <VStack as="ul" py={2} gap={0} alignItems="stretch">
             <Box as="li">
               <Button
-                onClick={() => handleNavigate('/reference/sheets/mech')}
+                onClick={() => handleNavigate('/sheets/mech')}
                 w="full"
                 textAlign="left"
                 display="block"
                 px={4}
                 py={3}
                 _hover={{ bg: 'su.lightOrange' }}
-                bg={location.pathname === '/reference/sheets/mech' ? 'su.lightBlue' : 'transparent'}
-                borderLeftWidth={location.pathname === '/reference/sheets/mech' ? '4px' : 0}
+                bg={location.pathname === '/sheets/mech' ? 'su.lightBlue' : 'transparent'}
+                borderLeftWidth={location.pathname === '/sheets/mech' ? '4px' : 0}
                 borderLeftColor="su.orange"
                 color="su.black"
-                fontWeight={location.pathname === '/reference/sheets/mech' ? 'medium' : 'normal'}
+                fontWeight={location.pathname === '/sheets/mech' ? 'medium' : 'normal'}
                 borderRadius={0}
                 variant="ghost"
                 h="auto"
@@ -153,20 +153,18 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
             </Box>
             <Box as="li">
               <Button
-                onClick={() => handleNavigate('/reference/sheets/pilot')}
+                onClick={() => handleNavigate('/sheets/pilot')}
                 w="full"
                 textAlign="left"
                 display="block"
                 px={4}
                 py={3}
                 _hover={{ bg: 'su.lightOrange' }}
-                bg={
-                  location.pathname === '/reference/sheets/pilot' ? 'su.lightBlue' : 'transparent'
-                }
-                borderLeftWidth={location.pathname === '/reference/sheets/pilot' ? '4px' : 0}
+                bg={location.pathname === '/sheets/pilot' ? 'su.lightBlue' : 'transparent'}
+                borderLeftWidth={location.pathname === '/sheets/pilot' ? '4px' : 0}
                 borderLeftColor="su.orange"
                 color="su.black"
-                fontWeight={location.pathname === '/reference/sheets/pilot' ? 'medium' : 'normal'}
+                fontWeight={location.pathname === '/sheets/pilot' ? 'medium' : 'normal'}
                 borderRadius={0}
                 variant="ghost"
                 h="auto"
@@ -177,20 +175,18 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
             </Box>
             <Box as="li">
               <Button
-                onClick={() => handleNavigate('/reference/sheets/crawler')}
+                onClick={() => handleNavigate('/sheets/crawler')}
                 w="full"
                 textAlign="left"
                 display="block"
                 px={4}
                 py={3}
                 _hover={{ bg: 'su.lightOrange' }}
-                bg={
-                  location.pathname === '/reference/sheets/crawler' ? 'su.lightBlue' : 'transparent'
-                }
-                borderLeftWidth={location.pathname === '/reference/sheets/crawler' ? '4px' : 0}
+                bg={location.pathname === '/sheets/crawler' ? 'su.lightBlue' : 'transparent'}
+                borderLeftWidth={location.pathname === '/sheets/crawler' ? '4px' : 0}
                 borderLeftColor="su.orange"
                 color="su.black"
-                fontWeight={location.pathname === '/reference/sheets/crawler' ? 'medium' : 'normal'}
+                fontWeight={location.pathname === '/sheets/crawler' ? 'medium' : 'normal'}
                 borderRadius={0}
                 variant="ghost"
                 h="auto"
@@ -216,7 +212,7 @@ export default function ReferenceNavigation({ schemas }: ReferenceNavigationProp
             {schemas.map((schema) => (
               <Box as="li" key={schema.id}>
                 <Button
-                  onClick={() => handleNavigate(`/reference/schema/${schema.id}`)}
+                  onClick={() => handleNavigate(`/schema/${schema.id}`)}
                   w="full"
                   textAlign="left"
                   display="block"

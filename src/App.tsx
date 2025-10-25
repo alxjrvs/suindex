@@ -8,7 +8,6 @@ import MechLiveSheet from './components/MechLiveSheet'
 import PilotLiveSheet from './components/PilotLiveSheet'
 import CrawlerLiveSheet from './components/CrawlerLiveSheet'
 import Dashboard from './components/Dashboard'
-import LandingPage from './components/LandingPage'
 import { RulesReferenceLanding } from './components/Reference/RulesReferenceLanding'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
@@ -34,13 +33,11 @@ function AppContent() {
 
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/dashboard/*" element={<Dashboard />} />
       <Route
-        path="/reference/*"
+        path="/*"
         element={
           <Flex flexDirection="column" minH="100vh" bg="su.white">
-            <TopNavigation user={user} />
+            <TopNavigation user={user} schemas={schemaIndexData.schemas} />
             <Box as="main" flex="1" pt={{ base: 16, md: 0 }}>
               <Routes>
                 <Route
@@ -58,6 +55,7 @@ function AppContent() {
                   path="/schema/:schemaId/item/:itemId"
                   element={<ItemShowPage schemas={schemaIndexData.schemas} />}
                 />
+                <Route path="/dashboard/*" element={<Dashboard />} />
               </Routes>
             </Box>
           </Flex>

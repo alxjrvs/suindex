@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { User } from '@supabase/supabase-js'
-import { TopNavigation } from '../TopNavigation'
 import { DashboardContent } from './DashboardContent'
 import { GamesGrid } from './GamesGrid'
 import { NewGame } from './NewGame'
@@ -51,18 +50,14 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <Flex flexDirection="column" minH="100vh" bg="su.white">
-        <TopNavigation user={null} />
-        <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
-          <Auth />
-        </Box>
-      </Flex>
+      <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
+        <Auth />
+      </Box>
     )
   }
 
   return (
-    <Flex flexDirection="column" minH="100vh" bg="su.white">
-      <TopNavigation user={user} />
+    <>
       <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
         <Routes>
           <Route path="/" element={<DashboardContent />} />
@@ -79,6 +74,6 @@ export default function Dashboard() {
         </Routes>
       </Box>
       <Footer />
-    </Flex>
+    </>
   )
 }
