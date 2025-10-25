@@ -41,7 +41,7 @@ export function CrawlerResourceSteppers({
       matchBorder={false}
       borderWidth="4px"
       disabled={disabled}
-      fillHeight
+      justifyContent="flex-start"
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
         <Flex justifyContent="start" alignItems="end">
