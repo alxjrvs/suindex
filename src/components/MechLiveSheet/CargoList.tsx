@@ -28,10 +28,6 @@ export function CargoList({
     <RoundedBox
       bg="bg.builder.mech"
       borderColor="border.builder"
-      matchBorder={false}
-      borderWidth="8px"
-      borderRadius="3xl"
-      padding={6}
       title="Cargo"
       disabled={disabled}
       rightContent={

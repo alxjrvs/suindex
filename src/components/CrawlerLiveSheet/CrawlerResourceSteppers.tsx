@@ -38,8 +38,6 @@ export function CrawlerResourceSteppers({
     <RoundedBox
       bg="bg.builder.crawler"
       borderColor="border.builder.crawler"
-      matchBorder={false}
-      borderWidth="4px"
       disabled={disabled}
       justifyContent="flex-start"
     >

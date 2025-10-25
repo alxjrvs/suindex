@@ -29,12 +29,10 @@ export function CrawlerHeaderInputs({
   return (
     <RoundedBox
       bg="bg.builder.crawler"
-      fillWidth
-      fillHeight
+      h="full"
+      w="full"
       flex="1"
       borderColor="border.builder.crawler"
-      matchBorder={false}
-      borderWidth="4px"
       disabled={disabled}
     >
       <VStack gap={4} alignItems="stretch" w="full" h="full" flex="1">

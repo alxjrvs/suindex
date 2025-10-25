@@ -19,7 +19,7 @@ export function ChassisStatsGrid({
   disabled = false,
 }: ChassisStatsGridProps) {
   return (
-    <RoundedBox bg="su.green" padding={4} fillHeight fillWidth disabled={disabled}>
+    <RoundedBox bg="su.green" h="full" w="full" disabled={disabled}>
       <Flex flexDirection="row" justifyContent="space-between" w="full">
         <StatDisplay
           label="Sys. Slots"

@@ -23,7 +23,7 @@ export function Notes({
       bg={backgroundColor}
       borderColor={backgroundColor}
       disabled={disabled}
-      fillHeight
+      h="full"
     >
       <SheetTextarea
         value={notes}

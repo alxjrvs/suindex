@@ -18,11 +18,9 @@ export function CrawlerNPC({
     <RoundedBox
       bg="bg.builder.crawler"
       borderColor="border.builder.crawler"
-      matchBorder={false}
-      borderWidth="4px"
       title="NPC"
       disabled={disabled}
-      fillWidth
+      w="full"
     >
       <NPCCard
         npc={crawler.npc!}

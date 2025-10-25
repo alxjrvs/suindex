@@ -90,8 +90,7 @@ export function PilotInfoInputs({
     <RoundedBox
       bg="bg.builder.pilot"
       borderColor="border.builder.pilot"
-      matchBorder={false}
-      fillWidth
+      w="full"
       disabled={disabled}
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">

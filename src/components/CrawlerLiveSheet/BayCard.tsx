@@ -27,10 +27,7 @@ export function BayCard({ bay, onUpdate, disabled = false }: BayCardProps) {
   return (
     <RoundedBox
       bg={bay.damaged ? 'su.grey' : 'su.crawlerPink'}
-      borderWidth="4px"
-      borderRadius="2xl"
       justifyContent="flex-start"
-      padding={4}
       title={bay.name}
       titleRotation={bay.damaged ? titleRotation : 0}
       disabled={disabled}
