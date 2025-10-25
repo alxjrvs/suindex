@@ -47,7 +47,7 @@ export function LiveSheetControlBar({
   onRelationChange,
   hasPendingChanges = false,
 }: LiveSheetControlBarProps) {
-  const { items, loading } = useEntityRelationships<Record<string, string>>({
+  const { items, loading } = useEntityRelationships<{ id: string; [key: string]: string }>({
     table: config.table,
     selectFields: config.selectFields,
     orderBy: config.nameField,

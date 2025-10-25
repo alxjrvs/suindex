@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Box, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
-import { supabase } from '../../lib/supabase'
+import { redeemInviteCode } from '../../lib/api'
 
 export function JoinGame() {
   const [searchParams] = useSearchParams()
@@ -21,12 +21,7 @@ export function JoinGame() {
       setError(null)
       setLoading(true)
       try {
-        const { data, error } = await supabase.rpc('redeem_invite_code', {
-          invite_code: invite.trim(),
-        })
-        if (error) throw error
-        const gameId = data as string
-        if (!gameId) throw new Error('Invalid response from server')
+        const gameId = await redeemInviteCode(invite)
         navigate(`/dashboard/games/${gameId}`)
       } catch (err) {
         console.error('Failed to join game', err)

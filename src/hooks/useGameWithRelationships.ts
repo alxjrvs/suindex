@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '../lib/supabase'
 import type { Tables } from '../types/database'
+import { getUser, fetchGame, fetchGameMembers } from '../lib/api'
+import { supabase } from '../lib/supabase'
 
 type GameRow = Tables<'games'>
 type CrawlerRow = Tables<'crawlers'>
@@ -49,30 +50,21 @@ export function useGameWithRelationships(gameId: string | undefined) {
       setError(null)
 
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Fetch game data and user's role in parallel
-      const [gameResult, memberResult, membersResult] = await Promise.all([
-        supabase.from('games').select('*').eq('id', gameId).single(),
-        supabase
-          .from('game_members')
-          .select('role')
-          .eq('game_id', gameId)
-          .eq('user_id', user.id)
-          .single(),
-        supabase.rpc('get_game_members', { p_game_id: gameId }),
-      ])
+      // Fetch game data and members in parallel
+      const [gameData, members] = await Promise.all([fetchGame(gameId), fetchGameMembers(gameId)])
 
-      if (gameResult.error) throw gameResult.error
-      if (memberResult.error) throw memberResult.error
-      if (membersResult.error) throw membersResult.error
+      // Get user's role in the game
+      const { data: memberData } = await supabase
+        .from('game_members')
+        .select('role')
+        .eq('game_id', gameId)
+        .eq('user_id', user.id)
+        .single()
 
-      const gameData = gameResult.data as GameRow
-      const userRole = (memberResult.data?.role || 'player') as MemberRole
-      const members = (membersResult.data || []) as GameMember[]
+      const userRole = (memberData?.role || 'player') as MemberRole
       const mediator = members.find((m) => m.role === 'mediator') || null
 
       // Fetch crawler for this game

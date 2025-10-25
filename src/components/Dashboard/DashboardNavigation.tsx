@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Box, Button, Flex, IconButton, Text, HStack } from '@chakra-ui/react'
-import { supabase } from '../../lib/supabase'
+import { signOut, signInWithDiscord } from '../../lib/api'
 import type { User } from '@supabase/supabase-js'
 import { Heading } from '../base/Heading'
 
@@ -25,7 +25,7 @@ export function DashboardNavigation({ user, onSignIn }: DashboardNavigationProps
   const handleSignOut = async () => {
     try {
       setSigningOut(true)
-      await supabase.auth.signOut()
+      await signOut()
     } catch (error) {
       console.error('Error signing out:', error)
     } finally {
@@ -36,13 +36,7 @@ export function DashboardNavigation({ user, onSignIn }: DashboardNavigationProps
   const handleSignIn = async () => {
     try {
       setSigningIn(true)
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'discord',
-        options: {
-          redirectTo: `${window.location.origin}/dashboard`,
-        },
-      })
-      if (error) throw error
+      await signInWithDiscord(`${window.location.origin}/dashboard`)
       onSignIn?.()
     } catch (error) {
       console.error('Error signing in:', error)

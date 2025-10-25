@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { getUser } from '../../lib/api'
 import { supabase } from '../../lib/supabase'
 import { SheetSelect } from '../shared/SheetSelect'
 import { ControlBarContainer } from '../shared/ControlBarContainer'
@@ -25,14 +26,14 @@ export function CrawlerControlBar({
     const fetchGames = async () => {
       try {
         setLoadingGames(true)
-        const { data: userData } = await supabase.auth.getUser()
-        if (!userData.user) return
+        const user = await getUser()
+        if (!user) return
 
         // Get games where user is a member
         const { data: memberData } = await supabase
           .from('game_members')
           .select('game_id')
-          .eq('user_id', userData.user.id)
+          .eq('user_id', user.id)
 
         if (!memberData) return
 
