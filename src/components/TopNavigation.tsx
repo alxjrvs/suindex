@@ -197,7 +197,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                 </Menu.Trigger>
                 <Portal>
                   <Menu.Positioner>
-                    <Menu.Content maxH="300px" minW="200px">
+                    <Menu.Content maxH="300px" minW="200px" overflowY="auto">
                       {schemas.map((schema) => (
                         <Menu.Item
                           key={schema.id}
