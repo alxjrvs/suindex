@@ -23,6 +23,8 @@ export function StatDisplay({
   borderColor = 'su.black',
 }: StatDisplayProps) {
   const WrapperComponent = onClick ? Button : Box
+
+  // All stat displays keep their background when disabled, just apply opacity
   const commonProps = {
     w: 16,
     h: 16,
@@ -44,6 +46,7 @@ export function StatDisplay({
         ...commonProps,
         disabled,
         onClick,
+        bg: disabled ? 'gray.200' : bg,
         _hover: !disabled ? { opacity: 0.8 } : undefined,
       }
     : commonProps
@@ -64,7 +67,7 @@ export function StatDisplay({
         {label}
       </Text>
       <WrapperComponent {...buttonProps}>
-        <Text fontSize="lg" fontWeight="bold" color={valueColor}>
+        <Text fontSize="lg" fontWeight="bold" color={disabled ? 'su.black' : valueColor}>
           {value}
         </Text>
       </WrapperComponent>

@@ -43,7 +43,7 @@ export function CrawlerResourceSteppers({
       disabled={disabled}
       fillHeight
     >
-      <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
+      <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
         <Flex justifyContent="start" alignItems="end">
           <NumericStepper
             label="SP"
@@ -69,7 +69,6 @@ export function CrawlerResourceSteppers({
             value={upgrade}
             onChange={onUpgradeChange}
             max={maxUpgrade}
-            step={5}
             disabled={disabled}
           />
         </Flex>

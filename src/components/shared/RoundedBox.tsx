@@ -84,7 +84,7 @@ export function RoundedBox({
               alignSelf="center"
               transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
               transition="transform 0.3s ease"
-              opacity={disabled ? 0.3 : 1}
+              opacity={disabled ? 0.5 : 1}
             >
               {title}
             </Heading>

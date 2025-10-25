@@ -1,8 +1,8 @@
-import { Box, Flex, Grid, Text } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
+import { DynamicBay } from '../shared/DynamicBay'
 import type { CargoItem } from '../../types/database'
 
 interface CargoListProps {
@@ -41,66 +41,7 @@ export function CargoList({
         </Flex>
       }
     >
-      <Grid templateColumns="repeat(4, 1fr)" gap={3}>
-        {cargo.map((item) => (
-          <Box
-            key={item.id}
-            position="relative"
-            bg="bg.input"
-            borderWidth="2px"
-            borderColor="fg.input"
-            borderRadius="lg"
-            p={2}
-            aspectRatio="1"
-            display="flex"
-            flexDirection="column"
-          >
-            <Button
-              onClick={() => onRemove(item.id)}
-              position="absolute"
-              top={1}
-              right={1}
-              bg="su.brick"
-              color="su.white"
-              w={5}
-              h={5}
-              borderRadius="md"
-              fontWeight="bold"
-              _hover={{ bg: 'su.black' }}
-              fontSize="xs"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              lineHeight="none"
-              aria-label="Remove"
-              minW={5}
-              p={0}
-              disabled={disabled}
-            >
-              ✕
-            </Button>
-            <Flex flex="1" flexDirection="column" alignItems="center" justifyContent="center">
-              <Text fontSize="3xl" fontWeight="bold" color="fg.input">
-                {item.amount}
-              </Text>
-              <Text
-                fontSize="xs"
-                color="fg.input"
-                textAlign="center"
-                px={2}
-                css={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}
-              >
-                {item.description}
-              </Text>
-            </Flex>
-          </Box>
-        ))}
-      </Grid>
+      <DynamicBay items={cargo} maxCapacity={maxCargo} onRemove={onRemove} disabled={disabled} />
     </RoundedBox>
   )
 }

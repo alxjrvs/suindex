@@ -44,7 +44,7 @@ export function SheetDisplay({
         minH={minHeight}
         p={3}
         borderWidth="3px"
-        borderColor={disabled ? 'gray.400' : 'su.black'}
+        borderColor={disabled ? 'gray.600' : 'su.black'}
         borderRadius="2xl"
         bg={disabled ? 'gray.200' : 'su.white'}
         color={disabled ? 'gray.600' : 'su.black'}
