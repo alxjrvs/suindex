@@ -4,21 +4,7 @@ import userEvent from '@testing-library/user-event'
 import MechLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefChassis, SURefSystem, SURefModule } from 'salvageunion-reference'
-
-// Mock the SalvageUnionReference
-vi.mock('salvageunion-reference', () => ({
-  SalvageUnionReference: {
-    Chassis: {
-      all: vi.fn(),
-    },
-    Systems: {
-      all: vi.fn(),
-    },
-    Modules: {
-      all: vi.fn(),
-    },
-  },
-}))
+import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('MechLiveSheet', () => {
   const mockChassis: SURefChassis[] = [
@@ -110,9 +96,11 @@ describe('MechLiveSheet', () => {
   ]
 
   beforeEach(() => {
-    vi.mocked(SalvageUnionReference.Chassis.all).mockReturnValue(mockChassis)
-    vi.mocked(SalvageUnionReference.Systems.all).mockReturnValue(mockSystems)
-    vi.mocked(SalvageUnionReference.Modules.all).mockReturnValue(mockModules)
+    setupSalvageUnionMocks({
+      chassis: mockChassis,
+      systems: mockSystems,
+      modules: mockModules,
+    })
   })
 
   describe('Initial Render', () => {

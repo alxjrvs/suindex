@@ -4,21 +4,7 @@ import userEvent from '@testing-library/user-event'
 import CrawlerLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefCrawler, SURefCrawlerBay, SURefCrawlerTechLevel } from 'salvageunion-reference'
-
-// Mock the SalvageUnionReference
-vi.mock('salvageunion-reference', () => ({
-  SalvageUnionReference: {
-    Crawlers: {
-      all: vi.fn(),
-    },
-    CrawlerBays: {
-      all: vi.fn(),
-    },
-    CrawlerTechLevels: {
-      all: vi.fn(),
-    },
-  },
-}))
+import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('CrawlerLiveSheet', () => {
   const mockCrawlers: SURefCrawler[] = [
@@ -172,9 +158,11 @@ describe('CrawlerLiveSheet', () => {
   ]
 
   beforeEach(() => {
-    vi.mocked(SalvageUnionReference.Crawlers.all).mockReturnValue(mockCrawlers)
-    vi.mocked(SalvageUnionReference.CrawlerBays.all).mockReturnValue(mockBays)
-    vi.mocked(SalvageUnionReference.CrawlerTechLevels.all).mockReturnValue(mockTechLevels)
+    setupSalvageUnionMocks({
+      crawlers: mockCrawlers,
+      crawlerBays: mockBays,
+      crawlerTechLevels: mockTechLevels,
+    })
   })
 
   describe('Initial Render', () => {
