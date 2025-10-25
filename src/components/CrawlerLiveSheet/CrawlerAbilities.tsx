@@ -12,7 +12,6 @@ export function CrawlerAbilities({
   return (
     <RoundedBox
       bg="bg.builder.crawler"
-      borderColor="border.builder.crawler"
       title="Abilities"
       justifyContent={'flex-start'}
       disabled={disabled}

@@ -27,7 +27,6 @@ export function CargoList({
   return (
     <RoundedBox
       bg="bg.builder.mech"
-      borderColor="border.builder"
       title="Cargo"
       disabled={disabled}
       rightContent={

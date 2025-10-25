@@ -67,7 +67,6 @@ export function SystemsModulesList({
   return (
     <RoundedBox
       bg="bg.builder.mech"
-      borderColor="border.builder"
       title="Systems & Modules"
       disabled={disabled}
       rightContent={

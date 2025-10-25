@@ -2,7 +2,7 @@ import { Flex, type FlexProps } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import type { ReactNode } from 'react'
 
-interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children'> {
+interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderColor'> {
   /** Background color token (e.g., 'bg.builder.pilot', 'su.orange', 'su.green') */
   bg: string
   /** Optional title to display at the top */
@@ -11,8 +11,6 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children'> {
   rightContent?: ReactNode
   /** Main content of the box */
   children: ReactNode
-  /** Custom border color token (if not provided, uses bg color) */
-  borderColor?: string
   /** Optional rotation for the title in degrees */
   titleRotation?: number
   /** Whether the box is disabled (grays out background and makes title opaque) */
@@ -24,14 +22,13 @@ export function RoundedBox({
   title,
   rightContent,
   children,
-  borderColor,
   justifyContent = 'space-between',
   titleRotation = 0,
   disabled = false,
   ...flexProps
 }: RoundedBoxProps) {
-  const actualBorderColor = disabled ? 'su.grey' : borderColor || bg
   const actualBg = disabled ? 'su.grey' : bg
+  const actualBorderColor = disabled ? 'blackAlpha.400' : 'black'
 
   return (
     <Flex
@@ -39,7 +36,7 @@ export function RoundedBox({
       alignItems="center"
       justifyContent={justifyContent}
       bg={actualBg}
-      borderWidth="4px"
+      borderWidth="3px"
       borderColor={actualBorderColor}
       borderRadius="2xl"
       p={4}

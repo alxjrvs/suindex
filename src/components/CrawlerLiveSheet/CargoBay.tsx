@@ -25,7 +25,6 @@ export function CargoBay({
   return (
     <RoundedBox
       bg={damaged ? 'su.grey' : 'bg.builder.crawler'}
-      borderColor="border.builder.crawler"
       justifyContent="flex-start"
       title="Storage"
       titleRotation={damaged ? titleRotation : 0}
