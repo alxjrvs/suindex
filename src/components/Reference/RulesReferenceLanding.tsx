@@ -152,12 +152,21 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
 
   return (
     <Flex h="full" flexDirection="column" bg="su.white">
-      <Box bg="su.white" shadow="sm" borderBottomWidth="1px" borderColor="su.lightBlue" p={6}>
-        <Heading level="h1" mb={6}>
+      <Box
+        bg="su.white"
+        shadow="sm"
+        borderBottomWidth="1px"
+        borderColor="su.lightBlue"
+        p={6}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+      >
+        <Heading level="h1" mb={6} textAlign="center" alignSelf="center">
           Salvage Union Rules Reference
         </Heading>
 
-        <Box position="relative" maxW="2xl">
+        <Box position="relative" maxW="2xl" w="full">
           <Input
             ref={inputRef}
             value={searchQuery}
@@ -257,7 +266,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                     {title}
                   </Text>
                   <Text fontSize="sm" color="su.brick" mt={1}>
-                    {description} ({schema.itemCount} items)
+                    {description.replace('in Salvage Union', '')} ({schema.itemCount} items)
                   </Text>
                 </Box>
               )

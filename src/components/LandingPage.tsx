@@ -1,13 +1,34 @@
+import { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Box, Container, Text, Link, Grid } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import Footer from './Footer'
 import { Heading } from './base/Heading'
+import { TopNavigation } from './TopNavigation'
+import type { User } from '@supabase/supabase-js'
+import { supabase } from '../lib/supabase'
 
 export default function LandingPage() {
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
   return (
     <Box display="flex" flexDirection="column" minH="100vh" bg="su.lightBlue">
-      <Box px={6} pt={6} flex="1">
+      <TopNavigation user={user} />
+      <Box px={6} pt={{ base: 20, lg: 6 }} flex="1">
         <Container maxW="4xl">
           <Box display="flex" justifyContent="center">
             <Heading level="h1">Salvage Union Index</Heading>
@@ -95,23 +116,6 @@ export default function LandingPage() {
                   _hover={{ opacity: 0.9 }}
                 >
                   Dashboard
-                </Button>
-              </RouterLink>
-              <RouterLink to="/playground/" style={{ textDecoration: 'none' }}>
-                <Button
-                  w="full"
-                  bg="su.green"
-                  color="su.white"
-                  px={6}
-                  py={4}
-                  borderRadius="lg"
-                  fontWeight="bold"
-                  textAlign="center"
-                  fontSize="lg"
-                  h="auto"
-                  _hover={{ opacity: 0.9 }}
-                >
-                  Playground
                 </Button>
               </RouterLink>
               <RouterLink to="/reference/" style={{ textDecoration: 'none' }}>

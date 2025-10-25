@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Box, Flex } from '@chakra-ui/react'
-import ReferenceNavigation from './components/ReferenceNavigation'
+import { TopNavigation } from './components/TopNavigation'
 import SchemaViewer from './components/schema/SchemaViewer'
 import ItemShowPage from './components/ItemShowPage'
 import MechLiveSheet from './components/MechLiveSheet'
@@ -11,8 +12,26 @@ import LandingPage from './components/LandingPage'
 import { RulesReferenceLanding } from './components/Reference/RulesReferenceLanding'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
+import { supabase } from './lib/supabase'
+import type { User } from '@supabase/supabase-js'
 
 function AppContent() {
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
@@ -20,13 +39,8 @@ function AppContent() {
       <Route
         path="/reference/*"
         element={
-          <Flex
-            flexDirection={{ base: 'column', md: 'row' }}
-            h="100vh"
-            bg="su.white"
-            overflow="hidden"
-          >
-            <ReferenceNavigation schemas={schemaIndexData.schemas} />
+          <Flex flexDirection="column" h="100vh" bg="su.white" overflow="hidden">
+            <TopNavigation user={user} />
             <Box as="main" flex="1" overflowY="auto" pt={{ base: 16, md: 0 }}>
               <Routes>
                 <Route

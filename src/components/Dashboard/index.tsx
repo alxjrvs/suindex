@@ -3,9 +3,8 @@ import { Routes, Route } from 'react-router'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import { TopNavigation } from '../TopNavigation'
 import { DashboardContent } from './DashboardContent'
-import { DashboardNavigation } from './DashboardNavigation'
-import { LandingPageDashboard } from './LandingPageDashboard'
 import { GamesGrid } from './GamesGrid'
 import { NewGame } from './NewGame'
 import { GameShow } from './GameShow'
@@ -17,6 +16,7 @@ import { PilotEdit } from './PilotEdit'
 import { MechsGrid } from './MechsGrid'
 import { MechEdit } from './MechEdit'
 import Footer from '../Footer'
+import { Auth } from './Auth'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
@@ -52,9 +52,9 @@ export default function Dashboard() {
   if (!user) {
     return (
       <Flex flexDirection="column" minH="100vh" bg="su.white">
-        <DashboardNavigation user={null} />
+        <TopNavigation user={null} />
         <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
-          <LandingPageDashboard />
+          <Auth />
         </Box>
       </Flex>
     )
@@ -62,7 +62,7 @@ export default function Dashboard() {
 
   return (
     <Flex flexDirection="column" minH="100vh" bg="su.white">
-      <DashboardNavigation user={user} />
+      <TopNavigation user={user} />
       <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
         <Routes>
           <Route path="/" element={<DashboardContent />} />

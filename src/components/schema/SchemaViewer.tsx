@@ -35,9 +35,21 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
 
   return (
     <Flex h="full" flexDirection="column">
-      <Box bg="su.white" shadow="sm" borderBottomWidth="1px" borderColor="su.lightBlue" p={6}>
-        <Heading level="h2">{currentSchema.title}</Heading>
-        <Text color="su.brick" mt={1}>
+      <Box
+        bg="su.white"
+        shadow="sm"
+        borderBottomWidth="1px"
+        borderColor="su.lightBlue"
+        p={6}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        textAlign="center"
+      >
+        <Heading level="h2" textAlign="center" alignSelf="center">
+          {currentSchema.title}
+        </Heading>
+        <Text color="su.brick" mt={1} textAlign="center">
           {currentSchema.description}
         </Text>
       </Box>
