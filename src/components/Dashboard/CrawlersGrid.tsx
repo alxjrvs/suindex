@@ -47,11 +47,12 @@ export function CrawlersGrid() {
       items={crawlers}
       renderItem={(crawler) => {
         const crawlerTypeName = crawler.crawler_type_id
-          ? (SalvageUnionReference.Crawlers.findById(crawler.crawler_type_id)?.name ?? 'Unknown')
+          ? (SalvageUnionReference.Crawlers.all().find((c) => c.id === crawler.crawler_type_id)
+              ?.name ?? 'Unknown')
           : 'Unknown'
 
         const maxSP = crawler.tech_level
-          ? (SalvageUnionReference.CrawlerTechLevels.find(
+          ? (SalvageUnionReference.CrawlerTechLevels.all().find(
               (tl) => tl.techLevel === crawler.tech_level
             )?.structurePoints ?? 20)
           : 20

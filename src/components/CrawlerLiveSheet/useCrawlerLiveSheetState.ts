@@ -29,7 +29,9 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
 }
 
 export function useCrawlerLiveSheetState(id?: string) {
+  const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
   const allBays = SalvageUnionReference.CrawlerBays.all()
+  const allCrawlers = SalvageUnionReference.Crawlers.all()
   const hasInitializedBaysRef = useRef(false)
 
   const {
@@ -79,13 +81,13 @@ export function useCrawlerLiveSheetState(id?: string) {
   }, [allBays, crawler.bays, updateCrawler, loading])
 
   const selectedCrawlerType = useMemo(
-    () => SalvageUnionReference.Crawlers.findById(crawler.crawler_type_id ?? ''),
-    [crawler.crawler_type_id]
+    () => allCrawlers.find((c) => c.id === crawler.crawler_type_id),
+    [crawler.crawler_type_id, allCrawlers]
   )
 
   const currentTechLevel = useMemo(
-    () => SalvageUnionReference.CrawlerTechLevels.find((tl) => tl.techLevel === crawler.tech_level),
-    [crawler.tech_level]
+    () => allTechLevels.find((tl) => tl.techLevel === crawler.tech_level),
+    [allTechLevels, crawler.tech_level]
   )
 
   const maxSP = useMemo(() => {
@@ -118,7 +120,7 @@ export function useCrawlerLiveSheetState(id?: string) {
         return
       }
 
-      const newCrawlerType = SalvageUnionReference.Crawlers.findById(crawlerTypeId)
+      const newCrawlerType = allCrawlers.find((c) => c.id === crawlerTypeId)
 
       // If there's already a crawler type selected and user is changing it, reset data
       if (crawler.crawler_type_id && crawler.crawler_type_id !== crawlerTypeId) {
@@ -158,7 +160,7 @@ export function useCrawlerLiveSheetState(id?: string) {
         })
       }
     },
-    [allBays, crawler, updateEntity, updateCrawler]
+    [allBays, allCrawlers, crawler, updateEntity, updateCrawler]
   )
 
   const handleUpdateBay = useCallback(

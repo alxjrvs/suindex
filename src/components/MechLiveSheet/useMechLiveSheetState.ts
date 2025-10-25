@@ -22,6 +22,10 @@ const INITIAL_MECH_STATE: MechLiveSheetState = {
 }
 
 export function useMechLiveSheetState(id?: string) {
+  const allChassis = SalvageUnionReference.Chassis.all()
+  const allSystems = SalvageUnionReference.Systems.all()
+  const allModules = SalvageUnionReference.Modules.all()
+
   const {
     entity: mech,
     updateEntity,
@@ -43,17 +47,17 @@ export function useMechLiveSheetState(id?: string) {
   )
 
   const selectedChassis = useMemo(
-    () => SalvageUnionReference.Chassis.findById(mech.chassis_id ?? ''),
-    [mech.chassis_id]
+    () => allChassis.find((c) => c.id === mech.chassis_id),
+    [mech.chassis_id, allChassis]
   )
 
   const usedSystemSlots = (mech.systems ?? []).reduce((sum, systemId) => {
-    const system = SalvageUnionReference.Systems.findById(systemId)
+    const system = allSystems.find((s) => s.id === systemId)
     return sum + (system?.slotsRequired ?? 0)
   }, 0)
 
   const usedModuleSlots = (mech.modules ?? []).reduce((sum, moduleId) => {
-    const module = SalvageUnionReference.Modules.findById(moduleId)
+    const module = allModules.find((m) => m.id === moduleId)
     return sum + (module?.slotsRequired ?? 0)
   }, 0)
 
@@ -70,7 +74,7 @@ export function useMechLiveSheetState(id?: string) {
       // If there's already a chassis selected and user is changing it, reset data
       if (mech.chassis_id && mech.chassis_id !== chassisId) {
         // Find the new chassis to get its stats
-        const newChassis = SalvageUnionReference.Chassis.findById(chassisId)
+        const newChassis = allChassis.find((c) => c.id === chassisId)
 
         // Reset to initial state but keep the new chassis_id and set initial stats
         updateEntity({
@@ -90,7 +94,7 @@ export function useMechLiveSheetState(id?: string) {
         })
       } else {
         // First time selection - set chassis and initialize EP
-        const newChassis = SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
+        const newChassis = SalvageUnionReference.Chassis.all().find((c) => c.id === chassisId)
         updateMech({
           chassis_id: chassisId,
           pattern: null,
@@ -101,7 +105,7 @@ export function useMechLiveSheetState(id?: string) {
         })
       }
     },
-    [mech, updateEntity, updateMech]
+    [mech, allChassis, updateEntity, updateMech]
   )
 
   const handlePatternChange = (patternName: string) => {
@@ -122,14 +126,14 @@ export function useMechLiveSheetState(id?: string) {
         const patternModules: string[] = []
 
         matchingPattern.systems?.forEach((systemName) => {
-          const system = SalvageUnionReference.Systems.findByName(systemName)
+          const system = allSystems.find((s) => s.name === systemName)
           if (system) {
             patternSystems.push(system.id)
           }
         })
 
         matchingPattern.modules?.forEach((moduleName) => {
-          const module = SalvageUnionReference.Modules.findByName(moduleName)
+          const module = allModules.find((m) => m.name === moduleName)
           if (module) {
             patternModules.push(module.id)
           }
@@ -153,7 +157,7 @@ export function useMechLiveSheetState(id?: string) {
   }
 
   const handleAddSystem = (systemId: string) => {
-    const system = SalvageUnionReference.Systems.findById(systemId)
+    const system = allSystems.find((s) => s.id === systemId)
     if (system) {
       updateMech({
         systems: [...(mech.systems ?? []), systemId],
@@ -162,7 +166,7 @@ export function useMechLiveSheetState(id?: string) {
   }
 
   const handleRemoveSystem = (systemId: string) => {
-    const system = SalvageUnionReference.Systems.findById(systemId)
+    const system = allSystems.find((s) => s.id === systemId)
     const systemName = system?.name || 'this system'
 
     if (window.confirm(`Are you sure you want to remove ${systemName}?`)) {
@@ -173,7 +177,7 @@ export function useMechLiveSheetState(id?: string) {
   }
 
   const handleAddModule = (moduleId: string) => {
-    const module = SalvageUnionReference.Modules.findById(moduleId)
+    const module = allModules.find((m) => m.id === moduleId)
     if (module) {
       updateMech({
         modules: [...(mech.modules ?? []), moduleId],
@@ -182,7 +186,7 @@ export function useMechLiveSheetState(id?: string) {
   }
 
   const handleRemoveModule = (moduleId: string) => {
-    const module = SalvageUnionReference.Modules.findById(moduleId)
+    const module = allModules.find((m) => m.id === moduleId)
     const moduleName = module?.name || 'this module'
 
     if (window.confirm(`Are you sure you want to remove ${moduleName}?`)) {

@@ -17,7 +17,8 @@ interface BayCardProps {
 
 export function BayCard({ bay, onUpdate, disabled = false }: BayCardProps) {
   const referenceBay = useMemo(() => {
-    return SalvageUnionReference.CrawlerBays.findById(bay.bayId)
+    const allBays = SalvageUnionReference.CrawlerBays.all()
+    return allBays.find((b) => b.id === bay.bayId)
   }, [bay.bayId])
 
   const titleRotation = useMemo(() => getTiltRotation(), [])
