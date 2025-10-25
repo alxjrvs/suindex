@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Box, Flex, IconButton, Text } from '@chakra-ui/react'
 import { resultForTable, type SURefMetaTable } from 'salvageunion-reference'
 import { roll } from '@randsum/roller'
@@ -43,6 +43,13 @@ function digestRollTable(table: SURefMetaTable): DigestedRollTable[] {
 export function RollTable({ table, showCommand = false, tableName }: RollTableDisplayProps) {
   const digestedTable = digestRollTable(table)
   const [highlightedKey, setHighlightedKey] = useState<string | null>(null)
+  const highlightedRowRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (highlightedKey && highlightedRowRef.current) {
+      highlightedRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [highlightedKey])
 
   const handleRoll = () => {
     setHighlightedKey(null)
@@ -103,6 +110,7 @@ export function RollTable({ table, showCommand = false, tableName }: RollTableDi
 
           return (
             <Flex
+              ref={isHighlighted ? highlightedRowRef : null}
               key={key + name + index}
               flexDirection="row"
               flexWrap="wrap"
