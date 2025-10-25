@@ -77,7 +77,14 @@ export function SheetInput({
       {/* Label with optional toggle */}
       {label && (
         <Flex alignItems="center" mb={-2} zIndex={1} gap={2}>
-          <Text variant="pseudoheader" fontSize="sm" textTransform="uppercase" ml={3}>
+          <Text
+            variant="pseudoheader"
+            fontSize="sm"
+            textTransform="uppercase"
+            ml={3}
+            bg={disabled ? 'gray.600' : undefined}
+            color={disabled ? 'gray.300' : undefined}
+          >
             {label}
           </Text>
           {hasToggle && (
@@ -119,6 +126,7 @@ export function SheetInput({
           disabled={disabled}
           placeholder={placeholder}
           flex="1"
+          minW="190px"
           p={3}
           borderWidth="3px"
           borderColor="su.black"
@@ -136,9 +144,12 @@ export function SheetInput({
             color="su.white"
             borderWidth="3px"
             borderColor="su.black"
-            borderRadius="2xl"
+            borderRadius="0"
             fontWeight="semibold"
             fontSize="sm"
+            whiteSpace="nowrap"
+            flexShrink={0}
+            opacity={disabled ? 0.3 : 1}
           >
             {suffixText}
           </Flex>

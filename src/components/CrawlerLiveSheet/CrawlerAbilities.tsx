@@ -1,30 +1,41 @@
-import { VStack } from '@chakra-ui/react'
 import { type SURefCrawler } from 'salvageunion-reference'
-import { Heading } from '../base/Heading'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
 
-export function CrawlerAbilities({ crawlerRef }: { crawlerRef: SURefCrawler | undefined }) {
+export function CrawlerAbilities({
+  crawlerRef,
+  disabled = false,
+}: {
+  crawlerRef: SURefCrawler | undefined
+  disabled?: boolean
+}) {
   return (
     <RoundedBox
       bg="bg.builder.crawler"
       borderColor="border.builder.crawler"
       matchBorder={false}
       borderWidth="4px"
+      minW="50%"
+      title="Abilities"
+      justifyContent={'flex-start'}
+      flex="1"
+      disabled={disabled}
     >
-      <VStack gap={3} alignItems="stretch">
-        <Heading level="h2">Abilities</Heading>
-        {(
-          crawlerRef?.abilities || [
-            {
-              name: '',
-              description: 'No crawler type selected.',
-            },
-          ]
-        ).map((ability, idx) => (
-          <SheetDisplay key={idx} label={ability.name || undefined} value={ability.description} />
-        ))}
-      </VStack>
+      {(
+        crawlerRef?.abilities || [
+          {
+            name: '',
+            description: 'No crawler type selected.',
+          },
+        ]
+      ).map((ability, idx) => (
+        <SheetDisplay
+          disabled={disabled}
+          key={idx}
+          label={ability.name || undefined}
+          value={ability.description}
+        />
+      ))}
     </RoundedBox>
   )
 }

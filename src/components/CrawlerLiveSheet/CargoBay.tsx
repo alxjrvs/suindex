@@ -12,9 +12,16 @@ interface CargoBayProps {
   onAddCargo: () => void
   onRemoveCargo: (id: string) => void
   damaged?: boolean
+  disabled?: boolean
 }
 
-export function CargoBay({ cargo, onAddCargo, onRemoveCargo, damaged = false }: CargoBayProps) {
+export function CargoBay({
+  cargo,
+  onAddCargo,
+  onRemoveCargo,
+  damaged = false,
+  disabled = false,
+}: CargoBayProps) {
   const titleRotation = useMemo(() => getTiltRotation(), [])
   const cargoRotation = useMemo(() => getTiltRotation(), [])
 
@@ -28,8 +35,9 @@ export function CargoBay({ cargo, onAddCargo, onRemoveCargo, damaged = false }: 
       borderRadius="2xl"
       title="Storage"
       titleRotation={damaged ? titleRotation : 0}
-      rightContent={<AddStatButton onClick={onAddCargo} label="Add Cargo" />}
+      rightContent={<AddStatButton onClick={onAddCargo} label="Add Cargo" disabled={disabled} />}
       padding={4}
+      disabled={disabled}
     >
       <Box
         transform={damaged ? `rotate(${cargoRotation}deg)` : undefined}
@@ -55,6 +63,7 @@ export function CargoBay({ cargo, onAddCargo, onRemoveCargo, damaged = false }: 
               aspectRatio="1"
               display="flex"
               flexDirection="column"
+              opacity={disabled ? 0.3 : 1}
             >
               <Button
                 onClick={() => onRemoveCargo(item.id)}
@@ -74,6 +83,7 @@ export function CargoBay({ cargo, onAddCargo, onRemoveCargo, damaged = false }: 
                 justifyContent="center"
                 lineHeight="none"
                 aria-label="Remove"
+                disabled={disabled}
               >
                 ✕
               </Button>

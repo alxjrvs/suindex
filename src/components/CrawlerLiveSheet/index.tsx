@@ -105,6 +105,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           onNameChange={(value) => updateCrawler({ name: value })}
           onCrawlerTypeChange={handleCrawlerTypeChange}
           onDescriptionChange={(value) => updateCrawler({ description: value })}
+          disabled={!selectedCrawlerType}
         />
 
         <CrawlerResourceSteppers
@@ -119,12 +120,18 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           onTechLevelChange={(value) => updateCrawler({ tech_level: value })}
           onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
           onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
+          disabled={!selectedCrawlerType}
         />
       </Flex>
 
       <Flex gap={6}>
-        <CrawlerAbilities crawlerRef={selectedCrawlerType} />
-        <CrawlerNPC crawler={crawler} onUpdate={updateCrawler} crawlerRef={selectedCrawlerType} />
+        <CrawlerAbilities crawlerRef={selectedCrawlerType} disabled={!selectedCrawlerType} />
+        <CrawlerNPC
+          crawler={crawler}
+          onUpdate={updateCrawler}
+          crawlerRef={selectedCrawlerType}
+          disabled={!selectedCrawlerType}
+        />
       </Flex>
 
       {/* Bays Grid - First Row */}
@@ -135,6 +142,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
               key={bay.id}
               bay={bay}
               onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
+              disabled={!selectedCrawlerType}
             />
           ))}
         </Grid>
@@ -148,6 +156,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
               key={bay.id}
               bay={bay}
               onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
+              disabled={!selectedCrawlerType}
             />
           ))}
         </Grid>
@@ -161,6 +170,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
               key={bay.id}
               bay={bay}
               onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
+              disabled={!selectedCrawlerType}
             />
           ))}
         </Grid>
@@ -175,6 +185,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
             <BayCard
               bay={storageBay}
               onUpdate={(updates) => handleUpdateBay(storageBay.id, updates)}
+              disabled={!selectedCrawlerType}
             />
           )}
 
@@ -184,6 +195,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
             onAddCargo={() => setIsCargoModalOpen(true)}
             onRemoveCargo={handleRemoveCargo}
             damaged={storageBay?.damaged}
+            disabled={!selectedCrawlerType}
           />
         </VStack>
 
@@ -194,6 +206,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           backgroundColor="bg.builder.crawler"
           borderWidth={4}
           placeholder="Add notes about your crawler..."
+          disabled={!selectedCrawlerType}
         />
       </Grid>
 

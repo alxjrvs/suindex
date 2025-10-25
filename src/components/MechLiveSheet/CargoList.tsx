@@ -12,6 +12,7 @@ interface CargoListProps {
   canAddCargo: boolean
   onRemove: (id: string) => void
   onAddClick: () => void
+  disabled?: boolean
 }
 
 export function CargoList({
@@ -21,6 +22,7 @@ export function CargoList({
   canAddCargo,
   onRemove,
   onAddClick,
+  disabled = false,
 }: CargoListProps) {
   return (
     <RoundedBox
@@ -31,10 +33,11 @@ export function CargoList({
       borderRadius="3xl"
       padding={6}
       title="Cargo"
+      disabled={disabled}
       rightContent={
         <Flex gap={2} alignItems="center">
-          <AddStatButton onClick={onAddClick} disabled={!canAddCargo} />
-          <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} />
+          <AddStatButton onClick={onAddClick} disabled={disabled || !canAddCargo} />
+          <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} disabled={disabled} />
         </Flex>
       }
     >
@@ -72,6 +75,7 @@ export function CargoList({
               aria-label="Remove"
               minW={5}
               p={0}
+              disabled={disabled}
             >
               ✕
             </Button>

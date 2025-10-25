@@ -11,9 +11,15 @@ interface PilotInventoryProps {
   equipment: string[] // Array of Equipment IDs
   onAddClick: () => void
   onRemove: (index: number) => void
+  disabled?: boolean
 }
 
-export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInventoryProps) {
+export function PilotInventory({
+  equipment,
+  onAddClick,
+  onRemove,
+  disabled = false,
+}: PilotInventoryProps) {
   const MAX_SLOTS = 6
   const isFull = equipment.length >= MAX_SLOTS
 
@@ -34,10 +40,15 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
     <RoundedBox
       bg="su.orange"
       title="Inventory"
+      disabled={disabled}
       rightContent={
         <Flex alignItems="center" gap={4}>
-          <AddStatButton onClick={onAddClick} disabled={isFull} />
-          <StatDisplay label="Equipment" value={`${equipment.length}/${MAX_SLOTS}`} />
+          <AddStatButton onClick={onAddClick} disabled={disabled || isFull} />
+          <StatDisplay
+            label="Equipment"
+            value={`${equipment.length}/${MAX_SLOTS}`}
+            disabled={disabled}
+          />
         </Flex>
       }
     >
@@ -68,6 +79,7 @@ export function PilotInventory({ equipment, onAddClick, onRemove }: PilotInvento
               justifyContent="center"
               zIndex="10"
               aria-label="Remove equipment"
+              disabled={disabled}
             >
               ✕
             </Button>

@@ -76,10 +76,11 @@ export function AbilitiesList({
       borderColor="border.builder.pilot"
       matchBorder={false}
       title="Abilities"
+      disabled={disabled}
       rightContent={
         <Flex alignItems="center" gap={4}>
           <AddStatButton onClick={onAddClick} disabled={disabled || currentTP === 0} />
-          <StatDisplay label="TP" value={`${currentTP}`} />
+          <StatDisplay label="TP" value={`${currentTP}`} disabled={disabled} />
         </Flex>
       }
     >

@@ -21,6 +21,7 @@ interface SystemsModulesListProps {
   onRemoveSystem: (id: string) => void
   onRemoveModule: (id: string) => void
   onAddClick: () => void
+  disabled?: boolean
 }
 
 export function SystemsModulesList({
@@ -34,6 +35,7 @@ export function SystemsModulesList({
   onRemoveSystem,
   onRemoveModule,
   onAddClick,
+  disabled = false,
 }: SystemsModulesListProps) {
   const allSystems = useMemo(() => SalvageUnionReference.Systems.all(), [])
   const allModules = useMemo(() => SalvageUnionReference.Modules.all(), [])
@@ -71,11 +73,20 @@ export function SystemsModulesList({
       borderRadius="3xl"
       padding={6}
       title="Systems & Modules"
+      disabled={disabled}
       rightContent={
         <Flex gap={3}>
-          <AddStatButton onClick={onAddClick} disabled={!canAddMore} />
-          <StatDisplay label="Sys. Slots" value={`${usedSystemSlots}/${totalSystemSlots}`} />
-          <StatDisplay label="Mod. Slots" value={`${usedModuleSlots}/${totalModuleSlots}`} />
+          <AddStatButton onClick={onAddClick} disabled={disabled || !canAddMore} />
+          <StatDisplay
+            label="Sys. Slots"
+            value={`${usedSystemSlots}/${totalSystemSlots}`}
+            disabled={disabled}
+          />
+          <StatDisplay
+            label="Mod. Slots"
+            value={`${usedModuleSlots}/${totalModuleSlots}`}
+            disabled={disabled}
+          />
         </Flex>
       }
     >
@@ -115,6 +126,7 @@ export function SystemsModulesList({
                     _hover={{ bg: 'su.black' }}
                     fontSize="sm"
                     aria-label="Remove"
+                    disabled={disabled}
                   >
                     ✕ Remove
                   </Button>
@@ -160,6 +172,7 @@ export function SystemsModulesList({
                     _hover={{ bg: 'su.black' }}
                     fontSize="sm"
                     aria-label="Remove"
+                    disabled={disabled}
                   >
                     ✕ Remove
                   </Button>

@@ -107,7 +107,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
       )}
       <Flex gap={6}>
         <VStack flex="1" gap={6} alignItems="stretch">
-          <RoundedBox bg="su.green" fillHeight fillWidth>
+          <RoundedBox bg="su.green" fillHeight fillWidth disabled={!selectedChassis}>
             <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
               <ChassisSelector
                 chassisId={mech.chassis_id ?? null}
@@ -138,6 +138,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
             usedSystemSlots={usedSystemSlots}
             usedModuleSlots={usedModuleSlots}
             totalCargo={totalCargo}
+            disabled={!selectedChassis}
           />
         </VStack>
 
@@ -149,11 +150,12 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           onDamageChange={(value) => updateMech({ current_damage: value })}
           onEPChange={(value) => updateMech({ current_ep: value })}
           onHeatChange={(value) => updateMech({ current_heat: value })}
+          disabled={!selectedChassis}
         />
       </Flex>
 
-      <RoundedBox bg="su.green" title="Abilities">
-        <ChassisAbilities chassis={selectedChassis} />
+      <RoundedBox bg="su.green" title="Abilities" disabled={!selectedChassis}>
+        <ChassisAbilities chassis={selectedChassis} disabled={!selectedChassis} />
       </RoundedBox>
 
       <SystemsModulesList
@@ -167,6 +169,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         onRemoveSystem={handleRemoveSystem}
         onRemoveModule={handleRemoveModule}
         onAddClick={() => setIsSelectorOpen(true)}
+        disabled={!selectedChassis}
       />
 
       <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
@@ -177,6 +180,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           canAddCargo={!!selectedChassis}
           onRemove={handleRemoveCargo}
           onAddClick={() => setIsCargoModalOpen(true)}
+          disabled={!selectedChassis}
         />
 
         <Notes

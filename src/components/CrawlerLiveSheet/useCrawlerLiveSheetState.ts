@@ -32,7 +32,7 @@ export function useCrawlerLiveSheetState(id?: string) {
   const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
   const allBays = SalvageUnionReference.CrawlerBays.all()
   const allCrawlers = SalvageUnionReference.Crawlers.all()
-  const isResettingRef = useRef(false)
+  const hasInitializedBaysRef = useRef(false)
 
   const {
     entity: crawler,
@@ -54,9 +54,15 @@ export function useCrawlerLiveSheetState(id?: string) {
     [updateEntity]
   )
 
-  // Initialize all bays on mount
+  // Initialize all bays on mount (only once)
   useEffect(() => {
-    if (allBays.length > 0 && (crawler.bays ?? []).length === 0) {
+    if (
+      !hasInitializedBaysRef.current &&
+      allBays.length > 0 &&
+      (crawler.bays ?? []).length === 0 &&
+      !loading
+    ) {
+      hasInitializedBaysRef.current = true
       const initialBays: CrawlerBay[] = allBays.map((bay) => ({
         id: `${bay.id}-${Date.now()}-${Math.random()}`,
         bayId: bay.id,
@@ -72,7 +78,7 @@ export function useCrawlerLiveSheetState(id?: string) {
       }))
       updateCrawler({ bays: initialBays })
     }
-  }, [allBays, crawler.bays, updateCrawler])
+  }, [allBays, crawler.bays, updateCrawler, loading])
 
   const selectedCrawlerType = useMemo(
     () => allCrawlers.find((c) => c.id === crawler.crawler_type_id),
@@ -92,15 +98,19 @@ export function useCrawlerLiveSheetState(id?: string) {
     return `5 TL${crawler.tech_level}`
   }, [crawler.tech_level])
 
+  // Track previous tech level to detect changes
+  const prevTechLevelRef = useRef(crawler.tech_level)
+
   // Reset damage and upgrade when tech level changes
   useEffect(() => {
-    if (currentTechLevel?.structurePoints) {
+    if (prevTechLevelRef.current !== crawler.tech_level && currentTechLevel?.structurePoints) {
+      prevTechLevelRef.current = crawler.tech_level
       updateCrawler({
         current_damage: 0,
         upgrade: 0,
       })
     }
-  }, [currentTechLevel, updateCrawler])
+  }, [crawler.tech_level, currentTechLevel, updateCrawler])
 
   const handleCrawlerTypeChange = useCallback(
     (crawlerTypeId: string | null) => {
@@ -110,11 +120,10 @@ export function useCrawlerLiveSheetState(id?: string) {
         return
       }
 
+      const newCrawlerType = allCrawlers.find((c) => c.id === crawlerTypeId)
+
       // If there's already a crawler type selected and user is changing it, reset data
       if (crawler.crawler_type_id && crawler.crawler_type_id !== crawlerTypeId) {
-        // Mark that we're resetting to prevent useEffect from triggering additional updates
-        isResettingRef.current = true
-
         // Reset to initial state but keep the new crawler_type_id
         updateEntity({
           ...crawler,
@@ -139,7 +148,7 @@ export function useCrawlerLiveSheetState(id?: string) {
           npc: {
             name: '',
             notes: '',
-            hitPoints: selectedCrawlerType?.npc.hitPoints || 0,
+            hitPoints: newCrawlerType?.npc.hitPoints || 0,
             damage: 0,
           },
           cargo: [],
@@ -151,7 +160,7 @@ export function useCrawlerLiveSheetState(id?: string) {
         })
       }
     },
-    [allBays, crawler, updateEntity, updateCrawler]
+    [allBays, allCrawlers, crawler, updateEntity, updateCrawler]
   )
 
   const handleUpdateBay = useCallback(

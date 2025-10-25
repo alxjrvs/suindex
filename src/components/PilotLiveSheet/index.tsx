@@ -106,7 +106,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           advancedClassId={pilot.advanced_class_id ?? null}
           allClasses={allClasses}
           availableAdvancedClasses={availableAdvancedClasses}
-          disabled={false}
+          disabled={!selectedClass}
           onCallsignChange={(value) => updatePilot({ callsign: value })}
           onMottoChange={(value) => updatePilot({ motto: value })}
           onMottoUsedChange={(value) => updatePilot({ motto_used: value })}
@@ -153,6 +153,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         equipment={pilot.equipment ?? []}
         onAddClick={() => setIsEquipmentSelectorOpen(true)}
         onRemove={handleRemoveEquipment}
+        disabled={!selectedClass}
       />
 
       {/* Notes Section */}
@@ -162,6 +163,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         backgroundColor="bg.builder.pilot"
         borderWidth={8}
         placeholder="Add notes about your pilot..."
+        disabled={!selectedClass}
       />
 
       {/* Ability Selector Modal */}

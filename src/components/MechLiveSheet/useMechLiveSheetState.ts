@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect, useRef } from 'react'
+import { useCallback, useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { MechLiveSheetState } from './types'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
@@ -25,7 +25,6 @@ export function useMechLiveSheetState(id?: string) {
   const allChassis = SalvageUnionReference.Chassis.all()
   const allSystems = SalvageUnionReference.Systems.all()
   const allModules = SalvageUnionReference.Modules.all()
-  const isResettingRef = useRef(false)
 
   const {
     entity: mech,
@@ -64,57 +63,50 @@ export function useMechLiveSheetState(id?: string) {
 
   const totalCargo = (mech.cargo ?? []).reduce((sum, item) => sum + item.amount, 0)
 
-  useEffect(() => {
-    if (selectedChassis?.stats) {
-      updateMech({
-        current_damage: 0,
-        current_ep: selectedChassis.stats.energy_pts,
-      })
-    }
-  }, [selectedChassis, updateMech])
+  const handleChassisChange = useCallback(
+    (chassisId: string | null) => {
+      // If null or empty, just update to null
+      if (!chassisId) {
+        updateMech({ chassis_id: null })
+        return
+      }
 
-  const handleChassisChange = (chassisId: string | null) => {
-    // If null or empty, just update to null
-    if (!chassisId) {
-      updateMech({ chassis_id: null })
-      return
-    }
+      // If there's already a chassis selected and user is changing it, reset data
+      if (mech.chassis_id && mech.chassis_id !== chassisId) {
+        // Find the new chassis to get its stats
+        const newChassis = allChassis.find((c) => c.id === chassisId)
 
-    // If there's already a chassis selected and user is changing it, reset data
-    if (mech.chassis_id && mech.chassis_id !== chassisId) {
-      // Mark that we're resetting to prevent useEffect from triggering additional updates
-      isResettingRef.current = true
-
-      // Find the new chassis to get its stats
-      const newChassis = allChassis.find((c) => c.id === chassisId)
-
-      // Reset to initial state but keep the new chassis_id and set initial stats
-      updateEntity({
-        ...mech,
-        chassis_id: chassisId,
-        pattern: null,
-        quirk: null,
-        appearance: null,
-        chassis_ability: null,
-        systems: [],
-        modules: [],
-        cargo: [],
-        current_damage: 0,
-        current_ep: newChassis?.stats.energy_pts || 0,
-        current_heat: 0,
-        notes: null,
-      })
-    } else {
-      // First time selection or same selection
-      updateMech({
-        chassis_id: chassisId,
-        pattern: null,
-        systems: [],
-        modules: [],
-        chassis_ability: null,
-      })
-    }
-  }
+        // Reset to initial state but keep the new chassis_id and set initial stats
+        updateEntity({
+          ...mech,
+          chassis_id: chassisId,
+          pattern: null,
+          quirk: null,
+          appearance: null,
+          chassis_ability: null,
+          systems: [],
+          modules: [],
+          cargo: [],
+          current_damage: 0,
+          current_ep: newChassis?.stats.energy_pts || 0,
+          current_heat: 0,
+          notes: null,
+        })
+      } else {
+        // First time selection - set chassis and initialize EP
+        const newChassis = allChassis.find((c) => c.id === chassisId)
+        updateMech({
+          chassis_id: chassisId,
+          pattern: null,
+          systems: [],
+          modules: [],
+          chassis_ability: null,
+          current_ep: newChassis?.stats.energy_pts || 0,
+        })
+      }
+    },
+    [mech, allChassis, updateEntity, updateMech]
+  )
 
   const handlePatternChange = (patternName: string) => {
     const matchingPattern = selectedChassis?.patterns?.find(
