@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import MechLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefChassis, SURefSystem, SURefModule } from 'salvageunion-reference'
 import { setupSalvageUnionMocks } from '../../../test/helpers'
 

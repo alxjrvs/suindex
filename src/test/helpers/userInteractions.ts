@@ -167,7 +167,9 @@ export async function waitForTPValue(expectedValue: number) {
  */
 export async function addAbility(user: UserEvent, abilityName: string) {
   await openSectionModal(user, 'abilities')
-  const addButton = screen.getByRole('button', { name: new RegExp(`Add to Pilot.*${abilityName}`, 'i') })
+  const addButton = screen.getByRole('button', {
+    name: new RegExp(`Add to Pilot.*${abilityName}`, 'i'),
+  })
   await user.click(addButton)
 }
 
@@ -181,4 +183,3 @@ export async function addEquipment(user: UserEvent, equipmentName: string) {
   const addButton = screen.getByRole('button', { name: new RegExp(equipmentName, 'i') })
   await user.click(addButton)
 }
-

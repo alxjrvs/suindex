@@ -10,4 +10,3 @@ export {
   createMockSystem,
   createMockModule,
 } from './mockData'
-

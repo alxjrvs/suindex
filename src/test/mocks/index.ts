@@ -1,2 +1,4 @@
-export { setupSalvageUnionReferenceMock, getMockedSalvageUnionReference } from './salvageUnionReference'
-
+export {
+  setupSalvageUnionReferenceMock,
+  getMockedSalvageUnionReference,
+} from './salvageUnionReference'

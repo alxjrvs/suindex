@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import CrawlerLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefCrawler, SURefCrawlerBay, SURefCrawlerTechLevel } from 'salvageunion-reference'
 import { setupSalvageUnionMocks } from '../../../test/helpers'
 
