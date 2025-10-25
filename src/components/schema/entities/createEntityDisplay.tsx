@@ -12,11 +12,11 @@ import { ENTITY_DISPLAY_CONFIGS } from './entityDisplayConfig'
  */
 export function createEntityDisplay(
   entityName: SURefEntityName
-): ComponentType<{ data: Record<string, unknown> }> {
+): ComponentType<{ data: SURefEntity }> {
   const Component = ({ data }: { data: SURefEntity }) => {
     const config = ENTITY_DISPLAY_CONFIGS[entityName] || {}
     return <EntityDisplay entityName={entityName} data={data} {...config} />
   }
   Component.displayName = `${entityName}Display`
-  return Component as unknown as ComponentType<{ data: Record<string, unknown> }>
+  return Component
 }
