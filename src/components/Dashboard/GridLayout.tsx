@@ -8,6 +8,7 @@ interface CreateButtonConfig {
   label: string
   color: string
   bgColor: string
+  isLoading?: boolean
 }
 
 interface GridLayoutProps<T> {
@@ -41,8 +42,17 @@ export function GridLayout<T>({
           py={2}
           px={6}
           _hover={{ opacity: 0.9 }}
+          disabled={createButton.isLoading}
+          opacity={createButton.isLoading ? 0.6 : 1}
         >
-          + {createButton.label}
+          {createButton.isLoading ? (
+            <Flex align="center" gap={2}>
+              <Spinner size="sm" />
+              <>{createButton.label}</>
+            </Flex>
+          ) : (
+            <>+ {createButton.label}</>
+          )}
         </Button>
       </Flex>
 
