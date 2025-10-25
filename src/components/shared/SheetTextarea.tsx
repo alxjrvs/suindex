@@ -81,6 +81,7 @@ export function SheetTextarea({
         p={3}
         borderWidth="3px"
         borderColor="su.black"
+        minHeight="40"
         borderRadius="2xl"
         bg="su.white"
         color="su.black"

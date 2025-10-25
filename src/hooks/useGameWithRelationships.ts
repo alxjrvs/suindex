@@ -49,13 +49,20 @@ export function useGameWithRelationships(gameId: string | undefined) {
       setError(null)
 
       // Get current user
-      const { data: { user } } = await supabase.auth.getUser()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
       // Fetch game data and user's role in parallel
       const [gameResult, memberResult, membersResult] = await Promise.all([
         supabase.from('games').select('*').eq('id', gameId).single(),
-        supabase.from('game_members').select('role').eq('game_id', gameId).eq('user_id', user.id).single(),
+        supabase
+          .from('game_members')
+          .select('role')
+          .eq('game_id', gameId)
+          .eq('user_id', user.id)
+          .single(),
         supabase.rpc('get_game_members', { p_game_id: gameId }),
       ])
 
@@ -143,7 +150,9 @@ export function useGamesWithRelationships() {
       setError(null)
 
       // Get current user
-      const { data: { user } } = await supabase.auth.getUser()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
       // Fetch games the user is a member of
@@ -254,4 +263,3 @@ export function useGamesWithRelationships() {
 
   return { games, loading, error, reload: loadGames }
 }
-

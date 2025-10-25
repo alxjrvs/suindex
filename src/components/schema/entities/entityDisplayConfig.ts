@@ -48,4 +48,3 @@ export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefEntityName, EntityDispl
     actionHeaderTextColor: 'white',
   },
 }
-

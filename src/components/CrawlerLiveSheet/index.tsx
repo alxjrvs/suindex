@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
@@ -37,15 +37,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     error,
     hasPendingChanges,
   } = useCrawlerLiveSheetState(id)
-
-  // Track saved game ID for control bar links
-  const [savedGameId, setSavedGameId] = useState<string | null>(null)
-
-  // Set saved game ID after loading completes
-  useEffect(() => {
-    if (!id || loading) return
-    setSavedGameId(crawler.game_id ?? null)
-  }, [id, loading, crawler.game_id])
 
   if (loading) {
     return (
@@ -90,7 +81,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
       {id && (
         <CrawlerControlBar
           gameId={crawler.game_id}
-          savedGameId={savedGameId}
+          savedGameId={crawler.game_id}
           onGameChange={(gameId) => updateCrawler({ game_id: gameId })}
           hasPendingChanges={hasPendingChanges}
         />

@@ -1,4 +1,4 @@
-import { Suspense, useCallback } from 'react'
+import { Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
@@ -20,7 +20,7 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
   const currentSchema = schemas.find((s) => s.id === schemaId)
   const item = data.find((d) => d.id === itemId)
 
-  const formatValue = useCallback((value: unknown): ReactElement => {
+  const formatValue = (value: unknown): ReactElement => {
     if (value === undefined || value === null) {
       return (
         <Text as="span" color="su.brick" opacity={0.5}>
@@ -69,7 +69,7 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
     }
 
     return <Text as="span">{String(value)}</Text>
-  }, [])
+  }
 
   if (loading) {
     return (

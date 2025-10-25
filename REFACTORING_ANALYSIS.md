@@ -11,6 +11,7 @@ This analysis identifies opportunities to reduce duplication, extract patterns, 
 **Current State:** 19 nearly identical wrapper components in `src/components/schema/entities/`
 
 **Files:**
+
 - `NPCDisplay.tsx`, `CreatureDisplay.tsx`, `BioTitanDisplay.tsx`, `DroneDisplay.tsx`
 - `VehicleDisplay.tsx`, `SquadDisplay.tsx`, `MeldDisplay.tsx`
 - `SystemDisplay.tsx`, `ModuleDisplay.tsx`, `EquipmentDisplay.tsx`
@@ -19,6 +20,7 @@ This analysis identifies opportunities to reduce duplication, extract patterns, 
 - And more...
 
 **Pattern:**
+
 ```typescript
 // Current: 10-17 lines per file × 19 files = ~250 lines
 export function NPCDisplay({ data }: NPCDisplayProps) {
@@ -61,12 +63,14 @@ export function createEntityDisplay(entityName: SURefEntityName) {
 **Current State:** 4 similar grid card components with slight variations
 
 **Files:**
+
 - `PilotGridCard.tsx` (45 lines)
 - `MechGridCard.tsx` (37 lines)
 - `CrawlerGridCard.tsx` (33 lines)
 - `GameGridCard.tsx` (61 lines)
 
 **Pattern:** All use `GridCard` wrapper with similar structure:
+
 - Title/heading
 - Subtitle/secondary info
 - Stats/metadata at bottom
@@ -83,7 +87,14 @@ interface EntityGridCardProps {
   isLoading?: boolean
 }
 
-export function EntityGridCard({ title, subtitle, stats, cells, onClick, isLoading }: EntityGridCardProps) {
+export function EntityGridCard({
+  title,
+  subtitle,
+  stats,
+  cells,
+  onClick,
+  isLoading,
+}: EntityGridCardProps) {
   // Unified implementation
 }
 ```
@@ -97,11 +108,13 @@ export function EntityGridCard({ title, subtitle, stats, cells, onClick, isLoadi
 **Current State:** 3 nearly identical control bar components
 
 **Files:**
+
 - `PilotControlBar.tsx` (68 lines)
 - `MechControlBar.tsx` (64 lines)
 - `CrawlerControlBar.tsx` (78 lines)
 
 **Duplication:**
+
 - Same structure: fetch related entities, render SheetSelect + LinkButton
 - Same loading/state management pattern
 - Only differences: table name, field names, colors
@@ -124,7 +137,7 @@ export function LiveSheetControlBar({
   relationId,
   savedRelationId,
   onRelationChange,
-  hasPendingChanges
+  hasPendingChanges,
 }: LiveSheetControlBarProps) {
   // Generic implementation with config-driven behavior
 }
@@ -139,6 +152,7 @@ export function LiveSheetControlBar({
 **Current State:** 3 similar resource stepper components
 
 **Files:**
+
 - `PilotResourceSteppers.tsx` (52 lines)
 - `MechResourceSteppers.tsx` (53 lines)
 - `CrawlerResourceSteppers.tsx` (75 lines)
@@ -175,11 +189,13 @@ interface ResourceSteppersBoxProps {
 **Current State:** 3 very similar modal components with massive duplication
 
 **Files:**
+
 - `NewPilotModal.tsx` (378 lines)
 - `NewMechModal.tsx` (294 lines)
 - `NewCrawlerModal.tsx` (260 lines)
 
 **Duplication:**
+
 - Same form structure and validation
 - Same loading/error state management
 - Same submit/close handlers
@@ -221,6 +237,7 @@ export function NewEntityModal({ config, isOpen, onClose, onSuccess }: NewEntity
 **Current Duplication:** Found in all control bars and modals
 
 **Pattern:**
+
 ```typescript
 // Repeated in 6+ files
 useEffect(() => {
@@ -229,13 +246,13 @@ useEffect(() => {
       setLoading(true)
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) return
-      
+
       const { data } = await supabase
         .from(table)
         .select('id, name')
         .eq('user_id', userData.user.id)
         .order('name')
-      
+
       if (data) setItems(data)
     } finally {
       setLoading(false)
@@ -251,11 +268,11 @@ useEffect(() => {
 export function useEntityRelationships(table: string, selectFields: string = 'id, name') {
   const [items, setItems] = useState<Array<{ id: string; name: string }>>([])
   const [loading, setLoading] = useState(false)
-  
+
   useEffect(() => {
     // Generic implementation
   }, [table, selectFields])
-  
+
   return { items, loading, reload }
 }
 ```
@@ -269,6 +286,7 @@ export function useEntityRelationships(table: string, selectFields: string = 'id
 **Current Duplication:** All modal components have identical form state patterns
 
 **Pattern:**
+
 ```typescript
 // Repeated in NewPilotModal, NewMechModal, NewCrawlerModal
 const [field1, setField1] = useState('')
@@ -300,7 +318,7 @@ export function useFormState<T extends Record<string, any>>(
   const [values, setValues] = useState<T>(initialState)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
+
   const handleSubmit = async () => {
     try {
       setLoading(true)
@@ -313,12 +331,12 @@ export function useFormState<T extends Record<string, any>>(
       setLoading(false)
     }
   }
-  
+
   const reset = () => {
     setValues(initialState)
     setError(null)
   }
-  
+
   return { values, setValues, loading, error, handleSubmit, reset }
 }
 ```
@@ -332,6 +350,7 @@ export function useFormState<T extends Record<string, any>>(
 **Status:** ✅ Already well-extracted in `useLiveSheetState` hook
 
 The application already has excellent extraction of the LiveSheet state pattern:
+
 - `useLiveSheetState` (generic hook)
 - `usePilotLiveSheetState`, `useMechLiveSheetState`, `useCrawlerLiveSheetState` (specific implementations)
 
@@ -344,6 +363,7 @@ This is a good example of the pattern to follow for other extractions.
 **Status:** ✅ Already well-extracted in `GridLayout` component
 
 The `GridLayout` component successfully extracts the common grid pattern used across:
+
 - `PilotsGrid`
 - `MechsGrid`
 - `CrawlersGrid`
@@ -358,9 +378,12 @@ The `GridLayout` component successfully extracts the common grid pattern used ac
 **Current Duplication:** Every modal has nearly identical insert logic
 
 **Pattern:**
+
 ```typescript
 // Repeated in 3+ modals
-const { data: { user } } = await supabase.auth.getUser()
+const {
+  data: { user },
+} = await supabase.auth.getUser()
 if (!user) throw new Error('Not authenticated')
 
 const { error: insertError } = await supabase.from(table).insert({
@@ -376,17 +399,19 @@ if (insertError) throw insertError
 ```typescript
 export function useSupabaseInsert<T>(table: string) {
   const insert = async (data: Omit<T, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
     if (!user) throw new Error('Not authenticated')
-    
+
     const { error } = await supabase.from(table).insert({
       ...data,
       user_id: user.id,
     })
-    
+
     if (error) throw error
   }
-  
+
   return { insert }
 }
 ```
@@ -398,6 +423,7 @@ export function useSupabaseInsert<T>(table: string) {
 **Current Duplication:** Error boxes repeated in every modal
 
 **Pattern:**
+
 ```typescript
 // Repeated in 3+ modals
 {error && (
@@ -420,7 +446,7 @@ export function useSupabaseInsert<T>(table: string) {
 ```typescript
 export function ErrorAlert({ error }: { error: string | null }) {
   if (!error) return null
-  
+
   return (
     <Box
       bg="red.100"
@@ -444,6 +470,7 @@ export function ErrorAlert({ error }: { error: string | null }) {
 **Current Duplication:** Cancel/Submit button pattern repeated in every modal
 
 **Pattern:**
+
 ```typescript
 // Repeated in 4+ modals
 <Flex gap={2} justifyContent="flex-end" pt={2}>
@@ -467,7 +494,13 @@ interface ModalActionsProps {
   disabled?: boolean
 }
 
-export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disabled }: ModalActionsProps) {
+export function ModalActions({
+  onCancel,
+  onSubmit,
+  submitLabel,
+  loading,
+  disabled,
+}: ModalActionsProps) {
   // Unified implementation
 }
 ```
@@ -477,6 +510,7 @@ export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disable
 ## 4. Priority Recommendations
 
 ### Phase 1: High Impact, Low Risk
+
 1. **Combine Entity Display Wrappers** - Eliminate 19 files, ~200 lines saved
 2. **Extract Control Bar Pattern** - Eliminate 2 files, ~110 lines saved
 3. **Extract New Entity Modal Pattern** - Eliminate 2 files, ~680 lines saved
@@ -485,6 +519,7 @@ export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disable
 **Total Phase 1 Savings:** ~1,140 lines, 23 files eliminated
 
 ### Phase 2: Medium Impact, Medium Risk
+
 1. **Combine Grid Card Components** - Eliminate 3 files, ~96 lines saved
 2. **Extract Resource Stepper Pattern** - Eliminate 2 files, ~110 lines saved
 3. **Create useFormState hook** - ~150 lines saved across multiple files
@@ -493,6 +528,7 @@ export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disable
 **Total Phase 2 Savings:** ~406 lines, 5 files eliminated
 
 ### Phase 3: Low Impact, Low Risk (Polish)
+
 1. **Create ErrorAlert component** - ~30 lines saved
 2. **Create ModalActions component** - ~40 lines saved
 3. **Extract other small patterns** - ~50 lines saved
@@ -504,6 +540,7 @@ export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disable
 ## 5. Overall Impact
 
 **Total Potential Savings:**
+
 - **Lines of Code:** ~1,666 lines reduced
 - **Files Eliminated:** 28 files
 - **Maintainability:** Significantly improved - changes to patterns only need to be made once
@@ -511,6 +548,7 @@ export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disable
 - **Testing:** Easier - test shared components once instead of testing duplicates
 
 **Risk Assessment:**
+
 - Phase 1: Low risk - mostly wrapper elimination
 - Phase 2: Medium risk - requires careful API design
 - Phase 3: Low risk - cosmetic improvements
@@ -520,17 +558,20 @@ export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disable
 ## 6. Implementation Notes
 
 ### Testing Strategy
+
 1. Create new shared components alongside existing ones
 2. Migrate one consumer at a time
 3. Run full test suite after each migration
 4. Remove old components only after all consumers migrated
 
 ### Breaking Changes
+
 - Most refactorings can be done without breaking changes
 - Entity Display wrappers might need component registry updates
 - Control bars and modals are internal components, low breaking change risk
 
 ### Code Review Checklist
+
 - [ ] All existing tests still pass
 - [ ] New shared components have comprehensive tests
 - [ ] TypeScript types are properly generic
@@ -543,6 +584,7 @@ export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disable
 ## 7. Additional Observations
 
 ### Good Patterns Already in Place
+
 1. ✅ `useLiveSheetState` - Excellent generic hook pattern
 2. ✅ `GridLayout` - Good extraction of grid pattern
 3. ✅ `ControlBarContainer` - Good separation of layout from logic
@@ -550,13 +592,14 @@ export function ModalActions({ onCancel, onSubmit, submitLabel, loading, disable
 5. ✅ Shared UI components (`RoundedBox`, `SheetDisplay`, `StatDisplay`, etc.)
 
 ### Architecture Strengths
+
 - Clear separation between LiveSheet, Dashboard, and Reference sections
 - Consistent use of Chakra UI theming
 - Good TypeScript typing throughout
 - Supabase integration well-isolated
 
 ### Future Considerations
+
 - Consider form library (React Hook Form) for complex forms
 - Consider state management library if complexity grows
 - Consider component library documentation (Storybook)
-

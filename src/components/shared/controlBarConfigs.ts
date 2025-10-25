@@ -27,4 +27,3 @@ export const MECH_CONTROL_BAR_CONFIG: ControlBarConfig = {
   linkLabel: '→ Pilot',
   linkPath: (id) => `/dashboard/pilots/${id}`,
 }
-

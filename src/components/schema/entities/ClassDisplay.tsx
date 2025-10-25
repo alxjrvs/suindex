@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Heading } from '../../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -139,29 +138,7 @@ function AbilityItem({ ability }: { ability: SURefAbility }) {
 }
 
 export function ClassDisplay({ data }: ClassDisplayProps) {
-  const [abilities, setAbilities] = useState<SURefAbility[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    try {
-      setAbilities(SalvageUnionReference.Abilities.all())
-      setLoading(false)
-    } catch (err) {
-      console.error('Failed to load abilities:', err)
-      setLoading(false)
-    }
-  }, [])
-
-  if (loading) {
-    return (
-      <Flex alignItems="center" justifyContent="center" p={8}>
-        <Text fontSize="lg" color="su.black">
-          Loading abilities...
-        </Text>
-      </Flex>
-    )
-  }
-
+  const abilities = SalvageUnionReference.Abilities.all()
   const coreAbilities: HydratedAbilities = {}
   data.coreAbilities.forEach((tree) => {
     coreAbilities[tree] = abilities

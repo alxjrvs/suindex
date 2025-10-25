@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { Box, Flex, Grid, VStack, Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import type { SURefAbility, SURefClass } from 'salvageunion-reference'
@@ -190,9 +190,9 @@ export function AbilitySelector({
   const advancedTreeName = selectedClass?.advancedAbilities
   const isAdvancedVersion = selectedClass?.id === selectedAdvancedClass?.id
 
-  // Update expanded abilities when selections change or modal opens
-  useEffect(() => {
-    if (!isOpen || !selectedClass) return
+  // Compute which abilities should be auto-expanded (next available in each tree)
+  const autoExpandedAbilityIds = useMemo(() => {
+    if (!isOpen || !selectedClass) return new Set<string>()
 
     const nextExpandedIds = new Set<string>()
 
@@ -226,10 +226,9 @@ export function AbilitySelector({
       }
     }
 
-    setExpandedAbilityIds(nextExpandedIds)
+    return nextExpandedIds
   }, [
     isOpen,
-    selectedAbilityIds,
     selectedClass,
     selectedAdvancedClass,
     coreTreeAbilities,
@@ -239,6 +238,13 @@ export function AbilitySelector({
     isSelected,
     getLowestAvailableLevel,
   ])
+
+  // Merge auto-expanded IDs with manually expanded IDs
+  const allExpandedIds = useMemo(() => {
+    const merged = new Set(autoExpandedAbilityIds)
+    expandedAbilityIds.forEach((id) => merged.add(id))
+    return merged
+  }, [autoExpandedAbilityIds, expandedAbilityIds])
 
   if (!isOpen) return null
 
@@ -303,7 +309,7 @@ export function AbilitySelector({
                         canAfford={canAfford}
                         alreadySelected={alreadySelected}
                         isAvailable={isAvailable}
-                        isExpanded={expandedAbilityIds.has(ability.id)}
+                        isExpanded={allExpandedIds.has(ability.id)}
                         onSelect={() => handleSelect(ability.id)}
                         onToggleExpanded={createToggleExpanded(ability.id)}
                       />
@@ -348,7 +354,7 @@ export function AbilitySelector({
                                 canAfford={canAfford}
                                 alreadySelected={alreadySelected}
                                 isAvailable={isAvailable}
-                                isExpanded={expandedAbilityIds.has(ability.id)}
+                                isExpanded={allExpandedIds.has(ability.id)}
                                 onSelect={() => handleSelect(ability.id)}
                                 onToggleExpanded={createToggleExpanded(ability.id)}
                               />
@@ -433,7 +439,7 @@ export function AbilitySelector({
                                 canAfford={canAfford}
                                 alreadySelected={alreadySelected}
                                 isAvailable={isAvailable}
-                                isExpanded={expandedAbilityIds.has(ability.id)}
+                                isExpanded={allExpandedIds.has(ability.id)}
                                 onSelect={() => handleSelect(ability.id)}
                                 onToggleExpanded={createToggleExpanded(ability.id)}
                               />

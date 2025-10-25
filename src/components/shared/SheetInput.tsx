@@ -73,7 +73,7 @@ export function SheetInput({
   }
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" position="relative">
       {/* Label with optional toggle */}
       {label && (
         <Flex alignItems="center" mb={-2} zIndex={1} gap={2}>

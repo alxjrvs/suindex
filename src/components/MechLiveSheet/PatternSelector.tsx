@@ -40,7 +40,7 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
           position="absolute"
           zIndex={10}
           w="full"
-          mt={1}
+          mt={11}
           bg="bg.input"
           borderWidth="2px"
           borderColor="fg.input"

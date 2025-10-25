@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Flex, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
@@ -43,15 +43,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
     hasPendingChanges,
   } = usePilotLiveSheetState(id)
 
-  // Track saved crawler ID for control bar links
-  const [savedCrawlerId, setSavedCrawlerId] = useState<string | null>(null)
-
-  // Set saved crawler ID after loading completes
-  useEffect(() => {
-    if (!id || loading) return
-    setSavedCrawlerId(pilot.crawler_id ?? null)
-  }, [id, loading, pilot.crawler_id])
-
   if (loading) {
     return (
       <LiveSheetLayout>
@@ -87,7 +78,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         <LiveSheetControlBar
           config={PILOT_CONTROL_BAR_CONFIG}
           relationId={pilot.crawler_id}
-          savedRelationId={savedCrawlerId}
+          savedRelationId={pilot.crawler_id}
           onRelationChange={(crawlerId) => updatePilot({ crawler_id: crawlerId })}
           hasPendingChanges={hasPendingChanges}
         />

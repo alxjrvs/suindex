@@ -21,14 +21,13 @@ interface SearchResult {
 
 export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   const [searchQuery, setSearchQuery] = useState('')
-  const [allItems, setAllItems] = useState<Map<string, DataItem[]>>(new Map())
   const [selectedIndex, setSelectedIndex] = useState(0)
   const navigate = useNavigate()
   const inputRef = useRef<HTMLInputElement>(null)
   const resultsRef = useRef<HTMLDivElement>(null)
 
   // Load all data from all schemas
-  useEffect(() => {
+  const allItems = useMemo(() => {
     const itemsMap = new Map<string, DataItem[]>()
 
     for (const schema of schemas) {
@@ -47,7 +46,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       }
     }
 
-    setAllItems(itemsMap)
+    return itemsMap
   }, [schemas])
 
   const handleSelectResult = useCallback(
@@ -141,11 +140,6 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [searchResults, selectedIndex, handleSelectResult])
 
-  // Reset selected index when search query changes
-  useEffect(() => {
-    setSelectedIndex(0)
-  }, [searchQuery])
-
   // Scroll selected item into view
   useEffect(() => {
     if (resultsRef.current && searchResults.length > 0) {
@@ -167,7 +161,10 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
           <Input
             ref={inputRef}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value)
+              setSelectedIndex(0)
+            }}
             placeholder="Search all rules, items, and schemas..."
             size="lg"
             bg="su.white"
