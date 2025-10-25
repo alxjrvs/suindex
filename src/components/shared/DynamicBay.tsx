@@ -17,12 +17,12 @@ interface DynamicBayProps {
 
 /**
  * Calculate grid dimensions:
- * - Max 6: 2x3 grid (2 columns, 3 rows)
+ * - Max 6: 3x2 grid (3 columns, 2 rows)
  * - 7+: 4 columns with rows calculated based on capacity
  */
 function calculateGridDimensions(capacity: number): { rows: number; cols: number } {
-  if (capacity <= 0) return { rows: 3, cols: 2 }
-  if (capacity <= 6) return { rows: 3, cols: 2 }
+  if (capacity <= 0) return { rows: 2, cols: 3 }
+  if (capacity <= 6) return { rows: 2, cols: 3 }
 
   // For 7+, use 4 columns and calculate rows needed
   const cols = 4
