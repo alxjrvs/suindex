@@ -96,7 +96,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
       )}
       {/* Header Section */}
-      <Flex gap={6} alignItems="stretch">
+      <Grid templateColumns="1fr auto" gap={6}>
         <CrawlerHeaderInputs
           name={crawler.name}
           crawlerTypeId={crawler.crawler_type_id ?? null}
@@ -122,7 +122,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
           disabled={!selectedCrawlerType}
         />
-      </Flex>
+      </Grid>
 
       <Flex gap={6}>
         <CrawlerAbilities crawlerRef={selectedCrawlerType} disabled={!selectedCrawlerType} />

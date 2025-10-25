@@ -1,4 +1,4 @@
-import { Grid, VStack } from '@chakra-ui/react'
+import { Flex, Grid, VStack } from '@chakra-ui/react'
 import { SheetInput } from '../shared/SheetInput'
 import { SheetSelect } from '../shared/SheetSelect'
 import { SheetTextarea } from '../shared/SheetTextarea'
@@ -31,6 +31,7 @@ export function CrawlerHeaderInputs({
       bg="bg.builder.crawler"
       fillWidth
       fillHeight
+      flex="1"
       borderColor="border.builder.crawler"
       matchBorder={false}
       borderWidth="4px"
@@ -56,13 +57,16 @@ export function CrawlerHeaderInputs({
           </SheetSelect>
         </Grid>
 
-        <SheetTextarea
-          label="Description"
-          value={description}
-          onChange={onDescriptionChange}
-          placeholder="Enter crawler description..."
-          disabled={disabled}
-        />
+        <Flex flex="1" direction="column" minH="0">
+          <SheetTextarea
+            label="Description"
+            value={description}
+            onChange={onDescriptionChange}
+            placeholder="Enter crawler description..."
+            disabled={disabled}
+            height="full"
+          />
+        </Flex>
       </VStack>
     </RoundedBox>
   )

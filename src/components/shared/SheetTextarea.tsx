@@ -45,7 +45,12 @@ export function SheetTextarea({
   }
 
   return (
-    <Flex direction="column" w="full">
+    <Flex
+      direction="column"
+      w="full"
+      h={height === 'full' ? 'full' : undefined}
+      flex={height === 'full' ? '1' : undefined}
+    >
       {/* Label with pseudoheader styling */}
       {label && (
         <Flex alignItems="center" mb={-2} zIndex={1}>
