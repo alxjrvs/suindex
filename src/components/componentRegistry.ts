@@ -1,8 +1,9 @@
 import type { ComponentType } from 'react'
 import { lazy } from 'react'
 import { createEntityDisplay } from './schema/entities/createEntityDisplay'
+import type { SURefEntity } from 'salvageunion-reference'
 
-type DisplayComponentType = ComponentType<{ data: Record<string, unknown> }>
+type DisplayComponentType = ComponentType<{ data: SURefEntity }>
 
 // Complex components with custom logic/children - keep as separate files
 const AbilityDisplay = lazy(() =>
