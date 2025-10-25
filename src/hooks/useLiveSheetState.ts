@@ -128,7 +128,7 @@ export function useLiveSheetState<T extends { id: string }>(
             await saveToDatabase(pendingUpdatesRef.current)
             setPendingChanges(false)
           }
-        }, 500)
+        }, 1000)
       }
     },
     [config.id, saveToDatabase]

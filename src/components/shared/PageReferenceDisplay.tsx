@@ -17,23 +17,30 @@ export function PageReferenceDisplay({ source, page, schemaName }: PageReference
       color="su.black"
       justifyContent="space-between"
       alignItems="center"
+      w="full"
+      gap={4}
     >
       {/* Left side - Schema name */}
       {schemaName && (
-        <Text fontWeight="bold" textTransform="uppercase">
+        <Text
+          fontWeight="bold"
+          textTransform="uppercase"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          whiteSpace="nowrap"
+          flex="0 1 auto"
+          minW="0"
+        >
           {schemaName}
         </Text>
       )}
 
       {/* Right side - Source and page */}
-      <Box ml="auto">
+      <Box ml="auto" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" flex="0 1 auto">
         {source && (
-          <>
-            <Text as="span" fontWeight="bold" textTransform="uppercase">
-              {source}
-            </Text>{' '}
-            •{' '}
-          </>
+          <Text as="span" mr={4} fontWeight="bold" textTransform="uppercase">
+            {source}
+          </Text>
         )}
         Page {page}
       </Box>

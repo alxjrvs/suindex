@@ -52,6 +52,7 @@ export function AbilityDisplay({
       onToggleExpanded={onToggleExpanded}
       showSelectButton={showSelectButton}
       selectButtonText={selectButtonText}
+      showBorder
     >
       {data.effect && (
         <Box>
