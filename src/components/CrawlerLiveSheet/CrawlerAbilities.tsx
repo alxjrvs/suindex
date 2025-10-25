@@ -15,7 +15,6 @@ export function CrawlerAbilities({
       borderColor="border.builder.crawler"
       title="Abilities"
       justifyContent={'flex-start'}
-      flex="1"
       disabled={disabled}
     >
       {(
