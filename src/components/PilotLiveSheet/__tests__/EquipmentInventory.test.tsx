@@ -118,6 +118,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
       await user.click(addButton)
@@ -130,6 +134,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
     it('displays available equipment in modal', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -145,6 +153,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
     it('adds equipment to inventory when selected', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -168,6 +180,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
     it('updates equipment count when adding equipment', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -195,6 +211,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
       await user.click(addButton)
@@ -212,6 +232,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
     it('disables Add button when inventory is full (6/6)', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -254,6 +278,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
@@ -293,6 +321,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
     it('enables Add button after removing equipment from full inventory', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -349,6 +381,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
@@ -371,6 +407,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
     it('removes equipment when remove button is clicked', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -399,6 +439,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })

@@ -258,15 +258,7 @@ export function AbilitySelector({
       zIndex="50"
       p={4}
     >
-      <Flex
-        bg="su.white"
-        borderRadius="2xl"
-        shadow="2xl"
-        maxW="7xl"
-        w="full"
-        maxH="90vh"
-        flexDirection="column"
-      >
+      <Flex bg="su.white" borderRadius="2xl" shadow="2xl" maxH="90vh" flexDirection="column">
         {/* Header */}
         <Flex
           bg="su.orange"

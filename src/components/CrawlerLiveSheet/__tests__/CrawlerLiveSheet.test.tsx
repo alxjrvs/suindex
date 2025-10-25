@@ -194,11 +194,11 @@ describe('CrawlerLiveSheet', () => {
       expect(typeSelect).toBeInTheDocument()
 
       // Resource steppers
-      expect(screen.getByText(/SP/i)).toBeInTheDocument()
-      expect(screen.getByText(/TL/i)).toBeInTheDocument()
-      expect(screen.getByText(/UPGRADE/i)).toBeInTheDocument()
+      expect(screen.getByRole('group', { name: /SP/i })).toBeInTheDocument()
+      expect(screen.getByRole('group', { name: /TL/i })).toBeInTheDocument()
+      expect(screen.getByRole('group', { name: /UPGRADE/i })).toBeInTheDocument()
       expect(screen.getByText(/UPKEEP/i)).toBeInTheDocument()
-      expect(screen.getByText(/SCRAP/i)).toBeInTheDocument()
+      expect(screen.getByRole('group', { name: /SCRAP/i })).toBeInTheDocument()
 
       // Notes section
       expect(screen.getByPlaceholderText(/add notes about your crawler/i)).toBeInTheDocument()
@@ -283,6 +283,10 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
+
       const spStepper = screen.getByRole('group', { name: /SP/i })
       const decrementButton = within(spStepper).getByRole('button', { name: /Decrement SP/i })
 
@@ -299,6 +303,10 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
+
       const techLevelStepper = screen.getByRole('group', { name: /TL/i })
       const incrementButton = within(techLevelStepper).getByRole('button', {
         name: /Increment TL/i,
@@ -313,19 +321,26 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
+
       const upgradeStepper = screen.getByRole('group', { name: /UPGRADE/i })
       const incrementButton = within(upgradeStepper).getByRole('button', {
         name: /Increment UPGRADE/i,
       })
 
-      // Increment upgrade (step is 5, so it goes from 0 to 5)
       await user.click(incrementButton)
-      expect(within(upgradeStepper).getByText('5/25')).toBeInTheDocument()
+      expect(within(upgradeStepper).getByText('1/25')).toBeInTheDocument()
     })
 
     it('allows adjusting scrap value', async () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
+
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
 
       const scrapStepper = screen.getByRole('group', { name: /SCRAP/i })
       const incrementButton = within(scrapStepper).getByRole('button', {
@@ -340,6 +355,10 @@ describe('CrawlerLiveSheet', () => {
     it('updates upkeep display when tech level changes', async () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
+
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
 
       // Initial upkeep should be 5 TL1
       expect(screen.getByText('5 TL1')).toBeInTheDocument()
@@ -362,13 +381,17 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
+
       // First, increment upgrade
       const upgradeStepper = screen.getByRole('group', { name: /UPGRADE/i })
       const upgradeIncrementButton = within(upgradeStepper).getByRole('button', {
         name: /Increment UPGRADE/i,
       })
       await user.click(upgradeIncrementButton)
-      expect(within(upgradeStepper).getByText('5/25')).toBeInTheDocument()
+      expect(within(upgradeStepper).getByText('1/25')).toBeInTheDocument()
 
       // Now increment tech level
       const techLevelStepper = screen.getByRole('group', { name: /TL/i })
@@ -389,6 +412,10 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
+
       const nameInput = screen.getByPlaceholderText(/enter crawler name/i)
 
       await user.type(nameInput, 'The Iron Beast')
@@ -398,6 +425,10 @@ describe('CrawlerLiveSheet', () => {
     it('allows entering description', async () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
+
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
 
       const descriptionInput = screen.getByPlaceholderText(/enter crawler description/i)
 
@@ -411,6 +442,10 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
+
       // Find the Crew Quarters bay operator input (placeholder is "Enter Crew name...")
       const operatorInput = screen.getByPlaceholderText(/enter crew name/i)
 
@@ -421,6 +456,10 @@ describe('CrawlerLiveSheet', () => {
     it('allows entering description for a bay', async () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
+
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
 
       // Find bay notes inputs (placeholder is "Enter operator notes...")
       const bayNotes = screen.getAllByPlaceholderText(/enter operator notes/i)
@@ -449,6 +488,10 @@ describe('CrawlerLiveSheet', () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
+
       const addCargoButton = screen.getByRole('button', { name: /\+/i })
 
       await user.click(addCargoButton)
@@ -470,6 +513,10 @@ describe('CrawlerLiveSheet', () => {
     it('allows entering notes text', async () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
+
+      // Select a crawler type first to enable inputs
+      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
+      await user.selectOptions(crawlerTypeSelect, 'crawler-hauler')
 
       const notesTextarea = screen.getByPlaceholderText(/add notes about your crawler/i)
 

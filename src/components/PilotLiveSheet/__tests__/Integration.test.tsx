@@ -243,16 +243,16 @@ describe('PilotLiveSheet - Integration Tests', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
-      // Step 1: Fill in pilot information
+      // Step 1: Select class first to enable inputs
+      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
+      await user.selectOptions(classSelect, 'class-hacker')
+
+      // Step 2: Fill in pilot information
       await user.type(screen.getByPlaceholderText(/enter callsign/i), 'Ghost')
       await user.type(screen.getByPlaceholderText(/enter motto/i), 'Never give up')
       await user.type(screen.getByPlaceholderText(/enter keepsake/i), 'Lucky coin')
       await user.type(screen.getByPlaceholderText(/enter background/i), 'Former soldier')
       await user.type(screen.getByPlaceholderText(/enter appearance/i), 'Tall with dark hair')
-
-      // Step 2: Select class
-      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
 
       // Step 3: Set resources
       await waitFor(() => {

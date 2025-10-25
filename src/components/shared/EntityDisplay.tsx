@@ -43,6 +43,7 @@ interface EntityDisplayProps {
   selectButtonText?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
   entityName: SURefEntityName
+  showBorder?: boolean
 }
 
 export function EntityDisplay({
@@ -64,6 +65,7 @@ export function EntityDisplay({
   selectButtonText,
   contentJustify = 'flex-start',
   entityName,
+  showBorder = false,
 }: EntityDisplayProps) {
   const schemaName = getSchemaName(entityName)
   const variableCost = 'activationCost' in data && entityName === 'Ability'
@@ -95,8 +97,8 @@ export function EntityDisplay({
     headerColor || (sidebar.techLevel ? techLevelColors[sidebar.techLevel] : 'su.orange')
   const opacityValue = dimmed ? 0.5 : 1
 
-  // Click handling (from Frame)
-  const handleClick = () => {
+  // Click handling for header only
+  const handleHeaderClick = () => {
     if (showSelectButton) {
       if (collapsible) {
         handleToggle()
@@ -110,7 +112,7 @@ export function EntityDisplay({
     }
   }
 
-  const cursorStyle =
+  const headerCursorStyle =
     !showSelectButton && onClick && !dimmed ? 'pointer' : collapsible ? 'pointer' : 'default'
 
   return (
@@ -121,15 +123,22 @@ export function EntityDisplay({
       shadow="lg"
       overflow="visible"
       opacity={opacityValue}
-      cursor={cursorStyle}
-      onClick={handleClick}
+      borderWidth={showBorder ? '4px' : '0'}
+      borderColor="su.black"
     >
       {/* Header */}
-      <Box p={3} zIndex={10} bg={backgroundColor} overflow="visible">
+      <Box
+        p={3}
+        zIndex={10}
+        bg={backgroundColor}
+        overflow="visible"
+        cursor={headerCursorStyle}
+        onClick={handleHeaderClick}
+      >
         <Flex alignItems="flex-start" gap={3} overflow="visible">
           {/* Expand/Collapse Icon */}
           {collapsible && (
-            <Flex alignItems="center" justifyContent="center" minW="25px">
+            <Flex alignItems="center" justifyContent="center" minW="25px" alignSelf="center">
               <Text color="su.white" fontSize="lg">
                 {isExpanded ? '▼' : '▶'}
               </Text>
@@ -137,15 +146,9 @@ export function EntityDisplay({
           )}
 
           {/* Level indicator */}
-          {level && (
-            <Flex alignItems="center" justifyContent="center" minW="35px" maxW="35px">
-              <Text color="su.white" fontSize="2xl" fontWeight="bold">
-                {level}
-              </Text>
-            </Flex>
-          )}
+          {level && <StatDisplay label="LVL" value={level} />}
 
-          <Box flex="1" overflow="visible" data-testid="frame-header-container">
+          <Box mt={2} flex="1" overflow="visible" data-testid="frame-header-container">
             <Flex justifyContent="space-between" alignItems="flex-start" overflow="visible">
               {/* Left side: Title and details */}
               <VStack alignItems="flex-start" gap={1} flex="1">
@@ -162,7 +165,7 @@ export function EntityDisplay({
               </VStack>
 
               {/* Right side: Stats and remove button */}
-              <Flex alignItems="center" gap={2}>
+              <Flex alignItems="center" gap={2} alignSelf="center">
                 {stats.length > 0 && (
                   <Box ml="auto">
                     <StatList stats={stats} />

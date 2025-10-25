@@ -56,6 +56,7 @@ export function SheetSelect({
           color="su.black"
           fontWeight="semibold"
           _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+          aria-label={label}
         >
           <option value="">{loading ? 'Loading...' : placeholder}</option>
           {options

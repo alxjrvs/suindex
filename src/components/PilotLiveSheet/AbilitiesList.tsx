@@ -85,7 +85,7 @@ export function AbilitiesList({
       }
     >
       {coreTreeNamesDisplay.length > 0 && (
-        <Box mb={4}>
+        <Box mb={4} w="full">
           {coreTreeNamesDisplay.map((treeName) => (
             <Box key={treeName} mb={4}>
               <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">

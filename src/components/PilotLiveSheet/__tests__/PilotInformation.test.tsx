@@ -89,6 +89,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
       await user.type(callsignInput, 'Ghost')
 
@@ -98,6 +102,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
     it('allows typing in motto field', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const mottoInput = screen.getByPlaceholderText(/enter motto/i)
       await user.type(mottoInput, 'Never give up')
@@ -109,6 +117,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const keepsakeInput = screen.getByPlaceholderText(/enter keepsake/i)
       await user.type(keepsakeInput, 'Lucky coin')
 
@@ -119,6 +131,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const backgroundInput = screen.getByPlaceholderText(/enter background/i)
       await user.type(backgroundInput, 'Former soldier')
 
@@ -128,6 +144,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
     it('allows typing in appearance textarea', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
       await user.type(appearanceInput, 'Tall with dark hair')
@@ -162,6 +182,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /motto/i,
       }) as HTMLInputElement
@@ -176,6 +200,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
     it('allows checking keepsake "Used" checkbox', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /keepsake/i,
@@ -192,6 +220,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /background/i,
       }) as HTMLInputElement
@@ -206,6 +238,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
     it('allows unchecking "Used" checkbox', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /motto/i,
@@ -233,6 +269,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const notesTextarea = screen.getByPlaceholderText(/add notes about your pilot/i)
       await user.type(notesTextarea, 'This character is brave and loyal')
 
@@ -242,6 +282,10 @@ describe('PilotLiveSheet - Pilot Information', () => {
     it('allows multiline text in notes', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
 
       const notesTextarea = screen.getByPlaceholderText(/add notes about your pilot/i)
       await user.type(notesTextarea, 'Line 1{Enter}Line 2{Enter}Line 3')
@@ -255,11 +299,12 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
       await user.type(callsignInput, 'Ghost')
-
-      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
 
       expect(callsignInput).toHaveValue('Ghost')
     })
@@ -268,11 +313,12 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const mottoInput = screen.getByPlaceholderText(/enter motto/i)
       await user.type(mottoInput, 'Never give up')
-
-      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
 
       expect(mottoInput).toHaveValue('Never give up')
     })
@@ -281,11 +327,12 @@ describe('PilotLiveSheet - Pilot Information', () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
+      // Select a class first to enable inputs
+      const classSelect = screen.getByRole('combobox', { name: /class/i })
+      await user.selectOptions(classSelect, 'class-hacker')
+
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
       await user.type(appearanceInput, 'Tall and strong')
-
-      const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
 
       expect(appearanceInput).toHaveValue('Tall and strong')
     })

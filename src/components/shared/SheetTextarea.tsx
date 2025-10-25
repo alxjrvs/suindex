@@ -1,6 +1,5 @@
 import { Flex, Textarea } from '@chakra-ui/react'
 import { Text } from '../base/Text'
-import { useEffect, useRef } from 'react'
 
 interface SheetTextareaProps {
   label?: string
@@ -21,27 +20,8 @@ export function SheetTextarea({
   height = '20',
   rows,
 }: SheetTextareaProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const isTypingRef = useRef(false)
-
-  // Sync external value changes to textarea (but not during typing)
-  useEffect(() => {
-    if (!isTypingRef.current && textareaRef.current && textareaRef.current.value !== value) {
-      textareaRef.current.value = value
-    }
-  }, [value])
-
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    isTypingRef.current = true
     onChange(e.target.value)
-  }
-
-  const handleBlur = () => {
-    isTypingRef.current = false
-    // Ensure value is synced on blur
-    if (textareaRef.current) {
-      textareaRef.current.value = value
-    }
   }
 
   return (
@@ -69,10 +49,8 @@ export function SheetTextarea({
 
       {/* Textarea with consistent border styling */}
       <Textarea
-        ref={textareaRef}
-        defaultValue={value}
+        value={value}
         onChange={handleChange}
-        onBlur={handleBlur}
         disabled={disabled}
         placeholder={placeholder}
         w="full"
