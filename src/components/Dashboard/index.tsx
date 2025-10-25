@@ -3,9 +3,9 @@ import { Routes, Route } from 'react-router'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { supabase } from '../../lib/supabase'
 import type { User } from '@supabase/supabase-js'
-import { Auth } from './Auth'
 import { DashboardContent } from './DashboardContent'
 import { DashboardNavigation } from './DashboardNavigation'
+import { LandingPageDashboard } from './LandingPageDashboard'
 import { GamesGrid } from './GamesGrid'
 import { NewGame } from './NewGame'
 import { GameShow } from './GameShow'
@@ -50,7 +50,14 @@ export default function Dashboard() {
   }
 
   if (!user) {
-    return <Auth />
+    return (
+      <Flex flexDirection="column" minH="100vh" bg="su.white">
+        <DashboardNavigation user={null} />
+        <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
+          <LandingPageDashboard />
+        </Box>
+      </Flex>
+    )
   }
 
   return (
