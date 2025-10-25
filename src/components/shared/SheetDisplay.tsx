@@ -44,13 +44,15 @@ export function SheetDisplay({
         minH={minHeight}
         p={3}
         borderWidth="3px"
-        borderColor={disabled ? 'gray.600' : 'su.black'}
+        borderColor="su.black"
         borderRadius="2xl"
-        bg={disabled ? 'gray.200' : 'su.white'}
-        color={disabled ? 'gray.600' : 'su.black'}
+        bg="su.white"
+        color="su.black"
         fontWeight="semibold"
         whiteSpace="pre-wrap"
         overflowY="auto"
+        opacity={disabled ? 0.5 : 1}
+        cursor={disabled ? 'not-allowed' : 'default'}
       >
         {children || value}
       </Box>

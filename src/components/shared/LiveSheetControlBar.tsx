@@ -28,7 +28,7 @@ interface LiveSheetControlBarProps {
 /**
  * Generic control bar component for LiveSheet pages.
  * Handles loading related entities and displaying a selector with link button.
- * 
+ *
  * @example
  * ```tsx
  * <LiveSheetControlBar
@@ -47,7 +47,7 @@ export function LiveSheetControlBar({
   onRelationChange,
   hasPendingChanges = false,
 }: LiveSheetControlBarProps) {
-  const { items, loading } = useEntityRelationships<Record<string, any>>({
+  const { items, loading } = useEntityRelationships<Record<string, string>>({
     table: config.table,
     selectFields: config.selectFields,
     orderBy: config.nameField,
@@ -81,4 +81,3 @@ export function LiveSheetControlBar({
     />
   )
 }
-

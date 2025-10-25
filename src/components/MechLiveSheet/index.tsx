@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { SystemModuleSelector } from './SystemModuleSelector'
@@ -51,15 +51,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   const allSystems = SalvageUnionReference.Systems.all()
   const allModules = SalvageUnionReference.Modules.all()
 
-  // Track saved pilot ID for control bar links
-  const [savedPilotId, setSavedPilotId] = useState<string | null>(null)
-
-  // Set saved pilot ID after loading completes
-  useEffect(() => {
-    if (!id || loading) return
-    setSavedPilotId(mech.pilot_id ?? null)
-  }, [id, loading, mech.pilot_id])
-
   const stats = selectedChassis?.stats
 
   const canAddMore =
@@ -100,7 +91,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         <LiveSheetControlBar
           config={MECH_CONTROL_BAR_CONFIG}
           relationId={mech.pilot_id}
-          savedRelationId={savedPilotId}
+          savedRelationId={mech.pilot_id}
           onRelationChange={(pilotId) => updateMech({ pilot_id: pilotId })}
           hasPendingChanges={hasPendingChanges}
         />
@@ -114,16 +105,16 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
                 allChassis={allChassis}
                 onChange={handleChassisChange}
               />
+              <PatternSelector
+                pattern={mech.pattern ?? ''}
+                selectedChassis={selectedChassis}
+                onChange={handlePatternChange}
+              />
 
               <QuirkInput
                 quirk={mech.quirk ?? ''}
                 disabled={!selectedChassis}
                 onQuirkChange={(value) => updateMech({ quirk: value })}
-              />
-              <PatternSelector
-                pattern={mech.pattern ?? ''}
-                selectedChassis={selectedChassis}
-                onChange={handlePatternChange}
               />
               <AppearanceInput
                 appearance={mech.appearance ?? ''}

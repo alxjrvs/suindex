@@ -40,9 +40,8 @@ export function useEntityRelationships<T = { id: string; name: string }>(
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) return
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = supabase
-        .from(config.table as any)
+        .from(config.table)
         .select(config.selectFields || 'id, name')
         .eq('user_id', userData.user.id)
 

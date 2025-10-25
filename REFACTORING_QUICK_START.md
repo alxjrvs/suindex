@@ -13,6 +13,7 @@ This guide provides concrete implementation steps for the refactoring opportunit
 **Goal:** Eliminate 19 wrapper files, reduce ~200 lines
 
 **Step 1:** Create configuration file
+
 ```typescript
 // src/components/schema/entities/entityDisplayConfig.ts
 import type { SURefEntityName } from 'salvageunion-reference'
@@ -37,7 +38,11 @@ export const ENTITY_DISPLAY_CONFIGS: Record<SURefEntityName, EntityDisplayConfig
   Keyword: {},
   Trait: {},
   RollTable: { headerColor: 'su.orange' },
-  Crawler: { headerColor: 'su.pink', actionHeaderBgColor: 'su.pink', actionHeaderTextColor: 'white' },
+  Crawler: {
+    headerColor: 'su.pink',
+    actionHeaderBgColor: 'su.pink',
+    actionHeaderTextColor: 'white',
+  },
   Chassis: { headerColor: 'su.green' },
   Class: {}, // Special case - has custom children
   Ability: {}, // Special case - has custom logic
@@ -48,6 +53,7 @@ export const ENTITY_DISPLAY_CONFIGS: Record<SURefEntityName, EntityDisplayConfig
 ```
 
 **Step 2:** Update component registry
+
 ```typescript
 // src/components/componentRegistry.ts
 import { EntityDisplay } from './shared/EntityDisplay'
@@ -84,7 +90,7 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   traits: createEntityDisplay('Trait'),
   'roll-tables': createEntityDisplay('RollTable'),
   crawlers: createEntityDisplay('Crawler'),
-  
+
   // Special cases with custom components
   classes: ClassDisplay,
   abilities: AbilityDisplay,
@@ -96,6 +102,7 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
 ```
 
 **Step 3:** Delete old wrapper files
+
 ```bash
 # After verifying everything works
 rm src/components/schema/entities/NPCDisplay.tsx
@@ -111,6 +118,7 @@ rm src/components/schema/entities/BioTitanDisplay.tsx
 **Goal:** Eliminate 2 files, reduce ~110 lines
 
 **Step 1:** Create generic control bar
+
 ```typescript
 // src/components/shared/LiveSheetControlBar.tsx
 import { useEffect, useState } from 'react'
@@ -198,6 +206,7 @@ export function LiveSheetControlBar({
 ```
 
 **Step 2:** Create config constants
+
 ```typescript
 // src/components/shared/controlBarConfigs.ts
 import type { ControlBarConfig } from './LiveSheetControlBar'
@@ -234,6 +243,7 @@ export const CRAWLER_CONTROL_BAR_CONFIG: ControlBarConfig = {
 ```
 
 **Step 3:** Update LiveSheet components
+
 ```typescript
 // src/components/PilotLiveSheet/index.tsx
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
@@ -250,6 +260,7 @@ import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 ```
 
 **Step 4:** Delete old control bars
+
 ```bash
 rm src/components/PilotLiveSheet/PilotControlBar.tsx
 rm src/components/MechLiveSheet/MechControlBar.tsx
@@ -263,6 +274,7 @@ rm src/components/MechLiveSheet/MechControlBar.tsx
 **Goal:** Eliminate 2 files, reduce ~680 lines
 
 **Step 1:** Create form field types
+
 ```typescript
 // src/components/shared/FormModal/types.ts
 export type FormFieldType = 'text' | 'textarea' | 'select' | 'relationship'
@@ -295,6 +307,7 @@ export interface FormModalConfig {
 **Step 2:** Create generic form modal (see next section for full implementation)
 
 **Step 3:** Create config for each entity type
+
 ```typescript
 // src/components/Dashboard/formModalConfigs.ts
 export const NEW_PILOT_CONFIG: FormModalConfig = {
@@ -303,21 +316,37 @@ export const NEW_PILOT_CONFIG: FormModalConfig = {
   backgroundColor: 'bg.builder',
   submitLabel: 'Create Pilot',
   fields: [
-    { name: 'callsign', label: 'Callsign', type: 'text', required: true, placeholder: 'Enter pilot callsign...' },
+    {
+      name: 'callsign',
+      label: 'Callsign',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter pilot callsign...',
+    },
     { name: 'class_id', label: 'Class', type: 'select', options: [] }, // Populated from SalvageUnionReference
     { name: 'keepsake', label: 'Keepsake', type: 'textarea', placeholder: 'Enter keepsake...' },
     { name: 'motto', label: 'Motto', type: 'textarea', placeholder: 'Enter motto...' },
-    { name: 'background', label: 'Background', type: 'textarea', placeholder: 'Enter background...' },
-    { name: 'appearance', label: 'Appearance', type: 'textarea', placeholder: 'Enter appearance...' },
-    { 
-      name: 'crawler_id', 
-      label: 'Crawler', 
+    {
+      name: 'background',
+      label: 'Background',
+      type: 'textarea',
+      placeholder: 'Enter background...',
+    },
+    {
+      name: 'appearance',
+      label: 'Appearance',
+      type: 'textarea',
+      placeholder: 'Enter appearance...',
+    },
+    {
+      name: 'crawler_id',
+      label: 'Crawler',
       type: 'relationship',
       relationshipConfig: {
         table: 'crawlers',
         selectFields: 'id, name',
         nameField: 'name',
-      }
+      },
     },
   ],
 }
@@ -330,6 +359,7 @@ export const NEW_PILOT_CONFIG: FormModalConfig = {
 **Goal:** Reduce ~150 lines across multiple files
 
 **Implementation:**
+
 ```typescript
 // src/hooks/useEntityRelationships.ts
 import { useEffect, useState } from 'react'
@@ -392,6 +422,7 @@ export function useEntityRelationships<T = { id: string; name: string }>(
 ```
 
 **Usage:**
+
 ```typescript
 // In any component that needs to load relationships
 const { items: crawlers, loading: loadingCrawlers } = useEntityRelationships({
@@ -466,7 +497,7 @@ Track these metrics before and after each phase:
 ## Questions?
 
 Refer to:
+
 - `REFACTORING_ANALYSIS.md` - Detailed analysis
 - Existing patterns in codebase (e.g., `useLiveSheetState`, `GridLayout`)
 - Team for architectural decisions
-

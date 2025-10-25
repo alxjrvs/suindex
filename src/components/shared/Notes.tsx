@@ -8,7 +8,6 @@ interface NotesProps {
   backgroundColor?: string
   borderWidth?: 4 | 8
   placeholder?: string
-  height?: string
 }
 
 export function Notes({
@@ -17,7 +16,6 @@ export function Notes({
   placeholder,
   disabled = false,
   backgroundColor = 'bg.builder',
-  height = '96',
 }: NotesProps) {
   return (
     <RoundedBox
@@ -25,13 +23,14 @@ export function Notes({
       bg={backgroundColor}
       borderColor={backgroundColor}
       disabled={disabled}
+      fillHeight
     >
       <SheetTextarea
         value={notes}
         onChange={onChange}
         disabled={disabled}
         placeholder={placeholder}
-        height={height}
+        height="full"
       />
     </RoundedBox>
   )
