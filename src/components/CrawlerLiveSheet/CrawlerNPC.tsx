@@ -15,15 +15,7 @@ export function CrawlerNPC({
   disabled?: boolean
 }) {
   return (
-    <RoundedBox
-      bg="bg.builder.crawler"
-      borderColor="border.builder.crawler"
-      matchBorder={false}
-      borderWidth="4px"
-      title="NPC"
-      disabled={disabled}
-      fillWidth
-    >
+    <RoundedBox bg="bg.builder.crawler" title="NPC" disabled={disabled} w="full">
       <NPCCard
         npc={crawler.npc!}
         description={crawlerRef?.npc.description || ''}

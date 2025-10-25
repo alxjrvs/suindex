@@ -98,7 +98,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
       )}
       <Flex gap={6}>
         <VStack flex="1" gap={6} alignItems="stretch">
-          <RoundedBox bg="su.green" fillHeight fillWidth disabled={!selectedChassis}>
+          <RoundedBox bg="su.green" h="full" w="full" disabled={!selectedChassis}>
             <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
               <ChassisSelector
                 chassisId={mech.chassis_id ?? null}

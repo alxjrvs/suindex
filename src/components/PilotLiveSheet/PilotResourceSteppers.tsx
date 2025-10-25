@@ -28,12 +28,7 @@ export function PilotResourceSteppers({
   const currentHP = maxHP - currentDamage
 
   return (
-    <RoundedBox
-      bg="bg.builder.pilot"
-      borderColor="border.builder.pilot"
-      matchBorder={false}
-      disabled={disabled}
-    >
+    <RoundedBox bg="bg.builder.pilot" disabled={disabled}>
       <VStack alignItems="center">
         <NumericStepper
           label="HP"

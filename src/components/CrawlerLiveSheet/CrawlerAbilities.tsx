@@ -12,13 +12,8 @@ export function CrawlerAbilities({
   return (
     <RoundedBox
       bg="bg.builder.crawler"
-      borderColor="border.builder.crawler"
-      matchBorder={false}
-      borderWidth="4px"
-      minW="50%"
       title="Abilities"
       justifyContent={'flex-start'}
-      flex="1"
       disabled={disabled}
     >
       {(

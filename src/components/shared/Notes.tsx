@@ -18,13 +18,7 @@ export function Notes({
   backgroundColor = 'bg.builder',
 }: NotesProps) {
   return (
-    <RoundedBox
-      title="notes"
-      bg={backgroundColor}
-      borderColor={backgroundColor}
-      disabled={disabled}
-      fillHeight
-    >
+    <RoundedBox title="notes" bg={backgroundColor} disabled={disabled} h="full">
       <SheetTextarea
         value={notes}
         onChange={onChange}

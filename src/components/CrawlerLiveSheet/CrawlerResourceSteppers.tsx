@@ -35,14 +35,7 @@ export function CrawlerResourceSteppers({
   const currentSP = maxSP - currentDamage
 
   return (
-    <RoundedBox
-      bg="bg.builder.crawler"
-      borderColor="border.builder.crawler"
-      matchBorder={false}
-      borderWidth="4px"
-      disabled={disabled}
-      justifyContent="flex-start"
-    >
+    <RoundedBox bg="bg.builder.crawler" disabled={disabled} justifyContent="flex-start">
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
         <Flex justifyContent="start" alignItems="end">
           <NumericStepper

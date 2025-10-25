@@ -27,16 +27,7 @@ export function CrawlerHeaderInputs({
   disabled = false,
 }: CrawlerHeaderInputsProps) {
   return (
-    <RoundedBox
-      bg="bg.builder.crawler"
-      fillWidth
-      fillHeight
-      flex="1"
-      borderColor="border.builder.crawler"
-      matchBorder={false}
-      borderWidth="4px"
-      disabled={disabled}
-    >
+    <RoundedBox bg="bg.builder.crawler" h="full" w="full" flex="1" disabled={disabled}>
       <VStack gap={4} alignItems="stretch" w="full" h="full" flex="1">
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
           <SheetInput

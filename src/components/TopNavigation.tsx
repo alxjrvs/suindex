@@ -143,7 +143,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                     h="auto"
                     w={{ base: 'full', lg: 'auto' }}
                   >
-                    Schemas
+                    Schema
                   </Button>
                 </Menu.Trigger>
                 <Portal>
@@ -211,7 +211,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           </HStack>
         </Flex>
 
-        {/* Right section: Dashboard, My Data, User info and sign out / Sign in */}
+        {/* Right section: User data links, User info and sign out / Sign in */}
         <Flex
           alignItems="center"
           gap={4}
@@ -222,78 +222,78 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         >
           {user && (
             <>
-              {/* Dashboard link */}
+              {/* Individual data links */}
               <Button
-                onClick={() => handleNavigate('/dashboard')}
+                onClick={() => handleNavigate('/dashboard/pilots')}
                 px={4}
                 py={2}
                 _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard') ? 'su.lightBlue' : 'transparent'}
-                borderBottomWidth={isActive('/dashboard') ? '3px' : 0}
+                bg={isActive('/dashboard/pilots') ? 'su.lightBlue' : 'transparent'}
+                borderBottomWidth={isActive('/dashboard/pilots') ? '3px' : 0}
                 borderBottomColor="su.orange"
                 color="su.black"
-                fontWeight={isActive('/dashboard') ? 'semibold' : 'normal'}
+                fontWeight={isActive('/dashboard/pilots') ? 'semibold' : 'normal'}
                 borderRadius="md"
                 variant="ghost"
                 h="auto"
                 w={{ base: 'full', lg: 'auto' }}
               >
-                Dashboard
+                Pilots
               </Button>
 
-              {/* My Data Dropdown */}
-              <Box as="li" listStyleType="none">
-                <Menu.Root>
-                  <Menu.Trigger asChild>
-                    <Button
-                      px={4}
-                      py={2}
-                      _hover={{ bg: 'su.lightOrange' }}
-                      bg={isActive('/dashboard') ? 'su.lightBlue' : 'transparent'}
-                      borderBottomWidth={isActive('/dashboard') ? '3px' : 0}
-                      borderBottomColor="su.orange"
-                      color="su.black"
-                      fontWeight={isActive('/dashboard') ? 'semibold' : 'normal'}
-                      borderRadius="md"
-                      variant="ghost"
-                      h="auto"
-                      w={{ base: 'full', lg: 'auto' }}
-                    >
-                      My Data
-                    </Button>
-                  </Menu.Trigger>
-                  <Portal>
-                    <Menu.Positioner>
-                      <Menu.Content minW="200px">
-                        <Menu.Item
-                          value="games"
-                          onSelect={() => handleNavigate('/dashboard/games')}
-                        >
-                          Games
-                        </Menu.Item>
-                        <Menu.Item
-                          value="mechs"
-                          onSelect={() => handleNavigate('/dashboard/mechs')}
-                        >
-                          Mechs
-                        </Menu.Item>
-                        <Menu.Item
-                          value="pilots"
-                          onSelect={() => handleNavigate('/dashboard/pilots')}
-                        >
-                          Pilots
-                        </Menu.Item>
-                        <Menu.Item
-                          value="crawlers"
-                          onSelect={() => handleNavigate('/dashboard/crawlers')}
-                        >
-                          Crawlers
-                        </Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Portal>
-                </Menu.Root>
-              </Box>
+              <Button
+                onClick={() => handleNavigate('/dashboard/mechs')}
+                px={4}
+                py={2}
+                _hover={{ bg: 'su.lightOrange' }}
+                bg={isActive('/dashboard/mechs') ? 'su.lightBlue' : 'transparent'}
+                borderBottomWidth={isActive('/dashboard/mechs') ? '3px' : 0}
+                borderBottomColor="su.orange"
+                color="su.black"
+                fontWeight={isActive('/dashboard/mechs') ? 'semibold' : 'normal'}
+                borderRadius="md"
+                variant="ghost"
+                h="auto"
+                w={{ base: 'full', lg: 'auto' }}
+              >
+                Mechs
+              </Button>
+
+              <Button
+                onClick={() => handleNavigate('/dashboard/crawlers')}
+                px={4}
+                py={2}
+                _hover={{ bg: 'su.lightOrange' }}
+                bg={isActive('/dashboard/crawlers') ? 'su.lightBlue' : 'transparent'}
+                borderBottomWidth={isActive('/dashboard/crawlers') ? '3px' : 0}
+                borderBottomColor="su.orange"
+                color="su.black"
+                fontWeight={isActive('/dashboard/crawlers') ? 'semibold' : 'normal'}
+                borderRadius="md"
+                variant="ghost"
+                h="auto"
+                w={{ base: 'full', lg: 'auto' }}
+              >
+                Crawlers
+              </Button>
+
+              <Button
+                onClick={() => handleNavigate('/dashboard/games')}
+                px={4}
+                py={2}
+                _hover={{ bg: 'su.lightOrange' }}
+                bg={isActive('/dashboard/games') ? 'su.lightBlue' : 'transparent'}
+                borderBottomWidth={isActive('/dashboard/games') ? '3px' : 0}
+                borderBottomColor="su.orange"
+                color="su.black"
+                fontWeight={isActive('/dashboard/games') ? 'semibold' : 'normal'}
+                borderRadius="md"
+                variant="ghost"
+                h="auto"
+                w={{ base: 'full', lg: 'auto' }}
+              >
+                Games
+              </Button>
             </>
           )}
 
