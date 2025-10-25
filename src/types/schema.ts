@@ -1,3 +1,5 @@
+import type { SURefEntity } from 'salvageunion-reference'
+
 export interface SchemaInfo {
   id: string
   title: string
@@ -8,8 +10,4 @@ export interface SchemaInfo {
   requiredFields: string[]
 }
 
-export type DataItem = {
-  id: string
-  name?: string
-  description?: string
-} & Record<string, unknown>
+export type DataItem = SURefEntity & Record<string, unknown>
