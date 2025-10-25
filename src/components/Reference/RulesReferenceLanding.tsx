@@ -54,9 +54,9 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   const handleSelectResult = useCallback(
     (result: SearchResult) => {
       if (result.type === 'schema') {
-        navigate(`/reference/schema/${result.schemaId}`)
+        navigate(`/schema/${result.schemaId}`)
       } else {
-        navigate(`/reference/schema/${result.schemaId}/item/${result.itemId}`)
+        navigate(`/schema/${result.schemaId}/item/${result.itemId}`)
       }
       setSearchQuery('')
       setSelectedIndex(0)
@@ -249,7 +249,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                   borderRadius="md"
                   cursor="pointer"
                   _hover={{ bg: 'su.lightOrange', borderColor: 'su.orange' }}
-                  onClick={() => navigate(`/reference/schema/${schema.id}`)}
+                  onClick={() => navigate(`/schema/${schema.id}`)}
                 >
                   <Text fontWeight="semibold" color="su.black" fontSize="lg">
                     {title}

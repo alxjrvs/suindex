@@ -35,8 +35,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
   }
 
   const isActive = (path: string) => location.pathname.startsWith(path)
-  const isDashboard = location.pathname.startsWith('/dashboard')
-  const isReference = location.pathname.startsWith('/reference')
 
   return (
     <>
@@ -105,15 +103,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         >
           {/* Logo/Brand */}
           <Button
-            onClick={() => {
-              if (isDashboard) {
-                handleNavigate('/dashboard')
-              } else if (isReference) {
-                handleNavigate('/reference')
-              } else {
-                handleNavigate('/')
-              }
-            }}
+            onClick={() => handleNavigate('/')}
             _hover={{ bg: 'su.lightOrange' }}
             bg="transparent"
             borderRadius="md"
@@ -127,44 +117,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
             </Text>
           </Button>
 
-          {/* Dashboard link */}
-          <Button
-            onClick={() => handleNavigate('/dashboard')}
-            px={4}
-            py={2}
-            _hover={{ bg: 'su.lightOrange' }}
-            bg={isActive('/dashboard') ? 'su.lightBlue' : 'transparent'}
-            borderBottomWidth={isActive('/dashboard') ? '3px' : 0}
-            borderBottomColor="su.orange"
-            color="su.black"
-            fontWeight={isActive('/dashboard') ? 'semibold' : 'normal'}
-            borderRadius="md"
-            variant="ghost"
-            h="auto"
-            w={{ base: 'full', lg: 'auto' }}
-          >
-            Dashboard
-          </Button>
-
-          {/* Rules Reference link */}
-          <Button
-            onClick={() => handleNavigate('/reference/')}
-            px={4}
-            py={2}
-            _hover={{ bg: 'su.lightOrange' }}
-            bg={location.pathname === '/reference/' ? 'su.lightBlue' : 'transparent'}
-            borderBottomWidth={location.pathname === '/reference/' ? '3px' : 0}
-            borderBottomColor="su.orange"
-            color="su.black"
-            fontWeight={location.pathname === '/reference/' ? 'semibold' : 'normal'}
-            borderRadius="md"
-            variant="ghost"
-            h="auto"
-            w={{ base: 'full', lg: 'auto' }}
-          >
-            Rules Reference
-          </Button>
-
           {/* Navigation links */}
           <HStack
             as="ul"
@@ -173,7 +125,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
             flexDirection={{ base: 'column', lg: 'row' }}
             w={{ base: 'full', lg: 'auto' }}
           >
-            {/* Reference Links - Dropdowns */}
             {/* Schemas Dropdown */}
             <Box as="li">
               <Menu.Root>
@@ -182,11 +133,11 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                     px={4}
                     py={2}
                     _hover={{ bg: 'su.lightOrange' }}
-                    bg={isActive('/reference/schema') ? 'su.lightBlue' : 'transparent'}
-                    borderBottomWidth={isActive('/reference/schema') ? '3px' : 0}
+                    bg={isActive('/schema') ? 'su.lightBlue' : 'transparent'}
+                    borderBottomWidth={isActive('/schema') ? '3px' : 0}
                     borderBottomColor="su.orange"
                     color="su.black"
-                    fontWeight={isActive('/reference/schema') ? 'semibold' : 'normal'}
+                    fontWeight={isActive('/schema') ? 'semibold' : 'normal'}
                     borderRadius="md"
                     variant="ghost"
                     h="auto"
@@ -202,7 +153,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                         <Menu.Item
                           key={schema.id}
                           value={schema.id}
-                          onSelect={() => handleNavigate(`/reference/schema/${schema.id}`)}
+                          onSelect={() => handleNavigate(`/schema/${schema.id}`)}
                         >
                           {schema.title.replace('Salvage Union ', '')}
                         </Menu.Item>
@@ -221,11 +172,11 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                     px={4}
                     py={2}
                     _hover={{ bg: 'su.lightOrange' }}
-                    bg={isActive('/reference/sheets') ? 'su.lightBlue' : 'transparent'}
-                    borderBottomWidth={isActive('/reference/sheets') ? '3px' : 0}
+                    bg={isActive('/sheets') ? 'su.lightBlue' : 'transparent'}
+                    borderBottomWidth={isActive('/sheets') ? '3px' : 0}
                     borderBottomColor="su.orange"
                     color="su.black"
-                    fontWeight={isActive('/reference/sheets') ? 'semibold' : 'normal'}
+                    fontWeight={isActive('/sheets') ? 'semibold' : 'normal'}
                     borderRadius="md"
                     variant="ghost"
                     h="auto"
@@ -237,71 +188,20 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                 <Portal>
                   <Menu.Positioner>
                     <Menu.Content minW="200px">
-                      <Menu.Item
-                        value="mech-sheet"
-                        onSelect={() => handleNavigate('/reference/sheets/mech')}
-                      >
+                      <Menu.Item value="mech-sheet" onSelect={() => handleNavigate('/sheets/mech')}>
                         Mech Live Sheet
                       </Menu.Item>
                       <Menu.Item
                         value="pilot-sheet"
-                        onSelect={() => handleNavigate('/reference/sheets/pilot')}
+                        onSelect={() => handleNavigate('/sheets/pilot')}
                       >
                         Pilot Live Sheet
                       </Menu.Item>
                       <Menu.Item
                         value="crawler-sheet"
-                        onSelect={() => handleNavigate('/reference/sheets/crawler')}
+                        onSelect={() => handleNavigate('/sheets/crawler')}
                       >
                         Crawler Live Sheet
-                      </Menu.Item>
-                    </Menu.Content>
-                  </Menu.Positioner>
-                </Portal>
-              </Menu.Root>
-            </Box>
-
-            {/* My Data Dropdown */}
-            <Box as="li">
-              <Menu.Root>
-                <Menu.Trigger asChild>
-                  <Button
-                    px={4}
-                    py={2}
-                    _hover={{ bg: 'su.lightOrange' }}
-                    bg={isActive('/dashboard') ? 'su.lightBlue' : 'transparent'}
-                    borderBottomWidth={isActive('/dashboard') ? '3px' : 0}
-                    borderBottomColor="su.orange"
-                    color="su.black"
-                    fontWeight={isActive('/dashboard') ? 'semibold' : 'normal'}
-                    borderRadius="md"
-                    variant="ghost"
-                    h="auto"
-                    w={{ base: 'full', lg: 'auto' }}
-                  >
-                    My Data
-                  </Button>
-                </Menu.Trigger>
-                <Portal>
-                  <Menu.Positioner>
-                    <Menu.Content minW="200px">
-                      <Menu.Item value="games" onSelect={() => handleNavigate('/dashboard/games')}>
-                        Games
-                      </Menu.Item>
-                      <Menu.Item value="mechs" onSelect={() => handleNavigate('/dashboard/mechs')}>
-                        Mechs
-                      </Menu.Item>
-                      <Menu.Item
-                        value="pilots"
-                        onSelect={() => handleNavigate('/dashboard/pilots')}
-                      >
-                        Pilots
-                      </Menu.Item>
-                      <Menu.Item
-                        value="crawlers"
-                        onSelect={() => handleNavigate('/dashboard/crawlers')}
-                      >
-                        Crawlers
                       </Menu.Item>
                     </Menu.Content>
                   </Menu.Positioner>
@@ -311,7 +211,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           </HStack>
         </Flex>
 
-        {/* Right section: User info and sign out / Sign in */}
+        {/* Right section: Dashboard, My Data, User info and sign out / Sign in */}
         <Flex
           alignItems="center"
           gap={4}
@@ -320,6 +220,83 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           w={{ base: 'full', lg: 'auto' }}
           ml={{ base: 0, lg: 'auto' }}
         >
+          {user && (
+            <>
+              {/* Dashboard link */}
+              <Button
+                onClick={() => handleNavigate('/dashboard')}
+                px={4}
+                py={2}
+                _hover={{ bg: 'su.lightOrange' }}
+                bg={isActive('/dashboard') ? 'su.lightBlue' : 'transparent'}
+                borderBottomWidth={isActive('/dashboard') ? '3px' : 0}
+                borderBottomColor="su.orange"
+                color="su.black"
+                fontWeight={isActive('/dashboard') ? 'semibold' : 'normal'}
+                borderRadius="md"
+                variant="ghost"
+                h="auto"
+                w={{ base: 'full', lg: 'auto' }}
+              >
+                Dashboard
+              </Button>
+
+              {/* My Data Dropdown */}
+              <Box as="li" listStyleType="none">
+                <Menu.Root>
+                  <Menu.Trigger asChild>
+                    <Button
+                      px={4}
+                      py={2}
+                      _hover={{ bg: 'su.lightOrange' }}
+                      bg={isActive('/dashboard') ? 'su.lightBlue' : 'transparent'}
+                      borderBottomWidth={isActive('/dashboard') ? '3px' : 0}
+                      borderBottomColor="su.orange"
+                      color="su.black"
+                      fontWeight={isActive('/dashboard') ? 'semibold' : 'normal'}
+                      borderRadius="md"
+                      variant="ghost"
+                      h="auto"
+                      w={{ base: 'full', lg: 'auto' }}
+                    >
+                      My Data
+                    </Button>
+                  </Menu.Trigger>
+                  <Portal>
+                    <Menu.Positioner>
+                      <Menu.Content minW="200px">
+                        <Menu.Item
+                          value="games"
+                          onSelect={() => handleNavigate('/dashboard/games')}
+                        >
+                          Games
+                        </Menu.Item>
+                        <Menu.Item
+                          value="mechs"
+                          onSelect={() => handleNavigate('/dashboard/mechs')}
+                        >
+                          Mechs
+                        </Menu.Item>
+                        <Menu.Item
+                          value="pilots"
+                          onSelect={() => handleNavigate('/dashboard/pilots')}
+                        >
+                          Pilots
+                        </Menu.Item>
+                        <Menu.Item
+                          value="crawlers"
+                          onSelect={() => handleNavigate('/dashboard/crawlers')}
+                        >
+                          Crawlers
+                        </Menu.Item>
+                      </Menu.Content>
+                    </Menu.Positioner>
+                  </Portal>
+                </Menu.Root>
+              </Box>
+            </>
+          )}
+
           {user ? (
             <>
               <Text fontSize="sm" color="su.black" fontWeight="medium">
