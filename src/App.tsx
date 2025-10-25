@@ -40,7 +40,7 @@ function AppContent() {
         path="/reference/*"
         element={
           <Flex flexDirection="column" minH="100vh" bg="su.white">
-            <TopNavigation user={user} />
+            <TopNavigation user={user} schemas={schemaIndexData.schemas} />
             <Box as="main" flex="1" pt={{ base: 16, md: 0 }}>
               <Routes>
                 <Route

@@ -12,7 +12,6 @@ import { CargoList } from './CargoList'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { LiveSheetHeader } from '../shared/LiveSheetHeader'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { RoundedBox } from '../shared/RoundedBox'
@@ -88,7 +87,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
   return (
     <LiveSheetLayout>
-      {!id && <LiveSheetHeader title="Mech Live Sheet" />}
       {id && (
         <LiveSheetControlBar
           config={MECH_CONTROL_BAR_CONFIG}

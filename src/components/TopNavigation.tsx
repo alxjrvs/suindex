@@ -3,14 +3,16 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Box, Button, Flex, IconButton, Text, HStack, Menu, Portal } from '@chakra-ui/react'
 import { supabase } from '../lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import type { SchemaInfo } from '../types/schema'
 import { Heading } from './base/Heading'
 import { DiscordSignInButton } from './DiscordSignInButton'
 
 interface TopNavigationProps {
   user: User | null
+  schemas?: SchemaInfo[]
 }
 
-export function TopNavigation({ user }: TopNavigationProps) {
+export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
@@ -196,48 +198,15 @@ export function TopNavigation({ user }: TopNavigationProps) {
                 <Portal>
                   <Menu.Positioner>
                     <Menu.Content maxH="300px" minW="200px">
-                      <Menu.Item
-                        value="abilities"
-                        onSelect={() => handleNavigate('/reference/schema/abilities')}
-                      >
-                        Abilities
-                      </Menu.Item>
-                      <Menu.Item
-                        value="equipment"
-                        onSelect={() => handleNavigate('/reference/schema/equipment')}
-                      >
-                        Equipment
-                      </Menu.Item>
-                      <Menu.Item
-                        value="chassis"
-                        onSelect={() => handleNavigate('/reference/schema/chassis')}
-                      >
-                        Chassis
-                      </Menu.Item>
-                      <Menu.Item
-                        value="patterns"
-                        onSelect={() => handleNavigate('/reference/schema/patterns')}
-                      >
-                        Patterns
-                      </Menu.Item>
-                      <Menu.Item
-                        value="systems"
-                        onSelect={() => handleNavigate('/reference/schema/systems')}
-                      >
-                        Systems
-                      </Menu.Item>
-                      <Menu.Item
-                        value="modules"
-                        onSelect={() => handleNavigate('/reference/schema/modules')}
-                      >
-                        Modules
-                      </Menu.Item>
-                      <Menu.Item
-                        value="classes"
-                        onSelect={() => handleNavigate('/reference/schema/classes')}
-                      >
-                        Classes
-                      </Menu.Item>
+                      {schemas.map((schema) => (
+                        <Menu.Item
+                          key={schema.id}
+                          value={schema.id}
+                          onSelect={() => handleNavigate(`/reference/schema/${schema.id}`)}
+                        >
+                          {schema.title.replace('Salvage Union ', '')}
+                        </Menu.Item>
+                      ))}
                     </Menu.Content>
                   </Menu.Positioner>
                 </Portal>

@@ -11,7 +11,6 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
-import { LiveSheetHeader } from '../shared/LiveSheetHeader'
 import { usePilotLiveSheetState } from './usePilotLiveSheetState'
 
 interface PilotLiveSheetProps {
@@ -75,7 +74,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
 
   return (
     <LiveSheetLayout>
-      {!id && <LiveSheetHeader title="Pilot Live Sheet" />}
       {id && (
         <LiveSheetControlBar
           config={PILOT_CONTROL_BAR_CONFIG}
