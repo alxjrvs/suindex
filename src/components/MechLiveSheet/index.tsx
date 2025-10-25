@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import { Flex, Grid, Text, VStack } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { Flex, Grid, VStack } from '@chakra-ui/react'
 import { SystemModuleSelector } from './SystemModuleSelector'
 import { ChassisSelector } from './ChassisSelector'
 import { PatternSelector } from './PatternSelector'
@@ -16,6 +14,10 @@ import { LiveSheetHeader } from '../shared/LiveSheetHeader'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { RoundedBox } from '../shared/RoundedBox'
+import { LoadingState } from '../shared/LoadingState'
+import { ErrorState } from '../shared/ErrorState'
+import { useModalState } from '../../hooks/useModalState'
+import { useSalvageUnionData } from '../../hooks/useSalvageUnionData'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
 import { QuirkInput } from './QuirkInput'
 import { AppearanceInput } from './AppearanceInput'
@@ -25,8 +27,14 @@ interface MechLiveSheetProps {
 }
 
 export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
-  const [isSelectorOpen, setIsSelectorOpen] = useState(false)
-  const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
+  const selectorModal = useModalState()
+  const cargoModal = useModalState()
+
+  const {
+    chassis: allChassis,
+    systems: allSystems,
+    modules: allModules,
+  } = useSalvageUnionData('chassis', 'systems', 'modules')
 
   const {
     mech,
@@ -48,10 +56,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     hasPendingChanges,
   } = useMechLiveSheetState(id)
 
-  const allChassis = SalvageUnionReference.Chassis.all()
-  const allSystems = SalvageUnionReference.Systems.all()
-  const allModules = SalvageUnionReference.Modules.all()
-
   const stats = selectedChassis?.stats
 
   const canAddMore =
@@ -60,11 +64,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   if (loading) {
     return (
       <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Text fontSize="xl" fontFamily="mono">
-            Loading mech...
-          </Text>
-        </Flex>
+        <LoadingState message="Loading mech..." />
       </LiveSheetLayout>
     )
   }
@@ -72,16 +72,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   if (error) {
     return (
       <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <VStack textAlign="center">
-            <Text fontSize="xl" fontFamily="mono" color="red.600" mb={4}>
-              Error loading mech
-            </Text>
-            <Text fontSize="sm" fontFamily="mono" color="gray.600">
-              {error}
-            </Text>
-          </VStack>
-        </Flex>
+        <ErrorState title="Error loading mech" message={error} />
       </LiveSheetLayout>
     )
   }
@@ -161,7 +152,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         canAddMore={!!canAddMore}
         onRemoveSystem={handleRemoveSystem}
         onRemoveModule={handleRemoveModule}
-        onAddClick={() => setIsSelectorOpen(true)}
+        onAddClick={selectorModal.onOpen}
         disabled={!selectedChassis}
       />
 
@@ -172,7 +163,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           maxCargo={stats?.cargo_cap || 0}
           canAddCargo={!!selectedChassis}
           onRemove={handleRemoveCargo}
-          onAddClick={() => setIsCargoModalOpen(true)}
+          onAddClick={cargoModal.onOpen}
           disabled={!selectedChassis}
         />
 
@@ -189,8 +180,8 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
       <SystemModuleSelector
         availableSystemSlots={Number(stats?.system_slots) - usedSystemSlots || 0}
         availableModuleSlots={Number(stats?.module_slots) - usedModuleSlots || 0}
-        isOpen={isSelectorOpen}
-        onClose={() => setIsSelectorOpen(false)}
+        isOpen={selectorModal.isOpen}
+        onClose={selectorModal.onClose}
         systems={allSystems}
         modules={allModules}
         onSelectSystem={handleAddSystem}
@@ -200,8 +191,8 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
       />
 
       <CargoModal
-        isOpen={isCargoModalOpen}
-        onClose={() => setIsCargoModalOpen(false)}
+        isOpen={cargoModal.isOpen}
+        onClose={cargoModal.onClose}
         onAdd={handleAddCargo}
         maxCargo={stats?.cargo_cap || 0}
         currentCargo={totalCargo}

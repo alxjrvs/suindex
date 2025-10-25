@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import { Flex, Text, VStack } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { Flex } from '@chakra-ui/react'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { AbilitiesList } from './AbilitiesList'
@@ -12,6 +10,10 @@ import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
 import { LiveSheetHeader } from '../shared/LiveSheetHeader'
+import { LoadingState } from '../shared/LoadingState'
+import { ErrorState } from '../shared/ErrorState'
+import { useModalState } from '../../hooks/useModalState'
+import { useSalvageUnionData } from '../../hooks/useSalvageUnionData'
 import { usePilotLiveSheetState } from './usePilotLiveSheetState'
 
 interface PilotLiveSheetProps {
@@ -19,12 +21,14 @@ interface PilotLiveSheetProps {
 }
 
 export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
-  const [isAbilitySelectorOpen, setIsAbilitySelectorOpen] = useState(false)
-  const [isEquipmentSelectorOpen, setIsEquipmentSelectorOpen] = useState(false)
+  const abilitySelector = useModalState()
+  const equipmentSelector = useModalState()
 
-  const allClasses = SalvageUnionReference.Classes.all()
-  const allAbilities = SalvageUnionReference.Abilities.all()
-  const allEquipment = SalvageUnionReference.Equipment.all()
+  const {
+    classes: allClasses,
+    abilities: allAbilities,
+    equipment: allEquipment,
+  } = useSalvageUnionData('classes', 'abilities', 'equipment')
 
   const {
     pilot,
@@ -47,11 +51,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
   if (loading) {
     return (
       <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Text fontSize="xl" fontFamily="mono">
-            Loading pilot...
-          </Text>
-        </Flex>
+        <LoadingState message="Loading pilot..." />
       </LiveSheetLayout>
     )
   }
@@ -59,16 +59,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
   if (error) {
     return (
       <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <VStack textAlign="center">
-            <Text fontSize="xl" fontFamily="mono" color="red.600" mb={4}>
-              Error loading pilot
-            </Text>
-            <Text fontSize="sm" fontFamily="mono" color="gray.600">
-              {error}
-            </Text>
-          </VStack>
-        </Flex>
+        <ErrorState title="Error loading pilot" message={error} />
       </LiveSheetLayout>
     )
   }
@@ -130,12 +121,12 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         abilities={pilot.abilities ?? []}
         legendaryAbility={
           pilot.legendary_ability_id
-            ? allAbilities.find((a) => a.id === pilot.legendary_ability_id) || null
+            ? allAbilities.find((a) => a?.id === pilot.legendary_ability_id) || null
             : null
         }
         onRemove={handleRemoveAbility}
         onRemoveLegendary={handleRemoveLegendaryAbility}
-        onAddClick={() => setIsAbilitySelectorOpen(true)}
+        onAddClick={abilitySelector.onOpen}
         currentTP={pilot.current_tp ?? 0}
         disabled={!selectedClass}
         coreTreeNames={selectedClass?.coreAbilities || []}
@@ -144,7 +135,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
       {/* Equipment Section */}
       <PilotInventory
         equipment={pilot.equipment ?? []}
-        onAddClick={() => setIsEquipmentSelectorOpen(true)}
+        onAddClick={equipmentSelector.onOpen}
         onRemove={handleRemoveEquipment}
         disabled={!selectedClass}
       />
@@ -161,8 +152,8 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
 
       {/* Ability Selector Modal */}
       <AbilitySelector
-        isOpen={isAbilitySelectorOpen}
-        onClose={() => setIsAbilitySelectorOpen(false)}
+        isOpen={abilitySelector.isOpen}
+        onClose={abilitySelector.onClose}
         abilities={allAbilities}
         onSelectAbility={handleAddAbility}
         onSelectLegendaryAbility={handleAddLegendaryAbility}
@@ -175,8 +166,8 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
 
       {/* Equipment Selector Modal */}
       <EquipmentSelector
-        isOpen={isEquipmentSelectorOpen}
-        onClose={() => setIsEquipmentSelectorOpen(false)}
+        isOpen={equipmentSelector.isOpen}
+        onClose={equipmentSelector.onClose}
         equipment={allEquipment}
         onSelectEquipment={handleAddEquipment}
       />
