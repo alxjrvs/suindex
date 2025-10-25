@@ -19,6 +19,8 @@ export function SheetSelect({
   value,
   onChange,
   disabled = false,
+  placeholder = 'Select an option...',
+  loading = false,
   options,
   children,
 }: SheetSelectProps) {
@@ -32,6 +34,7 @@ export function SheetSelect({
         ml={3}
         mb={-2}
         zIndex={1}
+        py={disabled ? 0.5 : 0}
         bg={disabled ? 'gray.600' : undefined}
         color={disabled ? 'gray.300' : undefined}
       >
@@ -54,6 +57,7 @@ export function SheetSelect({
           fontWeight="semibold"
           _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
         >
+          <option value="">{loading ? 'Loading...' : placeholder}</option>
           {options
             ? options.map((option) => (
                 <option key={option.id} value={option.id}>
