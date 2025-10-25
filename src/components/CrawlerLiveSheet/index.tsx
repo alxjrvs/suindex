@@ -96,7 +96,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
       )}
       {/* Header Section */}
-      <Flex gap={6}>
+      <Flex gap={6} alignItems="stretch">
         <CrawlerHeaderInputs
           name={crawler.name}
           crawlerTypeId={crawler.crawler_type_id ?? null}
@@ -189,25 +189,25 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
             />
           )}
 
-          {/* Cargo Bay */}
-          <CargoBay
-            cargo={crawler.cargo ?? []}
-            onAddCargo={() => setIsCargoModalOpen(true)}
-            onRemoveCargo={handleRemoveCargo}
-            damaged={storageBay?.damaged}
+          <Notes
+            notes={crawler.notes ?? ''}
+            onChange={(value) => updateCrawler({ notes: value })}
+            backgroundColor="bg.builder.crawler"
+            borderWidth={4}
+            placeholder="Add notes about your crawler..."
             disabled={!selectedCrawlerType}
           />
+          {/* Cargo Bay */}
         </VStack>
-
-        {/* Notes */}
-        <Notes
-          notes={crawler.notes ?? ''}
-          onChange={(value) => updateCrawler({ notes: value })}
-          backgroundColor="bg.builder.crawler"
-          borderWidth={4}
-          placeholder="Add notes about your crawler..."
+        <CargoBay
+          cargo={crawler.cargo ?? []}
+          onAddCargo={() => setIsCargoModalOpen(true)}
+          onRemoveCargo={handleRemoveCargo}
+          damaged={storageBay?.damaged}
           disabled={!selectedCrawlerType}
         />
+
+        {/* Notes */}
       </Grid>
 
       {/* Cargo Modal */}

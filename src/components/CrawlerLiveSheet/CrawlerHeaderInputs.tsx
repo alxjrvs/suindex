@@ -36,7 +36,7 @@ export function CrawlerHeaderInputs({
       borderWidth="4px"
       disabled={disabled}
     >
-      <VStack gap={4} alignItems="stretch" w="full" h="full">
+      <VStack gap={4} alignItems="stretch" w="full" h="full" flex="1">
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
           <SheetInput
             label="Name"
@@ -61,7 +61,6 @@ export function CrawlerHeaderInputs({
           value={description}
           onChange={onDescriptionChange}
           placeholder="Enter crawler description..."
-          height="24"
           disabled={disabled}
         />
       </VStack>

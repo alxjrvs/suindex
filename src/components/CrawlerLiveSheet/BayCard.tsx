@@ -39,7 +39,7 @@ export function BayCard({ bay, onUpdate, disabled = false }: BayCardProps) {
           label={bay.damaged ? 'Repair' : 'Damage'}
           value={bay.damaged ? '+' : '-'}
           onClick={() => onUpdate({ damaged: !bay.damaged })}
-          bg={bay.damaged ? 'su.brick' : 'su.orange'}
+          bg={bay.damaged ? 'su.orange' : 'su.brick'}
           valueColor="su.white"
           disabled={disabled}
         />

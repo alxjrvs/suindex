@@ -1,8 +1,6 @@
-import { Box, Flex, Grid, Text } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
 import { RoundedBox } from '../shared/RoundedBox'
 import { AddStatButton } from '../shared/AddStatButton'
+import { DynamicBay } from '../shared/DynamicBay'
 import type { CargoItem } from '../../types/database'
 import { useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
@@ -23,7 +21,6 @@ export function CargoBay({
   disabled = false,
 }: CargoBayProps) {
   const titleRotation = useMemo(() => getTiltRotation(), [])
-  const cargoRotation = useMemo(() => getTiltRotation(), [])
 
   return (
     <RoundedBox
@@ -39,66 +36,7 @@ export function CargoBay({
       padding={4}
       disabled={disabled}
     >
-      <Box
-        transform={damaged ? `rotate(${cargoRotation}deg)` : undefined}
-        transition="transform 0.3s ease"
-        opacity={damaged ? 0.5 : 1}
-      >
-        <Flex alignItems="center" justifyContent="space-between" mb={2}>
-          <Heading level="h4" textTransform="uppercase">
-            Cargo
-          </Heading>
-        </Flex>
-
-        <Grid gridTemplateColumns="repeat(4, 1fr)" gap={2}>
-          {cargo.map((item) => (
-            <Box
-              key={item.id}
-              position="relative"
-              bg="bg.input"
-              borderWidth="2px"
-              borderColor="fg.input"
-              borderRadius="lg"
-              p={1}
-              aspectRatio="1"
-              display="flex"
-              flexDirection="column"
-              opacity={disabled ? 0.3 : 1}
-            >
-              <Button
-                onClick={() => onRemoveCargo(item.id)}
-                position="absolute"
-                top="0.5"
-                right="0.5"
-                bg="su.brick"
-                color="su.white"
-                w="4"
-                h="4"
-                borderRadius="md"
-                fontWeight="bold"
-                _hover={{ bg: 'su.black' }}
-                fontSize="xs"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                lineHeight="none"
-                aria-label="Remove"
-                disabled={disabled}
-              >
-                ✕
-              </Button>
-              <Flex flex="1" flexDirection="column" alignItems="center" justifyContent="center">
-                <Text fontSize="lg" fontWeight="bold" color="fg.input">
-                  {item.amount}
-                </Text>
-                <Text fontSize="10px" color="fg.input" textAlign="center" lineClamp={1} px={0.5}>
-                  {item.description}
-                </Text>
-              </Flex>
-            </Box>
-          ))}
-        </Grid>
-      </Box>
+      <DynamicBay items={cargo} maxCapacity={54} onRemove={onRemoveCargo} disabled={disabled} />
     </RoundedBox>
   )
 }
