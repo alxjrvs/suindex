@@ -9,24 +9,7 @@ import type {
   SURefEquipment,
   SURefAbilityTreeRequirement,
 } from 'salvageunion-reference'
-
-// Mock the SalvageUnionReference
-vi.mock('salvageunion-reference', () => ({
-  SalvageUnionReference: {
-    Classes: {
-      all: vi.fn(),
-    },
-    Abilities: {
-      all: vi.fn(),
-    },
-    Equipment: {
-      all: vi.fn(),
-    },
-    AbilityTreeRequirements: {
-      all: vi.fn(),
-    },
-  },
-}))
+import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Advanced Classes', () => {
   const mockClasses: SURefClass[] = [
@@ -245,9 +228,11 @@ describe('PilotLiveSheet - Advanced Classes', () => {
   const mockEquipment: SURefEquipment[] = []
 
   beforeEach(() => {
-    vi.mocked(SalvageUnionReference.Classes.all).mockReturnValue(mockClasses)
-    vi.mocked(SalvageUnionReference.Abilities.all).mockReturnValue(mockAbilities)
-    vi.mocked(SalvageUnionReference.Equipment.all).mockReturnValue(mockEquipment)
+    setupSalvageUnionMocks({
+      classes: mockClasses,
+      abilities: mockAbilities,
+      equipment: mockEquipment,
+    })
     vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue(
       mockTreeRequirements
     )

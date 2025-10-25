@@ -35,6 +35,42 @@ vi.mock('../lib/supabase', () => ({
   },
 }))
 
+// Mock SalvageUnionReference globally for all tests
+vi.mock('salvageunion-reference', () => ({
+  SalvageUnionReference: {
+    Classes: {
+      all: vi.fn(),
+    },
+    Abilities: {
+      all: vi.fn(),
+    },
+    Equipment: {
+      all: vi.fn(),
+    },
+    AbilityTreeRequirements: {
+      all: vi.fn(),
+    },
+    Crawlers: {
+      all: vi.fn(),
+    },
+    CrawlerBays: {
+      all: vi.fn(),
+    },
+    CrawlerTechLevels: {
+      all: vi.fn(),
+    },
+    Chassis: {
+      all: vi.fn(),
+    },
+    Systems: {
+      all: vi.fn(),
+    },
+    Modules: {
+      all: vi.fn(),
+    },
+  },
+}))
+
 // IntersectionObserver mock
 const IntersectionObserverMock = vi.fn(
   () =>

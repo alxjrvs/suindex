@@ -4,24 +4,7 @@ import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefClass, SURefAbility, SURefEquipment } from 'salvageunion-reference'
-
-// Mock the SalvageUnionReference
-vi.mock('salvageunion-reference', () => ({
-  SalvageUnionReference: {
-    Classes: {
-      all: vi.fn(),
-    },
-    Abilities: {
-      all: vi.fn(),
-    },
-    Equipment: {
-      all: vi.fn(),
-    },
-    AbilityTreeRequirements: {
-      all: vi.fn(),
-    },
-  },
-}))
+import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Ability Removal', () => {
   const mockClasses: SURefClass[] = [
@@ -81,9 +64,11 @@ describe('PilotLiveSheet - Ability Removal', () => {
   const mockEquipment: SURefEquipment[] = []
 
   beforeEach(() => {
-    vi.mocked(SalvageUnionReference.Classes.all).mockReturnValue(mockClasses)
-    vi.mocked(SalvageUnionReference.Abilities.all).mockReturnValue(mockAbilities)
-    vi.mocked(SalvageUnionReference.Equipment.all).mockReturnValue(mockEquipment)
+    setupSalvageUnionMocks({
+      classes: mockClasses,
+      abilities: mockAbilities,
+      equipment: mockEquipment,
+    })
     vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
     // Mock window.confirm to return true by default
     vi.spyOn(window, 'confirm').mockReturnValue(true)
