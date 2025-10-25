@@ -47,8 +47,7 @@ export function MechsGrid() {
       items={mechs}
       renderItem={(mech) => {
         const chassisName = mech.chassis_id
-          ? (SalvageUnionReference.Chassis.findById(mech.chassis_id)?.name ??
-            'Unknown')
+          ? (SalvageUnionReference.Chassis.findById(mech.chassis_id)?.name ?? 'Unknown')
           : 'No Chassis'
 
         return (
