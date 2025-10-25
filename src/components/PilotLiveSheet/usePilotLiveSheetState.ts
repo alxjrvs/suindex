@@ -29,10 +29,6 @@ const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
 }
 
 export function usePilotLiveSheetState(id?: string) {
-  const allClasses = SalvageUnionReference.Classes.all()
-  const allAbilities = SalvageUnionReference.Abilities.all()
-  const allEquipment = SalvageUnionReference.Equipment.all()
-
   const {
     entity: pilot,
     updateEntity,
@@ -53,9 +49,9 @@ export function usePilotLiveSheetState(id?: string) {
     [updateEntity]
   )
 
-  const selectedClass = allClasses.find((c) => c.id === pilot.class_id)
+  const selectedClass = SalvageUnionReference.Classes.findById(pilot.class_id ?? '')
 
-  const selectedAdvancedClass = allClasses.find((c) => c.id === pilot.advanced_class_id)
+  const selectedAdvancedClass = SalvageUnionReference.Classes.findById(pilot.advanced_class_id ?? '')
 
   const availableAdvancedClasses = useMemo(() => {
     if ((pilot.abilities ?? []).length < 6) {
@@ -69,7 +65,7 @@ export function usePilotLiveSheetState(id?: string) {
 
     const abilitiesByTree: Record<string, number> = {}
     ;(pilot.abilities ?? []).forEach((abilityId) => {
-      const ability = allAbilities.find((a) => a.id === abilityId)
+      const ability = SalvageUnionReference.Abilities.findById(abilityId)
       if (!ability) return
       const tree = ability.tree
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
@@ -81,14 +77,13 @@ export function usePilotLiveSheetState(id?: string) {
       return []
     }
 
-    const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
     const results: AdvancedClassOption[] = []
 
     // Check hybrid classes
-    const hybridClasses = allClasses.filter((cls) => cls.type === 'hybrid')
+    const hybridClasses = SalvageUnionReference.Classes.where((cls) => cls.type === 'hybrid')
 
     hybridClasses.forEach((cls) => {
-      const treeRequirement = allTreeRequirements.find((req) => req.tree === cls.advancedAbilities)
+      const treeRequirement = SalvageUnionReference.AbilityTreeRequirements.find((req) => req.tree === cls.advancedAbilities)
 
       if (!treeRequirement || !treeRequirement.requirement) {
         return
@@ -123,7 +118,7 @@ export function usePilotLiveSheetState(id?: string) {
     }
 
     return results
-  }, [allClasses, pilot.abilities, selectedClass, allAbilities])
+  }, [pilot.abilities, selectedClass])
 
   const handleClassChange = useCallback(
     (classId: string | null) => {
@@ -172,7 +167,7 @@ export function usePilotLiveSheetState(id?: string) {
 
   const handleAddAbility = useCallback(
     (abilityId: string) => {
-      const ability = allAbilities.find((a) => a.id === abilityId)
+      const ability = SalvageUnionReference.Abilities.findById(abilityId)
       if (!ability) return
 
       const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
@@ -191,7 +186,6 @@ export function usePilotLiveSheetState(id?: string) {
       })
     },
     [
-      allAbilities,
       selectedClass,
       selectedAdvancedClass,
       pilot.current_tp,
@@ -213,7 +207,7 @@ export function usePilotLiveSheetState(id?: string) {
 
   const handleAddLegendaryAbility = useCallback(
     (abilityId: string) => {
-      const ability = allAbilities.find((a) => a.id === abilityId)
+      const ability = SalvageUnionReference.Abilities.findById(abilityId)
       if (!ability) return
 
       const cost = 3 // Legendary abilities always cost 3 TP
@@ -228,7 +222,7 @@ export function usePilotLiveSheetState(id?: string) {
         legendary_ability_id: abilityId,
       })
     },
-    [allAbilities, pilot.current_tp, updatePilot]
+    [pilot.current_tp, updatePilot]
   )
 
   const handleRemoveLegendaryAbility = useCallback(() => {
@@ -241,7 +235,7 @@ export function usePilotLiveSheetState(id?: string) {
 
   const handleAddEquipment = useCallback(
     (equipmentId: string) => {
-      const equipment = allEquipment.find((e) => e.id === equipmentId)
+      const equipment = SalvageUnionReference.Equipment.findById(equipmentId)
       if (!equipment) return
 
       // Check if inventory is full (max 6 slots)
@@ -254,7 +248,7 @@ export function usePilotLiveSheetState(id?: string) {
         equipment: [...(pilot.equipment ?? []), equipmentId],
       })
     },
-    [allEquipment, pilot.equipment, updatePilot]
+    [pilot.equipment, updatePilot]
   )
 
   const handleRemoveEquipment = useCallback(
@@ -262,7 +256,7 @@ export function usePilotLiveSheetState(id?: string) {
       const equipmentId = (pilot.equipment ?? [])[index]
       if (!equipmentId) return
 
-      const equipment = allEquipment.find((e) => e.id === equipmentId)
+      const equipment = SalvageUnionReference.Equipment.findById(equipmentId)
       const equipmentName = equipment?.name || 'this equipment'
 
       if (window.confirm(`Are you sure you want to remove ${equipmentName}?`)) {
