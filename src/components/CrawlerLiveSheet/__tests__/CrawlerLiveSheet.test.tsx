@@ -8,7 +8,6 @@ describe('CrawlerLiveSheet', () => {
   // Get real data from salvageunion-reference
   const allCrawlers = SalvageUnionReference.Crawlers.all()
   const allBays = SalvageUnionReference.CrawlerBays.all()
-  const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
 
   if (allCrawlers.length === 0) {
     throw new Error('No crawlers found in salvageunion-reference')
@@ -20,9 +19,6 @@ describe('CrawlerLiveSheet', () => {
 
   // Use first crawler for most tests
   const testCrawler = allCrawlers[0]
-
-  // Get non-storage bays for bay tests
-  const nonStorageBays = allBays.filter((b) => b.name !== 'Storage Bay')
 
   beforeEach(() => {
     // No mocks needed - using real data

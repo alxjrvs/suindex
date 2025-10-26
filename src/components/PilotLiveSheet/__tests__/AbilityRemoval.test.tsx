@@ -20,7 +20,6 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
   // Get specific abilities for testing
   const level1Abilities = hackerAbilities.filter((a) => a.level === 1)
-  const level2Abilities = hackerAbilities.filter((a) => a.level === 2)
 
   if (level1Abilities.length === 0) {
     throw new Error('No level 1 abilities found for Hacker class')

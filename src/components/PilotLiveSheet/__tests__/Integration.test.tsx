@@ -7,7 +7,6 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 describe('PilotLiveSheet - Integration Tests', () => {
   // Get real data from salvageunion-reference
   const allClasses = SalvageUnionReference.Classes.all()
-  const allAbilities = SalvageUnionReference.Abilities.all()
   const allEquipment = SalvageUnionReference.Equipment.all()
 
   // Find specific classes for testing
@@ -22,8 +21,6 @@ describe('PilotLiveSheet - Integration Tests', () => {
     throw new Error('Fabricator class not found in salvageunion-reference')
   }
 
-  // Get abilities from Hacker's core trees
-  const electronicsAbilities = allAbilities.filter((a) => a.tree === 'Electronics')
   const testEquipment = allEquipment.slice(0, 2) // Get first 2 equipment items for testing
 
   beforeEach(() => {

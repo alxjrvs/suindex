@@ -16,9 +16,6 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
     throw new Error('Hacker class not found in salvageunion-reference')
   }
 
-  // Get abilities from Hacker's trees
-  const electronicsAbilities = allAbilities.filter((a) => a.tree === 'Electronics')
-
   // Get legendary abilities for Hacker class
   const legendaryAbilityNames = new Set(hackerClass.legendaryAbilities || [])
   const legendaryAbilities = allAbilities.filter((a) => legendaryAbilityNames.has(a.name))

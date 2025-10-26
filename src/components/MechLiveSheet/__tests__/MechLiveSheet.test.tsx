@@ -7,8 +7,6 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 describe('MechLiveSheet', () => {
   // Get real data from salvageunion-reference
   const allChassis = SalvageUnionReference.Chassis.all()
-  const allSystems = SalvageUnionReference.Systems.all()
-  const allModules = SalvageUnionReference.Modules.all()
 
   if (allChassis.length === 0) {
     throw new Error('No chassis found in salvageunion-reference')
@@ -19,10 +17,6 @@ describe('MechLiveSheet', () => {
 
   // Use first chassis for most tests
   const testChassis = allChassis[0]
-
-  // Get tech level 1 and 2 chassis for grouping tests
-  const techLevel1Chassis = allChassis.filter((c) => c.stats.tech_level === 1)
-  const techLevel2Chassis = allChassis.filter((c) => c.stats.tech_level === 2)
 
   beforeEach(() => {
     // No mocks needed - using real data
