@@ -34,7 +34,7 @@ describe('DiscordSignInButton', () => {
     it('should call signInWithDiscord when clicked', async () => {
       const user = userEvent.setup()
       const mockSignIn = vi.mocked(api.signInWithDiscord)
-      
+
       render(<DiscordSignInButton />)
 
       const button = screen.getByRole('button', { name: /sign in with discord/i })
@@ -48,10 +48,10 @@ describe('DiscordSignInButton', () => {
     it('should show loading state when signing in', async () => {
       const user = userEvent.setup()
       const mockSignIn = vi.mocked(api.signInWithDiscord)
-      
+
       // Make signIn hang to test loading state
       mockSignIn.mockImplementation(() => new Promise(() => {}))
-      
+
       render(<DiscordSignInButton />)
 
       const button = screen.getByRole('button', { name: /sign in with discord/i })
@@ -65,10 +65,10 @@ describe('DiscordSignInButton', () => {
     it('should disable button while loading', async () => {
       const user = userEvent.setup()
       const mockSignIn = vi.mocked(api.signInWithDiscord)
-      
+
       // Make signIn hang to test loading state
       mockSignIn.mockImplementation(() => new Promise(() => {}))
-      
+
       render(<DiscordSignInButton />)
 
       const button = screen.getByRole('button', { name: /sign in with discord/i })
@@ -83,19 +83,16 @@ describe('DiscordSignInButton', () => {
       const user = userEvent.setup()
       const mockSignIn = vi.mocked(api.signInWithDiscord)
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-      
+
       mockSignIn.mockRejectedValue(new Error('Sign in failed'))
-      
+
       render(<DiscordSignInButton />)
 
       const button = screen.getByRole('button', { name: /sign in with discord/i })
       await user.click(button)
 
       await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-          'Error signing in:',
-          expect.any(Error)
-        )
+        expect(consoleErrorSpy).toHaveBeenCalledWith('Error signing in:', expect.any(Error))
       })
 
       consoleErrorSpy.mockRestore()
@@ -105,7 +102,7 @@ describe('DiscordSignInButton', () => {
       const user = userEvent.setup()
       const mockSignIn = vi.mocked(api.signInWithDiscord)
       const customRedirect = 'https://example.com/custom'
-      
+
       render(<DiscordSignInButton redirectTo={customRedirect} />)
 
       const button = screen.getByRole('button', { name: /sign in with discord/i })
@@ -117,4 +114,3 @@ describe('DiscordSignInButton', () => {
     })
   })
 })
-
