@@ -5,6 +5,7 @@ This directory contains all Supabase database interactions organized by entity t
 ## Structure
 
 ### `auth.ts` - Authentication
+
 - `getCurrentUser()` - Get the current authenticated user
 - `getSession()` - Get the current session
 - `signInWithDiscord(redirectUrl)` - Sign in with Discord OAuth
@@ -12,7 +13,9 @@ This directory contains all Supabase database interactions organized by entity t
 - `onAuthStateChange(callback)` - Listen for auth state changes
 
 ### `entities.ts` - Generic Entity Operations
+
 Generic functions for any table:
+
 - `fetchEntity<T>(table, id)` - Fetch a single entity
 - `fetchUserEntities<T>(table, userId, options)` - Fetch all user entities with optional filtering/ordering
 - `updateEntity<T>(table, id, updates)` - Update an entity
@@ -20,6 +23,7 @@ Generic functions for any table:
 - `deleteEntity(table, id)` - Delete an entity
 
 ### `games.ts` - Games
+
 - `fetchGame(gameId)` - Fetch a single game
 - `fetchUserGames(userId)` - Fetch all games for a user
 - `createGame(name, description, createdBy)` - Create a new game
@@ -27,6 +31,7 @@ Generic functions for any table:
 - `fetchGameMembers(gameId)` - Fetch all members of a game
 
 ### `crawlers.ts` - Crawlers
+
 - `fetchCrawler(crawlerId)` - Fetch a single crawler
 - `fetchUserCrawlers(userId)` - Fetch all crawlers for a user
 - `fetchGameCrawler(gameId)` - Fetch crawler for a specific game
@@ -34,6 +39,7 @@ Generic functions for any table:
 - `updateCrawler(crawlerId, updates)` - Update a crawler
 
 ### `pilots.ts` - Pilots
+
 - `fetchPilot(pilotId)` - Fetch a single pilot
 - `fetchUserPilots(userId)` - Fetch all pilots for a user
 - `fetchCrawlerPilots(crawlerId)` - Fetch all pilots for a crawler
@@ -41,6 +47,7 @@ Generic functions for any table:
 - `updatePilot(pilotId, updates)` - Update a pilot
 
 ### `mechs.ts` - Mechs
+
 - `fetchMech(mechId)` - Fetch a single mech
 - `fetchUserMechs(userId)` - Fetch all mechs for a user
 - `fetchPilotMech(pilotId)` - Fetch mech for a specific pilot
@@ -73,4 +80,3 @@ const crawlers = await fetchUserCrawlers(user.id)
 4. **Testable** - Easy to mock for unit tests
 5. **Maintainable** - Changes to API logic only need to be made once
 6. **Reusable** - Functions can be used across hooks and components
-

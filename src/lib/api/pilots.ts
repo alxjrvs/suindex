@@ -7,11 +7,7 @@ export type PilotRow = Tables<'pilots'>
  * Fetch a single pilot by ID
  */
 export async function fetchPilot(pilotId: string): Promise<PilotRow> {
-  const { data, error } = await supabase
-    .from('pilots')
-    .select('*')
-    .eq('id', pilotId)
-    .single()
+  const { data, error } = await supabase.from('pilots').select('*').eq('id', pilotId).single()
 
   if (error) throw error
   if (!data) throw new Error('Pilot not found')
@@ -59,11 +55,7 @@ export async function createPilot(userId: string): Promise<PilotRow> {
     user_id: userId,
   }
 
-  const { data, error } = await supabase
-    .from('pilots')
-    .insert(pilotData)
-    .select()
-    .single()
+  const { data, error } = await supabase.from('pilots').insert(pilotData).select().single()
 
   if (error) throw error
   if (!data) throw new Error('Failed to create pilot')
@@ -73,15 +65,8 @@ export async function createPilot(userId: string): Promise<PilotRow> {
 /**
  * Update a pilot
  */
-export async function updatePilot(
-  pilotId: string,
-  updates: Partial<PilotRow>
-): Promise<void> {
-  const { error } = await supabase
-    .from('pilots')
-    .update(updates)
-    .eq('id', pilotId)
+export async function updatePilot(pilotId: string, updates: Partial<PilotRow>): Promise<void> {
+  const { error } = await supabase.from('pilots').update(updates).eq('id', pilotId)
 
   if (error) throw error
 }
-

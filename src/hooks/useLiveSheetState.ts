@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { fetchEntity, updateEntity } from '../lib/api'
+import { fetchEntity, updateEntity as updateEntityAPI } from '../lib/api'
 import type { ValidTable } from '../types/database'
 
 export interface UseLiveSheetStateConfig<T> {
@@ -72,7 +72,7 @@ export function useLiveSheetState<T extends { id: string }>(
       try {
         isSavingRef.current = true
 
-        await updateEntity<T>(config.table, config.id, updates)
+        await updateEntityAPI<T>(config.table, config.id, updates)
         setError(null)
       } catch (err) {
         console.error(`Error saving ${config.table}:`, err)

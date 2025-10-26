@@ -7,11 +7,7 @@ export type MechRow = Tables<'mechs'>
  * Fetch a single mech by ID
  */
 export async function fetchMech(mechId: string): Promise<MechRow> {
-  const { data, error } = await supabase
-    .from('mechs')
-    .select('*')
-    .eq('id', mechId)
-    .single()
+  const { data, error } = await supabase.from('mechs').select('*').eq('id', mechId).single()
 
   if (error) throw error
   if (!data) throw new Error('Mech not found')
@@ -52,10 +48,7 @@ export async function fetchPilotMech(pilotId: string): Promise<MechRow | null> {
 export async function fetchPilotsMechs(pilotIds: string[]): Promise<MechRow[]> {
   if (pilotIds.length === 0) return []
 
-  const { data, error } = await supabase
-    .from('mechs')
-    .select('*')
-    .in('pilot_id', pilotIds)
+  const { data, error } = await supabase.from('mechs').select('*').in('pilot_id', pilotIds)
 
   if (error) throw error
   return (data || []) as MechRow[]
@@ -73,11 +66,7 @@ export async function createMech(userId: string): Promise<MechRow> {
     user_id: userId,
   }
 
-  const { data, error } = await supabase
-    .from('mechs')
-    .insert(mechData)
-    .select()
-    .single()
+  const { data, error } = await supabase.from('mechs').insert(mechData).select().single()
 
   if (error) throw error
   if (!data) throw new Error('Failed to create mech')
@@ -87,15 +76,8 @@ export async function createMech(userId: string): Promise<MechRow> {
 /**
  * Update a mech
  */
-export async function updateMech(
-  mechId: string,
-  updates: Partial<MechRow>
-): Promise<void> {
-  const { error } = await supabase
-    .from('mechs')
-    .update(updates)
-    .eq('id', mechId)
+export async function updateMech(mechId: string, updates: Partial<MechRow>): Promise<void> {
+  const { error } = await supabase.from('mechs').update(updates).eq('id', mechId)
 
   if (error) throw error
 }
-
