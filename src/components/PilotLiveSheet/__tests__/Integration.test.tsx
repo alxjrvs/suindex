@@ -2,25 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { findCoreClass, findHybridClass, getEquipment } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Integration Tests', () => {
   // Get real data from salvageunion-reference
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const allHybridClasses = SalvageUnionReference.HybridClasses.all()
-  const allEquipment = SalvageUnionReference.Equipment.all()
-
-  // Find specific classes for testing
-  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
-  const fabricatorClass = allHybridClasses.find((c) => c.name === 'Fabricator') // Hybrid class
-
-  if (!hackerClass) {
-    throw new Error('Hacker class not found in salvageunion-reference')
-  }
-
-  if (!fabricatorClass) {
-    throw new Error('Fabricator class not found in salvageunion-reference')
-  }
+  const hackerClass = findCoreClass('Hacker')
+  const fabricatorClass = findHybridClass('Fabricator') // Hybrid class
+  const allEquipment = getEquipment()
 
   const testEquipment = allEquipment.slice(0, 2) // Get first 2 equipment items for testing
 

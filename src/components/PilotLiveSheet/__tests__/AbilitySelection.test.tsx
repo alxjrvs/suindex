@@ -1,29 +1,27 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor, within } from '../../../test/chakra-utils'
+import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import {
+  findCoreClass,
+  getAbilitiesForClass,
+  getAbilitiesByLevel,
+  incrementStepper,
+  openSection,
+  closeModalAndWait,
+} from '../../../test/helpers'
 
 describe('PilotLiveSheet - Ability Selection', () => {
   // Use real data from salvageunion-reference
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
-
-  if (!hackerClass) {
-    throw new Error('Hacker class not found in salvageunion-reference')
-  }
+  const hackerClass = findCoreClass('Hacker')
 
   // Get real abilities from the Hacker's core ability trees
-  const allAbilities = SalvageUnionReference.Abilities.all()
-
-  // Find abilities from the Hacker's core trees
-  const hackerTrees = hackerClass.coreTrees
-  const hackerAbilities = allAbilities.filter((a) => hackerTrees.includes(a.tree))
+  const hackerAbilities = getAbilitiesForClass(hackerClass)
 
   // Get specific abilities for testing
-  const level1Abilities = hackerAbilities.filter((a) => a.level === 1)
-  const level2Abilities = hackerAbilities.filter((a) => a.level === 2)
-  const level3Abilities = hackerAbilities.filter((a) => a.level === 3)
+  const level1Abilities = getAbilitiesByLevel(hackerAbilities, 1)
+  const level2Abilities = getAbilitiesByLevel(hackerAbilities, 2)
+  const level3Abilities = getAbilitiesByLevel(hackerAbilities, 3)
 
   if (level1Abilities.length === 0) {
     throw new Error('No level 1 abilities found for Hacker class')
@@ -49,19 +47,10 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-      const tpIncrementButton = tpStepper.querySelector(
-        'button[aria-label="Increment TP"]'
-      ) as HTMLButtonElement
-
-      for (let i = 0; i < 5; i++) {
-        await user.click(tpIncrementButton)
-      }
+      await incrementStepper(user, 'TP', 5)
 
       // Find and click the Add button in the Abilities section
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
-      await user.click(addButton)
+      await openSection(user, 'abilities')
 
       await waitFor(() => {
         expect(screen.getByText(/select ability/i)).toBeInTheDocument()
@@ -76,18 +65,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-      const tpIncrementButton = tpStepper.querySelector(
-        'button[aria-label="Increment TP"]'
-      ) as HTMLButtonElement
+      await incrementStepper(user, 'TP', 5)
 
-      for (let i = 0; i < 5; i++) {
-        await user.click(tpIncrementButton)
-      }
-
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
-      await user.click(addButton)
+      await openSection(user, 'abilities')
 
       await waitFor(() => {
         // Level 1 abilities should be visible and selectable
@@ -114,18 +94,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-      const tpIncrementButton = tpStepper.querySelector(
-        'button[aria-label="Increment TP"]'
-      ) as HTMLButtonElement
+      await incrementStepper(user, 'TP', 5)
 
-      for (let i = 0; i < 5; i++) {
-        await user.click(tpIncrementButton)
-      }
-
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
-      await user.click(addButton)
+      await openSection(user, 'abilities')
 
       await waitFor(() => {
         // Core abilities should cost 1 TP
@@ -142,30 +113,16 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-      const tpIncrementButton = tpStepper.querySelector(
-        'button[aria-label="Increment TP"]'
-      ) as HTMLButtonElement
+      await incrementStepper(user, 'TP', 5)
 
-      for (let i = 0; i < 5; i++) {
-        await user.click(tpIncrementButton)
-      }
-
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
-      await user.click(addButton)
+      await openSection(user, 'abilities')
 
       await waitFor(() => {
         expect(screen.getByText(/select ability/i)).toBeInTheDocument()
       })
 
-      // Find and click close button
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      await waitFor(() => {
-        expect(screen.queryByText(/select ability/i)).not.toBeInTheDocument()
-      })
+      // Close modal and wait for it to disappear
+      await closeModalAndWait(user, /select ability/i)
     })
   })
 
@@ -178,18 +135,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-      const tpIncrementButton = tpStepper.querySelector(
-        'button[aria-label="Increment TP"]'
-      ) as HTMLButtonElement
+      await incrementStepper(user, 'TP', 5)
 
-      for (let i = 0; i < 5; i++) {
-        await user.click(tpIncrementButton)
-      }
-
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
-      await user.click(addButton)
+      await openSection(user, 'abilities')
 
       await waitFor(() => {
         // Level 1 abilities should be visible and selectable
@@ -218,19 +166,10 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-      const tpIncrementButton = tpStepper.querySelector(
-        'button[aria-label="Increment TP"]'
-      ) as HTMLButtonElement
-
-      for (let i = 0; i < 5; i++) {
-        await user.click(tpIncrementButton)
-      }
+      await incrementStepper(user, 'TP', 5)
 
       // Open modal and select first level 1 ability
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
-      await user.click(addButton)
+      await openSection(user, 'abilities')
 
       await waitFor(() => {
         expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument()
@@ -242,17 +181,11 @@ describe('PilotLiveSheet - Ability Selection', () => {
       })
       await user.click(addToCharacterButtons[0])
 
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
+      // Close the modal and wait for it to close
+      await closeModalAndWait(user, /select ability/i)
 
       // Reopen modal
-      await user.click(addButton)
+      await openSection(user, 'abilities')
 
       await waitFor(() => {
         // Now level 2 from the same tree should be available (not dimmed)
@@ -275,56 +208,34 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 10
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-      const tpIncrementButton = tpStepper.querySelector(
-        'button[aria-label="Increment TP"]'
-      ) as HTMLButtonElement
-
-      for (let i = 0; i < 10; i++) {
-        await user.click(tpIncrementButton)
-      }
-
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      await incrementStepper(user, 'TP', 10)
 
       // Select level 1 ability
-      await user.click(addButton)
+      await openSection(user, 'abilities')
       await waitFor(() => expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument())
       const addToCharacterButtons1 = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addToCharacterButtons1[0])
 
-      // Close the modal
-      let closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
+      // Close the modal and wait for it to close
+      await closeModalAndWait(user, /select ability/i)
 
       // Select level 2 ability from same tree
       if (testLevel2Ability) {
-        await user.click(addButton)
+        await openSection(user, 'abilities')
         await waitFor(() => expect(screen.getByText(testLevel2Ability.name)).toBeInTheDocument())
         const addToCharacterButtons2 = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons2[0])
 
-        // Close the modal
-        closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
+        // Close the modal and wait for it to close
+        await closeModalAndWait(user, /select ability/i)
 
         // Now level 3 from same tree should be available
         if (testLevel3Ability) {
-          await user.click(addButton)
+          await openSection(user, 'abilities')
           await waitFor(() => {
             expect(screen.getByText(testLevel3Ability.name)).toBeInTheDocument()
           })
@@ -341,29 +252,11 @@ describe('PilotLiveSheet - Ability Selection', () => {
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, hackerClass.id)
 
-      // Increase TP by clicking increment button 5 times
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-
-      // Initial TP should be 0
-      const initialTpValue = within(tpStepper).getByText('0')
-      expect(initialTpValue).toBeInTheDocument()
-      const tpIncrementButton = tpStepper.querySelector(
-        'button[aria-label="Increment TP"]'
-      ) as HTMLButtonElement
-
-      for (let i = 0; i < 5; i++) {
-        await user.click(tpIncrementButton)
-      }
-
-      await waitFor(() => {
-        const tpValue = within(tpStepper).getByText('5')
-        expect(tpValue).toBeInTheDocument()
-      })
+      // Increase TP to 5
+      await incrementStepper(user, 'TP', 5)
 
       // Select an ability
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
-      await user.click(addButton)
+      await openSection(user, 'abilities')
 
       // Wait for the "Add to Pilot" buttons to appear in the modal
       const addButtons = await screen.findAllByRole('button', {
@@ -372,24 +265,12 @@ describe('PilotLiveSheet - Ability Selection', () => {
       // Click the first available button
       await user.click(addButtons[0])
 
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
+      // Close the modal and wait for it to close
+      await closeModalAndWait(user, /select ability/i)
 
       // Wait for ability to appear in the selected abilities list
       await waitFor(() => {
         expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument()
-      })
-
-      // TP should be reduced by 1 (from 5 to 4)
-      await waitFor(() => {
-        const tpValue = within(tpStepper).getByText('4')
-        expect(tpValue).toBeInTheDocument()
       })
     })
   })

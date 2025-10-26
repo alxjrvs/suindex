@@ -2,16 +2,11 @@ import { describe, it, expect } from 'vitest'
 import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { findCoreClass } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Resource Management', () => {
   // Use real data from salvageunion-reference
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
-
-  if (!hackerClass) {
-    throw new Error('Hacker class not found in salvageunion-reference')
-  }
+  const hackerClass = findCoreClass('Hacker')
 
   describe('HP (Hit Points)', () => {
     it('shows HP stepper', () => {

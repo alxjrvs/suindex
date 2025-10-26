@@ -2,24 +2,15 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { findCoreClass, getEquipment } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Equipment Inventory', () => {
   // Use real data from salvageunion-reference
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
-
-  if (!hackerClass) {
-    throw new Error('Hacker class not found in salvageunion-reference')
-  }
+  const hackerClass = findCoreClass('Hacker')
 
   // Get real equipment
-  const allEquipment = SalvageUnionReference.Equipment.all()
+  const allEquipment = getEquipment()
   const testEquipment = allEquipment.slice(0, 3) // Get first 3 equipment items for testing
-
-  if (testEquipment.length === 0) {
-    throw new Error('No equipment found in salvageunion-reference')
-  }
 
   beforeEach(() => {
     // Mock window.confirm for equipment removal

@@ -2,28 +2,17 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { findCoreClass, getAbilitiesForClass, getAbilitiesByLevel } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Ability Removal', () => {
   // Use real data from salvageunion-reference
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
-
-  if (!hackerClass) {
-    throw new Error('Hacker class not found in salvageunion-reference')
-  }
+  const hackerClass = findCoreClass('Hacker')
 
   // Get real abilities from the Hacker's core ability trees
-  const allAbilities = SalvageUnionReference.Abilities.all()
-  const hackerTrees = hackerClass.coreTrees
-  const hackerAbilities = allAbilities.filter((a) => hackerTrees.includes(a.tree))
+  const hackerAbilities = getAbilitiesForClass(hackerClass)
 
   // Get specific abilities for testing
-  const level1Abilities = hackerAbilities.filter((a) => a.level === 1)
-
-  if (level1Abilities.length === 0) {
-    throw new Error('No level 1 abilities found for Hacker class')
-  }
+  const level1Abilities = getAbilitiesByLevel(hackerAbilities, 1)
 
   // Get a specific level 1 ability for testing (first one from the list)
   const testAbility = level1Abilities[0]

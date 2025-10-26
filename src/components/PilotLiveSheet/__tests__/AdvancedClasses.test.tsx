@@ -2,27 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { findCoreClass, findHybridClass } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Advanced Classes', () => {
   // Use real data from salvageunion-reference
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const allHybridClasses = SalvageUnionReference.HybridClasses.all()
-  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
-  const salvagerClass = allCoreClasses.find((c) => c.name === 'Salvager')
-  const fabricatorClass = allHybridClasses.find((c) => c.name === 'Fabricator')
-
-  if (!hackerClass) {
-    throw new Error('Hacker class not found in salvageunion-reference')
-  }
-
-  if (!salvagerClass) {
-    throw new Error('Salvager class not found in salvageunion-reference')
-  }
-
-  if (!fabricatorClass) {
-    throw new Error('Fabricator hybrid class not found in salvageunion-reference')
-  }
+  const hackerClass = findCoreClass('Hacker')
+  const salvagerClass = findCoreClass('Salvager')
+  const fabricatorClass = findHybridClass('Fabricator')
 
   // No need to fetch abilities for these tests - they just verify class selection
 
