@@ -249,8 +249,8 @@ describe('MechLiveSheet', () => {
       await waitFor(
         () => {
           // Check for system and module slots
-          const systemText = new RegExp(`0\\/${testChassis.stats.system_slots}`)
-          const moduleText = new RegExp(`0\\/${testChassis.stats.module_slots}`)
+          const systemText = new RegExp(`0\\/${testChassis.stats.systemSlots}`)
+          const moduleText = new RegExp(`0\\/${testChassis.stats.moduleSlots}`)
           const systemSlots = screen.getAllByText(systemText)
           const moduleSlots = screen.getAllByText(moduleText)
           expect(systemSlots.length).toBeGreaterThan(0)
@@ -294,7 +294,7 @@ describe('MechLiveSheet', () => {
       await waitFor(
         () => {
           // Check for cargo capacity
-          const cargoText = new RegExp(`0\\/${testChassis.stats.cargo_cap}`)
+          const cargoText = new RegExp(`0\\/${testChassis.stats.cargoCap}`)
           const cargoDisplays = screen.getAllByText(cargoText)
           expect(cargoDisplays.length).toBeGreaterThan(0)
         },

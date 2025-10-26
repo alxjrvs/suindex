@@ -43,6 +43,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     handleRemoveCargo,
     updateMech,
     loading,
+    totalSalvageValue,
     error,
     hasPendingChanges,
   } = useMechLiveSheetState(id)
@@ -54,7 +55,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   const stats = selectedChassis?.stats
 
   const canAddMore =
-    stats && (usedSystemSlots < stats.system_slots || usedModuleSlots < stats.module_slots)
+    stats && (usedSystemSlots < stats.systemSlots || usedModuleSlots < stats.moduleSlots)
 
   if (loading) {
     return (
@@ -126,6 +127,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
           <ChassisStatsGrid
             stats={stats}
+            totalSalvageValue={totalSalvageValue}
             usedSystemSlots={usedSystemSlots}
             usedModuleSlots={usedModuleSlots}
             totalCargo={totalCargo}
@@ -145,17 +147,15 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         />
       </Flex>
 
-      <RoundedBox bg="su.green" title="Abilities" disabled={!selectedChassis}>
-        <ChassisAbilities chassis={selectedChassis} disabled={!selectedChassis} />
-      </RoundedBox>
+      <ChassisAbilities stats={stats} chassis={selectedChassis} disabled={!selectedChassis} />
 
       <SystemsModulesList
         systems={mech.systems ?? []}
         modules={mech.modules ?? []}
         usedSystemSlots={usedSystemSlots}
         usedModuleSlots={usedModuleSlots}
-        totalSystemSlots={stats?.system_slots || 0}
-        totalModuleSlots={stats?.module_slots || 0}
+        totalSystemSlots={stats?.systemSlots || 0}
+        totalModuleSlots={stats?.moduleSlots || 0}
         canAddMore={!!canAddMore}
         onRemoveSystem={handleRemoveSystem}
         onRemoveModule={handleRemoveModule}
@@ -167,7 +167,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         <CargoList
           cargo={mech.cargo ?? []}
           totalCargo={totalCargo}
-          maxCargo={stats?.cargo_cap || 0}
+          maxCargo={stats?.cargoCap || 0}
           canAddCargo={!!selectedChassis}
           onRemove={handleRemoveCargo}
           onAddClick={() => setIsCargoModalOpen(true)}
@@ -185,8 +185,8 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
       </Grid>
 
       <SystemModuleSelector
-        availableSystemSlots={Number(stats?.system_slots) - usedSystemSlots || 0}
-        availableModuleSlots={Number(stats?.module_slots) - usedModuleSlots || 0}
+        availableSystemSlots={Number(stats?.systemSlots) - usedSystemSlots || 0}
+        availableModuleSlots={Number(stats?.moduleSlots) - usedModuleSlots || 0}
         isOpen={isSelectorOpen}
         onClose={() => setIsSelectorOpen(false)}
         systems={allSystems}
@@ -201,7 +201,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         isOpen={isCargoModalOpen}
         onClose={() => setIsCargoModalOpen(false)}
         onAdd={handleAddCargo}
-        maxCargo={stats?.cargo_cap || 0}
+        maxCargo={stats?.cargoCap || 0}
         currentCargo={totalCargo}
       />
     </LiveSheetLayout>

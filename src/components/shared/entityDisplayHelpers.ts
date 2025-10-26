@@ -157,11 +157,11 @@ export function extractHeaderStats(data: SURefEntity): Stat[] {
       structure_pts?: number
       energy_pts?: number
       heat_cap?: number
-      system_slots?: number
-      module_slots?: number
-      cargo_cap?: number
-      tech_level?: number
-      salvage_value?: number
+      systemSlots?: number
+      moduleSlots?: number
+      cargoCap?: number
+      techLevel?: number
+      salvageValue?: number
     }
     if (chassisStats.structure_pts !== undefined) {
       stats.push({ label: 'SP', value: chassisStats.structure_pts })
@@ -172,14 +172,14 @@ export function extractHeaderStats(data: SURefEntity): Stat[] {
     if (chassisStats.heat_cap !== undefined) {
       stats.push({ label: 'Heat', value: chassisStats.heat_cap })
     }
-    if (chassisStats.system_slots !== undefined) {
-      stats.push({ label: 'Sys. Slots', value: chassisStats.system_slots })
+    if (chassisStats.systemSlots !== undefined) {
+      stats.push({ label: 'Sys. Slots', value: chassisStats.systemSlots })
     }
-    if (chassisStats.module_slots !== undefined) {
-      stats.push({ label: 'Mod. Slots', value: chassisStats.module_slots })
+    if (chassisStats.moduleSlots !== undefined) {
+      stats.push({ label: 'Mod. Slots', value: chassisStats.moduleSlots })
     }
-    if (chassisStats.cargo_cap !== undefined) {
-      stats.push({ label: 'Cargo Cap', value: chassisStats.cargo_cap })
+    if (chassisStats.cargoCap !== undefined) {
+      stats.push({ label: 'Cargo Cap', value: chassisStats.cargoCap })
     }
   } else {
     // Regular entities - only HP and SP (not SV)
@@ -272,9 +272,9 @@ export function extractSidebarData(data: SURefEntity): SidebarData {
     'stats' in data &&
     typeof data.stats === 'object' &&
     data.stats &&
-    'tech_level' in data.stats
+    'techLevel' in data.stats
   ) {
-    techLevel = (data.stats as { tech_level?: number }).tech_level
+    techLevel = (data.stats as { techLevel?: number }).techLevel
   } else if ('techLevel' in data) {
     techLevel = data.techLevel as number | undefined
   }
@@ -284,9 +284,9 @@ export function extractSidebarData(data: SURefEntity): SidebarData {
     'stats' in data &&
     typeof data.stats === 'object' &&
     data.stats &&
-    'salvage_value' in data.stats
+    'salvageValue' in data.stats
   ) {
-    salvageValue = (data.stats as { salvage_value?: number }).salvage_value
+    salvageValue = (data.stats as { salvageValue?: number }).salvageValue
   } else if ('salvageValue' in data) {
     salvageValue = data.salvageValue as number | undefined
   }

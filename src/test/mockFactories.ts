@@ -124,7 +124,7 @@ export function createMockCrawler(overrides?: Partial<Tables<'crawlers'>>): Tabl
     user_id: 'test-user-id',
     name: 'Test Crawler',
     crawler_type_id: null,
-    tech_level: 1,
+    techLevel: 1,
     current_damage: 0,
     current_scrap: 0,
     description: null,
@@ -145,7 +145,7 @@ export function createMockCrawlers(count: number = 2): Tables<'crawlers'>[] {
     createMockCrawler({
       id: `crawler-${i + 1}`,
       name: `Test Crawler ${i + 1}`,
-      tech_level: i + 1,
+      techLevel: i + 1,
       current_damage: i * 5,
       current_scrap: i * 10,
       created_at: new Date(Date.now() + i * 1000).toISOString(),

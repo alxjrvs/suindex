@@ -13,7 +13,7 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
     const groups = new Map<number, SURefChassis[]>()
 
     allChassis.forEach((chassis) => {
-      const techLevel = chassis.stats.tech_level
+      const techLevel = chassis.stats.techLevel
       if (!groups.has(techLevel)) {
         groups.set(techLevel, [])
       }

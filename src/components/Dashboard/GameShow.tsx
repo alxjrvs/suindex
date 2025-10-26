@@ -268,7 +268,7 @@ export function GameShow() {
     ? getCrawlerNameById(crawler.crawler_type_id)
     : ''
 
-  const crawlerMaxSP = crawler?.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
+  const crawlerMaxSP = crawler?.techLevel ? getStructurePointsForTechLevel(crawler.techLevel) : 20
 
   return (
     <Box p={4} maxW="6xl" mx="auto">

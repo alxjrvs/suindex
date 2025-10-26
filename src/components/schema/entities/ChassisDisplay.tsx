@@ -11,13 +11,13 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
   return (
     <EntityDisplay entityName="Chassis" data={data} headerColor="su.green">
       {/* Chassis Abilities */}
-      {data.chassis_abilities && data.chassis_abilities.length > 0 && (
+      {data.chassisAbilities && data.chassisAbilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
           <Heading level="h4" textTransform="uppercase">
             Chassis Abilities
           </Heading>
           <VStack gap={3} alignItems="stretch" borderWidth="1px" borderColor="su.black" p={3}>
-            {data.chassis_abilities.map((ability, index) => (
+            {data.chassisAbilities.map((ability, index) => (
               <VStack key={index} gap={2} alignItems="stretch">
                 <Box>
                   {ability.name && (

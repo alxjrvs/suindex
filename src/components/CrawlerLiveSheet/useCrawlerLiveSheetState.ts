@@ -4,7 +4,7 @@ import type { CrawlerLiveSheetState } from './types'
 import type { CrawlerBay } from '../../types/database'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
 
-const INITIAL_TECH_LEVEL = 1
+const INITIAL_techLevel = 1
 const MAX_UPGRADE = 25
 
 const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
@@ -14,7 +14,7 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
   crawler_type_id: null,
   description: null,
   current_damage: 0,
-  tech_level: INITIAL_TECH_LEVEL,
+  techLevel: INITIAL_techLevel,
   upgrade: 0,
   current_scrap: 0,
   bays: [],
@@ -86,8 +86,8 @@ export function useCrawlerLiveSheetState(id?: string) {
   )
 
   const currentTechLevel = useMemo(
-    () => allTechLevels.find((tl) => tl.techLevel === crawler.tech_level),
-    [allTechLevels, crawler.tech_level]
+    () => allTechLevels.find((tl) => tl.techLevel === crawler.techLevel),
+    [allTechLevels, crawler.techLevel]
   )
 
   const maxSP = useMemo(() => {
@@ -95,22 +95,22 @@ export function useCrawlerLiveSheetState(id?: string) {
   }, [currentTechLevel])
 
   const upkeep = useMemo(() => {
-    return `5 TL${crawler.tech_level}`
-  }, [crawler.tech_level])
+    return `5 TL${crawler.techLevel}`
+  }, [crawler.techLevel])
 
   // Track previous tech level to detect changes
-  const prevTechLevelRef = useRef(crawler.tech_level)
+  const prevTechLevelRef = useRef(crawler.techLevel)
 
   // Reset damage and upgrade when tech level changes
   useEffect(() => {
-    if (prevTechLevelRef.current !== crawler.tech_level && currentTechLevel?.structurePoints) {
-      prevTechLevelRef.current = crawler.tech_level
+    if (prevTechLevelRef.current !== crawler.techLevel && currentTechLevel?.structurePoints) {
+      prevTechLevelRef.current = crawler.techLevel
       updateCrawler({
         current_damage: 0,
         upgrade: 0,
       })
     }
-  }, [crawler.tech_level, currentTechLevel, updateCrawler])
+  }, [crawler.techLevel, currentTechLevel, updateCrawler])
 
   const handleCrawlerTypeChange = useCallback(
     (crawlerTypeId: string | null) => {
@@ -129,7 +129,7 @@ export function useCrawlerLiveSheetState(id?: string) {
           ...crawler,
           crawler_type_id: crawlerTypeId,
           current_damage: 0,
-          tech_level: INITIAL_TECH_LEVEL,
+          techLevel: INITIAL_techLevel,
           upgrade: 0,
           current_scrap: 0,
           bays: allBays.map((bay) => ({

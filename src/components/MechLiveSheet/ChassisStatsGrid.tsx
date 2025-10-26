@@ -9,6 +9,7 @@ interface ChassisStatsGridProps {
   usedModuleSlots: number
   totalCargo: number
   disabled?: boolean
+  totalSalvageValue: number
 }
 
 export function ChassisStatsGrid({
@@ -16,6 +17,7 @@ export function ChassisStatsGrid({
   usedSystemSlots,
   usedModuleSlots,
   totalCargo,
+  totalSalvageValue,
   disabled = false,
 }: ChassisStatsGridProps) {
   return (
@@ -23,21 +25,20 @@ export function ChassisStatsGrid({
       <Flex flexDirection="row" justifyContent="space-between" w="full">
         <StatDisplay
           label="Sys. Slots"
-          value={`${usedSystemSlots}/${stats?.system_slots || 0}`}
+          value={`${usedSystemSlots}/${stats?.systemSlots || 0}`}
           disabled={disabled}
         />
         <StatDisplay
           label="Mod. Slots"
-          value={`${usedModuleSlots}/${stats?.module_slots || 0}`}
+          value={`${usedModuleSlots}/${stats?.moduleSlots || 0}`}
           disabled={disabled}
         />
         <StatDisplay
           label="Cargo Cap"
-          value={`${totalCargo}/${stats?.cargo_cap || 0}`}
+          value={`${totalCargo}/${stats?.cargoCap || 0}`}
           disabled={disabled}
         />
-        <StatDisplay label="TL" value={stats?.tech_level || 0} disabled={disabled} />
-        <StatDisplay label="SV" value={stats?.salvage_value || 0} disabled={disabled} />
+        <StatDisplay label="Total SV" value={totalSalvageValue} disabled={disabled} />
       </Flex>
     </RoundedBox>
   )

@@ -200,7 +200,7 @@ export default function DataTable({ data, schema }: DataTableProps) {
               <Button
                 onClick={() => {
                   dispatch({
-                    type: 'SET_TECH_LEVEL_FILTERS',
+                    type: 'SET_techLevel_FILTERS',
                     payload: new Set(),
                   })
                 }}
@@ -224,7 +224,7 @@ export default function DataTable({ data, schema }: DataTableProps) {
                       key={String(value)}
                       onClick={() => {
                         dispatch({
-                          type: 'TOGGLE_TECH_LEVEL',
+                          type: 'TOGGLE_techLevel',
                           payload: String(value),
                         })
                       }}

@@ -61,6 +61,24 @@ export function useMechLiveSheetState(id?: string) {
     return sum + (module?.slotsRequired ?? 0)
   }, 0)
 
+  const totalSalvageValue = useMemo(() => {
+    const systemValue = (mech.systems ?? []).reduce((sum, systemId) => {
+      const system = allSystems.find((s) => s.id === systemId)
+      if (!system) return sum
+      return sum + system.salvageValue * system.techLevel
+    }, 0)
+
+    const moduleValue = (mech.modules ?? []).reduce((sum, moduleId) => {
+      const module = allModules.find((m) => m.id === moduleId)
+      if (!module) return sum
+      return sum + module.salvageValue * module.techLevel
+    }, 0)
+
+    const chassisValue = selectedChassis?.stats?.salvageValue || 0
+
+    return systemValue + moduleValue + chassisValue
+  }, [mech.systems, mech.modules, allSystems, allModules, selectedChassis])
+
   const totalCargo = (mech.cargo ?? []).reduce((sum, item) => sum + item.amount, 0)
 
   const handleChassisChange = useCallback(
@@ -88,7 +106,7 @@ export function useMechLiveSheetState(id?: string) {
           modules: [],
           cargo: [],
           current_damage: 0,
-          current_ep: newChassis?.stats.energy_pts || 0,
+          current_ep: newChassis?.stats.energyPts || 0,
           current_heat: 0,
           notes: null,
         })
@@ -101,7 +119,7 @@ export function useMechLiveSheetState(id?: string) {
           systems: [],
           modules: [],
           chassis_ability: null,
-          current_ep: newChassis?.stats.energy_pts || 0,
+          current_ep: newChassis?.stats.energyPts || 0,
         })
       }
     },
@@ -222,6 +240,7 @@ export function useMechLiveSheetState(id?: string) {
 
   return {
     mech,
+    totalSalvageValue,
     selectedChassis,
     usedSystemSlots,
     usedModuleSlots,

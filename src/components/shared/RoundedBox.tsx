@@ -17,8 +17,6 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   titleRotation?: number
   /** Whether the box is disabled (grays out background and makes title opaque) */
   disabled?: boolean
-  /** If true, aligns leftContent, title, and rightContent horizontally on the same line instead of stacking */
-  inlineHeader?: boolean
 }
 
 export function RoundedBox({
@@ -30,46 +28,11 @@ export function RoundedBox({
   justifyContent = 'space-between',
   titleRotation = 0,
   disabled = false,
-  inlineHeader = false,
   ...flexProps
 }: RoundedBoxProps) {
   const actualBg = disabled ? 'su.grey' : bg
   const actualBorderColor = disabled ? 'blackAlpha.400' : 'black'
 
-  // For inline headers, use row direction with all content on one line
-  if (inlineHeader) {
-    return (
-      <Flex
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        bg={actualBg}
-        borderWidth="3px"
-        borderColor={actualBorderColor}
-        borderRadius="2xl"
-        p={4}
-        shadow="lg"
-        {...flexProps}
-      >
-        {leftContent}
-        {title && (
-          <Heading
-            level="h2"
-            textTransform="uppercase"
-            alignSelf="center"
-            transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
-            transition="transform 0.3s ease"
-            opacity={disabled ? 0.5 : 1}
-          >
-            {title}
-          </Heading>
-        )}
-        {rightContent}
-      </Flex>
-    )
-  }
-
-  // Default column layout with header section
   return (
     <Flex
       direction="column"
@@ -84,20 +47,29 @@ export function RoundedBox({
       {...flexProps}
     >
       {(title || leftContent || rightContent) && (
-        <Flex alignItems="center" justifyContent="space-between" mb={4} w="full">
-          {leftContent}
-          {title && (
-            <Heading
-              level="h2"
-              textTransform="uppercase"
-              alignSelf="center"
-              transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
-              transition="transform 0.3s ease"
-              opacity={disabled ? 0.5 : 1}
-            >
-              {title}
-            </Heading>
-          )}
+        <Flex
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          gap={4}
+          w="full"
+          mb="4"
+        >
+          <Flex gap={4} alignItems="center" flexDirection="row" justifyContent="flex-start">
+            {leftContent}
+            {title && (
+              <Heading
+                level="h2"
+                textTransform="uppercase"
+                alignSelf="center"
+                transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
+                transition="transform 0.3s ease"
+                opacity={disabled ? 0.5 : 1}
+              >
+                {title}
+              </Heading>
+            )}
+          </Flex>
           {rightContent}
         </Flex>
       )}

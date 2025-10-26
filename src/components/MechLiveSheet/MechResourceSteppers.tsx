@@ -24,7 +24,7 @@ export function MechResourceSteppers({
   onHeatChange,
   disabled = false,
 }: MechResourceSteppersProps) {
-  const maxSP = stats?.structure_pts || 0
+  const maxSP = stats?.structurePts || 0
   const currentSP = maxSP - currentDamage
 
   return (
@@ -42,14 +42,14 @@ export function MechResourceSteppers({
           label="EP"
           value={currentEP}
           onChange={onEPChange}
-          max={stats?.energy_pts || 0}
+          max={stats?.energyPts || 0}
           disabled={disabled}
         />
         <NumericStepper
           label="HEAT"
           value={currentHeat}
           onChange={onHeatChange}
-          max={stats?.heat_cap || 0}
+          max={stats?.heatCap || 0}
           disabled={disabled}
         />
       </VStack>

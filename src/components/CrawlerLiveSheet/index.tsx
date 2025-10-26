@@ -102,13 +102,13 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         <CrawlerResourceSteppers
           currentDamage={crawler.current_damage ?? 0}
           maxSP={maxSP}
-          techLevel={crawler.tech_level ?? 1}
+          techLevel={crawler.techLevel ?? 1}
           upkeep={upkeep}
           upgrade={crawler.upgrade ?? 0}
           maxUpgrade={maxUpgrade}
           currentScrap={crawler.current_scrap ?? 0}
           onDamageChange={(value) => updateCrawler({ current_damage: value })}
-          onTechLevelChange={(value) => updateCrawler({ tech_level: value })}
+          onTechLevelChange={(value) => updateCrawler({ techLevel: value })}
           onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
           onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
           disabled={!selectedCrawlerType}

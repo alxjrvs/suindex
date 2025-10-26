@@ -22,7 +22,7 @@ export type Database = {
           name: string
           notes: string | null
           npc: Json | null
-          tech_level: number | null
+          techLevel: number | null
           updated_at: string | null
           upgrade: number | null
           user_id: string
@@ -40,7 +40,7 @@ export type Database = {
           name: string
           notes?: string | null
           npc?: Json | null
-          tech_level?: number | null
+          techLevel?: number | null
           updated_at?: string | null
           upgrade?: number | null
           user_id: string
@@ -58,7 +58,7 @@ export type Database = {
           name?: string
           notes?: string | null
           npc?: Json | null
-          tech_level?: number | null
+          techLevel?: number | null
           updated_at?: string | null
           upgrade?: number | null
           user_id?: string
