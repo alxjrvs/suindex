@@ -2,25 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { findCoreClass, findAdvancedClass, getAbilities } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Legendary Abilities', () => {
   // Get real data from salvageunion-reference
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
-  const allAbilities = SalvageUnionReference.Abilities.all()
-
-  // Find Hacker class for testing
-  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
-  const hackerAdvancedClass = allAdvancedClasses.find((c) => c.name === 'Advanced Hacker')
-
-  if (!hackerClass) {
-    throw new Error('Hacker class not found in salvageunion-reference')
-  }
-
-  if (!hackerAdvancedClass) {
-    throw new Error('Advanced Hacker class not found in salvageunion-reference')
-  }
+  const hackerClass = findCoreClass('Hacker')
+  const hackerAdvancedClass = findAdvancedClass('Advanced Hacker')
+  const allAbilities = getAbilities()
 
   // Get legendary abilities for Hacker advanced class by tree
   const legendaryAbilities = allAbilities.filter(

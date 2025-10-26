@@ -1,10 +1,13 @@
-import { screen, within, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { expect } from 'vitest'
 import type { UserEvent } from '@testing-library/user-event'
+import { incrementStepper, getStepperValue } from './steppers'
+import { openSection } from './sections'
 
 /**
  * Common user interaction helpers for tests
  * These eliminate duplicate interaction patterns across test files
+ */
 
 /**
  * Increment TP (Talent Points) by clicking the increment button N times
@@ -12,14 +15,7 @@ import type { UserEvent } from '@testing-library/user-event'
  * @param times - Number of times to increment (default: 1)
  */
 export async function incrementTP(user: UserEvent, times: number = 1) {
-  const tpStepper = screen.getByRole('group', { name: /TP/i })
-  const tpIncrementButton = tpStepper.querySelector(
-    'button[aria-label="Increment TP"]'
-  ) as HTMLButtonElement
-
-  for (let i = 0; i < times; i++) {
-    await user.click(tpIncrementButton)
-  }
+  await incrementStepper(user, 'TP', times)
 }
 
 /**
@@ -38,9 +34,7 @@ export async function selectClass(user: UserEvent, classId: string) {
  * @param sectionName - The name of the section (e.g., "abilities", "inventory")
  */
 export async function openSectionModal(user: UserEvent, sectionName: string) {
-  const section = screen.getByText(new RegExp(`^${sectionName}$`, 'i')).closest('div')
-  const addButton = within(section!).getByRole('button', { name: '+' })
-  await user.click(addButton)
+  await openSection(user, sectionName)
 }
 
 /**
@@ -77,9 +71,7 @@ export async function waitForModalToClose(modalText: string | RegExp) {
  * @returns The current TP value as a number
  */
 export function getCurrentTPValue(): number {
-  const tpStepper = screen.getByRole('group', { name: /TP/i })
-  const tpText = within(tpStepper).getByText(/\d+/)
-  return parseInt(tpText.textContent || '0', 10)
+  return getStepperValue('TP')
 }
 
 /**
@@ -87,9 +79,8 @@ export function getCurrentTPValue(): number {
  * @param expectedValue - The expected TP value
  */
 export async function waitForTPValue(expectedValue: number) {
-  const tpStepper = screen.getByRole('group', { name: /TP/i })
   await waitFor(() => {
-    expect(within(tpStepper).getByText(expectedValue.toString())).toBeInTheDocument()
+    expect(getStepperValue('TP')).toBe(expectedValue)
   })
 }
 

@@ -2,18 +2,11 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, within, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { getCoreClasses, getStepperGroup, isStepperButtonDisabled } from '../../../test/helpers'
 
 describe('PilotLiveSheet', () => {
   // Get real data from salvageunion-reference
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-
-  // Find core classes for testing
-  const coreClasses = allCoreClasses
-
-  if (coreClasses.length === 0) {
-    throw new Error('No core classes found in salvageunion-reference')
-  }
+  const coreClasses = getCoreClasses()
 
   beforeEach(() => {
     // No mocks needed - using real data
@@ -55,16 +48,12 @@ describe('PilotLiveSheet', () => {
       render(<PilotLiveSheet />)
 
       // HP, AP, and TP stepper buttons should be disabled
-      const hpStepper = screen.getByRole('group', { name: /HP/i })
-      const apStepper = screen.getByRole('group', { name: /^AP$/i })
-      const tpStepper = screen.getByRole('group', { name: /TP/i })
-
-      expect(hpStepper.querySelector('button[aria-label="Increment HP"]')).toBeDisabled()
-      expect(hpStepper.querySelector('button[aria-label="Decrement HP"]')).toBeDisabled()
-      expect(apStepper.querySelector('button[aria-label="Increment AP"]')).toBeDisabled()
-      expect(apStepper.querySelector('button[aria-label="Decrement AP"]')).toBeDisabled()
-      expect(tpStepper.querySelector('button[aria-label="Increment TP"]')).toBeDisabled()
-      expect(tpStepper.querySelector('button[aria-label="Decrement TP"]')).toBeDisabled()
+      expect(isStepperButtonDisabled('HP', 'increment')).toBe(true)
+      expect(isStepperButtonDisabled('HP', 'decrement')).toBe(true)
+      expect(isStepperButtonDisabled('AP', 'increment')).toBe(true)
+      expect(isStepperButtonDisabled('AP', 'decrement')).toBe(true)
+      expect(isStepperButtonDisabled('TP', 'increment')).toBe(true)
+      expect(isStepperButtonDisabled('TP', 'decrement')).toBe(true)
     })
 
     it('shows notes section', () => {
@@ -85,13 +74,9 @@ describe('PilotLiveSheet', () => {
 
       await waitFor(() => {
         // HP and AP start at max, so decrement buttons should be enabled
-        const hpStepper = screen.getByRole('group', { name: /HP/i })
-        const apStepper = screen.getByRole('group', { name: /^AP$/i })
-        const tpStepper = screen.getByRole('group', { name: /TP/i })
-
-        expect(hpStepper.querySelector('button[aria-label="Decrement HP"]')).not.toBeDisabled()
-        expect(apStepper.querySelector('button[aria-label="Decrement AP"]')).not.toBeDisabled()
-        expect(tpStepper.querySelector('button[aria-label="Increment TP"]')).not.toBeDisabled()
+        expect(isStepperButtonDisabled('HP', 'decrement')).toBe(false)
+        expect(isStepperButtonDisabled('AP', 'decrement')).toBe(false)
+        expect(isStepperButtonDisabled('TP', 'increment')).toBe(false)
       })
     })
 
@@ -104,7 +89,7 @@ describe('PilotLiveSheet', () => {
 
       await waitFor(() => {
         // Check TP stepper shows 0
-        const tpStepper = screen.getByRole('group', { name: /TP/i })
+        const tpStepper = getStepperGroup('TP')
         expect(tpStepper).toBeInTheDocument()
         expect(within(tpStepper).getByText('0')).toBeInTheDocument()
       })

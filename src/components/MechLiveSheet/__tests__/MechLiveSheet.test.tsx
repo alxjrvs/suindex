@@ -2,18 +2,14 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import MechLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { getChassis, getChassisWithPatterns } from '../../../test/helpers'
 
 describe('MechLiveSheet', () => {
   // Get real data from salvageunion-reference
-  const allChassis = SalvageUnionReference.Chassis.all()
-
-  if (allChassis.length === 0) {
-    throw new Error('No chassis found in salvageunion-reference')
-  }
+  const allChassis = getChassis()
 
   // Get chassis with patterns for pattern tests
-  const chassisWithPatterns = allChassis.filter((c) => c.patterns && c.patterns.length > 0)
+  const chassisWithPatterns = getChassisWithPatterns()
 
   // Use first chassis for most tests
   const testChassis = allChassis[0]

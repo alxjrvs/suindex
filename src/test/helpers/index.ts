@@ -10,3 +10,60 @@ export {
   addAbility,
   addEquipment,
 } from './userInteractions'
+
+// Reference data helpers
+export {
+  getCoreClasses,
+  getHybridClasses,
+  getAdvancedClasses,
+  findClass,
+  findCoreClass,
+  findHybridClass,
+  findAdvancedClass,
+  getChassis,
+  getChassisWithPatterns,
+  getCrawlers,
+  getCrawlerBays,
+  getAbilities,
+  getAbilitiesForClass,
+  getAbilitiesByLevel,
+  getEquipment,
+} from './referenceData'
+
+// Stepper helpers
+export {
+  getStepperGroup,
+  getIncrementButton,
+  getDecrementButton,
+  incrementStepper,
+  decrementStepper,
+  getStepperValue,
+  getStepperDisplayValue,
+  waitForStepperValue,
+  waitForStepperDisplayValue,
+  isStepperButtonDisabled,
+} from './steppers'
+
+// Section and modal helpers
+export {
+  getSection,
+  getSectionAddButton,
+  openSection,
+  waitForModalOpen,
+  waitForModalClosed,
+  closeModal as closeModalHelper,
+  closeModalAndWait,
+  getSectionCount,
+  waitForSectionCount,
+  getModalButton,
+  clickModalButton,
+} from './sections'
+
+// Combobox helpers
+export {
+  getCombobox,
+  selectComboboxOption,
+  getComboboxOptions,
+  getComboboxOptionCount,
+  isComboboxDisabled,
+} from './combobox'

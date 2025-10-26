@@ -2,20 +2,12 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import CrawlerLiveSheet from '../index'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { getCrawlers, getCrawlerBays } from '../../../test/helpers'
 
 describe('CrawlerLiveSheet', () => {
   // Get real data from salvageunion-reference
-  const allCrawlers = SalvageUnionReference.Crawlers.all()
-  const allBays = SalvageUnionReference.CrawlerBays.all()
-
-  if (allCrawlers.length === 0) {
-    throw new Error('No crawlers found in salvageunion-reference')
-  }
-
-  if (allBays.length === 0) {
-    throw new Error('No crawler bays found in salvageunion-reference')
-  }
+  const allCrawlers = getCrawlers()
+  const allBays = getCrawlerBays()
 
   // Use first crawler for most tests
   const testCrawler = allCrawlers[0]
