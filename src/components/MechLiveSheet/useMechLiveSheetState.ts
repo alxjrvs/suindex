@@ -38,14 +38,6 @@ export function useMechLiveSheetState(id?: string) {
     id: id || '',
   })
 
-  // Wrapper for partial updates (used by components)
-  const updateMech = useCallback(
-    (updates: Partial<MechLiveSheetState>) => {
-      updateEntity(updates)
-    },
-    [updateEntity]
-  )
-
   const selectedChassis = useMemo(
     () => allChassis.find((c) => c.id === mech.chassis_id),
     [mech.chassis_id, allChassis]
@@ -85,7 +77,7 @@ export function useMechLiveSheetState(id?: string) {
     (chassisId: string | null) => {
       // If null or empty, just update to null
       if (!chassisId) {
-        updateMech({ chassis_id: null })
+        updateEntity({ chassis_id: null })
         return
       }
 
@@ -113,7 +105,7 @@ export function useMechLiveSheetState(id?: string) {
       } else {
         // First time selection - set chassis and initialize EP
         const newChassis = SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
-        updateMech({
+        updateEntity({
           chassis_id: chassisId,
           pattern: null,
           systems: [],
@@ -123,7 +115,7 @@ export function useMechLiveSheetState(id?: string) {
         })
       }
     },
-    [mech, allChassis, updateEntity, updateMech]
+    [mech, allChassis, updateEntity]
   )
 
   const handlePatternChange = (patternName: string) => {
@@ -157,18 +149,18 @@ export function useMechLiveSheetState(id?: string) {
           }
         })
 
-        updateMech({
+        updateEntity({
           pattern: patternName,
           systems: patternSystems,
           modules: patternModules,
         })
       } else {
-        updateMech({
+        updateEntity({
           pattern: patternName,
         })
       }
     } else {
-      updateMech({
+      updateEntity({
         pattern: patternName,
       })
     }
@@ -177,7 +169,7 @@ export function useMechLiveSheetState(id?: string) {
   const handleAddSystem = (systemId: string) => {
     const system = allSystems.find((s) => s.id === systemId)
     if (system) {
-      updateMech({
+      updateEntity({
         systems: [...(mech.systems ?? []), systemId],
       })
     }
@@ -188,7 +180,7 @@ export function useMechLiveSheetState(id?: string) {
     const systemName = system?.name || 'this system'
 
     if (window.confirm(`Are you sure you want to remove ${systemName}?`)) {
-      updateMech({
+      updateEntity({
         systems: (mech.systems ?? []).filter((id) => id !== systemId),
       })
     }
@@ -197,7 +189,7 @@ export function useMechLiveSheetState(id?: string) {
   const handleAddModule = (moduleId: string) => {
     const module = allModules.find((m) => m.id === moduleId)
     if (module) {
-      updateMech({
+      updateEntity({
         modules: [...(mech.modules ?? []), moduleId],
       })
     }
@@ -208,14 +200,14 @@ export function useMechLiveSheetState(id?: string) {
     const moduleName = module?.name || 'this module'
 
     if (window.confirm(`Are you sure you want to remove ${moduleName}?`)) {
-      updateMech({
+      updateEntity({
         modules: (mech.modules ?? []).filter((id) => id !== moduleId),
       })
     }
   }
 
   const handleAddCargo = (amount: number, description: string, color: string) => {
-    updateMech({
+    updateEntity({
       cargo: [
         ...(mech.cargo ?? []),
         {
@@ -233,7 +225,7 @@ export function useMechLiveSheetState(id?: string) {
     const cargoDescription = cargoToRemove?.description || 'this cargo'
 
     if (window.confirm(`Are you sure you want to remove ${cargoDescription}?`)) {
-      updateMech({
+      updateEntity({
         cargo: (mech.cargo ?? []).filter((c) => c.id !== cargoId),
       })
     }
@@ -254,7 +246,7 @@ export function useMechLiveSheetState(id?: string) {
     handleRemoveModule,
     handleAddCargo,
     handleRemoveCargo,
-    updateMech,
+    updateEntity,
     loading,
     error,
     hasPendingChanges,

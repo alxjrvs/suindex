@@ -11,11 +11,11 @@ export function CrawlerAbilities({
   crawler,
   upkeep,
   maxUpgrade,
-  onUpgradeChange,
+  updateEntity,
   disabled = false,
 }: {
   upkeep: string
-  onUpgradeChange: (value: number) => void
+  updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
   crawlerRef: SURefCrawler | undefined
   crawler: CrawlerLiveSheetState
   maxUpgrade: number
@@ -34,7 +34,7 @@ export function CrawlerAbilities({
           <NumericStepper
             label="UPGRADE"
             value={crawler.upgrade ?? 0}
-            onChange={onUpgradeChange}
+            onChange={(value) => updateEntity({ upgrade: value })}
             max={maxUpgrade}
             disabled={disabled}
           />

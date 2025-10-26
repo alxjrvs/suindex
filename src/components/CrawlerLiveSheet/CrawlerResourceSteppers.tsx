@@ -2,6 +2,7 @@ import { Flex, Grid } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
 import { StatDisplay } from '../StatDisplay'
 import { RoundedBox } from '../shared/RoundedBox'
+import type { CrawlerLiveSheetState } from './types'
 
 interface CrawlerResourceSteppersProps {
   currentDamage: number
@@ -11,10 +12,7 @@ interface CrawlerResourceSteppersProps {
   upgrade: number
   maxUpgrade: number
   currentScrap: number
-  onDamageChange: (value: number) => void
-  onTechLevelChange: (value: number) => void
-  onUpgradeChange: (value: number) => void
-  onCurrentScrapChange: (value: number) => void
+  updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
   disabled?: boolean
 }
 
@@ -26,10 +24,7 @@ export function CrawlerResourceSteppers({
   upgrade,
   maxUpgrade,
   currentScrap,
-  onDamageChange,
-  onTechLevelChange,
-  onUpgradeChange,
-  onCurrentScrapChange,
+  updateEntity,
   disabled = false,
 }: CrawlerResourceSteppersProps) {
   const currentSP = maxSP - currentDamage
@@ -41,7 +36,7 @@ export function CrawlerResourceSteppers({
           <NumericStepper
             label="SP"
             value={currentSP}
-            onChange={(newSP) => onDamageChange(maxSP - newSP)}
+            onChange={(newSP) => updateEntity({ current_damage: maxSP - newSP })}
             max={maxSP}
             min={0}
             disabled={disabled}
@@ -51,7 +46,7 @@ export function CrawlerResourceSteppers({
           <NumericStepper
             label="TL"
             value={techLevel}
-            onChange={onTechLevelChange}
+            onChange={(value) => updateEntity({ techLevel: value })}
             min={1}
             disabled={disabled}
           />
@@ -60,7 +55,7 @@ export function CrawlerResourceSteppers({
           <NumericStepper
             label="UPGRADE"
             value={upgrade}
-            onChange={onUpgradeChange}
+            onChange={(value) => updateEntity({ upgrade: value })}
             max={maxUpgrade}
             disabled={disabled}
           />
@@ -69,7 +64,7 @@ export function CrawlerResourceSteppers({
           <NumericStepper
             label="SCRAP"
             value={currentScrap}
-            onChange={onCurrentScrapChange}
+            onChange={(value) => updateEntity({ current_scrap: value })}
             min={0}
             disabled={disabled}
           />

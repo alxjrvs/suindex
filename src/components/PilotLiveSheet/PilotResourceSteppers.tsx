@@ -1,6 +1,7 @@
 import { VStack } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
 import { RoundedBox } from '../shared/RoundedBox'
+import type { PilotLiveSheetState } from './types'
 
 interface PilotResourceSteppersProps {
   maxHP: number
@@ -8,9 +9,7 @@ interface PilotResourceSteppersProps {
   maxAP: number
   currentAP: number
   currentTP: number
-  onDamageChange: (value: number) => void
-  onAPChange: (value: number) => void
-  onTPChange: (value: number) => void
+  updateEntity: (updates: Partial<PilotLiveSheetState>) => void
   disabled?: boolean
 }
 
@@ -20,9 +19,7 @@ export function PilotResourceSteppers({
   maxAP,
   currentAP,
   currentTP,
-  onDamageChange,
-  onAPChange,
-  onTPChange,
+  updateEntity,
   disabled = false,
 }: PilotResourceSteppersProps) {
   const currentHP = maxHP - currentDamage
@@ -33,7 +30,7 @@ export function PilotResourceSteppers({
         <NumericStepper
           label="HP"
           value={currentHP}
-          onChange={(newHP) => onDamageChange(maxHP - newHP)}
+          onChange={(newHP) => updateEntity({ current_damage: maxHP - newHP })}
           max={maxHP}
           min={0}
           disabled={disabled}
@@ -41,11 +38,16 @@ export function PilotResourceSteppers({
         <NumericStepper
           label="AP"
           value={currentAP}
-          onChange={onAPChange}
+          onChange={(value) => updateEntity({ current_ap: value })}
           max={maxAP}
           disabled={disabled}
         />
-        <NumericStepper label="TP" value={currentTP} onChange={onTPChange} disabled={disabled} />
+        <NumericStepper
+          label="TP"
+          value={currentTP}
+          onChange={(value) => updateEntity({ current_tp: value })}
+          disabled={disabled}
+        />
       </VStack>
     </RoundedBox>
   )

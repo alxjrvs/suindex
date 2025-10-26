@@ -32,7 +32,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     handleUpdateBay,
     handleAddCargo,
     handleRemoveCargo,
-    updateCrawler,
+    updateEntity,
     loading,
     error,
     hasPendingChanges,
@@ -82,7 +82,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         <CrawlerControlBar
           gameId={crawler.game_id}
           savedGameId={crawler.game_id}
-          onGameChange={(gameId) => updateCrawler({ game_id: gameId })}
+          onGameChange={(gameId) => updateEntity({ game_id: gameId })}
           hasPendingChanges={hasPendingChanges}
         />
       )}
@@ -93,9 +93,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           crawlerTypeId={crawler.crawler_type_id ?? null}
           description={crawler.description ?? ''}
           allCrawlers={allCrawlers}
-          onNameChange={(value) => updateCrawler({ name: value })}
+          updateEntity={updateEntity}
           onCrawlerTypeChange={handleCrawlerTypeChange}
-          onDescriptionChange={(value) => updateCrawler({ description: value })}
           disabled={!selectedCrawlerType}
         />
 
@@ -107,10 +106,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           upgrade={crawler.upgrade ?? 0}
           maxUpgrade={maxUpgrade}
           currentScrap={crawler.current_scrap ?? 0}
-          onDamageChange={(value) => updateCrawler({ current_damage: value })}
-          onTechLevelChange={(value) => updateCrawler({ techLevel: value })}
-          onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
-          onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
+          updateEntity={updateEntity}
           disabled={!selectedCrawlerType}
         />
       </Grid>
@@ -118,7 +114,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
       <Flex gap={6}>
         <CrawlerAbilities
           upkeep={upkeep}
-          onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
+          updateEntity={updateEntity}
           maxUpgrade={maxUpgrade}
           crawlerRef={selectedCrawlerType}
           crawler={crawler}
@@ -126,7 +122,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
         <CrawlerNPC
           crawler={crawler}
-          onUpdate={updateCrawler}
+          onUpdate={updateEntity}
           crawlerRef={selectedCrawlerType}
           disabled={!selectedCrawlerType}
         />
@@ -189,7 +185,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
           <Notes
             notes={crawler.notes ?? ''}
-            onChange={(value) => updateCrawler({ notes: value })}
+            onChange={(value) => updateEntity({ notes: value })}
             backgroundColor="bg.builder.crawler"
             borderWidth={4}
             placeholder="Add notes about your crawler..."

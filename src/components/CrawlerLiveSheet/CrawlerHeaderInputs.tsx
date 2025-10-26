@@ -4,15 +4,15 @@ import { SheetSelect } from '../shared/SheetSelect'
 import { SheetTextarea } from '../shared/SheetTextarea'
 import type { SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
+import type { CrawlerLiveSheetState } from './types'
 
 interface CrawlerHeaderInputsProps {
   name: string
   crawlerTypeId: string | null
   description: string
   allCrawlers: SURefCrawler[]
-  onNameChange: (value: string) => void
+  updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
   onCrawlerTypeChange: (value: string | null) => void
-  onDescriptionChange: (value: string) => void
   disabled?: boolean
 }
 
@@ -21,9 +21,8 @@ export function CrawlerHeaderInputs({
   crawlerTypeId,
   description,
   allCrawlers,
-  onNameChange,
+  updateEntity,
   onCrawlerTypeChange,
-  onDescriptionChange,
   disabled = false,
 }: CrawlerHeaderInputsProps) {
   return (
@@ -33,7 +32,7 @@ export function CrawlerHeaderInputs({
           <SheetInput
             label="Name"
             value={name}
-            onChange={onNameChange}
+            onChange={(value) => updateEntity({ name: value })}
             placeholder="Enter crawler name..."
             disabled={disabled}
           />
@@ -52,7 +51,7 @@ export function CrawlerHeaderInputs({
           <SheetTextarea
             label="Description"
             value={description}
-            onChange={onDescriptionChange}
+            onChange={(value) => updateEntity({ description: value })}
             placeholder="Enter crawler description..."
             disabled={disabled}
             height="full"

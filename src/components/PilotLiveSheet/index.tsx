@@ -37,7 +37,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
     handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
-    updatePilot,
+    updateEntity,
     loading,
     error,
     hasPendingChanges,
@@ -79,7 +79,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           config={PILOT_CONTROL_BAR_CONFIG}
           relationId={pilot.crawler_id}
           savedRelationId={pilot.crawler_id}
-          onRelationChange={(crawlerId) => updatePilot({ crawler_id: crawlerId })}
+          onRelationChange={(crawlerId) => updateEntity({ crawler_id: crawlerId })}
           hasPendingChanges={hasPendingChanges}
         />
       )}
@@ -98,16 +98,9 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           allCoreClasses={allCoreClasses}
           availableAdvancedClasses={availableAdvancedClasses}
           disabled={!selectedClass}
-          onCallsignChange={(value) => updatePilot({ callsign: value })}
-          onMottoChange={(value) => updatePilot({ motto: value })}
-          onMottoUsedChange={(value) => updatePilot({ motto_used: value })}
-          onKeepsakeChange={(value) => updatePilot({ keepsake: value })}
-          onKeepsakeUsedChange={(value) => updatePilot({ keepsake_used: value })}
-          onBackgroundChange={(value) => updatePilot({ background: value })}
-          onBackgroundUsedChange={(value) => updatePilot({ background_used: value })}
-          onAppearanceChange={(value) => updatePilot({ appearance: value })}
+          updateEntity={updateEntity}
           onClassChange={handleClassChange}
-          onAdvancedClassChange={(value) => updatePilot({ advanced_class_id: value })}
+          onAdvancedClassChange={(value) => updateEntity({ advanced_class_id: value })}
         />
 
         <PilotResourceSteppers
@@ -116,9 +109,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           maxAP={pilot.max_ap ?? 5}
           currentAP={pilot.current_ap ?? 5}
           currentTP={pilot.current_tp ?? 0}
-          onDamageChange={(value) => updatePilot({ current_damage: value })}
-          onAPChange={(value) => updatePilot({ current_ap: value })}
-          onTPChange={(value) => updatePilot({ current_tp: value })}
+          updateEntity={updateEntity}
           disabled={!selectedClass}
         />
       </Flex>
@@ -150,7 +141,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
       {/* Notes Section */}
       <Notes
         notes={pilot.notes ?? ''}
-        onChange={(value) => updatePilot({ notes: value })}
+        onChange={(value) => updateEntity({ notes: value })}
         backgroundColor="bg.builder.pilot"
         borderWidth={8}
         placeholder="Add notes about your pilot..."

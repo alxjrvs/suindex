@@ -40,7 +40,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     handleRemoveModule,
     handleAddCargo,
     handleRemoveCargo,
-    updateMech,
+    updateEntity,
     loading,
     totalSalvageValue,
     error,
@@ -92,7 +92,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
             <PilotInfo
               mechId={id}
               pilotId={mech.pilot_id}
-              onPilotChange={(pilotId) => updateMech({ pilot_id: pilotId })}
+              onPilotChange={(pilotId) => updateEntity({ pilot_id: pilotId })}
               disabled={!selectedChassis}
             />
             <ChassisStatsGrid
@@ -120,12 +120,12 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
               <QuirkInput
                 quirk={mech.quirk ?? ''}
                 disabled={!selectedChassis}
-                onQuirkChange={(value) => updateMech({ quirk: value })}
+                updateEntity={updateEntity}
               />
               <AppearanceInput
                 appearance={mech.appearance ?? ''}
                 disabled={!selectedChassis}
-                onAppearanceChange={(value) => updateMech({ appearance: value })}
+                updateEntity={updateEntity}
               />
             </Grid>
           </RoundedBox>
@@ -136,9 +136,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           currentDamage={mech.current_damage ?? 0}
           currentEP={mech.current_ep ?? 0}
           currentHeat={mech.current_heat ?? 0}
-          onDamageChange={(value) => updateMech({ current_damage: value })}
-          onEPChange={(value) => updateMech({ current_ep: value })}
-          onHeatChange={(value) => updateMech({ current_heat: value })}
+          updateEntity={updateEntity}
           disabled={!selectedChassis}
         />
       </Flex>
@@ -172,7 +170,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
         <Notes
           notes={mech.notes ?? ''}
-          onChange={(value) => updateMech({ notes: value })}
+          onChange={(value) => updateEntity({ notes: value })}
           disabled={!selectedChassis}
           backgroundColor="bg.builder.mech"
           borderWidth={8}
