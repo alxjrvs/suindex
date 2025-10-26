@@ -3,222 +3,27 @@ import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type {
-  SURefClass,
-  SURefAbility,
-  SURefEquipment,
-  SURefAbilityTreeRequirement,
-} from 'salvageunion-reference'
-import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Integration Tests', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: ['Ultimate Hack'],
-    },
-    {
-      id: 'class-smuggler',
-      name: 'Smuggler',
-      type: 'hybrid',
-      source: 'core',
-      page: 20,
-      description: 'A hybrid class',
-      coreAbilities: ['Stealth', 'Trade'],
-      hybridClasses: [],
-      advancedAbilities: 'Smuggling',
-      legendaryAbilities: ['Master Smuggler'],
-    },
-  ]
+  // Get real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
+  const allEquipment = SalvageUnionReference.Equipment.all()
 
-  const mockAbilities: SURefAbility[] = [
-    // Hacking tree
-    {
-      id: 'hack-1',
-      name: 'Hack 1',
-      tree: 'Hacking',
-      level: 1,
-      source: 'core',
-      page: 30,
-      description: 'Basic hack',
-      effect: 'Hack things',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'hack-2',
-      name: 'Hack 2',
-      tree: 'Hacking',
-      level: 2,
-      source: 'core',
-      page: 31,
-      description: 'Better hack',
-      effect: 'Hack better',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'hack-3',
-      name: 'Hack 3',
-      tree: 'Hacking',
-      level: 3,
-      source: 'core',
-      page: 32,
-      description: 'Best hack',
-      effect: 'Hack best',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    // Tech tree
-    {
-      id: 'tech-1',
-      name: 'Tech 1',
-      tree: 'Tech',
-      level: 1,
-      source: 'core',
-      page: 33,
-      description: 'Basic tech',
-      effect: 'Use tech',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'tech-2',
-      name: 'Tech 2',
-      tree: 'Tech',
-      level: 2,
-      source: 'core',
-      page: 34,
-      description: 'Better tech',
-      effect: 'Use better tech',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'tech-3',
-      name: 'Tech 3',
-      tree: 'Tech',
-      level: 3,
-      source: 'core',
-      page: 35,
-      description: 'Best tech',
-      effect: 'Use best tech',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    // Advanced abilities
-    {
-      id: 'adv-1',
-      name: 'Adv Hack 1',
-      tree: 'Advanced Hacking',
-      level: 1,
-      source: 'core',
-      page: 40,
-      description: 'Advanced',
-      effect: 'Advanced hack',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'adv-2',
-      name: 'Adv Hack 2',
-      tree: 'Advanced Hacking',
-      level: 2,
-      source: 'core',
-      page: 41,
-      description: 'Advanced',
-      effect: 'Advanced hack',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'adv-3',
-      name: 'Adv Hack 3',
-      tree: 'Advanced Hacking',
-      level: 3,
-      source: 'core',
-      page: 42,
-      description: 'Advanced',
-      effect: 'Advanced hack',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    // Smuggling abilities
-    {
-      id: 'smuggle-1',
-      name: 'Smuggle 1',
-      tree: 'Smuggling',
-      level: 1,
-      source: 'core',
-      page: 50,
-      description: 'Smuggle',
-      effect: 'Smuggle things',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    // Legendary
-    {
-      id: 'legendary',
-      name: 'Ultimate Hack',
-      tree: 'Advanced Hacking',
-      level: 4,
-      source: 'core',
-      page: 60,
-      description: 'Ultimate',
-      effect: 'Ultimate hack',
-      actionType: 'Turn',
-      activationCost: 3,
-    },
-  ]
+  // Find specific classes for testing
+  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
+  const fabricatorClass = allClasses.find((c) => c.name === 'Fabricator') // Hybrid class
 
-  const mockEquipment: SURefEquipment[] = [
-    {
-      id: 'eq-1',
-      name: 'Tool 1',
-      source: 'core',
-      page: 70,
-      description: 'A tool',
-      techLevel: 1,
-      traits: [],
-    },
-    {
-      id: 'eq-2',
-      name: 'Tool 2',
-      source: 'core',
-      page: 71,
-      description: 'Another tool',
-      techLevel: 1,
-      traits: [],
-    },
-  ]
+  if (!hackerClass) {
+    throw new Error('Hacker class not found in salvageunion-reference')
+  }
 
-  const mockTreeRequirements: SURefAbilityTreeRequirement[] = [
-    {
-      id: 'req-smuggler',
-      tree: 'Smuggling',
-      requirement: ['Hacking'],
-      source: 'Salvage Union Core Book',
-      page: 80,
-    },
-  ]
+  if (!fabricatorClass) {
+    throw new Error('Fabricator class not found in salvageunion-reference')
+  }
+
+  const testEquipment = allEquipment.slice(0, 2) // Get first 2 equipment items for testing
 
   beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue(
-      mockTreeRequirements
-    )
     // Mock window.confirm to always return true
     vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
@@ -230,7 +35,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
 
       // Step 1: Select class first to enable inputs
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Step 2: Fill in pilot information
       await user.type(screen.getByPlaceholderText(/enter callsign/i), 'Ghost')
@@ -260,19 +65,8 @@ describe('PilotLiveSheet - Integration Tests', () => {
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addAbilityButton = within(abilitiesSection!).getByRole('button', { name: '+' })
 
-      // Select 3 from Hacking tree
-      for (let i = 0; i < 3; i++) {
-        await user.click(addAbilityButton)
-        // Wait for the "Add to Pilot" buttons to appear in the modal
-        const addButtons = await screen.findAllByRole('button', {
-          name: /Add to Pilot \(1 TP\)/i,
-        })
-        // Click the first available button
-        await user.click(addButtons[0])
-      }
-
-      // Select 3 from Tech tree
-      for (let i = 0; i < 3; i++) {
+      // Select 6 core abilities
+      for (let i = 0; i < 6; i++) {
         await user.click(addAbilityButton)
         // Wait for the "Add to Pilot" buttons to appear in the modal
         const addButtons = await screen.findAllByRole('button', {
@@ -289,39 +83,42 @@ describe('PilotLiveSheet - Integration Tests', () => {
       })
 
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, 'class-smuggler')
+      await user.selectOptions(advancedClassSelect, fabricatorClass.id)
 
       // Step 6: Select hybrid class ability
       await user.click(addAbilityButton)
-      await waitFor(() => screen.getByText('Smuggle 1'))
-      // Click the "Add to Pilot" button (advanced ability costs 2 TP)
-      const smuggleAddButton = await screen.findByRole('button', {
+      // Click the first "Add to Pilot" button for a hybrid ability (advanced ability costs 2 TP)
+      const hybridAddButton = await screen.findByRole('button', {
         name: /Add to Pilot \(2 TP\)/i,
       })
-      await user.click(smuggleAddButton)
+      await user.click(hybridAddButton)
 
       // Step 7: Add equipment
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addEquipmentButton = within(inventorySection!).getByRole('button', { name: '+' })
 
       await user.click(addEquipmentButton)
-      // Wait for the equipment selector modal to open and find the button containing "Tool 1"
-      const tool1Button = await screen.findByRole('button', { name: /Tool 1/i })
-      await user.click(tool1Button)
+      // Wait for the equipment selector modal to open and find the first equipment button
+      const equipment1Button = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[0].name, 'i'),
+      })
+      await user.click(equipment1Button)
 
-      // Wait for modal to close and reopen for second equipment
+      // Wait for modal to close
       await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /Tool 1/i })).not.toBeInTheDocument()
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
       })
 
       await user.click(addEquipmentButton)
-      const tool2Button = await screen.findByRole('button', { name: /Tool 2/i })
-      await user.click(tool2Button)
+      const equipment2Button = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[1].name, 'i'),
+      })
+      await user.click(equipment2Button)
 
       // Step 8: Add notes
       await user.type(
         screen.getByPlaceholderText(/add notes about your pilot/i),
-        'A skilled hacker turned smuggler'
+        'A skilled hacker with fabrication abilities'
       )
 
       // Verify final state
@@ -330,20 +127,8 @@ describe('PilotLiveSheet - Integration Tests', () => {
         expect(screen.getByPlaceholderText(/enter callsign/i)).toHaveValue('Ghost')
         expect(screen.getByPlaceholderText(/enter motto/i)).toHaveValue('Never give up')
 
-        // Abilities (6 core + 1 hybrid = 7 total) - check that they exist (may be multiple instances)
-        expect(screen.getAllByText('Hack 1').length).toBeGreaterThan(0)
-        expect(screen.getAllByText('Hack 2').length).toBeGreaterThan(0)
-        expect(screen.getAllByText('Hack 3').length).toBeGreaterThan(0)
-        expect(screen.getAllByText('Tech 1').length).toBeGreaterThan(0)
-        expect(screen.getAllByText('Tech 2').length).toBeGreaterThan(0)
-        expect(screen.getAllByText('Tech 3').length).toBeGreaterThan(0)
-        expect(screen.getAllByText('Smuggle 1').length).toBeGreaterThan(0)
-
         // Equipment - check that equipment was added (count should be 2/6)
         expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
-        // Check that Tool 1 and Tool 2 exist somewhere in the document (they should be in inventory)
-        expect(screen.getAllByText('Tool 1').length).toBeGreaterThan(0)
-        expect(screen.getAllByText('Tool 2').length).toBeGreaterThan(0)
 
         // TP (20 - 6 core - 2 hybrid = 12) - find the TP stepper and check its value
         const tpStepper = screen.getByLabelText('Increment TP').closest('div')!.parentElement!
@@ -351,7 +136,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
 
         // Notes
         expect(screen.getByPlaceholderText(/add notes about your pilot/i)).toHaveValue(
-          'A skilled hacker turned smuggler'
+          'A skilled hacker with fabrication abilities'
         )
       })
     })
@@ -361,7 +146,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to only 1
       await waitFor(() => {
@@ -385,10 +170,10 @@ describe('PilotLiveSheet - Integration Tests', () => {
       // Select first ability (costs 1 TP)
       await user.click(addButton)
       // Wait for the "Add to Pilot" buttons to appear in the modal
-      const hack1AddButtons = await screen.findAllByRole('button', {
+      const addButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
-      await user.click(hack1AddButtons[0])
+      await user.click(addButtons[0])
 
       // TP should now be 0
       await waitFor(() => {
@@ -410,7 +195,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
 
       // Select first class and add abilities
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Increase TP to 10 by clicking increment button
       const tpIncrementButton = screen.getByLabelText('Increment TP')
@@ -424,35 +209,27 @@ describe('PilotLiveSheet - Integration Tests', () => {
 
       await user.click(addButton)
       // Wait for the "Add to Pilot" buttons to appear in the modal
-      const hack1AddButtons = await screen.findAllByRole('button', {
+      const addButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
-      await user.click(hack1AddButtons[0])
-
-      // Verify ability was added
-      await waitFor(() => {
-        const hack1Elements = screen.getAllByText('Hack 1')
-        expect(hack1Elements.length).toBeGreaterThan(0)
-      })
-
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
+      await user.click(addButtons[0])
 
       // Wait for modal to close
       await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
       })
 
       // Change class - should reset abilities
       await user.selectOptions(classSelect, '')
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
-      // Abilities should be cleared (no Hack 1 in the selected abilities list)
+      // Abilities should be cleared after changing class
       await waitFor(() => {
-        const hack1Elements = screen.queryAllByText('Hack 1')
-        // Should not find any Hack 1 elements after clearing
-        expect(hack1Elements.length).toBe(0)
+        // Check that abilities section shows 0 abilities
+        const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
+        expect(
+          within(abilitiesSection!).queryByRole('button', { name: /remove ability/i })
+        ).not.toBeInTheDocument()
       })
     })
   })

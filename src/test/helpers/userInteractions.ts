@@ -1,77 +1,10 @@
 import { screen, within, waitFor } from '@testing-library/react'
-import { expect, vi } from 'vitest'
+import { expect } from 'vitest'
 import type { UserEvent } from '@testing-library/user-event'
-import { SalvageUnionReference } from 'salvageunion-reference'
-import type {
-  SURefClass,
-  SURefAbility,
-  SURefEquipment,
-  SURefCrawler,
-  SURefCrawlerBay,
-  SURefCrawlerTechLevel,
-  SURefChassis,
-  SURefSystem,
-  SURefModule,
-} from 'salvageunion-reference'
 
 /**
  * Common user interaction helpers for tests
  * These eliminate duplicate interaction patterns across test files
- */
-
-/**
- * Setup mock return values for SalvageUnionReference
- * Call this in your beforeEach to configure mocks for a test
- */
-export function setupSalvageUnionMocks(options: {
-  classes?: SURefClass[]
-  abilities?: SURefAbility[]
-  equipment?: SURefEquipment[]
-  crawlers?: SURefCrawler[]
-  crawlerBays?: SURefCrawlerBay[]
-  crawlerTechLevels?: SURefCrawlerTechLevel[]
-  chassis?: SURefChassis[]
-  systems?: SURefSystem[]
-  modules?: SURefModule[]
-}) {
-  if (options.classes) {
-    vi.mocked(SalvageUnionReference.Classes.all).mockReturnValue(options.classes)
-  }
-
-  if (options.abilities) {
-    vi.mocked(SalvageUnionReference.Abilities.all).mockReturnValue(options.abilities)
-  }
-
-  if (options.equipment) {
-    vi.mocked(SalvageUnionReference.Equipment.all).mockReturnValue(options.equipment)
-  }
-
-  if (options.crawlers) {
-    vi.mocked(SalvageUnionReference.Crawlers.all).mockReturnValue(options.crawlers)
-  }
-
-  if (options.crawlerBays) {
-    vi.mocked(SalvageUnionReference.CrawlerBays.all).mockReturnValue(options.crawlerBays)
-  }
-
-  if (options.crawlerTechLevels) {
-    vi.mocked(SalvageUnionReference.CrawlerTechLevels.all).mockReturnValue(
-      options.crawlerTechLevels
-    )
-  }
-
-  if (options.chassis) {
-    vi.mocked(SalvageUnionReference.Chassis.all).mockReturnValue(options.chassis)
-  }
-
-  if (options.systems) {
-    vi.mocked(SalvageUnionReference.Systems.all).mockReturnValue(options.systems)
-  }
-
-  if (options.modules) {
-    vi.mocked(SalvageUnionReference.Modules.all).mockReturnValue(options.modules)
-  }
-}
 
 /**
  * Increment TP (Talent Points) by clicking the increment button N times

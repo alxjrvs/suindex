@@ -1,39 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefClass, SURefAbility, SURefEquipment } from 'salvageunion-reference'
-
-import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Pilot Information', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: [],
-    },
-  ]
+  // Use real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
+  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
 
-  const mockAbilities: SURefAbility[] = []
-  const mockEquipment: SURefEquipment[] = []
-
-  beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
-  })
+  if (!hackerClass) {
+    throw new Error('Hacker class not found in salvageunion-reference')
+  }
 
   describe('Input Fields', () => {
     it('shows callsign input field', () => {
@@ -77,7 +55,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
       await user.type(callsignInput, 'Ghost')
@@ -91,7 +69,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const mottoInput = screen.getByPlaceholderText(/enter motto/i)
       await user.type(mottoInput, 'Never give up')
@@ -105,7 +83,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const keepsakeInput = screen.getByPlaceholderText(/enter keepsake/i)
       await user.type(keepsakeInput, 'Lucky coin')
@@ -119,7 +97,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const backgroundInput = screen.getByPlaceholderText(/enter background/i)
       await user.type(backgroundInput, 'Former soldier')
@@ -133,7 +111,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
       await user.type(appearanceInput, 'Tall with dark hair')
@@ -170,7 +148,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /motto/i,
@@ -189,7 +167,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /keepsake/i,
@@ -208,7 +186,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /background/i,
@@ -227,7 +205,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const usedCheckbox = screen.getByRole('checkbox', {
         name: /motto/i,
@@ -257,7 +235,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const notesTextarea = screen.getByPlaceholderText(/add notes about your pilot/i)
       await user.type(notesTextarea, 'This character is brave and loyal')
@@ -271,7 +249,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const notesTextarea = screen.getByPlaceholderText(/add notes about your pilot/i)
       await user.type(notesTextarea, 'Line 1{Enter}Line 2{Enter}Line 3')
@@ -287,7 +265,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const callsignInput = screen.getByPlaceholderText(/enter callsign/i)
       await user.type(callsignInput, 'Ghost')
@@ -301,7 +279,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const mottoInput = screen.getByPlaceholderText(/enter motto/i)
       await user.type(mottoInput, 'Never give up')
@@ -315,7 +293,7 @@ describe('PilotLiveSheet - Pilot Information', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const appearanceInput = screen.getByPlaceholderText(/enter appearance/i)
       await user.type(appearanceInput, 'Tall and strong')

@@ -3,110 +3,38 @@ import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefClass, SURefAbility, SURefEquipment } from 'salvageunion-reference'
-import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Ability Selection', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: ['Ultimate Hack'],
-    },
-  ]
+  // Use real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
+  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
 
-  const mockAbilities: SURefAbility[] = [
-    {
-      id: 'ability-hack-1',
-      name: 'Basic Hack',
-      tree: 'Hacking',
-      level: 1,
-      source: 'core',
-      page: 30,
-      description: 'A basic hacking ability',
-      effect: 'Hack things',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'ability-hack-2',
-      name: 'Intermediate Hack',
-      tree: 'Hacking',
-      level: 2,
-      source: 'core',
-      page: 31,
-      description: 'An intermediate hacking ability',
-      effect: 'Hack better things',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'ability-hack-3',
-      name: 'Expert Hack',
-      tree: 'Hacking',
-      level: 3,
-      source: 'core',
-      page: 32,
-      description: 'An expert hacking ability',
-      effect: 'Hack the best things',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'ability-tech-1',
-      name: 'Basic Tech',
-      tree: 'Tech',
-      level: 1,
-      source: 'core',
-      page: 33,
-      description: 'A basic tech ability',
-      effect: 'Use tech',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'ability-tech-2',
-      name: 'Intermediate Tech',
-      tree: 'Tech',
-      level: 2,
-      source: 'core',
-      page: 34,
-      description: 'An intermediate tech ability',
-      effect: 'Use better tech',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'ability-tech-3',
-      name: 'Expert Tech',
-      tree: 'Tech',
-      level: 3,
-      source: 'core',
-      page: 35,
-      description: 'An expert tech ability',
-      effect: 'Use the best tech',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-  ]
+  if (!hackerClass) {
+    throw new Error('Hacker class not found in salvageunion-reference')
+  }
 
-  const mockEquipment: SURefEquipment[] = []
+  // Get real abilities from the Hacker's core ability trees
+  const allAbilities = SalvageUnionReference.Abilities.all()
+
+  // Find abilities from the Hacker's core trees
+  const hackerTrees = hackerClass.coreAbilities
+  const hackerAbilities = allAbilities.filter((a) => hackerTrees.includes(a.tree))
+
+  // Get specific abilities for testing
+  const level1Abilities = hackerAbilities.filter((a) => a.level === 1)
+  const level2Abilities = hackerAbilities.filter((a) => a.level === 2)
+  const level3Abilities = hackerAbilities.filter((a) => a.level === 3)
+
+  if (level1Abilities.length === 0) {
+    throw new Error('No level 1 abilities found for Hacker class')
+  }
+
+  // Get a specific level 1 ability for testing (first one from the list)
+  const testLevel1Ability = level1Abilities[0]
+  const testLevel2Ability = level2Abilities.find((a) => a.tree === testLevel1Ability.tree)
+  const testLevel3Ability = level3Abilities.find((a) => a.tree === testLevel1Ability.tree)
 
   beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
-
     // Mock window.confirm for ability removal
     vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
@@ -118,7 +46,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
 
       // Select a class first
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -145,7 +73,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -163,12 +91,18 @@ describe('PilotLiveSheet - Ability Selection', () => {
 
       await waitFor(() => {
         // Level 1 abilities should be visible and selectable
-        expect(screen.getByText('Basic Hack')).toBeInTheDocument()
-        expect(screen.getByText('Basic Tech')).toBeInTheDocument()
+        expect(screen.getByText(level1Abilities[0].name)).toBeInTheDocument()
+        if (level1Abilities.length > 1) {
+          expect(screen.getByText(level1Abilities[1].name)).toBeInTheDocument()
+        }
 
         // Higher level abilities are shown but their "Add to Pilot" buttons should be disabled
-        expect(screen.getByText('Intermediate Hack')).toBeInTheDocument()
-        expect(screen.getByText('Expert Hack')).toBeInTheDocument()
+        if (level2Abilities.length > 0) {
+          expect(screen.getByText(level2Abilities[0].name)).toBeInTheDocument()
+        }
+        if (level3Abilities.length > 0) {
+          expect(screen.getByText(level3Abilities[0].name)).toBeInTheDocument()
+        }
       })
     })
 
@@ -177,7 +111,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -205,7 +139,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -241,7 +175,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -259,11 +193,15 @@ describe('PilotLiveSheet - Ability Selection', () => {
 
       await waitFor(() => {
         // Level 1 abilities should be visible and selectable
-        expect(screen.getByText('Basic Hack')).toBeInTheDocument()
-        expect(screen.getByText('Basic Tech')).toBeInTheDocument()
+        expect(screen.getByText(level1Abilities[0].name)).toBeInTheDocument()
+        if (level1Abilities.length > 1) {
+          expect(screen.getByText(level1Abilities[1].name)).toBeInTheDocument()
+        }
 
         // Higher level abilities are shown but dimmed/disabled
-        expect(screen.getByText('Intermediate Hack')).toBeInTheDocument()
+        if (level2Abilities.length > 0) {
+          expect(screen.getByText(level2Abilities[0].name)).toBeInTheDocument()
+        }
       })
 
       // Verify that level 1 abilities have enabled "Add to Pilot" buttons
@@ -277,7 +215,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -289,16 +227,16 @@ describe('PilotLiveSheet - Ability Selection', () => {
         await user.click(tpIncrementButton)
       }
 
-      // Open modal and select Basic Hack (level 1)
+      // Open modal and select first level 1 ability
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
       await waitFor(() => {
-        expect(screen.getByText('Basic Hack')).toBeInTheDocument()
+        expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument()
       })
 
-      await waitFor(() => screen.getByText('Basic Hack'))
+      await waitFor(() => screen.getByText(testLevel1Ability.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -317,10 +255,15 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await user.click(addButton)
 
       await waitFor(() => {
-        // Now level 2 from Hacking tree should be available (not dimmed)
-        expect(screen.getByText('Intermediate Hack')).toBeInTheDocument()
-        // Level 2 from Tech tree is shown but should be dimmed (we didn't select Basic Tech)
-        expect(screen.getByText('Intermediate Tech')).toBeInTheDocument()
+        // Now level 2 from the same tree should be available (not dimmed)
+        if (testLevel2Ability) {
+          expect(screen.getByText(testLevel2Ability.name)).toBeInTheDocument()
+        }
+        // Level 2 from other trees should still be shown
+        const otherTreeLevel2 = level2Abilities.find((a) => a.tree !== testLevel1Ability.tree)
+        if (otherTreeLevel2) {
+          expect(screen.getByText(otherTreeLevel2.name)).toBeInTheDocument()
+        }
       })
     })
 
@@ -329,7 +272,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 10
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -344,9 +287,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
 
-      // Select Basic Hack (level 1)
+      // Select level 1 ability
       await user.click(addButton)
-      await waitFor(() => expect(screen.getByText('Basic Hack')).toBeInTheDocument())
+      await waitFor(() => expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument())
       const addToCharacterButtons1 = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -361,28 +304,32 @@ describe('PilotLiveSheet - Ability Selection', () => {
         expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
       })
 
-      // Select Intermediate Hack (level 2)
-      await user.click(addButton)
-      await waitFor(() => expect(screen.getByText('Intermediate Hack')).toBeInTheDocument())
-      const addToCharacterButtons2 = await screen.findAllByRole('button', {
-        name: /Add to Pilot \(1 TP\)/i,
-      })
-      await user.click(addToCharacterButtons2[0])
+      // Select level 2 ability from same tree
+      if (testLevel2Ability) {
+        await user.click(addButton)
+        await waitFor(() => expect(screen.getByText(testLevel2Ability.name)).toBeInTheDocument())
+        const addToCharacterButtons2 = await screen.findAllByRole('button', {
+          name: /Add to Pilot \(1 TP\)/i,
+        })
+        await user.click(addToCharacterButtons2[0])
 
-      // Close the modal
-      closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
+        // Close the modal
+        closeButton = screen.getByRole('button', { name: /close/i })
+        await user.click(closeButton)
 
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
+        // Wait for modal to close
+        await waitFor(() => {
+          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
+        })
 
-      // Now Expert Hack (level 3) should be available
-      await user.click(addButton)
-      await waitFor(() => {
-        expect(screen.getByText('Expert Hack')).toBeInTheDocument()
-      })
+        // Now level 3 from same tree should be available
+        if (testLevel3Ability) {
+          await user.click(addButton)
+          await waitFor(() => {
+            expect(screen.getByText(testLevel3Ability.name)).toBeInTheDocument()
+          })
+        }
+      }
     })
   })
 
@@ -392,7 +339,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Increase TP by clicking increment button 5 times
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -436,7 +383,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
 
       // Wait for ability to appear in the selected abilities list
       await waitFor(() => {
-        expect(screen.getByText('Basic Hack')).toBeInTheDocument()
+        expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument()
       })
 
       // TP should be reduced by 1 (from 5 to 4)

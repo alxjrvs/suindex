@@ -2,165 +2,32 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import {
-  SalvageUnionReference,
-  type SURefAbility,
-  type SURefClass,
-  type SURefEquipment,
-} from 'salvageunion-reference'
-import { setupSalvageUnionMocks } from '../../../test/helpers'
+import { SalvageUnionReference } from 'salvageunion-reference'
 
 describe('PilotLiveSheet - Legendary Abilities', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: ['Ultimate Hack'],
-    },
-  ]
+  // Get real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
+  const allAbilities = SalvageUnionReference.Abilities.all()
 
-  const mockAbilities: SURefAbility[] = [
-    // Core abilities
-    {
-      id: 'hack-1',
-      name: 'Hack 1',
-      tree: 'Hacking',
-      level: 1,
-      source: 'core',
-      page: 30,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'hack-2',
-      name: 'Hack 2',
-      tree: 'Hacking',
-      level: 2,
-      source: 'core',
-      page: 31,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'hack-3',
-      name: 'Hack 3',
-      tree: 'Hacking',
-      level: 3,
-      source: 'core',
-      page: 32,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'tech-1',
-      name: 'Tech 1',
-      tree: 'Tech',
-      level: 1,
-      source: 'core',
-      page: 33,
-      description: '',
-      effect: '',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'tech-2',
-      name: 'Tech 2',
-      tree: 'Tech',
-      level: 2,
-      source: 'core',
-      page: 34,
-      description: '',
-      effect: '',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'tech-3',
-      name: 'Tech 3',
-      tree: 'Tech',
-      level: 3,
-      source: 'core',
-      page: 35,
-      description: '',
-      effect: '',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    // Advanced abilities
-    {
-      id: 'adv-hack-1',
-      name: 'Adv Hack 1',
-      tree: 'Advanced Hacking',
-      level: 1,
-      source: 'core',
-      page: 40,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'adv-hack-2',
-      name: 'Adv Hack 2',
-      tree: 'Advanced Hacking',
-      level: 2,
-      source: 'core',
-      page: 41,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'adv-hack-3',
-      name: 'Adv Hack 3',
-      tree: 'Advanced Hacking',
-      level: 3,
-      source: 'core',
-      page: 42,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    // Legendary
-    {
-      id: 'legendary-1',
-      name: 'Ultimate Hack',
-      tree: 'Advanced Hacking',
-      level: 4,
-      source: 'core',
-      page: 60,
-      description: 'The ultimate hack',
-      effect: 'Hack everything',
-      actionType: 'Turn',
-      activationCost: 3,
-    },
-  ]
+  // Find Hacker class for testing
+  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
 
-  const mockEquipment: SURefEquipment[] = []
+  if (!hackerClass) {
+    throw new Error('Hacker class not found in salvageunion-reference')
+  }
+
+  // Get legendary abilities for Hacker class
+  const legendaryAbilityNames = new Set(hackerClass.legendaryAbilities || [])
+  const legendaryAbilities = allAbilities.filter((a) => legendaryAbilityNames.has(a.name))
+
+  if (legendaryAbilities.length === 0) {
+    throw new Error('No legendary abilities found for Hacker class')
+  }
+
+  // Use the first legendary ability for testing
+  const testLegendaryAbility = legendaryAbilities[0]
 
   beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
     // Mock window.confirm to always return true
     vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
@@ -171,7 +38,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 20 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -229,7 +96,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
 
       // Select advanced class
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, 'class-hacker')
+      await user.selectOptions(advancedClassSelect, hackerClass.id)
 
       // Select only 2 advanced abilities (not all 3)
       await user.click(addButton)
@@ -273,7 +140,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       })
 
       // Legendary ability should be visible
-      expect(screen.getByText('Ultimate Hack')).toBeInTheDocument()
+      expect(screen.getByText(testLegendaryAbility.name)).toBeInTheDocument()
 
       // But the "Add to Pilot (3 TP)" button should NOT be present (hidden when not selectable)
       expect(
@@ -286,7 +153,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 30 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -344,7 +211,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
 
       // Select advanced class
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, 'class-hacker')
+      await user.selectOptions(advancedClassSelect, hackerClass.id)
 
       // Select all 3 advanced abilities
       for (let i = 0; i < 3; i++) {
@@ -367,7 +234,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       // Open modal - legendary should now be visible
       await user.click(addButton)
       await waitFor(() => {
-        expect(screen.getByText('Ultimate Hack')).toBeInTheDocument()
+        expect(screen.getByText(testLegendaryAbility.name)).toBeInTheDocument()
       })
     })
 
@@ -376,7 +243,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 30 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -433,7 +300,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       })
 
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, 'class-hacker')
+      await user.selectOptions(advancedClassSelect, hackerClass.id)
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
@@ -460,7 +327,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
 
       // Select legendary ability
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Ultimate Hack'))
+      await waitFor(() => screen.getByText(testLegendaryAbility.name))
 
       // Find and click the "Add to Pilot (3 TP)" button
       const addToCharacterButtons = await screen.findAllByRole('button', {
@@ -489,7 +356,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 30 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -546,7 +413,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       })
 
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, 'class-hacker')
+      await user.selectOptions(advancedClassSelect, hackerClass.id)
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
@@ -567,7 +434,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
 
       // Select legendary ability
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Ultimate Hack'))
+      await waitFor(() => screen.getByText(testLegendaryAbility.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(3 TP\)/i,
       })
@@ -584,7 +451,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
 
       // Legendary ability should now be displayed in the abilities list
       await waitFor(() => {
-        expect(screen.getByText('Ultimate Hack')).toBeInTheDocument()
+        expect(screen.getByText(testLegendaryAbility.name)).toBeInTheDocument()
       })
 
       // Open modal again - legendary section should be visible but button should not be present (already selected one)
