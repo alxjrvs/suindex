@@ -1,5 +1,8 @@
 import { supabase } from '../supabase'
 import type { Tables, TablesInsert } from '../../types/database'
+export { fetchCrawlerPilots } from './pilots'
+export { fetchPilotsMechs } from './mechs'
+export { fetchGameCrawler } from './crawlers'
 
 export type GameRow = Tables<'games'>
 export type GameMember = {
@@ -40,6 +43,21 @@ export async function fetchUserGames(userId: string): Promise<GameRow[]> {
 
   if (error) throw error
   return (data || []) as GameRow[]
+}
+
+/**
+ * Fetch user's games with their role in each game
+ */
+export async function fetchUserGamesWithRoles(
+  userId: string
+): Promise<Array<{ game_id: string; role: string }>> {
+  const { data, error } = await supabase
+    .from('game_members')
+    .select('game_id, role')
+    .eq('user_id', userId)
+
+  if (error) throw error
+  return (data || []) as Array<{ game_id: string; role: string }>
 }
 
 /**

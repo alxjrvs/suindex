@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { supabase } from '../lib/supabase'
+import { fetchEntity, updateEntity } from '../lib/api'
 import type { ValidTable } from '../types/database'
 
 export interface UseLiveSheetStateConfig<T> {
@@ -50,16 +50,8 @@ export function useLiveSheetState<T extends { id: string }>(
         setLoading(true)
         setError(null)
 
-        const { data, error: fetchError } = await supabase
-          .from(config.table)
-          .select('*')
-          .eq('id', config.id!)
-          .single()
-
-        if (fetchError) throw fetchError
-        if (!data) throw new Error(`${config.table} not found`)
-
-        setEntity(data as T)
+        const data = await fetchEntity<T>(config.table, config.id!)
+        setEntity(data)
       } catch (err) {
         console.error(`Error loading ${config.table}:`, err)
         setError(err instanceof Error ? err.message : `Failed to load ${config.table}`)
@@ -80,17 +72,8 @@ export function useLiveSheetState<T extends { id: string }>(
       try {
         isSavingRef.current = true
 
-        const { error: updateError } = await supabase
-          .from(config.table)
-          .update(updates)
-          .eq('id', config.id)
-
-        if (updateError) {
-          console.error(`Failed to update ${config.table}:`, updateError)
-          setError(updateError.message)
-        } else {
-          setError(null)
-        }
+        await updateEntity<T>(config.table, config.id, updates)
+        setError(null)
       } catch (err) {
         console.error(`Error saving ${config.table}:`, err)
         setError(err instanceof Error ? err.message : `Failed to save ${config.table}`)

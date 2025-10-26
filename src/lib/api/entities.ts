@@ -4,15 +4,8 @@ import type { ValidTable } from '../../types/database'
 /**
  * Fetch a single entity by ID from any table
  */
-export async function fetchEntity<T>(
-  table: ValidTable,
-  id: string
-): Promise<T> {
-  const { data, error } = await supabase
-    .from(table)
-    .select('*')
-    .eq('id', id)
-    .single()
+export async function fetchEntity<T>(table: ValidTable, id: string): Promise<T> {
+  const { data, error } = await supabase.from(table).select('*').eq('id', id).single()
 
   if (error) throw error
   if (!data) throw new Error(`${table} not found`)
@@ -58,10 +51,7 @@ export async function updateEntity<T>(
   id: string,
   updates: Partial<T>
 ): Promise<void> {
-  const { error } = await supabase
-    .from(table)
-    .update(updates)
-    .eq('id', id)
+  const { error } = await supabase.from(table).update(updates).eq('id', id)
 
   if (error) throw error
 }
@@ -69,10 +59,7 @@ export async function updateEntity<T>(
 /**
  * Create an entity in any table
  */
-export async function createEntity<T>(
-  table: ValidTable,
-  data: T
-): Promise<T> {
+export async function createEntity<T>(table: ValidTable, data: T): Promise<T> {
   const { data: result, error } = await supabase
     .from(table)
     .insert(data as never)
@@ -87,15 +74,8 @@ export async function createEntity<T>(
 /**
  * Delete an entity from any table
  */
-export async function deleteEntity(
-  table: ValidTable,
-  id: string
-): Promise<void> {
-  const { error } = await supabase
-    .from(table)
-    .delete()
-    .eq('id', id)
+export async function deleteEntity(table: ValidTable, id: string): Promise<void> {
+  const { error } = await supabase.from(table).delete().eq('id', id)
 
   if (error) throw error
 }
-

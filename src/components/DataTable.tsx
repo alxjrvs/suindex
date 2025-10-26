@@ -344,7 +344,7 @@ export default function DataTable({ data, schema }: DataTableProps) {
                     cursor="pointer"
                     _hover={{ bg: 'su.lightOrange' }}
                     onClick={() => {
-                      navigate(`/reference/schema/${schemaId}/item/${item.id}`)
+                      navigate(`/schema/${schemaId}/item/${item.id}`)
                     }}
                     borderTopWidth={index > 0 ? '1px' : '0'}
                     borderColor="su.lightBlue"

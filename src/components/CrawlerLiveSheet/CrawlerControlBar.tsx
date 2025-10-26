@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getUser } from '../../lib/api'
-import { supabase } from '../../lib/supabase'
+import { fetchUserGames, getUser } from '../../lib/api'
 import { SheetSelect } from '../shared/SheetSelect'
 import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { LinkButton } from '../shared/LinkButton'
@@ -23,38 +22,24 @@ export function CrawlerControlBar({
 
   // Fetch games (only fetch games the user is a member of)
   useEffect(() => {
-    const fetchGames = async () => {
+    const loadGames = async () => {
       try {
         setLoadingGames(true)
         const user = await getUser()
-        if (!user) return
-
-        // Get games where user is a member
-        const { data: memberData } = await supabase
-          .from('game_members')
-          .select('game_id')
-          .eq('user_id', user.id)
-
-        if (!memberData) return
-
-        const gameIds = memberData.map((m) => m.game_id)
-        if (gameIds.length === 0) {
+        if (!user) {
           setGames([])
           return
         }
-
-        const { data } = await supabase
-          .from('games')
-          .select('id, name')
-          .in('id', gameIds)
-          .order('name')
-
-        if (data) setGames(data)
+        const games = await fetchUserGames(user.id)
+        setGames(games.map((g) => ({ id: g.id, name: g.name })))
+      } catch (err) {
+        console.error('Failed to load games:', err)
+        setGames([])
       } finally {
         setLoadingGames(false)
       }
     }
-    fetchGames()
+    loadGames()
   }, [])
 
   return (
