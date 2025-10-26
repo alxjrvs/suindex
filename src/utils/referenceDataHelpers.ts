@@ -88,11 +88,7 @@ export function findCrawlerTechLevel(techLevel: number) {
  * @param fallback - Fallback number if tech level not found (default: 20)
  * @returns The structure points or fallback
  */
-export function getStructurePointsForTechLevel(
-  techLevel: number | null,
-  fallback = 20
-): number {
+export function getStructurePointsForTechLevel(techLevel: number | null, fallback = 20): number {
   if (techLevel === null) return fallback
   return findCrawlerTechLevel(techLevel)?.structurePoints ?? fallback
 }
-
