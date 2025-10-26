@@ -220,3 +220,36 @@ export function getEquipment() {
 
   return allEquipment
 }
+
+/**
+ * Get all classes (Core, Advanced, and Hybrid) combined
+ * @returns Array of all classes
+ */
+export function getAllClasses() {
+  return [
+    ...SalvageUnionReference.CoreClasses.all(),
+    ...SalvageUnionReference.AdvancedClasses.all(),
+    ...SalvageUnionReference.HybridClasses.all(),
+  ]
+}
+
+/**
+ * Find a class by ID across all class types
+ * @param classId - The ID of the class to find
+ * @returns The class object or undefined if not found
+ */
+export function findClassById(classId: string) {
+  const allClasses = getAllClasses()
+  return allClasses.find((c) => c.id === classId)
+}
+
+/**
+ * Get class name by ID with fallback
+ * @param classId - The ID of the class to find
+ * @param fallback - Fallback string if class not found (default: 'Unknown')
+ * @returns The class name or fallback
+ */
+export function getClassNameById(classId: string | null, fallback = 'Unknown'): string {
+  if (!classId) return fallback
+  return findClassById(classId)?.name ?? fallback
+}

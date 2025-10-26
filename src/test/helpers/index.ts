@@ -28,7 +28,19 @@ export {
   getAbilitiesForClass,
   getAbilitiesByLevel,
   getEquipment,
+  getAllClasses,
+  findClassById,
+  getClassNameById,
 } from './referenceData'
+
+// Grid test setup helpers
+export {
+  setupGridTestMocks,
+  setupGridBeforeEach,
+  setupGridTest,
+  mockWindowConfirm,
+  mockWindowConfirmCancel,
+} from './gridTestSetup'
 
 // Stepper helpers
 export {

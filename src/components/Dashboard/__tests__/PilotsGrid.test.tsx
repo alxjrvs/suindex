@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, waitFor } from '../../../test/chakra-utils'
+import { renderWithRouter, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
-import { BrowserRouter } from 'react-router-dom'
 import { PilotsGrid } from '../PilotsGrid'
 import * as api from '../../../lib/api'
 import { createMockUser, createMockPilots } from '../../../test/mockFactories'
@@ -35,11 +34,7 @@ describe('PilotsGrid', () => {
 
   describe('Grid Display', () => {
     it('should render page title', async () => {
-      render(
-        <BrowserRouter>
-          <PilotsGrid />
-        </BrowserRouter>
-      )
+      renderWithRouter(<PilotsGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Your Pilots')).toBeInTheDocument()
@@ -47,11 +42,7 @@ describe('PilotsGrid', () => {
     })
 
     it('should render create pilot button', async () => {
-      render(
-        <BrowserRouter>
-          <PilotsGrid />
-        </BrowserRouter>
-      )
+      renderWithRouter(<PilotsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new pilot/i })).toBeInTheDocument()
@@ -59,11 +50,7 @@ describe('PilotsGrid', () => {
     })
 
     it('should render pilot cards after loading', async () => {
-      render(
-        <BrowserRouter>
-          <PilotsGrid />
-        </BrowserRouter>
-      )
+      renderWithRouter(<PilotsGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Test Pilot 1')).toBeInTheDocument()
@@ -72,11 +59,7 @@ describe('PilotsGrid', () => {
     })
 
     it('should display pilot stats on cards', async () => {
-      render(
-        <BrowserRouter>
-          <PilotsGrid />
-        </BrowserRouter>
-      )
+      renderWithRouter(<PilotsGrid />)
 
       await waitFor(() => {
         // Check for HP and AP stats
@@ -93,11 +76,7 @@ describe('PilotsGrid', () => {
       const newPilot = { ...mockPilots[0], id: 'new-pilot-id' }
       mockCreateEntity.mockResolvedValue(newPilot as never)
 
-      render(
-        <BrowserRouter>
-          <PilotsGrid />
-        </BrowserRouter>
-      )
+      renderWithRouter(<PilotsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new pilot/i })).toBeInTheDocument()
@@ -117,11 +96,7 @@ describe('PilotsGrid', () => {
       const newPilot = { ...mockPilots[0], id: 'new-pilot-id' }
       mockCreateEntity.mockResolvedValue(newPilot as never)
 
-      render(
-        <BrowserRouter>
-          <PilotsGrid />
-        </BrowserRouter>
-      )
+      renderWithRouter(<PilotsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new pilot/i })).toBeInTheDocument()
@@ -140,11 +115,7 @@ describe('PilotsGrid', () => {
     it('should navigate to pilot detail when card is clicked', async () => {
       const user = userEvent.setup()
 
-      render(
-        <BrowserRouter>
-          <PilotsGrid />
-        </BrowserRouter>
-      )
+      renderWithRouter(<PilotsGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Test Pilot 1')).toBeInTheDocument()

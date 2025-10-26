@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router'
 import type { Tables } from '../../types/database'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { PilotGridCard } from './PilotGridCard'
 import { GridLayout } from './GridLayout'
+import { getClassNameById } from '../../utils/referenceDataHelpers'
 
 type PilotRow = Tables<'pilots'>
 
@@ -46,14 +46,7 @@ export function PilotsGrid() {
       error={error}
       items={pilots}
       renderItem={(pilot) => {
-        const allClasses = [
-          ...SalvageUnionReference.CoreClasses.all(),
-          ...SalvageUnionReference.AdvancedClasses.all(),
-          ...SalvageUnionReference.HybridClasses.all(),
-        ]
-        const className = pilot.class_id
-          ? (allClasses.find((c) => c.id === pilot.class_id)?.name ?? 'Unknown')
-          : null
+        const className = pilot.class_id ? getClassNameById(pilot.class_id) : null
         const currentHP = pilot.current_damage ?? 0
         const maxHP = pilot.max_hp ?? 10
         const currentAP = pilot.current_ap ?? 0

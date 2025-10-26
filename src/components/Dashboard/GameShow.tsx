@@ -15,9 +15,14 @@ import {
   type GameInvite,
   type ExternalLink,
 } from '../../lib/api'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import { ExternalLinkModal } from './ExternalLinkModal'
 import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
+import {
+  getCrawlerNameById,
+  getStructurePointsForTechLevel,
+  getClassNameById,
+  getChassisNameById,
+} from '../../utils/referenceDataHelpers'
 
 type GameInviteRow = GameInvite
 type ExternalLinkRow = ExternalLink
@@ -260,14 +265,10 @@ export function GameShow() {
   const { crawler, pilots } = gameWithRelationships
 
   const crawlerTypeName = crawler?.crawler_type_id
-    ? (SalvageUnionReference.Crawlers.find((c) => c.id === crawler.crawler_type_id)?.name ??
-      'Unknown')
+    ? getCrawlerNameById(crawler.crawler_type_id)
     : ''
 
-  const crawlerMaxSP = crawler?.tech_level
-    ? (SalvageUnionReference.CrawlerTechLevels.find((tl) => tl.techLevel === crawler.tech_level)
-        ?.structurePoints ?? 20)
-    : 20
+  const crawlerMaxSP = crawler?.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
 
   return (
     <Box p={4} maxW="6xl" mx="auto">
@@ -428,17 +429,11 @@ export function GameShow() {
                   <VStack mt={4} gap={3} align="stretch">
                     <Heading level="h3">Pilots</Heading>
                     {pilots.map(({ pilot, mech }) => {
-                      const allClasses = [
-                        ...SalvageUnionReference.CoreClasses.all(),
-                        ...SalvageUnionReference.AdvancedClasses.all(),
-                        ...SalvageUnionReference.HybridClasses.all(),
-                      ]
                       const className = pilot.class_id
-                        ? allClasses.find((c) => c.id === pilot.class_id)?.name || 'Unknown Class'
+                        ? getClassNameById(pilot.class_id, 'Unknown Class')
                         : 'No Class'
                       const chassisName = mech?.chassis_id
-                        ? SalvageUnionReference.Chassis.find((c) => c.id === mech.chassis_id)
-                            ?.name || 'Unknown Chassis'
+                        ? getChassisNameById(mech.chassis_id, 'Unknown Chassis')
                         : null
                       const mechDisplayName = mech
                         ? mech.pattern || chassisName || 'Unnamed Mech'
