@@ -6,8 +6,8 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 
 describe('PilotLiveSheet - Ability Selection', () => {
   // Use real data from salvageunion-reference
-  const allClasses = SalvageUnionReference.Classes.all()
-  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
+  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
+  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
 
   if (!hackerClass) {
     throw new Error('Hacker class not found in salvageunion-reference')
@@ -17,7 +17,7 @@ describe('PilotLiveSheet - Ability Selection', () => {
   const allAbilities = SalvageUnionReference.Abilities.all()
 
   // Find abilities from the Hacker's core trees
-  const hackerTrees = hackerClass.coreAbilities
+  const hackerTrees = hackerClass.coreTrees
   const hackerAbilities = allAbilities.filter((a) => hackerTrees.includes(a.tree))
 
   // Get specific abilities for testing

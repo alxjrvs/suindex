@@ -21,7 +21,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
   const [isAbilitySelectorOpen, setIsAbilitySelectorOpen] = useState(false)
   const [isEquipmentSelectorOpen, setIsEquipmentSelectorOpen] = useState(false)
 
-  const allClasses = SalvageUnionReference.Classes.all()
+  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
   const allAbilities = SalvageUnionReference.Abilities.all()
   const allEquipment = SalvageUnionReference.Equipment.all()
 
@@ -95,7 +95,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           appearance={pilot.appearance ?? ''}
           classId={pilot.class_id ?? null}
           advancedClassId={pilot.advanced_class_id ?? null}
-          allClasses={allClasses}
+          allCoreClasses={allCoreClasses}
           availableAdvancedClasses={availableAdvancedClasses}
           disabled={!selectedClass}
           onCallsignChange={(value) => updatePilot({ callsign: value })}
@@ -136,7 +136,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         onAddClick={() => setIsAbilitySelectorOpen(true)}
         currentTP={pilot.current_tp ?? 0}
         disabled={!selectedClass}
-        coreTreeNames={selectedClass?.coreAbilities || []}
+        coreTreeNames={selectedClass?.coreTrees || []}
       />
 
       {/* Equipment Section */}

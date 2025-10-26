@@ -6,22 +6,29 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 
 describe('PilotLiveSheet - Legendary Abilities', () => {
   // Get real data from salvageunion-reference
-  const allClasses = SalvageUnionReference.Classes.all()
+  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
+  const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
   const allAbilities = SalvageUnionReference.Abilities.all()
 
   // Find Hacker class for testing
-  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
+  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
+  const hackerAdvancedClass = allAdvancedClasses.find((c) => c.name === 'Advanced Hacker')
 
   if (!hackerClass) {
     throw new Error('Hacker class not found in salvageunion-reference')
   }
 
-  // Get legendary abilities for Hacker class
-  const legendaryAbilityNames = new Set(hackerClass.legendaryAbilities || [])
-  const legendaryAbilities = allAbilities.filter((a) => legendaryAbilityNames.has(a.name))
+  if (!hackerAdvancedClass) {
+    throw new Error('Advanced Hacker class not found in salvageunion-reference')
+  }
+
+  // Get legendary abilities for Hacker advanced class by tree
+  const legendaryAbilities = allAbilities.filter(
+    (a) => a.tree === hackerAdvancedClass.legendaryTree
+  )
 
   if (legendaryAbilities.length === 0) {
-    throw new Error('No legendary abilities found for Hacker class')
+    throw new Error('No legendary abilities found for Advanced Hacker class')
   }
 
   // Use the first legendary ability for testing
@@ -96,7 +103,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
 
       // Select advanced class
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, hackerClass.id)
+      await user.selectOptions(advancedClassSelect, hackerAdvancedClass.id)
 
       // Select only 2 advanced abilities (not all 3)
       await user.click(addButton)
@@ -211,7 +218,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
 
       // Select advanced class
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, hackerClass.id)
+      await user.selectOptions(advancedClassSelect, hackerAdvancedClass.id)
 
       // Select all 3 advanced abilities
       for (let i = 0; i < 3; i++) {
@@ -300,7 +307,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       })
 
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, hackerClass.id)
+      await user.selectOptions(advancedClassSelect, hackerAdvancedClass.id)
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
@@ -413,7 +420,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       })
 
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, hackerClass.id)
+      await user.selectOptions(advancedClassSelect, hackerAdvancedClass.id)
 
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)

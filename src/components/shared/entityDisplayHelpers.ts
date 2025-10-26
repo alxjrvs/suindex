@@ -33,7 +33,7 @@ export function detectEntityType(data: SURefEntity): SURefEntityName {
 
   // Table: has table and section
   if ('table' in data && 'section' in data) {
-    return 'Table'
+    return 'RollTable'
   }
 
   // Ability: has tree, level, and name
@@ -121,7 +121,6 @@ export function getSchemaName(entityType: SURefEntityName): string {
     Equipment: 'Equipment',
     Ability: 'Ability',
     AbilityTreeRequirement: 'Ability Tree Requirement',
-    Table: 'Table',
     Crawler: 'Crawler',
     RollTable: 'Roll Table',
     CrawlerTechLevel: 'Crawler Tech Level',

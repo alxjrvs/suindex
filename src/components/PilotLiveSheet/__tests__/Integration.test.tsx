@@ -6,12 +6,13 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 
 describe('PilotLiveSheet - Integration Tests', () => {
   // Get real data from salvageunion-reference
-  const allClasses = SalvageUnionReference.Classes.all()
+  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
+  const allHybridClasses = SalvageUnionReference.HybridClasses.all()
   const allEquipment = SalvageUnionReference.Equipment.all()
 
   // Find specific classes for testing
-  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
-  const fabricatorClass = allClasses.find((c) => c.name === 'Fabricator') // Hybrid class
+  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
+  const fabricatorClass = allHybridClasses.find((c) => c.name === 'Fabricator') // Hybrid class
 
   if (!hackerClass) {
     throw new Error('Hacker class not found in salvageunion-reference')

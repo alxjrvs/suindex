@@ -29,7 +29,9 @@ const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
 }
 
 export function usePilotLiveSheetState(id?: string) {
-  const allClasses = SalvageUnionReference.Classes.all()
+  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
+  const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
+  const allHybridClasses = SalvageUnionReference.HybridClasses.all()
   const allAbilities = SalvageUnionReference.Abilities.all()
   const allEquipment = SalvageUnionReference.Equipment.all()
 
@@ -53,9 +55,12 @@ export function usePilotLiveSheetState(id?: string) {
     [updateEntity]
   )
 
-  const selectedClass = allClasses.find((c) => c.id === pilot.class_id)
+  const selectedClass = allCoreClasses.find((c) => c.id === pilot.class_id)
 
-  const selectedAdvancedClass = allClasses.find((c) => c.id === pilot.advanced_class_id)
+  // Advanced class can be either an AdvancedClass or a HybridClass
+  const selectedAdvancedClass =
+    allAdvancedClasses.find((c) => c.id === pilot.advanced_class_id) ||
+    allHybridClasses.find((c) => c.id === pilot.advanced_class_id)
 
   const availableAdvancedClasses = useMemo(() => {
     if ((pilot.abilities ?? []).length < 6) {
@@ -84,46 +89,59 @@ export function usePilotLiveSheetState(id?: string) {
     const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
     const results: AdvancedClassOption[] = []
 
-    // Check hybrid classes
-    const hybridClasses = allClasses.filter((cls) => cls.type === 'hybrid')
-
-    hybridClasses.forEach((cls) => {
-      const treeRequirement = allTreeRequirements.find((req) => req.tree === cls.advancedAbilities)
+    // Check hybrid classes - filter based on tree requirements
+    allHybridClasses.forEach((hybridClass) => {
+      const treeRequirement = allTreeRequirements.find(
+        (req) => req.tree === hybridClass.advancedTree
+      )
 
       if (!treeRequirement || !treeRequirement.requirement) {
         return
       }
 
-      const hasRequirement = treeRequirement.requirement.some((requiredTree: string) =>
+      // A hybrid class is available if the pilot has completed ANY of the required trees
+      const hasAnyRequirement = treeRequirement.requirement.some((requiredTree: string) =>
         completeTrees.includes(requiredTree)
       )
 
-      if (hasRequirement) {
+      if (hasAnyRequirement) {
         results.push({
-          id: cls.id,
-          name: cls.name,
+          id: hybridClass.id,
+          name: hybridClass.name,
           isAdvancedVersion: false,
         })
       }
     })
 
     // Check if player can take advanced version of their base class
-    if (selectedClass && selectedClass.coreAbilities) {
-      const hasAllTreesComplete = selectedClass.coreAbilities.some((tree) =>
-        completeTrees.includes(tree)
-      )
+    if (selectedClass && selectedClass.coreTrees) {
+      // Find the advanced class that corresponds to this core class
+      const advancedClass = allAdvancedClasses.find((ac) => ac.id === selectedClass.id)
 
-      if (hasAllTreesComplete) {
-        results.push({
-          id: selectedClass.id,
-          name: `Adv. ${selectedClass.name}`,
-          isAdvancedVersion: true,
-        })
+      if (advancedClass) {
+        const treeRequirement = allTreeRequirements.find(
+          (req) => req.tree === advancedClass.advancedTree
+        )
+
+        if (treeRequirement && treeRequirement.requirement) {
+          // Check if pilot has completed any of the required trees for the advanced class
+          const hasAnyRequirement = treeRequirement.requirement.some((requiredTree: string) =>
+            completeTrees.includes(requiredTree)
+          )
+
+          if (hasAnyRequirement) {
+            results.push({
+              id: selectedClass.id,
+              name: `Adv. ${selectedClass.name}`,
+              isAdvancedVersion: true,
+            })
+          }
+        }
       }
     }
 
     return results
-  }, [allClasses, pilot.abilities, selectedClass, allAbilities])
+  }, [allHybridClasses, allAdvancedClasses, pilot.abilities, selectedClass, allAbilities])
 
   const handleClassChange = useCallback(
     (classId: string | null) => {

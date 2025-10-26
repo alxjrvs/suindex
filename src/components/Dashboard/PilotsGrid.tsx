@@ -46,9 +46,13 @@ export function PilotsGrid() {
       error={error}
       items={pilots}
       renderItem={(pilot) => {
+        const allClasses = [
+          ...SalvageUnionReference.CoreClasses.all(),
+          ...SalvageUnionReference.AdvancedClasses.all(),
+          ...SalvageUnionReference.HybridClasses.all(),
+        ]
         const className = pilot.class_id
-          ? (SalvageUnionReference.Classes.all().find((c) => c.id === pilot.class_id)?.name ??
-            'Unknown')
+          ? (allClasses.find((c) => c.id === pilot.class_id)?.name ?? 'Unknown')
           : null
         const currentHP = pilot.current_damage ?? 0
         const maxHP = pilot.max_hp ?? 10

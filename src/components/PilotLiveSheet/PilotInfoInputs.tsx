@@ -4,7 +4,7 @@ import { SheetInput } from '../shared/SheetInput'
 import { SheetSelect } from '../shared/SheetSelect'
 import { RoundedBox } from '../shared/RoundedBox'
 import { rollTable } from '@randsum/salvageunion'
-import type { SURefClass } from 'salvageunion-reference'
+import type { SURefCoreClass } from 'salvageunion-reference'
 import type { AdvancedClassOption } from './types'
 
 interface PilotInfoInputsProps {
@@ -18,7 +18,7 @@ interface PilotInfoInputsProps {
   appearance: string
   classId: string | null
   advancedClassId: string | null
-  allClasses: SURefClass[]
+  allCoreClasses: SURefCoreClass[]
   availableAdvancedClasses: AdvancedClassOption[]
   disabled?: boolean
   onCallsignChange: (value: string) => void
@@ -44,7 +44,7 @@ export function PilotInfoInputs({
   appearance,
   classId,
   advancedClassId,
-  allClasses,
+  allCoreClasses,
   availableAdvancedClasses,
   disabled = false,
   onCallsignChange,
@@ -58,12 +58,10 @@ export function PilotInfoInputs({
   onClassChange,
   onAdvancedClassChange,
 }: PilotInfoInputsProps) {
-  // Filter to only show basic (core) classes
-  const basicClasses = useMemo(() => {
-    return allClasses
-      .filter((cls) => cls.type === 'core')
-      .sort((a, b) => a.name.localeCompare(b.name))
-  }, [allClasses])
+  // Sort core classes alphabetically
+  const sortedCoreClasses = useMemo(() => {
+    return [...allCoreClasses].sort((a, b) => a.name.localeCompare(b.name))
+  }, [allCoreClasses])
   const handleMottoRoll = () => {
     const {
       result: { label },
@@ -123,7 +121,7 @@ export function PilotInfoInputs({
               disabled={false}
               placeholder="Select..."
             >
-              {basicClasses.map((cls) => (
+              {sortedCoreClasses.map((cls) => (
                 <option key={cls.id} value={cls.id}>
                   {cls.name}
                 </option>
