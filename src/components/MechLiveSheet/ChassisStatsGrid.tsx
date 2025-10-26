@@ -22,7 +22,13 @@ export function ChassisStatsGrid({
 }: ChassisStatsGridProps) {
   return (
     <RoundedBox bg="su.green" h="full" w="full" disabled={disabled}>
-      <Flex flexDirection="row" justifyContent="space-between" w="full">
+      <Flex
+        flexDirection="row"
+        justifyContent="space-between"
+        w="full"
+        h="full"
+        alignItems="center"
+      >
         <StatDisplay
           label="Sys. Slots"
           value={`${usedSystemSlots}/${stats?.systemSlots || 0}`}

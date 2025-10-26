@@ -41,7 +41,7 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
           zIndex={10}
           w="full"
           mt={11}
-          bg="bg.input"
+          bg="su.white"
           borderWidth="2px"
           borderColor="fg.input"
           borderRadius="2xl"

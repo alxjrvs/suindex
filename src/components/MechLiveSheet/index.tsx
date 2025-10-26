@@ -12,12 +12,11 @@ import { CargoList } from './CargoList'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
-import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { RoundedBox } from '../shared/RoundedBox'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
 import { QuirkInput } from './QuirkInput'
 import { AppearanceInput } from './AppearanceInput'
+import { PilotInfo } from './PilotInfo'
 
 interface MechLiveSheetProps {
   id?: string
@@ -45,7 +44,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     loading,
     totalSalvageValue,
     error,
-    hasPendingChanges,
   } = useMechLiveSheetState(id)
 
   const allChassis = SalvageUnionReference.Chassis.all()
@@ -88,17 +86,24 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
   return (
     <LiveSheetLayout>
-      {id && (
-        <LiveSheetControlBar
-          config={MECH_CONTROL_BAR_CONFIG}
-          relationId={mech.pilot_id}
-          savedRelationId={mech.pilot_id}
-          onRelationChange={(pilotId) => updateMech({ pilot_id: pilotId })}
-          hasPendingChanges={hasPendingChanges}
-        />
-      )}
       <Flex gap={6}>
         <VStack flex="1" gap={6} alignItems="stretch">
+          <Flex gap={6} flexDirection="row" justifyContent="space-between" w="full">
+            <PilotInfo
+              mechId={id}
+              pilotId={mech.pilot_id}
+              onPilotChange={(pilotId) => updateMech({ pilot_id: pilotId })}
+              disabled={!selectedChassis}
+            />
+            <ChassisStatsGrid
+              stats={stats}
+              totalSalvageValue={totalSalvageValue}
+              usedSystemSlots={usedSystemSlots}
+              usedModuleSlots={usedModuleSlots}
+              totalCargo={totalCargo}
+              disabled={!selectedChassis}
+            />
+          </Flex>
           <RoundedBox bg="su.green" h="full" w="full" disabled={!selectedChassis}>
             <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
               <ChassisSelector
@@ -124,15 +129,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
               />
             </Grid>
           </RoundedBox>
-
-          <ChassisStatsGrid
-            stats={stats}
-            totalSalvageValue={totalSalvageValue}
-            usedSystemSlots={usedSystemSlots}
-            usedModuleSlots={usedModuleSlots}
-            totalCargo={totalCargo}
-            disabled={!selectedChassis}
-          />
         </VStack>
 
         <MechResourceSteppers
