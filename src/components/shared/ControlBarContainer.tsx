@@ -53,8 +53,6 @@ export function ControlBarContainer({
           {saveStatusIndicator}
         </HStack>
       }
-    >
-      {/* Empty children - content is in leftContent and rightContent */}
-    </RoundedBox>
+    />
   )
 }

@@ -12,7 +12,7 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   /** Optional content to display on the right side of the header (e.g., buttons, stats) */
   rightContent?: ReactNode
   /** Main content of the box */
-  children: ReactNode
+  children?: ReactNode
   /** Optional rotation for the title in degrees */
   titleRotation?: number
   /** Whether the box is disabled (grays out background and makes title opaque) */
