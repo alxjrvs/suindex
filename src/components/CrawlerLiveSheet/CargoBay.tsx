@@ -1,7 +1,7 @@
 import { RoundedBox } from '../shared/RoundedBox'
 import { AddStatButton } from '../shared/AddStatButton'
 import { DynamicBay } from '../shared/DynamicBay'
-import type { CargoItem } from '../../types/database'
+import type { CargoItem } from '../../types/common'
 import { useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
 

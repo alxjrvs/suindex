@@ -3,7 +3,7 @@ import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
 import { DynamicBay } from '../shared/DynamicBay'
-import type { CargoItem } from '../../types/database'
+import type { CargoItem } from '../../types/common'
 
 interface CargoListProps {
   cargo: CargoItem[]

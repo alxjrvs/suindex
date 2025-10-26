@@ -5,6 +5,8 @@ import { SheetTextarea } from '../shared/SheetTextarea'
 import type { SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import type { CrawlerLiveSheetState } from './types'
+import NumericStepper from '../NumericStepper'
+import { StatDisplay } from '../StatDisplay'
 
 interface CrawlerHeaderInputsProps {
   name: string
@@ -14,19 +16,57 @@ interface CrawlerHeaderInputsProps {
   updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
   onCrawlerTypeChange: (value: string | null) => void
   disabled?: boolean
+  maxSP: number
+  currentSP: number
+  crawler: CrawlerLiveSheetState
+  upkeep: string
+  maxUpgrade: number
 }
 
 export function CrawlerHeaderInputs({
   name,
+  upkeep,
+  maxUpgrade,
   crawlerTypeId,
   description,
   allCrawlers,
   updateEntity,
+  maxSP,
+  currentSP,
+  crawler,
   onCrawlerTypeChange,
   disabled = false,
 }: CrawlerHeaderInputsProps) {
   return (
-    <RoundedBox bg="bg.builder.crawler" h="full" w="full" flex="1" disabled={disabled}>
+    <RoundedBox
+      title="Crawler"
+      bg="bg.builder.crawler"
+      h="full"
+      w="full"
+      flex="1"
+      disabled={disabled}
+      leftContent={<StatDisplay label="TL" value={crawler.tech_level || 0} disabled={disabled} />}
+      rightContent={
+        <Flex gap="2">
+          <StatDisplay disabled={disabled} label="UPKEEP" value={upkeep} />
+          <NumericStepper
+            label="UPGRADE"
+            value={crawler.upgrade ?? 0}
+            onChange={(value) => updateEntity({ upgrade: value })}
+            max={maxUpgrade}
+            disabled={disabled}
+          />
+          <NumericStepper
+            label="SP"
+            value={currentSP}
+            onChange={(newSP) => updateEntity({ current_damage: maxSP - newSP })}
+            max={maxSP}
+            min={0}
+            disabled={disabled}
+          />
+        </Flex>
+      }
+    >
       <VStack gap={4} alignItems="stretch" w="full" h="full" flex="1">
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
           <SheetInput

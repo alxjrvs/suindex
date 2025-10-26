@@ -1,76 +1,90 @@
 import { Flex, Grid } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
-import { StatDisplay } from '../StatDisplay'
 import { RoundedBox } from '../shared/RoundedBox'
 import type { CrawlerLiveSheetState } from './types'
 
 interface CrawlerResourceSteppersProps {
-  currentDamage: number
-  maxSP: number
-  techLevel: number
-  upkeep: string
-  upgrade: number
-  maxUpgrade: number
-  currentScrap: number
+  scrapTlOne: number
+  scrapTlTwo: number
+  scrapTlThree: number
+  scrapTlFour: number
+  scrapTlFive: number
+  scrapTlSix: number
   updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
   disabled?: boolean
 }
 
 export function CrawlerResourceSteppers({
-  currentDamage,
-  maxSP,
-  techLevel,
-  upkeep,
-  upgrade,
-  maxUpgrade,
-  currentScrap,
+  scrapTlOne,
+  scrapTlTwo,
+  scrapTlThree,
+  scrapTlFour,
+  scrapTlFive,
+  scrapTlSix,
   updateEntity,
   disabled = false,
 }: CrawlerResourceSteppersProps) {
-  const currentSP = maxSP - currentDamage
-
   return (
-    <RoundedBox bg="bg.builder.crawler" disabled={disabled} justifyContent="flex-start">
+    <RoundedBox
+      title="SCRAP"
+      bg="bg.builder.crawler"
+      disabled={disabled}
+      justifyContent="flex-start"
+    >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
         <Flex justifyContent="start" alignItems="end">
           <NumericStepper
-            label="SP"
-            value={currentSP}
-            onChange={(newSP) => updateEntity({ current_damage: maxSP - newSP })}
-            max={maxSP}
+            label="TL1"
+            value={scrapTlOne}
+            onChange={(value) => updateEntity({ scrap_tl_one: value })}
             min={0}
             disabled={disabled}
           />
         </Flex>
         <Flex justifyContent="start" alignItems="end">
           <NumericStepper
-            label="TL"
-            value={techLevel}
-            onChange={(value) => updateEntity({ techLevel: value })}
-            min={1}
-            disabled={disabled}
-          />
-        </Flex>
-        <Flex justifyContent="start" alignItems="end">
-          <NumericStepper
-            label="UPGRADE"
-            value={upgrade}
-            onChange={(value) => updateEntity({ upgrade: value })}
-            max={maxUpgrade}
-            disabled={disabled}
-          />
-        </Flex>
-        <Flex justifyContent="start" alignItems="end">
-          <NumericStepper
-            label="SCRAP"
-            value={currentScrap}
-            onChange={(value) => updateEntity({ current_scrap: value })}
+            label="TL2"
+            value={scrapTlTwo}
+            onChange={(value) => updateEntity({ scrap_tl_two: value })}
             min={0}
             disabled={disabled}
           />
         </Flex>
         <Flex justifyContent="start" alignItems="end">
-          <StatDisplay disabled={disabled} label="UPKEEP" value={upkeep} />
+          <NumericStepper
+            label="TL3"
+            value={scrapTlThree}
+            onChange={(value) => updateEntity({ scrap_tl_three: value })}
+            min={0}
+            disabled={disabled}
+          />
+        </Flex>
+        <Flex justifyContent="start" alignItems="end">
+          <NumericStepper
+            label="TL4"
+            value={scrapTlFour}
+            onChange={(value) => updateEntity({ scrap_tl_four: value })}
+            min={0}
+            disabled={disabled}
+          />
+        </Flex>
+        <Flex justifyContent="start" alignItems="end">
+          <NumericStepper
+            label="TL5"
+            value={scrapTlFive}
+            onChange={(value) => updateEntity({ scrap_tl_five: value })}
+            min={0}
+            disabled={disabled}
+          />
+        </Flex>
+        <Flex justifyContent="start" alignItems="end">
+          <NumericStepper
+            label="TL6"
+            value={scrapTlSix}
+            onChange={(value) => updateEntity({ scrap_tl_six: value })}
+            min={0}
+            disabled={disabled}
+          />
         </Flex>
       </Grid>
     </RoundedBox>

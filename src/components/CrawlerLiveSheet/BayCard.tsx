@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Box, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { CrawlerBay } from '../../types/database'
+import type { CrawlerBay } from './types'
 import { RoundedBox } from '../shared/RoundedBox'
 import { NPCCard } from '../shared/NPCCard'
 import { BayInfo } from './BayInfo'

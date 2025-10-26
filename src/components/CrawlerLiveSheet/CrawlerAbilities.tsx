@@ -1,17 +1,10 @@
 import { type SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
-import { StatDisplay } from '../StatDisplay'
-import { Flex } from '@chakra-ui/react'
 import type { CrawlerLiveSheetState } from './types'
-import NumericStepper from '../NumericStepper'
 
 export function CrawlerAbilities({
   crawlerRef,
-  crawler,
-  upkeep,
-  maxUpgrade,
-  updateEntity,
   disabled = false,
 }: {
   upkeep: string
@@ -24,22 +17,9 @@ export function CrawlerAbilities({
   return (
     <RoundedBox
       bg="bg.builder.crawler"
-      title="Crawler"
+      title="Abilities"
       justifyContent={'flex-start'}
       disabled={disabled}
-      leftContent={<StatDisplay label="TL" value={crawler?.techLevel || 0} disabled={disabled} />}
-      rightContent={
-        <Flex gap="2">
-          <StatDisplay disabled={disabled} label="UPKEEP" value={upkeep} />
-          <NumericStepper
-            label="UPGRADE"
-            value={crawler.upgrade ?? 0}
-            onChange={(value) => updateEntity({ upgrade: value })}
-            max={maxUpgrade}
-            disabled={disabled}
-          />
-        </Flex>
-      }
       w="full"
     >
       {(

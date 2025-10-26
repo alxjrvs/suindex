@@ -89,23 +89,27 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
       {/* Header Section */}
       <Grid templateColumns="1fr auto" gap={6}>
         <CrawlerHeaderInputs
+          maxSP={maxSP}
+          currentSP={maxSP - (crawler.current_damage ?? 0)}
           name={crawler.name}
           crawlerTypeId={crawler.crawler_type_id ?? null}
           description={crawler.description ?? ''}
           allCrawlers={allCrawlers}
           updateEntity={updateEntity}
+          crawler={crawler}
+          upkeep={upkeep}
+          maxUpgrade={maxUpgrade}
           onCrawlerTypeChange={handleCrawlerTypeChange}
           disabled={!selectedCrawlerType}
         />
 
         <CrawlerResourceSteppers
-          currentDamage={crawler.current_damage ?? 0}
-          maxSP={maxSP}
-          techLevel={crawler.techLevel ?? 1}
-          upkeep={upkeep}
-          upgrade={crawler.upgrade ?? 0}
-          maxUpgrade={maxUpgrade}
-          currentScrap={crawler.current_scrap ?? 0}
+          scrapTlOne={crawler.scrap_tl_one ?? 0}
+          scrapTlTwo={crawler.scrap_tl_two ?? 0}
+          scrapTlThree={crawler.scrap_tl_three ?? 0}
+          scrapTlFour={crawler.scrap_tl_four ?? 0}
+          scrapTlFive={crawler.scrap_tl_five ?? 0}
+          scrapTlSix={crawler.scrap_tl_six ?? 0}
           updateEntity={updateEntity}
           disabled={!selectedCrawlerType}
         />

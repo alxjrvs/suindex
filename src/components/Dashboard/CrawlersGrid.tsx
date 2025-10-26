@@ -53,7 +53,7 @@ export function CrawlersGrid() {
           ? getCrawlerNameById(crawler.crawler_type_id)
           : 'Unknown'
 
-        const maxSP = crawler.techLevel ? getStructurePointsForTechLevel(crawler.techLevel) : 20
+        const maxSP = crawler.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
         const currentSP = maxSP - (crawler.current_damage ?? 0)
 
         return (

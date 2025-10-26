@@ -1,19 +1,36 @@
 import { supabase } from '../supabase'
-import type { ValidTable } from '../../types/database'
+import type { ValidTable } from '../../types/common'
 
 /**
- * Fetch a single entity by ID from any table
+ * Helper to safely cast database results to expected type.
+ * This is necessary because Supabase returns a union of all possible table types,
+ * but we know the specific table type based on the table parameter.
  */
-export async function fetchEntity<T>(table: ValidTable, id: string): Promise<T> {
-  const { data, error } = await supabase.from(table).select('*').eq('id', id).single()
-
-  if (error) throw error
-  if (!data) throw new Error(`${table} not found`)
+function castDatabaseResult<T>(data: unknown): T {
   return data as T
 }
 
 /**
+ * Fetch a single entity by ID from any table
+ *
+ * @template T - The expected row type (should match Tables<tableName>)
+ */
+export async function fetchEntity<T>(table: ValidTable, id: string): Promise<T> {
+  const { data, error } = await supabase
+    .from(table)
+    .select('*')
+    .eq('id' as never, id)
+    .single()
+
+  if (error) throw error
+  if (!data) throw new Error(`${table} not found`)
+  return castDatabaseResult<T>(data)
+}
+
+/**
  * Fetch all entities for a user from any table
+ *
+ * @template T - The expected row type (should match Tables<tableName>)
  */
 export async function fetchUserEntities<T extends { id: string }>(
   table: ValidTable,
@@ -25,14 +42,17 @@ export async function fetchUserEntities<T extends { id: string }>(
     filterValue?: string
   }
 ): Promise<T[]> {
-  let query = supabase.from(table).select('*').eq('user_id', userId)
+  let query = supabase
+    .from(table)
+    .select('*')
+    .eq('user_id' as never, userId)
 
   if (options?.filterField && options?.filterValue) {
-    query = query.eq(options.filterField, options.filterValue)
+    query = query.eq(options.filterField as never, options.filterValue)
   }
 
   if (options?.orderBy) {
-    query = query.order(options.orderBy, {
+    query = query.order(options.orderBy as never, {
       ascending: options.orderAscending ?? false,
     })
   }
@@ -40,7 +60,7 @@ export async function fetchUserEntities<T extends { id: string }>(
   const { data, error } = await query
 
   if (error) throw error
-  return (data || []) as T[]
+  return castDatabaseResult<T[]>(data || [])
 }
 
 /**
