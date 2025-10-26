@@ -71,11 +71,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
   const storageBay = (crawler.bays ?? []).find((bay) => bay.bayId === 'storage-bay')
   const regularBays = (crawler.bays ?? []).filter((bay) => bay.bayId !== 'storage-bay')
 
-  // Split regular bays into two groups for the grid layout
-  const firstRowBays = regularBays.slice(0, 3)
-  const secondRowBays = regularBays.slice(3, 6)
-  const thirdRowBays = regularBays.slice(6, 9)
-
   return (
     <LiveSheetLayout>
       {id && (
@@ -104,12 +99,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
 
         <CrawlerResourceSteppers
-          scrapTlOne={crawler.scrap_tl_one ?? 0}
-          scrapTlTwo={crawler.scrap_tl_two ?? 0}
-          scrapTlThree={crawler.scrap_tl_three ?? 0}
-          scrapTlFour={crawler.scrap_tl_four ?? 0}
-          scrapTlFive={crawler.scrap_tl_five ?? 0}
-          scrapTlSix={crawler.scrap_tl_six ?? 0}
+          crawler={crawler}
           updateEntity={updateEntity}
           disabled={!selectedCrawlerType}
         />
@@ -132,38 +122,10 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
       </Flex>
 
-      {/* Bays Grid - First Row */}
-      {firstRowBays.length > 0 && (
+      {/* Bays Grid - Dynamic Layout */}
+      {regularBays.length > 0 && (
         <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-          {firstRowBays.map((bay) => (
-            <BayCard
-              key={bay.id}
-              bay={bay}
-              onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
-              disabled={!selectedCrawlerType}
-            />
-          ))}
-        </Grid>
-      )}
-
-      {/* Bays Grid - Second Row */}
-      {secondRowBays.length > 0 && (
-        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-          {secondRowBays.map((bay) => (
-            <BayCard
-              key={bay.id}
-              bay={bay}
-              onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
-              disabled={!selectedCrawlerType}
-            />
-          ))}
-        </Grid>
-      )}
-
-      {/* Bays Grid - Third Row */}
-      {thirdRowBays.length > 0 && (
-        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-          {thirdRowBays.map((bay) => (
+          {regularBays.map((bay) => (
             <BayCard
               key={bay.id}
               bay={bay}

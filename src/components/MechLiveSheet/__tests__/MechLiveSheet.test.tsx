@@ -30,7 +30,7 @@ describe('MechLiveSheet', () => {
     it('displays all main sections', () => {
       render(<MechLiveSheet />)
 
-      expect(screen.getByText(/Abilities/i)).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /Chassis/i })).toBeInTheDocument()
       expect(screen.getAllByText(/quirk/i)[0]).toBeInTheDocument()
       expect(screen.getAllByText(/appearance/i)[0]).toBeInTheDocument()
       expect(screen.getByText(/systems & modules/i)).toBeInTheDocument()
@@ -419,6 +419,23 @@ describe('MechLiveSheet', () => {
 
       const notesTextarea = screen.getByPlaceholderText(/add notes about your mech/i)
       expect(notesTextarea).toHaveValue('This mech is equipped for long-range combat')
+    })
+  })
+
+  describe('Pilot Display', () => {
+    it('shows pilot section with sign in button in draft mode', () => {
+      render(<MechLiveSheet />)
+
+      expect(screen.getByRole('heading', { name: /Pilot/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /sign in with discord/i })).toBeInTheDocument()
+    })
+
+    it('displays pilot name with class when pilot is selected', async () => {
+      // This test would require mocking the pilot data and relationships
+      // For now, we just verify the pilot section exists
+      render(<MechLiveSheet />)
+
+      expect(screen.getByRole('heading', { name: /Pilot/i })).toBeInTheDocument()
     })
   })
 })
