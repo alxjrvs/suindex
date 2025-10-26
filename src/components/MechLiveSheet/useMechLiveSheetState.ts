@@ -94,7 +94,7 @@ export function useMechLiveSheetState(id?: string) {
         })
       } else {
         // First time selection - set chassis and initialize EP
-        const newChassis = SalvageUnionReference.Chassis.all().find((c) => c.id === chassisId)
+        const newChassis = SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
         updateMech({
           chassis_id: chassisId,
           pattern: null,

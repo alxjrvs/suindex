@@ -260,14 +260,13 @@ export function GameShow() {
   const { crawler, pilots } = gameWithRelationships
 
   const crawlerTypeName = crawler?.crawler_type_id
-    ? (SalvageUnionReference.Crawlers.all().find((c) => c.id === crawler.crawler_type_id)?.name ??
+    ? (SalvageUnionReference.Crawlers.find((c) => c.id === crawler.crawler_type_id)?.name ??
       'Unknown')
     : ''
 
   const crawlerMaxSP = crawler?.tech_level
-    ? (SalvageUnionReference.CrawlerTechLevels.all().find(
-        (tl) => tl.techLevel === crawler.tech_level
-      )?.structurePoints ?? 20)
+    ? (SalvageUnionReference.CrawlerTechLevels.find((tl) => tl.techLevel === crawler.tech_level)
+        ?.structurePoints ?? 20)
     : 20
 
   return (
@@ -438,7 +437,7 @@ export function GameShow() {
                         ? allClasses.find((c) => c.id === pilot.class_id)?.name || 'Unknown Class'
                         : 'No Class'
                       const chassisName = mech?.chassis_id
-                        ? SalvageUnionReference.Chassis.all().find((c) => c.id === mech.chassis_id)
+                        ? SalvageUnionReference.Chassis.find((c) => c.id === mech.chassis_id)
                             ?.name || 'Unknown Chassis'
                         : null
                       const mechDisplayName = mech

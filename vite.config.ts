@@ -30,6 +30,17 @@ export default defineConfig({
           'salvage-union': ['salvageunion-reference'],
         },
       },
+      onwarn(warning, warn) {
+        // Ignore sourcemap warnings for salvageunion-reference package
+        // The package includes sourcemaps but not the source files
+        if (
+          warning.code === 'SOURCEMAP_ERROR' &&
+          warning.message.includes('salvageunion-reference')
+        ) {
+          return
+        }
+        warn(warning)
+      },
     },
     chunkSizeWarningLimit: 1000,
     minify: 'terser',
