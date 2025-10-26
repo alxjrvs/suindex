@@ -1,13 +1,18 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { Heading } from '../../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefClass, SURefAbility } from 'salvageunion-reference'
+import type {
+  SURefCoreClass,
+  SURefAdvancedClass,
+  SURefHybridClass,
+  SURefAbility,
+} from 'salvageunion-reference'
 import { EntityDisplay } from '../../shared/EntityDisplay'
 import { DetailsList } from '../../shared/DetailsList'
 import type { DataValue } from '../../../types/common'
 
 interface ClassDisplayProps {
-  data: SURefClass
+  data: SURefCoreClass | SURefAdvancedClass | SURefHybridClass
 }
 
 interface HydratedAbilities {
@@ -139,35 +144,48 @@ function AbilityItem({ ability }: { ability: SURefAbility }) {
 
 export function ClassDisplay({ data }: ClassDisplayProps) {
   const abilities = SalvageUnionReference.Abilities.all()
+
+  // Determine class type based on which fields are present
+  const isCoreClass = 'coreTrees' in data
+
   const coreAbilities: HydratedAbilities = {}
-  data.coreAbilities.forEach((tree) => {
-    coreAbilities[tree] = abilities
-      .filter((a) => a.tree === tree)
-      .sort((a, b) => Number(a.level) - Number(b.level))
-  })
+
+  // Core classes have coreTrees
+  if (isCoreClass) {
+    const coreClass = data as SURefCoreClass
+    coreClass.coreTrees.forEach((tree) => {
+      coreAbilities[tree] = abilities
+        .filter((a) => a.tree === tree)
+        .sort((a, b) => Number(a.level) - Number(b.level))
+    })
+  }
 
   const advancedAbilities: HydratedAbilities = {}
-  if (data.advancedAbilities) {
-    advancedAbilities[data.advancedAbilities] = abilities
-      .filter((a) => a.tree === data.advancedAbilities)
+  // Advanced and Hybrid classes have advancedTree
+  if ('advancedTree' in data) {
+    const classWithAdvanced = data as SURefAdvancedClass | SURefHybridClass
+    advancedAbilities[classWithAdvanced.advancedTree] = abilities
+      .filter((a) => a.tree === classWithAdvanced.advancedTree)
       .sort((a, b) => Number(a.level) - Number(b.level))
   }
 
   const legendaryAbilities: HydratedAbilities = {}
-  if (data.legendaryAbilities && data.legendaryAbilities.length > 0) {
-    legendaryAbilities['Legendary Abilities'] = data.legendaryAbilities
-      .map((name) => abilities.find((a) => a.name === name))
-      .filter((a): a is SURefAbility => a !== undefined)
+  if ('legendaryTree' in data && data.legendaryTree) {
+    const classWithLegendary = data as SURefAdvancedClass | SURefHybridClass
+    legendaryAbilities[classWithLegendary.legendaryTree] = abilities
+      .filter((a) => a.tree === classWithLegendary.legendaryTree)
+      .sort((a, b) => Number(a.level) - Number(b.level))
   }
 
+  // Determine header color based on class type
+  const headerColor = isCoreClass ? 'su.orange' : 'su.pink'
+
   return (
-    <EntityDisplay
-      entityName="Class"
-      data={data}
-      headerColor={data.type === 'core' ? 'su.orange' : 'su.pink'}
-    >
+    <EntityDisplay entityName="Class" data={data} headerColor={headerColor}>
       <VStack gap={6} alignItems="stretch">
-        <AbilitySection title="Core Abilities" abilities={coreAbilities} headerColor="su.brick" />
+        {Object.keys(coreAbilities).length > 0 && (
+          <AbilitySection title="Core Abilities" abilities={coreAbilities} headerColor="su.brick" />
+        )}
 
         {Object.keys(advancedAbilities).length > 0 && (
           <AbilitySection

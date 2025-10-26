@@ -429,9 +429,13 @@ export function GameShow() {
                   <VStack mt={4} gap={3} align="stretch">
                     <Heading level="h3">Pilots</Heading>
                     {pilots.map(({ pilot, mech }) => {
+                      const allClasses = [
+                        ...SalvageUnionReference.CoreClasses.all(),
+                        ...SalvageUnionReference.AdvancedClasses.all(),
+                        ...SalvageUnionReference.HybridClasses.all(),
+                      ]
                       const className = pilot.class_id
-                        ? SalvageUnionReference.Classes.all().find((c) => c.id === pilot.class_id)
-                            ?.name || 'Unknown Class'
+                        ? allClasses.find((c) => c.id === pilot.class_id)?.name || 'Unknown Class'
                         : 'No Class'
                       const chassisName = mech?.chassis_id
                         ? SalvageUnionReference.Chassis.all().find((c) => c.id === mech.chassis_id)

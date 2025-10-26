@@ -6,10 +6,10 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 
 describe('PilotLiveSheet', () => {
   // Get real data from salvageunion-reference
-  const allClasses = SalvageUnionReference.Classes.all()
+  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
 
   // Find core classes for testing
-  const coreClasses = allClasses.filter((c) => c.type === 'core')
+  const coreClasses = allCoreClasses
 
   if (coreClasses.length === 0) {
     throw new Error('No core classes found in salvageunion-reference')

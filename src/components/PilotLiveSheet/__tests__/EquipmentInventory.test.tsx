@@ -6,8 +6,8 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 
 describe('PilotLiveSheet - Equipment Inventory', () => {
   // Use real data from salvageunion-reference
-  const allClasses = SalvageUnionReference.Classes.all()
-  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
+  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
+  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
 
   if (!hackerClass) {
     throw new Error('Hacker class not found in salvageunion-reference')

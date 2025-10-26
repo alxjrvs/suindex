@@ -1,7 +1,12 @@
 import { useMemo, useState, useCallback } from 'react'
 import { Box, Flex, Grid, VStack, Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
-import type { SURefAbility, SURefClass } from 'salvageunion-reference'
+import type {
+  SURefAbility,
+  SURefCoreClass,
+  SURefAdvancedClass,
+  SURefHybridClass,
+} from 'salvageunion-reference'
 import { AbilityDisplay } from '../schema/entities/AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
@@ -15,8 +20,8 @@ interface AbilitySelectorProps {
   onSelectLegendaryAbility: (abilityId: string) => void
   selectedAbilityIds: string[]
   selectedLegendaryAbilityId: string | null
-  selectedClass: SURefClass | undefined
-  selectedAdvancedClass: SURefClass | undefined
+  selectedClass: SURefCoreClass | undefined
+  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
   currentTP: number
 }
 
@@ -51,92 +56,62 @@ export function AbilitySelector({
   }, [])
 
   // Organize abilities by tree
-  const {
-    coreTreeAbilities,
-    advancedTreeAbilities,
-    legendaryAbilities,
-    advancedClassTreeAbilities,
-    advancedClassLegendaryAbilities,
-  } = useMemo(() => {
-    if (!selectedClass) {
+  const { coreTreeAbilities, advancedClassTreeAbilities, advancedClassLegendaryAbilities } =
+    useMemo(() => {
+      if (!selectedClass) {
+        return {
+          coreTreeAbilities: {},
+          advancedClassTreeAbilities: [],
+          advancedClassLegendaryAbilities: [],
+        }
+      }
+
+      const coreTreeAbilities: Record<string, SURefAbility[]> = {}
+
+      // Advanced class abilities
+      const advancedClassTreeAbilities: SURefAbility[] = []
+      const advancedClassLegendaryAbilities: SURefAbility[] = []
+
+      // Initialize core tree arrays - core classes have coreTrees
+      selectedClass.coreTrees.forEach((tree) => {
+        coreTreeAbilities[tree] = []
+      })
+
+      abilities.forEach((ability) => {
+        // Check if it's a legendary ability from advanced class (by tree)
+        if (
+          selectedAdvancedClass?.legendaryTree &&
+          ability.tree === selectedAdvancedClass.legendaryTree
+        ) {
+          advancedClassLegendaryAbilities.push(ability)
+          return
+        }
+
+        // Check if it's in a core tree
+        if (selectedClass.coreTrees.includes(ability.tree)) {
+          coreTreeAbilities[ability.tree].push(ability)
+          return
+        }
+
+        // Check if it's in the advanced tree from advanced class
+        if (selectedAdvancedClass && ability.tree === selectedAdvancedClass.advancedTree) {
+          advancedClassTreeAbilities.push(ability)
+        }
+      })
+
+      // Sort abilities by level within each tree
+      Object.keys(coreTreeAbilities).forEach((tree) => {
+        coreTreeAbilities[tree].sort((a, b) => Number(a.level) - Number(b.level))
+      })
+      advancedClassTreeAbilities.sort((a, b) => Number(a.level) - Number(b.level))
+      advancedClassLegendaryAbilities.sort((a, b) => a.name.localeCompare(b.name))
+
       return {
-        coreTreeAbilities: {},
-        advancedTreeAbilities: [],
-        legendaryAbilities: [],
-        advancedClassTreeAbilities: [],
-        advancedClassLegendaryAbilities: [],
+        coreTreeAbilities,
+        advancedClassTreeAbilities,
+        advancedClassLegendaryAbilities,
       }
-    }
-
-    const coreTreeAbilities: Record<string, SURefAbility[]> = {}
-    const advancedTreeAbilities: SURefAbility[] = []
-    const legendaryAbilityNames = new Set(selectedClass.legendaryAbilities || [])
-    const legendaryAbilities: SURefAbility[] = []
-
-    // Advanced class abilities
-    const advancedClassTreeAbilities: SURefAbility[] = []
-    const advancedClassLegendaryAbilityNames = new Set(
-      selectedAdvancedClass?.legendaryAbilities || []
-    )
-    const advancedClassLegendaryAbilities: SURefAbility[] = []
-
-    // Initialize core tree arrays
-    selectedClass.coreAbilities.forEach((tree) => {
-      coreTreeAbilities[tree] = []
-    })
-
-    abilities.forEach((ability) => {
-      // Check if it's a legendary ability from base class
-      if (legendaryAbilityNames.has(ability.name)) {
-        legendaryAbilities.push(ability)
-        return
-      }
-
-      // Check if it's a legendary ability from advanced class
-      if (selectedAdvancedClass && advancedClassLegendaryAbilityNames.has(ability.name)) {
-        advancedClassLegendaryAbilities.push(ability)
-        return
-      }
-
-      // Check if it's in a core tree
-      if (selectedClass.coreAbilities.includes(ability.tree)) {
-        coreTreeAbilities[ability.tree].push(ability)
-        return
-      }
-
-      // Check if it's in the advanced tree from base class
-      if (selectedClass.advancedAbilities && ability.tree === selectedClass.advancedAbilities) {
-        advancedTreeAbilities.push(ability)
-        return
-      }
-
-      // Check if it's in the advanced tree from advanced class
-      if (
-        selectedAdvancedClass &&
-        selectedAdvancedClass.advancedAbilities &&
-        ability.tree === selectedAdvancedClass.advancedAbilities
-      ) {
-        advancedClassTreeAbilities.push(ability)
-      }
-    })
-
-    // Sort abilities by level within each tree
-    Object.keys(coreTreeAbilities).forEach((tree) => {
-      coreTreeAbilities[tree].sort((a, b) => Number(a.level) - Number(b.level))
-    })
-    advancedTreeAbilities.sort((a, b) => Number(a.level) - Number(b.level))
-    advancedClassTreeAbilities.sort((a, b) => Number(a.level) - Number(b.level))
-    legendaryAbilities.sort((a, b) => a.name.localeCompare(b.name))
-    advancedClassLegendaryAbilities.sort((a, b) => a.name.localeCompare(b.name))
-
-    return {
-      coreTreeAbilities,
-      advancedTreeAbilities,
-      legendaryAbilities,
-      advancedClassTreeAbilities,
-      advancedClassLegendaryAbilities,
-    }
-  }, [abilities, selectedClass, selectedAdvancedClass])
+    }, [abilities, selectedClass, selectedAdvancedClass])
 
   const handleSelect = (abilityId: string, isLegendary: boolean = false) => {
     const ability = abilities.find((a) => a.id === abilityId)
@@ -186,8 +161,7 @@ export function AbilitySelector({
     [selectedAbilityIds]
   )
 
-  const coreTreeNames = selectedClass?.coreAbilities || []
-  const advancedTreeName = selectedClass?.advancedAbilities
+  const coreTreeNames = selectedClass?.coreTrees || []
   const isAdvancedVersion = selectedClass?.id === selectedAdvancedClass?.id
 
   // Compute which abilities should be auto-expanded (next available in each tree)
@@ -197,7 +171,7 @@ export function AbilitySelector({
     const nextExpandedIds = new Set<string>()
 
     // For core abilities, expand the next selectable ability in each tree
-    selectedClass.coreAbilities.forEach((treeName) => {
+    selectedClass.coreTrees.forEach((treeName) => {
       const lowestAvailable = getLowestAvailableLevel(treeName)
       const treeAbilities = coreTreeAbilities[treeName] || []
       const nextAbility = treeAbilities.find((a) => Number(a.level) === lowestAvailable)
@@ -206,18 +180,9 @@ export function AbilitySelector({
       }
     })
 
-    // For advanced tree abilities
-    if (advancedTreeAbilities.length > 0 && advancedTreeName) {
-      const lowestAvailable = getLowestAvailableLevel(advancedTreeName)
-      const nextAbility = advancedTreeAbilities.find((a) => Number(a.level) === lowestAvailable)
-      if (nextAbility && !isSelected(nextAbility.id)) {
-        nextExpandedIds.add(nextAbility.id)
-      }
-    }
-
     // For advanced class tree abilities
-    if (advancedClassTreeAbilities.length > 0 && selectedAdvancedClass?.advancedAbilities) {
-      const lowestAvailable = getLowestAvailableLevel(selectedAdvancedClass.advancedAbilities)
+    if (advancedClassTreeAbilities.length > 0 && selectedAdvancedClass?.advancedTree) {
+      const lowestAvailable = getLowestAvailableLevel(selectedAdvancedClass.advancedTree)
       const nextAbility = advancedClassTreeAbilities.find(
         (a) => Number(a.level) === lowestAvailable
       )
@@ -232,9 +197,7 @@ export function AbilitySelector({
     selectedClass,
     selectedAdvancedClass,
     coreTreeAbilities,
-    advancedTreeAbilities,
     advancedClassTreeAbilities,
-    advancedTreeName,
     isSelected,
     getLowestAvailableLevel,
   ])
@@ -315,18 +278,18 @@ export function AbilitySelector({
           {/* Advanced Class Abilities */}
           {selectedAdvancedClass && (
             <>
-              {/* For advanced version, show advanced/legendary from base class */}
+              {/* For advanced version, show advanced tree abilities from AdvancedClass */}
               {isAdvancedVersion ? (
                 <Flex justifyContent="center" mb={4}>
                   <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} maxW="4xl">
-                    {/* Advanced Tree from base class */}
-                    {advancedTreeAbilities.length > 0 && (
+                    {/* Advanced Tree from AdvancedClass */}
+                    {advancedClassTreeAbilities.length > 0 && (
                       <Flex flexDirection="column">
                         <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
-                          {advancedTreeName}
+                          {selectedAdvancedClass.advancedTree}
                         </Heading>
                         <VStack gap={2} alignItems="stretch">
-                          {advancedTreeAbilities.map((ability) => {
+                          {advancedClassTreeAbilities.map((ability) => {
                             const cost = getAbilityCost(
                               ability,
                               selectedClass,
@@ -334,7 +297,9 @@ export function AbilitySelector({
                             )
                             const canAfford = currentTP >= cost
                             const alreadySelected = isSelected(ability.id)
-                            const lowestAvailable = getLowestAvailableLevel(advancedTreeName!)
+                            const lowestAvailable = getLowestAvailableLevel(
+                              selectedAdvancedClass.advancedTree
+                            )
                             const abilityLevel = Number(ability.level)
                             const isAvailable = abilityLevel === lowestAvailable
 
@@ -356,47 +321,48 @@ export function AbilitySelector({
                       </Flex>
                     )}
 
-                    {/* Legendary Abilities from base class */}
-                    {legendaryAbilities.length > 0 && advancedTreeAbilities.length > 0 && (
-                      <Flex flexDirection="column">
-                        <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
-                          Legendary Abilities
-                        </Heading>
-                        <VStack gap={2} alignItems="stretch">
-                          {legendaryAbilities.map((ability) => {
-                            const cost = 3 // Legendary abilities always cost 3 TP
-                            const canAfford = currentTP >= cost
-                            const alreadySelected = selectedLegendaryAbilityId === ability.id
-                            const hasLegendary = selectedLegendaryAbilityId !== null
-                            // Check if all advanced tree abilities are selected
-                            const allAdvancedSelected =
-                              advancedTreeAbilities.length > 0 &&
-                              advancedTreeAbilities.every((adv) => isSelected(adv.id))
-                            const isSelectable = canAfford && !hasLegendary && allAdvancedSelected
+                    {/* Legendary Abilities from AdvancedClass */}
+                    {advancedClassLegendaryAbilities.length > 0 &&
+                      advancedClassTreeAbilities.length > 0 && (
+                        <Flex flexDirection="column">
+                          <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
+                            Legendary Abilities
+                          </Heading>
+                          <VStack gap={2} alignItems="stretch">
+                            {advancedClassLegendaryAbilities.map((ability) => {
+                              const cost = 3 // Legendary abilities always cost 3 TP
+                              const canAfford = currentTP >= cost
+                              const alreadySelected = selectedLegendaryAbilityId === ability.id
+                              const hasLegendary = selectedLegendaryAbilityId !== null
+                              // Check if all advanced tree abilities are selected
+                              const allAdvancedSelected =
+                                advancedClassTreeAbilities.length > 0 &&
+                                advancedClassTreeAbilities.every((adv) => isSelected(adv.id))
+                              const isSelectable = canAfford && !hasLegendary && allAdvancedSelected
 
-                            return (
-                              <AbilityDisplay
-                                key={ability.id}
-                                data={ability}
-                                onClick={
-                                  isSelectable ? () => handleSelect(ability.id, true) : undefined
-                                }
-                                dimmed={
-                                  alreadySelected ||
-                                  !canAfford ||
-                                  hasLegendary ||
-                                  !allAdvancedSelected
-                                }
-                                collapsible
-                                defaultExpanded
-                                showSelectButton
-                                selectButtonText={`Add to Pilot (${cost} TP)`}
-                              />
-                            )
-                          })}
-                        </VStack>
-                      </Flex>
-                    )}
+                              return (
+                                <AbilityDisplay
+                                  key={ability.id}
+                                  data={ability}
+                                  onClick={
+                                    isSelectable ? () => handleSelect(ability.id, true) : undefined
+                                  }
+                                  dimmed={
+                                    alreadySelected ||
+                                    !canAfford ||
+                                    hasLegendary ||
+                                    !allAdvancedSelected
+                                  }
+                                  collapsible
+                                  defaultExpanded
+                                  showSelectButton
+                                  selectButtonText={`Add to Pilot (${cost} TP)`}
+                                />
+                              )
+                            })}
+                          </VStack>
+                        </Flex>
+                      )}
                   </Grid>
                 </Flex>
               ) : (
@@ -406,7 +372,7 @@ export function AbilitySelector({
                     {advancedClassTreeAbilities.length > 0 && (
                       <Flex flexDirection="column">
                         <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
-                          {selectedAdvancedClass.advancedAbilities}
+                          {selectedAdvancedClass.advancedTree}
                         </Heading>
                         <VStack gap={2} alignItems="stretch">
                           {advancedClassTreeAbilities.map((ability) => {
@@ -418,7 +384,7 @@ export function AbilitySelector({
                             const canAfford = currentTP >= cost
                             const alreadySelected = isSelected(ability.id)
                             const lowestAvailable = getLowestAvailableLevel(
-                              selectedAdvancedClass.advancedAbilities!
+                              selectedAdvancedClass.advancedTree
                             )
                             const abilityLevel = Number(ability.level)
                             const isAvailable = abilityLevel === lowestAvailable

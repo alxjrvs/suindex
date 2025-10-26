@@ -6,10 +6,11 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 
 describe('PilotLiveSheet - Advanced Classes', () => {
   // Use real data from salvageunion-reference
-  const allClasses = SalvageUnionReference.Classes.all()
-  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
-  const salvagerClass = allClasses.find((c) => c.name === 'Salvager')
-  const fabricatorClass = allClasses.find((c) => c.name === 'Fabricator')
+  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
+  const allHybridClasses = SalvageUnionReference.HybridClasses.all()
+  const hackerClass = allCoreClasses.find((c) => c.name === 'Hacker')
+  const salvagerClass = allCoreClasses.find((c) => c.name === 'Salvager')
+  const fabricatorClass = allHybridClasses.find((c) => c.name === 'Fabricator')
 
   if (!hackerClass) {
     throw new Error('Hacker class not found in salvageunion-reference')
@@ -20,7 +21,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
   }
 
   if (!fabricatorClass) {
-    throw new Error('Fabricator class not found in salvageunion-reference')
+    throw new Error('Fabricator hybrid class not found in salvageunion-reference')
   }
 
   // No need to fetch abilities for these tests - they just verify class selection
