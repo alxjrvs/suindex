@@ -30,9 +30,7 @@ export function createMockUser(overrides?: Partial<User>): User {
 // Mech Mocks
 // ============================================================================
 
-export function createMockMech(
-  overrides?: Partial<Tables<'mechs'>>
-): Tables<'mechs'> {
+export function createMockMech(overrides?: Partial<Tables<'mechs'>>): Tables<'mechs'> {
   return {
     id: 'mech-1',
     user_id: 'test-user-id',
@@ -73,9 +71,7 @@ export function createMockMechs(count: number = 2): Tables<'mechs'>[] {
 // Pilot Mocks
 // ============================================================================
 
-export function createMockPilot(
-  overrides?: Partial<Tables<'pilots'>>
-): Tables<'pilots'> {
+export function createMockPilot(overrides?: Partial<Tables<'pilots'>>): Tables<'pilots'> {
   return {
     id: 'pilot-1',
     user_id: 'test-user-id',
@@ -122,9 +118,7 @@ export function createMockPilots(count: number = 2): Tables<'pilots'>[] {
 // Crawler Mocks
 // ============================================================================
 
-export function createMockCrawler(
-  overrides?: Partial<Tables<'crawlers'>>
-): Tables<'crawlers'> {
+export function createMockCrawler(overrides?: Partial<Tables<'crawlers'>>): Tables<'crawlers'> {
   return {
     id: 'crawler-1',
     user_id: 'test-user-id',
@@ -164,9 +158,7 @@ export function createMockCrawlers(count: number = 2): Tables<'crawlers'>[] {
 // Game Mocks
 // ============================================================================
 
-export function createMockGame(
-  overrides?: Partial<Tables<'games'>>
-): Tables<'games'> {
+export function createMockGame(overrides?: Partial<Tables<'games'>>): Tables<'games'> {
   return {
     id: 'game-1',
     name: 'Test Game',
@@ -248,4 +240,3 @@ export function createMockCrawlerBay(overrides?: {
     ...overrides,
   }
 }
-
