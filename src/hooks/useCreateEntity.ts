@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { supabase } from '../lib/supabase'
 import type { ValidTable, TablesInsert } from '../types/database'
+import { getUser, createEntity as createEntityAPI } from '../lib/api'
 
 interface UseCreateEntityConfig<T extends ValidTable> {
   table: T
@@ -77,9 +77,7 @@ export function useCreateEntity<T extends ValidTable>(
       setError(null)
 
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
       // Prepare data with placeholder values and user_id
@@ -88,21 +86,11 @@ export function useCreateEntity<T extends ValidTable>(
         user_id: user.id,
       }
 
-      // Insert into Supabase - use type assertion to bypass strict typing
-      const response = await (supabase
-        .from(config.table)
-        .insert(data as never)
-        .select()
-        .single() as unknown as Promise<{
-        data: { id: string } | null
-        error: { message: string } | null
-      }>)
-
-      if (response.error) throw new Error(response.error.message)
-      if (!response.data) throw new Error('Failed to create entity')
+      // Create entity using API
+      const createdEntity = await createEntityAPI(config.table, data as never)
 
       // Navigate to the newly created entity
-      const navigationUrl = config.navigationPath(response.data.id)
+      const navigationUrl = config.navigationPath((createdEntity as { id: string }).id)
       navigate(navigationUrl)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : `Failed to create ${config.table}`

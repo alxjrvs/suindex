@@ -2,14 +2,7 @@ import { Box, Flex, Image, Link, Text } from '@chakra-ui/react'
 
 export default function Footer() {
   return (
-    <Box
-      as="footer"
-      bg="transparent"
-      borderTopWidth="1px"
-      borderTopColor="su.lightBlue"
-      py={3}
-      mt="auto"
-    >
+    <Box as="footer" bg="transparent" borderTopWidth="1px" borderTopColor="su.lightBlue" py={3}>
       <Flex
         maxW="7xl"
         mx="auto"

@@ -3,14 +3,24 @@ import { useParams, useNavigate } from 'react-router'
 import { Box, Flex, Grid, Input, Text, Textarea, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
-import { supabase } from '../../lib/supabase'
-import type { Tables } from '../../types/database'
+import {
+  createGameInvite,
+  expireGameInvite,
+  deleteExternalLink,
+  createExternalLink,
+  updateGame,
+  deleteGame,
+  fetchGameExternalLinks,
+  fetchGameInvites,
+  type GameInvite,
+  type ExternalLink,
+} from '../../lib/api'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { ExternalLinkModal } from './ExternalLinkModal'
 import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
 
-type GameInviteRow = Tables<'game_invites'>
-type ExternalLinkRow = Tables<'external_links'>
+type GameInviteRow = GameInvite
+type ExternalLinkRow = ExternalLink
 
 export function GameShow() {
   const { gameId } = useParams<{ gameId: string }>()
@@ -56,13 +66,8 @@ export function GameShow() {
     try {
       setLinksLoading(true)
       setLinksError(null)
-      const { data, error } = await supabase
-        .from('external_links')
-        .select('*')
-        .eq('game_id', gameId)
-        .order('created_at', { ascending: false })
-      if (error) throw error
-      setExternalLinks((data || []) as ExternalLinkRow[])
+      const links = await fetchGameExternalLinks(gameId)
+      setExternalLinks(links as ExternalLinkRow[])
     } catch (err) {
       console.error('Error loading external links:', err)
       setLinksError(err instanceof Error ? err.message : 'Failed to load external links')
@@ -76,13 +81,8 @@ export function GameShow() {
     try {
       setInvitesLoading(true)
       setInviteError(null)
-      const { data, error } = await supabase
-        .from('game_invites')
-        .select('id, code, created_by, expires_at, max_uses, uses, created_at, game_id')
-        .eq('game_id', gameId)
-        .order('created_at', { ascending: false })
-      if (error) throw error
-      const rows = (data || []) as GameInviteRow[]
+      const invites = await fetchGameInvites(gameId)
+      const rows = invites as GameInviteRow[]
       setInvites(rows.filter(isInviteActive))
     } catch (err) {
       console.error('Error loading invites:', err)
@@ -125,11 +125,7 @@ export function GameShow() {
     if (!gameId) return
     try {
       setInviteError(null)
-      const { data, error } = await supabase.rpc('create_game_invite', {
-        p_game_id: gameId,
-      })
-      if (error) throw error
-      const invite = data as GameInviteRow
+      const invite = await createGameInvite(gameId)
       if (isInviteActive(invite)) {
         // Prepend the new invite
         setInvites((prev) => [invite, ...prev])
@@ -145,17 +141,12 @@ export function GameShow() {
     }
   }
 
-  const createExternalLink = async (name: string, url: string) => {
+  const handleCreateExternalLink = async (name: string, url: string) => {
     if (!gameId) return
     try {
       setLinksError(null)
-      const { data, error } = await supabase
-        .from('external_links')
-        .insert({ game_id: gameId, name, url })
-        .select()
-        .single()
-      if (error) throw error
-      setExternalLinks((prev) => [data as ExternalLinkRow, ...prev])
+      const link = await createExternalLink(gameId, url, name)
+      setExternalLinks((prev) => [link, ...prev])
       setIsLinkModalOpen(false)
     } catch (err) {
       console.error('Error creating external link:', err)
@@ -163,11 +154,10 @@ export function GameShow() {
     }
   }
 
-  const deleteExternalLink = async (linkId: string) => {
+  const deleteExternalLinkHandler = async (linkId: string) => {
     try {
       setLinksError(null)
-      const { error } = await supabase.from('external_links').delete().eq('id', linkId)
-      if (error) throw error
+      await deleteExternalLink(linkId)
       setExternalLinks((prev) => prev.filter((link) => link.id !== linkId))
     } catch (err) {
       console.error('Error deleting external link:', err)
@@ -181,15 +171,10 @@ export function GameShow() {
       setSaveGameLoading(true)
       setSaveGameError(null)
 
-      const { error } = await supabase
-        .from('games')
-        .update({
-          name: editedName,
-          description: editedDescription,
-        })
-        .eq('id', gameId)
-
-      if (error) throw error
+      await updateGame(gameId, {
+        name: editedName,
+        description: editedDescription,
+      })
 
       // Reload game data
       reloadGame()
@@ -220,36 +205,7 @@ export function GameShow() {
       setDeleteLoading(true)
       setDeleteError(null)
 
-      // 1) Un-assign models pointing to this game (keep user association)
-      const { error: crawlerUpdateError } = await supabase
-        .from('crawlers')
-        .update({ game_id: null })
-        .eq('game_id', gameId)
-      if (crawlerUpdateError) throw crawlerUpdateError
-
-      // 2) Clean up related rows for this game
-      const { error: linksDeleteError } = await supabase
-        .from('external_links')
-        .delete()
-        .eq('game_id', gameId)
-      if (linksDeleteError) throw linksDeleteError
-
-      const { error: invitesDeleteError } = await supabase
-        .from('game_invites')
-        .delete()
-        .eq('game_id', gameId)
-      if (invitesDeleteError) throw invitesDeleteError
-
-      const { error: membersDeleteError } = await supabase
-        .from('game_members')
-        .delete()
-        .eq('game_id', gameId)
-      if (membersDeleteError) throw membersDeleteError
-
-      // 3) Delete the game itself
-      const { error: gameDeleteError } = await supabase.from('games').delete().eq('id', gameId)
-      if (gameDeleteError) throw gameDeleteError
-
+      await deleteGame(gameId)
       navigate('/dashboard')
     } catch (err) {
       console.error('Error deleting game:', err)
@@ -669,7 +625,7 @@ export function GameShow() {
                             onClick={async () => {
                               try {
                                 setInviteError(null)
-                                await supabase.rpc('expire_invite', { p_invite_id: inv.id })
+                                await expireGameInvite(inv.id)
                                 setInvites((prev) => prev.filter((i) => i.id !== inv.id))
                               } catch (err) {
                                 const msg =
@@ -760,7 +716,7 @@ export function GameShow() {
                       <Button
                         onClick={() => {
                           if (window.confirm(`Delete "${link.name}"?`)) {
-                            deleteExternalLink(link.id)
+                            deleteExternalLinkHandler(link.id)
                           }
                         }}
                         variant="plain"
@@ -818,7 +774,7 @@ export function GameShow() {
       <ExternalLinkModal
         isOpen={isLinkModalOpen}
         onClose={() => setIsLinkModalOpen(false)}
-        onAdd={createExternalLink}
+        onAdd={handleCreateExternalLink}
       />
     </Box>
   )

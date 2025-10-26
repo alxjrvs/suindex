@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@chakra-ui/react'
 import type { ButtonProps } from '@chakra-ui/react'
-import { supabase } from '../lib/supabase'
+import { signInWithDiscord } from '../lib/api'
 
 interface DiscordSignInButtonProps extends ButtonProps {
   redirectTo?: string
@@ -16,13 +16,7 @@ export function DiscordSignInButton({
   const handleDiscordLogin = async () => {
     try {
       setLoading(true)
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'discord',
-        options: {
-          redirectTo,
-        },
-      })
-      if (error) throw error
+      await signInWithDiscord(redirectTo)
     } catch (error) {
       console.error('Error signing in:', error)
     } finally {

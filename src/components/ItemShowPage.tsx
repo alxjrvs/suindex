@@ -114,7 +114,7 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
       <Box bg="su.white" shadow="sm" borderBottomWidth="1px" borderColor="su.lightBlue" p={6}>
         <Flex alignItems="center" gap={4} mb={4}>
           <Button
-            onClick={() => navigate(`/reference/schema/${schemaId}`)}
+            onClick={() => navigate(`/schema/${schemaId}`)}
             color="su.orange"
             _hover={{ color: 'su.brick' }}
             fontWeight="medium"

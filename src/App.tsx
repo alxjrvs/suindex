@@ -8,24 +8,22 @@ import MechLiveSheet from './components/MechLiveSheet'
 import PilotLiveSheet from './components/PilotLiveSheet'
 import CrawlerLiveSheet from './components/CrawlerLiveSheet'
 import Dashboard from './components/Dashboard'
-import { RulesReferenceLanding } from './components/Reference/RulesReferenceLanding'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
-import { supabase } from './lib/supabase'
+import { getSession, onAuthStateChange } from './lib/api'
 import type { User } from '@supabase/supabase-js'
+import { RulesReferenceLanding } from './components/Reference/RulesReferenceLanding'
 
 function AppContent() {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    getSession().then((session) => {
       setUser(session?.user ?? null)
     })
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
+    const subscription = onAuthStateChange((authUser) => {
+      setUser(authUser)
     })
 
     return () => subscription.unsubscribe()
@@ -38,7 +36,7 @@ function AppContent() {
         element={
           <Flex flexDirection="column" minH="100vh" bg="su.white">
             <TopNavigation user={user} schemas={schemaIndexData.schemas} />
-            <Box as="main" flex="1" pt={{ base: 16, md: 0 }}>
+            <Box as="main" flex="1" display="flex" flexDirection="column" pt={{ base: 16, md: 0 }}>
               <Routes>
                 <Route
                   index

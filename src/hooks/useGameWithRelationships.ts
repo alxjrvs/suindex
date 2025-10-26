@@ -1,6 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '../lib/supabase'
 import type { Tables } from '../types/database'
+import {
+  getUser,
+  fetchGame,
+  fetchGameMembers,
+  getUserGameRole,
+  fetchGameCrawler,
+  fetchCrawlerPilots,
+  fetchPilotsMechs,
+  fetchUserGamesWithRoles,
+} from '../lib/api'
 
 type GameRow = Tables<'games'>
 type CrawlerRow = Tables<'crawlers'>
@@ -49,61 +58,28 @@ export function useGameWithRelationships(gameId: string | undefined) {
       setError(null)
 
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Fetch game data and user's role in parallel
-      const [gameResult, memberResult, membersResult] = await Promise.all([
-        supabase.from('games').select('*').eq('id', gameId).single(),
-        supabase
-          .from('game_members')
-          .select('role')
-          .eq('game_id', gameId)
-          .eq('user_id', user.id)
-          .single(),
-        supabase.rpc('get_game_members', { p_game_id: gameId }),
-      ])
+      // Fetch game data and members in parallel
+      const [gameData, members] = await Promise.all([fetchGame(gameId), fetchGameMembers(gameId)])
 
-      if (gameResult.error) throw gameResult.error
-      if (memberResult.error) throw memberResult.error
-      if (membersResult.error) throw membersResult.error
-
-      const gameData = gameResult.data as GameRow
-      const userRole = (memberResult.data?.role || 'player') as MemberRole
-      const members = (membersResult.data || []) as GameMember[]
+      // Get user's role in the game
+      const userRole = (await getUserGameRole(gameId, user.id)) as MemberRole
       const mediator = members.find((m) => m.role === 'mediator') || null
 
       // Fetch crawler for this game
-      const { data: crawlerData } = await supabase
-        .from('crawlers')
-        .select('*')
-        .eq('game_id', gameId)
-        .maybeSingle()
-
-      const crawler = crawlerData as CrawlerRow | null
+      const crawler = await fetchGameCrawler(gameId)
 
       // Fetch pilots and mechs if crawler exists
       let pilots: PilotWithMech[] = []
       if (crawler) {
-        const { data: pilotsData } = await supabase
-          .from('pilots')
-          .select('*')
-          .eq('crawler_id', crawler.id)
-          .order('callsign')
-
-        const pilotsArray = (pilotsData || []) as PilotRow[]
+        const pilotsArray = await fetchCrawlerPilots(crawler.id)
 
         // Fetch mechs for these pilots in a single query
         if (pilotsArray.length > 0) {
           const pilotIds = pilotsArray.map((p) => p.id)
-          const { data: mechsData } = await supabase
-            .from('mechs')
-            .select('*')
-            .in('pilot_id', pilotIds)
-
-          const mechsArray = (mechsData || []) as MechRow[]
+          const mechsArray = await fetchPilotsMechs(pilotIds)
 
           pilots = pilotsArray.map((pilot) => ({
             pilot,
@@ -150,20 +126,11 @@ export function useGamesWithRelationships() {
       setError(null)
 
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Fetch games the user is a member of
-      const { data: gameMembersData, error: gameMembersError } = await supabase
-        .from('game_members')
-        .select('game_id, role')
-        .eq('user_id', user.id)
-
-      if (gameMembersError) throw gameMembersError
-
-      const gameMembers = (gameMembersData || []) as Array<{ game_id: string; role: MemberRole }>
+      // Fetch games the user is a member of with their roles
+      const gameMembers = await fetchUserGamesWithRoles(user.id)
 
       if (gameMembers.length === 0) {
         setGames([])
@@ -172,50 +139,30 @@ export function useGamesWithRelationships() {
 
       // Fetch all game data in parallel
       const gameIds = gameMembers.map((gm) => gm.game_id)
-      const { data: gamesData, error: gamesError } = await supabase
-        .from('games')
-        .select('*')
-        .in('id', gameIds)
-
-      if (gamesError) throw gamesError
-
-      const gamesArray = (gamesData || []) as GameRow[]
+      const gamesArray = await Promise.all(gameIds.map((id) => fetchGame(id)))
 
       // Fetch all related data in parallel for all games
       const relationshipsPromises = gamesArray.map(async (game) => {
         const gameMember = gameMembers.find((gm) => gm.game_id === game.id)
-        const role = gameMember?.role || ('player' as MemberRole)
+        const role = (gameMember?.role || 'player') as MemberRole
 
         try {
-          // Fetch members, crawler in parallel
-          const [membersResult, crawlerResult] = await Promise.all([
-            supabase.rpc('get_game_members', { p_game_id: game.id }),
-            supabase.from('crawlers').select('*').eq('game_id', game.id).maybeSingle(),
+          // Fetch members and crawler in parallel
+          const [members, crawler] = await Promise.all([
+            fetchGameMembers(game.id),
+            fetchGameCrawler(game.id),
           ])
 
-          const members = (membersResult.data || []) as GameMember[]
           const mediator = members.find((m) => m.role === 'mediator') || null
-          const crawler = crawlerResult.data as CrawlerRow | null
 
           // Fetch pilots and mechs if crawler exists
           let pilots: PilotWithMech[] = []
           if (crawler) {
-            const { data: pilotsData } = await supabase
-              .from('pilots')
-              .select('*')
-              .eq('crawler_id', crawler.id)
-              .order('callsign')
-
-            const pilotsArray = (pilotsData || []) as PilotRow[]
+            const pilotsArray = await fetchCrawlerPilots(crawler.id)
 
             if (pilotsArray.length > 0) {
               const pilotIds = pilotsArray.map((p) => p.id)
-              const { data: mechsData } = await supabase
-                .from('mechs')
-                .select('*')
-                .in('pilot_id', pilotIds)
-
-              const mechsArray = (mechsData || []) as MechRow[]
+              const mechsArray = await fetchPilotsMechs(pilotIds)
 
               pilots = pilotsArray.map((pilot) => ({
                 pilot,

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '../lib/supabase'
 import type { ValidTable } from '../types/database'
+import { getUser, fetchUserEntities } from '../lib/api'
 
 export interface UseEntityGridConfig {
   table: ValidTable
@@ -34,29 +34,18 @@ export function useEntityGrid<T extends { id: string }>(
       setError(null)
 
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Build query
-      let query = supabase.from(config.table).select('*').eq('user_id', user.id)
+      // Fetch user entities with optional filtering and ordering
+      const data = await fetchUserEntities<T>(config.table, user.id, {
+        filterField: config.filterField,
+        filterValue: config.filterValue,
+        orderBy: config.orderBy,
+        orderAscending: config.orderAscending,
+      })
 
-      // Apply filter if provided
-      if (config.filterField && config.filterValue) {
-        query = query.eq(config.filterField, config.filterValue)
-      }
-
-      // Apply ordering
-      if (config.orderBy) {
-        query = query.order(config.orderBy, { ascending: config.orderAscending ?? false })
-      }
-
-      const { data, error: queryError } = await query
-
-      if (queryError) throw queryError
-
-      setItems((data || []) as T[])
+      setItems(data)
     } catch (err) {
       console.error(`Error loading ${config.table}:`, err)
       setError(err instanceof Error ? err.message : `Failed to load ${config.table}`)

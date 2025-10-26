@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
 import type { Database } from '../types/database'
+import { getUser, fetchUserEntities } from '../lib/api'
 
 type TableName = keyof Database['public']['Tables']
 
@@ -25,7 +25,7 @@ interface UseEntityRelationshipsConfig {
  * })
  * ```
  */
-export function useEntityRelationships<T = { id: string; name: string }>(
+export function useEntityRelationships<T extends { id: string } = { id: string; name: string }>(
   config: UseEntityRelationshipsConfig
 ) {
   const [items, setItems] = useState<T[]>([])
@@ -37,26 +37,16 @@ export function useEntityRelationships<T = { id: string; name: string }>(
       setLoading(true)
       setError(null)
 
-      const { data: userData } = await supabase.auth.getUser()
-      if (!userData.user) return
+      const user = await getUser()
+      if (!user) return
 
-      let query = supabase
-        .from(config.table)
-        .select(config.selectFields || 'id, name')
-        .eq('user_id', userData.user.id)
+      const data = await fetchUserEntities<T>(config.table, user.id, {
+        filterField: config.filterField,
+        filterValue: config.filterValue,
+        orderBy: config.orderBy,
+      })
 
-      if (config.filterField && config.filterValue) {
-        query = query.eq(config.filterField, config.filterValue)
-      }
-
-      if (config.orderBy) {
-        query = query.order(config.orderBy)
-      }
-
-      const { data, error: fetchError } = await query
-
-      if (fetchError) throw fetchError
-      if (data) setItems(data as T[])
+      setItems(data)
     } catch (err) {
       console.error(`Error loading ${config.table}:`, err)
       setError(err instanceof Error ? err.message : `Failed to load ${config.table}`)

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router'
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { supabase } from '../../lib/supabase'
+import { getSession, onAuthStateChange } from '../../lib/api'
 import type { User } from '@supabase/supabase-js'
 import { DashboardContent } from './DashboardContent'
 import { GamesGrid } from './GamesGrid'
-import { NewGame } from './NewGame'
 import { GameShow } from './GameShow'
 import { JoinGame } from './JoinGame'
 import { CrawlersGrid } from './CrawlersGrid'
@@ -23,16 +22,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     // Check active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    getSession().then((session) => {
       setUser(session?.user ?? null)
       setLoading(false)
     })
 
     // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
+    const subscription = onAuthStateChange((authUser) => {
+      setUser(authUser)
     })
 
     return () => subscription.unsubscribe()
@@ -40,7 +37,13 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <Flex alignItems="center" justifyContent="center" minH="100vh" bg="su.white">
+      <Flex
+        flexDirection="column"
+        flex="1"
+        alignItems="center"
+        justifyContent="center"
+        bg="su.white"
+      >
         <Text fontSize="lg" color="su.black">
           Loading...
         </Text>
@@ -50,19 +53,21 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
-        <Auth />
-      </Box>
+      <Flex flexDirection="column" flex="1" pt={{ base: 20, lg: 0 }}>
+        <Box flex="1" display="flex" alignItems="center" justifyContent="center">
+          <Auth />
+        </Box>
+        <Footer />
+      </Flex>
     )
   }
 
   return (
-    <>
-      <Box as="main" flex="1" pt={{ base: 20, lg: 0 }}>
+    <Flex flexDirection="column" flex="1" pt={{ base: 20, lg: 0 }}>
+      <Box flex="1" display="flex" flexDirection="column">
         <Routes>
           <Route path="/" element={<DashboardContent />} />
           <Route path="/games" element={<GamesGrid />} />
-          <Route path="/games/new" element={<NewGame />} />
           <Route path="/games/:gameId" element={<GameShow />} />
           <Route path="/join" element={<JoinGame />} />
           <Route path="/crawlers" element={<CrawlersGrid />} />
@@ -74,6 +79,6 @@ export default function Dashboard() {
         </Routes>
       </Box>
       <Footer />
-    </>
+    </Flex>
   )
 }

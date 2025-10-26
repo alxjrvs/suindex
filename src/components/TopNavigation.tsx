@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Box, Button, Flex, IconButton, Text, HStack, Menu, Portal } from '@chakra-ui/react'
-import { supabase } from '../lib/supabase'
+import { signOut } from '../lib/api'
 import type { User } from '@supabase/supabase-js'
 import type { SchemaInfo } from '../types/schema'
 import { Heading } from './base/Heading'
@@ -26,7 +26,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
   const handleSignOut = async () => {
     try {
       setSigningOut(true)
-      await supabase.auth.signOut()
+      await signOut()
     } catch (error) {
       console.error('Error signing out:', error)
     } finally {
