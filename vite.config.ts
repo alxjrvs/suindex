@@ -19,6 +19,9 @@ export default defineConfig({
       filename: 'dist/bundle-analysis.html',
     }),
   ],
+  optimizeDeps: {
+    exclude: ['salvageunion-reference'],
+  },
   build: {
     rollupOptions: {
       output: {

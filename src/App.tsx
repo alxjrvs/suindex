@@ -9,10 +9,12 @@ import PilotLiveSheet from './components/PilotLiveSheet'
 import CrawlerLiveSheet from './components/CrawlerLiveSheet'
 import Dashboard from './components/Dashboard'
 import { ErrorBoundary } from './components/ErrorBoundary'
-import schemaIndexData from 'salvageunion-reference/schemas/index.json'
+import { getSchemaCatalog } from 'salvageunion-reference'
 import { getSession, onAuthStateChange } from './lib/api'
 import type { User } from '@supabase/supabase-js'
 import { RulesReferenceLanding } from './components/Reference/RulesReferenceLanding'
+
+const schemaIndexData = getSchemaCatalog()
 
 function AppContent() {
   const [user, setUser] = useState<User | null>(null)
