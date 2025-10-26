@@ -77,7 +77,11 @@ export function AbilitiesList({
       disabled={disabled}
       rightContent={
         <Flex alignItems="center" gap={4}>
-          <AddStatButton onClick={onAddClick} disabled={disabled || currentTP === 0} />
+          <AddStatButton
+            onClick={onAddClick}
+            disabled={disabled || currentTP === 0}
+            ariaLabel="Add ability"
+          />
           <StatDisplay label="TP" value={`${currentTP}`} disabled={disabled} />
         </Flex>
       }

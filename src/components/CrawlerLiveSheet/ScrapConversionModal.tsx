@@ -130,9 +130,9 @@ export function ScrapConversionModal({
       title="Convert Scrap"
       backgroundColor="bg.builder.crawler"
     >
-      <VStack gap={6} align="stretch">
+      <Flex gap={6} align="stretch" w="full">
         {/* FROM Selection */}
-        <VStack gap={2} align="stretch">
+        <VStack gap={2} align="stretch" w="full">
           <Text fontWeight="bold" fontFamily="mono">
             FROM Tech Level
           </Text>
@@ -160,7 +160,7 @@ export function ScrapConversionModal({
         </VStack>
 
         {/* TO Selection */}
-        <VStack gap={2} align="stretch">
+        <VStack gap={2} align="stretch" w="full">
           <Text fontWeight="bold" fontFamily="mono">
             TO Tech Level
           </Text>
@@ -219,34 +219,33 @@ export function ScrapConversionModal({
             )}
           </VStack>
         )}
-
-        <Flex gap={2} justifyContent="flex-end" pt={4}>
-          <Button
-            onClick={handleClose}
-            bg="su.brick"
-            color="su.white"
-            px={4}
-            py={2}
-            fontWeight="bold"
-            _hover={{ opacity: 0.9 }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleConvert}
-            disabled={!fromTL || !toTL}
-            bg="su.green"
-            color="su.black"
-            px={4}
-            py={2}
-            fontWeight="bold"
-            _hover={{ opacity: 0.9 }}
-            _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-          >
-            Convert
-          </Button>
-        </Flex>
-      </VStack>
+      </Flex>
+      <Flex gap={2} justifyContent="flex-end" pt={4}>
+        <Button
+          onClick={handleClose}
+          bg="su.brick"
+          color="su.white"
+          px={4}
+          py={2}
+          fontWeight="bold"
+          _hover={{ opacity: 0.9 }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleConvert}
+          disabled={!fromTL || !toTL}
+          bg="su.green"
+          color="su.black"
+          px={4}
+          py={2}
+          fontWeight="bold"
+          _hover={{ opacity: 0.9 }}
+          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+        >
+          Convert
+        </Button>
+      </Flex>
     </Modal>
   )
 }

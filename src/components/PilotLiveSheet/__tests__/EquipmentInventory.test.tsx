@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor, within } from '../../../test/chakra-utils'
+import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { findCoreClass, getEquipment } from '../../../test/helpers'
@@ -27,15 +27,13 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
     it('shows equipment count as 0/6 initially', () => {
       render(<PilotLiveSheet />)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      expect(within(inventorySection!).getByText(/0\/6/)).toBeInTheDocument()
+      expect(screen.getByText(/0\/6/)).toBeInTheDocument()
     })
 
     it('shows Add button for equipment', () => {
       render(<PilotLiveSheet />)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
       expect(addButton).toBeInTheDocument()
     })
 
@@ -43,8 +41,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       render(<PilotLiveSheet />)
 
       // Should not show dashed boxes or "—" symbols for empty slots
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const emptySlots = within(inventorySection!).queryAllByText('—')
+      const emptySlots = screen.queryAllByText('—')
       expect(emptySlots.length).toBe(0)
     })
   })
@@ -58,8 +55,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
       await user.click(addButton)
 
       await waitFor(() => {
@@ -75,8 +71,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
       await user.click(addButton)
 
       await waitFor(() => {
@@ -94,8 +89,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
       await user.click(addButton)
 
       // Wait for the equipment selector modal to open and find the button
@@ -125,8 +119,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
 
       // Add first equipment
       await user.click(addButton)
@@ -136,7 +129,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await user.click(hackingToolButton)
 
       await waitFor(() => {
-        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
+        expect(screen.getByText(/1\/6/)).toBeInTheDocument()
       })
 
       // Wait for modal to close
@@ -153,7 +146,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await user.click(repairKitButton)
 
       await waitFor(() => {
-        expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
+        expect(screen.getByText(/2\/6/)).toBeInTheDocument()
       })
     })
 
@@ -165,8 +158,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
       await user.click(addButton)
 
       const hackingToolButton = await screen.findByRole('button', {
@@ -189,8 +181,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
 
       // Add 6 items
       for (let i = 0; i < 6; i++) {
@@ -211,9 +202,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
         // Wait for equipment count to update
         await waitFor(
           () => {
-            expect(
-              within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))
-            ).toBeInTheDocument()
+            expect(screen.getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
           },
           { timeout: 3000 }
         )
@@ -236,8 +225,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
 
       // Add 6 items
       for (let i = 0; i < 6; i++) {
@@ -258,9 +246,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
         // Wait for equipment count to update
         await waitFor(
           () => {
-            expect(
-              within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))
-            ).toBeInTheDocument()
+            expect(screen.getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
           },
           { timeout: 3000 }
         )
@@ -268,7 +254,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       await waitFor(
         () => {
-          expect(within(inventorySection!).getByText(/6\/6/)).toBeInTheDocument()
+          expect(screen.getByText(/6\/6/)).toBeInTheDocument()
         },
         { timeout: 3000 }
       )
@@ -282,8 +268,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
 
       // Add 6 items
       for (let i = 0; i < 6; i++) {
@@ -304,9 +289,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
         // Wait for equipment count to update
         await waitFor(
           () => {
-            expect(
-              within(inventorySection!).getByText(new RegExp(`${i + 1}/6`))
-            ).toBeInTheDocument()
+            expect(screen.getByText(new RegExp(`${i + 1}/6`))).toBeInTheDocument()
           },
           { timeout: 3000 }
         )
@@ -343,8 +326,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
 
       await user.click(addButton)
       const hackingToolButton = await screen.findByRole('button', {
@@ -354,7 +336,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Wait for equipment count to update
       await waitFor(() => {
-        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
+        expect(screen.getByText(/1\/6/)).toBeInTheDocument()
       })
 
       // Check for remove button - need to find the parent container with the button
@@ -372,8 +354,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
 
       await user.click(addButton)
       const hackingToolButton = await screen.findByRole('button', {
@@ -383,7 +364,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Wait for equipment count to update
       await waitFor(() => {
-        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
+        expect(screen.getByText(/1\/6/)).toBeInTheDocument()
       })
 
       const removeButton = screen.getByRole('button', { name: /remove equipment/i })
@@ -406,8 +387,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add equipment' })
 
       // Add two items
       await user.click(addButton)
@@ -417,7 +397,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await user.click(hackingToolButton)
 
       await waitFor(() => {
-        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
+        expect(screen.getByText(/1\/6/)).toBeInTheDocument()
       })
 
       // Wait for modal to close
@@ -432,7 +412,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await user.click(repairKitButton)
 
       await waitFor(() => {
-        expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
+        expect(screen.getByText(/2\/6/)).toBeInTheDocument()
       })
 
       // Remove one item - get all remove buttons and click the first one
@@ -440,7 +420,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await user.click(removeButtons[0])
 
       await waitFor(() => {
-        expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
+        expect(screen.getByText(/1\/6/)).toBeInTheDocument()
       })
 
       confirmSpy.mockRestore()

@@ -113,7 +113,7 @@ export function CrawlerResourceSteppers({
           py={2}
           borderRadius="lg"
           onClick={() => setIsConversionModalOpen(true)}
-          disabled={disabled}
+          disabled={disabled || totalInTl1 <= 1}
         >
           CONVERT
         </Button>

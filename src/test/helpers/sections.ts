@@ -24,8 +24,22 @@ export function getSection(sectionName: string) {
  * @returns The add button element
  */
 export function getSectionAddButton(sectionName: string) {
-  const section = getSection(sectionName)
-  return within(section).getByRole('button', { name: '+' })
+  // Map section names to their specific aria-labels
+  const ariaLabelMap: Record<string, string> = {
+    abilities: 'Add ability',
+    inventory: 'Add equipment',
+  }
+
+  const ariaLabel = ariaLabelMap[sectionName.toLowerCase()] || '+'
+
+  // Try to find the button by aria-label first, fall back to searching in section
+  try {
+    return screen.getByRole('button', { name: ariaLabel })
+  } catch {
+    // Fallback: search within section
+    const section = getSection(sectionName)
+    return within(section).getByRole('button', { name: ariaLabel })
+  }
 }
 
 /**
