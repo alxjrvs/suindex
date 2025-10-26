@@ -3,73 +3,33 @@ import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefClass, SURefAbility, SURefEquipment } from 'salvageunion-reference'
-import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Ability Removal', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: ['Ultimate Hack'],
-    },
-  ]
+  // Use real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
+  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
 
-  const mockAbilities: SURefAbility[] = [
-    {
-      id: 'hack-1',
-      name: 'Hack 1',
-      tree: 'Hacking',
-      level: 1,
-      source: 'core',
-      page: 30,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'hack-2',
-      name: 'Hack 2',
-      tree: 'Hacking',
-      level: 2,
-      source: 'core',
-      page: 31,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'tech-1',
-      name: 'Tech 1',
-      tree: 'Tech',
-      level: 1,
-      source: 'core',
-      page: 33,
-      description: '',
-      effect: '',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-  ]
+  if (!hackerClass) {
+    throw new Error('Hacker class not found in salvageunion-reference')
+  }
 
-  const mockEquipment: SURefEquipment[] = []
+  // Get real abilities from the Hacker's core ability trees
+  const allAbilities = SalvageUnionReference.Abilities.all()
+  const hackerTrees = hackerClass.coreAbilities
+  const hackerAbilities = allAbilities.filter((a) => hackerTrees.includes(a.tree))
+
+  // Get specific abilities for testing
+  const level1Abilities = hackerAbilities.filter((a) => a.level === 1)
+  const level2Abilities = hackerAbilities.filter((a) => a.level === 2)
+
+  if (level1Abilities.length === 0) {
+    throw new Error('No level 1 abilities found for Hacker class')
+  }
+
+  // Get a specific level 1 ability for testing (first one from the list)
+  const testAbility = level1Abilities[0]
 
   beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
     // Mock window.confirm to return true by default
     vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
@@ -80,7 +40,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -97,7 +57,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Select an ability
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hack 1'))
+      await waitFor(() => screen.getByText(testAbility.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -114,7 +74,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Ability should be displayed with remove button
       await waitFor(() => {
-        const abilityCards = screen.getAllByText('Hack 1')
+        const abilityCards = screen.getAllByText(testAbility.name)
         // Find the one in the selected abilities list (not in the modal)
         const selectedAbilityCard = abilityCards[0].closest(
           '[data-testid="frame-header-container"]'
@@ -131,7 +91,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 1 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -145,7 +105,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Select an ability (costs 1 TP, leaving 0 TP)
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hack 1'))
+      await waitFor(() => screen.getByText(testAbility.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -168,7 +128,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Remove button should be disabled
       await waitFor(() => {
-        const abilityCards = screen.getAllByText('Hack 1')
+        const abilityCards = screen.getAllByText(testAbility.name)
         const selectedAbilityCard = abilityCards[0].closest(
           '[data-testid="frame-header-container"]'
         ) as HTMLElement
@@ -184,7 +144,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -201,7 +161,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Select an ability
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hack 1'))
+      await waitFor(() => screen.getByText(testAbility.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -218,7 +178,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Remove button should be enabled (we have 4 TP left)
       await waitFor(() => {
-        const abilityCards = screen.getAllByText('Hack 1')
+        const abilityCards = screen.getAllByText(testAbility.name)
         const selectedAbilityCard = abilityCards[0].closest(
           '[data-testid="frame-header-container"]'
         ) as HTMLElement
@@ -236,7 +196,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -253,7 +213,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Select an ability (costs 1 TP, leaving 4 TP)
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hack 1'))
+      await waitFor(() => screen.getByText(testAbility.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -274,7 +234,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       })
 
       // Remove the ability
-      const abilityCards = screen.getAllByText('Hack 1')
+      const abilityCards = screen.getAllByText(testAbility.name)
       const selectedAbilityCard = abilityCards[0].closest(
         '[data-testid="frame-header-container"]'
       ) as HTMLElement
@@ -295,7 +255,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -312,7 +272,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Select an ability
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hack 1'))
+      await waitFor(() => screen.getByText(testAbility.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -345,7 +305,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -362,7 +322,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Select an ability
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hack 1'))
+      await waitFor(() => screen.getByText(testAbility.name))
       const addToCharacterButtons2 = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -383,7 +343,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       })
 
       // Click remove button but cancel
-      const abilityCards = screen.getAllByText('Hack 1')
+      const abilityCards = screen.getAllByText(testAbility.name)
       const selectedAbilityCard = abilityCards[0].closest(
         '[data-testid="frame-header-container"]'
       ) as HTMLElement
@@ -400,7 +360,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       expect(tpValue).toBeInTheDocument()
 
       // Ability should still be there
-      expect(screen.getByText('Hack 1')).toBeInTheDocument()
+      expect(screen.getByText(testAbility.name)).toBeInTheDocument()
 
       confirmSpy.mockRestore()
     })
@@ -410,7 +370,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 5 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -427,7 +387,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Select an ability
       await user.click(addButton)
-      await waitFor(() => screen.getByText('Hack 1'))
+      await waitFor(() => screen.getByText(testAbility.name))
       const addToCharacterButtons3 = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -444,7 +404,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Ability should be in the list
       await waitFor(() => {
-        expect(screen.getByText('Hack 1')).toBeInTheDocument()
+        expect(screen.getByText(testAbility.name)).toBeInTheDocument()
       })
 
       // Remove the ability
@@ -456,7 +416,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
 
       // Ability should be removed from the list
       await waitFor(() => {
-        expect(screen.queryByText('Hack 1')).not.toBeInTheDocument()
+        expect(screen.queryByText(testAbility.name)).not.toBeInTheDocument()
       })
 
       confirmSpy.mockRestore()
@@ -469,7 +429,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 30 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })

@@ -3,65 +3,25 @@ import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefClass, SURefAbility, SURefEquipment } from 'salvageunion-reference'
-import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Equipment Inventory', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: [],
-    },
-  ]
+  // Use real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
+  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
 
-  const mockAbilities: SURefAbility[] = []
+  if (!hackerClass) {
+    throw new Error('Hacker class not found in salvageunion-reference')
+  }
 
-  const mockEquipment: SURefEquipment[] = [
-    {
-      id: 'equipment-1',
-      name: 'Hacking Tool',
-      source: 'core',
-      page: 60,
-      description: 'A tool for hacking',
-      techLevel: 1,
-      traits: [],
-    },
-    {
-      id: 'equipment-2',
-      name: 'Repair Kit',
-      source: 'core',
-      page: 61,
-      description: 'A kit for repairs',
-      techLevel: 1,
-      traits: [],
-    },
-    {
-      id: 'equipment-3',
-      name: 'Scanner',
-      source: 'core',
-      page: 62,
-      description: 'A scanning device',
-      techLevel: 2,
-      traits: [],
-    },
-  ]
+  // Get real equipment
+  const allEquipment = SalvageUnionReference.Equipment.all()
+  const testEquipment = allEquipment.slice(0, 3) // Get first 3 equipment items for testing
+
+  if (testEquipment.length === 0) {
+    throw new Error('No equipment found in salvageunion-reference')
+  }
 
   beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
-
     // Mock window.confirm for equipment removal
     vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
@@ -105,7 +65,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -122,16 +82,16 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
       await waitFor(() => {
-        expect(screen.getByText('Hacking Tool')).toBeInTheDocument()
-        expect(screen.getByText('Repair Kit')).toBeInTheDocument()
-        expect(screen.getByText('Scanner')).toBeInTheDocument()
+        expect(screen.getByText(testEquipment[0].name)).toBeInTheDocument()
+        expect(screen.getByText(testEquipment[1].name)).toBeInTheDocument()
+        expect(screen.getByText(testEquipment[2].name)).toBeInTheDocument()
       })
     })
 
@@ -141,24 +101,28 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
       // Wait for the equipment selector modal to open and find the button
-      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      const hackingToolButton = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[0].name, 'i'),
+      })
       await user.click(hackingToolButton)
 
       // Wait for modal to close
       await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /Hacking Tool/i })).not.toBeInTheDocument()
+        expect(
+          screen.queryByRole('button', { name: new RegExp(testEquipment[0].name, 'i') })
+        ).not.toBeInTheDocument()
       })
 
       // Equipment should be added to inventory
       await waitFor(() => {
-        expect(screen.getAllByText('Hacking Tool').length).toBeGreaterThan(0)
+        expect(screen.getAllByText(testEquipment[0].name).length).toBeGreaterThan(0)
       })
     })
 
@@ -168,23 +132,33 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
       // Add first equipment
       await user.click(addButton)
-      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      const hackingToolButton = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[0].name, 'i'),
+      })
       await user.click(hackingToolButton)
 
       await waitFor(() => {
         expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
       })
 
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      })
+
       // Add second equipment
       await user.click(addButton)
-      const repairKitButton = await screen.findByRole('button', { name: /Repair Kit/i })
+
+      const repairKitButton = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[1].name, 'i'),
+      })
       await user.click(repairKitButton)
 
       await waitFor(() => {
@@ -198,13 +172,15 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
       await user.click(addButton)
 
-      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      const hackingToolButton = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[0].name, 'i'),
+      })
       await user.click(hackingToolButton)
 
       await waitFor(() => {
@@ -220,7 +196,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -228,7 +204,9 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Add 6 items
       for (let i = 0; i < 6; i++) {
         await user.click(addButton)
-        const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+        const hackingToolButton = await screen.findByRole('button', {
+          name: new RegExp(testEquipment[0].name, 'i'),
+        })
         await user.click(hackingToolButton)
 
         // Wait for modal to close
@@ -265,7 +243,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -273,7 +251,9 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Add 6 items
       for (let i = 0; i < 6; i++) {
         await user.click(addButton)
-        const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+        const hackingToolButton = await screen.findByRole('button', {
+          name: new RegExp(testEquipment[0].name, 'i'),
+        })
         await user.click(hackingToolButton)
 
         // Wait for modal to close (equipment modal auto-closes)
@@ -309,7 +289,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
@@ -317,7 +297,9 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Add 6 items
       for (let i = 0; i < 6; i++) {
         await user.click(addButton)
-        const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+        const hackingToolButton = await screen.findByRole('button', {
+          name: new RegExp(testEquipment[0].name, 'i'),
+        })
         await user.click(hackingToolButton)
 
         // Wait for modal to close (equipment modal auto-closes)
@@ -368,13 +350,15 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
       await user.click(addButton)
-      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      const hackingToolButton = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[0].name, 'i'),
+      })
       await user.click(hackingToolButton)
 
       // Wait for equipment count to update
@@ -395,13 +379,15 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
       await user.click(addButton)
-      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      const hackingToolButton = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[0].name, 'i'),
+      })
       await user.click(hackingToolButton)
 
       // Wait for equipment count to update
@@ -413,7 +399,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await user.click(removeButton)
 
       await waitFor(() => {
-        expect(screen.queryByText('Hacking Tool')).not.toBeInTheDocument()
+        expect(screen.queryByText(testEquipment[0].name)).not.toBeInTheDocument()
       })
     })
 
@@ -427,22 +413,31 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const inventorySection = screen.getByText(/^inventory$/i).closest('div')
       const addButton = within(inventorySection!).getByRole('button', { name: '+' })
 
       // Add two items
       await user.click(addButton)
-      const hackingToolButton = await screen.findByRole('button', { name: /Hacking Tool/i })
+      const hackingToolButton = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[0].name, 'i'),
+      })
       await user.click(hackingToolButton)
 
       await waitFor(() => {
         expect(within(inventorySection!).getByText(/1\/6/)).toBeInTheDocument()
       })
 
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      })
+
       await user.click(addButton)
-      const repairKitButton = await screen.findByRole('button', { name: /Repair Kit/i })
+      const repairKitButton = await screen.findByRole('button', {
+        name: new RegExp(testEquipment[1].name, 'i'),
+      })
       await user.click(repairKitButton)
 
       await waitFor(() => {

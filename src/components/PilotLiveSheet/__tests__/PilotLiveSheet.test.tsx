@@ -1,154 +1,22 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor, within } from '../../../test/chakra-utils'
+import { describe, it, expect, beforeEach } from 'vitest'
+import { render, screen, within, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefClass, SURefAbility, SURefEquipment } from 'salvageunion-reference'
-import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: ['Ultimate Hack'],
-    },
-    {
-      id: 'class-salvager',
-      name: 'Salvager',
-      type: 'core',
-      source: 'core',
-      page: 15,
-      description: 'A scavenger',
-      coreAbilities: ['Salvage', 'Repair'],
-      hybridClasses: [],
-      advancedAbilities: 'Master Salvage',
-      legendaryAbilities: ['Legendary Salvage'],
-    },
-    {
-      id: 'class-smuggler',
-      name: 'Smuggler',
-      type: 'hybrid',
-      source: 'core',
-      page: 20,
-      description: 'A hybrid class',
-      coreAbilities: ['Stealth', 'Trade'],
-      hybridClasses: [],
-      advancedAbilities: 'Smuggling',
-      legendaryAbilities: ['Master Smuggler'],
-    },
-  ]
+  // Get real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
 
-  const mockAbilities: SURefAbility[] = [
-    {
-      id: 'ability-hack-1',
-      name: 'Basic Hack',
-      tree: 'Hacking',
-      level: 1,
-      source: 'core',
-      page: 30,
-      description: 'A basic hacking ability',
-      effect: 'Hack things',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'ability-hack-2',
-      name: 'Advanced Hack',
-      tree: 'Hacking',
-      level: 2,
-      source: 'core',
-      page: 31,
-      description: 'An advanced hacking ability',
-      effect: 'Hack better things',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'ability-hack-3',
-      name: 'Expert Hack',
-      tree: 'Hacking',
-      level: 3,
-      source: 'core',
-      page: 32,
-      description: 'An expert hacking ability',
-      effect: 'Hack the best things',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'ability-tech-1',
-      name: 'Basic Tech',
-      tree: 'Tech',
-      level: 1,
-      source: 'core',
-      page: 33,
-      description: 'A basic tech ability',
-      effect: 'Use tech',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'ability-advanced-hack-1',
-      name: 'Advanced Hacking 1',
-      tree: 'Advanced Hacking',
-      level: 1,
-      source: 'core',
-      page: 40,
-      description: 'First advanced ability',
-      effect: 'Advanced hacking',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'ability-legendary',
-      name: 'Ultimate Hack',
-      tree: 'Advanced Hacking',
-      level: 4,
-      source: 'core',
-      page: 50,
-      description: 'The ultimate hack',
-      effect: 'Hack everything',
-      actionType: 'Turn',
-      activationCost: 3,
-    },
-  ]
+  // Find core classes for testing
+  const coreClasses = allClasses.filter((c) => c.type === 'core')
 
-  const mockEquipment: SURefEquipment[] = [
-    {
-      id: 'equipment-1',
-      name: 'Hacking Tool',
-      source: 'core',
-      page: 60,
-      description: 'A tool for hacking',
-      techLevel: 1,
-      traits: [],
-    },
-    {
-      id: 'equipment-2',
-      name: 'Repair Kit',
-      source: 'core',
-      page: 61,
-      description: 'A kit for repairs',
-      techLevel: 1,
-      traits: [],
-    },
-  ]
+  if (coreClasses.length === 0) {
+    throw new Error('No core classes found in salvageunion-reference')
+  }
 
   beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
+    // No mocks needed - using real data
   })
 
   describe('Initial Render', () => {
@@ -179,8 +47,8 @@ describe('PilotLiveSheet', () => {
       expect(classSelect).toBeInTheDocument()
 
       const options = classSelect.querySelectorAll('option')
-      // Should have placeholder + 2 core classes (not hybrid)
-      expect(options.length).toBe(3)
+      // Should have placeholder + core classes (not hybrid)
+      expect(options.length).toBe(coreClasses.length + 1)
     })
 
     it('disables resource steppers when no class is selected', () => {
@@ -213,7 +81,7 @@ describe('PilotLiveSheet', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, coreClasses[0].id)
 
       await waitFor(() => {
         // HP and AP start at max, so decrement buttons should be enabled
@@ -232,7 +100,7 @@ describe('PilotLiveSheet', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, coreClasses[0].id)
 
       await waitFor(() => {
         // Check TP stepper shows 0

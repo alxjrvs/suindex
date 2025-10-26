@@ -1,38 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefClass, SURefAbility, SURefEquipment } from 'salvageunion-reference'
-import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Resource Management', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: [],
-    },
-  ]
+  // Use real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
+  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
 
-  const mockAbilities: SURefAbility[] = []
-  const mockEquipment: SURefEquipment[] = []
-
-  beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue([])
-  })
+  if (!hackerClass) {
+    throw new Error('Hacker class not found in salvageunion-reference')
+  }
 
   describe('HP (Hit Points)', () => {
     it('shows HP stepper', () => {
@@ -61,7 +40,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       await waitFor(() => {
         const hpStepper = screen.getByRole('group', { name: /HP/i })
@@ -76,7 +55,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       await waitFor(() => {
         const hpStepper = screen.getByRole('group', { name: /HP/i })
@@ -128,7 +107,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       await waitFor(() => {
         const apStepper = screen.getByRole('group', { name: /^AP$/i })
@@ -143,7 +122,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       await waitFor(() => {
         const apStepper = screen.getByRole('group', { name: /^AP$/i })
@@ -200,7 +179,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       await waitFor(() => {
         const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -214,7 +193,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       await waitFor(() => {
         const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -261,7 +240,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Decrement HP to 0
       const hpStepper = screen.getByRole('group', { name: /HP/i })
@@ -288,7 +267,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Decrement AP to 0
       const apStepper = screen.getByRole('group', { name: /^AP$/i })
@@ -315,7 +294,7 @@ describe('PilotLiveSheet - Resource Management', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // TP starts at 0, so decrement button should already be disabled
       const tpStepper = screen.getByRole('group', { name: /TP/i })

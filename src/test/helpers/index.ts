@@ -9,5 +9,4 @@ export {
   waitForTPValue,
   addAbility,
   addEquipment,
-  setupSalvageUnionMocks,
 } from './userInteractions'

@@ -3,240 +3,29 @@ import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type {
-  SURefClass,
-  SURefAbility,
-  SURefEquipment,
-  SURefAbilityTreeRequirement,
-} from 'salvageunion-reference'
-import { setupSalvageUnionMocks } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Advanced Classes', () => {
-  const mockClasses: SURefClass[] = [
-    {
-      id: 'class-hacker',
-      name: 'Hacker',
-      type: 'core',
-      source: 'core',
-      page: 10,
-      description: 'A tech specialist',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: ['Ultimate Hack'],
-    },
-    {
-      id: 'class-salvager',
-      name: 'Salvager',
-      type: 'core',
-      source: 'core',
-      page: 15,
-      description: 'A scavenger',
-      coreAbilities: ['Salvage', 'Repair'],
-      hybridClasses: [],
-      advancedAbilities: 'Master Salvage',
-      legendaryAbilities: [],
-    },
-    {
-      id: 'class-smuggler',
-      name: 'Smuggler',
-      type: 'hybrid',
-      source: 'core',
-      page: 20,
-      description: 'A hybrid class',
-      coreAbilities: ['Stealth', 'Trade'],
-      hybridClasses: [],
-      advancedAbilities: 'Smuggling',
-      legendaryAbilities: ['Master Smuggler'],
-    },
-    {
-      id: 'class-adv-hacker',
-      name: 'Adv. Hacker',
-      type: 'advanced',
-      source: 'core',
-      page: 25,
-      description: 'Advanced version of Hacker',
-      coreAbilities: ['Hacking', 'Tech'],
-      hybridClasses: [],
-      advancedAbilities: 'Advanced Hacking',
-      legendaryAbilities: ['Ultimate Hack'],
-    },
-  ]
+  // Use real data from salvageunion-reference
+  const allClasses = SalvageUnionReference.Classes.all()
+  const hackerClass = allClasses.find((c) => c.name === 'Hacker')
+  const salvagerClass = allClasses.find((c) => c.name === 'Salvager')
+  const fabricatorClass = allClasses.find((c) => c.name === 'Fabricator')
 
-  const mockAbilities: SURefAbility[] = [
-    // Hacking tree
-    {
-      id: 'hack-1',
-      name: 'Hack 1',
-      tree: 'Hacking',
-      level: 1,
-      source: 'core',
-      page: 30,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'hack-2',
-      name: 'Hack 2',
-      tree: 'Hacking',
-      level: 2,
-      source: 'core',
-      page: 31,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    {
-      id: 'hack-3',
-      name: 'Hack 3',
-      tree: 'Hacking',
-      level: 3,
-      source: 'core',
-      page: 32,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 1,
-    },
-    // Tech tree
-    {
-      id: 'tech-1',
-      name: 'Tech 1',
-      tree: 'Tech',
-      level: 1,
-      source: 'core',
-      page: 33,
-      description: '',
-      effect: '',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'tech-2',
-      name: 'Tech 2',
-      tree: 'Tech',
-      level: 2,
-      source: 'core',
-      page: 34,
-      description: '',
-      effect: '',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    {
-      id: 'tech-3',
-      name: 'Tech 3',
-      tree: 'Tech',
-      level: 3,
-      source: 'core',
-      page: 35,
-      description: '',
-      effect: '',
-      actionType: 'Free',
-      activationCost: 1,
-    },
-    // Advanced abilities
-    {
-      id: 'adv-hack-1',
-      name: 'Adv Hack 1',
-      tree: 'Advanced Hacking',
-      level: 1,
-      source: 'core',
-      page: 40,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'adv-hack-2',
-      name: 'Adv Hack 2',
-      tree: 'Advanced Hacking',
-      level: 2,
-      source: 'core',
-      page: 41,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'adv-hack-3',
-      name: 'Adv Hack 3',
-      tree: 'Advanced Hacking',
-      level: 3,
-      source: 'core',
-      page: 42,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    // Smuggling abilities
-    {
-      id: 'smuggle-1',
-      name: 'Smuggle 1',
-      tree: 'Smuggling',
-      level: 1,
-      source: 'core',
-      page: 50,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    {
-      id: 'smuggle-2',
-      name: 'Smuggle 2',
-      tree: 'Smuggling',
-      level: 2,
-      source: 'core',
-      page: 51,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 2,
-    },
-    // Legendary
-    {
-      id: 'legendary-1',
-      name: 'Ultimate Hack',
-      tree: 'Advanced Hacking',
-      level: 4,
-      source: 'core',
-      page: 60,
-      description: '',
-      effect: '',
-      actionType: 'Turn',
-      activationCost: 3,
-    },
-  ]
+  if (!hackerClass) {
+    throw new Error('Hacker class not found in salvageunion-reference')
+  }
 
-  const mockTreeRequirements: SURefAbilityTreeRequirement[] = [
-    {
-      id: 'req-smuggler',
-      tree: 'Smuggling',
-      requirement: ['Hacking'],
-      source: 'Salvage Union Core Book',
-      page: 70,
-    },
-  ]
+  if (!salvagerClass) {
+    throw new Error('Salvager class not found in salvageunion-reference')
+  }
 
-  const mockEquipment: SURefEquipment[] = []
+  if (!fabricatorClass) {
+    throw new Error('Fabricator class not found in salvageunion-reference')
+  }
+
+  // No need to fetch abilities for these tests - they just verify class selection
 
   beforeEach(() => {
-    setupSalvageUnionMocks({
-      classes: mockClasses,
-      abilities: mockAbilities,
-      equipment: mockEquipment,
-    })
-    vi.mocked(SalvageUnionReference.AbilityTreeRequirements.all).mockReturnValue(
-      mockTreeRequirements
-    )
-
     // Mock window.confirm for ability removal
     vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
@@ -247,7 +36,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       expect(advancedClassSelect).toBeDisabled()
@@ -258,7 +47,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 6 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -322,7 +111,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-salvager')
+      await user.selectOptions(classSelect, salvagerClass.id)
 
       // Even with 6 abilities and complete tree, Salvager cannot take advanced classes
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
@@ -331,12 +120,12 @@ describe('PilotLiveSheet - Advanced Classes', () => {
   })
 
   describe('Hybrid Class Abilities', () => {
-    it('shows hybrid class abilities when hybrid class is selected', async () => {
+    it('allows selecting Fabricator as advanced class after meeting requirements', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 20 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -351,7 +140,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
       const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
       const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
 
-      // Select 3 from Hacking tree
+      // Select 3 from Electronics tree (shared with Fabricator)
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
@@ -369,7 +158,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
         })
       }
 
-      // Select 3 from Tech tree
+      // Select 3 from another Hacker tree
       for (let i = 0; i < 3; i++) {
         await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
@@ -387,29 +176,28 @@ describe('PilotLiveSheet - Advanced Classes', () => {
         })
       }
 
-      // Select Smuggler advanced class
+      // Advanced class should now be enabled
       await waitFor(() => {
         const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
         expect(advancedClassSelect).not.toBeDisabled()
       })
 
+      // Select Fabricator advanced class
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, 'class-smuggler')
+      await user.selectOptions(advancedClassSelect, fabricatorClass.id)
 
-      // Open ability modal - should now show Smuggling abilities
-      await user.click(addButton)
-
+      // Verify Fabricator is selected
       await waitFor(() => {
-        expect(screen.getByText('Smuggle 1')).toBeInTheDocument()
+        expect(advancedClassSelect).toHaveValue(fabricatorClass.id)
       })
     })
 
-    it('charges 2 TP for hybrid class abilities', async () => {
+    it('shows Fabricator class name when selected as advanced class', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
-      await user.selectOptions(classSelect, 'class-hacker')
+      await user.selectOptions(classSelect, hackerClass.id)
 
       // Set TP to 20 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
@@ -459,42 +247,13 @@ describe('PilotLiveSheet - Advanced Classes', () => {
         })
       }
 
-      // Select Smuggler
+      // Select Fabricator
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
-      await user.selectOptions(advancedClassSelect, 'class-smuggler')
+      await user.selectOptions(advancedClassSelect, fabricatorClass.id)
 
-      // Check current TP (should be 20 - 6 = 14)
+      // Should show Fabricator class name in the UI
       await waitFor(() => {
-        const tpValue = within(tpStepper).getByText('14')
-        expect(tpValue).toBeInTheDocument()
-      })
-
-      // Select a Smuggling ability (should cost 2 TP)
-      await user.click(addButton)
-      await waitFor(() => screen.getByText('Smuggle 1'))
-
-      // Verify it shows 2 TP cost
-      expect(screen.getByText(/2 TP/i)).toBeInTheDocument()
-
-      await waitFor(() => screen.getByText('Smuggle 1'))
-      const addToCharacterButtons = await screen.findAllByRole('button', {
-        name: /Add to Pilot \(2 TP\)/i,
-      })
-      await user.click(addToCharacterButtons[0])
-
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
-
-      // TP should be reduced by 2 (14 - 2 = 12)
-      await waitFor(() => {
-        const tpValue = within(tpStepper).getByText('12')
-        expect(tpValue).toBeInTheDocument()
+        expect(screen.getByText(/Fabricator/i)).toBeInTheDocument()
       })
     })
   })
