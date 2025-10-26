@@ -199,7 +199,10 @@ export function getAbilitiesForClass(classObj: { coreTrees: string[] }) {
  * @param level - The ability level to filter by
  * @returns Array of abilities at the specified level
  */
-export function getAbilitiesByLevel(abilities: Array<{ level: number }>, level: number) {
+export function getAbilitiesByLevel<T extends { level?: number }>(
+  abilities: T[],
+  level: number
+): T[] {
   return abilities.filter((a) => a.level === level)
 }
 
