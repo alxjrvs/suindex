@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { CrawlersGrid } from '../CrawlersGrid'
 import * as api from '../../../lib/api'
-import type { Tables } from '../../../types/database'
+import { createMockUser, createMockCrawlers } from '../../../test/mockFactories'
 
 // Mock the API
 vi.mock('../../../lib/api', () => ({
@@ -24,49 +24,8 @@ vi.mock('react-router', async () => {
 })
 
 describe('CrawlersGrid', () => {
-  const mockUser = {
-    id: 'test-user-id',
-    email: 'test@example.com',
-  }
-
-  const mockCrawlers: Tables<'crawlers'>[] = [
-    {
-      id: 'crawler-1',
-      user_id: 'test-user-id',
-      name: 'Test Crawler 1',
-      crawler_type_id: null,
-      tech_level: 1,
-      current_damage: 0,
-      current_scrap: 0,
-      bays: null,
-      cargo: null,
-      npc: null,
-      description: null,
-      notes: null,
-      upgrade: null,
-      created_at: '2024-01-01T00:00:00Z',
-      updated_at: '2024-01-01T00:00:00Z',
-      game_id: null,
-    },
-    {
-      id: 'crawler-2',
-      user_id: 'test-user-id',
-      name: 'Test Crawler 2',
-      crawler_type_id: null,
-      tech_level: 2,
-      current_damage: 5,
-      current_scrap: 10,
-      bays: null,
-      cargo: null,
-      npc: null,
-      description: null,
-      notes: null,
-      upgrade: null,
-      created_at: '2024-01-02T00:00:00Z',
-      updated_at: '2024-01-02T00:00:00Z',
-      game_id: null,
-    },
-  ]
+  const mockUser = createMockUser()
+  const mockCrawlers = createMockCrawlers(2)
 
   beforeEach(() => {
     vi.clearAllMocks()

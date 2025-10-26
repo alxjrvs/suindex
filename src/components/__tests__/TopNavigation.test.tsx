@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { TopNavigation } from '../TopNavigation'
 import schemaIndexData from 'salvageunion-reference/schemas/index.json'
 import * as api from '../../lib/api'
-import type { User } from '@supabase/supabase-js'
+import { createMockUser } from '../../test/mockFactories'
 
 // Mock the API
 vi.mock('../../lib/api', () => ({
@@ -15,13 +15,7 @@ vi.mock('../../lib/api', () => ({
 
 describe('TopNavigation', () => {
   const schemas = schemaIndexData.schemas
-  const mockUser: User = {
-    id: 'test-user-id',
-    email: 'test@example.com',
-    user_metadata: {
-      full_name: 'Test User',
-    },
-  } as User
+  const mockUser = createMockUser()
 
   beforeEach(() => {
     vi.clearAllMocks()

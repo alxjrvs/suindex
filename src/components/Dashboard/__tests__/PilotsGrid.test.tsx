@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { PilotsGrid } from '../PilotsGrid'
 import * as api from '../../../lib/api'
-import type { Tables } from '../../../types/database'
+import { createMockUser, createMockPilots } from '../../../test/mockFactories'
 
 // Mock the API
 vi.mock('../../../lib/api', () => ({
@@ -24,47 +24,8 @@ vi.mock('react-router', async () => {
 })
 
 describe('PilotsGrid', () => {
-  const mockUser = {
-    id: 'test-user-id',
-    email: 'test@example.com',
-  }
-
-  const mockPilots: Tables<'pilots'>[] = [
-    {
-      id: 'pilot-1',
-      user_id: 'test-user-id',
-      callsign: 'Test Pilot 1',
-      class_id: null,
-      max_hp: 10,
-      max_ap: 3,
-      current_damage: 0,
-      current_ap: 3,
-      abilities: null,
-      inventory: null,
-      created_at: '2024-01-01T00:00:00Z',
-      updated_at: '2024-01-01T00:00:00Z',
-      game_id: null,
-      crawler_id: null,
-      mech_id: null,
-    },
-    {
-      id: 'pilot-2',
-      user_id: 'test-user-id',
-      callsign: 'Test Pilot 2',
-      class_id: null,
-      max_hp: 10,
-      max_ap: 3,
-      current_damage: 2,
-      current_ap: 1,
-      abilities: null,
-      inventory: null,
-      created_at: '2024-01-02T00:00:00Z',
-      updated_at: '2024-01-02T00:00:00Z',
-      game_id: null,
-      crawler_id: null,
-      mech_id: null,
-    },
-  ]
+  const mockUser = createMockUser()
+  const mockPilots = createMockPilots(2)
 
   beforeEach(() => {
     vi.clearAllMocks()

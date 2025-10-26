@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { MechsGrid } from '../MechsGrid'
 import * as api from '../../../lib/api'
-import type { Tables } from '../../../types/database'
+import { createMockUser, createMockMechs } from '../../../test/mockFactories'
 
 // Mock the API
 vi.mock('../../../lib/api', () => ({
@@ -24,45 +24,8 @@ vi.mock('react-router', async () => {
 })
 
 describe('MechsGrid', () => {
-  const mockUser = {
-    id: 'test-user-id',
-    email: 'test@example.com',
-  }
-
-  const mockMechs: Tables<'mechs'>[] = [
-    {
-      id: 'mech-1',
-      user_id: 'test-user-id',
-      pattern: 'Test Mech 1',
-      chassis_id: null,
-      current_damage: 0,
-      current_heat: 0,
-      current_ep: 0,
-      cargo: null,
-      systems: null,
-      modules: null,
-      created_at: '2024-01-01T00:00:00Z',
-      updated_at: '2024-01-01T00:00:00Z',
-      game_id: null,
-      pilot_id: null,
-    },
-    {
-      id: 'mech-2',
-      user_id: 'test-user-id',
-      pattern: 'Test Mech 2',
-      chassis_id: null,
-      current_damage: 5,
-      current_heat: 3,
-      current_ep: 2,
-      cargo: null,
-      systems: null,
-      modules: null,
-      created_at: '2024-01-02T00:00:00Z',
-      updated_at: '2024-01-02T00:00:00Z',
-      game_id: null,
-      pilot_id: null,
-    },
-  ]
+  const mockUser = createMockUser()
+  const mockMechs = createMockMechs(2)
 
   beforeEach(() => {
     vi.clearAllMocks()
