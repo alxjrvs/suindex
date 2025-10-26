@@ -116,7 +116,14 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
       </Grid>
 
       <Flex gap={6}>
-        <CrawlerAbilities crawlerRef={selectedCrawlerType} disabled={!selectedCrawlerType} />
+        <CrawlerAbilities
+          upkeep={upkeep}
+          onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
+          maxUpgrade={maxUpgrade}
+          crawlerRef={selectedCrawlerType}
+          crawler={crawler}
+          disabled={!selectedCrawlerType}
+        />
         <CrawlerNPC
           crawler={crawler}
           onUpdate={updateCrawler}

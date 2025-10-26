@@ -67,7 +67,20 @@ export function StatDisplay({
         {label}
       </Text>
       <WrapperComponent {...buttonProps}>
-        <Text fontSize="lg" fontWeight="bold" color={disabled ? 'su.black' : valueColor}>
+        <Text
+          fontSize="lg"
+          fontWeight="bold"
+          color={disabled ? 'su.black' : valueColor}
+          textAlign="center"
+          overflow="hidden"
+          whiteSpace="nowrap"
+          maxW="full"
+          w="full"
+          css={{
+            fontSize: 'clamp(0.5rem, 5cqw, 1.125rem)',
+            containerType: 'inline-size',
+          }}
+        >
           {value}
         </Text>
       </WrapperComponent>

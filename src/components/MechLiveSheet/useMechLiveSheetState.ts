@@ -214,7 +214,7 @@ export function useMechLiveSheetState(id?: string) {
     }
   }
 
-  const handleAddCargo = (amount: number, description: string) => {
+  const handleAddCargo = (amount: number, description: string, color: string) => {
     updateMech({
       cargo: [
         ...(mech.cargo ?? []),
@@ -222,6 +222,7 @@ export function useMechLiveSheetState(id?: string) {
           id: `cargo-${Date.now()}-${Math.random()}`,
           amount,
           description,
+          color,
         },
       ],
     })

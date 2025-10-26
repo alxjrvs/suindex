@@ -173,7 +173,7 @@ export function useCrawlerLiveSheetState(id?: string) {
   )
 
   const handleAddCargo = useCallback(
-    (amount: number, description: string) => {
+    (amount: number, description: string, color: string) => {
       updateCrawler({
         cargo: [
           ...(crawler.cargo ?? []),
@@ -181,6 +181,7 @@ export function useCrawlerLiveSheetState(id?: string) {
             id: `cargo-${Date.now()}-${Math.random()}`,
             amount,
             description,
+            color,
           },
         ],
       })

@@ -27,6 +27,7 @@ export interface CargoItem {
   id: string
   amount: number
   description: string
+  color?: string // Light background color for the cargo item
 }
 
 // ============================================================================
