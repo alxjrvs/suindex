@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router'
 import type { Tables } from '../../types/database'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerGridCard } from './CrawlerGridCard'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { GridLayout } from './GridLayout'
+import {
+  getCrawlerNameById,
+  getStructurePointsForTechLevel,
+} from '../../utils/referenceDataHelpers'
 
 type CrawlerRow = Tables<'crawlers'>
 
@@ -47,15 +50,10 @@ export function CrawlersGrid() {
       items={crawlers}
       renderItem={(crawler) => {
         const crawlerTypeName = crawler.crawler_type_id
-          ? (SalvageUnionReference.Crawlers.all().find((c) => c.id === crawler.crawler_type_id)
-              ?.name ?? 'Unknown')
+          ? getCrawlerNameById(crawler.crawler_type_id)
           : 'Unknown'
 
-        const maxSP = crawler.tech_level
-          ? (SalvageUnionReference.CrawlerTechLevels.all().find(
-              (tl) => tl.techLevel === crawler.tech_level
-            )?.structurePoints ?? 20)
-          : 20
+        const maxSP = crawler.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
         const currentSP = maxSP - (crawler.current_damage ?? 0)
 
         return (

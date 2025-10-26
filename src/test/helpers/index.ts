@@ -28,6 +28,9 @@ export {
   getAbilitiesForClass,
   getAbilitiesByLevel,
   getEquipment,
+  getAllClasses,
+  findClassById,
+  getClassNameById,
 } from './referenceData'
 
 // Stepper helpers

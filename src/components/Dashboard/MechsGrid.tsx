@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router'
 import type { Tables } from '../../types/database'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { MechGridCard } from './MechGridCard'
 import { GridLayout } from './GridLayout'
+import { getChassisNameById } from '../../utils/referenceDataHelpers'
 
 type MechRow = Tables<'mechs'>
 
@@ -46,10 +46,7 @@ export function MechsGrid() {
       error={error}
       items={mechs}
       renderItem={(mech) => {
-        const chassisName = mech.chassis_id
-          ? (SalvageUnionReference.Chassis.all().find((c) => c.id === mech.chassis_id)?.name ??
-            'Unknown')
-          : 'No Chassis'
+        const chassisName = mech.chassis_id ? getChassisNameById(mech.chassis_id) : 'No Chassis'
 
         return (
           <MechGridCard

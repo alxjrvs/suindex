@@ -4,31 +4,6 @@ import type { Tables, TablesInsert } from '../../types/database'
 export type CrawlerRow = Tables<'crawlers'>
 
 /**
- * Fetch a single crawler by ID
- */
-export async function fetchCrawler(crawlerId: string): Promise<CrawlerRow> {
-  const { data, error } = await supabase.from('crawlers').select('*').eq('id', crawlerId).single()
-
-  if (error) throw error
-  if (!data) throw new Error('Crawler not found')
-  return data as CrawlerRow
-}
-
-/**
- * Fetch all crawlers for the current user
- */
-export async function fetchUserCrawlers(userId: string): Promise<CrawlerRow[]> {
-  const { data, error } = await supabase
-    .from('crawlers')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-
-  if (error) throw error
-  return (data || []) as CrawlerRow[]
-}
-
-/**
  * Fetch crawler for a specific game
  */
 export async function fetchGameCrawler(gameId: string): Promise<CrawlerRow | null> {
