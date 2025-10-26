@@ -1,8 +1,5 @@
 import { supabase } from '../supabase'
 import type { Tables, TablesInsert } from '../../types/database'
-export { fetchCrawlerPilots } from './pilots'
-export { fetchPilotsMechs } from './mechs'
-export { fetchGameCrawler } from './crawlers'
 
 export type GameRow = Tables<'games'>
 export type GameMember = {

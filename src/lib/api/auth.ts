@@ -4,7 +4,7 @@ import type { User } from '@supabase/supabase-js'
 /**
  * Get the current authenticated user
  */
-export async function getCurrentUser(): Promise<User | null> {
+export async function getUser(): Promise<User | null> {
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -51,8 +51,3 @@ export function onAuthStateChange(callback: (user: User | null) => void) {
   })
   return subscription
 }
-
-/**
- * Alias for getCurrentUser for convenience
- */
-export const getUser = getCurrentUser

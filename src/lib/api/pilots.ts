@@ -4,31 +4,6 @@ import type { Tables, TablesInsert } from '../../types/database'
 export type PilotRow = Tables<'pilots'>
 
 /**
- * Fetch a single pilot by ID
- */
-export async function fetchPilot(pilotId: string): Promise<PilotRow> {
-  const { data, error } = await supabase.from('pilots').select('*').eq('id', pilotId).single()
-
-  if (error) throw error
-  if (!data) throw new Error('Pilot not found')
-  return data as PilotRow
-}
-
-/**
- * Fetch all pilots for the current user
- */
-export async function fetchUserPilots(userId: string): Promise<PilotRow[]> {
-  const { data, error } = await supabase
-    .from('pilots')
-    .select('*')
-    .eq('user_id', userId)
-    .order('callsign')
-
-  if (error) throw error
-  return (data || []) as PilotRow[]
-}
-
-/**
  * Fetch all pilots for a crawler
  */
 export async function fetchCrawlerPilots(crawlerId: string): Promise<PilotRow[]> {

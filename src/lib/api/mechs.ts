@@ -4,45 +4,6 @@ import type { Tables, TablesInsert } from '../../types/database'
 export type MechRow = Tables<'mechs'>
 
 /**
- * Fetch a single mech by ID
- */
-export async function fetchMech(mechId: string): Promise<MechRow> {
-  const { data, error } = await supabase.from('mechs').select('*').eq('id', mechId).single()
-
-  if (error) throw error
-  if (!data) throw new Error('Mech not found')
-  return data as MechRow
-}
-
-/**
- * Fetch all mechs for the current user
- */
-export async function fetchUserMechs(userId: string): Promise<MechRow[]> {
-  const { data, error } = await supabase
-    .from('mechs')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-
-  if (error) throw error
-  return (data || []) as MechRow[]
-}
-
-/**
- * Fetch mech for a specific pilot
- */
-export async function fetchPilotMech(pilotId: string): Promise<MechRow | null> {
-  const { data, error } = await supabase
-    .from('mechs')
-    .select('*')
-    .eq('pilot_id', pilotId)
-    .maybeSingle()
-
-  if (error) throw error
-  return (data || null) as MechRow | null
-}
-
-/**
  * Fetch mechs for multiple pilots
  */
 export async function fetchPilotsMechs(pilotIds: string[]): Promise<MechRow[]> {
