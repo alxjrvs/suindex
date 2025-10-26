@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen } from '../../../test/chakra-utils'
 import { Auth } from '../Auth'
-import * as api from '../../../lib/api'
 
 // Mock the API
 vi.mock('../../../lib/api', () => ({
@@ -25,7 +24,7 @@ describe('Dashboard Auth', () => {
 
       const button = screen.getByRole('button', { name: /sign in with discord/i })
       const container = button.closest('div')
-      
+
       expect(container).toHaveStyle({
         display: 'flex',
         alignItems: 'center',
@@ -38,11 +37,10 @@ describe('Dashboard Auth', () => {
 
       const button = screen.getByRole('button', { name: /sign in with discord/i })
       const container = button.closest('div')
-      
+
       expect(container).toHaveStyle({
         minHeight: '100vh',
       })
     })
   })
 })
-

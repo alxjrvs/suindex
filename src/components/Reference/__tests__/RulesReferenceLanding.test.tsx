@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, waitFor, within } from '../../../test/chakra-utils'
+import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { RulesReferenceLanding } from '../RulesReferenceLanding'
