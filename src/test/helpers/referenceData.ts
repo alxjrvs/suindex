@@ -1,4 +1,5 @@
 import { SalvageUnionReference } from 'salvageunion-reference'
+import type { SURefAbility } from 'salvageunion-reference'
 
 /**
  * Fetch and validate core classes from reference data
@@ -199,10 +200,7 @@ export function getAbilitiesForClass(classObj: { coreTrees: string[] }) {
  * @param level - The ability level to filter by
  * @returns Array of abilities at the specified level
  */
-export function getAbilitiesByLevel<T extends { level?: number }>(
-  abilities: T[],
-  level: number
-): T[] {
+export function getAbilitiesByLevel(abilities: SURefAbility[], level: number): SURefAbility[] {
   return abilities.filter((a) => a.level === level)
 }
 
