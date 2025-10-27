@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { renderWithRouter, screen, waitFor } from '../../../test/chakra-utils'
+import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import { CrawlersGrid } from '../CrawlersGrid'
 import * as api from '../../../lib/api'
@@ -34,7 +34,7 @@ describe('CrawlersGrid', () => {
 
   describe('Grid Display', () => {
     it('should render page title', async () => {
-      renderWithRouter(<CrawlersGrid />)
+      render(<CrawlersGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Your Crawlers')).toBeInTheDocument()
@@ -42,7 +42,7 @@ describe('CrawlersGrid', () => {
     })
 
     it('should render create crawler button', async () => {
-      renderWithRouter(<CrawlersGrid />)
+      render(<CrawlersGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new crawler/i })).toBeInTheDocument()
@@ -50,7 +50,7 @@ describe('CrawlersGrid', () => {
     })
 
     it('should render crawler cards after loading', async () => {
-      renderWithRouter(<CrawlersGrid />)
+      render(<CrawlersGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Test Crawler 1')).toBeInTheDocument()
@@ -59,7 +59,7 @@ describe('CrawlersGrid', () => {
     })
 
     it('should display crawler stats on cards', async () => {
-      renderWithRouter(<CrawlersGrid />)
+      render(<CrawlersGrid />)
 
       await waitFor(() => {
         // Check for SP (Structure Points) stats
@@ -75,7 +75,7 @@ describe('CrawlersGrid', () => {
       const newCrawler = { ...mockCrawlers[0], id: 'new-crawler-id' }
       mockCreateEntity.mockResolvedValue(newCrawler as never)
 
-      renderWithRouter(<CrawlersGrid />)
+      render(<CrawlersGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new crawler/i })).toBeInTheDocument()
@@ -95,7 +95,7 @@ describe('CrawlersGrid', () => {
       const newCrawler = { ...mockCrawlers[0], id: 'new-crawler-id' }
       mockCreateEntity.mockResolvedValue(newCrawler as never)
 
-      renderWithRouter(<CrawlersGrid />)
+      render(<CrawlersGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new crawler/i })).toBeInTheDocument()
@@ -114,7 +114,7 @@ describe('CrawlersGrid', () => {
     it('should navigate to crawler detail when card is clicked', async () => {
       const user = userEvent.setup()
 
-      renderWithRouter(<CrawlersGrid />)
+      render(<CrawlersGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Test Crawler 1')).toBeInTheDocument()

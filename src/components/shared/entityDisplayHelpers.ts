@@ -9,7 +9,6 @@ export interface Stat {
 
 export interface SidebarData {
   showSidebar: boolean
-  techLevel?: 1 | 2 | 3 | 4 | 5 | 6
   salvageValue?: number
   slotsRequired?: number
 }
@@ -263,21 +262,8 @@ export function extractDetails(data: SURefEntity, entityType: SURefEntityName): 
  * Extract sidebar data (tech level, salvage value, slots)
  */
 export function extractSidebarData(data: SURefEntity): SidebarData {
-  let techLevel: number | undefined
   let salvageValue: number | undefined
   let slotsRequired: number | undefined
-
-  // Tech level
-  if (
-    'stats' in data &&
-    typeof data.stats === 'object' &&
-    data.stats &&
-    'techLevel' in data.stats
-  ) {
-    techLevel = (data.stats as { techLevel?: number }).techLevel
-  } else if ('techLevel' in data) {
-    techLevel = data.techLevel as number | undefined
-  }
 
   // Salvage value
   if (
@@ -296,12 +282,10 @@ export function extractSidebarData(data: SURefEntity): SidebarData {
     slotsRequired = data.slotsRequired as number | undefined
   }
 
-  const showSidebar =
-    techLevel !== undefined || salvageValue !== undefined || slotsRequired !== undefined
+  const showSidebar = salvageValue !== undefined || slotsRequired !== undefined
 
   return {
     showSidebar,
-    techLevel: techLevel as 1 | 2 | 3 | 4 | 5 | 6 | undefined,
     salvageValue,
     slotsRequired,
   }
@@ -373,6 +357,15 @@ export function extractAbilities(data: SURefEntity): SURefActionMetaList[] {
   const abilities = 'abilities' in data ? data.abilities : undefined
   if (!abilities) return []
   return abilities
+}
+
+export function extractTechLevel(data: SURefEntity): number | undefined {
+  if ('stats' in data && typeof data.stats === 'object' && data.stats) {
+    return (data.stats as { techLevel?: number }).techLevel
+  } else if ('techLevel' in data) {
+    return data.techLevel as number | undefined
+  }
+  return undefined
 }
 
 export function extractTechLevelEffects(data: SURefEntity): {

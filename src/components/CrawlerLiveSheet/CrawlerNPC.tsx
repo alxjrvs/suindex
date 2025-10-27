@@ -16,7 +16,6 @@ export function CrawlerNPC({
   crawlerRef: SURefCrawler | undefined
   disabled?: boolean
 }) {
-  console.log()
   return (
     <RoundedBox bg="bg.builder.crawler" title="NPC" disabled={disabled} w="full">
       {crawler.npc && (

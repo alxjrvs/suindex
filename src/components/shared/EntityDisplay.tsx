@@ -24,6 +24,7 @@ import {
   extractPageReference,
   extractTechLevelEffects,
   extractAbilities,
+  extractTechLevel,
 } from './entityDisplayHelpers'
 import type { SURefEntity, SURefEntityName } from 'salvageunion-reference'
 import { SheetDisplay } from './SheetDisplay'
@@ -82,6 +83,7 @@ export function EntityDisplay({
   const sidebar = extractSidebarData(data)
   const sections = extractContentSections(data)
   const pageRef = extractPageReference(data)
+  const techLevel = extractTechLevel(data)
   const techLevelEffects = extractTechLevelEffects(data)
   const abilities = extractAbilities(data)
 
@@ -97,8 +99,7 @@ export function EntityDisplay({
   }
 
   // Styling (from Frame)
-  const backgroundColor =
-    headerColor || (sidebar.techLevel ? techLevelColors[sidebar.techLevel] : 'su.orange')
+  const backgroundColor = headerColor || (techLevel ? techLevelColors[techLevel] : 'su.orange')
   const opacityValue = dimmed ? 0.5 : 1
 
   // Click handling for header only
@@ -129,6 +130,7 @@ export function EntityDisplay({
           </Text>
         </Flex>
       )}
+      {techLevel && <StatDisplay label="TL" value={techLevel} />}
       {level && <StatDisplay label="LVL" value={level} />}
     </>
   )
@@ -147,8 +149,8 @@ export function EntityDisplay({
           fontStyle="italic"
           textAlign="right"
           fontWeight="medium"
-          lineHeight="tight"
-          fontSize="sm"
+          lineHeight="1.2"
+          fontSize="xs"
           flex="1"
         >
           {description}
@@ -215,26 +217,22 @@ export function EntityDisplay({
       {(!collapsible || isExpanded) && (
         <Flex bg={backgroundColor} w="full">
           {/* Sidebar */}
-          {sidebar.showSidebar &&
-            (sidebar.techLevel || sidebar.slotsRequired || sidebar.salvageValue) && (
-              <VStack
-                alignItems="center"
-                justifyContent="flex-start"
-                pb={3}
-                pt={3}
-                gap={3}
-                minW="80px"
-                maxW="80px"
-                bg={backgroundColor}
-                overflow="visible"
-              >
-                {sidebar.slotsRequired && (
-                  <StatDisplay label="Slots" value={sidebar.slotsRequired} />
-                )}
-                {sidebar.salvageValue && <StatDisplay label="SV" value={sidebar.salvageValue} />}
-                {sidebar.techLevel && <StatDisplay label="TL" value={sidebar.techLevel} />}
-              </VStack>
-            )}
+          {sidebar.showSidebar && (sidebar.slotsRequired || sidebar.salvageValue) && (
+            <VStack
+              alignItems="center"
+              justifyContent="flex-start"
+              pb={3}
+              pt={3}
+              gap={3}
+              minW="80px"
+              maxW="80px"
+              bg={backgroundColor}
+              overflow="visible"
+            >
+              {sidebar.slotsRequired && <StatDisplay label="Slots" value={sidebar.slotsRequired} />}
+              {sidebar.salvageValue && <StatDisplay label="SV" value={sidebar.salvageValue} />}
+            </VStack>
+          )}
 
           {/* Main content area */}
           <VStack

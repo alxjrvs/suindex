@@ -93,7 +93,6 @@ export function useCrawlerLiveSheetState(id?: string) {
   const maxSP = useMemo(() => {
     return currentTechLevel?.structurePoints || 20
   }, [currentTechLevel])
-  console.log('maxSP', maxSP)
 
   const upkeep = useMemo(() => {
     return `5 TL${crawler.tech_level}`

@@ -75,6 +75,8 @@ export function RoundedBox({
       p={0}
       shadow="lg"
       overflow="hidden"
+      minH="fit-content"
+      flexShrink={0}
       {...flexProps}
     >
       {hasHeader && (
@@ -108,7 +110,7 @@ export function RoundedBox({
                 <Heading
                   level="h2"
                   textTransform="uppercase"
-                  alignSelf="center"
+                  alignSelf="flex-start"
                   transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
                   transition="transform 0.3s ease"
                   opacity={disabled ? 0.5 : 1}
@@ -130,6 +132,7 @@ export function RoundedBox({
           w="full"
           p={bodyPadding ?? 4}
           flex="1"
+          minH="fit-content"
         >
           {children}
         </Flex>

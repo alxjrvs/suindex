@@ -28,7 +28,7 @@ export default function Modal({
     <DialogRoot open={isOpen} onOpenChange={(e) => !e.open && onClose()} size="xl">
       <DialogBackdrop />
       <DialogContent
-        maxW="4xl"
+        maxW="6xl"
         maxH="90vh"
         bg={backgroundColor}
         borderWidth="3px"

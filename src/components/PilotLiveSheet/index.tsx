@@ -24,7 +24,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
 
   const allCoreClasses = SalvageUnionReference.CoreClasses.all()
   const allAbilities = SalvageUnionReference.Abilities.all()
-  const allEquipment = SalvageUnionReference.Equipment.all()
 
   const {
     pilot,
@@ -168,7 +167,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
       <EquipmentSelector
         isOpen={isEquipmentSelectorOpen}
         onClose={() => setIsEquipmentSelectorOpen(false)}
-        equipment={allEquipment}
         onSelectEquipment={handleAddEquipment}
       />
 

@@ -16,7 +16,7 @@
         "react-dom": "^19.2.0",
         "react-hook-form": "^7.65.0",
         "react-router-dom": "^7.9.4",
-        "salvageunion-reference": "^1.31.1",
+        "salvageunion-reference": "^1.31.2",
         "type-fest": "^5.1.0",
       },
       "devDependencies": {
@@ -922,7 +922,7 @@
 
     "safer-buffer": ["safer-buffer@2.1.2", "", {}, "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="],
 
-    "salvageunion-reference": ["salvageunion-reference@1.31.2", "", {}, "sha512-FXGb7Xiln8y7sxLiYlvzr7dDWCabXcelBcYCjGWjghmCNFqtQHt6acMuSsIO6X68WaLmXa5OSty1Mo9QbkkBhw=="],
+    "salvageunion-reference": ["salvageunion-reference@1.31.3", "", {}, "sha512-TL5XMPshoUPR+D19cgCaRBHGfKmENVO+M/ybEtYlfoAv1yOnZwDVhLt2AKoFaZyyyHIwGK7y0DcUFIFpNWaENw=="],
 
     "saxes": ["saxes@6.0.0", "", { "dependencies": { "xmlchars": "^2.2.0" } }, "sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA=="],
 
