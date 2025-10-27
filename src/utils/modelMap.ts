@@ -8,6 +8,10 @@ export const modelMap = {
   'classes-core': SalvageUnionReference.CoreClasses,
   'classes-advanced': SalvageUnionReference.AdvancedClasses,
   'classes-hybrid': SalvageUnionReference.HybridClasses,
+  // Support dot notation for classes (used in schema catalog)
+  'classes.core': SalvageUnionReference.CoreClasses,
+  'classes.advanced': SalvageUnionReference.AdvancedClasses,
+  'classes.hybrid': SalvageUnionReference.HybridClasses,
   crawlers: SalvageUnionReference.Crawlers,
   'crawler-bays': SalvageUnionReference.CrawlerBays,
   'crawler-tech-levels': SalvageUnionReference.CrawlerTechLevels,
@@ -17,7 +21,8 @@ export const modelMap = {
   keywords: SalvageUnionReference.Keywords,
   meld: SalvageUnionReference.Meld,
   modules: SalvageUnionReference.Modules,
-  npcs: SalvageUnionReference.NPCs,
+  // NPCs model exists in the library but is undefined (not yet implemented)
+  // npcs: SalvageUnionReference.NPCs,
   squads: SalvageUnionReference.Squads,
   systems: SalvageUnionReference.Systems,
   'roll-tables': SalvageUnionReference.RollTables,

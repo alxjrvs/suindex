@@ -32,12 +32,11 @@ describe('CrawlerLiveSheet', () => {
       const typeSelect = screen.getByRole('combobox')
       expect(typeSelect).toBeInTheDocument()
 
-      // Resource steppers
+      // Resource steppers - now has 6 TL scrap steppers
       expect(screen.getByRole('group', { name: /SP/i })).toBeInTheDocument()
-      expect(screen.getByRole('group', { name: /TL/i })).toBeInTheDocument()
       expect(screen.getByRole('group', { name: /UPGRADE/i })).toBeInTheDocument()
       expect(screen.getByText(/UPKEEP/i)).toBeInTheDocument()
-      expect(screen.getByRole('group', { name: /SCRAP/i })).toBeInTheDocument()
+      expect(screen.getByText(/SCRAP/i)).toBeInTheDocument()
 
       // Notes section
       expect(screen.getByPlaceholderText(/add notes about your crawler/i)).toBeInTheDocument()
@@ -50,17 +49,13 @@ describe('CrawlerLiveSheet', () => {
       const spStepper = screen.getByRole('group', { name: /SP/i })
       expect(within(spStepper).getByText('20/20')).toBeInTheDocument()
 
-      // Tech Level should start at 1
-      const techLevelStepper = screen.getByRole('group', { name: /TL/i })
-      expect(within(techLevelStepper).getByText('1')).toBeInTheDocument()
-
       // Upgrade should start at 0/25
       const upgradeStepper = screen.getByRole('group', { name: /UPGRADE/i })
       expect(within(upgradeStepper).getByText('0/25')).toBeInTheDocument()
 
-      // Scrap should start at 0
-      const scrapStepper = screen.getByRole('group', { name: /SCRAP/i })
-      expect(within(scrapStepper).getByText('0')).toBeInTheDocument()
+      // Scrap TL steppers should all start at 0
+      const scrapSection = screen.getByText(/SCRAP/i).closest('div')
+      expect(scrapSection).toBeInTheDocument()
     })
 
     it('displays all bay cards', () => {
@@ -147,24 +142,6 @@ describe('CrawlerLiveSheet', () => {
       expect(within(spStepper).getByText('18/20')).toBeInTheDocument()
     })
 
-    it('allows adjusting tech level', async () => {
-      const user = userEvent.setup()
-      render(<CrawlerLiveSheet />)
-
-      // Select a crawler type first to enable inputs
-      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
-      await user.selectOptions(crawlerTypeSelect, testCrawler.id)
-
-      const techLevelStepper = screen.getByRole('group', { name: /TL/i })
-      const incrementButton = within(techLevelStepper).getByRole('button', {
-        name: /Increment TL/i,
-      })
-
-      // Increment tech level
-      await user.click(incrementButton)
-      expect(within(techLevelStepper).getByText('2')).toBeInTheDocument()
-    })
-
     it('allows adjusting upgrade value', async () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
@@ -180,78 +157,6 @@ describe('CrawlerLiveSheet', () => {
 
       await user.click(incrementButton)
       expect(within(upgradeStepper).getByText('1/25')).toBeInTheDocument()
-    })
-
-    it('allows adjusting scrap value', async () => {
-      const user = userEvent.setup()
-      render(<CrawlerLiveSheet />)
-
-      // Select a crawler type first to enable inputs
-      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
-      await user.selectOptions(crawlerTypeSelect, testCrawler.id)
-
-      const scrapStepper = screen.getByRole('group', { name: /SCRAP/i })
-      const incrementButton = within(scrapStepper).getByRole('button', {
-        name: /Increment SCRAP/i,
-      })
-
-      // Increment scrap
-      await user.click(incrementButton)
-      expect(within(scrapStepper).getByText('1')).toBeInTheDocument()
-    })
-
-    it('updates upkeep display when tech level changes', async () => {
-      const user = userEvent.setup()
-      render(<CrawlerLiveSheet />)
-
-      // Select a crawler type first to enable inputs
-      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
-      await user.selectOptions(crawlerTypeSelect, testCrawler.id)
-
-      // Initial upkeep should be 5 TL1
-      expect(screen.getByText('5 TL1')).toBeInTheDocument()
-
-      const techLevelStepper = screen.getByRole('group', { name: /TL/i })
-      const incrementButton = within(techLevelStepper).getByRole('button', {
-        name: /Increment TL/i,
-      })
-
-      // Increment tech level
-      await user.click(incrementButton)
-
-      // Upkeep should update to 5 TL2
-      await waitFor(() => {
-        expect(screen.getByText('5 TL2')).toBeInTheDocument()
-      })
-    })
-
-    it('resets upgrade to 0 when tech level changes', async () => {
-      const user = userEvent.setup()
-      render(<CrawlerLiveSheet />)
-
-      // Select a crawler type first to enable inputs
-      const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
-      await user.selectOptions(crawlerTypeSelect, testCrawler.id)
-
-      // First, increment upgrade
-      const upgradeStepper = screen.getByRole('group', { name: /UPGRADE/i })
-      const upgradeIncrementButton = within(upgradeStepper).getByRole('button', {
-        name: /Increment UPGRADE/i,
-      })
-      await user.click(upgradeIncrementButton)
-      expect(within(upgradeStepper).getByText('1/25')).toBeInTheDocument()
-
-      // Now increment tech level
-      const techLevelStepper = screen.getByRole('group', { name: /TL/i })
-      const techLevelIncrementButton = within(techLevelStepper).getByRole('button', {
-        name: /Increment TL/i,
-      })
-      await user.click(techLevelIncrementButton)
-
-      // Upgrade should be reset to 0
-      await waitFor(() => {
-        expect(within(upgradeStepper).getByText('0/25')).toBeInTheDocument()
-      })
     })
   })
 

@@ -7,8 +7,10 @@ interface SheetDisplayProps {
   value?: string
   height?: string | number
   minHeight?: string | number
+  borderColor?: string
   children?: ReactNode
   disabled?: boolean
+  labelBgColor?: string
 }
 
 export function SheetDisplay({
@@ -16,6 +18,8 @@ export function SheetDisplay({
   value,
   height,
   minHeight = '20',
+  borderColor = 'su.black',
+  labelBgColor = 'su.black',
   children,
   disabled = false,
 }: SheetDisplayProps) {
@@ -29,7 +33,7 @@ export function SheetDisplay({
             fontSize="sm"
             textTransform="uppercase"
             ml={3}
-            bg={disabled ? 'gray.600' : undefined}
+            bg={disabled ? 'gray.600' : labelBgColor}
             color={disabled ? 'gray.300' : undefined}
           >
             {label}
@@ -44,7 +48,7 @@ export function SheetDisplay({
         minH={minHeight}
         p={3}
         borderWidth="3px"
-        borderColor="su.black"
+        borderColor={borderColor}
         borderRadius="2xl"
         bg="su.white"
         color="su.black"

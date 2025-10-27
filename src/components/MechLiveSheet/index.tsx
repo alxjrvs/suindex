@@ -12,12 +12,12 @@ import { CargoList } from './CargoList'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
-import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { RoundedBox } from '../shared/RoundedBox'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
 import { QuirkInput } from './QuirkInput'
 import { AppearanceInput } from './AppearanceInput'
+import { PilotInfo } from './PilotInfo'
+import { StatDisplay } from '../StatDisplay'
 
 interface MechLiveSheetProps {
   id?: string
@@ -41,10 +41,10 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     handleRemoveModule,
     handleAddCargo,
     handleRemoveCargo,
-    updateMech,
+    updateEntity,
     loading,
+    totalSalvageValue,
     error,
-    hasPendingChanges,
   } = useMechLiveSheetState(id)
 
   const allChassis = SalvageUnionReference.Chassis.all()
@@ -54,7 +54,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   const stats = selectedChassis?.stats
 
   const canAddMore =
-    stats && (usedSystemSlots < stats.system_slots || usedModuleSlots < stats.module_slots)
+    stats && (usedSystemSlots < stats.systemSlots || usedModuleSlots < stats.moduleSlots)
 
   if (loading) {
     return (
@@ -87,18 +87,42 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
   return (
     <LiveSheetLayout>
-      {id && (
-        <LiveSheetControlBar
-          config={MECH_CONTROL_BAR_CONFIG}
-          relationId={mech.pilot_id}
-          savedRelationId={mech.pilot_id}
-          onRelationChange={(pilotId) => updateMech({ pilot_id: pilotId })}
-          hasPendingChanges={hasPendingChanges}
-        />
-      )}
       <Flex gap={6}>
         <VStack flex="1" gap={6} alignItems="stretch">
-          <RoundedBox bg="su.green" h="full" w="full" disabled={!selectedChassis}>
+          <RoundedBox
+            leftContent={
+              <StatDisplay label="TL" value={stats?.techLevel || 0} disabled={!selectedChassis} />
+            }
+            rightContent={
+              <Flex flexDirection="row" justifyContent="space-between" gap={4}>
+                <StatDisplay
+                  label="Sys. Slots"
+                  value={stats?.systemSlots || 0}
+                  disabled={!selectedChassis}
+                />
+                <StatDisplay
+                  label="Mod. Slots"
+                  value={stats?.moduleSlots || 0}
+                  disabled={!selectedChassis}
+                />
+                <StatDisplay
+                  label="Cargo Cap"
+                  value={stats?.cargoCap || 0}
+                  disabled={!selectedChassis}
+                />
+                <StatDisplay
+                  label="SV"
+                  value={stats?.salvageValue || 0}
+                  disabled={!selectedChassis}
+                />
+              </Flex>
+            }
+            title="Mech Chassis"
+            bg="su.green"
+            h="full"
+            w="full"
+            disabled={!selectedChassis}
+          >
             <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
               <ChassisSelector
                 chassisId={mech.chassis_id ?? null}
@@ -114,23 +138,31 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
               <QuirkInput
                 quirk={mech.quirk ?? ''}
                 disabled={!selectedChassis}
-                onQuirkChange={(value) => updateMech({ quirk: value })}
+                updateEntity={updateEntity}
               />
               <AppearanceInput
                 appearance={mech.appearance ?? ''}
                 disabled={!selectedChassis}
-                onAppearanceChange={(value) => updateMech({ appearance: value })}
+                updateEntity={updateEntity}
               />
             </Grid>
           </RoundedBox>
-
-          <ChassisStatsGrid
-            stats={stats}
-            usedSystemSlots={usedSystemSlots}
-            usedModuleSlots={usedModuleSlots}
-            totalCargo={totalCargo}
-            disabled={!selectedChassis}
-          />
+          <Flex gap={6} flexDirection="row" justifyContent="space-between" w="full">
+            <PilotInfo
+              mechId={id}
+              pilotId={mech.pilot_id}
+              onPilotChange={(pilotId) => updateEntity({ pilot_id: pilotId })}
+              disabled={!selectedChassis}
+            />
+            <ChassisStatsGrid
+              stats={stats}
+              totalSalvageValue={totalSalvageValue}
+              usedSystemSlots={usedSystemSlots}
+              usedModuleSlots={usedModuleSlots}
+              totalCargo={totalCargo}
+              disabled={!selectedChassis}
+            />
+          </Flex>
         </VStack>
 
         <MechResourceSteppers
@@ -138,24 +170,20 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           currentDamage={mech.current_damage ?? 0}
           currentEP={mech.current_ep ?? 0}
           currentHeat={mech.current_heat ?? 0}
-          onDamageChange={(value) => updateMech({ current_damage: value })}
-          onEPChange={(value) => updateMech({ current_ep: value })}
-          onHeatChange={(value) => updateMech({ current_heat: value })}
+          updateEntity={updateEntity}
           disabled={!selectedChassis}
         />
       </Flex>
 
-      <RoundedBox bg="su.green" title="Abilities" disabled={!selectedChassis}>
-        <ChassisAbilities chassis={selectedChassis} disabled={!selectedChassis} />
-      </RoundedBox>
+      <ChassisAbilities stats={stats} chassis={selectedChassis} disabled={!selectedChassis} />
 
       <SystemsModulesList
         systems={mech.systems ?? []}
         modules={mech.modules ?? []}
         usedSystemSlots={usedSystemSlots}
         usedModuleSlots={usedModuleSlots}
-        totalSystemSlots={stats?.system_slots || 0}
-        totalModuleSlots={stats?.module_slots || 0}
+        totalSystemSlots={stats?.systemSlots || 0}
+        totalModuleSlots={stats?.moduleSlots || 0}
         canAddMore={!!canAddMore}
         onRemoveSystem={handleRemoveSystem}
         onRemoveModule={handleRemoveModule}
@@ -167,7 +195,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         <CargoList
           cargo={mech.cargo ?? []}
           totalCargo={totalCargo}
-          maxCargo={stats?.cargo_cap || 0}
+          maxCargo={stats?.cargoCap || 0}
           canAddCargo={!!selectedChassis}
           onRemove={handleRemoveCargo}
           onAddClick={() => setIsCargoModalOpen(true)}
@@ -176,7 +204,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
         <Notes
           notes={mech.notes ?? ''}
-          onChange={(value) => updateMech({ notes: value })}
+          onChange={(value) => updateEntity({ notes: value })}
           disabled={!selectedChassis}
           backgroundColor="bg.builder.mech"
           borderWidth={8}
@@ -185,8 +213,8 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
       </Grid>
 
       <SystemModuleSelector
-        availableSystemSlots={Number(stats?.system_slots) - usedSystemSlots || 0}
-        availableModuleSlots={Number(stats?.module_slots) - usedModuleSlots || 0}
+        availableSystemSlots={Number(stats?.systemSlots) - usedSystemSlots || 0}
+        availableModuleSlots={Number(stats?.moduleSlots) - usedModuleSlots || 0}
         isOpen={isSelectorOpen}
         onClose={() => setIsSelectorOpen(false)}
         systems={allSystems}
@@ -201,7 +229,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         isOpen={isCargoModalOpen}
         onClose={() => setIsCargoModalOpen(false)}
         onAdd={handleAddCargo}
-        maxCargo={stats?.cargo_cap || 0}
+        maxCargo={stats?.cargoCap || 0}
         currentCargo={totalCargo}
       />
     </LiveSheetLayout>

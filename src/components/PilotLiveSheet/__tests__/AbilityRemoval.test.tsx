@@ -40,8 +40,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select an ability
       await user.click(addButton)
@@ -88,8 +87,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       ) as HTMLButtonElement
       await user.click(tpIncrementButton)
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select an ability (costs 1 TP, leaving 0 TP)
       await user.click(addButton)
@@ -144,8 +142,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select an ability
       await user.click(addButton)
@@ -196,8 +193,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select an ability (costs 1 TP, leaving 4 TP)
       await user.click(addButton)
@@ -255,8 +251,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select an ability
       await user.click(addButton)
@@ -305,8 +300,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select an ability
       await user.click(addButton)
@@ -370,8 +364,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select an ability
       await user.click(addButton)

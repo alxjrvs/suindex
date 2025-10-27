@@ -51,8 +51,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
       }
 
       // Step 4: Select 6 core abilities
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addAbilityButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addAbilityButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select 6 core abilities
       for (let i = 0; i < 6; i++) {
@@ -83,8 +82,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
       await user.click(hybridAddButton)
 
       // Step 7: Add equipment
-      const inventorySection = screen.getByText(/^inventory$/i).closest('div')
-      const addEquipmentButton = within(inventorySection!).getByRole('button', { name: '+' })
+      const addEquipmentButton = screen.getByRole('button', { name: 'Add equipment' })
 
       await user.click(addEquipmentButton)
       // Wait for the equipment selector modal to open and find the first equipment button
@@ -117,7 +115,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
         expect(screen.getByPlaceholderText(/enter motto/i)).toHaveValue('Never give up')
 
         // Equipment - check that equipment was added (count should be 2/6)
-        expect(within(inventorySection!).getByText(/2\/6/)).toBeInTheDocument()
+        expect(screen.getByText(/2\/6/)).toBeInTheDocument()
 
         // TP (20 - 6 core - 2 hybrid = 12) - find the TP stepper and check its value
         const tpStepper = screen.getByLabelText('Increment TP').closest('div')!.parentElement!
@@ -153,8 +151,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
       ) as HTMLButtonElement
       await user.click(tpIncrementButton)
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select first ability (costs 1 TP)
       await user.click(addButton)
@@ -193,8 +190,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       await user.click(addButton)
       // Wait for the "Add to Pilot" buttons to appear in the modal
@@ -215,10 +211,7 @@ describe('PilotLiveSheet - Integration Tests', () => {
       // Abilities should be cleared after changing class
       await waitFor(() => {
         // Check that abilities section shows 0 abilities
-        const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-        expect(
-          within(abilitiesSection!).queryByRole('button', { name: /remove ability/i })
-        ).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: /remove ability/i })).not.toBeInTheDocument()
       })
     })
   })

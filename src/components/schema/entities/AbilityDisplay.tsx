@@ -1,8 +1,10 @@
-import { Box, Text, VStack } from '@chakra-ui/react'
+import { Grid, VStack } from '@chakra-ui/react'
 import { Heading } from '../../base/Heading'
 import { EntityDisplay } from '../../shared/EntityDisplay'
 import { ActionCard } from '../../shared/ActionCard'
 import type { SURefAbility } from 'salvageunion-reference'
+import { extractOptions } from '../../shared/entityDisplayHelpers'
+import { SheetDisplay } from '../../shared/SheetDisplay'
 
 interface AbilityDisplayProps {
   data: SURefAbility
@@ -35,6 +37,7 @@ export function AbilityDisplay({
 }: AbilityDisplayProps) {
   const isLegendary = String(data.level).toUpperCase() === 'L' || data.tree.includes('Legendary')
   const headerColor = isLegendary ? 'su.pink' : 'su.orange'
+  const options = extractOptions(data)
 
   return (
     <EntityDisplay
@@ -52,17 +55,16 @@ export function AbilityDisplay({
       onToggleExpanded={onToggleExpanded}
       showSelectButton={showSelectButton}
       selectButtonText={selectButtonText}
-      showBorder
     >
-      {data.effect && (
-        <Box>
-          <Heading level="h4" mb={2}>
-            Effect:
-          </Heading>
-          <Text color="su.black" lineHeight="relaxed" whiteSpace="pre-line">
-            {data.effect}
-          </Text>
-        </Box>
+      {data.effect && <SheetDisplay label="Effect" value={data.effect} />}
+      {options && (
+        <Grid gridTemplateColumns="repeat(2, 1fr)" gap={1}>
+          {options.map((option, optIndex) => {
+            const label = typeof option === 'string' ? '' : option.label
+            const value = typeof option === 'string' ? option : option.value
+            return <SheetDisplay key={optIndex} label={label} value={value} />
+          })}
+        </Grid>
       )}
 
       {data.subAbilities && data.subAbilities.length > 0 && (

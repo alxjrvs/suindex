@@ -45,8 +45,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select 6 core abilities
       for (let i = 0; i < 3; i++) {
@@ -160,8 +159,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select 6 core abilities
       for (let i = 0; i < 3; i++) {
@@ -250,8 +248,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select all required abilities
       for (let i = 0; i < 3; i++) {
@@ -363,8 +360,7 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select all required abilities
       for (let i = 0; i < 3; i++) {

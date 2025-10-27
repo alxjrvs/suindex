@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import type { DataItem } from '../../types/schema'
 import { getModel } from '../../utils/modelMap'
+import type { SURefEntity } from 'salvageunion-reference'
 
 interface UseSchemaDataResult {
-  data: DataItem[]
+  data: SURefEntity[]
   loading: boolean
   error: string | null
 }
 
 export function useSchemaData(schemaId: string | undefined): UseSchemaDataResult {
-  const [data, setData] = useState<DataItem[]>([])
+  const [data, setData] = useState<SURefEntity[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -28,7 +28,7 @@ export function useSchemaData(schemaId: string | undefined): UseSchemaDataResult
         throw new Error(`Unknown schema: ${schemaId}`)
       }
       const jsonData = model.all()
-      setData(jsonData as DataItem[])
+      setData(jsonData as SURefEntity[])
       setLoading(false)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data')

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { fetchEntity, updateEntity as updateEntityAPI } from '../lib/api'
-import type { ValidTable } from '../types/database'
+import type { ValidTable } from '../types/common'
 
 export interface UseLiveSheetStateConfig<T> {
   table: ValidTable

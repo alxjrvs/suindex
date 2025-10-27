@@ -1,11 +1,13 @@
 import { Box, Grid, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { useMemo } from 'react'
+import { packCargoGrid } from '../../utils/cargoGridPacking'
 
 interface BayItem {
   id: string
   description: string
   amount: number
+  color?: string
 }
 
 interface DynamicBayProps {
@@ -15,103 +17,44 @@ interface DynamicBayProps {
   disabled?: boolean
 }
 
-/**
- * Calculate grid dimensions:
- * - Max 6: 3x2 grid (3 columns, 2 rows)
- * - 7+: 4 columns with rows calculated based on capacity
- */
-function calculateGridDimensions(capacity: number): { rows: number; cols: number } {
-  if (capacity <= 0) return { rows: 2, cols: 3 }
-  if (capacity <= 6) return { rows: 2, cols: 3 }
-
-  // For 7+, use 4 columns and calculate rows needed
-  const cols = 4
-  const rows = Math.ceil(capacity / cols)
-
-  return { rows, cols }
-}
+// Store previous grids outside component to preserve across renders
+// Key is a combination of component instance and capacity
+const previousGrids = new Map<string, ReturnType<typeof packCargoGrid>>()
 
 /**
- * DynamicBay - A bento-box style grid layout for displaying items that occupy multiple slots
- * Items flow sequentially through the grid and can wrap across rows
+ * DynamicBay - A grid layout for displaying items that occupy connected regions
+ * Each item appears as a single contained box regardless of its shape
  */
 export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: DynamicBayProps) {
-  const { rows, cols, gridCells } = useMemo(() => {
-    const dims = calculateGridDimensions(maxCapacity)
+  // Create a stable key for this instance
+  const instanceKey = `${maxCapacity}`
 
-    // Calculate actual rows needed (only up to maxCapacity)
-    const actualRows = Math.ceil(maxCapacity / dims.cols)
+  const { rows, cols, packedGrid, itemsMap } = useMemo(() => {
+    const previousGrid = previousGrids.get(instanceKey)
+    const packed = packCargoGrid(items, maxCapacity, previousGrid)
 
-    // Create array representing each grid cell
-    type CellData =
-      | {
-          type: 'item'
-          item: BayItem
-          isFirst: boolean
-          isTopRight: boolean
-          isCenter: boolean
-          startIndex: number
-          endIndex: number
-        }
-      | { type: 'empty' }
-    const cells: CellData[] = Array(maxCapacity)
-      .fill(null)
-      .map(() => ({ type: 'empty' as const }))
+    // Store for next render
+    previousGrids.set(instanceKey, packed)
 
-    // Place items sequentially
-    let currentSlot = 0
-    items.forEach((item) => {
-      // Find next available slot
-      while (currentSlot < maxCapacity && cells[currentSlot].type !== 'empty') {
-        currentSlot++
-      }
+    // Create a map of item IDs to item data for quick lookup
+    const map = new Map(items.map((item) => [item.id, item]))
 
-      if (currentSlot >= maxCapacity) return // No more space
-
-      // Occupy consecutive slots for this item
-      const startSlot = currentSlot
-      const endSlot = Math.min(startSlot + item.amount - 1, maxCapacity - 1)
-
-      // Calculate center index (middle of the occupied cells)
-      const centerSlot = Math.floor((startSlot + endSlot) / 2)
-
-      // Calculate top-right index (rightmost cell in the first row of occupation)
-      const startRow = Math.floor(startSlot / dims.cols)
-      let topRightSlot = startSlot
-
-      // Find the rightmost cell in the first row
-      for (let i = startSlot; i <= endSlot; i++) {
-        const row = Math.floor(i / dims.cols)
-        if (row === startRow) {
-          topRightSlot = i
-        } else {
-          break
-        }
-      }
-
-      for (let i = 0; i < item.amount && currentSlot < maxCapacity; i++) {
-        cells[currentSlot] = {
-          type: 'item',
-          item,
-          isFirst: currentSlot === startSlot,
-          isTopRight: currentSlot === topRightSlot,
-          isCenter: currentSlot === centerSlot,
-          startIndex: startSlot,
-          endIndex: endSlot,
-        }
-        currentSlot++
-      }
-    })
-
-    return { rows: actualRows, cols: dims.cols, gridCells: cells }
-  }, [items, maxCapacity])
+    return {
+      rows: packed.rows,
+      cols: packed.cols,
+      packedGrid: packed.cells,
+      itemsMap: map,
+    }
+  }, [items, maxCapacity, instanceKey])
 
   // Helper to check if two cells belong to the same item
   const isSameItem = (index1: number, index2: number): boolean => {
-    const cell1 = gridCells[index1]
-    const cell2 = gridCells[index2]
-    if (cell1?.type !== 'item' || cell2?.type !== 'item') return false
-    return cell1.item.id === cell2.item.id
+    if (index1 < 0 || index1 >= packedGrid.length) return false
+    if (index2 < 0 || index2 >= packedGrid.length) return false
+    const cell1 = packedGrid[index1]
+    const cell2 = packedGrid[index2]
+    if (!cell1.itemId || !cell2.itemId) return false
+    return cell1.itemId === cell2.itemId
   }
 
   return (
@@ -124,39 +67,31 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
       borderRadius="lg"
       overflow="hidden"
     >
-      {gridCells.map((cell, index) => {
-        if (cell.type === 'empty') {
-          // Check each border individually
-          const col = index % cols
-          const topIndex = index - cols
-          const bottomIndex = index + cols
-          const leftIndex = col > 0 ? index - 1 : -1
-          const rightIndex = col < cols - 1 ? index + 1 : -1
+      {packedGrid.map((cell, index) => {
+        const col = index % cols
 
-          // A border is black if it's at the edge OR next to an item OR next to an invisible cell (beyond maxCapacity)
-          // A border is semi-transparent if it's next to another empty cell within the capacity
+        // Calculate neighbor indices
+        const topIndex = index - cols
+        const bottomIndex = index + cols
+        const leftIndex = col > 0 ? index - 1 : -1
+        const rightIndex = col < cols - 1 ? index + 1 : -1
+
+        if (!cell.itemId) {
+          // Empty cell
           const isTopEdge = topIndex < 0
-          const isBottomEdge = bottomIndex >= gridCells.length
+          const isBottomEdge = bottomIndex >= packedGrid.length
           const isLeftEdge = leftIndex < 0
           const isRightEdge = rightIndex < 0
 
-          const topIsItem = !isTopEdge && gridCells[topIndex]?.type === 'item'
-          const bottomIsItem = !isBottomEdge && gridCells[bottomIndex]?.type === 'item'
-          const leftIsItem = !isLeftEdge && gridCells[leftIndex]?.type === 'item'
-          const rightIsItem = !isRightEdge && gridCells[rightIndex]?.type === 'item'
+          const topIsItem = !isTopEdge && packedGrid[topIndex]?.itemId !== null
+          const bottomIsItem = !isBottomEdge && packedGrid[bottomIndex]?.itemId !== null
+          const leftIsItem = !isLeftEdge && packedGrid[leftIndex]?.itemId !== null
+          const rightIsItem = !isRightEdge && packedGrid[rightIndex]?.itemId !== null
 
-          // Check if adjacent cell is beyond capacity (invisible)
-          const topIsInvisible = !isTopEdge && topIndex >= maxCapacity
-          const bottomIsInvisible = !isBottomEdge && bottomIndex >= maxCapacity
-          const leftIsInvisible = !isLeftEdge && leftIndex >= maxCapacity
-          const rightIsInvisible = !isRightEdge && rightIndex >= maxCapacity
-
-          const topColor = isTopEdge || topIsItem || topIsInvisible ? 'black' : 'blackAlpha.300'
-          const bottomColor =
-            isBottomEdge || bottomIsItem || bottomIsInvisible ? 'black' : 'blackAlpha.300'
-          const leftColor = isLeftEdge || leftIsItem || leftIsInvisible ? 'black' : 'blackAlpha.300'
-          const rightColor =
-            isRightEdge || rightIsItem || rightIsInvisible ? 'black' : 'blackAlpha.300'
+          const topColor = isTopEdge || topIsItem ? 'black' : 'blackAlpha.300'
+          const bottomColor = isBottomEdge || bottomIsItem ? 'black' : 'blackAlpha.300'
+          const leftColor = isLeftEdge || leftIsItem ? 'black' : 'blackAlpha.300'
+          const rightColor = isRightEdge || rightIsItem ? 'black' : 'blackAlpha.300'
 
           return (
             <Box
@@ -172,16 +107,9 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
           )
         }
 
-        // item cell - calculate which borders to show
-        const col = index % cols
-
-        const topIndex = index - cols
-        const bottomIndex = index + cols
-        const leftIndex = col > 0 ? index - 1 : -1
-        const rightIndex = col < cols - 1 ? index + 1 : -1
-
+        // Item cell - calculate which borders to show
         const showTopBorder = topIndex < 0 || !isSameItem(index, topIndex)
-        const showBottomBorder = bottomIndex >= gridCells.length || !isSameItem(index, bottomIndex)
+        const showBottomBorder = bottomIndex >= packedGrid.length || !isSameItem(index, bottomIndex)
         const showLeftBorder = leftIndex < 0 || !isSameItem(index, leftIndex)
         const showRightBorder = rightIndex < 0 || !isSameItem(index, rightIndex)
 
@@ -191,13 +119,14 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
         const bottomLeftRounded = showBottomBorder && showLeftBorder
         const bottomRightRounded = showBottomBorder && showRightBorder
 
-        const bayItem = cell.item
+        const bayItem = itemsMap.get(cell.itemId)
+        if (!bayItem) return null // Should never happen
 
         return (
           <Box
             key={`item-${index}`}
             position="relative"
-            bg="bg.input"
+            bg={bayItem.color || 'bg.input'}
             borderTopWidth={showTopBorder ? '3px' : '0'}
             borderBottomWidth={showBottomBorder ? '3px' : '0'}
             borderLeftWidth={showLeftBorder ? '3px' : '0'}

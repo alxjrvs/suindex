@@ -15,13 +15,18 @@ export type Database = {
           crawler_type_id: string | null
           created_at: string | null
           current_damage: number | null
-          current_scrap: number | null
           description: string | null
           game_id: string | null
           id: string
           name: string
           notes: string | null
           npc: Json | null
+          scrap_tl_five: number | null
+          scrap_tl_four: number | null
+          scrap_tl_one: number | null
+          scrap_tl_six: number | null
+          scrap_tl_three: number | null
+          scrap_tl_two: number | null
           tech_level: number | null
           updated_at: string | null
           upgrade: number | null
@@ -33,13 +38,18 @@ export type Database = {
           crawler_type_id?: string | null
           created_at?: string | null
           current_damage?: number | null
-          current_scrap?: number | null
           description?: string | null
           game_id?: string | null
           id?: string
           name: string
           notes?: string | null
           npc?: Json | null
+          scrap_tl_five?: number | null
+          scrap_tl_four?: number | null
+          scrap_tl_one?: number | null
+          scrap_tl_six?: number | null
+          scrap_tl_three?: number | null
+          scrap_tl_two?: number | null
           tech_level?: number | null
           updated_at?: string | null
           upgrade?: number | null
@@ -51,13 +61,18 @@ export type Database = {
           crawler_type_id?: string | null
           created_at?: string | null
           current_damage?: number | null
-          current_scrap?: number | null
           description?: string | null
           game_id?: string | null
           id?: string
           name?: string
           notes?: string | null
           npc?: Json | null
+          scrap_tl_five?: number | null
+          scrap_tl_four?: number | null
+          scrap_tl_one?: number | null
+          scrap_tl_six?: number | null
+          scrap_tl_three?: number | null
+          scrap_tl_two?: number | null
           tech_level?: number | null
           updated_at?: string | null
           upgrade?: number | null

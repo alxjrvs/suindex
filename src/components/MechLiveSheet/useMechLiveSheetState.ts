@@ -38,14 +38,6 @@ export function useMechLiveSheetState(id?: string) {
     id: id || '',
   })
 
-  // Wrapper for partial updates (used by components)
-  const updateMech = useCallback(
-    (updates: Partial<MechLiveSheetState>) => {
-      updateEntity(updates)
-    },
-    [updateEntity]
-  )
-
   const selectedChassis = useMemo(
     () => allChassis.find((c) => c.id === mech.chassis_id),
     [mech.chassis_id, allChassis]
@@ -61,13 +53,31 @@ export function useMechLiveSheetState(id?: string) {
     return sum + (module?.slotsRequired ?? 0)
   }, 0)
 
+  const totalSalvageValue = useMemo(() => {
+    const systemValue = (mech.systems ?? []).reduce((sum, systemId) => {
+      const system = allSystems.find((s) => s.id === systemId)
+      if (!system) return sum
+      return sum + system.salvageValue * system.techLevel
+    }, 0)
+
+    const moduleValue = (mech.modules ?? []).reduce((sum, moduleId) => {
+      const module = allModules.find((m) => m.id === moduleId)
+      if (!module) return sum
+      return sum + module.salvageValue * module.techLevel
+    }, 0)
+
+    const chassisValue = selectedChassis?.stats?.salvageValue || 0
+
+    return systemValue + moduleValue + chassisValue
+  }, [mech.systems, mech.modules, allSystems, allModules, selectedChassis])
+
   const totalCargo = (mech.cargo ?? []).reduce((sum, item) => sum + item.amount, 0)
 
   const handleChassisChange = useCallback(
     (chassisId: string | null) => {
       // If null or empty, just update to null
       if (!chassisId) {
-        updateMech({ chassis_id: null })
+        updateEntity({ chassis_id: null })
         return
       }
 
@@ -88,24 +98,24 @@ export function useMechLiveSheetState(id?: string) {
           modules: [],
           cargo: [],
           current_damage: 0,
-          current_ep: newChassis?.stats.energy_pts || 0,
+          current_ep: newChassis?.stats.energyPts || 0,
           current_heat: 0,
           notes: null,
         })
       } else {
         // First time selection - set chassis and initialize EP
         const newChassis = SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
-        updateMech({
+        updateEntity({
           chassis_id: chassisId,
           pattern: null,
           systems: [],
           modules: [],
           chassis_ability: null,
-          current_ep: newChassis?.stats.energy_pts || 0,
+          current_ep: newChassis?.stats.energyPts || 0,
         })
       }
     },
-    [mech, allChassis, updateEntity, updateMech]
+    [mech, allChassis, updateEntity]
   )
 
   const handlePatternChange = (patternName: string) => {
@@ -139,18 +149,18 @@ export function useMechLiveSheetState(id?: string) {
           }
         })
 
-        updateMech({
+        updateEntity({
           pattern: patternName,
           systems: patternSystems,
           modules: patternModules,
         })
       } else {
-        updateMech({
+        updateEntity({
           pattern: patternName,
         })
       }
     } else {
-      updateMech({
+      updateEntity({
         pattern: patternName,
       })
     }
@@ -159,7 +169,7 @@ export function useMechLiveSheetState(id?: string) {
   const handleAddSystem = (systemId: string) => {
     const system = allSystems.find((s) => s.id === systemId)
     if (system) {
-      updateMech({
+      updateEntity({
         systems: [...(mech.systems ?? []), systemId],
       })
     }
@@ -170,7 +180,7 @@ export function useMechLiveSheetState(id?: string) {
     const systemName = system?.name || 'this system'
 
     if (window.confirm(`Are you sure you want to remove ${systemName}?`)) {
-      updateMech({
+      updateEntity({
         systems: (mech.systems ?? []).filter((id) => id !== systemId),
       })
     }
@@ -179,7 +189,7 @@ export function useMechLiveSheetState(id?: string) {
   const handleAddModule = (moduleId: string) => {
     const module = allModules.find((m) => m.id === moduleId)
     if (module) {
-      updateMech({
+      updateEntity({
         modules: [...(mech.modules ?? []), moduleId],
       })
     }
@@ -190,20 +200,21 @@ export function useMechLiveSheetState(id?: string) {
     const moduleName = module?.name || 'this module'
 
     if (window.confirm(`Are you sure you want to remove ${moduleName}?`)) {
-      updateMech({
+      updateEntity({
         modules: (mech.modules ?? []).filter((id) => id !== moduleId),
       })
     }
   }
 
-  const handleAddCargo = (amount: number, description: string) => {
-    updateMech({
+  const handleAddCargo = (amount: number, description: string, color: string) => {
+    updateEntity({
       cargo: [
         ...(mech.cargo ?? []),
         {
           id: `cargo-${Date.now()}-${Math.random()}`,
           amount,
           description,
+          color,
         },
       ],
     })
@@ -214,7 +225,7 @@ export function useMechLiveSheetState(id?: string) {
     const cargoDescription = cargoToRemove?.description || 'this cargo'
 
     if (window.confirm(`Are you sure you want to remove ${cargoDescription}?`)) {
-      updateMech({
+      updateEntity({
         cargo: (mech.cargo ?? []).filter((c) => c.id !== cargoId),
       })
     }
@@ -222,6 +233,7 @@ export function useMechLiveSheetState(id?: string) {
 
   return {
     mech,
+    totalSalvageValue,
     selectedChassis,
     usedSystemSlots,
     usedModuleSlots,
@@ -234,7 +246,7 @@ export function useMechLiveSheetState(id?: string) {
     handleRemoveModule,
     handleAddCargo,
     handleRemoveCargo,
-    updateMech,
+    updateEntity,
     loading,
     error,
     hasPendingChanges,

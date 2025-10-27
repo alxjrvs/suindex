@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Box, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { CrawlerBay } from '../../types/database'
+import type { CrawlerBay, CrawlerLiveSheetState } from './types'
 import { RoundedBox } from '../shared/RoundedBox'
 import { NPCCard } from '../shared/NPCCard'
 import { BayInfo } from './BayInfo'
@@ -11,11 +11,12 @@ import { getTiltRotation } from '../../utils/tiltUtils'
 
 interface BayCardProps {
   bay: CrawlerBay
+  crawler: CrawlerLiveSheetState
   onUpdate: (updates: Partial<CrawlerBay>) => void
   disabled?: boolean
 }
 
-export function BayCard({ bay, onUpdate, disabled = false }: BayCardProps) {
+export function BayCard({ bay, onUpdate, disabled = false, crawler }: BayCardProps) {
   const referenceBay = useMemo(() => {
     const allBays = SalvageUnionReference.CrawlerBays.all()
     return allBays.find((b) => b.id === bay.bayId)
@@ -78,7 +79,7 @@ export function BayCard({ bay, onUpdate, disabled = false }: BayCardProps) {
             transition="transform 0.3s ease"
             opacity={bay.damaged ? 0.5 : 1}
           >
-            <BayInfo referenceBay={referenceBay} />
+            <BayInfo referenceBay={referenceBay} crawler={crawler} />
           </Box>
         </VStack>
       </Box>

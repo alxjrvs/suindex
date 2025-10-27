@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useEffect, useRef } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { CrawlerLiveSheetState } from './types'
-import type { CrawlerBay } from '../../types/database'
+import type { CrawlerLiveSheetState, CrawlerBay } from './types'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
 
-const INITIAL_TECH_LEVEL = 1
+const INITIAL_techLevel = 1
 const MAX_UPGRADE = 25
 
 const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
@@ -14,9 +13,14 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
   crawler_type_id: null,
   description: null,
   current_damage: 0,
-  tech_level: INITIAL_TECH_LEVEL,
+  tech_level: INITIAL_techLevel,
   upgrade: 0,
-  current_scrap: 0,
+  scrap_tl_one: 0,
+  scrap_tl_two: 0,
+  scrap_tl_three: 0,
+  scrap_tl_four: 0,
+  scrap_tl_five: 0,
+  scrap_tl_six: 0,
   bays: [],
   cargo: [],
   notes: null,
@@ -46,14 +50,6 @@ export function useCrawlerLiveSheetState(id?: string) {
     id: id || '',
   })
 
-  // Wrapper for partial updates (used by components)
-  const updateCrawler = useCallback(
-    (updates: Partial<CrawlerLiveSheetState>) => {
-      updateEntity(updates)
-    },
-    [updateEntity]
-  )
-
   // Initialize all bays on mount (only once)
   useEffect(() => {
     if (
@@ -76,9 +72,9 @@ export function useCrawlerLiveSheetState(id?: string) {
         },
         description: '',
       }))
-      updateCrawler({ bays: initialBays })
+      updateEntity({ bays: initialBays })
     }
-  }, [allBays, crawler.bays, updateCrawler, loading])
+  }, [allBays, crawler.bays, updateEntity, loading])
 
   const selectedCrawlerType = useMemo(
     () => allCrawlers.find((c) => c.id === crawler.crawler_type_id),
@@ -105,18 +101,18 @@ export function useCrawlerLiveSheetState(id?: string) {
   useEffect(() => {
     if (prevTechLevelRef.current !== crawler.tech_level && currentTechLevel?.structurePoints) {
       prevTechLevelRef.current = crawler.tech_level
-      updateCrawler({
+      updateEntity({
         current_damage: 0,
         upgrade: 0,
       })
     }
-  }, [crawler.tech_level, currentTechLevel, updateCrawler])
+  }, [crawler.tech_level, currentTechLevel, updateEntity])
 
   const handleCrawlerTypeChange = useCallback(
     (crawlerTypeId: string | null) => {
       // If null or empty, just update to null
       if (!crawlerTypeId) {
-        updateCrawler({ crawler_type_id: null })
+        updateEntity({ crawler_type_id: null })
         return
       }
 
@@ -129,9 +125,14 @@ export function useCrawlerLiveSheetState(id?: string) {
           ...crawler,
           crawler_type_id: crawlerTypeId,
           current_damage: 0,
-          tech_level: INITIAL_TECH_LEVEL,
+          tech_level: INITIAL_techLevel,
           upgrade: 0,
-          current_scrap: 0,
+          scrap_tl_one: 0,
+          scrap_tl_two: 0,
+          scrap_tl_three: 0,
+          scrap_tl_four: 0,
+          scrap_tl_five: 0,
+          scrap_tl_six: 0,
           bays: allBays.map((bay) => ({
             id: `${bay.id}-${Date.now()}-${Math.random()}`,
             bayId: bay.id,
@@ -155,46 +156,47 @@ export function useCrawlerLiveSheetState(id?: string) {
         })
       } else {
         // First time selection or same selection
-        updateCrawler({
+        updateEntity({
           crawler_type_id: crawlerTypeId,
         })
       }
     },
-    [allBays, allCrawlers, crawler, updateEntity, updateCrawler]
+    [allBays, allCrawlers, crawler, updateEntity]
   )
 
   const handleUpdateBay = useCallback(
     (bayId: string, updates: Partial<CrawlerBay>) => {
-      updateCrawler({
+      updateEntity({
         bays: (crawler.bays ?? []).map((bay) => (bay.id === bayId ? { ...bay, ...updates } : bay)),
       })
     },
-    [crawler.bays, updateCrawler]
+    [crawler.bays, updateEntity]
   )
 
   const handleAddCargo = useCallback(
-    (amount: number, description: string) => {
-      updateCrawler({
+    (amount: number, description: string, color: string) => {
+      updateEntity({
         cargo: [
           ...(crawler.cargo ?? []),
           {
             id: `cargo-${Date.now()}-${Math.random()}`,
             amount,
             description,
+            color,
           },
         ],
       })
     },
-    [crawler.cargo, updateCrawler]
+    [crawler.cargo, updateEntity]
   )
 
   const handleRemoveCargo = useCallback(
     (cargoId: string) => {
-      updateCrawler({
+      updateEntity({
         cargo: (crawler.cargo ?? []).filter((c) => c.id !== cargoId),
       })
     },
-    [crawler.cargo, updateCrawler]
+    [crawler.cargo, updateEntity]
   )
 
   return {
@@ -207,7 +209,7 @@ export function useCrawlerLiveSheetState(id?: string) {
     handleUpdateBay,
     handleAddCargo,
     handleRemoveCargo,
-    updateCrawler,
+    updateEntity,
     loading,
     error,
     hasPendingChanges,

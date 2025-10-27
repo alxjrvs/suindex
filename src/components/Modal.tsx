@@ -31,8 +31,8 @@ export default function Modal({
         maxW="4xl"
         maxH="90vh"
         bg={backgroundColor}
-        borderWidth="8px"
-        borderColor={backgroundColor}
+        borderWidth="3px"
+        borderColor="su.black"
         borderRadius="24px"
         shadow="lg"
         position="fixed"
@@ -45,6 +45,7 @@ export default function Modal({
           bg={backgroundColor}
           borderBottomWidth="4px"
           borderBottomColor="su.black"
+          borderTopRadius="24px"
           pl={6}
           pr={2}
           py={2}

@@ -42,7 +42,6 @@ export function ControlBarContainer({
   return (
     <RoundedBox
       bg={backgroundColor}
-      inlineHeader
       px={6}
       py={3}
       borderWidth="4px"

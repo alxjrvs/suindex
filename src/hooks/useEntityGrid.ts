@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { ValidTable } from '../types/database'
+import type { ValidTable } from '../types/common'
 import { getUser, fetchUserEntities } from '../lib/api'
 
 export interface UseEntityGridConfig {

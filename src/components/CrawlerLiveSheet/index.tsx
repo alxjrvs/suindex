@@ -32,7 +32,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     handleUpdateBay,
     handleAddCargo,
     handleRemoveCargo,
-    updateCrawler,
+    updateEntity,
     loading,
     error,
     hasPendingChanges,
@@ -71,93 +71,63 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
   const storageBay = (crawler.bays ?? []).find((bay) => bay.bayId === 'storage-bay')
   const regularBays = (crawler.bays ?? []).filter((bay) => bay.bayId !== 'storage-bay')
 
-  // Split regular bays into two groups for the grid layout
-  const firstRowBays = regularBays.slice(0, 3)
-  const secondRowBays = regularBays.slice(3, 6)
-  const thirdRowBays = regularBays.slice(6, 9)
-
   return (
     <LiveSheetLayout>
       {id && (
         <CrawlerControlBar
           gameId={crawler.game_id}
           savedGameId={crawler.game_id}
-          onGameChange={(gameId) => updateCrawler({ game_id: gameId })}
+          onGameChange={(gameId) => updateEntity({ game_id: gameId })}
           hasPendingChanges={hasPendingChanges}
         />
       )}
       {/* Header Section */}
       <Grid templateColumns="1fr auto" gap={6}>
         <CrawlerHeaderInputs
+          maxSP={maxSP}
+          currentSP={maxSP - (crawler.current_damage ?? 0)}
           name={crawler.name}
           crawlerTypeId={crawler.crawler_type_id ?? null}
           description={crawler.description ?? ''}
           allCrawlers={allCrawlers}
-          onNameChange={(value) => updateCrawler({ name: value })}
+          updateEntity={updateEntity}
+          crawler={crawler}
+          upkeep={upkeep}
+          maxUpgrade={maxUpgrade}
           onCrawlerTypeChange={handleCrawlerTypeChange}
-          onDescriptionChange={(value) => updateCrawler({ description: value })}
           disabled={!selectedCrawlerType}
         />
 
         <CrawlerResourceSteppers
-          currentDamage={crawler.current_damage ?? 0}
-          maxSP={maxSP}
-          techLevel={crawler.tech_level ?? 1}
-          upkeep={upkeep}
-          upgrade={crawler.upgrade ?? 0}
-          maxUpgrade={maxUpgrade}
-          currentScrap={crawler.current_scrap ?? 0}
-          onDamageChange={(value) => updateCrawler({ current_damage: value })}
-          onTechLevelChange={(value) => updateCrawler({ tech_level: value })}
-          onUpgradeChange={(value) => updateCrawler({ upgrade: value })}
-          onCurrentScrapChange={(value) => updateCrawler({ current_scrap: value })}
+          crawler={crawler}
+          updateEntity={updateEntity}
           disabled={!selectedCrawlerType}
         />
       </Grid>
 
       <Flex gap={6}>
-        <CrawlerAbilities crawlerRef={selectedCrawlerType} disabled={!selectedCrawlerType} />
+        <CrawlerAbilities
+          upkeep={upkeep}
+          updateEntity={updateEntity}
+          maxUpgrade={maxUpgrade}
+          crawlerRef={selectedCrawlerType}
+          crawler={crawler}
+          disabled={!selectedCrawlerType}
+        />
         <CrawlerNPC
           crawler={crawler}
-          onUpdate={updateCrawler}
+          onUpdate={updateEntity}
           crawlerRef={selectedCrawlerType}
           disabled={!selectedCrawlerType}
         />
       </Flex>
 
-      {/* Bays Grid - First Row */}
-      {firstRowBays.length > 0 && (
+      {/* Bays Grid - Dynamic Layout */}
+      {regularBays.length > 0 && (
         <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-          {firstRowBays.map((bay) => (
+          {regularBays.map((bay) => (
             <BayCard
-              key={bay.id}
-              bay={bay}
-              onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
-              disabled={!selectedCrawlerType}
-            />
-          ))}
-        </Grid>
-      )}
-
-      {/* Bays Grid - Second Row */}
-      {secondRowBays.length > 0 && (
-        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-          {secondRowBays.map((bay) => (
-            <BayCard
-              key={bay.id}
-              bay={bay}
-              onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
-              disabled={!selectedCrawlerType}
-            />
-          ))}
-        </Grid>
-      )}
-
-      {/* Bays Grid - Third Row */}
-      {thirdRowBays.length > 0 && (
-        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-          {thirdRowBays.map((bay) => (
-            <BayCard
+              crawler={crawler}
               key={bay.id}
               bay={bay}
               onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
@@ -174,6 +144,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           {/* Storage Bay */}
           {storageBay && (
             <BayCard
+              crawler={crawler}
               bay={storageBay}
               onUpdate={(updates) => handleUpdateBay(storageBay.id, updates)}
               disabled={!selectedCrawlerType}
@@ -182,7 +153,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
           <Notes
             notes={crawler.notes ?? ''}
-            onChange={(value) => updateCrawler({ notes: value })}
+            onChange={(value) => updateEntity({ notes: value })}
             backgroundColor="bg.builder.crawler"
             borderWidth={4}
             placeholder="Add notes about your crawler..."

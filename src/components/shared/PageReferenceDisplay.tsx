@@ -9,7 +9,6 @@ interface PageReferenceDisplayProps {
 export function PageReferenceDisplay({ source, page, schemaName }: PageReferenceDisplayProps) {
   return (
     <Flex
-      mt={4}
       pt={3}
       borderTopWidth="2px"
       borderTopColor="su.black"

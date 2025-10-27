@@ -8,6 +8,7 @@ import { ActionCard } from './ActionCard'
 import { PageReferenceDisplay } from './PageReferenceDisplay'
 import { StatBonusDisplay } from './StatBonusDisplay'
 import { RollTable } from './RollTable'
+import { RoundedBox } from './RoundedBox'
 import { techLevelColors } from '../../theme'
 import {
   getSchemaName,
@@ -21,8 +22,11 @@ import {
   extractDescription,
   extractNotes,
   extractPageReference,
+  extractTechLevelEffects,
+  extractAbilities,
 } from './entityDisplayHelpers'
 import type { SURefEntity, SURefEntityName } from 'salvageunion-reference'
+import { SheetDisplay } from './SheetDisplay'
 
 interface EntityDisplayProps {
   data: SURefEntity
@@ -43,7 +47,6 @@ interface EntityDisplayProps {
   selectButtonText?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
   entityName: SURefEntityName
-  showBorder?: boolean
 }
 
 export function EntityDisplay({
@@ -65,7 +68,6 @@ export function EntityDisplay({
   selectButtonText,
   contentJustify = 'flex-start',
   entityName,
-  showBorder = false,
 }: EntityDisplayProps) {
   const schemaName = getSchemaName(entityName)
   const variableCost = 'activationCost' in data && entityName === 'Ability'
@@ -80,6 +82,8 @@ export function EntityDisplay({
   const sidebar = extractSidebarData(data)
   const sections = extractContentSections(data)
   const pageRef = extractPageReference(data)
+  const techLevelEffects = extractTechLevelEffects(data)
+  const abilities = extractAbilities(data)
 
   // Expansion state management (from Frame)
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
@@ -115,125 +119,124 @@ export function EntityDisplay({
   const headerCursorStyle =
     !showSelectButton && onClick && !dimmed ? 'pointer' : collapsible ? 'pointer' : 'default'
 
-  return (
-    <Box
-      bg="su.lightBlue"
-      w="full"
-      borderRadius="lg"
-      shadow="lg"
-      overflow="visible"
-      opacity={opacityValue}
-      borderWidth={showBorder ? '4px' : '0'}
-      borderColor="su.black"
-    >
-      {/* Header */}
-      <Box
-        p={3}
-        zIndex={10}
-        bg={backgroundColor}
-        overflow="visible"
-        cursor={headerCursorStyle}
-        onClick={handleHeaderClick}
-      >
-        <Flex alignItems="flex-start" gap={3} overflow="visible">
-          {/* Expand/Collapse Icon */}
-          {collapsible && (
-            <Flex alignItems="center" justifyContent="center" minW="25px" alignSelf="center">
-              <Text color="su.white" fontSize="lg">
-                {isExpanded ? '▼' : '▶'}
-              </Text>
-            </Flex>
-          )}
-
-          {/* Level indicator */}
-          {level && <StatDisplay label="LVL" value={level} />}
-
-          <Box mt={2} flex="1" overflow="visible" data-testid="frame-header-container">
-            <Flex justifyContent="space-between" alignItems="flex-start" overflow="visible">
-              {/* Left side: Title and details */}
-              <VStack alignItems="flex-start" gap={1} flex="1">
-                {header && (
-                  <Heading level="h2" flexWrap="wrap" color="su.white">
-                    {header}
-                  </Heading>
-                )}
-                {details && details.length > 0 && (
-                  <Box>
-                    <DetailsList textColor="su.white" values={details} />
-                  </Box>
-                )}
-              </VStack>
-
-              {/* Right side: Stats and remove button */}
-              <Flex alignItems="center" gap={2} alignSelf="center">
-                {stats.length > 0 && (
-                  <Box ml="auto">
-                    <StatList stats={stats} />
-                  </Box>
-                )}
-                {showRemoveButton && onRemove && (
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      if (disableRemove) return
-
-                      const confirmed = window.confirm(
-                        `Are you sure you want to remove "${header}"?\n\nThis will cost 1 TP.`
-                      )
-
-                      if (confirmed) {
-                        onRemove()
-                      }
-                    }}
-                    disabled={disableRemove}
-                    bg="su.brick"
-                    color="su.white"
-                    px={3}
-                    py={1}
-                    borderRadius="md"
-                    fontWeight="bold"
-                    _hover={{ bg: 'su.black' }}
-                    fontSize="sm"
-                    _disabled={{
-                      opacity: 0.5,
-                      cursor: 'not-allowed',
-                      _hover: { bg: 'su.brick' },
-                    }}
-                    aria-label="Remove ability"
-                  >
-                    ✕
-                  </Button>
-                )}
-              </Flex>
-            </Flex>
-          </Box>
+  // Build left content (expand icon + level)
+  const leftContentElement = (
+    <>
+      {collapsible && (
+        <Flex alignItems="center" justifyContent="center" minW="25px" alignSelf="center">
+          <Text color="su.white" fontSize="lg">
+            {isExpanded ? '▼' : '▶'}
+          </Text>
         </Flex>
-      </Box>
+      )}
+      {level && <StatDisplay label="LVL" value={level} />}
+    </>
+  )
 
+  // Build title content (header + details)
+  const subTitleContentElement = header ? (
+    <DetailsList textColor="su.white" values={details} />
+  ) : undefined
+
+  // Build right content (description + stats + remove button)
+  const rightContentElement = (
+    <Flex alignItems="center" gap={2} alignSelf="center" maxW="50%" mt={2}>
+      {description && (
+        <Text
+          color="su.white"
+          fontStyle="italic"
+          textAlign="right"
+          fontWeight="medium"
+          lineHeight="tight"
+          fontSize="sm"
+          flex="1"
+        >
+          {description}
+        </Text>
+      )}
+      {stats.length > 0 && (
+        <Box ml="auto">
+          <StatList stats={stats} />
+        </Box>
+      )}
+      {showRemoveButton && onRemove && (
+        <Button
+          onClick={(e) => {
+            e.stopPropagation()
+            if (disableRemove) return
+
+            const confirmed = window.confirm(
+              `Are you sure you want to remove "${header}"?\n\nThis will cost 1 TP.`
+            )
+
+            if (confirmed) {
+              onRemove()
+            }
+          }}
+          disabled={disableRemove}
+          bg="su.brick"
+          color="su.white"
+          px={3}
+          py={1}
+          borderRadius="md"
+          fontWeight="bold"
+          _hover={{ bg: 'su.black' }}
+          fontSize="sm"
+          _disabled={{
+            opacity: 0.5,
+            cursor: 'not-allowed',
+            _hover: { bg: 'su.brick' },
+          }}
+          aria-label="Remove ability"
+        >
+          ✕
+        </Button>
+      )}
+    </Flex>
+  )
+
+  return (
+    <RoundedBox
+      bg="su.lightBlue"
+      headerBg={backgroundColor}
+      w="full"
+      opacity={opacityValue}
+      leftContent={leftContentElement}
+      title={header}
+      subTitleContent={subTitleContentElement}
+      rightContent={rightContentElement}
+      headerPadding={3}
+      bodyPadding={0}
+      onHeaderClick={handleHeaderClick}
+      headerCursor={headerCursorStyle}
+      headerTestId="frame-header-container"
+    >
       {/* Body with sidebar and content */}
-      <Flex bg={backgroundColor}>
-        {/* Sidebar */}
-        {sidebar.showSidebar &&
-          (sidebar.techLevel || sidebar.slotsRequired || sidebar.salvageValue) && (
-            <VStack
-              alignItems="center"
-              justifyContent="flex-start"
-              pb={3}
-              pt={3}
-              gap={3}
-              minW="80px"
-              maxW="80px"
-              bg={backgroundColor}
-              overflow="visible"
-            >
-              {sidebar.slotsRequired && <StatDisplay label="Slots" value={sidebar.slotsRequired} />}
-              {sidebar.salvageValue && <StatDisplay label="SV" value={sidebar.salvageValue} />}
-              {sidebar.techLevel && <StatDisplay label="TL" value={sidebar.techLevel} />}
-            </VStack>
-          )}
+      {(!collapsible || isExpanded) && (
+        <Flex bg={backgroundColor} w="full">
+          {/* Sidebar */}
+          {sidebar.showSidebar &&
+            (sidebar.techLevel || sidebar.slotsRequired || sidebar.salvageValue) && (
+              <VStack
+                alignItems="center"
+                justifyContent="flex-start"
+                pb={3}
+                pt={3}
+                gap={3}
+                minW="80px"
+                maxW="80px"
+                bg={backgroundColor}
+                overflow="visible"
+              >
+                {sidebar.slotsRequired && (
+                  <StatDisplay label="Slots" value={sidebar.slotsRequired} />
+                )}
+                {sidebar.salvageValue && <StatDisplay label="SV" value={sidebar.salvageValue} />}
+                {sidebar.techLevel && <StatDisplay label="TL" value={sidebar.techLevel} />}
+              </VStack>
+            )}
 
-        {/* Main content area */}
-        {(!collapsible || isExpanded) && (
+          {/* Main content area */}
           <VStack
             flex="1"
             bg="su.lightBlue"
@@ -242,13 +245,6 @@ export function EntityDisplay({
             alignItems="stretch"
             justifyContent={contentJustify}
           >
-            {/* Description */}
-            {description && (
-              <Text color="su.black" fontWeight="medium" lineHeight="relaxed">
-                {description}
-              </Text>
-            )}
-
             {/* Notes */}
             {notes && (
               <Text color="su.black" fontWeight="medium" lineHeight="relaxed" fontStyle="italic">
@@ -315,36 +311,36 @@ export function EntityDisplay({
               )}
 
             {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds, Crawlers) */}
-            {sections.showAbilities &&
-              'abilities' in data &&
-              data.abilities &&
-              data.abilities.length > 0 && (
-                <VStack gap={3} alignItems="stretch">
-                  <Heading
-                    level="h3"
-                    fontSize="lg"
-                    fontWeight="bold"
-                    color="su.black"
-                    textTransform="uppercase"
-                  >
-                    Abilities
-                  </Heading>
-                  {data.abilities.map((ability, index) => (
-                    <ActionCard
-                      key={index}
-                      action={ability}
-                      headerBgColor={actionHeaderBgColor}
-                      headerTextColor={actionHeaderTextColor}
-                    />
-                  ))}
-                </VStack>
-              )}
+            {sections.showAbilities && (
+              <VStack gap={3} alignItems="stretch">
+                <Heading
+                  level="h3"
+                  fontSize="lg"
+                  fontWeight="bold"
+                  color="su.black"
+                  textTransform="uppercase"
+                >
+                  Abilities
+                </Heading>
+                {abilities.map((ability, index) => (
+                  <ActionCard
+                    key={index}
+                    action={ability}
+                    headerBgColor={actionHeaderBgColor}
+                    headerTextColor={actionHeaderTextColor}
+                  />
+                ))}
+                {techLevelEffects.map((tle, index) => (
+                  <SheetDisplay
+                    key={index}
+                    label={`Tech Level ${tle.techLevelMin}`}
+                    value={tle.effect}
+                  />
+                ))}
+              </VStack>
+            )}
 
-            {/* Custom children (for special cases like AbilityTreeRequirement, AbilityDisplay, etc.) */}
             {children}
-
-            {/* Spacer before page reference */}
-            {pageRef && <Box flex="1" minHeight="1rem" />}
 
             {/* Page Reference */}
             {pageRef && (
@@ -384,8 +380,8 @@ export function EntityDisplay({
               </Button>
             )}
           </VStack>
-        )}
-      </Flex>
-    </Box>
+        </Flex>
+      )}
+    </RoundedBox>
   )
 }

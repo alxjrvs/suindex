@@ -5,7 +5,7 @@ import { SheetSelect } from '../shared/SheetSelect'
 import { RoundedBox } from '../shared/RoundedBox'
 import { rollTable } from '@randsum/salvageunion'
 import type { SURefCoreClass } from 'salvageunion-reference'
-import type { AdvancedClassOption } from './types'
+import type { AdvancedClassOption, PilotLiveSheetState } from './types'
 
 interface PilotInfoInputsProps {
   callsign: string
@@ -21,14 +21,7 @@ interface PilotInfoInputsProps {
   allCoreClasses: SURefCoreClass[]
   availableAdvancedClasses: AdvancedClassOption[]
   disabled?: boolean
-  onCallsignChange: (value: string) => void
-  onMottoChange: (value: string) => void
-  onMottoUsedChange: (value: boolean) => void
-  onKeepsakeChange: (value: string) => void
-  onKeepsakeUsedChange: (value: boolean) => void
-  onBackgroundChange: (value: string) => void
-  onBackgroundUsedChange: (value: boolean) => void
-  onAppearanceChange: (value: string) => void
+  updateEntity: (updates: Partial<PilotLiveSheetState>) => void
   onClassChange: (classId: string | null) => void
   onAdvancedClassChange: (classId: string | null) => void
 }
@@ -47,14 +40,7 @@ export function PilotInfoInputs({
   allCoreClasses,
   availableAdvancedClasses,
   disabled = false,
-  onCallsignChange,
-  onMottoChange,
-  onMottoUsedChange,
-  onKeepsakeChange,
-  onKeepsakeUsedChange,
-  onBackgroundChange,
-  onBackgroundUsedChange,
-  onAppearanceChange,
+  updateEntity,
   onClassChange,
   onAdvancedClassChange,
 }: PilotInfoInputsProps) {
@@ -67,31 +53,31 @@ export function PilotInfoInputs({
       result: { label },
     } = rollTable('Motto')
 
-    onMottoChange(label)
+    updateEntity({ motto: label })
   }
 
   const handleKeepsakeRoll = () => {
     const {
       result: { label },
     } = rollTable('Keepsake')
-    onKeepsakeChange(label)
+    updateEntity({ keepsake: label })
   }
 
   const handleAppearanceRoll = () => {
     const {
       result: { label },
     } = rollTable('Pilot Appearance')
-    onAppearanceChange(label)
+    updateEntity({ appearance: label })
   }
 
   return (
-    <RoundedBox bg="bg.builder.pilot" w="full" disabled={disabled}>
+    <RoundedBox title="Pilot" bg="bg.builder.pilot" w="full" disabled={disabled}>
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
         {/* Callsign */}
         <SheetInput
           label="Callsign"
           value={callsign}
-          onChange={onCallsignChange}
+          onChange={(value) => updateEntity({ callsign: value })}
           placeholder="Enter callsign"
           disabled={disabled}
         />
@@ -100,11 +86,11 @@ export function PilotInfoInputs({
         <SheetInput
           label="Motto"
           value={motto}
-          onChange={onMottoChange}
+          onChange={(value) => updateEntity({ motto: value })}
           placeholder="Enter motto"
           disabled={disabled}
           toggleChecked={mottoUsed}
-          onToggleChange={onMottoUsedChange}
+          onToggleChange={(value) => updateEntity({ motto_used: value })}
           onDiceRoll={handleMottoRoll}
           diceRollAriaLabel="Roll on the Motto table"
           diceRollTitle="Roll on the Motto table"
@@ -151,11 +137,11 @@ export function PilotInfoInputs({
         <SheetInput
           label="Keepsake"
           value={keepsake}
-          onChange={onKeepsakeChange}
+          onChange={(value) => updateEntity({ keepsake: value })}
           placeholder="Enter keepsake"
           disabled={disabled}
           toggleChecked={keepsakeUsed}
-          onToggleChange={onKeepsakeUsedChange}
+          onToggleChange={(value) => updateEntity({ keepsake_used: value })}
           onDiceRoll={handleKeepsakeRoll}
           diceRollAriaLabel="Roll on the Keepsake table"
           diceRollTitle="Roll on the Keepsake table"
@@ -165,7 +151,7 @@ export function PilotInfoInputs({
         <SheetInput
           label="Appearance"
           value={appearance}
-          onChange={onAppearanceChange}
+          onChange={(value) => updateEntity({ appearance: value })}
           placeholder="Enter appearance"
           disabled={disabled}
           onDiceRoll={handleAppearanceRoll}
@@ -177,11 +163,11 @@ export function PilotInfoInputs({
         <SheetInput
           label="Background"
           value={background}
-          onChange={onBackgroundChange}
+          onChange={(value) => updateEntity({ background: value })}
           placeholder="Enter background"
           disabled={disabled}
           toggleChecked={backgroundUsed}
-          onToggleChange={onBackgroundUsedChange}
+          onToggleChange={(value) => updateEntity({ background_used: value })}
         />
       </Grid>
     </RoundedBox>

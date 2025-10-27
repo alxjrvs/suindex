@@ -10,6 +10,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "sanity": "bun run lint -- --fix && bun run format && bun run typecheck",
     "format:check": "prettier --check .",
     "preview": "vite preview",
     "gen:types": "bunx supabase gen types typescript --project-id opxrguskxuogghzcnppk --schema public > src/types/database-generated.types.ts",
@@ -30,7 +31,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.4",
-    "salvageunion-reference": "^1.30.6",
+    "salvageunion-reference": "^1.31.1",
     "type-fest": "^5.1.0"
   },
   "devDependencies": {

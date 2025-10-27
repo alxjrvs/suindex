@@ -1,12 +1,17 @@
 import { type SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
+import type { CrawlerLiveSheetState } from './types'
 
 export function CrawlerAbilities({
   crawlerRef,
   disabled = false,
 }: {
+  upkeep: string
+  updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
   crawlerRef: SURefCrawler | undefined
+  crawler: CrawlerLiveSheetState
+  maxUpgrade: number
   disabled?: boolean
 }) {
   return (
@@ -15,6 +20,7 @@ export function CrawlerAbilities({
       title="Abilities"
       justifyContent={'flex-start'}
       disabled={disabled}
+      w="full"
     >
       {(
         crawlerRef?.abilities || [

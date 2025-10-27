@@ -10,6 +10,7 @@ interface StatDisplayProps {
   bg?: string
   valueColor?: string
   borderColor?: string
+  ariaLabel?: string
 }
 
 export function StatDisplay({
@@ -21,6 +22,7 @@ export function StatDisplay({
   bg = 'su.white',
   valueColor = 'su.black',
   borderColor = 'su.black',
+  ariaLabel,
 }: StatDisplayProps) {
   const WrapperComponent = onClick ? Button : Box
 
@@ -48,6 +50,7 @@ export function StatDisplay({
         onClick,
         bg: disabled ? 'gray.200' : bg,
         _hover: !disabled ? { opacity: 0.8 } : undefined,
+        'aria-label': ariaLabel || String(value),
       }
     : commonProps
 
@@ -67,7 +70,20 @@ export function StatDisplay({
         {label}
       </Text>
       <WrapperComponent {...buttonProps}>
-        <Text fontSize="lg" fontWeight="bold" color={disabled ? 'su.black' : valueColor}>
+        <Text
+          fontSize="md"
+          fontWeight="bold"
+          color={disabled ? 'su.black' : valueColor}
+          textAlign="center"
+          overflow="hidden"
+          whiteSpace="nowrap"
+          maxW="full"
+          w="full"
+          css={{
+            fontSize: 'clamp(0.5rem, 4.5cqw, 1rem)',
+            containerType: 'inline-size',
+          }}
+        >
           {value}
         </Text>
       </WrapperComponent>

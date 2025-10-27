@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor, within } from '../../../test/chakra-utils'
+import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
 import { findCoreClass, findHybridClass } from '../../../test/helpers'
@@ -47,8 +47,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
       }
 
       // Select 6 abilities but spread across trees (not completing any)
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select 3 from Hacking, but we need to select them progressively
       for (let i = 0; i < 3; i++) {
@@ -124,8 +123,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select 3 from Electronics tree (shared with Fabricator)
       for (let i = 0; i < 3; i++) {
@@ -196,8 +194,7 @@ describe('PilotLiveSheet - Advanced Classes', () => {
         await user.click(tpIncrementButton)
       }
 
-      const abilitiesSection = screen.getByText(/^abilities$/i).closest('div')
-      const addButton = within(abilitiesSection!).getByRole('button', { name: '+' })
+      const addButton = screen.getByRole('button', { name: 'Add ability' })
 
       // Select 6 abilities to unlock advanced class
       for (let i = 0; i < 3; i++) {

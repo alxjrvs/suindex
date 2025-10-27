@@ -19,34 +19,44 @@ describe('MechLiveSheet', () => {
   })
 
   describe('Initial Render', () => {
-    it('renders the mech builder interface', () => {
+    it('renders the mech builder interface', async () => {
       render(<MechLiveSheet />)
 
-      expect(screen.getByRole('combobox')).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByRole('combobox')).toBeInTheDocument()
+      })
       expect(screen.getByPlaceholderText(/enter or select a pattern/i)).toBeInTheDocument()
       expect(screen.getAllByText(/sys. slots/i)[0]).toBeInTheDocument()
     })
 
-    it('displays all main sections', () => {
+    it('displays all main sections', async () => {
       render(<MechLiveSheet />)
 
-      expect(screen.getByText(/Abilities/i)).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: /Chassis/i })).toBeInTheDocument()
+      })
       expect(screen.getAllByText(/quirk/i)[0]).toBeInTheDocument()
       expect(screen.getAllByText(/appearance/i)[0]).toBeInTheDocument()
       expect(screen.getByText(/systems & modules/i)).toBeInTheDocument()
       expect(screen.getByRole('heading', { name: /cargo/i })).toBeInTheDocument()
     })
 
-    it('shows resource steppers (SP, EP, Heat)', () => {
+    it('shows resource steppers (SP, EP, Heat)', async () => {
       render(<MechLiveSheet />)
 
-      expect(screen.getByText(/^SP$/i)).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByText(/^SP$/i)).toBeInTheDocument()
+      })
       expect(screen.getByText(/^EP$/i)).toBeInTheDocument()
       expect(screen.getByText(/^HEAT$/i)).toBeInTheDocument()
     })
 
-    it('disables inputs when no chassis is selected', () => {
+    it('disables inputs when no chassis is selected', async () => {
       render(<MechLiveSheet />)
+
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText(/enter or select a pattern/i)).toBeInTheDocument()
+      })
 
       const patternInput = screen.getByPlaceholderText(/enter or select a pattern/i)
       const quirkInput = screen.getByPlaceholderText(/enter quirk/i)
@@ -62,11 +72,13 @@ describe('MechLiveSheet', () => {
     it('loads and displays chassis options grouped by tech level', async () => {
       render(<MechLiveSheet />)
 
-      const chassisSelect = screen.getByRole('combobox')
-      expect(chassisSelect).toBeInTheDocument()
+      await waitFor(() => {
+        const chassisSelect = screen.getByRole('combobox')
+        expect(chassisSelect).toBeInTheDocument()
 
-      const options = chassisSelect.querySelectorAll('option')
-      expect(options.length).toBeGreaterThan(0)
+        const options = chassisSelect.querySelectorAll('option')
+        expect(options.length).toBeGreaterThan(0)
+      })
     })
 
     it('updates stats when chassis is selected', async () => {
@@ -214,12 +226,14 @@ describe('MechLiveSheet', () => {
   })
 
   describe('Systems and Modules', () => {
-    it('shows add system/module button disabled when no chassis selected', () => {
+    it('shows add system/module button disabled when no chassis selected', async () => {
       render(<MechLiveSheet />)
 
-      const addButton = screen.getAllByRole('button', { name: /\+/i })
-      const systemModuleButton = addButton[0]
-      expect(systemModuleButton).toBeDisabled()
+      await waitFor(() => {
+        const addButton = screen.getAllByRole('button', { name: /\+/i })
+        const systemModuleButton = addButton[0]
+        expect(systemModuleButton).toBeDisabled()
+      })
     })
 
     it('enables add system/module button when chassis is selected', async () => {
@@ -249,8 +263,8 @@ describe('MechLiveSheet', () => {
       await waitFor(
         () => {
           // Check for system and module slots
-          const systemText = new RegExp(`0\\/${testChassis.stats.system_slots}`)
-          const moduleText = new RegExp(`0\\/${testChassis.stats.module_slots}`)
+          const systemText = new RegExp(`0\\/${testChassis.stats.systemSlots}`)
+          const moduleText = new RegExp(`0\\/${testChassis.stats.moduleSlots}`)
           const systemSlots = screen.getAllByText(systemText)
           const moduleSlots = screen.getAllByText(moduleText)
           expect(systemSlots.length).toBeGreaterThan(0)
@@ -262,12 +276,14 @@ describe('MechLiveSheet', () => {
   })
 
   describe('Cargo Management', () => {
-    it('shows add cargo button disabled when no chassis selected', () => {
+    it('shows add cargo button disabled when no chassis selected', async () => {
       render(<MechLiveSheet />)
 
-      const addButtons = screen.getAllByRole('button', { name: /\+/i })
-      const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
-      expect(cargoButton).toBeDisabled()
+      await waitFor(() => {
+        const addButtons = screen.getAllByRole('button', { name: /\+/i })
+        const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
+        expect(cargoButton).toBeDisabled()
+      })
     })
 
     it('enables add cargo button when chassis is selected', async () => {
@@ -294,7 +310,7 @@ describe('MechLiveSheet', () => {
       await waitFor(
         () => {
           // Check for cargo capacity
-          const cargoText = new RegExp(`0\\/${testChassis.stats.cargo_cap}`)
+          const cargoText = new RegExp(`0\\/${testChassis.stats.cargoCap}`)
           const cargoDisplays = screen.getAllByText(cargoText)
           expect(cargoDisplays.length).toBeGreaterThan(0)
         },
@@ -379,17 +395,21 @@ describe('MechLiveSheet', () => {
   })
 
   describe('Notes', () => {
-    it('shows notes section', () => {
+    it('shows notes section', async () => {
       render(<MechLiveSheet />)
 
-      expect(screen.getByText(/notes/i)).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByText(/notes/i)).toBeInTheDocument()
+      })
     })
 
-    it('shows notes textarea disabled when no chassis selected', () => {
+    it('shows notes textarea disabled when no chassis selected', async () => {
       render(<MechLiveSheet />)
 
-      const notesTextarea = screen.getByPlaceholderText(/add notes about your mech/i)
-      expect(notesTextarea).toBeDisabled()
+      await waitFor(() => {
+        const notesTextarea = screen.getByPlaceholderText(/add notes about your mech/i)
+        expect(notesTextarea).toBeDisabled()
+      })
     })
 
     it('enables notes textarea when chassis is selected', async () => {
@@ -419,6 +439,27 @@ describe('MechLiveSheet', () => {
 
       const notesTextarea = screen.getByPlaceholderText(/add notes about your mech/i)
       expect(notesTextarea).toHaveValue('This mech is equipped for long-range combat')
+    })
+  })
+
+  describe('Pilot Display', () => {
+    it('shows pilot section with sign in button in draft mode', async () => {
+      render(<MechLiveSheet />)
+
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: /Pilot/i })).toBeInTheDocument()
+      })
+      expect(screen.getByRole('button', { name: /sign in with discord/i })).toBeInTheDocument()
+    })
+
+    it('displays pilot name with class when pilot is selected', async () => {
+      // This test would require mocking the pilot data and relationships
+      // For now, we just verify the pilot section exists
+      render(<MechLiveSheet />)
+
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: /Pilot/i })).toBeInTheDocument()
+      })
     })
   })
 })

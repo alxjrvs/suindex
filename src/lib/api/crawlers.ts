@@ -24,7 +24,6 @@ export async function createCrawler(userId: string): Promise<CrawlerRow> {
   const crawlerData: TablesInsert<'crawlers'> = {
     name: 'Unknown Name',
     current_damage: 0,
-    current_scrap: 0,
     user_id: userId,
   }
 

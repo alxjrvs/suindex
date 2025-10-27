@@ -47,14 +47,6 @@ export function usePilotLiveSheetState(id?: string) {
     id,
   })
 
-  // Wrapper for partial updates (used by components)
-  const updatePilot = useCallback(
-    (updates: Partial<PilotLiveSheetState>) => {
-      updateEntity(updates)
-    },
-    [updateEntity]
-  )
-
   const selectedClass = allCoreClasses.find((c) => c.id === pilot.class_id)
 
   // Advanced class can be either an AdvancedClass or a HybridClass
@@ -147,7 +139,7 @@ export function usePilotLiveSheetState(id?: string) {
     (classId: string | null) => {
       // If null or empty, just update to null
       if (!classId) {
-        updatePilot({ class_id: null })
+        updateEntity({ class_id: null })
         return
       }
 
@@ -179,13 +171,13 @@ export function usePilotLiveSheetState(id?: string) {
         })
       } else {
         // First time selection or same selection
-        updatePilot({
+        updateEntity({
           class_id: classId,
           abilities: [],
         })
       }
     },
-    [id, pilot, updateEntity, updatePilot]
+    [id, pilot, updateEntity]
   )
 
   const handleAddAbility = useCallback(
@@ -203,7 +195,7 @@ export function usePilotLiveSheetState(id?: string) {
         return
       }
 
-      updatePilot({
+      updateEntity({
         current_tp: (pilot.current_tp ?? 0) - cost,
         abilities: [...(pilot.abilities ?? []), abilityId],
       })
@@ -214,19 +206,19 @@ export function usePilotLiveSheetState(id?: string) {
       selectedAdvancedClass,
       pilot.current_tp,
       pilot.abilities,
-      updatePilot,
+      updateEntity,
     ]
   )
 
   const handleRemoveAbility = useCallback(
     (abilityId: string) => {
       // Removing an ability costs 1 TP (confirmation handled in AbilityDisplay)
-      updatePilot({
+      updateEntity({
         current_tp: (pilot.current_tp ?? 0) - 1,
         abilities: (pilot.abilities ?? []).filter((id) => id !== abilityId),
       })
     },
-    [pilot.current_tp, pilot.abilities, updatePilot]
+    [pilot.current_tp, pilot.abilities, updateEntity]
   )
 
   const handleAddLegendaryAbility = useCallback(
@@ -241,21 +233,21 @@ export function usePilotLiveSheetState(id?: string) {
         return
       }
 
-      updatePilot({
+      updateEntity({
         current_tp: (pilot.current_tp ?? 0) - cost,
         legendary_ability_id: abilityId,
       })
     },
-    [allAbilities, pilot.current_tp, updatePilot]
+    [allAbilities, pilot.current_tp, updateEntity]
   )
 
   const handleRemoveLegendaryAbility = useCallback(() => {
     // Removing a legendary ability costs 1 TP (confirmation handled in AbilityDisplay)
-    updatePilot({
+    updateEntity({
       current_tp: (pilot.current_tp ?? 0) - 1,
       legendary_ability_id: null,
     })
-  }, [pilot.current_tp, updatePilot])
+  }, [pilot.current_tp, updateEntity])
 
   const handleAddEquipment = useCallback(
     (equipmentId: string) => {
@@ -268,11 +260,11 @@ export function usePilotLiveSheetState(id?: string) {
         return
       }
 
-      updatePilot({
+      updateEntity({
         equipment: [...(pilot.equipment ?? []), equipmentId],
       })
     },
-    [allEquipment, pilot.equipment, updatePilot]
+    [allEquipment, pilot.equipment, updateEntity]
   )
 
   const handleRemoveEquipment = useCallback(
@@ -284,12 +276,12 @@ export function usePilotLiveSheetState(id?: string) {
       const equipmentName = equipment?.name || 'this equipment'
 
       if (window.confirm(`Are you sure you want to remove ${equipmentName}?`)) {
-        updatePilot({
+        updateEntity({
           equipment: (pilot.equipment ?? []).filter((_, i) => i !== index),
         })
       }
     },
-    [pilot.equipment, allEquipment, updatePilot]
+    [pilot.equipment, allEquipment, updateEntity]
   )
 
   return {
@@ -304,7 +296,7 @@ export function usePilotLiveSheetState(id?: string) {
     handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
-    updatePilot,
+    updateEntity,
     loading,
     error,
     hasPendingChanges,

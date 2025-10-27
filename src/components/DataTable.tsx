@@ -1,14 +1,14 @@
 import { useMemo, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Flex, Grid, Input, Text } from '@chakra-ui/react'
+import { Box, Flex, Input, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { NativeSelect } from '@chakra-ui/react'
-import type { SchemaInfo, DataItem } from '../types/schema'
+import type { SchemaInfo } from '../types/schema'
 import { useDataTableFilters } from '../hooks/useDataTableFilters'
 import { useSchemaId } from '../hooks/useSchemaParams'
+import type { SURefEntity } from 'salvageunion-reference'
 
 interface DataTableProps {
-  data: DataItem[]
+  data: SURefEntity[]
   schema: SchemaInfo
 }
 
@@ -21,11 +21,11 @@ export default function DataTable({ data, schema }: DataTableProps) {
     dispatch({ type: 'RESET' })
   }, [schemaId, dispatch])
 
-  const allFields = useMemo(() => {
+  const allFields: (keyof SURefEntity)[] = useMemo(() => {
     if (data.length === 0) return []
-    const fieldSet = new Set<string>()
+    const fieldSet = new Set<keyof SURefEntity>()
     data.forEach((item) => {
-      Object.keys(item).forEach((key) => fieldSet.add(key))
+      Object.keys(item).forEach((key) => fieldSet.add(key as keyof SURefEntity))
     })
     return Array.from(fieldSet).sort()
   }, [data])
@@ -60,13 +60,15 @@ export default function DataTable({ data, schema }: DataTableProps) {
     return data.filter((item) => {
       if (filterState.searchTerm) {
         const searchLower = filterState.searchTerm.toLowerCase()
-        const nameMatch = item.name?.toString().toLowerCase().includes(searchLower)
-        const descMatch = item.description?.toString().toLowerCase().includes(searchLower)
+        const nameMatch =
+          'name' in item && item.name?.toString().toLowerCase().includes(searchLower)
+        const descMatch =
+          'description' in item && item.description?.toString().toLowerCase().includes(searchLower)
         if (!nameMatch && !descMatch) return false
       }
 
       if (filterState.techLevelFilters.size > 0 && !filterState.techLevelFilters.has('all')) {
-        const itemTechLevel = item.techLevel?.toString()
+        const itemTechLevel = 'techLevel' in item && item.techLevel?.toString()
         if (!itemTechLevel || !filterState.techLevelFilters.has(itemTechLevel)) {
           return false
         }
@@ -75,7 +77,7 @@ export default function DataTable({ data, schema }: DataTableProps) {
       for (const [field, filterValue] of Object.entries(filterState.filters)) {
         if (!filterValue) continue
 
-        const itemValue = item[field]
+        const itemValue = item[field as keyof SURefEntity]
         if (itemValue === undefined || itemValue === null) return false
 
         if (Array.isArray(itemValue)) {
@@ -91,8 +93,8 @@ export default function DataTable({ data, schema }: DataTableProps) {
 
   const sortedData = useMemo(() => {
     return [...filteredData].sort((a, b) => {
-      const aVal = a[filterState.sortField]
-      const bVal = b[filterState.sortField]
+      const aVal = a[filterState.sortField as keyof SURefEntity]
+      const bVal = b[filterState.sortField as keyof SURefEntity]
 
       if (aVal === undefined || aVal === null) return 1
       if (bVal === undefined || bVal === null) return -1
@@ -140,13 +142,16 @@ export default function DataTable({ data, schema }: DataTableProps) {
   const displayFields = useMemo(() => {
     const fields = ['name', ...schema.requiredFields.filter((f) => f !== 'name' && f !== 'id')]
     ;['description', 'effect', 'type', 'category'].forEach((f) => {
-      if (allFields.includes(f) && !fields.includes(f)) {
+      if (allFields.includes(f as keyof SURefEntity) && !fields.includes(f)) {
         fields.push(f)
       }
     })
 
     const result = fields
-      .filter((f) => allFields.includes(f) && f !== 'id' && f !== 'source' && f !== 'page')
+      .filter(
+        (f) =>
+          allFields.includes(f as keyof SURefEntity) && f !== 'id' && f !== 'source' && f !== 'page'
+      )
       .slice(0, 4)
 
     if (allFields.includes('page')) {
@@ -184,113 +189,67 @@ export default function DataTable({ data, schema }: DataTableProps) {
           />
         </Box>
 
-        {allFields.includes('techLevel') && fieldValues['techLevel'].size > 1 && (
-          <Box mb={4}>
-            <Box
-              as="label"
-              display="block"
-              fontSize="sm"
-              fontWeight="medium"
-              color="su.black"
-              mb={2}
-            >
-              Tech Level
-            </Box>
-            <Flex flexWrap="wrap" gap={2}>
-              <Button
-                onClick={() => {
-                  dispatch({
-                    type: 'SET_TECH_LEVEL_FILTERS',
-                    payload: new Set(),
-                  })
-                }}
-                px={4}
-                py={2}
+        {allFields.includes('techLevel' as keyof SURefEntity) &&
+          fieldValues['techLevel'].size > 1 && (
+            <Box mb={4}>
+              <Box
+                as="label"
+                display="block"
+                fontSize="sm"
                 fontWeight="medium"
-                bg={filterState.techLevelFilters.size === 0 ? 'su.orange' : 'su.lightBlue'}
-                color={filterState.techLevelFilters.size === 0 ? 'su.white' : 'su.black'}
-                borderWidth={filterState.techLevelFilters.size === 0 ? '0' : '1px'}
-                borderColor="su.lightBlue"
-                _hover={filterState.techLevelFilters.size === 0 ? {} : { bg: 'su.lightOrange' }}
+                color="su.black"
+                mb={2}
               >
-                All
-              </Button>
-              {Array.from(fieldValues['techLevel'])
-                .sort()
-                .map((value) => {
-                  const isSelected = filterState.techLevelFilters.has(String(value))
-                  return (
-                    <Button
-                      key={String(value)}
-                      onClick={() => {
-                        dispatch({
-                          type: 'TOGGLE_TECH_LEVEL',
-                          payload: String(value),
-                        })
-                      }}
-                      px={4}
-                      py={2}
-                      fontWeight="medium"
-                      bg={isSelected ? 'su.orange' : 'su.lightBlue'}
-                      color={isSelected ? 'su.white' : 'su.black'}
-                      borderWidth={isSelected ? '0' : '1px'}
-                      borderColor="su.lightBlue"
-                      _hover={isSelected ? {} : { bg: 'su.lightOrange' }}
-                    >
-                      T{String(value)}
-                    </Button>
-                  )
-                })}
-            </Flex>
-          </Box>
-        )}
-
-        <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }} gap={4}>
-          {allFields
-            .filter((field) => {
-              return field === 'class' && fieldValues[field].size > 1
-            })
-            .map((field) => (
-              <Box key={field}>
-                <Box
-                  as="label"
-                  display="block"
-                  fontSize="sm"
-                  fontWeight="medium"
-                  color="su.black"
-                  mb={1}
-                  textTransform="capitalize"
-                >
-                  {field.replace(/([A-Z])/g, ' $1').trim()}
-                </Box>
-                <NativeSelect.Root size="sm">
-                  <NativeSelect.Field
-                    value={filterState.filters[field] || ''}
-                    onChange={(e) =>
-                      dispatch({
-                        type: 'SET_FILTER',
-                        payload: { field, value: e.currentTarget.value },
-                      })
-                    }
-                    borderColor="su.lightBlue"
-                    focusRingColor="su.orange"
-                    bg="su.white"
-                    color="su.black"
-                  >
-                    <option value="">All</option>
-                    {Array.from(fieldValues[field])
-                      .sort()
-                      .map((value) => (
-                        <option key={String(value)} value={String(value)}>
-                          {String(value)}
-                        </option>
-                      ))}
-                  </NativeSelect.Field>
-                  <NativeSelect.Indicator />
-                </NativeSelect.Root>
+                Tech Level
               </Box>
-            ))}
-        </Grid>
+              <Flex flexWrap="wrap" gap={2}>
+                <Button
+                  onClick={() => {
+                    dispatch({
+                      type: 'SET_techLevel_FILTERS',
+                      payload: new Set(),
+                    })
+                  }}
+                  px={4}
+                  py={2}
+                  fontWeight="medium"
+                  bg={filterState.techLevelFilters.size === 0 ? 'su.orange' : 'su.lightBlue'}
+                  color={filterState.techLevelFilters.size === 0 ? 'su.white' : 'su.black'}
+                  borderWidth={filterState.techLevelFilters.size === 0 ? '0' : '1px'}
+                  borderColor="su.lightBlue"
+                  _hover={filterState.techLevelFilters.size === 0 ? {} : { bg: 'su.lightOrange' }}
+                >
+                  All
+                </Button>
+                {Array.from(fieldValues['techLevel'])
+                  .sort()
+                  .map((value) => {
+                    const isSelected = filterState.techLevelFilters.has(String(value))
+                    return (
+                      <Button
+                        key={String(value)}
+                        onClick={() => {
+                          dispatch({
+                            type: 'TOGGLE_techLevel',
+                            payload: String(value),
+                          })
+                        }}
+                        px={4}
+                        py={2}
+                        fontWeight="medium"
+                        bg={isSelected ? 'su.orange' : 'su.lightBlue'}
+                        color={isSelected ? 'su.white' : 'su.black'}
+                        borderWidth={isSelected ? '0' : '1px'}
+                        borderColor="su.lightBlue"
+                        _hover={isSelected ? {} : { bg: 'su.lightOrange' }}
+                      >
+                        T{String(value)}
+                      </Button>
+                    )
+                  })}
+              </Flex>
+            </Box>
+          )}
 
         <Text mt={4} fontSize="sm" color="su.brick">
           Showing {sortedData.length} of {data.length} items
@@ -351,8 +310,12 @@ export default function DataTable({ data, schema }: DataTableProps) {
                   >
                     {displayFields.map((field) => (
                       <Box as="td" key={field} px={6} py={6} fontSize="sm" color="su.black">
-                        <Box maxW="xs" truncate title={formatValue(item[field])}>
-                          {formatValue(item[field])}
+                        <Box
+                          maxW="xs"
+                          truncate
+                          title={formatValue(item[field as keyof SURefEntity])}
+                        >
+                          {formatValue(item[field as keyof SURefEntity])}
                         </Box>
                       </Box>
                     ))}

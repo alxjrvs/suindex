@@ -12,8 +12,8 @@ export type DataTableFilterAction =
   | { type: 'SET_SEARCH'; payload: string }
   | { type: 'SET_FILTER'; payload: { field: string; value: string } }
   | { type: 'CLEAR_FILTER'; payload: string }
-  | { type: 'SET_TECH_LEVEL_FILTERS'; payload: Set<string> }
-  | { type: 'TOGGLE_TECH_LEVEL'; payload: string }
+  | { type: 'SET_techLevel_FILTERS'; payload: Set<string> }
+  | { type: 'TOGGLE_techLevel'; payload: string }
   | { type: 'SET_SORT'; payload: { field: string; direction: 'asc' | 'desc' } }
   | { type: 'RESET' }
 
@@ -47,10 +47,10 @@ function filterReducer(
         ),
       }
 
-    case 'SET_TECH_LEVEL_FILTERS':
+    case 'SET_techLevel_FILTERS':
       return { ...state, techLevelFilters: action.payload }
 
-    case 'TOGGLE_TECH_LEVEL': {
+    case 'TOGGLE_techLevel': {
       const newFilters = new Set(state.techLevelFilters)
       if (newFilters.has(action.payload)) {
         newFilters.delete(action.payload)

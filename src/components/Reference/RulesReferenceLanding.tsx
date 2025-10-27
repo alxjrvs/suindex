@@ -5,8 +5,9 @@ import { Text } from '../base/Text'
 import { Heading } from '../base/Heading'
 import { ReferenceHeader } from '../shared/ReferenceHeader'
 import Footer from '../Footer'
-import type { SchemaInfo, DataItem } from '../../types/schema'
+import type { SchemaInfo } from '../../types/schema'
 import { getModel } from '../../utils/modelMap'
+import type { SURefEntity } from 'salvageunion-reference'
 
 interface RulesReferenceLandingProps {
   schemas: SchemaInfo[]
@@ -30,16 +31,19 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
 
   // Load all data from all schemas
   const allItems = useMemo(() => {
-    const itemsMap = new Map<string, DataItem[]>()
+    const itemsMap = new Map<string, SURefEntity[]>()
 
     for (const schema of schemas) {
       try {
         const model = getModel(schema.id)
         if (model) {
-          const data = model.all() as DataItem[]
+          const data = model.all() as SURefEntity[]
           itemsMap.set(schema.id, data)
         } else {
-          console.warn(`No model found for schema: ${schema.id}`)
+          // Only warn in development, not in tests
+          if (import.meta.env.MODE !== 'test') {
+            console.warn(`No model found for schema: ${schema.id}`)
+          }
           itemsMap.set(schema.id, [])
         }
       } catch (error) {
@@ -94,7 +98,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       const schemaName = schema.title.replace('Salvage Union ', '')
 
       items.forEach((item) => {
-        const name = String(item.name || '')
+        const name = String(('name' in item && item.name) || '')
 
         if (name && name.toLowerCase().includes(query)) {
           results.push({

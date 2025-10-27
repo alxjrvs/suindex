@@ -1,4 +1,4 @@
-import type { SURefEntity, SURefEntityName } from 'salvageunion-reference'
+import type { SURefActionMetaList, SURefEntity, SURefEntityName } from 'salvageunion-reference'
 import type { DataValue } from '../../types/common'
 import { formatTraits } from '../../utils/displayUtils'
 
@@ -157,11 +157,11 @@ export function extractHeaderStats(data: SURefEntity): Stat[] {
       structure_pts?: number
       energy_pts?: number
       heat_cap?: number
-      system_slots?: number
-      module_slots?: number
-      cargo_cap?: number
-      tech_level?: number
-      salvage_value?: number
+      systemSlots?: number
+      moduleSlots?: number
+      cargoCap?: number
+      techLevel?: number
+      salvageValue?: number
     }
     if (chassisStats.structure_pts !== undefined) {
       stats.push({ label: 'SP', value: chassisStats.structure_pts })
@@ -172,14 +172,14 @@ export function extractHeaderStats(data: SURefEntity): Stat[] {
     if (chassisStats.heat_cap !== undefined) {
       stats.push({ label: 'Heat', value: chassisStats.heat_cap })
     }
-    if (chassisStats.system_slots !== undefined) {
-      stats.push({ label: 'Sys. Slots', value: chassisStats.system_slots })
+    if (chassisStats.systemSlots !== undefined) {
+      stats.push({ label: 'Sys. Slots', value: chassisStats.systemSlots })
     }
-    if (chassisStats.module_slots !== undefined) {
-      stats.push({ label: 'Mod. Slots', value: chassisStats.module_slots })
+    if (chassisStats.moduleSlots !== undefined) {
+      stats.push({ label: 'Mod. Slots', value: chassisStats.moduleSlots })
     }
-    if (chassisStats.cargo_cap !== undefined) {
-      stats.push({ label: 'Cargo Cap', value: chassisStats.cargo_cap })
+    if (chassisStats.cargoCap !== undefined) {
+      stats.push({ label: 'Cargo Cap', value: chassisStats.cargoCap })
     }
   } else {
     // Regular entities - only HP and SP (not SV)
@@ -272,9 +272,9 @@ export function extractSidebarData(data: SURefEntity): SidebarData {
     'stats' in data &&
     typeof data.stats === 'object' &&
     data.stats &&
-    'tech_level' in data.stats
+    'techLevel' in data.stats
   ) {
-    techLevel = (data.stats as { tech_level?: number }).tech_level
+    techLevel = (data.stats as { techLevel?: number }).techLevel
   } else if ('techLevel' in data) {
     techLevel = data.techLevel as number | undefined
   }
@@ -284,9 +284,9 @@ export function extractSidebarData(data: SURefEntity): SidebarData {
     'stats' in data &&
     typeof data.stats === 'object' &&
     data.stats &&
-    'salvage_value' in data.stats
+    'salvageValue' in data.stats
   ) {
-    salvageValue = (data.stats as { salvage_value?: number }).salvage_value
+    salvageValue = (data.stats as { salvageValue?: number }).salvageValue
   } else if ('salvageValue' in data) {
     salvageValue = data.salvageValue as number | undefined
   }
@@ -316,7 +316,11 @@ export function extractContentSections(data: SURefEntity): ContentSections {
     showActions: 'actions' in data && data.actions !== undefined && data.actions.length > 0,
     showRollTable: 'table' in data && data.table !== undefined,
     showSystems: 'systems' in data && data.systems !== undefined && data.systems.length > 0,
-    showAbilities: 'abilities' in data && data.abilities !== undefined && data.abilities.length > 0,
+    showAbilities:
+      ('abilities' in data && data.abilities !== undefined && data.abilities.length > 0) ||
+      ('techLevelEffects' in data &&
+        data.techLevelEffects !== undefined &&
+        data.techLevelEffects.length > 0),
   }
 }
 
@@ -357,6 +361,28 @@ export function extractNotes(data: SURefEntity): string | undefined {
  */
 export function hasPageReference(data: SURefEntity): boolean {
   return 'page' in data
+}
+
+export function extractOptions(
+  data: SURefEntity
+): string[] | { label: string; value: string }[] | undefined {
+  return 'options' in data ? data.options : undefined
+}
+
+export function extractAbilities(data: SURefEntity): SURefActionMetaList[] {
+  const abilities = 'abilities' in data ? data.abilities : undefined
+  if (!abilities) return []
+  return abilities
+}
+
+export function extractTechLevelEffects(data: SURefEntity): {
+  techLevelMin: number
+  techLevelMax: number
+  effect: string
+}[] {
+  const techLevelEffects = 'techLevelEffects' in data ? data.techLevelEffects : undefined
+  if (!techLevelEffects) return []
+  return techLevelEffects
 }
 
 /**

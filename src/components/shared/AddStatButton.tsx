@@ -4,13 +4,19 @@ interface AddStatButtonProps {
   onClick: () => void
   disabled?: boolean
   label?: string
+  ariaLabel?: string
 }
 
 /**
  * Reusable "Add" button component using StatDisplay styling
  * Used consistently across inventory, cargo, abilities, systems, etc.
  */
-export function AddStatButton({ onClick, disabled = false, label = 'Add' }: AddStatButtonProps) {
+export function AddStatButton({
+  onClick,
+  disabled = false,
+  label = 'Add',
+  ariaLabel,
+}: AddStatButtonProps) {
   return (
     <StatDisplay
       label={label}
@@ -19,6 +25,7 @@ export function AddStatButton({ onClick, disabled = false, label = 'Add' }: AddS
       onClick={onClick}
       bg="su.brick"
       valueColor="su.white"
+      ariaLabel={ariaLabel || '+'}
     />
   )
 }
