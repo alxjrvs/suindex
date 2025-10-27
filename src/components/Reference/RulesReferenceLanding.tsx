@@ -39,7 +39,10 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
           const data = model.all() as DataItem[]
           itemsMap.set(schema.id, data)
         } else {
-          console.warn(`No model found for schema: ${schema.id}`)
+          // Only warn in development, not in tests
+          if (import.meta.env.MODE !== 'test') {
+            console.warn(`No model found for schema: ${schema.id}`)
+          }
           itemsMap.set(schema.id, [])
         }
       } catch (error) {

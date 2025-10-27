@@ -1,4 +1,4 @@
-import type { SURefEntity, SURefEntityName } from 'salvageunion-reference'
+import type { SURefActionMetaList, SURefEntity, SURefEntityName } from 'salvageunion-reference'
 import type { DataValue } from '../../types/common'
 import { formatTraits } from '../../utils/displayUtils'
 
@@ -316,7 +316,11 @@ export function extractContentSections(data: SURefEntity): ContentSections {
     showActions: 'actions' in data && data.actions !== undefined && data.actions.length > 0,
     showRollTable: 'table' in data && data.table !== undefined,
     showSystems: 'systems' in data && data.systems !== undefined && data.systems.length > 0,
-    showAbilities: 'abilities' in data && data.abilities !== undefined && data.abilities.length > 0,
+    showAbilities:
+      ('abilities' in data && data.abilities !== undefined && data.abilities.length > 0) ||
+      ('techLevelEffects' in data &&
+        data.techLevelEffects !== undefined &&
+        data.techLevelEffects.length > 0),
   }
 }
 
@@ -357,6 +361,28 @@ export function extractNotes(data: SURefEntity): string | undefined {
  */
 export function hasPageReference(data: SURefEntity): boolean {
   return 'page' in data
+}
+
+export function extractOptions(
+  data: SURefEntity
+): string[] | { label: string; value: string }[] | undefined {
+  return 'options' in data ? data.options : undefined
+}
+
+export function extractAbilities(data: SURefEntity): SURefActionMetaList[] {
+  const abilities = 'abilities' in data ? data.abilities : undefined
+  if (!abilities) return []
+  return abilities
+}
+
+export function extractTechLevelEffects(data: SURefEntity): {
+  techLevelMin: number
+  techLevelMax: number
+  effect: string
+}[] {
+  const techLevelEffects = 'techLevelEffects' in data ? data.techLevelEffects : undefined
+  if (!techLevelEffects) return []
+  return techLevelEffects
 }
 
 /**

@@ -94,14 +94,14 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       // Wait for the equipment selector modal to open and find the button
       const hackingToolButton = await screen.findByRole('button', {
-        name: new RegExp(testEquipment[0].name, 'i'),
+        name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
       })
       await user.click(hackingToolButton)
 
       // Wait for modal to close
       await waitFor(() => {
         expect(
-          screen.queryByRole('button', { name: new RegExp(testEquipment[0].name, 'i') })
+          screen.queryByRole('button', { name: new RegExp(`Equip ${testEquipment[0].name}`, 'i') })
         ).not.toBeInTheDocument()
       })
 
@@ -124,7 +124,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Add first equipment
       await user.click(addButton)
       const hackingToolButton = await screen.findByRole('button', {
-        name: new RegExp(testEquipment[0].name, 'i'),
+        name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
       })
       await user.click(hackingToolButton)
 
@@ -141,7 +141,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await user.click(addButton)
 
       const repairKitButton = await screen.findByRole('button', {
-        name: new RegExp(testEquipment[1].name, 'i'),
+        name: new RegExp(`Equip ${testEquipment[1].name}`, 'i'),
       })
       await user.click(repairKitButton)
 
@@ -162,7 +162,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       await user.click(addButton)
 
       const hackingToolButton = await screen.findByRole('button', {
-        name: new RegExp(testEquipment[0].name, 'i'),
+        name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
       })
       await user.click(hackingToolButton)
 
@@ -187,7 +187,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       for (let i = 0; i < 6; i++) {
         await user.click(addButton)
         const hackingToolButton = await screen.findByRole('button', {
-          name: new RegExp(testEquipment[0].name, 'i'),
+          name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
         })
         await user.click(hackingToolButton)
 
@@ -231,7 +231,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       for (let i = 0; i < 6; i++) {
         await user.click(addButton)
         const hackingToolButton = await screen.findByRole('button', {
-          name: new RegExp(testEquipment[0].name, 'i'),
+          name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
         })
         await user.click(hackingToolButton)
 
@@ -274,7 +274,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       for (let i = 0; i < 6; i++) {
         await user.click(addButton)
         const hackingToolButton = await screen.findByRole('button', {
-          name: new RegExp(testEquipment[0].name, 'i'),
+          name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
         })
         await user.click(hackingToolButton)
 
@@ -330,7 +330,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       await user.click(addButton)
       const hackingToolButton = await screen.findByRole('button', {
-        name: new RegExp(testEquipment[0].name, 'i'),
+        name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
       })
       await user.click(hackingToolButton)
 
@@ -358,7 +358,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       await user.click(addButton)
       const hackingToolButton = await screen.findByRole('button', {
-        name: new RegExp(testEquipment[0].name, 'i'),
+        name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
       })
       await user.click(hackingToolButton)
 
@@ -392,7 +392,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Add two items
       await user.click(addButton)
       const hackingToolButton = await screen.findByRole('button', {
-        name: new RegExp(testEquipment[0].name, 'i'),
+        name: new RegExp(`Equip ${testEquipment[0].name}`, 'i'),
       })
       await user.click(hackingToolButton)
 
@@ -407,7 +407,7 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
 
       await user.click(addButton)
       const repairKitButton = await screen.findByRole('button', {
-        name: new RegExp(testEquipment[1].name, 'i'),
+        name: new RegExp(`Equip ${testEquipment[1].name}`, 'i'),
       })
       await user.click(repairKitButton)
 

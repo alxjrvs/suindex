@@ -3,12 +3,14 @@ import { VStack, Text, HStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
+import type { CrawlerLiveSheetState } from './types'
 
 interface BayInfoProps {
   referenceBay: SURefCrawlerBay | undefined
+  crawler: CrawlerLiveSheetState
 }
 
-export function BayInfo({ referenceBay }: BayInfoProps) {
+export function BayInfo({ referenceBay, crawler: { crawler_type_id, tech_level } }: BayInfoProps) {
   const [isFunctionExpanded, setIsFunctionExpanded] = useState(false)
   const [isAbilitiesExpanded, setIsAbilitiesExpanded] = useState(false)
 
@@ -21,7 +23,16 @@ export function BayInfo({ referenceBay }: BayInfoProps) {
   }
 
   const hasFunction = !!referenceBay.description
-  const hasAbilities = !!(referenceBay.abilities && referenceBay.abilities.length > 0)
+  const hasAbilities =
+    !!(referenceBay.abilities && referenceBay.abilities.length > 0) ||
+    (!!referenceBay.techLevelEffects && referenceBay.techLevelEffects.length > 0)
+
+  const techLevelEffects =
+    crawler_type_id && tech_level
+      ? referenceBay.techLevelEffects?.filter(
+          (effect) => effect.techLevelMin <= tech_level && effect.techLevelMax >= tech_level
+        )
+      : referenceBay.techLevelEffects
 
   return (
     <VStack mt="2" gap={2} justifyContent="flex-start" alignItems="stretch" w="full">
@@ -73,6 +84,11 @@ export function BayInfo({ referenceBay }: BayInfoProps) {
           {referenceBay.abilities!.map((ability, idx) => (
             <SheetDisplay key={idx} label={ability.name}>
               <Text lineHeight="relaxed">{ability.description}</Text>
+            </SheetDisplay>
+          ))}
+          {techLevelEffects?.map((effect, idx) => (
+            <SheetDisplay key={idx} label={`Tech Level ${effect.techLevelMin}`}>
+              <Text lineHeight="relaxed">{effect.effect}</Text>
             </SheetDisplay>
           ))}
         </VStack>

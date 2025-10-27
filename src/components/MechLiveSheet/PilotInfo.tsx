@@ -58,9 +58,13 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   // State 1: No mech ID (draft mode) - show disabled message
   if (!mechId) {
     return (
-      <RoundedBox w="full" title="Pilot" disabled={true} bg="su.orange">
-        <DiscordSignInButton disabled={disabled} />
-      </RoundedBox>
+      <RoundedBox
+        rightContent={<DiscordSignInButton disabled={disabled} />}
+        w="full"
+        title="Pilot"
+        disabled={true}
+        bg="su.orange"
+      />
     )
   }
 

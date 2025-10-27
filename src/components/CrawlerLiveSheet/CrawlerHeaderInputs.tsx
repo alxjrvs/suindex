@@ -37,6 +37,20 @@ export function CrawlerHeaderInputs({
   onCrawlerTypeChange,
   disabled = false,
 }: CrawlerHeaderInputsProps) {
+  const currentUpgrade = crawler.upgrade ?? 0
+  const currentTechLevel = crawler.tech_level || 1
+  const isMaxUpgrade = currentUpgrade === maxUpgrade
+  const isTechLevel6 = currentTechLevel === 6
+
+  const handleUpgradeToNextTechLevel = () => {
+    if (isMaxUpgrade && currentTechLevel < 6) {
+      updateEntity({
+        tech_level: currentTechLevel + 1,
+        upgrade: 0,
+      })
+    }
+  }
+
   return (
     <RoundedBox
       title="Crawler"
@@ -45,17 +59,29 @@ export function CrawlerHeaderInputs({
       w="full"
       flex="1"
       disabled={disabled}
-      leftContent={<StatDisplay label="TL" value={crawler.tech_level || 0} disabled={disabled} />}
+      leftContent={<StatDisplay label="TL" value={currentTechLevel} disabled={disabled} />}
       rightContent={
         <Flex gap="2">
           <StatDisplay disabled={disabled} label="UPKEEP" value={upkeep} />
-          <NumericStepper
-            label="UPGRADE"
-            value={crawler.upgrade ?? 0}
-            onChange={(value) => updateEntity({ upgrade: value })}
-            max={maxUpgrade}
-            disabled={disabled}
-          />
+          {isMaxUpgrade && !isTechLevel6 ? (
+            <StatDisplay
+              label="UPGRADE"
+              value={`TL${currentTechLevel + 1}`}
+              onClick={handleUpgradeToNextTechLevel}
+              disabled={disabled}
+              bg="su.green"
+              valueColor="su.white"
+              ariaLabel={`Upgrade to Tech Level ${currentTechLevel + 1}`}
+            />
+          ) : (
+            <NumericStepper
+              label="UPGRADE"
+              value={currentUpgrade}
+              onChange={(value) => updateEntity({ upgrade: value })}
+              max={isTechLevel6 ? undefined : maxUpgrade}
+              disabled={disabled}
+            />
+          )}
           <NumericStepper
             label="SP"
             value={currentSP}

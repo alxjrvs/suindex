@@ -71,7 +71,7 @@ export function StatDisplay({
       </Text>
       <WrapperComponent {...buttonProps}>
         <Text
-          fontSize="lg"
+          fontSize="md"
           fontWeight="bold"
           color={disabled ? 'su.black' : valueColor}
           textAlign="center"
@@ -80,7 +80,7 @@ export function StatDisplay({
           maxW="full"
           w="full"
           css={{
-            fontSize: 'clamp(0.5rem, 5cqw, 1.125rem)',
+            fontSize: 'clamp(0.5rem, 4.5cqw, 1rem)',
             containerType: 'inline-size',
           }}
         >

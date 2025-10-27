@@ -127,6 +127,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
           {regularBays.map((bay) => (
             <BayCard
+              crawler={crawler}
               key={bay.id}
               bay={bay}
               onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
@@ -143,6 +144,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           {/* Storage Bay */}
           {storageBay && (
             <BayCard
+              crawler={crawler}
               bay={storageBay}
               onUpdate={(updates) => handleUpdateBay(storageBay.id, updates)}
               disabled={!selectedCrawlerType}

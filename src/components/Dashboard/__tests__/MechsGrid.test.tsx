@@ -49,11 +49,16 @@ describe('MechsGrid', () => {
       })
     })
 
-    it('should display loading state initially', () => {
+    it('should display loading state initially', async () => {
       renderWithRouter(<MechsGrid />)
 
       // Check for loading spinner (Chakra UI Spinner doesn't have progressbar role)
       expect(screen.getByText('Your Mechs')).toBeInTheDocument()
+
+      // Wait for async state updates to complete
+      await waitFor(() => {
+        expect(screen.getByText('Test Mech 1')).toBeInTheDocument()
+      })
     })
 
     it('should render mech cards after loading', async () => {

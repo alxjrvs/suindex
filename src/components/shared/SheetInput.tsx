@@ -55,7 +55,7 @@ export function SheetInput({
     <Flex direction="column" position="relative">
       {/* Label with optional toggle */}
       {label && (
-        <Flex alignItems="center" mb={-2} zIndex={1} gap={2}>
+        <Flex alignItems="center" mb={hasToggle ? -4 : -2} zIndex={1}>
           <Text
             variant="pseudoheader"
             fontSize="sm"
@@ -77,9 +77,8 @@ export function SheetInput({
               <ChakraCheckbox.HiddenInput aria-label={`${label} ${toggleLabel}`} />
               <ChakraCheckbox.Control
                 bg="su.white"
-                borderWidth="2px"
-                mb={-2}
-                ml={1}
+                borderWidth="3px"
+                mb={2}
                 borderColor="su.black"
                 h="14px"
                 w="14px"

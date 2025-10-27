@@ -1,8 +1,7 @@
-import { Box, Flex, Text, VStack } from '@chakra-ui/react'
+import { Box, Text, VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import { RoundedBox } from '../shared/RoundedBox'
-import { StatDisplay } from '../StatDisplay'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
@@ -10,22 +9,9 @@ interface ChassisAbilitiesProps {
   disabled?: boolean
 }
 
-export function ChassisAbilities({ chassis, stats, disabled = false }: ChassisAbilitiesProps) {
+export function ChassisAbilities({ chassis, disabled = false }: ChassisAbilitiesProps) {
   return (
-    <RoundedBox
-      leftContent={<StatDisplay label="TL" value={stats?.techLevel || 0} disabled={disabled} />}
-      rightContent={
-        <Flex flexDirection="row" justifyContent="space-between">
-          <StatDisplay label="Sys. Slots" value={stats?.systemSlots || 0} disabled={disabled} />
-          <StatDisplay label="Mod. Slots" value={stats?.moduleSlots || 0} disabled={disabled} />
-          <StatDisplay label="Cargo Cap" value={stats?.cargoCap || 0} disabled={disabled} />
-          <StatDisplay label="SV" value={stats?.salvageValue || 0} disabled={disabled} />
-        </Flex>
-      }
-      bg="su.green"
-      title="Chassis"
-      disabled={!chassis}
-    >
+    <RoundedBox bg="su.green" title="Abilities" disabled={!chassis}>
       <VStack gap={3} alignItems="stretch" w="full">
         {(
           chassis?.chassisAbilities || [

@@ -26,7 +26,7 @@ export function PilotResourceSteppers({
 
   return (
     <RoundedBox bg="bg.builder.pilot" disabled={disabled}>
-      <VStack alignItems="center">
+      <VStack alignItems="center" justifyContent="space-between" h="full">
         <NumericStepper
           label="HP"
           value={currentHP}

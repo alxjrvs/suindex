@@ -104,6 +104,6 @@ export async function addAbility(user: UserEvent, abilityName: string) {
  */
 export async function addEquipment(user: UserEvent, equipmentName: string) {
   await openSectionModal(user, 'inventory')
-  const addButton = screen.getByRole('button', { name: new RegExp(equipmentName, 'i') })
+  const addButton = screen.getByRole('button', { name: new RegExp(`Equip ${equipmentName}`, 'i') })
   await user.click(addButton)
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
+import { Flex, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import type { SURefEquipment } from 'salvageunion-reference'
 import Modal from '../Modal'
@@ -103,19 +103,13 @@ export function EquipmentSelector({
             </Text>
           ) : (
             filteredEquipment.map((item) => (
-              <Box
-                as="button"
+              <EquipmentDisplay
                 key={item.id}
+                data={item}
+                showSelectButton
+                selectButtonText={`Equip ${item.name}`}
                 onClick={() => handleSelect(item.id)}
-                w="full"
-                textAlign="left"
-                transition="all 0.2s"
-                _hover={{ shadow: 'lg', transform: 'scale(1.01)' }}
-                cursor="pointer"
-                aria-label={item.name}
-              >
-                <EquipmentDisplay data={item} />
-              </Box>
+              />
             ))
           )}
         </VStack>
