@@ -32,7 +32,6 @@ export function GridLayout<T>({
   createButton,
   onRetry,
   emptyStateMessage,
-  emptyStateIcon = '📦',
 }: GridLayoutProps<T>) {
   return (
     <Box p={8}>
@@ -83,7 +82,6 @@ export function GridLayout<T>({
       {!loading && !error && items.length === 0 && (
         <Flex align="center" justify="center" minH="60vh">
           <VStack gap={4}>
-            <Text fontSize="6xl">{emptyStateIcon}</Text>
             <Text fontSize="xl" fontWeight="bold" color="su.white">
               {emptyStateMessage || 'No items yet'}
             </Text>
