@@ -6,7 +6,6 @@ interface NotesProps {
   onChange: (value: string) => void
   disabled?: boolean
   backgroundColor?: string
-  borderWidth?: 4 | 8
   placeholder?: string
   h?: string | number
   flex?: string | number

@@ -1,51 +1,16 @@
-import { useNavigate } from 'react-router'
-import type { Tables } from '../../types/database-generated.types'
-import { useEntityGrid } from '../../hooks/useEntityGrid'
-import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { PilotGridCard } from './PilotGridCard'
-import { GridLayout } from './GridLayout'
+import { EntityGrid } from './EntityGrid'
 import { getClassNameById } from '../../utils/referenceDataHelpers'
 
-type PilotRow = Tables<'pilots'>
-
 export function PilotsGrid() {
-  const navigate = useNavigate()
-
-  const {
-    items: pilots,
-    loading,
-    error,
-    reload,
-  } = useEntityGrid<PilotRow>({
-    table: 'pilots',
-    orderBy: 'created_at',
-    orderAscending: false,
-  })
-
-  const { createEntity: createPilot, isLoading: isCreating } = useCreateEntity({
-    table: 'pilots',
-    navigationPath: (id) => `/dashboard/pilots/${id}`,
-  })
-
-  const handleCreatePilot = async () => {
-    try {
-      await createPilot()
-    } catch (err) {
-      console.error('Failed to create pilot:', err)
-    }
-  }
-
-  const handlePilotClick = (pilotId: string) => {
-    navigate(`/dashboard/pilots/${pilotId}`)
-  }
-
   return (
-    <GridLayout
+    <EntityGrid<'pilots'>
+      table="pilots"
       title="Your Pilots"
-      loading={loading}
-      error={error}
-      items={pilots}
-      renderItem={(pilot) => {
+      createButtonLabel="New Pilot"
+      createButtonBgColor="su.orange"
+      createButtonColor="su.white"
+      renderCard={(pilot, onClick) => {
         const className = pilot.class_id ? getClassNameById(pilot.class_id) : null
         const currentHP = pilot.current_damage ?? 0
         const maxHP = pilot.max_hp ?? 10
@@ -61,18 +26,10 @@ export function PilotsGrid() {
             maxHP={maxHP}
             currentAP={currentAP}
             maxAP={maxAP}
-            onClick={() => handlePilotClick(pilot.id)}
+            onClick={() => onClick(pilot.id)}
           />
         )
       }}
-      createButton={{
-        onClick: handleCreatePilot,
-        label: 'New Pilot',
-        bgColor: 'su.orange',
-        color: 'su.white',
-        isLoading: isCreating,
-      }}
-      onRetry={reload}
     />
   )
 }

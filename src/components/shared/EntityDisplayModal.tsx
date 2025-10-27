@@ -1,5 +1,5 @@
-import { DialogRoot, DialogContent, DialogBody, DialogCloseTrigger } from '@chakra-ui/react'
 import type { SURefSchemaName } from 'salvageunion-reference'
+import Modal from '../Modal'
 import { EntityDisplay } from './EntityDisplay'
 import { lookupEntityByRef } from '../../utils/referenceUtils'
 
@@ -25,20 +25,13 @@ export function EntityDisplayModal({
   const ref = hasValidData ? `${schemaName}||${entityId}` : null
   const entity = ref ? lookupEntityByRef(ref) : null
 
+  if (!hasValidData || !entity || !schemaName) {
+    return null
+  }
+
   return (
-    <DialogRoot
-      open={!!(isOpen && hasValidData && entity)}
-      onOpenChange={(e) => !e.open && onClose()}
-      size="lg"
-    >
-      <DialogContent>
-        <DialogCloseTrigger />
-        <DialogBody p={0}>
-          {entity && schemaName && (
-            <EntityDisplay schemaName={schemaName} data={entity} collapsible={false} />
-          )}
-        </DialogBody>
-      </DialogContent>
-    </DialogRoot>
+    <Modal isOpen={isOpen} onClose={onClose} title={entity.name || 'Entity Details'}>
+      <EntityDisplay schemaName={schemaName} data={entity} collapsible={false} />
+    </Modal>
   )
 }

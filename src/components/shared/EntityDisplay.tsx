@@ -50,7 +50,6 @@ interface EntityDisplayProps {
   rightLabel?: string
   schemaName: SURefSchemaName
   compact?: boolean
-  overflow?: 'hidden' | 'visible'
 }
 
 function calculateBGColor(

@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { Box, Flex, Grid, Spinner } from '@chakra-ui/react'
+import { Box, Flex, Grid, Spinner, VStack, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 
@@ -19,6 +19,8 @@ interface GridLayoutProps<T> {
   renderItem: (item: T) => ReactNode
   createButton: CreateButtonConfig
   onRetry: () => void
+  emptyStateMessage?: string
+  emptyStateIcon?: string
 }
 
 export function GridLayout<T>({
@@ -29,6 +31,8 @@ export function GridLayout<T>({
   renderItem,
   createButton,
   onRetry,
+  emptyStateMessage,
+  emptyStateIcon = '📦',
 }: GridLayoutProps<T>) {
   return (
     <Box p={8}>
@@ -76,7 +80,20 @@ export function GridLayout<T>({
           <Spinner />
         </Flex>
       )}
-      {!loading && !error && (
+      {!loading && !error && items.length === 0 && (
+        <Flex align="center" justify="center" minH="60vh">
+          <VStack gap={4}>
+            <Text fontSize="6xl">{emptyStateIcon}</Text>
+            <Text fontSize="xl" fontWeight="bold" color="su.white">
+              {emptyStateMessage || 'No items yet'}
+            </Text>
+            <Text fontSize="md" color="su.lightGrey">
+              Click the button above to create your first one!
+            </Text>
+          </VStack>
+        </Flex>
+      )}
+      {!loading && !error && items.length > 0 && (
         <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
           {items.map(renderItem)}
         </Grid>

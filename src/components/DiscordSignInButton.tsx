@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Button } from '@chakra-ui/react'
+import { Button, Flex } from '@chakra-ui/react'
 import type { ButtonProps } from '@chakra-ui/react'
 import { signInWithDiscord } from '../lib/api'
+import { DiscordIcon } from './shared/DiscordIcon'
 
 interface DiscordSignInButtonProps extends ButtonProps {
   redirectTo?: string
@@ -40,7 +41,10 @@ export function DiscordSignInButton({
       h="auto"
       {...props}
     >
-      {loading ? 'Signing in...' : 'Sign in with Discord'}
+      <Flex align="center" gap={2}>
+        <DiscordIcon />
+        {loading ? 'Signing in...' : 'Sign in with Discord'}
+      </Flex>
     </Button>
   )
 }

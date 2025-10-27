@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router'
+import { Routes, Route } from 'react-router'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { getSession, onAuthStateChange } from '../../lib/api'
 import type { User } from '@supabase/supabase-js'
-import { supabase } from '../../lib/supabase'
 import { DashboardContent } from './DashboardContent'
 import { GamesGrid } from './GamesGrid'
 import { GameShow } from './GameShow'
@@ -20,7 +19,6 @@ import { Auth } from './Auth'
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
 
   useEffect(() => {
     // Handle OAuth callback

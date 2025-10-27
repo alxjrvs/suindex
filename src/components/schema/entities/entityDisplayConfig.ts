@@ -7,7 +7,6 @@ import type { SURefSchemaName } from 'salvageunion-reference'
 interface EntityDisplayConfig {
   headerColor?: string
   actionHeaderBgColor?: string
-  actionHeaderTextColor?: string
 }
 
 /**
@@ -17,7 +16,6 @@ interface EntityDisplayConfig {
 export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefSchemaName, EntityDisplayConfig>> = {
   npcs: {
     actionHeaderBgColor: 'su.green',
-    actionHeaderTextColor: 'white',
   },
   creatures: {
     headerColor: 'su.orange',
@@ -25,15 +23,7 @@ export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefSchemaName, EntityDispl
   },
   'bio-titans': {
     actionHeaderBgColor: 'su.orange',
-    actionHeaderTextColor: 'su.white',
   },
-  drones: {},
-  vehicles: {},
-  squads: {},
-  meld: {},
-  systems: {},
-  modules: {},
-  equipment: {},
   keywords: {
     headerColor: 'su.orange',
   },
@@ -46,7 +36,6 @@ export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefSchemaName, EntityDispl
   crawlers: {
     headerColor: 'su.pink',
     actionHeaderBgColor: 'su.pink',
-    actionHeaderTextColor: 'white',
   },
   chassis: {
     headerColor: 'su.green',
