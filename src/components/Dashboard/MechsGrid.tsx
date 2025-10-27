@@ -10,6 +10,7 @@ export function MechsGrid() {
       createButtonLabel="New Mech"
       createButtonBgColor="su.green"
       createButtonColor="su.white"
+      emptyStateMessage="No mechs yet"
       renderCard={(mech, onClick) => {
         const chassisName = mech.chassis_id ? getChassisNameById(mech.chassis_id) : 'No Chassis'
 

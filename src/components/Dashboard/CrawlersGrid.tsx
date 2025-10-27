@@ -13,6 +13,7 @@ export function CrawlersGrid() {
       createButtonLabel="New Crawler"
       createButtonBgColor="su.crawlerPink"
       createButtonColor="su.white"
+      emptyStateMessage="No crawlers yet"
       renderCard={(crawler, onClick) => {
         const crawlerTypeName = crawler.crawler_type_id
           ? getCrawlerNameById(crawler.crawler_type_id)

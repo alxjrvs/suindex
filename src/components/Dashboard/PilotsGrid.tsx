@@ -10,6 +10,7 @@ export function PilotsGrid() {
       createButtonLabel="New Pilot"
       createButtonBgColor="su.orange"
       createButtonColor="su.white"
+      emptyStateMessage="No pilots yet"
       renderCard={(pilot, onClick) => {
         const className = pilot.class_id ? getClassNameById(pilot.class_id) : null
         const currentHP = pilot.current_damage ?? 0

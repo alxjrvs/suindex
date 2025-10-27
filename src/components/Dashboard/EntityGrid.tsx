@@ -22,7 +22,6 @@ interface EntityGridConfig<T extends ValidTable> {
   /** Empty state message */
   emptyStateMessage?: string
   /** Empty state icon */
-  emptyStateIcon?: string
 }
 
 /**
@@ -37,7 +36,6 @@ export function EntityGrid<T extends ValidTable>({
   createButtonColor,
   renderCard,
   emptyStateMessage,
-  emptyStateIcon,
 }: EntityGridConfig<T>) {
   const navigate = useNavigate()
 
@@ -79,6 +77,7 @@ export function EntityGrid<T extends ValidTable>({
         isLoading: isCreating,
       }}
       onRetry={reload}
+      emptyStateMessage={emptyStateMessage}
     />
   )
 }
