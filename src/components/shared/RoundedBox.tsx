@@ -29,7 +29,7 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   bodyPadding?: number | string
   /** Optional click handler for the header */
   onHeaderClick?: () => void
-  /** Optional cursor style for the header */
+  /** Optional cursor style for the header (defaults to 'pointer' if onHeaderClick is provided, otherwise 'default') */
   headerCursor?: 'pointer' | 'default'
   /** Optional test ID for the header container */
   headerTestId?: string
@@ -50,7 +50,7 @@ export function RoundedBox({
   headerPadding,
   bodyPadding,
   onHeaderClick,
-  headerCursor = 'default',
+  headerCursor,
   headerTestId,
   ...flexProps
 }: RoundedBoxProps) {
@@ -60,6 +60,8 @@ export function RoundedBox({
   const actualBorderColor = disabled ? 'blackAlpha.400' : 'black'
 
   const hasHeader = title || leftContent || rightContent
+  // Infer cursor from presence of onHeaderClick if not explicitly set
+  const actualHeaderCursor = headerCursor ?? (onHeaderClick ? 'pointer' : 'default')
 
   return (
     <Flex
@@ -83,7 +85,7 @@ export function RoundedBox({
           p={headerPadding ?? 4}
           gap={4}
           pb={2}
-          cursor={headerCursor}
+          cursor={actualHeaderCursor}
           onClick={onHeaderClick}
           alignItems="flex-start"
         >

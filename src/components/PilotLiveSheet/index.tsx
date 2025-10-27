@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Flex, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -12,6 +12,7 @@ import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
 import { usePilotLiveSheetState } from './usePilotLiveSheetState'
+import { DeleteEntity } from '../shared/DeleteEntity'
 
 interface PilotLiveSheetProps {
   id?: string
@@ -37,6 +38,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
     handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
+    deleteEntity,
     updateEntity,
     loading,
     error,
@@ -169,6 +171,17 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         equipment={allEquipment}
         onSelectEquipment={handleAddEquipment}
       />
+
+      {/* Delete Button - Only show when editing existing entity */}
+      {id && (
+        <Box mt={6}>
+          <DeleteEntity
+            entityName="Pilot"
+            onConfirmDelete={deleteEntity}
+            disabled={!id || hasPendingChanges}
+          />
+        </Box>
+      )}
     </LiveSheetLayout>
   )
 }

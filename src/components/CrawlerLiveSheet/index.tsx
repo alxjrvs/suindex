@@ -12,6 +12,7 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { CrawlerControlBar } from './CrawlerControlBar'
 import { useCrawlerLiveSheetState } from './useCrawlerLiveSheetState'
 import { CrawlerNPC } from './CrawlerNPC'
+import { DeleteEntity } from '../shared/DeleteEntity'
 
 interface CrawlerLiveSheetProps {
   id?: string
@@ -34,6 +35,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     handleAddCargo,
     handleRemoveCargo,
     updateEntity,
+    deleteEntity,
     loading,
     error,
     hasPendingChanges,
@@ -69,8 +71,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
   }
 
   // Separate storage bay from other bays
-  const storageBay = (crawler.bays ?? []).find((bay) => bay.bayId === 'storage-bay')
-  const regularBays = (crawler.bays ?? []).filter((bay) => bay.bayId !== 'storage-bay')
+  const storageBay = (crawler.bays ?? []).find((bay) => bay.name === 'Storage Bay')
+  const regularBays = (crawler.bays ?? []).filter((bay) => bay.name !== 'Storage Bay')
 
   return (
     <LiveSheetLayout>
@@ -162,6 +164,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
             borderWidth={4}
             placeholder="Add notes about your crawler..."
             disabled={!selectedCrawlerType}
+            h="500px"
           />
           {/* Cargo Bay */}
         </VStack>
@@ -175,6 +178,11 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
         {/* Notes */}
       </Grid>
+      <DeleteEntity
+        entityName="Crawler"
+        onConfirmDelete={deleteEntity}
+        disabled={!id || hasPendingChanges}
+      />
 
       {/* Cargo Modal */}
       <CargoModal

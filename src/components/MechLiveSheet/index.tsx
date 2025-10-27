@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { SystemModuleSelector } from './SystemModuleSelector'
 import { ChassisSelector } from './ChassisSelector'
@@ -18,6 +18,7 @@ import { QuirkInput } from './QuirkInput'
 import { AppearanceInput } from './AppearanceInput'
 import { PilotInfo } from './PilotInfo'
 import { StatDisplay } from '../StatDisplay'
+import { DeleteEntity } from '../shared/DeleteEntity'
 
 interface MechLiveSheetProps {
   id?: string
@@ -41,10 +42,12 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     handleRemoveModule,
     handleAddCargo,
     handleRemoveCargo,
+    deleteEntity,
     updateEntity,
     loading,
     totalSalvageValue,
     error,
+    hasPendingChanges,
   } = useMechLiveSheetState(id)
 
   const allChassis = SalvageUnionReference.Chassis.all()
@@ -233,6 +236,17 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         maxCargo={stats?.cargoCap || 0}
         currentCargo={totalCargo}
       />
+
+      {/* Delete Button - Only show when editing existing entity */}
+      {id && (
+        <Box mt={6}>
+          <DeleteEntity
+            entityName="Mech"
+            onConfirmDelete={deleteEntity}
+            disabled={!id || hasPendingChanges}
+          />
+        </Box>
+      )}
     </LiveSheetLayout>
   )
 }

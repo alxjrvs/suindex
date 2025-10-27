@@ -49,6 +49,7 @@ export function BayCard({
           disabled={disabled}
         />
       }
+      h="full"
     >
       <Box position="relative" w="full">
         {bay.damaged && referenceBay?.damagedEffect && (
@@ -69,7 +70,7 @@ export function BayCard({
         <VStack gap={2} alignItems="stretch" w="full">
           <Box opacity={bay.damaged ? 0.5 : 1} transition="opacity 0.3s ease">
             <NPCCard
-              npc={bay.npc!}
+              npc={bay.npc}
               choices={crawler.choices}
               referenceBay={referenceBay!}
               description={referenceBay?.npc.description || ''}

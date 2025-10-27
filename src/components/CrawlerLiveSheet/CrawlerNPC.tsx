@@ -16,19 +16,22 @@ export function CrawlerNPC({
   crawlerRef: SURefCrawler | undefined
   disabled?: boolean
 }) {
+  console.log()
   return (
     <RoundedBox bg="bg.builder.crawler" title="NPC" disabled={disabled} w="full">
-      <NPCCard
-        npc={crawler.npc!}
-        choices={crawler.choices}
-        description={crawlerRef?.npc.description || ''}
-        maxHP={crawlerRef?.npc.hitPoints || 0}
-        referenceBay={crawlerRef}
-        onUpdateBay={onUpdate}
-        onUpdateChoice={onUpdateChoice}
-        position={crawlerRef?.npc.position || 'NPC'}
-        disabled={!crawlerRef}
-      />
+      {crawler.npc && (
+        <NPCCard
+          npc={crawler.npc}
+          choices={crawler.choices}
+          description={crawlerRef?.npc.description || ''}
+          maxHP={crawlerRef?.npc.hitPoints || 0}
+          referenceBay={crawlerRef}
+          onUpdateBay={onUpdate}
+          onUpdateChoice={onUpdateChoice}
+          position={crawlerRef?.npc.position || 'NPC'}
+          disabled={!crawlerRef}
+        />
+      )}
     </RoundedBox>
   )
 }

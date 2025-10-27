@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react'
+import { useNavigate } from 'react-router'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { PilotLiveSheetState, AdvancedClassOption } from './types'
 import { getAbilityCost } from './utils/getAbilityCost'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
+import { deleteEntity as deleteEntityAPI } from '../../lib/api'
 
 const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
   user_id: '',
@@ -30,6 +32,7 @@ const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
 }
 
 export function usePilotLiveSheetState(id?: string) {
+  const navigate = useNavigate()
   const allCoreClasses = SalvageUnionReference.CoreClasses.all()
   const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
   const allHybridClasses = SalvageUnionReference.HybridClasses.all()
@@ -285,6 +288,18 @@ export function usePilotLiveSheetState(id?: string) {
     [pilot.equipment, allEquipment, updateEntity]
   )
 
+  const handleDeleteEntity = useCallback(async () => {
+    if (!id) return
+
+    try {
+      await deleteEntityAPI('pilots', id)
+      navigate('/dashboard/pilots')
+    } catch (error) {
+      console.error('Error deleting pilot:', error)
+      throw error
+    }
+  }, [id, navigate])
+
   return {
     pilot,
     selectedClass,
@@ -297,6 +312,7 @@ export function usePilotLiveSheetState(id?: string) {
     handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
+    deleteEntity: handleDeleteEntity,
     updateEntity,
     loading,
     error,

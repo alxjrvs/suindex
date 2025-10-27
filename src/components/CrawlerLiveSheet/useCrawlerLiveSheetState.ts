@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { CrawlerLiveSheetState, CrawlerBay } from './types'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
+import { deleteEntity as deleteEntityAPI } from '../../lib/api'
 
 const INITIAL_techLevel = 1
 const MAX_UPGRADE = 25
@@ -34,6 +36,7 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
 }
 
 export function useCrawlerLiveSheetState(id?: string) {
+  const navigate = useNavigate()
   const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
   const allBays = SalvageUnionReference.CrawlerBays.all()
   const allCrawlers = SalvageUnionReference.Crawlers.all()
@@ -90,6 +93,7 @@ export function useCrawlerLiveSheetState(id?: string) {
   const maxSP = useMemo(() => {
     return currentTechLevel?.structurePoints || 20
   }, [currentTechLevel])
+  console.log('maxSP', maxSP)
 
   const upkeep = useMemo(() => {
     return `5 TL${crawler.tech_level}`
@@ -212,6 +216,18 @@ export function useCrawlerLiveSheetState(id?: string) {
     [crawler.choices, updateEntity]
   )
 
+  const handleDeleteEntity = useCallback(async () => {
+    if (!id) return
+
+    try {
+      await deleteEntityAPI('crawlers', id)
+      navigate('/dashboard/crawlers')
+    } catch (error) {
+      console.error('Error deleting crawler:', error)
+      throw error
+    }
+  }, [id, navigate])
+
   return {
     crawler,
     selectedCrawlerType,
@@ -223,6 +239,7 @@ export function useCrawlerLiveSheetState(id?: string) {
     handleUpdateBay,
     handleAddCargo,
     handleRemoveCargo,
+    deleteEntity: handleDeleteEntity,
     updateEntity,
     loading,
     error,
