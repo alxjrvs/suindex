@@ -40,18 +40,21 @@ interface EntityDisplayProps {
   dimmed?: boolean
   disableRemove?: boolean
   onRemove?: () => void
+  removeConfirmMessage?: string
   collapsible?: boolean
   defaultExpanded?: boolean
   expanded?: boolean
   onToggleExpanded?: () => void
   showSelectButton?: boolean
   selectButtonText?: string
+  label?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
   schemaName: SURefSchemaName
 }
 
 export function EntityDisplay({
   data,
+  label,
   headerColor,
   actionHeaderBgColor,
   actionHeaderTextColor,
@@ -60,6 +63,7 @@ export function EntityDisplay({
   dimmed = false,
   disableRemove = false,
   onRemove,
+  removeConfirmMessage,
   collapsible = false,
   defaultExpanded = true,
   expanded,
@@ -89,10 +93,9 @@ export function EntityDisplay({
   const abilities = extractAbilities(data)
 
   // Detect entity type from data properties
-  const hasSlots = 'slotsRequired' in data
-  const isModule = hasSlots && 'recommended' in data
-  const isSystem = hasSlots && ('statBonus' in data || 'table' in data)
-  const isEquipment = hasSlots && !isModule && !isSystem
+  const isModule = schemaName === 'modules'
+  const isSystem = schemaName === 'systems'
+  const isEquipment = schemaName === 'equipment'
   const headerDescription = !isEquipment && !isModule && !isSystem
 
   // Expansion state management (from Frame)
@@ -168,9 +171,11 @@ export function EntityDisplay({
             e.stopPropagation()
             if (disableRemove) return
 
-            const confirmed = window.confirm(
+            const message =
+              removeConfirmMessage ||
               `Are you sure you want to remove "${header}"?\n\nThis will cost 1 TP.`
-            )
+
+            const confirmed = window.confirm(message)
 
             if (confirmed) {
               onRemove()
@@ -220,6 +225,7 @@ export function EntityDisplay({
       onHeaderClick={handleHeaderClick}
       headerCursor={headerCursorStyle}
       headerTestId="frame-header-container"
+      label={label}
     >
       {/* Body with sidebar and content */}
       {(!collapsible || isExpanded) && (
@@ -250,6 +256,8 @@ export function EntityDisplay({
             gap={6}
             alignItems="stretch"
             justifyContent={contentJustify}
+            overflow="hidden"
+            minW="0"
           >
             {/* Notes */}
             {notes && (
@@ -261,6 +269,9 @@ export function EntityDisplay({
                 wordBreak="break-word"
                 overflowWrap="break-word"
                 whiteSpace="normal"
+                overflow="hidden"
+                maxW="100%"
+                fontSize="sm"
               >
                 {notes}
               </Text>
@@ -275,6 +286,9 @@ export function EntityDisplay({
                 wordBreak="break-word"
                 overflowWrap="break-word"
                 whiteSpace="normal"
+                overflow="hidden"
+                maxW="100%"
+                fontSize="sm"
               >
                 {description}
               </Text>

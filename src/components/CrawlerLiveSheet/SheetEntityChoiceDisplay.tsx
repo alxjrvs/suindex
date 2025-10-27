@@ -4,7 +4,6 @@ import type { SURefSchemaName } from 'salvageunion-reference'
 import { getModel } from '../../utils/modelMap'
 import { EntityDisplay } from '../shared/EntityDisplay'
 import { EntitySelectionModal } from '../shared/EntitySelectionModal'
-import { SheetDisplay } from '../shared/SheetDisplay'
 
 type CrawlerAbilityChoice = {
   id: string
@@ -61,7 +60,7 @@ export function SheetEntityChoiceDisplay({
     const entity = model.find((e) => e.id === entityId)
     if (!entity) return null
 
-    return { entity, schemaName: singularToPlural[schemaName] }
+    return { entity, schemaName: modelKey }
   }, [selectedValue])
 
   // Convert schema to schema names for the modal
@@ -99,7 +98,6 @@ export function SheetEntityChoiceDisplay({
   }, [choice.schema])
 
   const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
-    // THIS IS NOT BEING SET, ALEX. SCHEMA NAME IS BLANK FOR BAYS. FIGURE IT OUT SMART GUY!
     onUpdateChoice(choice.id, `${schemaName}||${entityId}`)
     setIsModalOpen(false)
   }
@@ -108,22 +106,28 @@ export function SheetEntityChoiceDisplay({
     onUpdateChoice(choice.id, undefined)
   }
 
+  const entityName =
+    selectedEntity?.entity && 'name' in selectedEntity.entity
+      ? selectedEntity.entity.name
+      : choice.name
+
   return (
     <>
-      <SheetDisplay label={choice.name} value={choice.description}>
-        {!selectedEntity ? (
-          <Button onClick={() => setIsModalOpen(true)} w="full" mt={2}>
-            Select {choice.name}
-          </Button>
-        ) : (
-          <EntityDisplay
-            schemaName={selectedEntity.schemaName as SURefSchemaName}
-            onRemove={handleRemove}
-            data={selectedEntity.entity}
-            defaultExpanded={false}
-          />
-        )}
-      </SheetDisplay>
+      {!selectedEntity ? (
+        <Button onClick={() => setIsModalOpen(true)} w="full" mt={2}>
+          Select {choice.name}
+        </Button>
+      ) : (
+        <EntityDisplay
+          schemaName={selectedEntity.schemaName as SURefSchemaName}
+          onRemove={handleRemove}
+          removeConfirmMessage={`Are you sure you want to remove "${entityName}"?`}
+          data={selectedEntity.entity}
+          collapsible
+          label={choice.name}
+          defaultExpanded={false}
+        />
+      )}
 
       <EntitySelectionModal
         isOpen={isModalOpen}

@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor } from '../../test/chakra-utils'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ItemShowPage from '../ItemShowPage'
 import { getSchemaCatalog } from 'salvageunion-reference'
 
@@ -23,13 +22,7 @@ describe('ItemShowPage', () => {
 
   describe('Item Display', () => {
     it('should render item details', async () => {
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<ItemShowPage schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<ItemShowPage schemas={schemas} />)
 
       await waitFor(() => {
         // Should display the Mule chassis name
@@ -38,13 +31,7 @@ describe('ItemShowPage', () => {
     })
 
     it('should render back button', async () => {
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<ItemShowPage schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<ItemShowPage schemas={schemas} />)
 
       await waitFor(() => {
         const backButton = screen.getByRole('button', { name: /back/i })
@@ -53,13 +40,7 @@ describe('ItemShowPage', () => {
     })
 
     it('should render footer', async () => {
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<ItemShowPage schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<ItemShowPage schemas={schemas} />)
 
       await waitFor(() => {
         const footer = document.querySelector('footer')
@@ -72,13 +53,7 @@ describe('ItemShowPage', () => {
     it('should display loading state initially', () => {
       // This test is difficult to catch because the component loads very fast
       // Just verify the component renders without crashing
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<ItemShowPage schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<ItemShowPage schemas={schemas} />)
 
       // Component should render (either loading or loaded state)
       expect(document.body).toBeInTheDocument()

@@ -1,6 +1,7 @@
 import { Flex, type FlexProps } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import type { ReactNode } from 'react'
+import { Text } from '../base/Text'
 
 interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderColor'> {
   /** Background color token (e.g., 'bg.builder.pilot', 'su.orange', 'su.green') */
@@ -33,9 +34,11 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   headerCursor?: 'pointer' | 'default'
   /** Optional test ID for the header container */
   headerTestId?: string
+  label?: string
 }
 
 export function RoundedBox({
+  label,
   bg,
   headerBg,
   title,
@@ -79,6 +82,18 @@ export function RoundedBox({
       flexShrink={0}
       {...flexProps}
     >
+      {label && (
+        <Text
+          position="absolute"
+          variant="pseudoheader"
+          fontSize="sm"
+          textTransform="uppercase"
+          ml={3}
+          mt={-2}
+        >
+          {label}
+        </Text>
+      )}
       {hasHeader && (
         <Flex
           direction="row"
