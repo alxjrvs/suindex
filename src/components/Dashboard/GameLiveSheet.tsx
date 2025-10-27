@@ -478,55 +478,48 @@ export function GameLiveSheet() {
           )}
         </RoundedBox>
 
-        {/* Right: Members + Invites */}
-        <VStack gridColumn={{ base: '1', lg: '3' }} gap={4} align="stretch">
-          <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
-            <Heading level="h2" mb={3}>
-              Members
-            </Heading>
+        {/* Row 2: Members and Invites Stack */}
+        <VStack gridColumn={{ base: '1 / -1', md: 'span 1' }} gap={4} align="stretch">
+          {/* Members */}
+          <RoundedBox bg="su.lightBlue" title="Members">
             {gameWithRelationships.members.length === 0 ? (
-              <Text color="su.brick">No members in this game yet.</Text>
+              <Text color="su.brick" p={4}>
+                No members in this game yet.
+              </Text>
             ) : (
-              <VStack gap={3} align="stretch">
+              <VStack gap={2} align="stretch" p={4}>
                 {gameWithRelationships.members.map((member) => (
                   <Flex
                     key={member.user_id}
                     align="center"
                     justify="space-between"
-                    p={3}
-                    bg="su.lightOrange"
-                    borderRadius="lg"
+                    p={2}
+                    bg="su.white"
+                    borderRadius="md"
                   >
                     <Box>
-                      <Text fontWeight="medium" color="su.black">
+                      <Text fontWeight="medium" color="su.black" fontSize="sm">
                         {member.user_name ||
                           member.user_email ||
                           `User ${member.user_id.slice(0, 8)}`}
                       </Text>
-                      {member.user_email && (
-                        <Text fontSize="sm" color="su.brick">
-                          {member.user_email}
-                        </Text>
-                      )}
                     </Box>
-                    <Box>
-                      <Box
-                        px={3}
-                        py={1}
-                        borderRadius="full"
-                        fontSize="sm"
-                        fontWeight="medium"
-                        bg={member.role === 'mediator' ? 'su.brick' : 'su.green'}
-                        color="su.white"
-                      >
-                        {member.role.toUpperCase()}
-                      </Box>
+                    <Box
+                      px={2}
+                      py={1}
+                      borderRadius="full"
+                      fontSize="xs"
+                      fontWeight="medium"
+                      bg={member.role === 'mediator' ? 'su.brick' : 'su.green'}
+                      color="su.white"
+                    >
+                      {member.role.toUpperCase()}
                     </Box>
                   </Flex>
                 ))}
               </VStack>
             )}
-          </Box>
+          </RoundedBox>
 
           {isMediator && (
             <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
