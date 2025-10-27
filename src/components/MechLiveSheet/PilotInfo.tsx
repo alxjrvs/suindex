@@ -6,7 +6,7 @@ import { LinkButton } from '../shared/LinkButton'
 import { useEntityRelationships } from '../../hooks/useEntityRelationships'
 import { fetchEntity } from '../../lib/api'
 import { getClassNameById } from '../../utils/referenceDataHelpers'
-import type { Tables } from '../../types/database'
+import type { Tables } from '../../types/database-generated.types'
 import { DiscordSignInButton } from '../DiscordSignInButton'
 
 type PilotRow = Tables<'pilots'>

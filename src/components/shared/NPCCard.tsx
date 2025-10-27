@@ -6,31 +6,41 @@ import NumericStepper from '../NumericStepper'
 import { Text } from '../base/Text'
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
+import type { CrawlerBay, CrawlerLiveSheetState } from '../CrawlerLiveSheet/types'
+import { rollTable } from '@randsum/salvageunion'
 
 export function NPCCard({
-  onUpdateName,
   position,
-  onUpdateNotes,
+  choices,
   description,
+  referenceBay,
   npc,
   maxHP,
-  onUpdateDamage,
   tilted = false,
   disabled = false,
+  onUpdateChoice,
+  onUpdateBay,
 }: {
+  choices: CrawlerLiveSheetState['choices']
   npc: CrawlerNPC
-  onUpdateName: (value: string) => void
+  referenceBay:
+    | { npc: { choices: { id: string; name: string; description: string }[] } }
+    | undefined
+  onUpdateBay: (updates: Partial<CrawlerBay>) => void
+  onUpdateChoice: (id: string, value: string) => void
   position: string
   description: string
   maxHP: number
-  onUpdateNotes: (value: string) => void
-  onUpdateDamage: (value: number) => void
   tilted?: boolean
+
   disabled?: boolean
 }) {
   const textRef = useRef<HTMLParagraphElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [fontSize, setFontSize] = useState(16)
+  const onUpdateDamage = (value: number) => onUpdateBay({ npc: { ...npc!, damage: value } })
+  const onUpdateName = (value: string) => onUpdateBay({ npc: { ...npc!, name: value } })
+  const onUpdateNotes = (value: string) => onUpdateBay({ npc: { ...npc!, notes: value } })
 
   useEffect(() => {
     const adjustFontSize = () => {
@@ -117,6 +127,22 @@ export function NPCCard({
           disabled={disabled}
         />
       </Box>
+      {referenceBay?.npc.choices?.map((choice) => (
+        <SheetInput
+          key={choice.id}
+          label={choice.name}
+          placeholder={choice.description}
+          onDiceRoll={() => {
+            const {
+              result: { label },
+            } = rollTable(choice.name)
+            onUpdateChoice(choice.id, label)
+          }}
+          value={(choices as Record<string, string> | null)?.[choice.id] || ''}
+          onChange={(value) => onUpdateChoice(choice.id, value)}
+          disabled={disabled}
+        />
+      ))}
 
       <Box
         transform={tilted ? `rotate(${notesRotation}deg)` : undefined}

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
-import type { TablesInsert } from '../types/database'
+import type { TablesInsert } from '../types/database-generated.types'
 import type { ValidTable } from '../types/common'
 import { getUser, createEntity as createEntityAPI } from '../lib/api'
 

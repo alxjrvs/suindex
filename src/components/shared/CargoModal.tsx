@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react'
 import Modal from '../Modal'
-import { generateRandomLightColor } from '../../utils/colorUtils'
+import { generateUniqueColor } from '../../utils/colorUtils'
+import type { CargoItem } from '../../types/common'
 
 interface CargoModalProps {
   isOpen: boolean
   onClose: () => void
   onAdd: (amount: number, description: string, color: string) => void
+  existingCargo?: CargoItem[] // Optional - existing cargo items to avoid color duplication
   maxCargo?: number // Optional - if provided, shows amount input and tracking
   currentCargo?: number // Optional - if provided, shows available cargo
   backgroundColor?: string // For different builder colors
@@ -16,6 +18,7 @@ export function CargoModal({
   isOpen,
   onClose,
   onAdd,
+  existingCargo = [],
   maxCargo,
   currentCargo = 0,
   backgroundColor,
@@ -31,7 +34,10 @@ export function CargoModal({
 
   const handleSubmit = () => {
     if (isValid) {
-      const color = generateRandomLightColor()
+      // Get all currently used colors
+      const usedColors = existingCargo.map((item) => item.color)
+      // Generate a unique color that hasn't been used
+      const color = generateUniqueColor(usedColors)
       onAdd(hasCargoTracking ? amount : 1, description, color)
       setAmount(0)
       setDescription('')

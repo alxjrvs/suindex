@@ -7,7 +7,14 @@ import prettier from 'eslint-config-prettier'
 
 export default [
   {
-    ignores: ['dist', 'node_modules', '.git', 'coverage', 'build'],
+    ignores: [
+      'dist',
+      'node_modules',
+      '.git',
+      'coverage',
+      'build',
+      'src/types/database-generated.types.ts',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

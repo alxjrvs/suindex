@@ -3,7 +3,7 @@ import { SheetSelect } from './SheetSelect'
 import { ControlBarContainer } from './ControlBarContainer'
 import { LinkButton } from './LinkButton'
 import { useEntityRelationships } from '../../hooks/useEntityRelationships'
-import type { Database } from '../../types/database'
+import type { Database } from '../../types/database-generated.types'
 
 type TableName = keyof Database['public']['Tables']
 

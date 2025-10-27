@@ -229,6 +229,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         isOpen={isCargoModalOpen}
         onClose={() => setIsCargoModalOpen(false)}
         onAdd={handleAddCargo}
+        existingCargo={mech.cargo ?? []}
         maxCargo={stats?.cargoCap || 0}
         currentCargo={totalCargo}
       />

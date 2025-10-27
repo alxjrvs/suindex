@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { Tables } from '../types/database'
+import type { Tables } from '../types/database-generated.types'
 import {
   getUser,
   fetchGame,

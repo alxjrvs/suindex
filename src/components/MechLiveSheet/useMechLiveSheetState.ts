@@ -19,6 +19,7 @@ const INITIAL_MECH_STATE: MechLiveSheetState = {
   current_ep: 0,
   current_heat: 0,
   notes: null,
+  choices: null,
 }
 
 export function useMechLiveSheetState(id?: string) {

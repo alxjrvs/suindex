@@ -28,6 +28,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     upkeep,
     maxSP,
     maxUpgrade,
+    handleUpdateChoice,
     handleCrawlerTypeChange,
     handleUpdateBay,
     handleAddCargo,
@@ -117,6 +118,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         <CrawlerNPC
           crawler={crawler}
           onUpdate={updateEntity}
+          onUpdateChoice={(choiceId, value) => handleUpdateChoice(choiceId, value)}
           crawlerRef={selectedCrawlerType}
           disabled={!selectedCrawlerType}
         />
@@ -130,7 +132,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
               crawler={crawler}
               key={bay.id}
               bay={bay}
-              onUpdate={(updates) => handleUpdateBay(bay.id, updates)}
+              onUpdateChoice={(id, value) => handleUpdateChoice(id, value)}
+              onUpdateBay={(updates) => handleUpdateBay(bay.id, updates)}
               disabled={!selectedCrawlerType}
             />
           ))}
@@ -146,7 +149,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
             <BayCard
               crawler={crawler}
               bay={storageBay}
-              onUpdate={(updates) => handleUpdateBay(storageBay.id, updates)}
+              onUpdateChoice={(id, value) => handleUpdateChoice(id, value)}
+              onUpdateBay={(updates) => handleUpdateBay(storageBay.id, updates)}
               disabled={!selectedCrawlerType}
             />
           )}
@@ -177,6 +181,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         isOpen={isCargoModalOpen}
         onClose={() => setIsCargoModalOpen(false)}
         onAdd={handleAddCargo}
+        existingCargo={crawler.cargo ?? []}
         backgroundColor="bg.builder.crawler"
       />
     </LiveSheetLayout>

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import type { Tables } from '../../types/database'
+import type { Tables } from '../../types/database-generated.types'
 import { CrawlerGridCard } from './CrawlerGridCard'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
 import { useCreateEntity } from '../../hooks/useCreateEntity'

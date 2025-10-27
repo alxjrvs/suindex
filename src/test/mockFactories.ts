@@ -1,4 +1,4 @@
-import type { Tables } from '../types/database'
+import type { Tables } from '../types/database-generated.types'
 import type { User } from '@supabase/supabase-js'
 
 /**
@@ -44,6 +44,7 @@ export function createMockMech(overrides?: Partial<Tables<'mechs'>>): Tables<'me
     quirk: null,
     notes: null,
     cargo: null,
+    choices: null,
     systems: null,
     modules: null,
     pilot_id: null,
@@ -94,6 +95,7 @@ export function createMockPilot(overrides?: Partial<Tables<'pilots'>>): Tables<'
     motto: null,
     motto_used: null,
     notes: null,
+    choices: null,
     crawler_id: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -136,6 +138,7 @@ export function createMockCrawler(overrides?: Partial<Tables<'crawlers'>>): Tabl
     notes: null,
     bays: null,
     cargo: null,
+    choices: null,
     npc: null,
     upgrade: null,
     game_id: null,

@@ -1,4 +1,4 @@
-import type { Database } from './database'
+import type { Database } from './database-generated.types'
 
 export interface DataValue {
   value: string | number

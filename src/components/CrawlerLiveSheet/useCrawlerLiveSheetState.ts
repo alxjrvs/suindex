@@ -24,6 +24,7 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
   bays: [],
   cargo: [],
   notes: null,
+  choices: null,
   npc: {
     name: '',
     notes: '',
@@ -199,12 +200,25 @@ export function useCrawlerLiveSheetState(id?: string) {
     [crawler.cargo, updateEntity]
   )
 
+  const handleUpdateChoice = useCallback(
+    (choiceId: string, value: string) => {
+      updateEntity({
+        choices: {
+          ...((crawler.choices as Record<string, string>) ?? {}),
+          [choiceId]: value,
+        },
+      })
+    },
+    [crawler.choices, updateEntity]
+  )
+
   return {
     crawler,
     selectedCrawlerType,
     upkeep,
     maxSP,
     maxUpgrade: MAX_UPGRADE,
+    handleUpdateChoice,
     handleCrawlerTypeChange,
     handleUpdateBay,
     handleAddCargo,

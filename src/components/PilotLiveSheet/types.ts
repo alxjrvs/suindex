@@ -1,4 +1,4 @@
-import type { Tables } from '../../types/database'
+import type { Tables } from '../../types/database-generated.types'
 
 export interface AdvancedClassOption {
   id: string

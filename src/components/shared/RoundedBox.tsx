@@ -127,7 +127,6 @@ export function RoundedBox({
           justifyContent={justifyContent}
           w="full"
           p={bodyPadding ?? 4}
-          pt={0}
           flex="1"
         >
           {children}
