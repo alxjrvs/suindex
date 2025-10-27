@@ -123,6 +123,7 @@ export function SheetEntityChoiceDisplay({
           onRemove={handleRemove}
           removeConfirmMessage={`Are you sure you want to remove "${entityName}"?`}
           data={selectedEntity.entity}
+          compact
           collapsible
           label={choice.name}
           defaultExpanded={false}

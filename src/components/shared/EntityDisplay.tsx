@@ -38,6 +38,7 @@ interface EntityDisplayProps {
   children?: ReactNode
   onClick?: () => void
   dimmed?: boolean
+  disabled?: boolean
   disableRemove?: boolean
   onRemove?: () => void
   removeConfirmMessage?: string
@@ -50,6 +51,7 @@ interface EntityDisplayProps {
   label?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
   schemaName: SURefSchemaName
+  compact?: boolean
 }
 
 export function EntityDisplay({
@@ -61,6 +63,7 @@ export function EntityDisplay({
   children,
   onClick,
   dimmed = false,
+  disabled = false,
   disableRemove = false,
   onRemove,
   removeConfirmMessage,
@@ -72,6 +75,7 @@ export function EntityDisplay({
   selectButtonText,
   contentJustify = 'flex-start',
   schemaName,
+  compact = false,
 }: EntityDisplayProps) {
   // Convert schemaName to entityName for helper functions
   const entityName = schemaNameToEntityName(schemaName)
@@ -110,7 +114,9 @@ export function EntityDisplay({
   }
 
   // Styling (from Frame)
-  const backgroundColor = headerColor || (techLevel ? techLevelColors[techLevel] : 'su.orange')
+  const backgroundColor = disabled
+    ? 'su.grey'
+    : headerColor || (techLevel ? techLevelColors[techLevel] : 'su.orange')
   const opacityValue = dimmed ? 0.5 : 1
 
   // Click handling for header only
@@ -134,17 +140,17 @@ export function EntityDisplay({
   // Build left content (expand icon + level)
   const leftContentElement = (
     <>
-      {techLevel && <StatDisplay label="TL" value={techLevel} />}
-      {level && <StatDisplay label="LVL" value={level} />}
+      {techLevel && <StatDisplay label="TL" value={techLevel} compact={compact} />}
+      {level && <StatDisplay label="LVL" value={level} compact={compact} />}
     </>
   )
 
   // Build title content (header + details)
   const subTitleContentElement = header ? (
-    <DetailsList textColor="su.white" values={details} />
+    <DetailsList textColor="su.white" values={details} compact={compact} />
   ) : undefined
 
-  // Build right content (description + stats + remove button)
+  // Build right content (description + stats + collapsible indicator)
   const rightContentElement = (
     <Flex alignItems="center" gap={2} alignSelf="center" maxW="50%" mt={2}>
       {description && headerDescription && (
@@ -165,41 +171,6 @@ export function EntityDisplay({
           <StatList stats={stats} />
         </Box>
       )}
-      {onRemove && (
-        <Button
-          onClick={(e) => {
-            e.stopPropagation()
-            if (disableRemove) return
-
-            const message =
-              removeConfirmMessage ||
-              `Are you sure you want to remove "${header}"?\n\nThis will cost 1 TP.`
-
-            const confirmed = window.confirm(message)
-
-            if (confirmed) {
-              onRemove()
-            }
-          }}
-          disabled={disableRemove}
-          bg="su.brick"
-          color="su.white"
-          px={3}
-          py={1}
-          borderRadius="md"
-          fontWeight="bold"
-          _hover={{ bg: 'su.black' }}
-          fontSize="sm"
-          _disabled={{
-            opacity: 0.5,
-            cursor: 'not-allowed',
-            _hover: { bg: 'su.brick' },
-          }}
-          aria-label="Remove ability"
-        >
-          ✕
-        </Button>
-      )}
       {collapsible && (
         <Flex alignItems="center" justifyContent="center" minW="25px" alignSelf="center">
           <Text color="su.white" fontSize="lg">
@@ -212,6 +183,7 @@ export function EntityDisplay({
 
   return (
     <RoundedBox
+      compact={compact}
       bg="su.lightBlue"
       headerBg={backgroundColor}
       w="full"
@@ -220,46 +192,66 @@ export function EntityDisplay({
       title={header}
       subTitleContent={subTitleContentElement}
       rightContent={rightContentElement}
-      headerPadding={3}
+      headerPadding={compact ? 2 : 3}
       bodyPadding={0}
       onHeaderClick={handleHeaderClick}
       headerCursor={headerCursorStyle}
       headerTestId="frame-header-container"
       label={label}
     >
-      {/* Body with sidebar and content */}
       {(!collapsible || isExpanded) && (
         <Flex bg={backgroundColor} w="full">
           {/* Sidebar */}
-          {sidebar.showSidebar && (sidebar.slotsRequired || sidebar.salvageValue) && (
+          {!compact && sidebar.showSidebar && (sidebar.slotsRequired || sidebar.salvageValue) && (
             <VStack
               alignItems="center"
               justifyContent="flex-start"
               pb={3}
               pt={3}
               gap={3}
-              minW="80px"
-              maxW="80px"
+              minW={'80px'}
+              maxW={'80px'}
               bg={backgroundColor}
               overflow="visible"
             >
-              {sidebar.slotsRequired && <StatDisplay label="Slots" value={sidebar.slotsRequired} />}
-              {sidebar.salvageValue && <StatDisplay label="SV" value={sidebar.salvageValue} />}
+              {sidebar.slotsRequired && (
+                <StatDisplay label="Slots" value={sidebar.slotsRequired} compact={compact} />
+              )}
+              {sidebar.salvageValue && (
+                <StatDisplay label="SV" value={sidebar.salvageValue} compact={compact} />
+              )}
             </VStack>
           )}
-
           {/* Main content area */}
           <VStack
             flex="1"
             bg="su.lightBlue"
-            p={3}
-            gap={6}
+            p={compact ? 2 : 3}
+            gap={compact ? 3 : 6}
             alignItems="stretch"
             justifyContent={contentJustify}
-            overflow="hidden"
+            overflow="visible"
             minW="0"
           >
-            {/* Notes */}
+            {compact && sidebar.showSidebar && (sidebar.slotsRequired || sidebar.salvageValue) && (
+              <Flex
+                alignItems="center"
+                flexDirection="row"
+                justifyContent="flex-end"
+                pb={2}
+                pt={2}
+                gap={2}
+                overflow="visible"
+              >
+                {sidebar.slotsRequired && (
+                  <StatDisplay label="Slots" value={sidebar.slotsRequired} compact={compact} />
+                )}
+                {sidebar.salvageValue && (
+                  <StatDisplay label="SV" value={sidebar.salvageValue} compact={compact} />
+                )}
+              </Flex>
+            )}
+
             {notes && (
               <Text
                 color="su.black"
@@ -271,12 +263,11 @@ export function EntityDisplay({
                 whiteSpace="normal"
                 overflow="hidden"
                 maxW="100%"
-                fontSize="sm"
+                fontSize={compact ? 'xs' : 'sm'}
               >
                 {notes}
               </Text>
             )}
-
             {description && !headerDescription && (
               <Text
                 color="su.black"
@@ -288,23 +279,21 @@ export function EntityDisplay({
                 whiteSpace="normal"
                 overflow="hidden"
                 maxW="100%"
-                fontSize="sm"
+                fontSize={compact ? 'xs' : 'sm'}
               >
                 {description}
               </Text>
             )}
-
             {/* Stat Bonus (for Systems/Modules/Equipment) */}
             {sections.showStatBonus && 'statBonus' in data && data.statBonus && (
               <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
             )}
-
             {/* Actions (for Systems/Modules/Equipment) */}
             {sections.showActions &&
               'actions' in data &&
               data.actions &&
               data.actions.length > 0 && (
-                <VStack gap={3} alignItems="stretch">
+                <VStack gap={compact ? 2 : 3} alignItems="stretch">
                   {data.actions.map((action, index) => (
                     <ActionCard
                       key={index}
@@ -314,23 +303,27 @@ export function EntityDisplay({
                   ))}
                 </VStack>
               )}
-
             {/* Roll Table (for Systems/Modules/Equipment) */}
             {sections.showRollTable && 'table' in data && data.table && (
               <RollTable
                 table={data.table}
                 showCommand
+                compact
                 tableName={'name' in data ? String(data.name) : undefined}
               />
             )}
-
             {/* Systems (for Vehicles and Drones) */}
             {sections.showSystems &&
               'systems' in data &&
               data.systems &&
               data.systems.length > 0 && (
-                <VStack gap={3} alignItems="stretch">
-                  <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
+                <VStack gap={compact ? 2 : 3} alignItems="stretch">
+                  <Heading
+                    level="h3"
+                    fontSize={compact ? 'md' : 'lg'}
+                    fontWeight="bold"
+                    color="su.brick"
+                  >
                     Systems
                   </Heading>
                   {data.systems.map((system, index) => (
@@ -342,22 +335,21 @@ export function EntityDisplay({
                       borderWidth="1px"
                       borderColor="su.black"
                       borderRadius="md"
-                      p={3}
+                      p={compact ? 2 : 3}
                     >
-                      <Text fontWeight="bold" color="su.black">
+                      <Text fontWeight="bold" color="su.black" fontSize={compact ? 'sm' : 'md'}>
                         {system}
                       </Text>
                     </VStack>
                   ))}
                 </VStack>
               )}
-
             {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds, Crawlers) */}
             {sections.showAbilities && (
-              <VStack gap={3} alignItems="stretch">
+              <VStack gap={compact ? 2 : 3} alignItems="stretch">
                 <Heading
                   level="h3"
-                  fontSize="lg"
+                  fontSize={compact ? 'md' : 'lg'}
                   fontWeight="bold"
                   color="su.black"
                   textTransform="uppercase"
@@ -381,7 +373,6 @@ export function EntityDisplay({
                 ))}
               </VStack>
             )}
-
             {children}
             {/* Select Button - Only shown in modal */}
             {showSelectButton && onClick && (
@@ -411,7 +402,43 @@ export function EntityDisplay({
                 {selectButtonText || 'Select'}
               </Button>
             )}
+            {/* Remove Button */}
+            {onRemove && (
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (disableRemove) return
 
+                  const message =
+                    removeConfirmMessage || `Are you sure you want to remove "${header}"?`
+
+                  const confirmed = window.confirm(message)
+
+                  if (confirmed) {
+                    onRemove()
+                  }
+                }}
+                disabled={disableRemove}
+                w="full"
+                mt={3}
+                bg="su.brick"
+                color="su.white"
+                px={4}
+                py={2}
+                borderRadius="md"
+                fontWeight="bold"
+                textTransform="uppercase"
+                _hover={{ bg: 'su.black' }}
+                _disabled={{
+                  opacity: 0.5,
+                  cursor: 'not-allowed',
+                  _hover: { bg: 'su.brick' },
+                }}
+                aria-label="Remove"
+              >
+                Remove {schemaNameToEntityName(schemaName)}
+              </Button>
+            )}
             {/* Page Reference */}
             {pageRef && (
               <PageReferenceDisplay

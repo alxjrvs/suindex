@@ -11,6 +11,7 @@ interface StatDisplayProps {
   valueColor?: string
   borderColor?: string
   ariaLabel?: string
+  compact?: boolean
 }
 
 export function StatDisplay({
@@ -23,16 +24,17 @@ export function StatDisplay({
   valueColor = 'su.black',
   borderColor = 'su.black',
   ariaLabel,
+  compact = false,
 }: StatDisplayProps) {
   const WrapperComponent = onClick ? Button : Box
 
   // All stat displays keep their background when disabled, just apply opacity
   const commonProps = {
-    w: 16,
-    h: 16,
-    borderRadius: '2xl' as const,
+    w: compact ? 10 : 16,
+    h: compact ? 10 : 16,
+    borderRadius: compact ? 'xl' : ('2xl' as const),
     bg,
-    borderWidth: '3px',
+    borderWidth: compact ? '2px' : '3px',
     borderColor,
     display: 'flex' as const,
     alignItems: 'center' as const,
@@ -58,8 +60,8 @@ export function StatDisplay({
     <VStack gap={0} alignItems="center">
       <Text
         textTransform={'uppercase'}
-        mb={-2}
-        fontSize="xs"
+        mb={compact ? -1.5 : -2}
+        fontSize={compact ? '2xs' : 'xs'}
         alignSelf="center"
         variant="pseudoheader"
         zIndex={1}
@@ -71,7 +73,7 @@ export function StatDisplay({
       </Text>
       <WrapperComponent {...buttonProps}>
         <Text
-          fontSize="md"
+          fontSize={compact ? 'sm' : 'md'}
           fontWeight="bold"
           color={disabled ? 'su.black' : valueColor}
           textAlign="center"
@@ -80,7 +82,7 @@ export function StatDisplay({
           maxW="full"
           w="full"
           css={{
-            fontSize: 'clamp(0.5rem, 4.5cqw, 1rem)',
+            fontSize: compact ? 'clamp(0.4rem, 4.5cqw, 0.875rem)' : 'clamp(0.5rem, 4.5cqw, 1rem)',
             containerType: 'inline-size',
           }}
         >

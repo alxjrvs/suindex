@@ -1,4 +1,4 @@
-import { Flex, type FlexProps } from '@chakra-ui/react'
+import { Flex, VStack, type FlexProps } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import type { ReactNode } from 'react'
 import { Text } from '../base/Text'
@@ -35,10 +35,12 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   /** Optional test ID for the header container */
   headerTestId?: string
   label?: string
+  compact?: boolean
 }
 
 export function RoundedBox({
   label,
+  compact = false,
   bg,
   headerBg,
   title,
@@ -77,7 +79,7 @@ export function RoundedBox({
       borderRadius="2xl"
       p={0}
       shadow="lg"
-      overflow="hidden"
+      overflow="visible"
       minH="fit-content"
       flexShrink={0}
       {...flexProps}
@@ -95,49 +97,57 @@ export function RoundedBox({
         </Text>
       )}
       {hasHeader && (
-        <Flex
-          direction="row"
+        <VStack
+          pb={2}
+          p={headerPadding ?? 4}
+          gap={0}
+          alignItems="stretch"
           w="full"
           bg={actualHeaderBg}
-          p={headerPadding ?? 4}
-          gap={4}
-          pb={2}
-          cursor={actualHeaderCursor}
-          onClick={onHeaderClick}
-          alignItems="center"
         >
-          {/* Left side: leftContent + subTitleContent stacked */}
-          <Flex direction="column" gap={2} alignItems="flex-start">
-            {leftContent}
-          </Flex>
-
-          {/* Center/Right: title and rightContent */}
           <Flex
             direction="row"
-            justifyContent="space-between"
-            alignItems="center"
+            w="full"
+            bg={actualHeaderBg}
             gap={4}
-            flex="1"
-            data-testid={headerTestId}
+            cursor={actualHeaderCursor}
+            onClick={onHeaderClick}
+            alignItems="center"
           >
+            {/* Left side: leftContent + subTitleContent stacked */}
             <Flex direction="column" gap={2} alignItems="flex-start">
-              {title && (
-                <Heading
-                  level="h2"
-                  textTransform="uppercase"
-                  alignSelf="flex-start"
-                  transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
-                  transition="transform 0.3s ease"
-                  opacity={disabled ? 0.5 : 1}
-                >
-                  {title}
-                </Heading>
-              )}
-              {subTitleContent}
+              {leftContent}
             </Flex>
-            {rightContent}
+
+            {/* Center/Right: title and rightContent */}
+            <Flex
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              gap={4}
+              flex="1"
+              data-testid={headerTestId}
+            >
+              <Flex direction="column" gap={2} alignItems="flex-start">
+                {title && (
+                  <Heading
+                    level="h2"
+                    textTransform="uppercase"
+                    alignSelf="flex-start"
+                    transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
+                    transition="transform 0.3s ease"
+                    opacity={disabled ? 0.5 : 1}
+                  >
+                    {title}
+                  </Heading>
+                )}
+                {!compact && subTitleContent}
+              </Flex>
+              {rightContent}
+            </Flex>
           </Flex>
-        </Flex>
+          {compact && subTitleContent}
+        </VStack>
       )}
       {children && (
         <Flex

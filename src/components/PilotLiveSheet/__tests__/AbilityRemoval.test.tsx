@@ -59,16 +59,22 @@ describe('PilotLiveSheet - Ability Removal', () => {
         expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
       })
 
-      // Ability should be displayed with remove button
+      // Ability should be displayed - expand it to see the remove button
       await waitFor(() => {
         const abilityCards = screen.getAllByText(testAbility.name)
-        // Find the one in the selected abilities list (not in the modal)
-        const selectedAbilityCard = abilityCards[0].closest(
-          '[data-testid="frame-header-container"]'
-        ) as HTMLElement
-        const removeButton = within(selectedAbilityCard).getByRole('button', {
-          name: /remove ability/i,
-        })
+        expect(abilityCards.length).toBeGreaterThan(0)
+      })
+
+      // Click on the ability header to expand it
+      const abilityHeaders = screen.getAllByText(testAbility.name)
+      const selectedAbilityHeader = abilityHeaders[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+      await user.click(selectedAbilityHeader)
+
+      // Now the remove button should be visible
+      await waitFor(() => {
+        const removeButton = screen.getByText(/remove ability/i)
         expect(removeButton).toBeInTheDocument()
       })
     })
@@ -112,15 +118,21 @@ describe('PilotLiveSheet - Ability Removal', () => {
         expect(tpValue).toBeInTheDocument()
       })
 
-      // Remove button should be disabled
+      // Expand the ability to see the remove button
       await waitFor(() => {
         const abilityCards = screen.getAllByText(testAbility.name)
-        const selectedAbilityCard = abilityCards[0].closest(
-          '[data-testid="frame-header-container"]'
-        ) as HTMLElement
-        const removeButton = within(selectedAbilityCard).getByRole('button', {
-          name: /remove ability/i,
-        })
+        expect(abilityCards.length).toBeGreaterThan(0)
+      })
+
+      const abilityHeaders = screen.getAllByText(testAbility.name)
+      const selectedAbilityHeader = abilityHeaders[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+      await user.click(selectedAbilityHeader)
+
+      // Remove button should be disabled
+      await waitFor(() => {
+        const removeButton = screen.getByText(/remove ability/i).closest('button')
         expect(removeButton).toBeDisabled()
       })
     })
@@ -161,15 +173,21 @@ describe('PilotLiveSheet - Ability Removal', () => {
         expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
       })
 
-      // Remove button should be enabled (we have 4 TP left)
+      // Expand the ability to see the remove button
       await waitFor(() => {
         const abilityCards = screen.getAllByText(testAbility.name)
-        const selectedAbilityCard = abilityCards[0].closest(
-          '[data-testid="frame-header-container"]'
-        ) as HTMLElement
-        const removeButton = within(selectedAbilityCard).getByRole('button', {
-          name: /remove ability/i,
-        })
+        expect(abilityCards.length).toBeGreaterThan(0)
+      })
+
+      const abilityHeaders = screen.getAllByText(testAbility.name)
+      const selectedAbilityHeader = abilityHeaders[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+      await user.click(selectedAbilityHeader)
+
+      // Remove button should be enabled (we have 4 TP left)
+      await waitFor(() => {
+        const removeButton = screen.getByText(/remove ability/i).closest('button')
         expect(removeButton).not.toBeDisabled()
       })
     })
@@ -217,14 +235,21 @@ describe('PilotLiveSheet - Ability Removal', () => {
         expect(tpValue).toBeInTheDocument()
       })
 
-      // Remove the ability
-      const abilityCards = screen.getAllByText(testAbility.name)
-      const selectedAbilityCard = abilityCards[0].closest(
+      // Expand the ability first
+      await waitFor(() => {
+        const abilityCards = screen.getAllByText(testAbility.name)
+        expect(abilityCards.length).toBeGreaterThan(0)
+      })
+
+      const abilityHeaders = screen.getAllByText(testAbility.name)
+      const selectedAbilityHeader = abilityHeaders[0].closest(
         '[data-testid="frame-header-container"]'
       ) as HTMLElement
-      const removeButton = within(selectedAbilityCard).getByRole('button', {
-        name: /remove ability/i,
-      })
+      await user.click(selectedAbilityHeader)
+
+      // Remove the ability
+      const removeButton = (await screen.findByText(/remove ability/i)).closest('button')
+      if (!removeButton) throw new Error('Remove button not found')
       await user.click(removeButton)
 
       // TP should be reduced by 1 (4 - 1 = 3)
@@ -270,8 +295,21 @@ describe('PilotLiveSheet - Ability Removal', () => {
         expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
       })
 
+      // Expand the ability first
+      await waitFor(() => {
+        const abilityCards = screen.getAllByText(testAbility.name)
+        expect(abilityCards.length).toBeGreaterThan(0)
+      })
+
+      const abilityHeaders = screen.getAllByText(testAbility.name)
+      const selectedAbilityHeader = abilityHeaders[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+      await user.click(selectedAbilityHeader)
+
       // Click remove button
-      const removeButton = screen.getByRole('button', { name: /remove ability/i })
+      const removeButton = (await screen.findByText(/remove ability/i)).closest('button')
+      if (!removeButton) throw new Error('Remove button not found')
 
       // Mock window.confirm
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
@@ -324,14 +362,21 @@ describe('PilotLiveSheet - Ability Removal', () => {
         expect(tpValue).toBeInTheDocument()
       })
 
-      // Click remove button but cancel
-      const abilityCards = screen.getAllByText(testAbility.name)
-      const selectedAbilityCard = abilityCards[0].closest(
+      // Expand the ability first
+      await waitFor(() => {
+        const abilityCards = screen.getAllByText(testAbility.name)
+        expect(abilityCards.length).toBeGreaterThan(0)
+      })
+
+      const abilityHeaders = screen.getAllByText(testAbility.name)
+      const selectedAbilityHeader = abilityHeaders[0].closest(
         '[data-testid="frame-header-container"]'
       ) as HTMLElement
-      const removeButton = within(selectedAbilityCard).getByRole('button', {
-        name: /remove ability/i,
-      })
+      await user.click(selectedAbilityHeader)
+
+      // Click remove button but cancel
+      const removeButton = (await screen.findByText(/remove ability/i)).closest('button')
+      if (!removeButton) throw new Error('Remove button not found')
 
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
 
@@ -388,8 +433,21 @@ describe('PilotLiveSheet - Ability Removal', () => {
         expect(screen.getByText(testAbility.name)).toBeInTheDocument()
       })
 
+      // Expand the ability first
+      await waitFor(() => {
+        const abilityCards = screen.getAllByText(testAbility.name)
+        expect(abilityCards.length).toBeGreaterThan(0)
+      })
+
+      const abilityHeaders = screen.getAllByText(testAbility.name)
+      const selectedAbilityHeader = abilityHeaders[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+      await user.click(selectedAbilityHeader)
+
       // Remove the ability
-      const removeButton = screen.getByRole('button', { name: /remove ability/i })
+      const removeButton = (await screen.findByText(/remove ability/i)).closest('button')
+      if (!removeButton) throw new Error('Remove button not found')
 
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 

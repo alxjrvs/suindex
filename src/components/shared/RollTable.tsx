@@ -13,6 +13,7 @@ interface DigestedRollTable {
 interface RollTableDisplayProps {
   table: SURefMetaTable
   showCommand?: boolean
+  compact?: boolean
   tableName?: string
 }
 
@@ -40,7 +41,12 @@ function digestRollTable(table: SURefMetaTable): DigestedRollTable[] {
   })
 }
 
-export function RollTable({ table, showCommand = false, tableName }: RollTableDisplayProps) {
+export function RollTable({
+  compact,
+  table,
+  showCommand = false,
+  tableName,
+}: RollTableDisplayProps) {
   const digestedTable = digestRollTable(table)
   const [highlightedKey, setHighlightedKey] = useState<string | null>(null)
   const highlightedRowRef = useRef<HTMLDivElement>(null)
@@ -62,8 +68,8 @@ export function RollTable({ table, showCommand = false, tableName }: RollTableDi
   }
 
   return (
-    <Box position="relative">
-      <Box transition="opacity 0.2s">
+    <Box position="relative" overflow="visible">
+      <Box transition="opacity 0.2s" overflow="visible">
         {showCommand && (
           <Flex
             bg="su.black"
@@ -72,11 +78,11 @@ export function RollTable({ table, showCommand = false, tableName }: RollTableDi
             textTransform="uppercase"
             alignItems="center"
             justifyContent="center"
-            gap={2}
-            p={2}
-            mb={2}
+            gap={compact ? 1 : 2}
+            p={compact ? 1 : 2}
+            mb={compact ? 1 : 2}
           >
-            <Text>ROLL THE DIE:</Text>
+            <Text fontSize={compact ? 'xs' : 'md'}>ROLL THE DIE:</Text>
             {tableName && (
               <IconButton
                 onClick={handleRoll}
@@ -84,16 +90,16 @@ export function RollTable({ table, showCommand = false, tableName }: RollTableDi
                 bg="transparent"
                 _hover={{ bg: 'su.brick' }}
                 borderRadius="md"
-                size="sm"
+                size={compact ? 'xs' : 'sm'}
                 aria-label="Roll on this table"
                 title="Roll on this table"
                 variant="ghost"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="20"
+                  height={compact ? '16' : '20'}
                   viewBox="0 -960 960 960"
-                  width="20"
+                  width={compact ? '16' : '20'}
                   fill="currentColor"
                 >
                   <path d="M240-120q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM240-600q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240 240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />
@@ -125,13 +131,49 @@ export function RollTable({ table, showCommand = false, tableName }: RollTableDi
               }
               zIndex={isHighlighted ? 1 : 0}
             >
+              {/* Roll Again Button - Absolutely positioned to the left */}
+              {isHighlighted && (
+                <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleRoll()
+                  }}
+                  position="absolute"
+                  left={compact ? '-32px' : '-40px'}
+                  top="50%"
+                  transform="translateY(-50%)"
+                  color="su.white"
+                  bg="su.black"
+                  _hover={{ bg: 'su.brick' }}
+                  borderRadius="md"
+                  size={compact ? 'xs' : 'sm'}
+                  aria-label="Roll again"
+                  title="Roll again"
+                  zIndex={2}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height={compact ? '16' : '20'}
+                    viewBox="0 -960 960 960"
+                    width={compact ? '16' : '20'}
+                    fill="currentColor"
+                  >
+                    <path d="M240-120q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM240-600q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240 240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />
+                  </svg>
+                </IconButton>
+              )}
               <Flex flex="1" alignItems="center" justifyContent="center" alignSelf="center">
-                <Text fontSize="xl" fontWeight="bold" color="su.black" textAlign="center">
+                <Text
+                  fontSize={compact ? 'md' : 'xl'}
+                  fontWeight="bold"
+                  color="su.black"
+                  textAlign="center"
+                >
                   {key}
                 </Text>
               </Flex>
-              <Flex flex="4" flexDirection="row" flexWrap="wrap" py={1}>
-                <Text color="su.black">
+              <Flex flex="4" flexDirection="row" flexWrap="wrap" py={compact ? 0.5 : 1}>
+                <Text color="su.black" fontSize={compact ? 'xs' : 'md'}>
                   {showTitle && (
                     <Text as="span" fontWeight="bold">
                       {name}:{' '}
