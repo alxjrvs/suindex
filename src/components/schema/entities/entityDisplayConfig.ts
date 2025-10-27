@@ -1,4 +1,4 @@
-import type { SURefEntityName } from 'salvageunion-reference'
+import type { SURefSchemaName } from 'salvageunion-reference'
 
 /**
  * Configuration for simple entity display wrappers.
@@ -14,41 +14,41 @@ interface EntityDisplayConfig {
  * Entity display configurations for simple wrapper components.
  * Complex components with custom logic/children are not included here.
  */
-export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefEntityName, EntityDisplayConfig>> = {
-  NPC: {
+export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefSchemaName, EntityDisplayConfig>> = {
+  npcs: {
     actionHeaderBgColor: 'su.green',
     actionHeaderTextColor: 'white',
   },
-  Creature: {
+  creatures: {
     headerColor: 'su.orange',
     actionHeaderBgColor: 'su.orange',
   },
-  BioTitan: {
+  'bio-titans': {
     actionHeaderBgColor: 'su.orange',
     actionHeaderTextColor: 'su.white',
   },
-  Drone: {},
-  Vehicle: {},
-  Squad: {},
-  Meld: {},
-  System: {},
-  Module: {},
-  Equipment: {},
-  Keyword: {
+  drones: {},
+  vehicles: {},
+  squads: {},
+  meld: {},
+  systems: {},
+  modules: {},
+  equipment: {},
+  keywords: {
     headerColor: 'su.orange',
   },
-  Trait: {
+  traits: {
     headerColor: 'su.orange',
   },
-  RollTable: {
+  'roll-tables': {
     headerColor: 'su.orange',
   },
-  Crawler: {
+  crawlers: {
     headerColor: 'su.pink',
     actionHeaderBgColor: 'su.pink',
     actionHeaderTextColor: 'white',
   },
-  Chassis: {
+  chassis: {
     headerColor: 'su.green',
   },
 }

@@ -3,12 +3,16 @@ import { fetchUserGames, getUser } from '../../lib/api'
 import { SheetSelect } from '../shared/SheetSelect'
 import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { LinkButton } from '../shared/LinkButton'
+import { ActiveToggle } from '../shared/ActiveToggle'
 
 interface CrawlerControlBarProps {
   gameId?: string | null
   savedGameId?: string | null
   onGameChange: (gameId: string | null) => void
   hasPendingChanges?: boolean
+  active?: boolean
+  onActiveChange?: (active: boolean) => void
+  disabled?: boolean
 }
 
 export function CrawlerControlBar({
@@ -16,6 +20,9 @@ export function CrawlerControlBar({
   savedGameId,
   onGameChange,
   hasPendingChanges = false,
+  active,
+  onActiveChange,
+  disabled = false,
 }: CrawlerControlBarProps) {
   const [games, setGames] = useState<{ id: string; name: string }[]>([])
   const [loadingGames, setLoadingGames] = useState(false)
@@ -55,6 +62,12 @@ export function CrawlerControlBar({
           onChange={onGameChange}
           placeholder="No Game"
         />
+      }
+      centerContent={
+        active !== undefined &&
+        onActiveChange && (
+          <ActiveToggle active={active} onChange={onActiveChange} disabled={disabled} />
+        )
       }
       rightContent={
         savedGameId && <LinkButton to={`/dashboard/games/${savedGameId}`} label="→ Game" />

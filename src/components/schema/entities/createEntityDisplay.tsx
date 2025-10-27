@@ -2,7 +2,6 @@ import type { ComponentType } from 'react'
 import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { EntityDisplay } from '../../shared/EntityDisplay'
 import { ENTITY_DISPLAY_CONFIGS } from './entityDisplayConfig'
-import { schemaNameToEntityName } from '../../shared/entityDisplayHelpers'
 
 /**
  * Factory function to create simple entity display components from configuration.
@@ -15,8 +14,7 @@ export function createEntityDisplay(
   schemaName: SURefSchemaName
 ): ComponentType<{ data: SURefEntity }> {
   const Component = ({ data }: { data: SURefEntity }) => {
-    const entityName = schemaNameToEntityName(schemaName)
-    const config = ENTITY_DISPLAY_CONFIGS[entityName] || {}
+    const config = ENTITY_DISPLAY_CONFIGS[schemaName] || {}
     return <EntityDisplay schemaName={schemaName} data={data} {...config} />
   }
   Component.displayName = `${schemaName}Display`

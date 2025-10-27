@@ -11,6 +11,6 @@ interface SystemDisplayProps {
  * Uses the factory pattern configuration for consistent styling.
  */
 export function SystemDisplay({ data }: SystemDisplayProps) {
-  const config = ENTITY_DISPLAY_CONFIGS.System || {}
+  const config = ENTITY_DISPLAY_CONFIGS.systems || {}
   return <EntityDisplay schemaName="systems" data={data} {...config} />
 }

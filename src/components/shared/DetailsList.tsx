@@ -2,7 +2,7 @@ import { Flex } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
 import type { DataValue } from '../../types/common'
 import { Text } from '../base/Text'
-import type { SURefActionMetaList, SURefEntity, SURefEntityName } from 'salvageunion-reference'
+import type { SURefActionMetaList, SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { getActivationCurrency } from './entityDisplayHelpers'
 import { formatTraits } from '../../utils/displayUtils'
 
@@ -11,11 +11,11 @@ import { formatTraits } from '../../utils/displayUtils'
  */
 function extractDetails(
   data: SURefEntity | SURefActionMetaList,
-  entityType?: SURefEntityName
+  schemaName?: SURefSchemaName
 ): DataValue[] {
   const details: DataValue[] = []
-  const variableCost = 'activationCurrency' in data && entityType === 'Ability'
-  const activationCurrency = getActivationCurrency(entityType, variableCost)
+  const variableCost = 'activationCurrency' in data && schemaName === 'abilities'
+  const activationCurrency = getActivationCurrency(schemaName, variableCost)
 
   // Activation cost
   if ('activationCost' in data && data.activationCost !== undefined) {
@@ -75,12 +75,12 @@ function extractDetails(
 }
 interface DetailsListProps {
   data: SURefEntity | SURefActionMetaList
-  entityType?: SURefEntityName
+  schemaName?: SURefSchemaName
   compact?: boolean
 }
 
-export function DetailsList({ entityType, data, compact = false }: DetailsListProps) {
-  const values = extractDetails(data, entityType)
+export function DetailsList({ schemaName, data, compact = false }: DetailsListProps) {
+  const values = extractDetails(data, schemaName)
   if (values.length === 0) return null
 
   return (

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { SystemModuleSelector } from './SystemModuleSelector'
 import { ChassisSelector } from './ChassisSelector'
@@ -16,9 +16,10 @@ import { RoundedBox } from '../shared/RoundedBox'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
 import { QuirkInput } from './QuirkInput'
 import { AppearanceInput } from './AppearanceInput'
-import { PilotInfo } from './PilotInfo'
 import { StatDisplay } from '../StatDisplay'
 import { DeleteEntity } from '../shared/DeleteEntity'
+import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
+import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 
 interface MechLiveSheetProps {
   id?: string
@@ -89,6 +90,18 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
   return (
     <LiveSheetLayout>
+      {id && (
+        <LiveSheetControlBar
+          config={MECH_CONTROL_BAR_CONFIG}
+          relationId={mech.pilot_id}
+          savedRelationId={mech.pilot_id}
+          onRelationChange={(pilotId) => updateEntity({ pilot_id: pilotId })}
+          hasPendingChanges={hasPendingChanges}
+          active={mech.active ?? false}
+          onActiveChange={(active) => updateEntity({ active })}
+          disabled={!selectedChassis}
+        />
+      )}
       <Flex gap={6}>
         <VStack flex="1" gap={6} alignItems="stretch">
           <RoundedBox
@@ -148,22 +161,14 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
               />
             </Grid>
           </RoundedBox>
-          <Flex gap={6} flexDirection="row" justifyContent="space-between" w="full">
-            <PilotInfo
-              mechId={id}
-              pilotId={mech.pilot_id}
-              onPilotChange={(pilotId) => updateEntity({ pilot_id: pilotId })}
-              disabled={!selectedChassis}
-            />
-            <ChassisStatsGrid
-              stats={stats}
-              totalSalvageValue={totalSalvageValue}
-              usedSystemSlots={usedSystemSlots}
-              usedModuleSlots={usedModuleSlots}
-              totalCargo={totalCargo}
-              disabled={!selectedChassis}
-            />
-          </Flex>
+          <ChassisStatsGrid
+            stats={stats}
+            totalSalvageValue={totalSalvageValue}
+            usedSystemSlots={usedSystemSlots}
+            usedModuleSlots={usedModuleSlots}
+            totalCargo={totalCargo}
+            disabled={!selectedChassis}
+          />
         </VStack>
 
         <MechResourceSteppers
@@ -238,13 +243,11 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
       {/* Delete Button - Only show when editing existing entity */}
       {id && (
-        <Box mt={6}>
-          <DeleteEntity
-            entityName="Mech"
-            onConfirmDelete={deleteEntity}
-            disabled={!id || hasPendingChanges}
-          />
-        </Box>
+        <DeleteEntity
+          entityName="Mech"
+          onConfirmDelete={deleteEntity}
+          disabled={!id || hasPendingChanges}
+        />
       )}
     </LiveSheetLayout>
   )

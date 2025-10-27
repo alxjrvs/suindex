@@ -94,6 +94,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           savedGameId={crawler.game_id}
           onGameChange={(gameId) => updateEntity({ game_id: gameId })}
           hasPendingChanges={hasPendingChanges}
+          active={crawler.active ?? false}
+          onActiveChange={(active) => updateEntity({ active })}
+          disabled={!selectedCrawlerType}
         />
       )}
       {/* Header Section */}

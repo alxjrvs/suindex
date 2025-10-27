@@ -11,6 +11,6 @@ interface ModuleDisplayProps {
  * Uses the factory pattern configuration for consistent styling.
  */
 export function ModuleDisplay({ data }: ModuleDisplayProps) {
-  const config = ENTITY_DISPLAY_CONFIGS.Module || {}
+  const config = ENTITY_DISPLAY_CONFIGS.modules || {}
   return <EntityDisplay schemaName="modules" data={data} {...config} />
 }

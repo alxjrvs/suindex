@@ -5,7 +5,6 @@ import { useMemo } from 'react'
 import { packCargoGrid } from '../../utils/cargoGridPacking'
 import { lookupEntityByRef } from '../../utils/referenceUtils'
 import { techLevelColors, suColors } from '../../theme'
-import { schemaNameToEntityName, getSchemaName } from './entityDisplayHelpers'
 
 interface BayItem {
   id: string
@@ -195,9 +194,7 @@ export function DynamicBay({
             const entity = lookupEntityByRef(bayItem.ref)
             if (entity) {
               const [schemaName, entityId] = bayItem.ref.split('||')
-              const entityName = schemaNameToEntityName(schemaName)
-              const urlSchemaName = getSchemaName(entityName)
-              window.open(`/schema/${urlSchemaName.toLowerCase()}/item/${entityId}`, '_blank')
+              window.open(`/schema/${schemaName}/item/${entityId}`, '_blank')
             }
           }
         }

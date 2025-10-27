@@ -82,6 +82,9 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           savedRelationId={pilot.crawler_id}
           onRelationChange={(crawlerId) => updateEntity({ crawler_id: crawlerId })}
           hasPendingChanges={hasPendingChanges}
+          active={pilot.active ?? false}
+          onActiveChange={(active) => updateEntity({ active })}
+          disabled={!selectedClass}
         />
       )}
       <Flex gap={6} w="full">

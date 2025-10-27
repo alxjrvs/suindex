@@ -27,6 +27,7 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
   cargo: [],
   notes: null,
   choices: null,
+  active: false,
   npc: {
     name: '',
     notes: '',

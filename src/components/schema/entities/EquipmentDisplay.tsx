@@ -22,7 +22,7 @@ export function EquipmentDisplay({
   selectButtonText,
   children,
 }: EquipmentDisplayProps) {
-  const config = ENTITY_DISPLAY_CONFIGS.Equipment || {}
+  const config = ENTITY_DISPLAY_CONFIGS.equipment || {}
   return (
     <EntityDisplay
       schemaName="equipment"

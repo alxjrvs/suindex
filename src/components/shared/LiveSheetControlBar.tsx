@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { SheetSelect } from './SheetSelect'
 import { ControlBarContainer } from './ControlBarContainer'
 import { LinkButton } from './LinkButton'
+import { ActiveToggle } from './ActiveToggle'
 import { useEntityRelationships } from '../../hooks/useEntityRelationships'
 import type { Database } from '../../types/database-generated.types'
 
@@ -23,6 +24,9 @@ interface LiveSheetControlBarProps {
   savedRelationId?: string | null
   onRelationChange: (id: string | null) => void
   hasPendingChanges?: boolean
+  active?: boolean
+  onActiveChange?: (active: boolean) => void
+  disabled?: boolean
 }
 
 /**
@@ -46,6 +50,9 @@ export function LiveSheetControlBar({
   savedRelationId,
   onRelationChange,
   hasPendingChanges = false,
+  active,
+  onActiveChange,
+  disabled = false,
 }: LiveSheetControlBarProps) {
   const { items, loading } = useEntityRelationships<{ id: string; [key: string]: string }>({
     table: config.table,
@@ -72,6 +79,12 @@ export function LiveSheetControlBar({
           onChange={onRelationChange}
           placeholder={`No ${config.label}`}
         />
+      }
+      centerContent={
+        active !== undefined &&
+        onActiveChange && (
+          <ActiveToggle active={active} onChange={onActiveChange} disabled={disabled} />
+        )
       }
       rightContent={
         savedRelationId && (

@@ -23,13 +23,21 @@ export async function getSession() {
  * Sign in with Discord OAuth
  */
 export async function signInWithDiscord(redirectUrl: string) {
-  const { error } = await supabase.auth.signInWithOAuth({
+  console.log('Signing in with redirect URL:', redirectUrl)
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
     options: {
       redirectTo: redirectUrl,
+      skipBrowserRedirect: false,
     },
   })
-  if (error) throw error
+
+  if (error) {
+    console.error('OAuth error:', error)
+    throw error
+  }
+
+  console.log('OAuth initiated:', data)
 }
 
 /**

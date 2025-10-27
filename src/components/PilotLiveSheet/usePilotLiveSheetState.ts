@@ -29,6 +29,7 @@ const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
   current_tp: 0,
   notes: null,
   choices: null,
+  active: false,
 }
 
 export function usePilotLiveSheetState(id?: string) {

@@ -30,37 +30,15 @@ export function SheetEntityChoiceDisplay({
     const [schemaName, entityId] = selectedValue.split('||')
     if (!schemaName || !entityId) return null
 
-    const singularToPlural: Record<string, string> = {
-      System: 'systems',
-      Module: 'modules',
-      Ability: 'abilities',
-      Crawler: 'crawlers',
-      CrawlerBay: 'crawler-bays',
-      Creature: 'creatures',
-      Drone: 'drones',
-      Vehicle: 'vehicles',
-      BioTitan: 'bio-titans',
-      NPC: 'npcs',
-      Squad: 'squads',
-      Keyword: 'keywords',
-      Trait: 'traits',
-      RollTable: 'roll-tables',
-      CrawlerTechLevel: 'crawler-tech-levels',
-      Equipment: 'equipment',
-      Chassis: 'chassis',
-      Meld: 'meld',
-    }
+    const normalizedSchemaName = schemaName.toLowerCase()
 
-    const pluralSchemaName = singularToPlural[schemaName]
-
-    const modelKey = pluralSchemaName || schemaName.toLowerCase()
-    const model = getModel(modelKey)
+    const model = getModel(normalizedSchemaName)
     if (!model) return null
 
     const entity = model.find((e) => e.id === entityId)
     if (!entity) return null
 
-    return { entity, schemaName: modelKey }
+    return { entity, schemaName: normalizedSchemaName }
   }, [selectedValue])
 
   // Convert schema to schema names for the modal

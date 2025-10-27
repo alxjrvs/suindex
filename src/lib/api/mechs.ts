@@ -36,8 +36,33 @@ export async function createMech(userId: string): Promise<MechRow> {
 
 /**
  * Update a mech
+ * If setting active to true, automatically deactivates all other mechs for the same pilot
  */
 export async function updateMech(mechId: string, updates: Partial<MechRow>): Promise<void> {
+  // If setting this mech as active, deactivate others for the same pilot
+  if (updates.active === true) {
+    // First get the pilot_id for this mech
+    const { data: mech, error: fetchError } = await supabase
+      .from('mechs')
+      .select('pilot_id')
+      .eq('id', mechId)
+      .single()
+
+    if (fetchError) throw fetchError
+
+    if (mech?.pilot_id) {
+      // Deactivate all other mechs for this pilot
+      const { error: deactivateError } = await supabase
+        .from('mechs')
+        .update({ active: false })
+        .eq('pilot_id', mech.pilot_id)
+        .neq('id', mechId)
+
+      if (deactivateError) throw deactivateError
+    }
+  }
+
+  // Then update the current mech
   const { error } = await supabase.from('mechs').update(updates).eq('id', mechId)
 
   if (error) throw error

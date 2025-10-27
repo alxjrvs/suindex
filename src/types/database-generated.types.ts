@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       crawlers: {
         Row: {
+          active: boolean
           bays: Json | null
           cargo: Json | null
           choices: Json | null
@@ -40,6 +41,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          active?: boolean
           bays?: Json | null
           cargo?: Json | null
           choices?: Json | null
@@ -64,6 +66,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          active?: boolean
           bays?: Json | null
           cargo?: Json | null
           choices?: Json | null
@@ -191,6 +194,7 @@ export type Database = {
       }
       games: {
         Row: {
+          active: boolean
           created_at: string | null
           created_by: string
           description: string | null
@@ -199,6 +203,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          active?: boolean
           created_at?: string | null
           created_by: string
           description?: string | null
@@ -207,6 +212,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          active?: boolean
           created_at?: string | null
           created_by?: string
           description?: string | null
@@ -218,6 +224,7 @@ export type Database = {
       }
       mechs: {
         Row: {
+          active: boolean
           appearance: string | null
           cargo: Json | null
           chassis_ability: string | null
@@ -238,6 +245,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          active?: boolean
           appearance?: string | null
           cargo?: Json | null
           chassis_ability?: string | null
@@ -258,6 +266,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          active?: boolean
           appearance?: string | null
           cargo?: Json | null
           chassis_ability?: string | null
@@ -281,7 +290,7 @@ export type Database = {
           {
             foreignKeyName: "mechs_pilot_id_fkey"
             columns: ["pilot_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "pilots"
             referencedColumns: ["id"]
           },
@@ -290,6 +299,7 @@ export type Database = {
       pilots: {
         Row: {
           abilities: string[] | null
+          active: boolean
           advanced_class_id: string | null
           appearance: string | null
           background: string | null
@@ -317,6 +327,7 @@ export type Database = {
         }
         Insert: {
           abilities?: string[] | null
+          active?: boolean
           advanced_class_id?: string | null
           appearance?: string | null
           background?: string | null
@@ -344,6 +355,7 @@ export type Database = {
         }
         Update: {
           abilities?: string[] | null
+          active?: boolean
           advanced_class_id?: string | null
           appearance?: string | null
           background?: string | null

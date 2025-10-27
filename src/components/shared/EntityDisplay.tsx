@@ -24,8 +24,7 @@ import {
   extractTechLevelEffects,
   extractAbilities,
   extractTechLevel,
-  schemaNameToEntityName,
-  getSchemaName,
+  getSchemaDisplayName,
 } from './entityDisplayHelpers'
 import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { SheetDisplay } from './SheetDisplay'
@@ -95,13 +94,11 @@ export function EntityDisplay({
 }: EntityDisplayProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
   if (!data) return null
-  // Convert schemaName to entityName for helper functions
-  const entityName = schemaNameToEntityName(schemaName)
 
-  const variableCost = 'activationCost' in data && schemaName === 'abilities'
-  const activationCurrency = getActivationCurrency(entityName, variableCost)
+  const variableCost = 'activationCurrency' in data && schemaName === 'abilities'
+  const activationCurrency = getActivationCurrency(schemaName, variableCost)
 
-  const header = extractHeader(data, entityName)
+  const header = extractHeader(data, schemaName)
   const level = extractLevel(data)
   const description = extractDescription(data)
   const notes = extractNotes(data)
@@ -168,7 +165,7 @@ export function EntityDisplay({
 
   // Build title content (header + details)
   const subTitleContentElement = header ? (
-    <DetailsList data={data} entityType={entityName} compact={compact} />
+    <DetailsList data={data} schemaName={schemaName} compact={compact} />
   ) : undefined
 
   // Build right content (description + stats + collapsible indicator)
@@ -466,7 +463,7 @@ export function EntityDisplay({
                 }}
                 aria-label="Remove"
               >
-                Remove {schemaNameToEntityName(schemaName)}
+                Remove {getSchemaDisplayName(schemaName)}
               </Button>
             )}
             {/* Page Reference */}
@@ -475,7 +472,7 @@ export function EntityDisplay({
                 <PageReferenceDisplay
                   source={pageRef.source}
                   page={pageRef.page}
-                  schemaName={getSchemaName(entityName)}
+                  schemaName={getSchemaDisplayName(schemaName)}
                 />
               </Box>
             )}
