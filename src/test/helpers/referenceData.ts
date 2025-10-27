@@ -1,12 +1,21 @@
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefAbility } from 'salvageunion-reference'
+import type {
+  SURefAbility,
+  SURefCoreClass,
+  SURefAdvancedClass,
+  SURefHybridClass,
+  SURefChassis,
+  SURefCrawler,
+  SURefCrawlerBay,
+  SURefEquipment,
+} from 'salvageunion-reference'
 
 /**
  * Fetch and validate core classes from reference data
  * @throws Error if no core classes found
  * @returns Array of core classes
  */
-export function getCoreClasses() {
+export function getCoreClasses(): SURefCoreClass[] {
   const allCoreClasses = SalvageUnionReference.CoreClasses.all()
 
   if (allCoreClasses.length === 0) {
@@ -21,7 +30,7 @@ export function getCoreClasses() {
  * @throws Error if no hybrid classes found
  * @returns Array of hybrid classes
  */
-export function getHybridClasses() {
+export function getHybridClasses(): SURefHybridClass[] {
   const allHybridClasses = SalvageUnionReference.HybridClasses.all()
 
   if (allHybridClasses.length === 0) {
@@ -36,7 +45,7 @@ export function getHybridClasses() {
  * @throws Error if no advanced classes found
  * @returns Array of advanced classes
  */
-export function getAdvancedClasses() {
+export function getAdvancedClasses(): SURefAdvancedClass[] {
   const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
 
   if (allAdvancedClasses.length === 0) {
@@ -52,7 +61,7 @@ export function getAdvancedClasses() {
  * @throws Error if class not found
  * @returns The core class object
  */
-export function findCoreClass(className: string) {
+export function findCoreClass(className: string): SURefCoreClass {
   const classes = getCoreClasses()
   const foundClass = classes.find((c) => c.name === className)
 
@@ -69,7 +78,7 @@ export function findCoreClass(className: string) {
  * @throws Error if class not found
  * @returns The hybrid class object
  */
-export function findHybridClass(className: string) {
+export function findHybridClass(className: string): SURefHybridClass {
   const classes = getHybridClasses()
   const foundClass = classes.find((c) => c.name === className)
 
@@ -86,7 +95,7 @@ export function findHybridClass(className: string) {
  * @throws Error if class not found
  * @returns The advanced class object
  */
-export function findAdvancedClass(className: string) {
+export function findAdvancedClass(className: string): SURefAdvancedClass {
   const classes = getAdvancedClasses()
   const foundClass = classes.find((c) => c.name === className)
 
@@ -104,7 +113,10 @@ export function findAdvancedClass(className: string) {
  * @throws Error if class not found
  * @returns The class object
  */
-export function findClass(className: string, classType: 'core' | 'hybrid' | 'advanced' = 'core') {
+export function findClass(
+  className: string,
+  classType: 'core' | 'hybrid' | 'advanced' = 'core'
+): SURefCoreClass | SURefHybridClass | SURefAdvancedClass {
   switch (classType) {
     case 'hybrid':
       return findHybridClass(className)
@@ -120,7 +132,7 @@ export function findClass(className: string, classType: 'core' | 'hybrid' | 'adv
  * @throws Error if no chassis found
  * @returns Array of chassis
  */
-export function getChassis() {
+export function getChassis(): SURefChassis[] {
   const allChassis = SalvageUnionReference.Chassis.all()
 
   if (allChassis.length === 0) {
@@ -134,7 +146,7 @@ export function getChassis() {
  * Get chassis with patterns for pattern tests
  * @returns Array of chassis that have patterns
  */
-export function getChassisWithPatterns() {
+export function getChassisWithPatterns(): SURefChassis[] {
   const allChassis = getChassis()
   return allChassis.filter((c) => c.patterns && c.patterns.length > 0)
 }
@@ -144,7 +156,7 @@ export function getChassisWithPatterns() {
  * @throws Error if no crawlers found
  * @returns Array of crawlers
  */
-export function getCrawlers() {
+export function getCrawlers(): SURefCrawler[] {
   const allCrawlers = SalvageUnionReference.Crawlers.all()
 
   if (allCrawlers.length === 0) {
@@ -159,7 +171,7 @@ export function getCrawlers() {
  * @throws Error if no bays found
  * @returns Array of crawler bays
  */
-export function getCrawlerBays() {
+export function getCrawlerBays(): SURefCrawlerBay[] {
   const allBays = SalvageUnionReference.CrawlerBays.all()
 
   if (allBays.length === 0) {
@@ -174,7 +186,7 @@ export function getCrawlerBays() {
  * @throws Error if no abilities found
  * @returns Array of abilities
  */
-export function getAbilities() {
+export function getAbilities(): SURefAbility[] {
   const allAbilities = SalvageUnionReference.Abilities.all()
 
   if (allAbilities.length === 0) {
@@ -189,7 +201,7 @@ export function getAbilities() {
  * @param classObj - The class object with coreTrees property
  * @returns Array of abilities from the class's core trees
  */
-export function getAbilitiesForClass(classObj: { coreTrees: string[] }) {
+export function getAbilitiesForClass(classObj: { coreTrees: string[] }): SURefAbility[] {
   const allAbilities = getAbilities()
   return allAbilities.filter((a) => classObj.coreTrees.includes(a.tree))
 }
@@ -209,7 +221,7 @@ export function getAbilitiesByLevel(abilities: SURefAbility[], level: number): S
  * @throws Error if no equipment found
  * @returns Array of equipment
  */
-export function getEquipment() {
+export function getEquipment(): SURefEquipment[] {
   const allEquipment = SalvageUnionReference.Equipment.all()
 
   if (allEquipment.length === 0) {
@@ -223,7 +235,7 @@ export function getEquipment() {
  * Get all classes (Core, Advanced, and Hybrid) combined
  * @returns Array of all classes
  */
-export function getAllClasses() {
+export function getAllClasses(): (SURefCoreClass | SURefAdvancedClass | SURefHybridClass)[] {
   return [
     ...SalvageUnionReference.CoreClasses.all(),
     ...SalvageUnionReference.AdvancedClasses.all(),
@@ -236,7 +248,9 @@ export function getAllClasses() {
  * @param classId - The ID of the class to find
  * @returns The class object or undefined if not found
  */
-export function findClassById(classId: string) {
+export function findClassById(
+  classId: string
+): SURefCoreClass | SURefAdvancedClass | SURefHybridClass | undefined {
   const allClasses = getAllClasses()
   return allClasses.find((c) => c.id === classId)
 }

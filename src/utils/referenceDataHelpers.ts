@@ -1,10 +1,18 @@
 import { SalvageUnionReference } from 'salvageunion-reference'
+import type {
+  SURefCoreClass,
+  SURefAdvancedClass,
+  SURefHybridClass,
+  SURefChassis,
+  SURefCrawler,
+  SURefCrawlerTechLevel,
+} from 'salvageunion-reference'
 
 /**
  * Get all classes (Core, Advanced, and Hybrid) combined
  * @returns Array of all classes
  */
-export function getAllClasses() {
+export function getAllClasses(): (SURefCoreClass | SURefAdvancedClass | SURefHybridClass)[] {
   return [
     ...SalvageUnionReference.CoreClasses.all(),
     ...SalvageUnionReference.AdvancedClasses.all(),
@@ -17,7 +25,9 @@ export function getAllClasses() {
  * @param classId - The ID of the class to find
  * @returns The class object or undefined if not found
  */
-export function findClassById(classId: string) {
+export function findClassById(
+  classId: string
+): SURefCoreClass | SURefAdvancedClass | SURefHybridClass | undefined {
   const allClasses = getAllClasses()
   return allClasses.find((c) => c.id === classId)
 }
@@ -38,7 +48,7 @@ export function getClassNameById(classId: string | null, fallback = 'Unknown'): 
  * @param chassisId - The ID of the chassis to find
  * @returns The chassis object or undefined if not found
  */
-export function findChassisById(chassisId: string) {
+export function findChassisById(chassisId: string): SURefChassis | undefined {
   return SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
 }
 
@@ -58,7 +68,7 @@ export function getChassisNameById(chassisId: string | null, fallback = 'Unknown
  * @param crawlerId - The ID of the crawler to find
  * @returns The crawler object or undefined if not found
  */
-export function findCrawlerById(crawlerId: string) {
+export function findCrawlerById(crawlerId: string): SURefCrawler | undefined {
   return SalvageUnionReference.Crawlers.find((c) => c.id === crawlerId)
 }
 
@@ -78,7 +88,7 @@ export function getCrawlerNameById(crawlerId: string | null, fallback = 'Unknown
  * @param techLevel - The tech level number to find
  * @returns The tech level object or undefined if not found
  */
-export function findCrawlerTechLevel(techLevel: number) {
+export function findCrawlerTechLevel(techLevel: number): SURefCrawlerTechLevel | undefined {
   return SalvageUnionReference.CrawlerTechLevels.find((tl) => tl.techLevel === techLevel)
 }
 
