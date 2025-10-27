@@ -31,7 +31,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.4",
-    "salvageunion-reference": "^1.32.1",
+    "salvageunion-reference": "^1.32.2",
     "type-fest": "^5.1.0"
   },
   "devDependencies": {
@@ -58,6 +58,6 @@
     "typescript-eslint": "^8.46.2",
     "vite": "^7.1.12",
     "vite-plugin-compression": "^0.5.1",
-    "vitest": "^4.0.3"
+    "vitest": "^4.0.4"
   }
 }
