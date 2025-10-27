@@ -5,7 +5,7 @@ import { getSession, onAuthStateChange } from '../../lib/api'
 import type { User } from '@supabase/supabase-js'
 import { DashboardContent } from './DashboardContent'
 import { GamesGrid } from './GamesGrid'
-import { GameShow } from './GameShow'
+import { GameLiveSheet } from './GameLiveSheet'
 import { JoinGame } from './JoinGame'
 import { CrawlersGrid } from './CrawlersGrid'
 import { CrawlerEdit } from './CrawlerEdit'
@@ -106,7 +106,7 @@ export default function Dashboard() {
         <Routes>
           <Route path="/" element={<DashboardContent />} />
           <Route path="/games" element={<GamesGrid />} />
-          <Route path="/games/:gameId" element={<GameShow />} />
+          <Route path="/games/:gameId" element={<GameLiveSheet />} />
           <Route path="/join" element={<JoinGame />} />
           <Route path="/crawlers" element={<CrawlersGrid />} />
           <Route path="/crawlers/:id" element={<CrawlerEdit />} />

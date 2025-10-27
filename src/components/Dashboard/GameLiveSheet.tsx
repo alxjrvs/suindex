@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { Box, Flex, Grid, Input, Text, Textarea, VStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Input, Text, Textarea, VStack, HStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
 import {
@@ -24,11 +24,13 @@ import {
   getChassisNameById,
 } from '../../utils/referenceDataHelpers'
 import { ActiveToggle } from '../shared/ActiveToggle'
+import { RoundedBox } from '../shared/RoundedBox'
+import { useCreateEntity } from '../../hooks/useCreateEntity'
 
 type GameInviteRow = GameInvite
 type ExternalLinkRow = ExternalLink
 
-export function GameShow() {
+export function GameLiveSheet() {
   const { gameId } = useParams<{ gameId: string }>()
   const navigate = useNavigate()
 
@@ -66,6 +68,13 @@ export function GameShow() {
   // Danger zone
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+
+  // Crawler creation
+  const { createEntity: createCrawler, isLoading: isCreatingCrawler } = useCreateEntity({
+    table: 'crawlers',
+    navigationPath: (id) => `/dashboard/crawlers/${id}`,
+    placeholderData: gameId ? { game_id: gameId, active: true } : undefined,
+  })
 
   const loadExternalLinks = useCallback(async () => {
     if (!gameId) return
@@ -271,29 +280,70 @@ export function GameShow() {
 
   const crawlerMaxSP = crawler?.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
 
+  // Separate active and inactive pilots
+  const activePilots = pilots.filter((p) => p.pilot.active)
+  const inactivePilots = pilots.filter((p) => !p.pilot.active)
+
+  // Get all mechs from pilots and separate active/inactive
+  const allMechs = pilots.map((p) => p.mech).filter((m) => m !== null)
+  const activeMechs = allMechs.filter((m) => m.active)
+  const inactiveMechs = allMechs.filter((m) => !m.active)
+
   return (
     <Box p={4} maxW="6xl" mx="auto">
-      {/* Header */}
-      <Box mb={4}>
-        <Button
-          onClick={() => navigate('/dashboard')}
-          variant="plain"
-          color="su.brick"
-          mb={4}
-          _hover={{ textDecoration: 'underline' }}
-        >
-          ← Back to Dashboard
-        </Button>
+      {/* Back Button */}
+      <Button
+        onClick={() => navigate('/dashboard')}
+        variant="plain"
+        color="su.brick"
+        mb={4}
+        _hover={{ textDecoration: 'underline' }}
+      >
+        ← Back to Dashboard
+      </Button>
 
+      {/* Control Bar */}
+      <RoundedBox
+        bg="su.gameBlue"
+        title={isEditingGame ? undefined : gameWithRelationships.name}
+        rightContent={
+          isMediator && !isEditingGame ? (
+            <HStack gap={2}>
+              <ActiveToggle
+                active={gameWithRelationships.active ?? false}
+                onChange={async (active) => {
+                  if (!gameId) return
+                  try {
+                    await updateGame(gameId, { active })
+                    reloadGame()
+                  } catch (err) {
+                    console.error('Error updating game active status:', err)
+                  }
+                }}
+              />
+              <Button
+                onClick={() => setIsEditingGame(true)}
+                variant="plain"
+                color="su.white"
+                fontSize="sm"
+                _hover={{ textDecoration: 'underline' }}
+              >
+                Edit
+              </Button>
+            </HStack>
+          ) : undefined
+        }
+        mb={4}
+      >
         {isEditingGame ? (
-          <VStack gap={4} align="stretch">
+          <VStack gap={4} align="stretch" w="full" p={4}>
             <Box>
               <Box
                 as="label"
                 display="block"
                 fontSize="sm"
                 fontWeight="medium"
-                color="su.black"
+                color="su.white"
                 mb={2}
               >
                 Game Name
@@ -301,9 +351,9 @@ export function GameShow() {
               <Input
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
-                borderColor="su.lightBlue"
-                color="su.black"
-                focusRingColor="su.brick"
+                borderColor="su.white"
+                color="su.white"
+                focusRingColor="su.white"
               />
             </Box>
             <Box>
@@ -312,7 +362,7 @@ export function GameShow() {
                 display="block"
                 fontSize="sm"
                 fontWeight="medium"
-                color="su.black"
+                color="su.white"
                 mb={2}
               >
                 Description
@@ -321,13 +371,13 @@ export function GameShow() {
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
                 rows={4}
-                borderColor="su.lightBlue"
-                color="su.black"
-                focusRingColor="su.brick"
+                borderColor="su.white"
+                color="su.white"
+                focusRingColor="su.white"
               />
             </Box>
             {saveGameError && (
-              <Text color="red.600" fontSize="sm">
+              <Text color="red.300" fontSize="sm">
                 {saveGameError}
               </Text>
             )}
@@ -335,8 +385,8 @@ export function GameShow() {
               <Button
                 onClick={handleSaveGame}
                 disabled={saveGameLoading}
-                bg="su.brick"
-                color="su.white"
+                bg="su.white"
+                color="su.gameBlue"
                 fontWeight="bold"
                 py={2}
                 px={6}
@@ -348,7 +398,7 @@ export function GameShow() {
               <Button
                 onClick={handleCancelEdit}
                 disabled={saveGameLoading}
-                bg="gray.500"
+                bg="su.brick"
                 color="su.white"
                 fontWeight="bold"
                 py={2}
@@ -361,158 +411,72 @@ export function GameShow() {
             </Flex>
           </VStack>
         ) : (
-          <Box>
-            <Flex align="center" gap={4} mb={4} justifyContent="space-between">
-              <Flex align="center" gap={4}>
-                <Heading level="h1">{gameWithRelationships.name}</Heading>
-                {isMediator && (
-                  <Button
-                    onClick={() => setIsEditingGame(true)}
-                    variant="plain"
-                    color="su.brick"
-                    fontSize="sm"
-                    _hover={{ textDecoration: 'underline' }}
-                  >
-                    Edit
-                  </Button>
-                )}
-              </Flex>
-              {isMediator && (
-                <ActiveToggle
-                  active={gameWithRelationships.active ?? false}
-                  onChange={async (active) => {
-                    if (!gameId) return
-                    try {
-                      await updateGame(gameId, { active })
-                      reloadGame()
-                    } catch (err) {
-                      console.error('Error updating game active status:', err)
-                    }
-                  }}
-                />
-              )}
-            </Flex>
-            {gameWithRelationships.description && (
-              <Text fontSize="lg" color="su.black" whiteSpace="pre-wrap">
-                {gameWithRelationships.description}
-              </Text>
-            )}
-          </Box>
+          gameWithRelationships.description && (
+            <Text fontSize="md" color="su.white" whiteSpace="pre-wrap" p={4}>
+              {gameWithRelationships.description}
+            </Text>
+          )
         )}
-      </Box>
-      {/* Main Content */}
-      <Grid templateColumns={{ base: '1fr', lg: 'repeat(3, 1fr)' }} gap={4}>
-        {/* Left: The Union (2/3) */}
-        <Box gridColumn={{ base: '1', lg: 'span 2' }}>
-          <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
-            <Heading level="h2" mb={3}>
-              The Union
-            </Heading>
-            {crawler ? (
-              <>
-                <Box
-                  bg="su.crawlerPink"
-                  borderWidth="2px"
-                  borderColor="su.black"
-                  borderRadius="lg"
-                  p={6}
-                  h="48"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="space-between"
-                  w="full"
-                >
-                  <Box>
-                    <Text
-                      fontSize="xl"
-                      fontWeight="bold"
-                      color="su.white"
-                      lineHeight="tight"
-                      lineClamp={1}
-                    >
-                      {crawler.name}
-                    </Text>
-                    <Text fontSize="sm" color="su.white" opacity={0.9} mt={1} lineClamp={1}>
-                      {crawlerTypeName}
-                    </Text>
-                  </Box>
+      </RoundedBox>
+      {/* Main Content - Grid Layout with max 5 cells wide */}
+      <Grid
+        templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+        gap={4}
+        maxW="100%"
+        gridAutoFlow="dense"
+      >
+        {/* Row 1: Crawler Container */}
+        <RoundedBox
+          bg="su.crawlerPink"
+          title="Crawler"
+          gridColumn={{ base: '1 / -1', md: 'span 2' }}
+        >
+          {crawler ? (
+            <VStack gap={2} align="stretch" w="full" p={4}>
+              <Button
+                onClick={() => navigate(`/dashboard/crawlers/${crawler.id}`)}
+                variant="plain"
+                color="su.white"
+                textAlign="left"
+                _hover={{ textDecoration: 'underline' }}
+                p={0}
+              >
+                <VStack align="stretch" gap={1} w="full">
+                  <Text fontSize="xl" fontWeight="bold" color="su.white">
+                    {crawler.name}
+                  </Text>
+                  <Text fontSize="sm" color="su.white" opacity={0.9}>
+                    {crawlerTypeName}
+                  </Text>
                   <Text fontSize="sm" color="su.white" opacity={0.75}>
                     SP: {Math.max(crawlerMaxSP - (crawler.current_damage ?? 0), 0)}/{crawlerMaxSP}
                   </Text>
-                </Box>
-
-                {/* Pilots and Mechs */}
-                {pilots.length > 0 ? (
-                  <VStack mt={4} gap={3} align="stretch">
-                    <Heading level="h3">Pilots</Heading>
-                    {pilots.map(({ pilot, mech }) => {
-                      const className = pilot.class_id
-                        ? getClassNameById(pilot.class_id, 'Unknown Class')
-                        : 'No Class'
-                      const chassisName = mech?.chassis_id
-                        ? getChassisNameById(mech.chassis_id, 'Unknown Chassis')
-                        : null
-                      const mechDisplayName = mech
-                        ? mech.pattern || chassisName || 'Unnamed Mech'
-                        : null
-
-                      return (
-                        <Flex
-                          key={pilot.id}
-                          align="center"
-                          justify="space-between"
-                          p={3}
-                          bg="su.lightOrange"
-                          borderRadius="lg"
-                        >
-                          <Box flex={1}>
-                            <Text fontWeight="bold" color="su.black">
-                              {pilot.callsign}
-                            </Text>
-                            <Text fontSize="sm" color="su.brick">
-                              {className}
-                            </Text>
-                          </Box>
-                          {mechDisplayName ? (
-                            <Box flex={1} textAlign="right">
-                              <Text fontWeight="bold" color="su.black">
-                                {mechDisplayName}
-                              </Text>
-                              {mech?.pattern && chassisName && (
-                                <Text fontSize="sm" color="su.brick">
-                                  {chassisName}
-                                </Text>
-                              )}
-                            </Box>
-                          ) : (
-                            <Text fontSize="sm" color="su.brick" fontStyle="italic">
-                              No mech assigned
-                            </Text>
-                          )}
-                        </Flex>
-                      )
-                    })}
-                  </VStack>
-                ) : (
-                  <Text mt={4} color="su.brick">
-                    No pilots assigned to this crawler yet.
-                  </Text>
-                )}
-              </>
-            ) : (
+                </VStack>
+              </Button>
+            </VStack>
+          ) : (
+            <Flex align="center" justify="center" p={4}>
               <Button
-                bg="su.pink"
-                color="su.white"
+                onClick={async () => {
+                  try {
+                    await createCrawler()
+                  } catch (err) {
+                    console.error('Failed to create crawler:', err)
+                  }
+                }}
+                bg="su.white"
+                color="su.crawlerPink"
                 fontWeight="bold"
                 py={2}
                 px={4}
                 _hover={{ opacity: 0.9 }}
+                disabled={isCreatingCrawler}
               >
-                Create Crawler
+                {isCreatingCrawler ? 'Creating...' : '+ Create Crawler'}
               </Button>
-            )}
-          </Box>
-        </Box>
+            </Flex>
+          )}
+        </RoundedBox>
 
         {/* Right: Members + Invites */}
         <VStack gridColumn={{ base: '1', lg: '3' }} gap={4} align="stretch">

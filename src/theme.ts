@@ -5,6 +5,7 @@ import { textRecipe } from './recipes/text.recipe'
 // Salvage Union color palette - raw values
 export const suColors = {
   blue: 'rgb(143, 195, 216)',
+  gameBlue: 'rgb(115, 201, 230)', // Tech level 1 blue - for games
   green: 'rgb(122, 151, 138)',
   darkGreen: 'rgb(92, 121, 108)', // Slightly darker mech green
   orange: 'rgb(239, 137, 79)',
@@ -55,6 +56,7 @@ const config = defineConfig({
       colors: {
         su: {
           blue: { value: suColors.blue },
+          gameBlue: { value: suColors.gameBlue },
           green: { value: suColors.green },
           darkGreen: { value: suColors.darkGreen },
           orange: { value: suColors.orange },
