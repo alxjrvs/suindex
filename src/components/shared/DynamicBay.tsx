@@ -197,7 +197,7 @@ export function DynamicBay({
               const [schemaName, entityId] = bayItem.ref.split('||')
               const entityName = schemaNameToEntityName(schemaName)
               const urlSchemaName = getSchemaName(entityName)
-              window.open(`/schema/${urlSchemaName}/item/${entityId}`, '_blank')
+              window.open(`/schema/${urlSchemaName.toLowerCase()}/item/${entityId}`, '_blank')
             }
           }
         }
