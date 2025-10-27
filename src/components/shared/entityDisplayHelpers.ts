@@ -4,8 +4,6 @@ import type {
   SURefEntityName,
   SURefSchemaName,
 } from 'salvageunion-reference'
-import type { DataValue } from '../../types/common'
-import { formatTraits } from '../../utils/displayUtils'
 
 export interface Stat {
   label: string
@@ -170,7 +168,7 @@ export function getSchemaName(entityType: SURefEntityName): string {
  * Get activation currency based on entity type
  */
 export function getActivationCurrency(
-  entityType: SURefEntityName,
+  entityType: SURefEntityName | undefined,
   variable: boolean = false
 ): 'AP' | 'EP' | 'XP' {
   if (variable) return 'XP'
@@ -227,71 +225,6 @@ export function extractHeaderStats(data: SURefEntity): Stat[] {
   }
 
   return stats
-}
-
-/**
- * Extract details for header (activation cost, range, damage, traits)
- */
-export function extractDetails(data: SURefEntity, entityType: SURefEntityName): DataValue[] {
-  const details: DataValue[] = []
-  const variableCost = 'activationCurrency' in data && entityType === 'Ability'
-  const activationCurrency = getActivationCurrency(entityType, variableCost)
-
-  // Activation cost
-  if ('activationCost' in data && data.activationCost !== undefined) {
-    const isVariable = String(data.activationCost).toLowerCase() === 'variable'
-    const costValue = isVariable
-      ? `X ${activationCurrency}`
-      : `${data.activationCost} ${activationCurrency}`
-    details.push({ value: costValue, cost: true })
-  }
-
-  // Action type
-  if ('actionType' in data && data.actionType) {
-    if ('mechActionType' in data && data.mechActionType) {
-      const mechActionType = data.mechActionType.includes('action')
-        ? data.mechActionType
-        : `${data.mechActionType} Action (Mech)`
-
-      const actionType = data.actionType.includes('action')
-        ? data.actionType
-        : `${data.actionType} Action (Pilot)`
-
-      details.push({ value: mechActionType })
-      details.push({ value: actionType })
-    } else {
-      const actionType = data.actionType.includes('action')
-        ? data.actionType
-        : `${data.actionType} Action`
-      details.push({ value: actionType })
-    }
-  }
-
-  // Range - no "Range:" prefix for abilities
-  if ('range' in data && data.range) {
-    const rangeValue = entityType === 'Ability' ? data.range : `Range:${data.range}`
-    details.push({ value: rangeValue })
-  }
-
-  // Damage
-  if ('damage' in data && data.damage) {
-    details.push({
-      value: `Damage:${data.damage.amount}${data.damage.type}`,
-    })
-  }
-
-  // Traits
-  const traits = 'traits' in data ? formatTraits(data.traits) : []
-  traits.forEach((t) => {
-    details.push({ value: t })
-  })
-
-  // Recommended (for modules)
-  if ('recommended' in data && data.recommended) {
-    details.push({ value: 'Recommended' })
-  }
-
-  return details
 }
 
 /**

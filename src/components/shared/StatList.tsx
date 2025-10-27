@@ -8,13 +8,14 @@ interface Stat {
 
 interface StatListProps {
   stats: Stat[]
+  compact?: boolean
 }
 
-export function StatList({ stats }: StatListProps) {
+export function StatList({ stats, compact = false }: StatListProps) {
   return (
-    <Flex gap={2} flexWrap="wrap">
+    <Flex gap={2}>
       {stats.map((stat, index) => (
-        <StatDisplay key={index} label={stat.label} value={stat.value ?? '-'} />
+        <StatDisplay compact={compact} key={index} label={stat.label} value={stat.value ?? '-'} />
       ))}
     </Flex>
   )

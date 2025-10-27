@@ -21,6 +21,7 @@ export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefEntityName, EntityDispl
   },
   Creature: {
     headerColor: 'su.orange',
+    actionHeaderBgColor: 'su.orange',
   },
   BioTitan: {
     actionHeaderBgColor: 'su.orange',
@@ -46,5 +47,8 @@ export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefEntityName, EntityDispl
     headerColor: 'su.pink',
     actionHeaderBgColor: 'su.pink',
     actionHeaderTextColor: 'white',
+  },
+  Chassis: {
+    headerColor: 'su.green',
   },
 }

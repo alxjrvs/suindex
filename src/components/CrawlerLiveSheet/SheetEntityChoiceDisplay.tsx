@@ -136,7 +136,6 @@ export function SheetEntityChoiceDisplay({
         schemaNames={schemaNames}
         onSelect={handleSelect}
         title={`Select ${choice.name}`}
-        showTechLevelFilter={true}
       />
     </>
   )

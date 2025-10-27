@@ -59,11 +59,7 @@ describe('LiveSheetControlBar', () => {
         return {}
       })
 
-      render(
-        
-          <CrawlerControlBar gameId={null} onGameChange={mockOnGameChange} />
-        
-      )
+      render(<CrawlerControlBar gameId={null} onGameChange={mockOnGameChange} />)
 
       await waitFor(() => {
         expect(screen.getByText('Game')).toBeInTheDocument()
@@ -95,9 +91,7 @@ describe('LiveSheetControlBar', () => {
       })
 
       render(
-        
-          <CrawlerControlBar gameId="game-1" savedGameId="game-1" onGameChange={mockOnGameChange} />
-        
+        <CrawlerControlBar gameId="game-1" savedGameId="game-1" onGameChange={mockOnGameChange} />
       )
 
       await waitFor(() => {
@@ -124,14 +118,12 @@ describe('LiveSheetControlBar', () => {
       })
 
       render(
-        
-          <LiveSheetControlBar
-            config={MECH_CONTROL_BAR_CONFIG}
-            relationId="pilot-1"
-            savedRelationId="pilot-1"
-            onRelationChange={mockOnPilotChange}
-          />
-        
+        <LiveSheetControlBar
+          config={MECH_CONTROL_BAR_CONFIG}
+          relationId="pilot-1"
+          savedRelationId="pilot-1"
+          onRelationChange={mockOnPilotChange}
+        />
       )
 
       await waitFor(() => {

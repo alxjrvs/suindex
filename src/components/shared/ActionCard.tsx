@@ -3,52 +3,25 @@ import { ActivationCostBox } from './ActivationCostBox'
 import { DetailsList } from './DetailsList'
 import { RoundedBox } from './RoundedBox'
 import type { ReactNode } from 'react'
-import type { DataValue } from '../../types/common'
-import { formatTraits } from '../../utils/displayUtils'
 import type { SURefActionMetaList } from 'salvageunion-reference'
 
 interface ActionCardProps {
   action: SURefActionMetaList
   activationCurrency?: string
   headerBgColor?: string
-  headerTextColor?: string
 }
 
 export function ActionCard({
   action,
   activationCurrency = 'AP',
   headerBgColor = 'su.lightBlue',
-  headerTextColor = 'su.black',
 }: ActionCardProps) {
   const description =
     'description' in action && action.description
       ? action.description.replaceAll('•', '\n•')
       : undefined
 
-  // Build details array for DetailsList
-  const buildDetailsArray = (): DataValue[] => {
-    const details: DataValue[] = []
-
-    if ('damage' in action && action.damage) {
-      details.push({ value: `${action.damage.amount}${action.damage.type}` })
-    }
-    if ('range' in action && action.range) {
-      details.push({ value: `Range: ${action.range}` })
-    }
-    if ('actionType' in action && action.actionType) {
-      details.push({ value: action.actionType })
-    }
-    if ('traits' in action && action.traits && action.traits.length > 0) {
-      const formattedTraits = formatTraits(action.traits).join(', ')
-      details.push({ value: formattedTraits })
-    }
-
-    return details
-  }
-
-  const itemDetailsElement: ReactNode = (
-    <DetailsList values={buildDetailsArray()} textColor={headerTextColor} />
-  )
+  const itemDetailsElement: ReactNode = <DetailsList data={action} />
 
   const descriptionElement: ReactNode = description ? (
     <Text color="su.black" whiteSpace="pre-line">
@@ -98,23 +71,7 @@ export function ActionCard({
                 </Text>
               )}
             </Flex>
-            <DetailsList
-              values={(() => {
-                const details: DataValue[] = []
-                if ('damage' in subAbility && subAbility.damage) {
-                  details.push({ value: `${subAbility.damage.amount}${subAbility.damage.type}` })
-                }
-                if ('range' in subAbility && subAbility.range) {
-                  details.push({ value: `Range: ${subAbility.range}` })
-                }
-                if ('traits' in subAbility && subAbility.traits && subAbility.traits.length > 0) {
-                  const formattedTraits = formatTraits(subAbility.traits).join(', ')
-                  details.push({ value: formattedTraits })
-                }
-                return details
-              })()}
-              textColor="su.black"
-            />
+            <DetailsList data={subAbility} />
             {subAbility.description && (
               <Text fontSize="sm" color="su.black" mt={1}>
                 {subAbility.description}
@@ -146,7 +103,6 @@ export function ActionCard({
       title={'name' in action ? action.name : undefined}
       leftContent={leftContentElement}
       rightContent={itemDetailsElement}
-      headerPadding={2}
       bodyPadding={hasContent ? 3 : 0}
     >
       {hasContent && (

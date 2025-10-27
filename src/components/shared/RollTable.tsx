@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Box, Flex, IconButton, Text } from '@chakra-ui/react'
+import { Box, Flex, IconButton, Text, Button } from '@chakra-ui/react'
 import { resultForTable, type SURefMetaTable } from 'salvageunion-reference'
 import { roll } from '@randsum/roller'
 
@@ -68,7 +68,7 @@ export function RollTable({
   }
 
   return (
-    <Box position="relative" overflow="visible">
+    <Box borderColor="su.black" borderWidth="3px" position="relative" overflow="visible">
       <Box transition="opacity 0.2s" overflow="visible">
         {showCommand && (
           <Flex
@@ -130,49 +130,53 @@ export function RollTable({
                 isHighlighted ? '0 0 0 4px rgba(0,0,0,0.9), 0 14px 40px rgba(0,0,0,0.85)' : 'none'
               }
               zIndex={isHighlighted ? 1 : 0}
+              gap={compact ? 1 : 2}
             >
-              {/* Roll Again Button - Absolutely positioned to the left */}
-              {isHighlighted && (
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleRoll()
-                  }}
-                  position="absolute"
-                  left={compact ? '-32px' : '-40px'}
-                  top="50%"
-                  transform="translateY(-50%)"
-                  color="su.white"
-                  bg="su.black"
-                  _hover={{ bg: 'su.brick' }}
-                  borderRadius="md"
-                  size={compact ? 'xs' : 'sm'}
-                  aria-label="Roll again"
-                  title="Roll again"
-                  zIndex={2}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height={compact ? '16' : '20'}
-                    viewBox="0 -960 960 960"
-                    width={compact ? '16' : '20'}
-                    fill="currentColor"
-                  >
-                    <path d="M240-120q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM240-600q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240 240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />
-                  </svg>
-                </IconButton>
-              )}
-              <Flex flex="1" alignItems="center" justifyContent="center" alignSelf="center">
+              <Flex
+                flex="1"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                gap={isHighlighted ? 0.5 : 0}
+                minH="100%"
+                alignSelf="stretch"
+              >
                 <Text
                   fontSize={compact ? 'md' : 'xl'}
                   fontWeight="bold"
                   color="su.black"
                   textAlign="center"
+                  alignSelf="center"
                 >
                   {key}
                 </Text>
+                {isHighlighted && (
+                  <Button
+                    onClick={(e: React.MouseEvent) => {
+                      e.stopPropagation()
+                      handleRoll()
+                    }}
+                    w={compact ? 'auto' : 'full'}
+                    px={compact ? 2 : undefined}
+                    bg="su.black"
+                    alignSelf="flex-end"
+                    color="su.white"
+                    fontSize={compact ? 'xs' : 'sm'}
+                    fontWeight="bold"
+                    _hover={{ bg: 'su.brick' }}
+                    borderRadius="md"
+                  >
+                    Reroll
+                  </Button>
+                )}
               </Flex>
-              <Flex flex="4" flexDirection="row" flexWrap="wrap" py={compact ? 0.5 : 1}>
+              <Flex
+                flex="4"
+                flexDirection="row"
+                flexWrap="wrap"
+                alignItems="flex-end"
+                py={compact ? 0.5 : 1}
+              >
                 <Text color="su.black" fontSize={compact ? 'xs' : 'md'}>
                   {showTitle && (
                     <Text as="span" fontWeight="bold">

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, VStack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { DetailsList } from './DetailsList'
 import { StatDisplay } from '../StatDisplay'
@@ -8,12 +8,12 @@ import { ActionCard } from './ActionCard'
 import { PageReferenceDisplay } from './PageReferenceDisplay'
 import { StatBonusDisplay } from './StatBonusDisplay'
 import { RollTable } from './RollTable'
+import { Text } from '../base/Text'
 import { RoundedBox } from './RoundedBox'
 import { techLevelColors } from '../../theme'
 import {
   getActivationCurrency,
   extractHeaderStats,
-  extractDetails,
   extractSidebarData,
   extractContentSections,
   extractHeader,
@@ -31,13 +31,11 @@ import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { SheetDisplay } from './SheetDisplay'
 
 interface EntityDisplayProps {
-  data: SURefEntity
+  data: SURefEntity | undefined
   headerColor?: string
   actionHeaderBgColor?: string
-  actionHeaderTextColor?: string
   children?: ReactNode
   onClick?: () => void
-  dimmed?: boolean
   disabled?: boolean
   disableRemove?: boolean
   onRemove?: () => void
@@ -50,19 +48,37 @@ interface EntityDisplayProps {
   selectButtonText?: string
   label?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
+  rightLabel?: string
   schemaName: SURefSchemaName
   compact?: boolean
+  overflow?: 'hidden' | 'visible'
+}
+
+function calculateBGColor(
+  sChassis: boolean,
+  headerColor: string = '',
+  techLevel: number | undefined
+) {
+  if (sChassis) {
+    return 'su.green'
+  }
+  if (headerColor) {
+    return headerColor
+  }
+  if (techLevel) {
+    return techLevelColors[techLevel]
+  }
+  return 'su.orange'
 }
 
 export function EntityDisplay({
+  rightLabel,
   data,
   label,
   headerColor,
   actionHeaderBgColor,
-  actionHeaderTextColor,
   children,
   onClick,
-  dimmed = false,
   disabled = false,
   disableRemove = false,
   onRemove,
@@ -77,6 +93,8 @@ export function EntityDisplay({
   schemaName,
   compact = false,
 }: EntityDisplayProps) {
+  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
+  if (!data) return null
   // Convert schemaName to entityName for helper functions
   const entityName = schemaNameToEntityName(schemaName)
 
@@ -88,7 +106,6 @@ export function EntityDisplay({
   const description = extractDescription(data)
   const notes = extractNotes(data)
   const stats = extractHeaderStats(data)
-  const details = extractDetails(data, entityName)
   const sidebar = extractSidebarData(data)
   const sections = extractContentSections(data)
   const pageRef = extractPageReference(data)
@@ -100,10 +117,16 @@ export function EntityDisplay({
   const isModule = schemaName === 'modules'
   const isSystem = schemaName === 'systems'
   const isEquipment = schemaName === 'equipment'
-  const headerDescription = !isEquipment && !isModule && !isSystem
+  const isChassis = schemaName === 'chassis'
+  const isTrait = schemaName === 'traits'
+  const isClass =
+    schemaName === 'classes.core' ||
+    schemaName === 'classes.advanced' ||
+    schemaName === 'classes.hybrid'
+  const headerDescription =
+    !isClass && !isTrait && !isEquipment && !isModule && !isSystem && !isChassis
 
   // Expansion state management (from Frame)
-  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
   const handleToggle = () => {
     if (onToggleExpanded) {
@@ -113,11 +136,9 @@ export function EntityDisplay({
     }
   }
 
-  // Styling (from Frame)
-  const backgroundColor = disabled
-    ? 'su.grey'
-    : headerColor || (techLevel ? techLevelColors[techLevel] : 'su.orange')
-  const opacityValue = dimmed ? 0.5 : 1
+  const backgroundColor = calculateBGColor(isChassis, headerColor, techLevel)
+
+  const opacityValue = disabled ? 0.5 : 1
 
   // Click handling for header only
   const handleHeaderClick = () => {
@@ -126,7 +147,7 @@ export function EntityDisplay({
         handleToggle()
       }
     } else {
-      if (onClick && !dimmed) {
+      if (onClick && !disabled) {
         onClick()
       } else if (collapsible) {
         handleToggle()
@@ -135,7 +156,7 @@ export function EntityDisplay({
   }
 
   const headerCursorStyle =
-    !showSelectButton && onClick && !dimmed ? 'pointer' : collapsible ? 'pointer' : 'default'
+    !showSelectButton && onClick && !disabled ? 'pointer' : collapsible ? 'pointer' : 'default'
 
   // Build left content (expand icon + level)
   const leftContentElement = (
@@ -147,7 +168,7 @@ export function EntityDisplay({
 
   // Build title content (header + details)
   const subTitleContentElement = header ? (
-    <DetailsList textColor="su.white" values={details} compact={compact} />
+    <DetailsList data={data} entityType={entityName} compact={compact} />
   ) : undefined
 
   // Build right content (description + stats + collapsible indicator)
@@ -166,10 +187,15 @@ export function EntityDisplay({
           {description}
         </Text>
       )}
-      {stats.length > 0 && (
+      {!compact && stats.length > 0 && (
         <Box ml="auto">
-          <StatList stats={stats} />
+          <StatList stats={stats} compact={compact} />
         </Box>
+      )}
+      {rightLabel && (
+        <Text variant="pseudoheader" fontSize="lg" ml="auto">
+          {rightLabel}
+        </Text>
       )}
       {collapsible && (
         <Flex alignItems="center" justifyContent="center" minW="25px" alignSelf="center">
@@ -192,7 +218,6 @@ export function EntityDisplay({
       title={header}
       subTitleContent={subTitleContentElement}
       rightContent={rightContentElement}
-      headerPadding={compact ? 2 : 3}
       bodyPadding={0}
       onHeaderClick={handleHeaderClick}
       headerCursor={headerCursorStyle}
@@ -200,18 +225,18 @@ export function EntityDisplay({
       label={label}
     >
       {(!collapsible || isExpanded) && (
-        <Flex bg={backgroundColor} w="full">
+        <Flex bg={backgroundColor} w="full" borderTopRightRadius="2xl" borderTopLeftRadius="2xl">
           {/* Sidebar */}
           {!compact && sidebar.showSidebar && (sidebar.slotsRequired || sidebar.salvageValue) && (
             <VStack
               alignItems="center"
               justifyContent="flex-start"
               pb={3}
-              pt={3}
-              gap={3}
+              gap={2}
               minW={'80px'}
               maxW={'80px'}
               bg={backgroundColor}
+              borderBottomLeftRadius="2xl"
               overflow="visible"
             >
               {sidebar.slotsRequired && (
@@ -232,7 +257,13 @@ export function EntityDisplay({
             justifyContent={contentJustify}
             overflow="visible"
             minW="0"
+            borderBottomRightRadius="2xl"
           >
+            {compact && stats.length > 0 && (
+              <Box ml="auto">
+                <StatList stats={stats} compact={compact} />
+              </Box>
+            )}
             {compact && sidebar.showSidebar && (sidebar.slotsRequired || sidebar.salvageValue) && (
               <Flex
                 alignItems="center"
@@ -286,14 +317,16 @@ export function EntityDisplay({
             )}
             {/* Stat Bonus (for Systems/Modules/Equipment) */}
             {sections.showStatBonus && 'statBonus' in data && data.statBonus && (
-              <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
+              <Box borderRadius="xl">
+                <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
+              </Box>
             )}
             {/* Actions (for Systems/Modules/Equipment) */}
             {sections.showActions &&
               'actions' in data &&
               data.actions &&
               data.actions.length > 0 && (
-                <VStack gap={compact ? 2 : 3} alignItems="stretch">
+                <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="xl">
                   {data.actions.map((action, index) => (
                     <ActionCard
                       key={index}
@@ -305,19 +338,21 @@ export function EntityDisplay({
               )}
             {/* Roll Table (for Systems/Modules/Equipment) */}
             {sections.showRollTable && 'table' in data && data.table && (
-              <RollTable
-                table={data.table}
-                showCommand
-                compact
-                tableName={'name' in data ? String(data.name) : undefined}
-              />
+              <Box borderRadius="xl" position="relative" zIndex={10}>
+                <RollTable
+                  table={data.table}
+                  showCommand
+                  compact
+                  tableName={'name' in data ? String(data.name) : undefined}
+                />
+              </Box>
             )}
             {/* Systems (for Vehicles and Drones) */}
             {sections.showSystems &&
               'systems' in data &&
               data.systems &&
               data.systems.length > 0 && (
-                <VStack gap={compact ? 2 : 3} alignItems="stretch">
+                <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="xl">
                   <Heading
                     level="h3"
                     fontSize={compact ? 'md' : 'lg'}
@@ -346,7 +381,7 @@ export function EntityDisplay({
               )}
             {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds, Crawlers) */}
             {sections.showAbilities && (
-              <VStack gap={compact ? 2 : 3} alignItems="stretch">
+              <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="xl">
                 <Heading
                   level="h3"
                   fontSize={compact ? 'md' : 'lg'}
@@ -357,12 +392,7 @@ export function EntityDisplay({
                   Abilities
                 </Heading>
                 {abilities.map((ability, index) => (
-                  <ActionCard
-                    key={index}
-                    action={ability}
-                    headerBgColor={actionHeaderBgColor}
-                    headerTextColor={actionHeaderTextColor}
-                  />
+                  <ActionCard key={index} action={ability} headerBgColor={actionHeaderBgColor} />
                 ))}
                 {techLevelEffects.map((tle, index) => (
                   <SheetDisplay
@@ -379,11 +409,11 @@ export function EntityDisplay({
               <Button
                 onClick={(e) => {
                   e.stopPropagation()
-                  if (!dimmed) {
+                  if (!disabled) {
                     onClick()
                   }
                 }}
-                disabled={dimmed}
+                disabled={disabled}
                 w="full"
                 mt={3}
                 bg="su.orange"
@@ -441,11 +471,13 @@ export function EntityDisplay({
             )}
             {/* Page Reference */}
             {pageRef && (
-              <PageReferenceDisplay
-                source={pageRef.source}
-                page={pageRef.page}
-                schemaName={getSchemaName(entityName)}
-              />
+              <Box mt="auto">
+                <PageReferenceDisplay
+                  source={pageRef.source}
+                  page={pageRef.page}
+                  schemaName={getSchemaName(entityName)}
+                />
+              </Box>
             )}
           </VStack>
         </Flex>

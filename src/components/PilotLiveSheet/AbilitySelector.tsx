@@ -347,7 +347,7 @@ export function AbilitySelector({
                                   onClick={
                                     isSelectable ? () => handleSelect(ability.id, true) : undefined
                                   }
-                                  dimmed={
+                                  disabled={
                                     alreadySelected ||
                                     !canAfford ||
                                     hasLegendary ||
@@ -432,7 +432,7 @@ export function AbilitySelector({
                                 onClick={
                                   isSelectable ? () => handleSelect(ability.id, true) : undefined
                                 }
-                                dimmed={
+                                disabled={
                                   alreadySelected ||
                                   !canAfford ||
                                   hasLegendary ||

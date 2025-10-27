@@ -3,6 +3,7 @@ import { Flex, Box } from '@chakra-ui/react'
 interface ActivationCostBoxProps {
   cost: string | number
   currency?: string
+  compact?: boolean
 }
 
 /**
@@ -10,7 +11,11 @@ interface ActivationCostBoxProps {
  * Used in ActionCard, AbilityDisplay, and other components that show AP/EP costs
  * Features a black box with white text and a triangular pointer on the right
  */
-export function ActivationCostBox({ cost, currency = 'AP' }: ActivationCostBoxProps) {
+export function ActivationCostBox({
+  cost,
+  currency = 'AP',
+  compact = false,
+}: ActivationCostBoxProps) {
   const displayCost = cost === 'Variable' ? 'X' : cost
 
   return (
@@ -23,11 +28,11 @@ export function ActivationCostBox({ cost, currency = 'AP' }: ActivationCostBoxPr
         alignItems="center"
         justifyContent="center"
         whiteSpace="nowrap"
-        fontSize="15px"
-        px="6px"
-        py="2px"
-        h="20px"
-        minW="50px"
+        fontSize={compact ? '12px' : '15px'}
+        px={compact ? '4px' : '6px'}
+        py={compact ? '1px' : '2px'}
+        h={compact ? '16px' : '20px'}
+        minW={compact ? '40px' : '50px'}
         zIndex={2}
       >
         {`${displayCost} ${currency}`}
@@ -35,9 +40,9 @@ export function ActivationCostBox({ cost, currency = 'AP' }: ActivationCostBoxPr
       <Box
         w={0}
         h={0}
-        borderTop="10px solid transparent"
-        borderBottom="10px solid transparent"
-        borderLeft="10px solid"
+        borderTop={compact ? '8px solid transparent' : '10px solid transparent'}
+        borderBottom={compact ? '8px solid transparent' : '10px solid transparent'}
+        borderLeft={compact ? '8px solid' : '10px solid'}
         borderLeftColor="su.black"
         ml={0}
         zIndex={1}

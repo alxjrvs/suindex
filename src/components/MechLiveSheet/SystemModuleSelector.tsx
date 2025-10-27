@@ -30,7 +30,6 @@ export function SystemModuleSelector({
       schemaNames={['systems', 'modules']}
       onSelect={handleSelect}
       title="Add System or Module"
-      showTechLevelFilter={true}
     />
   )
 }

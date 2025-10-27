@@ -8,6 +8,7 @@ import {
 } from 'salvageunion-reference'
 import Modal from '../Modal'
 import { EntityDisplay } from './EntityDisplay'
+import { TECH_LEVELS } from '../../constants/gameRules'
 
 interface EntitySelectionModalProps {
   isOpen: boolean
@@ -16,13 +17,12 @@ interface EntitySelectionModalProps {
   schemaNames: SURefSchemaName[] | undefined
   /** Callback when an entity is selected - receives the entity ID and schema name */
   onSelect: (entityId: string, schemaName: SURefSchemaName) => void
-  /** Whether to show tech level filtering */
-  showTechLevelFilter?: boolean
   /** Modal title */
   title?: string
-  bg?: string
   /** Prefix for select button text (e.g., "Equip", "Select", "Add") */
   selectButtonTextPrefix?: string
+  /** Optional function to determine if an entity should be disabled */
+  shouldDisableEntity?: (entity: SURefEntity) => boolean
 }
 
 export function EntitySelectionModal({
@@ -30,13 +30,13 @@ export function EntitySelectionModal({
   onClose,
   schemaNames = [],
   onSelect,
-  showTechLevelFilter = true,
-  bg = 'su.green',
   title = 'Select Item',
   selectButtonTextPrefix = 'Select',
+  shouldDisableEntity,
 }: EntitySelectionModalProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [techLevelFilter, setTechLevelFilter] = useState<number | null>(null)
+  const [schemaFilter, setSchemaFilter] = useState<SURefSchemaName | null>(null)
 
   // Fetch all entities from the specified types
   const allEntities = useMemo(() => {
@@ -53,10 +53,28 @@ export function EntitySelectionModal({
     return entities
   }, [schemaNames])
 
-  // Filter entities based on search term and tech level
+  // Helper function to get tech level from entity (handles both direct and nested techLevel)
+  const getEntityTechLevel = (entity: SURefEntity): number | null => {
+    // Check for direct techLevel (systems, modules)
+    if ('techLevel' in entity && typeof entity.techLevel === 'number') {
+      return entity.techLevel
+    }
+
+    // Check for nested techLevel in stats (chassis)
+    if ('stats' in entity && typeof entity.stats === 'object' && entity.stats) {
+      const stats = entity.stats as { techLevel?: number }
+      if ('techLevel' in stats && typeof stats.techLevel === 'number') {
+        return stats.techLevel
+      }
+    }
+
+    return null
+  }
+
+  // Filter entities based on search term, tech level, and schema
   const filteredEntities = useMemo(() => {
     return allEntities
-      .filter(({ entity }) => {
+      .filter(({ entity, schemaName }) => {
         // Search filter
         const matchesSearch =
           !searchTerm ||
@@ -68,18 +86,29 @@ export function EntitySelectionModal({
             entity.description.toLowerCase().includes(searchTerm.toLowerCase()))
 
         // Tech level filter (only if enabled and entity has techLevel)
+        const entityTechLevel = getEntityTechLevel(entity)
         const matchesTechLevel =
-          !showTechLevelFilter ||
           techLevelFilter === null ||
-          !('techLevel' in entity) ||
-          entity.techLevel === techLevelFilter
+          entityTechLevel === null ||
+          entityTechLevel === techLevelFilter
 
-        return matchesSearch && matchesTechLevel
+        // Schema filter (only if multiple schemas and filter is set)
+        const matchesSchema = schemaFilter === null || schemaName === schemaFilter
+
+        return matchesSearch && matchesTechLevel && matchesSchema
       })
       .sort((a, b) => {
-        // Sort by tech level first (if available), then by name
-        const aTechLevel = 'techLevel' in a.entity ? (a.entity.techLevel as number) : 0
-        const bTechLevel = 'techLevel' in b.entity ? (b.entity.techLevel as number) : 0
+        // First, sort disabled entities to the end
+        const aDisabled = shouldDisableEntity ? shouldDisableEntity(a.entity) : false
+        const bDisabled = shouldDisableEntity ? shouldDisableEntity(b.entity) : false
+
+        if (aDisabled !== bDisabled) {
+          return aDisabled ? 1 : -1
+        }
+
+        // Then sort by tech level (if available), then by name
+        const aTechLevel = getEntityTechLevel(a.entity) || 0
+        const bTechLevel = getEntityTechLevel(b.entity) || 0
 
         if (aTechLevel !== bTechLevel) {
           return aTechLevel - bTechLevel
@@ -89,14 +118,20 @@ export function EntitySelectionModal({
         const bName = 'name' in b.entity ? (b.entity.name as string) : ''
         return aName.localeCompare(bName)
       })
-  }, [allEntities, searchTerm, techLevelFilter, showTechLevelFilter])
+  }, [allEntities, searchTerm, techLevelFilter, schemaFilter, shouldDisableEntity])
 
   const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
     onSelect(entityId, schemaName)
     onClose()
   }
 
-  const techLevels = [1, 2, 3, 4, 5, 6]
+  // Derive whether to show tech level filter based on schema definitions
+  const showTechLevelFilter = useMemo(() => {
+    if (!schemaNames || schemaNames.length === 0) return false
+
+    // Check if any of the schemas have entities with tech levels
+    return allEntities.some(({ entity }) => getEntityTechLevel(entity) !== null)
+  }, [schemaNames, allEntities])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
@@ -108,11 +143,13 @@ export function EntitySelectionModal({
           borderBottomWidth="3px"
           borderColor="su.black"
           pb={4}
-          boxShadow="0 6px 8px -2px rgba(0, 0, 0, 0.3)"
+          px={6}
+          pt={4}
           position="sticky"
           top={0}
-          bg={bg}
+          bg="su.mediumGrey"
           zIndex={1}
+          w="full"
         >
           {/* Search Input */}
           <Input
@@ -130,42 +167,95 @@ export function EntitySelectionModal({
             color="su.black"
           />
 
-          {/* Tech Level Filter */}
-          {showTechLevelFilter && (
-            <Flex gap={2} flexWrap="wrap">
-              {techLevels.map((tl) => (
+          {/* Filters Row */}
+          <Flex
+            gap={4}
+            justifyContent="space-between"
+            alignItems="flex-start"
+            flexWrap="wrap"
+            w="full"
+          >
+            {/* Tech Level Filter */}
+            {showTechLevelFilter && (
+              <Flex gap={2} flexWrap="wrap">
+                {TECH_LEVELS.map((tl) => (
+                  <Button
+                    key={tl}
+                    onClick={() => setTechLevelFilter(tl)}
+                    px={3}
+                    py={2}
+                    borderRadius="md"
+                    fontWeight="bold"
+                    fontSize="sm"
+                    bg={techLevelFilter === tl ? 'su.orange' : 'su.lightBlue'}
+                    color={techLevelFilter === tl ? 'su.white' : 'su.black'}
+                  >
+                    TL{tl}
+                  </Button>
+                ))}
                 <Button
-                  key={tl}
-                  onClick={() => setTechLevelFilter(tl)}
+                  onClick={() => setTechLevelFilter(null)}
                   px={3}
                   py={2}
                   borderRadius="md"
                   fontWeight="bold"
                   fontSize="sm"
-                  bg={techLevelFilter === tl ? 'su.orange' : 'su.lightBlue'}
-                  color={techLevelFilter === tl ? 'su.white' : 'su.black'}
+                  bg={techLevelFilter === null ? 'su.orange' : 'su.lightBlue'}
+                  color={techLevelFilter === null ? 'su.white' : 'su.black'}
                 >
-                  TL{tl}
+                  All
                 </Button>
-              ))}
-              <Button
-                onClick={() => setTechLevelFilter(null)}
-                px={3}
-                py={2}
-                borderRadius="md"
-                fontWeight="bold"
-                fontSize="sm"
-                bg={techLevelFilter === null ? 'su.orange' : 'su.lightBlue'}
-                color={techLevelFilter === null ? 'su.white' : 'su.black'}
-              >
-                All
-              </Button>
-            </Flex>
-          )}
+              </Flex>
+            )}
+
+            {/* Schema Filter - only show if multiple schemas */}
+            {schemaNames.length > 1 && (
+              <Flex gap={2} flexWrap="wrap" justifyContent="flex-end">
+                {schemaNames.map((schema) => (
+                  <Button
+                    key={schema}
+                    onClick={() => setSchemaFilter(schema)}
+                    px={3}
+                    py={2}
+                    borderRadius="md"
+                    fontWeight="bold"
+                    fontSize="sm"
+                    bg={schemaFilter === schema ? 'su.orange' : 'su.lightBlue'}
+                    color={schemaFilter === schema ? 'su.white' : 'su.black'}
+                    textTransform="capitalize"
+                  >
+                    {schema.replace(/-/g, ' ')}
+                  </Button>
+                ))}
+                <Button
+                  onClick={() => setSchemaFilter(null)}
+                  px={3}
+                  py={2}
+                  borderRadius="md"
+                  fontWeight="bold"
+                  fontSize="sm"
+                  bg={schemaFilter === null ? 'su.orange' : 'su.lightBlue'}
+                  color={schemaFilter === null ? 'su.white' : 'su.black'}
+                >
+                  All
+                </Button>
+              </Flex>
+            )}
+          </Flex>
         </VStack>
 
         {/* Scrollable Entity List */}
-        <VStack gap={4} overflowY="auto" alignItems="stretch" flex="1" minH={0}>
+        <VStack
+          gap={4}
+          overflowY="auto"
+          alignItems="stretch"
+          flex="1"
+          minH={0}
+          borderWidth="3px"
+          borderColor="su.black"
+          p={4}
+          bg="su.darkGrey"
+        >
           {filteredEntities.length === 0 ? (
             <Text textAlign="center" color="su.black" py={8}>
               No items found matching your criteria.
@@ -175,6 +265,7 @@ export function EntitySelectionModal({
               const entityId = 'id' in entity ? (entity.id as string) : ''
               const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
               const buttonText = `${selectButtonTextPrefix} ${entityName}`
+              const isDisabled = shouldDisableEntity ? shouldDisableEntity(entity) : false
 
               return (
                 <EntityDisplay
@@ -184,6 +275,7 @@ export function EntitySelectionModal({
                   showSelectButton
                   selectButtonText={buttonText}
                   onClick={() => handleSelect(entityId, schemaName)}
+                  disabled={isDisabled}
                 />
               )
             })

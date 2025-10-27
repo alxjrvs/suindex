@@ -100,9 +100,17 @@ export function useCrawlerLiveSheetState(id?: string) {
 
   // Track previous tech level to detect changes
   const prevTechLevelRef = useRef(crawler.tech_level)
+  const isInitialLoadRef = useRef(true)
 
-  // Reset damage and upgrade when tech level changes
+  // Reset damage and upgrade when tech level changes (but not on initial load)
   useEffect(() => {
+    // Skip on initial load
+    if (isInitialLoadRef.current) {
+      isInitialLoadRef.current = false
+      prevTechLevelRef.current = crawler.tech_level
+      return
+    }
+
     if (prevTechLevelRef.current !== crawler.tech_level && currentTechLevel?.structurePoints) {
       prevTechLevelRef.current = crawler.tech_level
       updateEntity({
@@ -178,7 +186,13 @@ export function useCrawlerLiveSheetState(id?: string) {
   )
 
   const handleAddCargo = useCallback(
-    (amount: number, description: string, color: string) => {
+    (
+      amount: number,
+      description: string,
+      color: string,
+      ref?: string,
+      position?: { row: number; col: number }
+    ) => {
       updateEntity({
         cargo: [
           ...(crawler.cargo ?? []),
@@ -187,6 +201,8 @@ export function useCrawlerLiveSheetState(id?: string) {
             amount,
             description,
             color,
+            ref,
+            position,
           },
         ],
       })

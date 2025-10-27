@@ -16,6 +16,7 @@ interface ModalProps {
   title: string
   children: ReactNode
   backgroundColor?: string
+  headerBackgroundColor?: string
 }
 
 export default function Modal({
@@ -23,7 +24,8 @@ export default function Modal({
   onClose,
   title,
   children,
-  backgroundColor = 'bg.builder',
+  backgroundColor = 'su.mediumGrey',
+  headerBackgroundColor = 'su.orange',
 }: ModalProps) {
   return (
     <DialogRoot
@@ -44,7 +46,7 @@ export default function Modal({
           shadow="lg"
         >
           <DialogHeader
-            bg={backgroundColor}
+            bg={headerBackgroundColor || backgroundColor}
             borderBottomWidth="4px"
             borderBottomColor="su.black"
             borderTopRadius="24px"

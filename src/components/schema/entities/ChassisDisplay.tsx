@@ -2,6 +2,7 @@ import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { Heading } from '../../base/Heading'
 import { EntityDisplay } from '../../shared/EntityDisplay'
 import type { SURefChassis } from 'salvageunion-reference'
+import { SheetDisplay } from '../../shared/SheetDisplay'
 
 interface ChassisDisplayProps {
   data: SURefChassis
@@ -16,30 +17,19 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
           <Heading level="h4" textTransform="uppercase">
             Chassis Abilities
           </Heading>
-          <VStack gap={3} alignItems="stretch" borderWidth="1px" borderColor="su.black" p={3}>
+          <VStack gap={3} alignItems="stretch">
             {data.chassisAbilities.map((ability, index) => (
               <VStack key={index} gap={2} alignItems="stretch">
-                <Box>
-                  {ability.name && (
-                    <Text as="span" fontWeight="bold" color="su.black">
-                      {ability.name}:{' '}
-                    </Text>
-                  )}
-                  <Text as="span" color="su.black">
-                    {ability.description}
-                  </Text>
-                </Box>
+                <SheetDisplay label={ability.name} value={ability.description} />
 
                 {'options' in ability && ability.options && ability.options.length > 0 && (
                   <VStack gap={1} alignItems="stretch" ml={4}>
                     {ability.options.map((option, optIndex) => (
-                      <Text key={optIndex} color="su.black">
-                        <Text as="span" fontWeight="bold">
-                          {option.label}
-                          {option.label.includes('•') || option.label.length === 0 ? '' : ':'}
-                        </Text>{' '}
-                        {option.value}
-                      </Text>
+                      <SheetDisplay
+                        key={optIndex}
+                        label={`${option.label}${option.label.includes('•') || option.label.length === 0 ? '' : ':'}`}
+                        value={option.value}
+                      />
                     ))}
                   </VStack>
                 )}
@@ -55,67 +45,59 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
           <Heading level="h3" textTransform="uppercase">
             Patterns
           </Heading>
-          <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
+          <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} alignItems="stretch">
             {data.patterns.map((pattern, index) => (
-              <VStack
-                key={index}
-                gap={3}
-                alignItems="stretch"
-                bg="su.lightBlue"
-                borderWidth="1px"
-                borderColor="su.black"
-                borderRadius="lg"
-                p={4}
-              >
-                <Flex alignItems="center" gap={2} flexWrap="wrap">
-                  <Heading level="h4">{pattern.name}</Heading>
-                  {'legalStarting' in pattern && pattern.legalStarting && (
-                    <Text
-                      as="span"
-                      bg="su.green"
-                      color="su.white"
-                      fontSize="xs"
-                      fontWeight="bold"
-                      px={2}
-                      py={1}
-                      borderRadius="md"
-                    >
-                      LEGAL STARTING
-                    </Text>
+              <SheetDisplay label={pattern.name}>
+                <VStack key={index} gap={3} alignItems="stretch" borderRadius="lg" p={4} w="full">
+                  <Flex alignItems="center" gap={2} flexWrap="wrap">
+                    {'legalStarting' in pattern && pattern.legalStarting && (
+                      <Text
+                        as="span"
+                        bg="su.green"
+                        color="su.white"
+                        fontSize="xs"
+                        fontWeight="bold"
+                        px={2}
+                        py={1}
+                        borderRadius="md"
+                      >
+                        LEGAL STARTING
+                      </Text>
+                    )}
+                  </Flex>
+                  <Text color="su.black">{pattern.description}</Text>
+
+                  {pattern.systems && pattern.systems.length > 0 && (
+                    <Box>
+                      <Heading level="h5">Systems:</Heading>
+                      <Box as="ul" listStyleType="disc" ml={6}>
+                        <VStack gap={1} alignItems="stretch">
+                          {pattern.systems.map((system, sysIndex) => (
+                            <Text as="li" key={sysIndex} color="su.black">
+                              {system}
+                            </Text>
+                          ))}
+                        </VStack>
+                      </Box>
+                    </Box>
                   )}
-                </Flex>
-                <Text color="su.black">{pattern.description}</Text>
 
-                {pattern.systems && pattern.systems.length > 0 && (
-                  <Box>
-                    <Heading level="h5">Systems:</Heading>
-                    <Box as="ul" listStyleType="disc" ml={6}>
-                      <VStack gap={1} alignItems="stretch">
-                        {pattern.systems.map((system, sysIndex) => (
-                          <Text as="li" key={sysIndex} color="su.black">
-                            {system}
-                          </Text>
-                        ))}
-                      </VStack>
+                  {pattern.modules && pattern.modules.length > 0 && (
+                    <Box>
+                      <Heading level="h5">Modules:</Heading>
+                      <Box as="ul" listStyleType="disc" ml={6}>
+                        <VStack gap={1} alignItems="stretch">
+                          {pattern.modules.map((module, modIndex) => (
+                            <Text as="li" key={modIndex} color="su.black">
+                              {module}
+                            </Text>
+                          ))}
+                        </VStack>
+                      </Box>
                     </Box>
-                  </Box>
-                )}
-
-                {pattern.modules && pattern.modules.length > 0 && (
-                  <Box>
-                    <Heading level="h5">Modules:</Heading>
-                    <Box as="ul" listStyleType="disc" ml={6}>
-                      <VStack gap={1} alignItems="stretch">
-                        {pattern.modules.map((module, modIndex) => (
-                          <Text as="li" key={modIndex} color="su.black">
-                            {module}
-                          </Text>
-                        ))}
-                      </VStack>
-                    </Box>
-                  </Box>
-                )}
-              </VStack>
+                  )}
+                </VStack>
+              </SheetDisplay>
             ))}
           </Grid>
         </VStack>

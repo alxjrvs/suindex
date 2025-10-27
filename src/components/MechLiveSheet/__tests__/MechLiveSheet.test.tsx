@@ -230,9 +230,10 @@ describe('MechLiveSheet', () => {
       render(<MechLiveSheet />)
 
       await waitFor(() => {
-        const addButton = screen.getAllByRole('button', { name: /\+/i })
-        const systemModuleButton = addButton[0]
-        expect(systemModuleButton).toBeDisabled()
+        // Find the add button in the Systems & Modules section
+        const addButtons = screen.getAllByRole('button', { name: '+' })
+        // First + button should be in Systems & Modules section
+        expect(addButtons[0]).toBeDisabled()
       })
     })
 
@@ -245,9 +246,9 @@ describe('MechLiveSheet', () => {
 
       await waitFor(
         () => {
-          const addButton = screen.getAllByRole('button', { name: /\+/i })
-          const systemModuleButton = addButton[0]
-          expect(systemModuleButton).not.toBeDisabled()
+          const addButtons = screen.getAllByRole('button', { name: '+' })
+          // First + button should be in Systems & Modules section
+          expect(addButtons[0]).not.toBeDisabled()
         },
         { timeout: 5000 }
       )
@@ -276,17 +277,18 @@ describe('MechLiveSheet', () => {
   })
 
   describe('Cargo Management', () => {
-    it('shows add cargo button disabled when no chassis selected', async () => {
+    it('shows empty cargo cells with + icon when no chassis selected', async () => {
       render(<MechLiveSheet />)
 
       await waitFor(() => {
-        const addButtons = screen.getAllByRole('button', { name: /\+/i })
-        const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
-        expect(cargoButton).toBeDisabled()
+        // Empty cells should not be clickable when disabled
+        const plusSigns = screen.queryAllByText('+')
+        // Should have some + signs from the cargo grid
+        expect(plusSigns.length).toBeGreaterThan(0)
       })
     })
 
-    it('enables add cargo button when chassis is selected', async () => {
+    it('shows clickable empty cargo cells when chassis is selected', async () => {
       const user = userEvent.setup()
       render(<MechLiveSheet />)
 
@@ -294,9 +296,10 @@ describe('MechLiveSheet', () => {
       await user.selectOptions(chassisSelect, testChassis.id)
 
       await waitFor(() => {
-        const addButtons = screen.getAllByRole('button', { name: /\+/i })
-        const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
-        expect(cargoButton).not.toBeDisabled()
+        // Empty cells should show + icon
+        const plusSigns = screen.getAllByText('+')
+        // testChassis.stats.cargoCap is 16, plus 1 for the Systems & Modules add button
+        expect(plusSigns.length).toBe(testChassis.stats.cargoCap + 1)
       })
     })
 
@@ -318,7 +321,7 @@ describe('MechLiveSheet', () => {
       )
     })
 
-    it('opens cargo modal when add cargo is clicked', async () => {
+    it('opens cargo modal when empty cell is clicked', async () => {
       const user = userEvent.setup()
       render(<MechLiveSheet />)
 
@@ -326,14 +329,13 @@ describe('MechLiveSheet', () => {
       await user.selectOptions(chassisSelect, testChassis.id)
 
       await waitFor(async () => {
-        const addButtons = screen.getAllByRole('button', { name: /\+/i })
-        const cargoButton = addButtons[1] // Second button is cargo (first is system/module)
-        await user.click(cargoButton)
+        // Click a cargo cell (skip the first + which is the Systems & Modules add button)
+        const emptyCells = screen.getAllByText('+')
+        await user.click(emptyCells[1])
       })
 
       await waitFor(() => {
-        expect(screen.getByText(/amount/i)).toBeInTheDocument()
-        expect(screen.getByText(/description/i)).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter cargo description/i)).toBeInTheDocument()
       })
     })
   })

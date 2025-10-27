@@ -24,8 +24,6 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   disabled?: boolean
   /** Optional background color for body (if different from header) */
   bodyBg?: string
-  /** Optional padding for header section */
-  headerPadding?: number | string
   /** Optional padding for body section */
   bodyPadding?: number | string
   /** Optional click handler for the header */
@@ -52,7 +50,6 @@ export function RoundedBox({
   titleRotation = 0,
   disabled = false,
   bodyBg,
-  headerPadding,
   bodyPadding,
   onHeaderClick,
   headerCursor,
@@ -79,7 +76,7 @@ export function RoundedBox({
       borderRadius="2xl"
       p={0}
       shadow="lg"
-      overflow="visible"
+      overflow="hidden"
       minH="fit-content"
       flexShrink={0}
       {...flexProps}
@@ -97,19 +94,12 @@ export function RoundedBox({
         </Text>
       )}
       {hasHeader && (
-        <VStack
-          pb={2}
-          p={headerPadding ?? 4}
-          gap={0}
-          alignItems="stretch"
-          w="full"
-          bg={actualHeaderBg}
-        >
+        <VStack pb={2} p={2} gap={0} alignItems="stretch" w="full" bg={actualHeaderBg}>
           <Flex
             direction="row"
             w="full"
             bg={actualHeaderBg}
-            gap={4}
+            px="0"
             cursor={actualHeaderCursor}
             onClick={onHeaderClick}
             alignItems="center"

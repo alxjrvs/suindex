@@ -1,11 +1,10 @@
-import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { Box, Button, Flex, IconButton, Text, HStack, Menu, Portal } from '@chakra-ui/react'
-import { signOut } from '../lib/api'
+import { Box, Button, Flex, IconButton, HStack, Menu, Portal, Text } from '@chakra-ui/react'
 import type { User } from '@supabase/supabase-js'
 import type { SchemaInfo } from '../types/schema'
 import { Heading } from './base/Heading'
-import { DiscordSignInButton } from './DiscordSignInButton'
+import { useNavigationState } from '../hooks/useNavigationState'
+import { NavigationLink } from './shared/NavigationLink'
+import { UserMenu } from './shared/UserMenu'
 
 interface TopNavigationProps {
   user: User | null
@@ -13,34 +12,14 @@ interface TopNavigationProps {
 }
 
 export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [isOpen, setIsOpen] = useState(false)
-  const [signingOut, setSigningOut] = useState(false)
-
-  const handleNavigate = (path: string) => {
-    navigate(path)
-    setIsOpen(false)
-  }
-
-  const handleSignOut = async () => {
-    try {
-      setSigningOut(true)
-      await signOut()
-    } catch (error) {
-      console.error('Error signing out:', error)
-    } finally {
-      setSigningOut(false)
-    }
-  }
-
-  const isActive = (path: string) => location.pathname.startsWith(path)
+  const { isOpen, signingOut, handleNavigate, handleSignOut, isActive, toggleMenu } =
+    useNavigationState()
 
   return (
     <>
       {/* Mobile menu button */}
       <IconButton
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleMenu}
         position="fixed"
         top={4}
         right={4}
@@ -70,7 +49,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           bg="blackAlpha.500"
           zIndex={30}
           display={{ base: 'block', lg: 'none' }}
-          onClick={() => setIsOpen(false)}
+          onClick={toggleMenu}
         />
       )}
 
@@ -223,113 +202,37 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           {user && (
             <>
               {/* Individual data links */}
-              <Button
+              <NavigationLink
+                isActive={isActive('/dashboard/pilots')}
                 onClick={() => handleNavigate('/dashboard/pilots')}
-                px={4}
-                py={2}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard/pilots') ? 'su.lightBlue' : 'transparent'}
-                borderBottomWidth={isActive('/dashboard/pilots') ? '3px' : 0}
-                borderBottomColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard/pilots') ? 'semibold' : 'normal'}
-                borderRadius="md"
-                variant="ghost"
-                h="auto"
-                w={{ base: 'full', lg: 'auto' }}
               >
                 Pilots
-              </Button>
+              </NavigationLink>
 
-              <Button
+              <NavigationLink
+                isActive={isActive('/dashboard/mechs')}
                 onClick={() => handleNavigate('/dashboard/mechs')}
-                px={4}
-                py={2}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard/mechs') ? 'su.lightBlue' : 'transparent'}
-                borderBottomWidth={isActive('/dashboard/mechs') ? '3px' : 0}
-                borderBottomColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard/mechs') ? 'semibold' : 'normal'}
-                borderRadius="md"
-                variant="ghost"
-                h="auto"
-                w={{ base: 'full', lg: 'auto' }}
               >
                 Mechs
-              </Button>
+              </NavigationLink>
 
-              <Button
+              <NavigationLink
+                isActive={isActive('/dashboard/crawlers')}
                 onClick={() => handleNavigate('/dashboard/crawlers')}
-                px={4}
-                py={2}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard/crawlers') ? 'su.lightBlue' : 'transparent'}
-                borderBottomWidth={isActive('/dashboard/crawlers') ? '3px' : 0}
-                borderBottomColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard/crawlers') ? 'semibold' : 'normal'}
-                borderRadius="md"
-                variant="ghost"
-                h="auto"
-                w={{ base: 'full', lg: 'auto' }}
               >
                 Crawlers
-              </Button>
+              </NavigationLink>
 
-              <Button
+              <NavigationLink
+                isActive={isActive('/dashboard/games')}
                 onClick={() => handleNavigate('/dashboard/games')}
-                px={4}
-                py={2}
-                _hover={{ bg: 'su.lightOrange' }}
-                bg={isActive('/dashboard/games') ? 'su.lightBlue' : 'transparent'}
-                borderBottomWidth={isActive('/dashboard/games') ? '3px' : 0}
-                borderBottomColor="su.orange"
-                color="su.black"
-                fontWeight={isActive('/dashboard/games') ? 'semibold' : 'normal'}
-                borderRadius="md"
-                variant="ghost"
-                h="auto"
-                w={{ base: 'full', lg: 'auto' }}
               >
                 Games
-              </Button>
+              </NavigationLink>
             </>
           )}
 
-          {user ? (
-            <>
-              <Text fontSize="sm" color="su.black" fontWeight="medium">
-                {user.user_metadata?.full_name || user.email || 'User'}
-              </Text>
-              <Button
-                onClick={handleSignOut}
-                disabled={signingOut}
-                px={4}
-                py={2}
-                fontSize="sm"
-                color="su.white"
-                bg="su.brick"
-                _hover={{ bg: 'su.orange' }}
-                _disabled={{ opacity: 0.5 }}
-                borderRadius="md"
-                h="auto"
-                w={{ base: 'full', lg: 'auto' }}
-              >
-                {signingOut ? 'Signing out...' : 'Sign Out'}
-              </Button>
-            </>
-          ) : (
-            <DiscordSignInButton
-              px={4}
-              py={2}
-              fontSize="sm"
-              w={{ base: 'full', lg: 'auto' }}
-              display="flex"
-              alignItems="center"
-              gap={2}
-            />
-          )}
+          <UserMenu user={user} onSignOut={handleSignOut} signingOut={signingOut} />
         </Flex>
       </Flex>
     </>

@@ -233,13 +233,14 @@ describe('CrawlerLiveSheet', () => {
       expect(screen.getByText('Storage Bay')).toBeInTheDocument()
     })
 
-    it('shows add cargo button', () => {
+    it('shows clickable empty cells with + icon', () => {
       render(<CrawlerLiveSheet />)
 
-      expect(screen.getByRole('button', { name: /\+/i })).toBeInTheDocument()
+      // Empty cells should show + icon
+      expect(screen.getAllByText('+')).toHaveLength(54) // 54 is maxCapacity for crawler storage
     })
 
-    it('opens cargo modal when add cargo is clicked', async () => {
+    it('opens cargo modal when empty cell is clicked', async () => {
       const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
@@ -247,9 +248,9 @@ describe('CrawlerLiveSheet', () => {
       const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
       await user.selectOptions(crawlerTypeSelect, testCrawler.id)
 
-      const addCargoButton = screen.getByRole('button', { name: /\+/i })
-
-      await user.click(addCargoButton)
+      // Click any empty cell (they all have + text)
+      const emptyCells = screen.getAllByText('+')
+      await user.click(emptyCells[0])
 
       // Modal should be visible with the cargo description input
       await waitFor(() => {

@@ -1,6 +1,4 @@
-import { Flex } from '@chakra-ui/react'
 import { StatDisplay } from '../StatDisplay'
-import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
 import { DynamicBay } from '../shared/DynamicBay'
 import type { CargoItem } from '../../types/common'
@@ -11,7 +9,7 @@ interface CargoListProps {
   maxCargo: number
   canAddCargo: boolean
   onRemove: (id: string) => void
-  onAddClick: () => void
+  onAddClick: (position: { row: number; col: number }) => void
   disabled?: boolean
 }
 
@@ -30,13 +28,16 @@ export function CargoList({
       title="Cargo"
       disabled={disabled}
       rightContent={
-        <Flex gap={2} alignItems="center">
-          <AddStatButton onClick={onAddClick} disabled={disabled || !canAddCargo} />
-          <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} disabled={disabled} />
-        </Flex>
+        <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} disabled={disabled} />
       }
     >
-      <DynamicBay items={cargo} maxCapacity={maxCargo} onRemove={onRemove} disabled={disabled} />
+      <DynamicBay
+        items={cargo}
+        maxCapacity={maxCargo}
+        onRemove={onRemove}
+        onAddClick={canAddCargo ? onAddClick : undefined}
+        disabled={disabled}
+      />
     </RoundedBox>
   )
 }

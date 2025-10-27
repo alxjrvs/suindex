@@ -14,7 +14,6 @@ export function EquipmentSelector({ isOpen, onClose, onSelectEquipment }: Equipm
       schemaNames={['equipment']}
       onSelect={(equipmentId) => onSelectEquipment(equipmentId)}
       title="Add Equipment"
-      showTechLevelFilter={true}
       selectButtonTextPrefix="Equip"
     />
   )

@@ -210,7 +210,13 @@ export function useMechLiveSheetState(id?: string) {
     }
   }
 
-  const handleAddCargo = (amount: number, description: string, color: string) => {
+  const handleAddCargo = (
+    amount: number,
+    description: string,
+    color: string,
+    ref?: string,
+    position?: { row: number; col: number }
+  ) => {
     updateEntity({
       cargo: [
         ...(mech.cargo ?? []),
@@ -219,6 +225,8 @@ export function useMechLiveSheetState(id?: string) {
           amount,
           description,
           color,
+          ref,
+          position,
         },
       ],
     })

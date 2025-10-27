@@ -1,5 +1,6 @@
 import { Box, Button, VStack } from '@chakra-ui/react'
 import { Text } from './base/Text'
+import { useState, useEffect } from 'react'
 
 interface StatDisplayProps {
   label: string
@@ -12,6 +13,7 @@ interface StatDisplayProps {
   borderColor?: string
   ariaLabel?: string
   compact?: boolean
+  flash?: boolean // Trigger flash animation
 }
 
 export function StatDisplay({
@@ -25,10 +27,23 @@ export function StatDisplay({
   borderColor = 'su.black',
   ariaLabel,
   compact = false,
+  flash = false,
 }: StatDisplayProps) {
+  const [isFlashing, setIsFlashing] = useState(false)
   const WrapperComponent = onClick ? Button : Box
 
-  // All stat displays keep their background when disabled, just apply opacity
+  useEffect(() => {
+    if (!flash) return
+
+    const startTimer = setTimeout(() => setIsFlashing(true), 0)
+    const endTimer = setTimeout(() => setIsFlashing(false), 3000)
+
+    return () => {
+      clearTimeout(startTimer)
+      clearTimeout(endTimer)
+    }
+  }, [flash])
+
   const commonProps = {
     w: compact ? 10 : 16,
     h: compact ? 10 : 16,
@@ -42,7 +57,9 @@ export function StatDisplay({
     cursor: onClick && !disabled ? ('pointer' as const) : ('default' as const),
     opacity: disabled ? 0.3 : 1,
     pointerEvents: disabled ? ('none' as const) : ('auto' as const),
-    transition: 'opacity 0.2s',
+    transition: isFlashing ? 'all 3s ease-out' : 'opacity 0.2s',
+    transform: isFlashing ? 'scale(1)' : 'scale(1)',
+    animation: isFlashing ? 'growShrink 3s ease-out' : undefined,
   }
 
   const buttonProps = onClick
@@ -58,6 +75,15 @@ export function StatDisplay({
 
   return (
     <VStack gap={0} alignItems="center">
+      <style>
+        {`
+          @keyframes growShrink {
+            0% { transform: scale(1); }
+            10% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+          }
+        `}
+      </style>
       <Text
         textTransform={'uppercase'}
         mb={compact ? -1.5 : -2}

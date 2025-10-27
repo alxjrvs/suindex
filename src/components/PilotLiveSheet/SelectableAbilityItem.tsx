@@ -32,7 +32,7 @@ export function SelectableAbilityItem({
       key={ability.id}
       data={ability}
       onClick={isSelectable ? onSelect : undefined}
-      dimmed={alreadySelected || !canAfford || !isAvailable}
+      disabled={alreadySelected || !canAfford || !isAvailable}
       collapsible
       expanded={isExpanded}
       onToggleExpanded={onToggleExpanded}

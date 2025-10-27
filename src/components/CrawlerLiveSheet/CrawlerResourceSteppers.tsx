@@ -10,17 +10,28 @@ interface CrawlerResourceSteppersProps {
   crawler: CrawlerLiveSheetState
   updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
   disabled?: boolean
+  flashingTLs?: number[]
 }
 
 export function CrawlerResourceSteppers({
   crawler,
   updateEntity,
   disabled = false,
+  flashingTLs = [],
 }: CrawlerResourceSteppersProps) {
   const { scrap_tl_one, scrap_tl_two, scrap_tl_three, scrap_tl_four, scrap_tl_five, scrap_tl_six } =
     crawler
 
   const [isConversionModalOpen, setIsConversionModalOpen] = useState(false)
+
+  // Derive flash states directly from flashingTLs prop
+  const flashStates = useMemo(() => {
+    const states: Record<number, boolean> = {}
+    flashingTLs.forEach((tl) => {
+      states[tl] = true
+    })
+    return states
+  }, [flashingTLs])
 
   const totalInTl1 = useMemo(() => {
     return (
@@ -44,7 +55,9 @@ export function CrawlerResourceSteppers({
         bg="bg.builder.crawler"
         disabled={disabled}
         justifyContent="flex-start"
-        rightContent={<StatDisplay label="Total (TL1)" value={totalInTl1} disabled={disabled} />}
+        rightContent={
+          <StatDisplay compact label="Total (TL1)" value={totalInTl1} disabled={disabled} />
+        }
       >
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
           <Flex justifyContent="start" alignItems="end">
@@ -54,6 +67,7 @@ export function CrawlerResourceSteppers({
               onChange={(value) => updateEntity({ scrap_tl_one: value })}
               min={0}
               disabled={disabled}
+              flash={flashStates[1]}
             />
           </Flex>
           <Flex justifyContent="start" alignItems="end">
@@ -63,6 +77,7 @@ export function CrawlerResourceSteppers({
               onChange={(value) => updateEntity({ scrap_tl_two: value })}
               min={0}
               disabled={disabled}
+              flash={flashStates[2]}
             />
           </Flex>
           <Flex justifyContent="start" alignItems="end">
@@ -72,6 +87,7 @@ export function CrawlerResourceSteppers({
               onChange={(value) => updateEntity({ scrap_tl_three: value })}
               min={0}
               disabled={disabled}
+              flash={flashStates[3]}
             />
           </Flex>
           <Flex justifyContent="start" alignItems="end">
@@ -81,6 +97,7 @@ export function CrawlerResourceSteppers({
               onChange={(value) => updateEntity({ scrap_tl_four: value })}
               min={0}
               disabled={disabled}
+              flash={flashStates[4]}
             />
           </Flex>
           <Flex justifyContent="start" alignItems="end">
@@ -90,6 +107,7 @@ export function CrawlerResourceSteppers({
               onChange={(value) => updateEntity({ scrap_tl_five: value })}
               min={0}
               disabled={disabled}
+              flash={flashStates[5]}
             />
           </Flex>
           <Flex justifyContent="start" alignItems="end">
@@ -99,6 +117,7 @@ export function CrawlerResourceSteppers({
               onChange={(value) => updateEntity({ scrap_tl_six: value })}
               min={0}
               disabled={disabled}
+              flash={flashStates[6]}
             />
           </Flex>
         </Grid>

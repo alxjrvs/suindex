@@ -23,14 +23,18 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   const [loadingPilot, setLoadingPilot] = useState(false)
 
   // Fetch available pilots for the selector
-  const { items: pilots, loading: loadingPilots } = useEntityRelationships<{
+  const { items: allPilots, loading: loadingPilots } = useEntityRelationships<{
     id: string
     callsign: string
+    mech_id: string | null
   }>({
     table: 'pilots',
-    selectFields: 'id, callsign',
+    selectFields: 'id, callsign, mech_id',
     orderBy: 'callsign',
   })
+
+  // Filter out pilots that already have a mech assigned (except the currently assigned pilot)
+  const pilots = allPilots.filter((p) => !p.mech_id || p.id === pilotId)
 
   // Fetch pilot details when pilotId changes
   useEffect(() => {
@@ -78,6 +82,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
             value={pilotId ?? null}
             loading={loadingPilots}
             options={pilots.map((p) => ({ id: p.id, name: p.callsign }))}
+            disabled={disabled}
             onChange={onPilotChange}
             placeholder="No Pilot"
           />

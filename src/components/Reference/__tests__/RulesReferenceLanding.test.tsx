@@ -15,43 +15,27 @@ describe('RulesReferenceLanding', () => {
 
   describe('Page Structure', () => {
     it('should render the page title', () => {
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       expect(screen.getByText('Salvage Union Rules Reference')).toBeInTheDocument()
     })
 
     it('should display the search input', () => {
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       const searchInput = screen.getByPlaceholderText('Search all rules, items, and schemas...')
       expect(searchInput).toBeInTheDocument()
     })
 
     it('should display schema count and item count in header', () => {
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       const headerText = screen.getByText(new RegExp(`Search across all ${schemas.length} schemas`))
       expect(headerText).toBeInTheDocument()
     })
 
     it('should render all schema cards in browse section', () => {
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       schemas.forEach((schema) => {
         const title = schema.title.replace('Salvage Union ', '')
@@ -63,11 +47,7 @@ describe('RulesReferenceLanding', () => {
   describe('Typeahead Search', () => {
     it('should show search results when typing', async () => {
       const user = userEvent.setup()
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       const searchInput = screen.getByPlaceholderText('Search all rules, items, and schemas...')
       await user.type(searchInput, 'Chassis')
@@ -80,11 +60,7 @@ describe('RulesReferenceLanding', () => {
 
     it('should clear search results when input is cleared', async () => {
       const user = userEvent.setup()
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       const searchInput = screen.getByPlaceholderText('Search all rules, items, and schemas...')
       await user.type(searchInput, 'Chassis')
@@ -104,11 +80,7 @@ describe('RulesReferenceLanding', () => {
 
     it('should support keyboard navigation in search results', async () => {
       const user = userEvent.setup()
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       const searchInput = screen.getByPlaceholderText('Search all rules, items, and schemas...')
       await user.type(searchInput, 'Chassis')
@@ -126,11 +98,7 @@ describe('RulesReferenceLanding', () => {
 
     it('should close search results on Escape key', async () => {
       const user = userEvent.setup()
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       const searchInput = screen.getByPlaceholderText('Search all rules, items, and schemas...')
       await user.type(searchInput, 'Chassis')
@@ -150,11 +118,7 @@ describe('RulesReferenceLanding', () => {
 
   describe('Schema Card Navigation', () => {
     it('should render schema cards with descriptions', () => {
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       // Just check that at least one schema description is present
       const firstSchema = schemas[0]
@@ -163,11 +127,7 @@ describe('RulesReferenceLanding', () => {
     })
 
     it('should display item count for each schema', () => {
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       // Check that item counts are displayed (use getAllByText for duplicates)
       const firstSchema = schemas[0]
@@ -179,11 +139,7 @@ describe('RulesReferenceLanding', () => {
 
   describe('Browse by Category Section', () => {
     it('should display browse by category heading', () => {
-      render(
-        
-          <RulesReferenceLanding schemas={schemas} />
-        
-      )
+      render(<RulesReferenceLanding schemas={schemas} />)
 
       expect(screen.getByText('Browse by Category')).toBeInTheDocument()
     })

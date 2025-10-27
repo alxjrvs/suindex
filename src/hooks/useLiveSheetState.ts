@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { fetchEntity, updateEntity as updateEntityAPI } from '../lib/api'
 import type { ValidTable } from '../types/common'
+import { DEBOUNCE_TIMINGS } from '../constants/gameRules'
 
 export interface UseLiveSheetStateConfig<T> {
   table: ValidTable
@@ -105,13 +106,13 @@ export function useLiveSheetState<T extends { id: string }>(
           clearTimeout(saveTimeoutRef.current)
         }
 
-        // Schedule save after 500ms of no changes
+        // Schedule save after debounce delay
         saveTimeoutRef.current = setTimeout(async () => {
           if (pendingUpdatesRef.current) {
             await saveToDatabase(pendingUpdatesRef.current)
             setPendingChanges(false)
           }
-        }, 1000)
+        }, DEBOUNCE_TIMINGS.autoSave)
       }
     },
     [config.id, saveToDatabase]

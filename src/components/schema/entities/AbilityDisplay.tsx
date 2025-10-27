@@ -6,9 +6,9 @@ import { extractOptions } from '../../shared/entityDisplayHelpers'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 
 interface AbilityDisplayProps {
-  data: SURefAbility
+  data: SURefAbility | undefined
   onClick?: () => void
-  dimmed?: boolean
+  disabled?: boolean
   disableRemove?: boolean
   onRemove?: () => void
   collapsible?: boolean
@@ -22,7 +22,7 @@ interface AbilityDisplayProps {
 export function AbilityDisplay({
   data,
   onClick,
-  dimmed = false,
+  disabled = false,
   disableRemove = false,
   onRemove,
   collapsible = false,
@@ -32,6 +32,7 @@ export function AbilityDisplay({
   showSelectButton = false,
   selectButtonText,
 }: AbilityDisplayProps) {
+  if (!data) return null
   const isLegendary = String(data.level).toUpperCase() === 'L' || data.tree.includes('Legendary')
   const headerColor = isLegendary ? 'su.pink' : 'su.orange'
   const options = extractOptions(data)
@@ -42,7 +43,7 @@ export function AbilityDisplay({
       data={data}
       headerColor={headerColor}
       onClick={onClick}
-      dimmed={dimmed}
+      disabled={disabled}
       disableRemove={disableRemove}
       onRemove={onRemove}
       collapsible={collapsible}

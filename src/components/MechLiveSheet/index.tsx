@@ -27,6 +27,7 @@ interface MechLiveSheetProps {
 export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false)
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
+  const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
 
   const {
     mech,
@@ -198,7 +199,10 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           maxCargo={stats?.cargoCap || 0}
           canAddCargo={!!selectedChassis}
           onRemove={handleRemoveCargo}
-          onAddClick={() => setIsCargoModalOpen(true)}
+          onAddClick={(position) => {
+            setCargoPosition(position)
+            setIsCargoModalOpen(true)
+          }}
           disabled={!selectedChassis}
         />
 
@@ -221,11 +225,15 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
       <CargoModal
         isOpen={isCargoModalOpen}
-        onClose={() => setIsCargoModalOpen(false)}
+        onClose={() => {
+          setIsCargoModalOpen(false)
+          setCargoPosition(null)
+        }}
         onAdd={handleAddCargo}
         existingCargo={mech.cargo ?? []}
         maxCargo={stats?.cargoCap || 0}
         currentCargo={totalCargo}
+        position={cargoPosition}
       />
 
       {/* Delete Button - Only show when editing existing entity */}

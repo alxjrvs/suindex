@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { Box, Button, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
@@ -20,6 +20,8 @@ interface CrawlerLiveSheetProps {
 
 export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
+  const [flashingScrapTLs, setFlashingScrapTLs] = useState<number[]>([])
+  const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
 
   const allCrawlers = SalvageUnionReference.Crawlers.all()
 
@@ -40,6 +42,16 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     error,
     hasPendingChanges,
   } = useCrawlerLiveSheetState(id)
+
+  // Clear flashing TLs after animation completes
+  useEffect(() => {
+    if (flashingScrapTLs.length > 0) {
+      const timer = setTimeout(() => {
+        setFlashingScrapTLs([])
+      }, 3100)
+      return () => clearTimeout(timer)
+    }
+  }, [flashingScrapTLs])
 
   if (loading) {
     return (
@@ -99,12 +111,14 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           maxUpgrade={maxUpgrade}
           onCrawlerTypeChange={handleCrawlerTypeChange}
           disabled={!selectedCrawlerType}
+          onScrapFlash={setFlashingScrapTLs}
         />
 
         <CrawlerResourceSteppers
           crawler={crawler}
           updateEntity={updateEntity}
           disabled={!selectedCrawlerType}
+          flashingTLs={flashingScrapTLs}
         />
       </Flex>
 
@@ -172,7 +186,10 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         </VStack>
         <CargoBay
           cargo={crawler.cargo ?? []}
-          onAddCargo={() => setIsCargoModalOpen(true)}
+          onAddCargo={(position) => {
+            setCargoPosition(position)
+            setIsCargoModalOpen(true)
+          }}
           onRemoveCargo={handleRemoveCargo}
           damaged={storageBay?.damaged}
           disabled={!selectedCrawlerType}
@@ -180,6 +197,30 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
         {/* Notes */}
       </Grid>
+
+      {/* Downgrade Tech Level Button */}
+      <Button
+        w="full"
+        bg="gray.500"
+        color="white"
+        borderWidth="3px"
+        borderColor="su.black"
+        borderRadius="xl"
+        fontSize="lg"
+        fontWeight="bold"
+        py={6}
+        _hover={{ bg: 'gray.600' }}
+        onClick={() => {
+          const currentTL = crawler.tech_level || 1
+          if (currentTL > 1) {
+            updateEntity({ tech_level: currentTL - 1 })
+          }
+        }}
+        disabled={!selectedCrawlerType || (crawler.tech_level || 1) <= 1}
+      >
+        DOWNGRADE TECH LEVEL
+      </Button>
+
       <DeleteEntity
         entityName="Crawler"
         onConfirmDelete={deleteEntity}
@@ -189,10 +230,16 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
       {/* Cargo Modal */}
       <CargoModal
         isOpen={isCargoModalOpen}
-        onClose={() => setIsCargoModalOpen(false)}
+        onClose={() => {
+          setIsCargoModalOpen(false)
+          setCargoPosition(null)
+        }}
         onAdd={handleAddCargo}
         existingCargo={crawler.cargo ?? []}
+        maxCargo={54}
+        currentCargo={(crawler.cargo ?? []).reduce((sum, item) => sum + item.amount, 0)}
         backgroundColor="bg.builder.crawler"
+        position={cargoPosition}
       />
     </LiveSheetLayout>
   )

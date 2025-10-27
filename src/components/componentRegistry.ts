@@ -33,6 +33,9 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   'ability-tree-requirements': AbilityTreeRequirementDisplay as unknown as DisplayComponentType,
   chassis: ChassisDisplay as unknown as DisplayComponentType,
   classes: ClassDisplay as unknown as DisplayComponentType,
+  'classes.core': ClassDisplay as unknown as DisplayComponentType,
+  'classes.advanced': ClassDisplay as unknown as DisplayComponentType,
+  'classes.hybrid': ClassDisplay as unknown as DisplayComponentType,
   'crawler-bays': CrawlerBayDisplay as unknown as DisplayComponentType,
   'crawler-tech-levels': CrawlerTechLevelDisplay as unknown as DisplayComponentType,
 
