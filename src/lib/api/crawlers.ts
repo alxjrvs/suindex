@@ -1,5 +1,5 @@
 import { supabase } from '../supabase'
-import type { Tables, TablesInsert } from '../../types/database'
+import type { Tables, TablesInsert } from '../../types/database-generated.types'
 
 export type CrawlerRow = Tables<'crawlers'>
 
@@ -36,11 +36,36 @@ export async function createCrawler(userId: string): Promise<CrawlerRow> {
 
 /**
  * Update a crawler
+ * If setting active to true, automatically deactivates all other crawlers for the same game
  */
 export async function updateCrawler(
   crawlerId: string,
   updates: Partial<CrawlerRow>
 ): Promise<void> {
+  // If setting this crawler as active, deactivate others for the same game
+  if (updates.active === true) {
+    // First get the game_id for this crawler
+    const { data: crawler, error: fetchError } = await supabase
+      .from('crawlers')
+      .select('game_id')
+      .eq('id', crawlerId)
+      .single()
+
+    if (fetchError) throw fetchError
+
+    if (crawler?.game_id) {
+      // Deactivate all other crawlers for this game
+      const { error: deactivateError } = await supabase
+        .from('crawlers')
+        .update({ active: false })
+        .eq('game_id', crawler.game_id)
+        .neq('id', crawlerId)
+
+      if (deactivateError) throw deactivateError
+    }
+  }
+
+  // Then update the current crawler
   const { error } = await supabase.from('crawlers').update(updates).eq('id', crawlerId)
 
   if (error) throw error

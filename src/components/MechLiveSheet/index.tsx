@@ -16,8 +16,10 @@ import { RoundedBox } from '../shared/RoundedBox'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
 import { QuirkInput } from './QuirkInput'
 import { AppearanceInput } from './AppearanceInput'
-import { PilotInfo } from './PilotInfo'
 import { StatDisplay } from '../StatDisplay'
+import { DeleteEntity } from '../shared/DeleteEntity'
+import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
+import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 
 interface MechLiveSheetProps {
   id?: string
@@ -26,6 +28,7 @@ interface MechLiveSheetProps {
 export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false)
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
+  const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
 
   const {
     mech,
@@ -41,15 +44,15 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     handleRemoveModule,
     handleAddCargo,
     handleRemoveCargo,
+    deleteEntity,
     updateEntity,
     loading,
     totalSalvageValue,
     error,
+    hasPendingChanges,
   } = useMechLiveSheetState(id)
 
-  const allChassis = SalvageUnionReference.Chassis.all()
-  const allSystems = SalvageUnionReference.Systems.all()
-  const allModules = SalvageUnionReference.Modules.all()
+  const allChassis = SalvageUnionReference.findAllIn('chassis', () => true)
 
   const stats = selectedChassis?.stats
 
@@ -87,6 +90,18 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
   return (
     <LiveSheetLayout>
+      {id && (
+        <LiveSheetControlBar
+          config={MECH_CONTROL_BAR_CONFIG}
+          relationId={mech.pilot_id}
+          savedRelationId={mech.pilot_id}
+          onRelationChange={(pilotId) => updateEntity({ pilot_id: pilotId })}
+          hasPendingChanges={hasPendingChanges}
+          active={mech.active ?? false}
+          onActiveChange={(active) => updateEntity({ active })}
+          disabled={!selectedChassis}
+        />
+      )}
       <Flex gap={6}>
         <VStack flex="1" gap={6} alignItems="stretch">
           <RoundedBox
@@ -119,7 +134,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
             }
             title="Mech Chassis"
             bg="su.green"
-            h="full"
             w="full"
             disabled={!selectedChassis}
           >
@@ -147,22 +161,14 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
               />
             </Grid>
           </RoundedBox>
-          <Flex gap={6} flexDirection="row" justifyContent="space-between" w="full">
-            <PilotInfo
-              mechId={id}
-              pilotId={mech.pilot_id}
-              onPilotChange={(pilotId) => updateEntity({ pilot_id: pilotId })}
-              disabled={!selectedChassis}
-            />
-            <ChassisStatsGrid
-              stats={stats}
-              totalSalvageValue={totalSalvageValue}
-              usedSystemSlots={usedSystemSlots}
-              usedModuleSlots={usedModuleSlots}
-              totalCargo={totalCargo}
-              disabled={!selectedChassis}
-            />
-          </Flex>
+          <ChassisStatsGrid
+            stats={stats}
+            totalSalvageValue={totalSalvageValue}
+            usedSystemSlots={usedSystemSlots}
+            usedModuleSlots={usedModuleSlots}
+            totalCargo={totalCargo}
+            disabled={!selectedChassis}
+          />
         </VStack>
 
         <MechResourceSteppers
@@ -198,7 +204,10 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           maxCargo={stats?.cargoCap || 0}
           canAddCargo={!!selectedChassis}
           onRemove={handleRemoveCargo}
-          onAddClick={() => setIsCargoModalOpen(true)}
+          onAddClick={(position) => {
+            setCargoPosition(position)
+            setIsCargoModalOpen(true)
+          }}
           disabled={!selectedChassis}
         />
 
@@ -207,31 +216,38 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           onChange={(value) => updateEntity({ notes: value })}
           disabled={!selectedChassis}
           backgroundColor="bg.builder.mech"
-          borderWidth={8}
           placeholder="Add notes about your mech..."
         />
       </Grid>
 
       <SystemModuleSelector
-        availableSystemSlots={Number(stats?.systemSlots) - usedSystemSlots || 0}
-        availableModuleSlots={Number(stats?.moduleSlots) - usedModuleSlots || 0}
         isOpen={isSelectorOpen}
         onClose={() => setIsSelectorOpen(false)}
-        systems={allSystems}
-        modules={allModules}
         onSelectSystem={handleAddSystem}
         onSelectModule={handleAddModule}
-        selectedSystemIds={mech.systems ?? []}
-        selectedModuleIds={mech.modules ?? []}
       />
 
       <CargoModal
         isOpen={isCargoModalOpen}
-        onClose={() => setIsCargoModalOpen(false)}
+        onClose={() => {
+          setIsCargoModalOpen(false)
+          setCargoPosition(null)
+        }}
         onAdd={handleAddCargo}
+        existingCargo={mech.cargo ?? []}
         maxCargo={stats?.cargoCap || 0}
         currentCargo={totalCargo}
+        position={cargoPosition}
       />
+
+      {/* Delete Button - Only show when editing existing entity */}
+      {id && (
+        <DeleteEntity
+          entityName="Mech"
+          onConfirmDelete={deleteEntity}
+          disabled={!id || hasPendingChanges}
+        />
+      )}
     </LiveSheetLayout>
   )
 }

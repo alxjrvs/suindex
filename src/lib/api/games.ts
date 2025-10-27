@@ -1,5 +1,5 @@
 import { supabase } from '../supabase'
-import type { Tables, TablesInsert } from '../../types/database'
+import type { Tables, TablesInsert } from '../../types/database-generated.types'
 
 export type GameRow = Tables<'games'>
 export type GameMember = {

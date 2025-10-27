@@ -7,6 +7,7 @@ interface ControlBarContainerProps {
   leftContent: ReactNode
   rightContent?: ReactNode
   hasPendingChanges?: boolean
+  centerContent?: ReactNode
 }
 
 export function ControlBarContainer({
@@ -14,6 +15,7 @@ export function ControlBarContainer({
   leftContent,
   rightContent,
   hasPendingChanges = false,
+  centerContent,
 }: ControlBarContainerProps) {
   // Save status indicator component
   const saveStatusIndicator = (
@@ -44,10 +46,10 @@ export function ControlBarContainer({
       bg={backgroundColor}
       px={6}
       py={3}
-      borderWidth="4px"
       leftContent={<HStack gap={4}>{leftContent}</HStack>}
       rightContent={
         <HStack gap={3}>
+          {centerContent}
           {rightContent}
           {saveStatusIndicator}
         </HStack>

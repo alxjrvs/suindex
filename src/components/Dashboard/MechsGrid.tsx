@@ -1,51 +1,17 @@
-import { useNavigate } from 'react-router'
-import type { Tables } from '../../types/database'
-import { useEntityGrid } from '../../hooks/useEntityGrid'
-import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { MechGridCard } from './MechGridCard'
-import { GridLayout } from './GridLayout'
+import { EntityGrid } from './EntityGrid'
 import { getChassisNameById } from '../../utils/referenceDataHelpers'
 
-type MechRow = Tables<'mechs'>
-
 export function MechsGrid() {
-  const navigate = useNavigate()
-
-  const {
-    items: mechs,
-    loading,
-    error,
-    reload,
-  } = useEntityGrid<MechRow>({
-    table: 'mechs',
-    orderBy: 'created_at',
-    orderAscending: false,
-  })
-
-  const { createEntity: createMech, isLoading: isCreating } = useCreateEntity({
-    table: 'mechs',
-    navigationPath: (id) => `/dashboard/mechs/${id}`,
-  })
-
-  const handleCreateMech = async () => {
-    try {
-      await createMech()
-    } catch (err) {
-      console.error('Failed to create mech:', err)
-    }
-  }
-
-  const handleMechClick = (mechId: string) => {
-    navigate(`/dashboard/mechs/${mechId}`)
-  }
-
   return (
-    <GridLayout
+    <EntityGrid<'mechs'>
+      table="mechs"
       title="Your Mechs"
-      loading={loading}
-      error={error}
-      items={mechs}
-      renderItem={(mech) => {
+      createButtonLabel="New Mech"
+      createButtonBgColor="su.green"
+      createButtonColor="su.white"
+      emptyStateMessage="No mechs yet"
+      renderCard={(mech, onClick) => {
         const chassisName = mech.chassis_id ? getChassisNameById(mech.chassis_id) : 'No Chassis'
 
         return (
@@ -55,18 +21,10 @@ export function MechsGrid() {
             chassisName={chassisName}
             currentDamage={mech.current_damage ?? 0}
             currentHeat={mech.current_heat ?? 0}
-            onClick={() => handleMechClick(mech.id)}
+            onClick={() => onClick(mech.id)}
           />
         )
       }}
-      createButton={{
-        onClick: handleCreateMech,
-        label: 'New Mech',
-        bgColor: 'su.green',
-        color: 'su.white',
-        isLoading: isCreating,
-      }}
-      onRetry={reload}
     />
   )
 }

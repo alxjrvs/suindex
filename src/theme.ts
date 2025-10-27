@@ -6,6 +6,7 @@ import { textRecipe } from './recipes/text.recipe'
 export const suColors = {
   blue: 'rgb(143, 195, 216)',
   green: 'rgb(122, 151, 138)',
+  darkGreen: 'rgb(92, 121, 108)', // Slightly darker mech green
   orange: 'rgb(239, 137, 79)',
   lightOrange: 'rgb(245, 193, 163)',
   lightBlue: 'rgb(199, 223, 231)',
@@ -17,9 +18,13 @@ export const suColors = {
   sixBlue: 'rgb(6, 52, 65)',
   pink: 'rgb(206, 88, 152)',
   brick: 'rgb(168, 89, 71)',
+  paleBrick: 'rgb(210, 160, 140)', // Pale brick for backgrounds
   black: 'rgb(40, 32, 25)',
   white: 'rgb(251, 248, 243)',
   grey: 'rgb(150, 150, 150)',
+  lightGrey: 'rgb(100, 100, 100)',
+  mediumGrey: 'rgb(130, 130, 130)',
+  darkGrey: 'rgb(80, 80, 80)',
   // Derived colors for UI components
   inputBg: 'rgb(232, 229, 216)', // #e8e5d8
   inputText: 'rgb(45, 62, 54)', // #2d3e36
@@ -51,6 +56,7 @@ const config = defineConfig({
         su: {
           blue: { value: suColors.blue },
           green: { value: suColors.green },
+          darkGreen: { value: suColors.darkGreen },
           orange: { value: suColors.orange },
           lightOrange: { value: suColors.lightOrange },
           lightBlue: { value: suColors.lightBlue },
@@ -62,9 +68,13 @@ const config = defineConfig({
           sixBlue: { value: suColors.sixBlue },
           pink: { value: suColors.pink },
           brick: { value: suColors.brick },
+          paleBrick: { value: suColors.paleBrick },
           black: { value: suColors.black },
           white: { value: suColors.white },
           grey: { value: suColors.grey },
+          lightGrey: { value: suColors.lightGrey },
+          mediumGrey: { value: suColors.mediumGrey },
+          darkGrey: { value: suColors.darkGrey },
           inputBg: { value: suColors.inputBg },
           inputText: { value: suColors.inputText },
           crawlerPink: { value: suColors.crawlerPink },

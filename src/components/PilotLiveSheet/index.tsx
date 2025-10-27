@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Flex, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -12,6 +12,7 @@ import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
 import { usePilotLiveSheetState } from './usePilotLiveSheetState'
+import { DeleteEntity } from '../shared/DeleteEntity'
 
 interface PilotLiveSheetProps {
   id?: string
@@ -23,7 +24,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
 
   const allCoreClasses = SalvageUnionReference.CoreClasses.all()
   const allAbilities = SalvageUnionReference.Abilities.all()
-  const allEquipment = SalvageUnionReference.Equipment.all()
 
   const {
     pilot,
@@ -37,6 +37,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
     handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
+    deleteEntity,
     updateEntity,
     loading,
     error,
@@ -81,9 +82,12 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           savedRelationId={pilot.crawler_id}
           onRelationChange={(crawlerId) => updateEntity({ crawler_id: crawlerId })}
           hasPendingChanges={hasPendingChanges}
+          active={pilot.active ?? false}
+          onActiveChange={(active) => updateEntity({ active })}
+          disabled={!selectedClass}
         />
       )}
-      <Flex gap={6}>
+      <Flex gap={6} w="full">
         <PilotInfoInputs
           callsign={pilot.callsign}
           motto={pilot.motto ?? ''}
@@ -143,7 +147,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         notes={pilot.notes ?? ''}
         onChange={(value) => updateEntity({ notes: value })}
         backgroundColor="bg.builder.pilot"
-        borderWidth={8}
         placeholder="Add notes about your pilot..."
         disabled={!selectedClass}
       />
@@ -166,9 +169,19 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
       <EquipmentSelector
         isOpen={isEquipmentSelectorOpen}
         onClose={() => setIsEquipmentSelectorOpen(false)}
-        equipment={allEquipment}
         onSelectEquipment={handleAddEquipment}
       />
+
+      {/* Delete Button - Only show when editing existing entity */}
+      {id && (
+        <Box mt={6}>
+          <DeleteEntity
+            entityName="Pilot"
+            onConfirmDelete={deleteEntity}
+            disabled={!id || hasPendingChanges}
+          />
+        </Box>
+      )}
     </LiveSheetLayout>
   )
 }

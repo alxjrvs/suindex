@@ -1,7 +1,9 @@
 import { useCallback, useMemo } from 'react'
+import { useNavigate } from 'react-router'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { MechLiveSheetState } from './types'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
+import { deleteEntity as deleteEntityAPI } from '../../lib/api'
 
 const INITIAL_MECH_STATE: MechLiveSheetState = {
   id: '',
@@ -19,12 +21,15 @@ const INITIAL_MECH_STATE: MechLiveSheetState = {
   current_ep: 0,
   current_heat: 0,
   notes: null,
+  choices: null,
+  active: false,
 }
 
 export function useMechLiveSheetState(id?: string) {
-  const allChassis = SalvageUnionReference.Chassis.all()
-  const allSystems = SalvageUnionReference.Systems.all()
-  const allModules = SalvageUnionReference.Modules.all()
+  const navigate = useNavigate()
+  const allChassis = SalvageUnionReference.findAllIn('chassis', () => true)
+  const allSystems = SalvageUnionReference.findAllIn('systems', () => true)
+  const allModules = SalvageUnionReference.findAllIn('modules', () => true)
 
   const {
     entity: mech,
@@ -206,7 +211,13 @@ export function useMechLiveSheetState(id?: string) {
     }
   }
 
-  const handleAddCargo = (amount: number, description: string, color: string) => {
+  const handleAddCargo = (
+    amount: number,
+    description: string,
+    color: string,
+    ref?: string,
+    position?: { row: number; col: number }
+  ) => {
     updateEntity({
       cargo: [
         ...(mech.cargo ?? []),
@@ -215,6 +226,8 @@ export function useMechLiveSheetState(id?: string) {
           amount,
           description,
           color,
+          ref,
+          position,
         },
       ],
     })
@@ -231,6 +244,18 @@ export function useMechLiveSheetState(id?: string) {
     }
   }
 
+  const handleDeleteEntity = useCallback(async () => {
+    if (!id) return
+
+    try {
+      await deleteEntityAPI('mechs', id)
+      navigate('/dashboard/mechs')
+    } catch (error) {
+      console.error('Error deleting mech:', error)
+      throw error
+    }
+  }, [id, navigate])
+
   return {
     mech,
     totalSalvageValue,
@@ -246,6 +271,7 @@ export function useMechLiveSheetState(id?: string) {
     handleRemoveModule,
     handleAddCargo,
     handleRemoveCargo,
+    deleteEntity: handleDeleteEntity,
     updateEntity,
     loading,
     error,

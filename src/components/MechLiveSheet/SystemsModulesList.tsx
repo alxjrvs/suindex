@@ -4,11 +4,14 @@ import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSystem, SURefModule } from 'salvageunion-reference'
-import { SystemDisplay } from '../schema/entities/SystemDisplay'
-import { ModuleDisplay } from '../schema/entities/ModuleDisplay'
+import { createEntityDisplay } from '../schema/entities/createEntityDisplay'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
+
+// Use factory-created display components
+const SystemDisplay = createEntityDisplay('systems')
+const ModuleDisplay = createEntityDisplay('modules')
 
 interface SystemsModulesListProps {
   systems: string[] // Array of System IDs
@@ -37,8 +40,8 @@ export function SystemsModulesList({
   onAddClick,
   disabled = false,
 }: SystemsModulesListProps) {
-  const allSystems = useMemo(() => SalvageUnionReference.Systems.all(), [])
-  const allModules = useMemo(() => SalvageUnionReference.Modules.all(), [])
+  const allSystems = useMemo(() => SalvageUnionReference.findAllIn('systems', () => true), [])
+  const allModules = useMemo(() => SalvageUnionReference.findAllIn('modules', () => true), [])
 
   const sortedSystems = useMemo(() => {
     return systems

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '../../../test/chakra-utils'
-import { BrowserRouter } from 'react-router-dom'
 import { CrawlerControlBar } from '../../CrawlerLiveSheet/CrawlerControlBar'
 import { LiveSheetControlBar } from '../LiveSheetControlBar'
 import { MECH_CONTROL_BAR_CONFIG } from '../controlBarConfigs'
@@ -60,11 +59,7 @@ describe('LiveSheetControlBar', () => {
         return {}
       })
 
-      render(
-        <BrowserRouter>
-          <CrawlerControlBar gameId={null} onGameChange={mockOnGameChange} />
-        </BrowserRouter>
-      )
+      render(<CrawlerControlBar gameId={null} onGameChange={mockOnGameChange} />)
 
       await waitFor(() => {
         expect(screen.getByText('Game')).toBeInTheDocument()
@@ -96,9 +91,7 @@ describe('LiveSheetControlBar', () => {
       })
 
       render(
-        <BrowserRouter>
-          <CrawlerControlBar gameId="game-1" savedGameId="game-1" onGameChange={mockOnGameChange} />
-        </BrowserRouter>
+        <CrawlerControlBar gameId="game-1" savedGameId="game-1" onGameChange={mockOnGameChange} />
       )
 
       await waitFor(() => {
@@ -125,14 +118,12 @@ describe('LiveSheetControlBar', () => {
       })
 
       render(
-        <BrowserRouter>
-          <LiveSheetControlBar
-            config={MECH_CONTROL_BAR_CONFIG}
-            relationId="pilot-1"
-            savedRelationId="pilot-1"
-            onRelationChange={mockOnPilotChange}
-          />
-        </BrowserRouter>
+        <LiveSheetControlBar
+          config={MECH_CONTROL_BAR_CONFIG}
+          relationId="pilot-1"
+          savedRelationId="pilot-1"
+          onRelationChange={mockOnPilotChange}
+        />
       )
 
       await waitFor(() => {

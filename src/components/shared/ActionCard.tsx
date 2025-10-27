@@ -1,53 +1,27 @@
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
 import { DetailsList } from './DetailsList'
+import { RoundedBox } from './RoundedBox'
 import type { ReactNode } from 'react'
-import type { DataValue } from '../../types/common'
-import { formatTraits } from '../../utils/displayUtils'
 import type { SURefActionMetaList } from 'salvageunion-reference'
 
 interface ActionCardProps {
   action: SURefActionMetaList
   activationCurrency?: string
   headerBgColor?: string
-  headerTextColor?: string
 }
 
 export function ActionCard({
   action,
   activationCurrency = 'AP',
   headerBgColor = 'su.lightBlue',
-  headerTextColor = 'su.black',
 }: ActionCardProps) {
   const description =
     'description' in action && action.description
       ? action.description.replaceAll('•', '\n•')
       : undefined
 
-  // Build details array for DetailsList
-  const buildDetailsArray = (): DataValue[] => {
-    const details: DataValue[] = []
-
-    if ('damage' in action && action.damage) {
-      details.push({ value: `${action.damage.amount}${action.damage.type}` })
-    }
-    if ('range' in action && action.range) {
-      details.push({ value: `Range: ${action.range}` })
-    }
-    if ('actionType' in action && action.actionType) {
-      details.push({ value: action.actionType })
-    }
-    if ('traits' in action && action.traits && action.traits.length > 0) {
-      const formattedTraits = formatTraits(action.traits).join(', ')
-      details.push({ value: formattedTraits })
-    }
-
-    return details
-  }
-
-  const itemDetailsElement: ReactNode = (
-    <DetailsList values={buildDetailsArray()} textColor={headerTextColor} />
-  )
+  const itemDetailsElement: ReactNode = <DetailsList data={action} />
 
   const descriptionElement: ReactNode = description ? (
     <Text color="su.black" whiteSpace="pre-line">
@@ -97,23 +71,7 @@ export function ActionCard({
                 </Text>
               )}
             </Flex>
-            <DetailsList
-              values={(() => {
-                const details: DataValue[] = []
-                if ('damage' in subAbility && subAbility.damage) {
-                  details.push({ value: `${subAbility.damage.amount}${subAbility.damage.type}` })
-                }
-                if ('range' in subAbility && subAbility.range) {
-                  details.push({ value: `Range: ${subAbility.range}` })
-                }
-                if ('traits' in subAbility && subAbility.traits && subAbility.traits.length > 0) {
-                  const formattedTraits = formatTraits(subAbility.traits).join(', ')
-                  details.push({ value: formattedTraits })
-                }
-                return details
-              })()}
-              textColor="su.black"
-            />
+            <DetailsList data={subAbility} />
             {subAbility.description && (
               <Text fontSize="sm" color="su.black" mt={1}>
                 {subAbility.description}
@@ -133,41 +91,28 @@ export function ActionCard({
 
   const hasContent = descriptionElement || optionsElement || subAbilitiesElement || notesElement
 
-  return (
-    <VStack borderWidth="2px" borderColor="su.black" bg="su.white" gap={0} alignItems="stretch">
-      {/* Header */}
-      {'name' in action && action.name && (
-        <Box bg={headerBgColor || 'su.lightBlue'} px={3} py={2}>
-          <Flex alignItems="center" gap={2} justifyContent="space-between">
-            <Flex alignItems="center" gap={2}>
-              {'activationCost' in action && action.activationCost && (
-                <ActivationCostBox cost={action.activationCost} currency={activationCurrency} />
-              )}
-              <Text
-                as="span"
-                fontWeight="bold"
-                color={headerTextColor || 'su.white'}
-                fontSize="17px"
-              >
-                {action.name}
-              </Text>
-            </Flex>
-            {itemDetailsElement}
-          </Flex>
-        </Box>
-      )}
+  const leftContentElement =
+    'activationCost' in action && action.activationCost ? (
+      <ActivationCostBox cost={action.activationCost} currency={activationCurrency} />
+    ) : undefined
 
-      {/* Content - only render if there's content to show */}
+  return (
+    <RoundedBox
+      bg={headerBgColor}
+      bodyBg="su.white"
+      title={'name' in action ? action.name : undefined}
+      leftContent={leftContentElement}
+      rightContent={itemDetailsElement}
+      bodyPadding={hasContent ? 3 : 0}
+    >
       {hasContent && (
-        <Box p={3}>
-          <VStack gap={2} alignItems="stretch">
-            {descriptionElement}
-            {optionsElement}
-            {subAbilitiesElement}
-            {notesElement}
-          </VStack>
-        </Box>
+        <VStack gap={2} alignItems="stretch" w="full">
+          {descriptionElement}
+          {optionsElement}
+          {subAbilitiesElement}
+          {notesElement}
+        </VStack>
       )}
-    </VStack>
+    </RoundedBox>
   )
 }

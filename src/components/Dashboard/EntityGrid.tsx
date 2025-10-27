@@ -1,0 +1,83 @@
+import { useNavigate } from 'react-router'
+import type { Tables } from '../../types/database-generated.types'
+import { useEntityGrid } from '../../hooks/useEntityGrid'
+import { useCreateEntity } from '../../hooks/useCreateEntity'
+import { GridLayout } from './GridLayout'
+import type { ValidTable } from '../../types/common'
+import type { ReactNode } from 'react'
+
+interface EntityGridConfig<T extends ValidTable> {
+  /** Database table name */
+  table: T
+  /** Page title */
+  title: string
+  /** Create button label */
+  createButtonLabel: string
+  /** Create button background color */
+  createButtonBgColor: string
+  /** Create button text color */
+  createButtonColor: string
+  /** Function to render each grid item */
+  renderCard: (item: Tables<T>, onClick: (id: string) => void) => ReactNode
+  /** Empty state message */
+  emptyStateMessage?: string
+  /** Empty state icon */
+}
+
+/**
+ * Generic grid component for displaying and managing entities (crawlers, pilots, mechs)
+ * Consolidates duplicate logic from CrawlersGrid, PilotsGrid, MechsGrid
+ */
+export function EntityGrid<T extends ValidTable>({
+  table,
+  title,
+  createButtonLabel,
+  createButtonBgColor,
+  createButtonColor,
+  renderCard,
+  emptyStateMessage,
+}: EntityGridConfig<T>) {
+  const navigate = useNavigate()
+
+  const { items, loading, error, reload } = useEntityGrid<Tables<T>>({
+    table,
+    orderBy: 'created_at',
+    orderAscending: false,
+  })
+
+  const { createEntity, isLoading: isCreating } = useCreateEntity({
+    table,
+    navigationPath: (id) => `/dashboard/${table}/${id}`,
+  })
+
+  const handleCreate = async () => {
+    try {
+      await createEntity()
+    } catch (err) {
+      console.error(`Failed to create ${table}:`, err)
+    }
+  }
+
+  const handleClick = (id: string) => {
+    navigate(`/dashboard/${table}/${id}`)
+  }
+
+  return (
+    <GridLayout
+      title={title}
+      loading={loading}
+      error={error}
+      items={items}
+      renderItem={(item) => renderCard(item, handleClick)}
+      createButton={{
+        onClick: handleCreate,
+        label: createButtonLabel,
+        color: createButtonColor,
+        bgColor: createButtonBgColor,
+        isLoading: isCreating,
+      }}
+      onRetry={reload}
+      emptyStateMessage={emptyStateMessage}
+    />
+  )
+}

@@ -5,6 +5,8 @@
  * occupies a connected region of cells, creating a "single box" visual appearance.
  */
 
+import { getCargoGridConfig } from '../constants/gameRules'
+
 export interface GridCell {
   itemId: string | null
   isCenter: boolean // Where to render the label
@@ -181,6 +183,95 @@ function findRectangularRegion(
 }
 
 /**
+ * Find a connected region that includes a specific cell
+ * Returns null if no region of the required size exists that includes the target cell
+ */
+function findConnectedRegionIncludingCell(
+  cells: GridCell[],
+  rows: number,
+  cols: number,
+  targetSize: number,
+  targetCell: { row: number; col: number },
+  preferredShape?: { width: number; height: number }
+): number[] | null {
+  const targetIdx = posToIndex(targetCell, cols)
+
+  // Check if target cell is valid and empty
+  if (targetIdx < 0 || targetIdx >= cells.length || cells[targetIdx].itemId !== null) {
+    return null
+  }
+
+  // Try rectangular region centered on target cell first
+  if (preferredShape) {
+    const { width, height } = preferredShape
+    // Try different offsets to center the rectangle on the target cell
+    for (let offsetRow = 0; offsetRow < height; offsetRow++) {
+      for (let offsetCol = 0; offsetCol < width; offsetCol++) {
+        const startRow = targetCell.row - offsetRow
+        const startCol = targetCell.col - offsetCol
+
+        if (
+          startRow >= 0 &&
+          startCol >= 0 &&
+          startRow + height <= rows &&
+          startCol + width <= cols
+        ) {
+          const region: number[] = []
+          let valid = true
+
+          for (let r = startRow; r < startRow + height && valid; r++) {
+            for (let c = startCol; c < startCol + width && valid; c++) {
+              const idx = posToIndex({ row: r, col: c }, cols)
+              if (cells[idx].itemId !== null) {
+                valid = false
+              } else {
+                region.push(idx)
+              }
+            }
+          }
+
+          if (valid && region.length === width * height && region.includes(targetIdx)) {
+            return region
+          }
+        }
+      }
+    }
+  }
+
+  // Fall back to flood fill from target cell
+  const region: number[] = []
+  const queue: number[] = [targetIdx]
+  const visited = new Set<number>()
+
+  while (queue.length > 0 && region.length < targetSize) {
+    const idx = queue.shift()!
+    if (visited.has(idx)) continue
+
+    visited.add(idx)
+
+    if (cells[idx].itemId === null) {
+      region.push(idx)
+
+      const pos = indexToPos(idx, cols)
+      const neighbors = getNeighbors(pos, rows, cols)
+
+      for (const neighborPos of neighbors) {
+        const neighborIdx = posToIndex(neighborPos, cols)
+        if (!visited.has(neighborIdx) && cells[neighborIdx].itemId === null) {
+          queue.push(neighborIdx)
+        }
+      }
+    }
+  }
+
+  if (region.length >= targetSize) {
+    return region.slice(0, targetSize)
+  }
+
+  return null
+}
+
+/**
  * Find the center-most and top-right-most cells in a region
  */
 function findSpecialCells(
@@ -224,14 +315,15 @@ function findSpecialCells(
 
 /**
  * Pack cargo items into a grid, preserving existing placements when possible
+ * If an item has a position, the packing algorithm will try to include that cell in the item's region
  */
 export function packCargoGrid(
-  items: Array<{ id: string; amount: number }>,
+  items: Array<{ id: string; amount: number; position?: { row: number; col: number } }>,
   maxCapacity: number,
   previousGrid?: PackedGrid
 ): PackedGrid {
-  // Calculate grid dimensions
-  const cols = maxCapacity <= 6 ? 3 : maxCapacity <= 16 ? 4 : maxCapacity <= 30 ? 5 : 6
+  // Calculate grid dimensions using centralized config
+  const { cols } = getCargoGridConfig(maxCapacity)
   const rows = Math.ceil(maxCapacity / cols)
 
   // Initialize empty grid
@@ -266,7 +358,24 @@ export function packCargoGrid(
   let needsRepack = false
   for (const item of itemsToPlace) {
     const preferredShape = findBestShape(item.amount, cols)
-    const region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
+
+    // If item has a position, try to place it including that cell
+    let region: number[] | null = null
+    if (item.position) {
+      region = findConnectedRegionIncludingCell(
+        cells,
+        rows,
+        cols,
+        item.amount,
+        item.position,
+        preferredShape
+      )
+    }
+
+    // If no position or couldn't place at position, use normal placement
+    if (!region) {
+      region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
+    }
 
     if (!region) {
       // No space available - need to repack everything
@@ -295,13 +404,36 @@ export function packCargoGrid(
       }
     }
 
-    // Sort items by amount (ascending) for optimal packing
-    const sortedItems = [...items].sort((a, b) => a.amount - b.amount)
+    // Sort items: items with positions first, then by amount (ascending) for optimal packing
+    const sortedItems = [...items].sort((a, b) => {
+      // Items with positions come first
+      if (a.position && !b.position) return -1
+      if (!a.position && b.position) return 1
+      // Otherwise sort by amount
+      return a.amount - b.amount
+    })
 
     // Try to place each item
     for (const item of sortedItems) {
       const preferredShape = findBestShape(item.amount, cols)
-      const region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
+
+      // If item has a position, try to place it including that cell
+      let region: number[] | null = null
+      if (item.position) {
+        region = findConnectedRegionIncludingCell(
+          cells,
+          rows,
+          cols,
+          item.amount,
+          item.position,
+          preferredShape
+        )
+      }
+
+      // If no position or couldn't place at position, use normal placement
+      if (!region) {
+        region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
+      }
 
       if (!region) {
         console.warn(`Could not fit item ${item.id} with amount ${item.amount}`)

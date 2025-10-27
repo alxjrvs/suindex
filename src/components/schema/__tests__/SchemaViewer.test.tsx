@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor } from '../../../test/chakra-utils'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import SchemaViewer from '../SchemaViewer'
 import { getSchemaCatalog } from 'salvageunion-reference'
 
@@ -21,13 +20,7 @@ describe('SchemaViewer', () => {
 
   describe('Schema List Page', () => {
     it('should render schema title in header', async () => {
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<SchemaViewer schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<SchemaViewer schemas={schemas} />)
 
       await waitFor(() => {
         expect(screen.getByText('Salvage Union Mech Chassis')).toBeInTheDocument()
@@ -35,13 +28,7 @@ describe('SchemaViewer', () => {
     })
 
     it('should render schema description in header', async () => {
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<SchemaViewer schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<SchemaViewer schemas={schemas} />)
 
       await waitFor(() => {
         expect(screen.getByText('Mech chassis definitions in Salvage Union')).toBeInTheDocument()
@@ -49,13 +36,7 @@ describe('SchemaViewer', () => {
     })
 
     it('should render data table with items', async () => {
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<SchemaViewer schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<SchemaViewer schemas={schemas} />)
 
       await waitFor(() => {
         // Should not be loading anymore
@@ -66,26 +47,14 @@ describe('SchemaViewer', () => {
     it('should display loading state initially', () => {
       // This test is difficult to catch because the component loads very fast
       // Just verify the component renders without crashing
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<SchemaViewer schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<SchemaViewer schemas={schemas} />)
 
       // Component should render (either loading or loaded state)
       expect(document.body).toBeInTheDocument()
     })
 
     it('should render footer', async () => {
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<SchemaViewer schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<SchemaViewer schemas={schemas} />)
 
       await waitFor(() => {
         // Wait for loading to finish
@@ -102,13 +71,7 @@ describe('SchemaViewer', () => {
     it('should display error message when schema not found', async () => {
       // The mock is already set to 'chassis', so we can't easily test invalid schema
       // Just verify the component renders successfully with valid data
-      render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<SchemaViewer schemas={schemas} />} />
-          </Routes>
-        </BrowserRouter>
-      )
+      render(<SchemaViewer schemas={schemas} />)
 
       // Component should render successfully
       await waitFor(() => {

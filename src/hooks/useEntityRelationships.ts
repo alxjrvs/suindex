@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { Database } from '../types/database'
+import type { Database } from '../types/database-generated.types'
 import { getUser, fetchUserEntities } from '../lib/api'
 
 type TableName = keyof Database['public']['Tables']

@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
-import type { TablesInsert } from '../types/database'
-import type { ValidTable } from '../types/common'
+import { SalvageUnionReference } from 'salvageunion-reference'
+import type { TablesInsert } from '../types/database-generated.types'
+import type { ValidTable, CrawlerNPC } from '../types/common'
 import { getUser, createEntity as createEntityAPI } from '../lib/api'
+import type { CrawlerBay } from '../components/CrawlerLiveSheet/types'
 
 interface UseCreateEntityConfig<T extends ValidTable> {
   table: T
@@ -32,6 +34,29 @@ export function useCreateEntity<T extends ValidTable>(
 
   // Get placeholder data based on table type
   const getPlaceholderData = useCallback((): Record<string, unknown> => {
+    // Initialize crawler bays and NPC
+    const allBays = SalvageUnionReference.CrawlerBays.all()
+    const initialBays: CrawlerBay[] = allBays.map((bay) => ({
+      id: `${bay.id}-${Date.now()}-${Math.random()}`,
+      bayId: bay.id,
+      name: bay.name,
+      damaged: false,
+      npc: {
+        name: '',
+        notes: '',
+        hitPoints: bay.npc.hitPoints,
+        damage: 0,
+      },
+      description: '',
+    }))
+
+    const initialNPC: CrawlerNPC = {
+      name: '',
+      notes: '',
+      hitPoints: 0,
+      damage: 0,
+    }
+
     const defaults: Record<ValidTable, Record<string, unknown>> = {
       mechs: {
         pattern: 'New Mech',
@@ -49,7 +74,15 @@ export function useCreateEntity<T extends ValidTable>(
       crawlers: {
         name: 'Unknown Name',
         current_damage: 0,
-        current_scrap: 0,
+        scrap_tl_one: 0,
+        scrap_tl_two: 0,
+        scrap_tl_three: 0,
+        scrap_tl_four: 0,
+        scrap_tl_five: 0,
+        scrap_tl_six: 0,
+        bays: initialBays,
+        npc: initialNPC,
+        tech_level: 1,
       },
       games: {
         name: 'Unknown Game',
@@ -81,10 +114,26 @@ export function useCreateEntity<T extends ValidTable>(
       const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Prepare data with placeholder values and user_id
-      const data = {
-        ...getPlaceholderData(),
-        user_id: user.id,
+      // Prepare data with placeholder values and appropriate user field
+      // Different tables use different column names for the user identifier
+      const placeholderData = getPlaceholderData()
+      let data: Record<string, unknown>
+
+      if (config.table === 'games' || config.table === 'game_invites') {
+        // games and game_invites use 'created_by' instead of 'user_id'
+        data = {
+          ...placeholderData,
+          created_by: user.id,
+        }
+      } else if (config.table === 'external_links') {
+        // external_links doesn't have a user field (associated via game_id)
+        data = placeholderData
+      } else {
+        // mechs, pilots, crawlers, game_members use 'user_id'
+        data = {
+          ...placeholderData,
+          user_id: user.id,
+        }
       }
 
       // Create entity using API

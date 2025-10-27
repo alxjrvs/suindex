@@ -7,6 +7,7 @@ import {
   DialogBody,
   DialogBackdrop,
   DialogCloseTrigger,
+  DialogPositioner,
 } from '@chakra-ui/react'
 
 interface ModalProps {
@@ -22,51 +23,53 @@ export default function Modal({
   onClose,
   title,
   children,
-  backgroundColor = 'bg.builder',
+  backgroundColor = 'su.mediumGrey',
 }: ModalProps) {
   return (
-    <DialogRoot open={isOpen} onOpenChange={(e) => !e.open && onClose()} size="xl">
+    <DialogRoot
+      open={isOpen}
+      onOpenChange={(e) => !e.open && onClose()}
+      size="xl"
+      placement="center"
+    >
       <DialogBackdrop />
-      <DialogContent
-        maxW="4xl"
-        maxH="90vh"
-        bg={backgroundColor}
-        borderWidth="3px"
-        borderColor="su.black"
-        borderRadius="24px"
-        shadow="lg"
-        position="fixed"
-        top="50%"
-        left="50%"
-        transform="translate(-50%, -50%)"
-        zIndex={1400}
-      >
-        <DialogHeader
+      <DialogPositioner>
+        <DialogContent
+          maxW="6xl"
+          maxH="90vh"
           bg={backgroundColor}
-          borderBottomWidth="4px"
-          borderBottomColor="su.black"
-          borderTopRadius="24px"
-          pl={6}
-          pr={2}
-          py={2}
-          w="full"
-          justifyContent="space-between"
-          alignItems="center"
+          borderWidth="3px"
+          borderColor="su.black"
+          borderRadius="24px"
+          shadow="lg"
         >
-          <DialogTitle fontSize="2xl" fontWeight="bold" color="su.white">
-            {title}
-          </DialogTitle>
-          <DialogCloseTrigger
-            color="su.white"
-            _hover={{ color: 'su.lightOrange' }}
-            fontSize="3xl"
-            fontWeight="bold"
-          />
-        </DialogHeader>
-        <DialogBody flex="1" overflowY="auto" p={6}>
-          {children}
-        </DialogBody>
-      </DialogContent>
+          <DialogHeader
+            bg="su.orange"
+            borderBottomWidth="4px"
+            borderBottomColor="su.black"
+            borderTopRadius="24px"
+            pl={6}
+            pr={2}
+            py={2}
+            w="full"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <DialogTitle fontSize="2xl" fontWeight="bold" color="su.white">
+              {title}
+            </DialogTitle>
+            <DialogCloseTrigger
+              color="su.white"
+              _hover={{ color: 'su.lightOrange' }}
+              fontSize="3xl"
+              fontWeight="bold"
+            />
+          </DialogHeader>
+          <DialogBody flex="1" overflowY="auto" p={6}>
+            {children}
+          </DialogBody>
+        </DialogContent>
+      </DialogPositioner>
     </DialogRoot>
   )
 }

@@ -35,6 +35,15 @@ vi.mock('../lib/supabase', () => ({
   },
 }))
 
+// Mock react-router globally for all tests
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router')
+  return {
+    ...actual,
+    useNavigate: () => vi.fn(),
+  }
+})
+
 // IntersectionObserver mock
 const IntersectionObserverMock = vi.fn(
   () =>

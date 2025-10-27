@@ -21,7 +21,7 @@ export function ChassisStatsGrid({
   disabled = false,
 }: ChassisStatsGridProps) {
   return (
-    <RoundedBox bg="su.green" h="full" w="full" disabled={disabled}>
+    <RoundedBox bg="su.green" h="full" flex="1" disabled={disabled}>
       <Flex
         flexDirection="row"
         justifyContent="space-between"

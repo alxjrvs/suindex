@@ -98,7 +98,6 @@ export function AbilitiesList({
                   <AbilityDisplay
                     key={ability.id}
                     data={ability}
-                    showRemoveButton
                     disableRemove={currentTP < 1}
                     onRemove={() => onRemove(ability.id)}
                     collapsible
@@ -123,7 +122,6 @@ export function AbilitiesList({
                   <AbilityDisplay
                     key={ability.id}
                     data={ability}
-                    showRemoveButton
                     disableRemove={currentTP < 1}
                     onRemove={() => onRemove(ability.id)}
                     collapsible
@@ -143,7 +141,6 @@ export function AbilitiesList({
           </Heading>
           <AbilityDisplay
             data={legendaryAbility}
-            showRemoveButton
             disableRemove={currentTP < 1}
             onRemove={onRemoveLegendary}
             collapsible

@@ -1,5 +1,6 @@
 import { Box, Button, VStack } from '@chakra-ui/react'
 import { Text } from './base/Text'
+import { useState, useEffect } from 'react'
 
 interface StatDisplayProps {
   label: string
@@ -11,6 +12,8 @@ interface StatDisplayProps {
   valueColor?: string
   borderColor?: string
   ariaLabel?: string
+  compact?: boolean
+  flash?: boolean // Trigger flash animation
 }
 
 export function StatDisplay({
@@ -23,16 +26,30 @@ export function StatDisplay({
   valueColor = 'su.black',
   borderColor = 'su.black',
   ariaLabel,
+  compact = false,
+  flash = false,
 }: StatDisplayProps) {
+  const [isFlashing, setIsFlashing] = useState(false)
   const WrapperComponent = onClick ? Button : Box
 
-  // All stat displays keep their background when disabled, just apply opacity
+  useEffect(() => {
+    if (!flash) return
+
+    const startTimer = setTimeout(() => setIsFlashing(true), 0)
+    const endTimer = setTimeout(() => setIsFlashing(false), 3000)
+
+    return () => {
+      clearTimeout(startTimer)
+      clearTimeout(endTimer)
+    }
+  }, [flash])
+
   const commonProps = {
-    w: 16,
-    h: 16,
-    borderRadius: '2xl' as const,
+    w: compact ? 10 : 16,
+    h: compact ? 10 : 16,
+    borderRadius: compact ? 'xl' : ('2xl' as const),
     bg,
-    borderWidth: '3px',
+    borderWidth: compact ? '2px' : '3px',
     borderColor,
     display: 'flex' as const,
     alignItems: 'center' as const,
@@ -40,7 +57,9 @@ export function StatDisplay({
     cursor: onClick && !disabled ? ('pointer' as const) : ('default' as const),
     opacity: disabled ? 0.3 : 1,
     pointerEvents: disabled ? ('none' as const) : ('auto' as const),
-    transition: 'opacity 0.2s',
+    transition: isFlashing ? 'all 3s ease-out' : 'opacity 0.2s',
+    transform: isFlashing ? 'scale(1)' : 'scale(1)',
+    animation: isFlashing ? 'growShrink 3s ease-out' : undefined,
   }
 
   const buttonProps = onClick
@@ -56,10 +75,19 @@ export function StatDisplay({
 
   return (
     <VStack gap={0} alignItems="center">
+      <style>
+        {`
+          @keyframes growShrink {
+            0% { transform: scale(1); }
+            10% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+          }
+        `}
+      </style>
       <Text
         textTransform={'uppercase'}
-        mb={-2}
-        fontSize="xs"
+        mb={compact ? -1.5 : -2}
+        fontSize={compact ? '2xs' : 'xs'}
         alignSelf="center"
         variant="pseudoheader"
         zIndex={1}
@@ -71,7 +99,7 @@ export function StatDisplay({
       </Text>
       <WrapperComponent {...buttonProps}>
         <Text
-          fontSize="md"
+          fontSize={compact ? 'sm' : 'md'}
           fontWeight="bold"
           color={disabled ? 'su.black' : valueColor}
           textAlign="center"
@@ -80,7 +108,7 @@ export function StatDisplay({
           maxW="full"
           w="full"
           css={{
-            fontSize: 'clamp(0.5rem, 4.5cqw, 1rem)',
+            fontSize: compact ? 'clamp(0.4rem, 4.5cqw, 0.875rem)' : 'clamp(0.5rem, 4.5cqw, 1rem)',
             containerType: 'inline-size',
           }}
         >

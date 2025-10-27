@@ -23,6 +23,7 @@ import {
   getClassNameById,
   getChassisNameById,
 } from '../../utils/referenceDataHelpers'
+import { ActiveToggle } from '../shared/ActiveToggle'
 
 type GameInviteRow = GameInvite
 type ExternalLinkRow = ExternalLink
@@ -361,18 +362,34 @@ export function GameShow() {
           </VStack>
         ) : (
           <Box>
-            <Flex align="center" gap={4} mb={4}>
-              <Heading level="h1">{gameWithRelationships.name}</Heading>
+            <Flex align="center" gap={4} mb={4} justifyContent="space-between">
+              <Flex align="center" gap={4}>
+                <Heading level="h1">{gameWithRelationships.name}</Heading>
+                {isMediator && (
+                  <Button
+                    onClick={() => setIsEditingGame(true)}
+                    variant="plain"
+                    color="su.brick"
+                    fontSize="sm"
+                    _hover={{ textDecoration: 'underline' }}
+                  >
+                    Edit
+                  </Button>
+                )}
+              </Flex>
               {isMediator && (
-                <Button
-                  onClick={() => setIsEditingGame(true)}
-                  variant="plain"
-                  color="su.brick"
-                  fontSize="sm"
-                  _hover={{ textDecoration: 'underline' }}
-                >
-                  Edit
-                </Button>
+                <ActiveToggle
+                  active={gameWithRelationships.active ?? false}
+                  onChange={async (active) => {
+                    if (!gameId) return
+                    try {
+                      await updateGame(gameId, { active })
+                      reloadGame()
+                    } catch (err) {
+                      console.error('Error updating game active status:', err)
+                    }
+                  }}
+                />
               )}
             </Flex>
             {gameWithRelationships.description && (

@@ -4,13 +4,19 @@ import { Button } from '@chakra-ui/react'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
 import type { CrawlerLiveSheetState } from './types'
+import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 
 interface BayInfoProps {
   referenceBay: SURefCrawlerBay | undefined
+  onUpdateChoice: (id: string, value: string | undefined) => void
   crawler: CrawlerLiveSheetState
 }
 
-export function BayInfo({ referenceBay, crawler: { crawler_type_id, tech_level } }: BayInfoProps) {
+export function BayInfo({
+  referenceBay,
+  crawler: { crawler_type_id, tech_level, choices },
+  onUpdateChoice,
+}: BayInfoProps) {
   const [isFunctionExpanded, setIsFunctionExpanded] = useState(false)
   const [isAbilitiesExpanded, setIsAbilitiesExpanded] = useState(false)
 
@@ -36,7 +42,14 @@ export function BayInfo({ referenceBay, crawler: { crawler_type_id, tech_level }
 
   return (
     <VStack mt="2" gap={2} justifyContent="flex-start" alignItems="stretch" w="full">
-      {/* Buttons Row */}
+      {referenceBay.choices?.map((choice) => (
+        <SheetEntityChoiceDisplay
+          key={choice.id}
+          choice={choice}
+          onUpdateChoice={onUpdateChoice}
+          selectedValue={(choices || {})[choice.id]}
+        />
+      ))}
       <HStack gap={2} w="full">
         {hasFunction && (
           <Button

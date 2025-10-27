@@ -1,20 +1,27 @@
-import { Box, Grid, Text } from '@chakra-ui/react'
+import { Box, Grid } from '@chakra-ui/react'
+import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { packCargoGrid } from '../../utils/cargoGridPacking'
+import { lookupEntityByRef } from '../../utils/referenceUtils'
+import { techLevelColors, suColors } from '../../theme'
 
 interface BayItem {
   id: string
   description: string
   amount: number
   color?: string
+  ref?: string
+  position?: { row: number; col: number }
 }
 
 interface DynamicBayProps {
   items: BayItem[]
   maxCapacity: number
   onRemove: (id: string) => void
+  onAddClick?: (position: { row: number; col: number }) => void
   disabled?: boolean
+  singleCellMode?: boolean // If true, all items take up exactly 1 cell regardless of amount
 }
 
 // Store previous grids outside component to preserve across renders
@@ -25,13 +32,47 @@ const previousGrids = new Map<string, ReturnType<typeof packCargoGrid>>()
  * DynamicBay - A grid layout for displaying items that occupy connected regions
  * Each item appears as a single contained box regardless of its shape
  */
-export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: DynamicBayProps) {
+export function DynamicBay({
+  items,
+  maxCapacity,
+  onRemove,
+  onAddClick,
+  disabled = false,
+  singleCellMode = false,
+}: DynamicBayProps) {
+  // Determine background color for a cargo item based on its ref
+  const getCargoItemBgColor = (ref?: string): string => {
+    if (!ref) return 'bg.input' // Default color for items without ref
+
+    const parts = ref.split('||')
+    const schemaName = parts[0]
+
+    // Systems and Modules use tech level colors
+    if (schemaName === 'systems' || schemaName === 'modules') {
+      const entity = lookupEntityByRef(ref)
+      if (entity && 'techLevel' in entity) {
+        const techLevel = entity.techLevel as number
+        return techLevelColors[techLevel] || 'bg.input'
+      }
+    }
+
+    // Chassis uses mech green
+    if (schemaName === 'chassis') {
+      return 'su.green'
+    }
+
+    return 'bg.input' // Default for other schemas
+  }
+
   // Create a stable key for this instance
   const instanceKey = `${maxCapacity}`
 
   const { rows, cols, packedGrid, itemsMap } = useMemo(() => {
+    // In single cell mode, normalize all items to amount: 1
+    const normalizedItems = singleCellMode ? items.map((item) => ({ ...item, amount: 1 })) : items
+
     const previousGrid = previousGrids.get(instanceKey)
-    const packed = packCargoGrid(items, maxCapacity, previousGrid)
+    const packed = packCargoGrid(normalizedItems, maxCapacity, previousGrid)
 
     // Store for next render
     previousGrids.set(instanceKey, packed)
@@ -45,7 +86,7 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
       packedGrid: packed.cells,
       itemsMap: map,
     }
-  }, [items, maxCapacity, instanceKey])
+  }, [items, maxCapacity, instanceKey, singleCellMode])
 
   // Helper to check if two cells belong to the same item
   const isSameItem = (index1: number, index2: number): boolean => {
@@ -93,6 +134,9 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
           const leftColor = isLeftEdge || leftIsItem ? 'black' : 'blackAlpha.300'
           const rightColor = isRightEdge || rightIsItem ? 'black' : 'blackAlpha.300'
 
+          const row = Math.floor(index / cols)
+          const col = index % cols
+
           return (
             <Box
               key={`empty-${index}`}
@@ -103,7 +147,25 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
               borderRightColor={rightColor}
               bg="transparent"
               borderStyle="dashed"
-            />
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              cursor={onAddClick && !disabled ? 'pointer' : 'default'}
+              onClick={onAddClick && !disabled ? () => onAddClick({ row, col }) : undefined}
+              _hover={
+                onAddClick && !disabled
+                  ? {
+                      bg: 'blackAlpha.50',
+                    }
+                  : undefined
+              }
+            >
+              {onAddClick && (
+                <Text fontSize="2xl" color="blackAlpha.300" fontWeight="bold" userSelect="none">
+                  +
+                </Text>
+              )}
+            </Box>
           )
         }
 
@@ -122,11 +184,34 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
         const bayItem = itemsMap.get(cell.itemId)
         if (!bayItem) return null // Should never happen
 
+        const handleRemoveClick = (e: React.MouseEvent) => {
+          e.stopPropagation()
+          onRemove(bayItem.id)
+        }
+
+        const handleCellClick = () => {
+          if (bayItem.ref) {
+            const entity = lookupEntityByRef(bayItem.ref)
+            if (entity) {
+              const [schemaName, entityId] = bayItem.ref.split('||')
+              window.open(`/schema/${schemaName}/item/${entityId}`, '_blank')
+            }
+          }
+        }
+
+        // Use ref-based color if available, otherwise use stored color
+        const itemBgColor = bayItem.ref
+          ? getCargoItemBgColor(bayItem.ref)
+          : bayItem.color || 'bg.input'
+
+        // Check if this is a chassis item
+        const isChassis = bayItem.ref?.startsWith('chassis||')
+
         return (
           <Box
             key={`item-${index}`}
             position="relative"
-            bg={bayItem.color || 'bg.input'}
+            bg={isChassis ? 'transparent' : itemBgColor}
             borderTopWidth={showTopBorder ? '3px' : '0'}
             borderBottomWidth={showBottomBorder ? '3px' : '0'}
             borderLeftWidth={showLeftBorder ? '3px' : '0'}
@@ -141,10 +226,31 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
             alignItems="center"
             justifyContent="center"
             minH="60px"
+            onClick={bayItem.ref ? handleCellClick : undefined}
+            cursor={bayItem.ref ? 'pointer' : 'default'}
+            _hover={bayItem.ref ? { opacity: 0.8 } : undefined}
+            _before={
+              isChassis
+                ? {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: `repeating-linear-gradient(45deg, ${suColors.green}, ${suColors.green} 8px, ${suColors.darkGreen} 8px, ${suColors.darkGreen} 16px)`,
+                    pointerEvents: 'none',
+                    borderTopLeftRadius: topLeftRounded ? 'lg' : '0',
+                    borderTopRightRadius: topRightRounded ? 'lg' : '0',
+                    borderBottomLeftRadius: bottomLeftRounded ? 'lg' : '0',
+                    borderBottomRightRadius: bottomRightRounded ? 'lg' : '0',
+                  }
+                : undefined
+            }
           >
             {cell.isTopRight && (
               <Button
-                onClick={() => onRemove(bayItem.id)}
+                onClick={handleRemoveClick}
                 position="absolute"
                 top={1}
                 right={1}
@@ -184,27 +290,17 @@ export function DynamicBay({ items, maxCapacity, onRemove, disabled = false }: D
                 pointerEvents="none"
                 w="100%"
                 textAlign="center"
+                zIndex={1}
               >
                 <Text
+                  variant="pseudoheader"
                   fontSize={bayItem.amount === 1 ? '10px' : 'sm'}
                   fontWeight="bold"
-                  color="fg.input"
                   textAlign="center"
                   lineHeight="1.1"
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
                   maxW="100%"
                 >
-                  {bayItem.description}
-                </Text>
-                <Text
-                  fontSize={bayItem.amount === 1 ? '8px' : 'xs'}
-                  color="fg.input"
-                  opacity={0.7}
-                  lineHeight="1"
-                >
-                  [{bayItem.amount}]
+                  {bayItem.description} ({bayItem.amount})
                 </Text>
               </Box>
             )}

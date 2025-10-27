@@ -1,11 +1,14 @@
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type {
+  SURefAbility,
   SURefCoreClass,
   SURefAdvancedClass,
   SURefHybridClass,
   SURefChassis,
   SURefCrawler,
+  SURefCrawlerBay,
   SURefCrawlerTechLevel,
+  SURefEquipment,
 } from 'salvageunion-reference'
 
 /**
@@ -14,9 +17,9 @@ import type {
  */
 export function getAllClasses(): (SURefCoreClass | SURefAdvancedClass | SURefHybridClass)[] {
   return [
-    ...SalvageUnionReference.CoreClasses.all(),
-    ...SalvageUnionReference.AdvancedClasses.all(),
-    ...SalvageUnionReference.HybridClasses.all(),
+    ...SalvageUnionReference.findAllIn('classes.core', () => true),
+    ...SalvageUnionReference.findAllIn('classes.advanced', () => true),
+    ...SalvageUnionReference.findAllIn('classes.hybrid', () => true),
   ]
 }
 
@@ -28,8 +31,12 @@ export function getAllClasses(): (SURefCoreClass | SURefAdvancedClass | SURefHyb
 export function findClassById(
   classId: string
 ): SURefCoreClass | SURefAdvancedClass | SURefHybridClass | undefined {
-  const allClasses = getAllClasses()
-  return allClasses.find((c) => c.id === classId)
+  // Try to find in each class type using findIn
+  return (
+    SalvageUnionReference.findIn('classes.core', (c) => c.id === classId) ||
+    SalvageUnionReference.findIn('classes.advanced', (c) => c.id === classId) ||
+    SalvageUnionReference.findIn('classes.hybrid', (c) => c.id === classId)
+  )
 }
 
 /**
@@ -49,7 +56,7 @@ export function getClassNameById(classId: string | null, fallback = 'Unknown'): 
  * @returns The chassis object or undefined if not found
  */
 export function findChassisById(chassisId: string): SURefChassis | undefined {
-  return SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
+  return SalvageUnionReference.findIn('chassis', (c) => c.id === chassisId)
 }
 
 /**
@@ -69,7 +76,7 @@ export function getChassisNameById(chassisId: string | null, fallback = 'Unknown
  * @returns The crawler object or undefined if not found
  */
 export function findCrawlerById(crawlerId: string): SURefCrawler | undefined {
-  return SalvageUnionReference.Crawlers.find((c) => c.id === crawlerId)
+  return SalvageUnionReference.findIn('crawlers', (c) => c.id === crawlerId)
 }
 
 /**
@@ -101,4 +108,237 @@ export function findCrawlerTechLevel(techLevel: number): SURefCrawlerTechLevel |
 export function getStructurePointsForTechLevel(techLevel: number | null, fallback = 20): number {
   if (techLevel === null) return fallback
   return findCrawlerTechLevel(techLevel)?.structurePoints ?? fallback
+}
+
+/**
+ * Fetch and validate core classes from reference data
+ * @throws Error if no core classes found
+ * @returns Array of core classes
+ */
+export function getCoreClasses(): SURefCoreClass[] {
+  const allCoreClasses = SalvageUnionReference.findAllIn('classes.core', () => true)
+
+  if (allCoreClasses.length === 0) {
+    throw new Error('No core classes found in salvageunion-reference')
+  }
+
+  return allCoreClasses
+}
+
+/**
+ * Fetch and validate hybrid classes from reference data
+ * @throws Error if no hybrid classes found
+ * @returns Array of hybrid classes
+ */
+export function getHybridClasses(): SURefHybridClass[] {
+  const allHybridClasses = SalvageUnionReference.findAllIn('classes.hybrid', () => true)
+
+  if (allHybridClasses.length === 0) {
+    throw new Error('No hybrid classes found in salvageunion-reference')
+  }
+
+  return allHybridClasses
+}
+
+/**
+ * Fetch and validate advanced classes from reference data
+ * @throws Error if no advanced classes found
+ * @returns Array of advanced classes
+ */
+export function getAdvancedClasses(): SURefAdvancedClass[] {
+  const allAdvancedClasses = SalvageUnionReference.findAllIn('classes.advanced', () => true)
+
+  if (allAdvancedClasses.length === 0) {
+    throw new Error('No advanced classes found in salvageunion-reference')
+  }
+
+  return allAdvancedClasses
+}
+
+/**
+ * Find a specific core class by name
+ * @param className - Name of the class to find
+ * @throws Error if class not found
+ * @returns The core class object
+ */
+export function findCoreClass(className: string): SURefCoreClass {
+  const foundClass = SalvageUnionReference.findIn('classes.core', (c) => c.name === className)
+
+  if (!foundClass) {
+    throw new Error(`${className} core class not found in salvageunion-reference`)
+  }
+
+  return foundClass
+}
+
+/**
+ * Find a specific hybrid class by name
+ * @param className - Name of the class to find
+ * @throws Error if class not found
+ * @returns The hybrid class object
+ */
+export function findHybridClass(className: string): SURefHybridClass {
+  const foundClass = SalvageUnionReference.findIn('classes.hybrid', (c) => c.name === className)
+
+  if (!foundClass) {
+    throw new Error(`${className} hybrid class not found in salvageunion-reference`)
+  }
+
+  return foundClass
+}
+
+/**
+ * Find a specific advanced class by name
+ * @param className - Name of the class to find
+ * @throws Error if class not found
+ * @returns The advanced class object
+ */
+export function findAdvancedClass(className: string): SURefAdvancedClass {
+  const foundClass = SalvageUnionReference.findIn('classes.advanced', (c) => c.name === className)
+
+  if (!foundClass) {
+    throw new Error(`${className} advanced class not found in salvageunion-reference`)
+  }
+
+  return foundClass
+}
+
+/**
+ * Find a class by name across all class types
+ * @param className - Name of the class to find
+ * @throws Error if class not found
+ * @returns The class object
+ */
+export function findClass(
+  className: string
+): SURefCoreClass | SURefAdvancedClass | SURefHybridClass {
+  const foundClass =
+    SalvageUnionReference.findIn('classes.core', (c) => c.name === className) ||
+    SalvageUnionReference.findIn('classes.advanced', (c) => c.name === className) ||
+    SalvageUnionReference.findIn('classes.hybrid', (c) => c.name === className)
+
+  if (!foundClass) {
+    throw new Error(`${className} class not found in salvageunion-reference`)
+  }
+
+  return foundClass
+}
+
+/**
+ * Fetch and validate chassis from reference data
+ * @throws Error if no chassis found
+ * @returns Array of chassis
+ */
+export function getChassis(): SURefChassis[] {
+  const allChassis = SalvageUnionReference.findAllIn('chassis', () => true)
+
+  if (allChassis.length === 0) {
+    throw new Error('No chassis found in salvageunion-reference')
+  }
+
+  return allChassis
+}
+
+/**
+ * Get chassis with patterns for pattern tests
+ * @returns Array of chassis that have patterns
+ */
+export function getChassisWithPatterns(): SURefChassis[] {
+  return SalvageUnionReference.findAllIn('chassis', (c) => c.patterns && c.patterns.length > 0)
+}
+
+/**
+ * Fetch and validate crawlers from reference data
+ * @throws Error if no crawlers found
+ * @returns Array of crawlers
+ */
+export function getCrawlers(): SURefCrawler[] {
+  const allCrawlers = SalvageUnionReference.Crawlers.all()
+
+  if (allCrawlers.length === 0) {
+    throw new Error('No crawlers found in salvageunion-reference')
+  }
+
+  return allCrawlers
+}
+
+/**
+ * Fetch and validate crawler bays from reference data
+ * @throws Error if no crawler bays found
+ * @returns Array of crawler bays
+ */
+export function getCrawlerBays(): SURefCrawlerBay[] {
+  const allBays = SalvageUnionReference.CrawlerBays.all()
+
+  if (allBays.length === 0) {
+    throw new Error('No crawler bays found in salvageunion-reference')
+  }
+
+  return allBays
+}
+
+/**
+ * Fetch and validate abilities from reference data
+ * @throws Error if no abilities found
+ * @returns Array of abilities
+ */
+export function getAbilities(): SURefAbility[] {
+  const allAbilities = SalvageUnionReference.Abilities.all()
+
+  if (allAbilities.length === 0) {
+    throw new Error('No abilities found in salvageunion-reference')
+  }
+
+  return allAbilities
+}
+
+/**
+ * Get abilities for a specific class by core trees
+ * @param classObjOrTreeNames - Either a class object with coreTrees property or an array of tree names
+ * @returns Array of abilities in those trees
+ */
+export function getAbilitiesForClass(
+  classObjOrTreeNames: { coreTrees: string[] } | string[]
+): SURefAbility[] {
+  const treeNames = Array.isArray(classObjOrTreeNames)
+    ? classObjOrTreeNames
+    : classObjOrTreeNames.coreTrees
+  return SalvageUnionReference.Abilities.all().filter((a) => treeNames.includes(a.tree))
+}
+
+/**
+ * Get abilities by level
+ * @param abilitiesOrLevel - Either an array of abilities to filter or a level number
+ * @param level - Optional level number when first param is abilities array
+ * @returns Array of abilities at that level
+ */
+export function getAbilitiesByLevel(
+  abilitiesOrLevel: SURefAbility[] | number,
+  level?: number
+): SURefAbility[] {
+  // If first param is a number, get all abilities at that level
+  if (typeof abilitiesOrLevel === 'number') {
+    return SalvageUnionReference.Abilities.all().filter((a) => a.level === abilitiesOrLevel)
+  }
+  // If first param is an array and level is provided, filter that array
+  if (level !== undefined) {
+    return abilitiesOrLevel.filter((a) => a.level === level)
+  }
+  // Otherwise return empty array
+  return []
+}
+
+/**
+ * Fetch and validate equipment from reference data
+ * @throws Error if no equipment found
+ * @returns Array of equipment
+ */
+export function getEquipment(): SURefEquipment[] {
+  const allEquipment = SalvageUnionReference.findAllIn('equipment', () => true)
+
+  if (allEquipment.length === 0) {
+    throw new Error('No equipment found in salvageunion-reference')
+  }
+
+  return allEquipment
 }

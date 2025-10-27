@@ -124,12 +124,7 @@ export function ScrapConversionModal({
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      title="Convert Scrap"
-      backgroundColor="bg.builder.crawler"
-    >
+    <Modal isOpen={isOpen} onClose={handleClose} title="Convert Scrap">
       <Flex gap={6} align="stretch" w="full">
         {/* FROM Selection */}
         <VStack gap={2} align="stretch" w="full">

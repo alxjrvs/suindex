@@ -103,7 +103,7 @@ export function SheetInput({
           disabled={disabled}
           placeholder={placeholder}
           flex="1"
-          minW="190px"
+          minW="120px"
           p={3}
           borderWidth="3px"
           borderColor="su.black"
@@ -141,7 +141,7 @@ export function SheetInput({
             _disabled={{ opacity: 0.3, cursor: 'not-allowed' }}
             borderWidth="3px"
             borderColor="su.black"
-            borderRadius="2xl"
+            borderRadius="0"
             aria-label={diceRollAriaLabel || `Roll for ${label}`}
             title={diceRollTitle || `Roll for ${label}`}
           >

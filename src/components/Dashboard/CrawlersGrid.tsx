@@ -1,54 +1,20 @@
-import { useNavigate } from 'react-router'
-import type { Tables } from '../../types/database'
 import { CrawlerGridCard } from './CrawlerGridCard'
-import { useEntityGrid } from '../../hooks/useEntityGrid'
-import { useCreateEntity } from '../../hooks/useCreateEntity'
-import { GridLayout } from './GridLayout'
+import { EntityGrid } from './EntityGrid'
 import {
   getCrawlerNameById,
   getStructurePointsForTechLevel,
 } from '../../utils/referenceDataHelpers'
 
-type CrawlerRow = Tables<'crawlers'>
-
 export function CrawlersGrid() {
-  const navigate = useNavigate()
-
-  const {
-    items: crawlers,
-    loading,
-    error,
-    reload,
-  } = useEntityGrid<CrawlerRow>({
-    table: 'crawlers',
-    orderBy: 'created_at',
-    orderAscending: false,
-  })
-
-  const { createEntity: createCrawler, isLoading: isCreating } = useCreateEntity({
-    table: 'crawlers',
-    navigationPath: (id) => `/dashboard/crawlers/${id}`,
-  })
-
-  const handleCreateCrawler = async () => {
-    try {
-      await createCrawler()
-    } catch (err) {
-      console.error('Failed to create crawler:', err)
-    }
-  }
-
-  const handleCrawlerClick = (crawlerId: string) => {
-    navigate(`/dashboard/crawlers/${crawlerId}`)
-  }
-
   return (
-    <GridLayout
+    <EntityGrid<'crawlers'>
+      table="crawlers"
       title="Your Crawlers"
-      loading={loading}
-      error={error}
-      items={crawlers}
-      renderItem={(crawler) => {
+      createButtonLabel="New Crawler"
+      createButtonBgColor="su.crawlerPink"
+      createButtonColor="su.white"
+      emptyStateMessage="No crawlers yet"
+      renderCard={(crawler, onClick) => {
         const crawlerTypeName = crawler.crawler_type_id
           ? getCrawlerNameById(crawler.crawler_type_id)
           : 'Unknown'
@@ -63,18 +29,10 @@ export function CrawlersGrid() {
             typeName={crawlerTypeName}
             currentSP={currentSP}
             maxSP={maxSP}
-            onClick={() => handleCrawlerClick(crawler.id)}
+            onClick={() => onClick(crawler.id)}
           />
         )
       }}
-      createButton={{
-        onClick: handleCreateCrawler,
-        label: 'New Crawler',
-        color: 'su.white',
-        bgColor: 'su.crawlerPink',
-        isLoading: isCreating,
-      }}
-      onRetry={reload}
     />
   )
 }

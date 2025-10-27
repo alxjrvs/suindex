@@ -6,7 +6,7 @@ import { LinkButton } from '../shared/LinkButton'
 import { useEntityRelationships } from '../../hooks/useEntityRelationships'
 import { fetchEntity } from '../../lib/api'
 import { getClassNameById } from '../../utils/referenceDataHelpers'
-import type { Tables } from '../../types/database'
+import type { Tables } from '../../types/database-generated.types'
 import { DiscordSignInButton } from '../DiscordSignInButton'
 
 type PilotRow = Tables<'pilots'>
@@ -23,14 +23,18 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   const [loadingPilot, setLoadingPilot] = useState(false)
 
   // Fetch available pilots for the selector
-  const { items: pilots, loading: loadingPilots } = useEntityRelationships<{
+  const { items: allPilots, loading: loadingPilots } = useEntityRelationships<{
     id: string
     callsign: string
+    mech_id: string | null
   }>({
     table: 'pilots',
-    selectFields: 'id, callsign',
+    selectFields: 'id, callsign, mech_id',
     orderBy: 'callsign',
   })
+
+  // Filter out pilots that already have a mech assigned (except the currently assigned pilot)
+  const pilots = allPilots.filter((p) => !p.mech_id || p.id === pilotId)
 
   // Fetch pilot details when pilotId changes
   useEffect(() => {
@@ -60,7 +64,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     return (
       <RoundedBox
         rightContent={<DiscordSignInButton disabled={disabled} />}
-        w="full"
+        flex="1"
         title="Pilot"
         disabled={true}
         bg="su.orange"
@@ -71,13 +75,14 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   // State 2: Mech ID but no pilot ID - show selector
   if (!pilotId) {
     return (
-      <RoundedBox w="full" title="Pilot" disabled={disabled} bg="su.orange">
+      <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
         <Flex justify="center" align="center" h="full" py={2}>
           <SheetSelect
             label="Pilot"
             value={pilotId ?? null}
             loading={loadingPilots}
             options={pilots.map((p) => ({ id: p.id, name: p.callsign }))}
+            disabled={disabled}
             onChange={onPilotChange}
             placeholder="No Pilot"
           />
@@ -89,7 +94,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   // State 3: Mech ID and pilot ID - show pilot info
   if (loadingPilot) {
     return (
-      <RoundedBox w="full" title="Pilot" disabled={disabled} bg="su.orange">
+      <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
         <Flex justify="center" align="center" h="full" py={4}>
           <Text fontSize="sm" color="gray.500" fontFamily="mono">
             Loading...
@@ -101,7 +106,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
 
   if (!pilot) {
     return (
-      <RoundedBox w="full" title="Pilot" disabled={disabled} bg="su.orange">
+      <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
         <Flex justify="center" align="center" h="full" py={4}>
           <Text fontSize="sm" color="red.500" fontFamily="mono">
             Pilot not found
@@ -117,7 +122,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     : getClassNameById(pilot.class_id)
 
   return (
-    <RoundedBox w="full" title="Pilot" disabled={disabled} bg="su.orange">
+    <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
       <VStack gap={3} align="stretch" py={2} px={3}>
         <Text fontSize="lg" fontWeight="bold" fontFamily="mono" textAlign="center">
           {pilot.callsign} the {className}

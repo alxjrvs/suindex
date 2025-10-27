@@ -12,11 +12,18 @@ import { getTiltRotation } from '../../utils/tiltUtils'
 interface BayCardProps {
   bay: CrawlerBay
   crawler: CrawlerLiveSheetState
-  onUpdate: (updates: Partial<CrawlerBay>) => void
+  onUpdateChoice: (id: string, value: string | undefined) => void
+  onUpdateBay: (updates: Partial<CrawlerBay>) => void
   disabled?: boolean
 }
 
-export function BayCard({ bay, onUpdate, disabled = false, crawler }: BayCardProps) {
+export function BayCard({
+  bay,
+  onUpdateChoice,
+  onUpdateBay,
+  disabled = false,
+  crawler,
+}: BayCardProps) {
   const referenceBay = useMemo(() => {
     const allBays = SalvageUnionReference.CrawlerBays.all()
     return allBays.find((b) => b.id === bay.bayId)
@@ -36,7 +43,7 @@ export function BayCard({ bay, onUpdate, disabled = false, crawler }: BayCardPro
         <StatDisplay
           label={bay.damaged ? 'Repair' : 'Damage'}
           value={bay.damaged ? '+' : '-'}
-          onClick={() => onUpdate({ damaged: !bay.damaged })}
+          onClick={() => onUpdateBay({ damaged: !bay.damaged })}
           bg={bay.damaged ? 'su.orange' : 'su.brick'}
           valueColor="su.white"
           disabled={disabled}
@@ -62,12 +69,13 @@ export function BayCard({ bay, onUpdate, disabled = false, crawler }: BayCardPro
         <VStack gap={2} alignItems="stretch" w="full">
           <Box opacity={bay.damaged ? 0.5 : 1} transition="opacity 0.3s ease">
             <NPCCard
-              npc={bay.npc!}
+              npc={bay.npc}
+              choices={crawler.choices}
+              referenceBay={referenceBay!}
               description={referenceBay?.npc.description || ''}
               maxHP={referenceBay?.npc.hitPoints || 0}
-              onUpdateDamage={(value) => onUpdate({ npc: { ...bay.npc!, damage: value } })}
-              onUpdateName={(value) => onUpdate({ npc: { ...bay.npc!, name: value } })}
-              onUpdateNotes={(value) => onUpdate({ npc: { ...bay.npc!, notes: value } })}
+              onUpdateChoice={onUpdateChoice}
+              onUpdateBay={onUpdateBay}
               position={referenceBay?.npc.position || 'NPC'}
               tilted={bay.damaged}
               disabled={disabled}
@@ -79,7 +87,11 @@ export function BayCard({ bay, onUpdate, disabled = false, crawler }: BayCardPro
             transition="transform 0.3s ease"
             opacity={bay.damaged ? 0.5 : 1}
           >
-            <BayInfo referenceBay={referenceBay} crawler={crawler} />
+            <BayInfo
+              referenceBay={referenceBay}
+              crawler={crawler}
+              onUpdateChoice={onUpdateChoice}
+            />
           </Box>
         </VStack>
       </Box>

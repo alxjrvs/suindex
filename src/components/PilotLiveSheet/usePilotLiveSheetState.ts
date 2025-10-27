@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react'
+import { useNavigate } from 'react-router'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { PilotLiveSheetState, AdvancedClassOption } from './types'
 import { getAbilityCost } from './utils/getAbilityCost'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
+import { deleteEntity as deleteEntityAPI } from '../../lib/api'
 
 const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
   user_id: '',
@@ -26,14 +28,17 @@ const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
   current_ap: 5,
   current_tp: 0,
   notes: null,
+  choices: null,
+  active: false,
 }
 
 export function usePilotLiveSheetState(id?: string) {
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
-  const allHybridClasses = SalvageUnionReference.HybridClasses.all()
-  const allAbilities = SalvageUnionReference.Abilities.all()
-  const allEquipment = SalvageUnionReference.Equipment.all()
+  const navigate = useNavigate()
+  const allCoreClasses = SalvageUnionReference.findAllIn('classes.core', () => true)
+  const allAdvancedClasses = SalvageUnionReference.findAllIn('classes.advanced', () => true)
+  const allHybridClasses = SalvageUnionReference.findAllIn('classes.hybrid', () => true)
+  const allAbilities = SalvageUnionReference.findAllIn('abilities', () => true)
+  const allEquipment = SalvageUnionReference.findAllIn('equipment', () => true)
 
   const {
     entity: pilot,
@@ -55,15 +60,16 @@ export function usePilotLiveSheetState(id?: string) {
     allHybridClasses.find((c) => c.id === pilot.advanced_class_id)
 
   const availableAdvancedClasses = useMemo(() => {
+    // Early exit conditions
     if ((pilot.abilities ?? []).length < 6) {
       return []
     }
 
-    // Salvager class cannot take advanced classes
-    if (selectedClass?.name === 'Salvager') {
+    if (selectedClass?.advanceable === false) {
       return []
     }
 
+    // Count abilities by tree
     const abilitiesByTree: Record<string, number> = {}
     ;(pilot.abilities ?? []).forEach((abilityId) => {
       const ability = allAbilities.find((a) => a.id === abilityId)
@@ -72,31 +78,33 @@ export function usePilotLiveSheetState(id?: string) {
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
     })
 
+    // Get all trees with 3+ abilities (completed trees)
     const completeTrees = Object.keys(abilitiesByTree).filter((tree) => abilitiesByTree[tree] >= 3)
 
     if (completeTrees.length === 0) {
       return []
     }
 
-    const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
+    // Load all ability tree requirements
+    const allTreeRequirements = SalvageUnionReference.findAllIn(
+      'ability-tree-requirements',
+      () => true
+    )
+
+    // Find tree requirements where at least one of the requirement trees is completed
+    const unlockedTreeNames = allTreeRequirements
+      .filter((treeReq) => {
+        // Check if pilot has completed at least one of the required trees
+        return treeReq.requirement.some((requiredTree: string) =>
+          completeTrees.includes(requiredTree)
+        )
+      })
+      .map((treeReq) => treeReq.tree)
+
     const results: AdvancedClassOption[] = []
 
-    // Check hybrid classes - filter based on tree requirements
     allHybridClasses.forEach((hybridClass) => {
-      const treeRequirement = allTreeRequirements.find(
-        (req) => req.tree === hybridClass.advancedTree
-      )
-
-      if (!treeRequirement || !treeRequirement.requirement) {
-        return
-      }
-
-      // A hybrid class is available if the pilot has completed ANY of the required trees
-      const hasAnyRequirement = treeRequirement.requirement.some((requiredTree: string) =>
-        completeTrees.includes(requiredTree)
-      )
-
-      if (hasAnyRequirement) {
+      if (unlockedTreeNames.includes(hybridClass.advancedTree)) {
         results.push({
           id: hybridClass.id,
           name: hybridClass.name,
@@ -105,32 +113,15 @@ export function usePilotLiveSheetState(id?: string) {
       }
     })
 
-    // Check if player can take advanced version of their base class
-    if (selectedClass && selectedClass.coreTrees) {
-      // Find the advanced class that corresponds to this core class
-      const advancedClass = allAdvancedClasses.find((ac) => ac.id === selectedClass.id)
-
-      if (advancedClass) {
-        const treeRequirement = allTreeRequirements.find(
-          (req) => req.tree === advancedClass.advancedTree
-        )
-
-        if (treeRequirement && treeRequirement.requirement) {
-          // Check if pilot has completed any of the required trees for the advanced class
-          const hasAnyRequirement = treeRequirement.requirement.some((requiredTree: string) =>
-            completeTrees.includes(requiredTree)
-          )
-
-          if (hasAnyRequirement) {
-            results.push({
-              id: selectedClass.id,
-              name: `Adv. ${selectedClass.name}`,
-              isAdvancedVersion: true,
-            })
-          }
-        }
+    allAdvancedClasses.forEach((advancedClass) => {
+      if (unlockedTreeNames.includes(advancedClass.advancedTree)) {
+        results.push({
+          id: advancedClass.id,
+          name: advancedClass.name,
+          isAdvancedVersion: true,
+        })
       }
-    }
+    })
 
     return results
   }, [allHybridClasses, allAdvancedClasses, pilot.abilities, selectedClass, allAbilities])
@@ -284,6 +275,18 @@ export function usePilotLiveSheetState(id?: string) {
     [pilot.equipment, allEquipment, updateEntity]
   )
 
+  const handleDeleteEntity = useCallback(async () => {
+    if (!id) return
+
+    try {
+      await deleteEntityAPI('pilots', id)
+      navigate('/dashboard/pilots')
+    } catch (error) {
+      console.error('Error deleting pilot:', error)
+      throw error
+    }
+  }, [id, navigate])
+
   return {
     pilot,
     selectedClass,
@@ -296,6 +299,7 @@ export function usePilotLiveSheetState(id?: string) {
     handleRemoveLegendaryAbility,
     handleAddEquipment,
     handleRemoveEquipment,
+    deleteEntity: handleDeleteEntity,
     updateEntity,
     loading,
     error,

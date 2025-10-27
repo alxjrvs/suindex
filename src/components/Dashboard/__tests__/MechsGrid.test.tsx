@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { renderWithRouter, screen, waitFor } from '../../../test/chakra-utils'
+import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import { MechsGrid } from '../MechsGrid'
 import * as api from '../../../lib/api'
@@ -34,7 +34,7 @@ describe('MechsGrid', () => {
 
   describe('Grid Display', () => {
     it('should render page title', async () => {
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Your Mechs')).toBeInTheDocument()
@@ -42,7 +42,7 @@ describe('MechsGrid', () => {
     })
 
     it('should render create mech button', async () => {
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new mech/i })).toBeInTheDocument()
@@ -50,7 +50,7 @@ describe('MechsGrid', () => {
     })
 
     it('should display loading state initially', async () => {
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       // Check for loading spinner (Chakra UI Spinner doesn't have progressbar role)
       expect(screen.getByText('Your Mechs')).toBeInTheDocument()
@@ -62,7 +62,7 @@ describe('MechsGrid', () => {
     })
 
     it('should render mech cards after loading', async () => {
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Test Mech 1')).toBeInTheDocument()
@@ -71,7 +71,7 @@ describe('MechsGrid', () => {
     })
 
     it('should display mech stats on cards', async () => {
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         // Check for damage and heat stats
@@ -88,7 +88,7 @@ describe('MechsGrid', () => {
       const newMech = { ...mockMechs[0], id: 'new-mech-id' }
       mockCreateEntity.mockResolvedValue(newMech as never)
 
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new mech/i })).toBeInTheDocument()
@@ -108,7 +108,7 @@ describe('MechsGrid', () => {
       const newMech = { ...mockMechs[0], id: 'new-mech-id' }
       mockCreateEntity.mockResolvedValue(newMech as never)
 
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new mech/i })).toBeInTheDocument()
@@ -129,7 +129,7 @@ describe('MechsGrid', () => {
       // Make createEntity hang to test loading state
       mockCreateEntity.mockImplementation(() => new Promise(() => {}))
 
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /new mech/i })).toBeInTheDocument()
@@ -148,7 +148,7 @@ describe('MechsGrid', () => {
     it('should navigate to mech detail when card is clicked', async () => {
       const user = userEvent.setup()
 
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByText('Test Mech 1')).toBeInTheDocument()
@@ -168,7 +168,7 @@ describe('MechsGrid', () => {
     it('should display error message when loading fails', async () => {
       vi.mocked(api.fetchUserEntities).mockRejectedValue(new Error('Failed to load mechs'))
 
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument()
@@ -179,7 +179,7 @@ describe('MechsGrid', () => {
       const user = userEvent.setup()
       vi.mocked(api.fetchUserEntities).mockRejectedValueOnce(new Error('Failed to load mechs'))
 
-      renderWithRouter(<MechsGrid />)
+      render(<MechsGrid />)
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument()

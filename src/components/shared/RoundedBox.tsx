@@ -1,6 +1,7 @@
-import { Flex, type FlexProps } from '@chakra-ui/react'
+import { Flex, VStack, type FlexProps } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import type { ReactNode } from 'react'
+import { Text } from '../base/Text'
 
 interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderColor'> {
   /** Background color token (e.g., 'bg.builder.pilot', 'su.orange', 'su.green') */
@@ -23,19 +24,21 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   disabled?: boolean
   /** Optional background color for body (if different from header) */
   bodyBg?: string
-  /** Optional padding for header section */
-  headerPadding?: number | string
   /** Optional padding for body section */
   bodyPadding?: number | string
   /** Optional click handler for the header */
   onHeaderClick?: () => void
-  /** Optional cursor style for the header */
+  /** Optional cursor style for the header (defaults to 'pointer' if onHeaderClick is provided, otherwise 'default') */
   headerCursor?: 'pointer' | 'default'
   /** Optional test ID for the header container */
   headerTestId?: string
+  label?: string
+  compact?: boolean
 }
 
 export function RoundedBox({
+  label,
+  compact = false,
   bg,
   headerBg,
   title,
@@ -47,10 +50,9 @@ export function RoundedBox({
   titleRotation = 0,
   disabled = false,
   bodyBg,
-  headerPadding,
   bodyPadding,
   onHeaderClick,
-  headerCursor = 'default',
+  headerCursor,
   headerTestId,
   ...flexProps
 }: RoundedBoxProps) {
@@ -60,6 +62,8 @@ export function RoundedBox({
   const actualBorderColor = disabled ? 'blackAlpha.400' : 'black'
 
   const hasHeader = title || leftContent || rightContent
+  // Infer cursor from presence of onHeaderClick if not explicitly set
+  const actualHeaderCursor = headerCursor ?? (onHeaderClick ? 'pointer' : 'default')
 
   return (
     <Flex
@@ -73,52 +77,67 @@ export function RoundedBox({
       p={0}
       shadow="lg"
       overflow="hidden"
+      minH="fit-content"
+      flexShrink={0}
       {...flexProps}
     >
-      {hasHeader && (
-        <Flex
-          direction="row"
-          w="full"
-          bg={actualHeaderBg}
-          p={headerPadding ?? 4}
-          gap={4}
-          pb={2}
-          cursor={headerCursor}
-          onClick={onHeaderClick}
-          alignItems="flex-start"
+      {label && (
+        <Text
+          position="absolute"
+          variant="pseudoheader"
+          fontSize="sm"
+          textTransform="uppercase"
+          ml={3}
+          mt={-2}
         >
-          {/* Left side: leftContent + subTitleContent stacked */}
-          <Flex direction="column" gap={2} alignItems="flex-start">
-            {leftContent}
-          </Flex>
-
-          {/* Center/Right: title and rightContent */}
+          {label}
+        </Text>
+      )}
+      {hasHeader && (
+        <VStack pb={2} p={2} gap={0} alignItems="stretch" w="full" bg={actualHeaderBg}>
           <Flex
             direction="row"
-            justifyContent="space-between"
+            w="full"
+            bg={actualHeaderBg}
+            px="0"
+            cursor={actualHeaderCursor}
+            onClick={onHeaderClick}
             alignItems="center"
-            gap={4}
-            flex="1"
-            data-testid={headerTestId}
           >
+            {/* Left side: leftContent + subTitleContent stacked */}
             <Flex direction="column" gap={2} alignItems="flex-start">
-              {title && (
-                <Heading
-                  level="h2"
-                  textTransform="uppercase"
-                  alignSelf="center"
-                  transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
-                  transition="transform 0.3s ease"
-                  opacity={disabled ? 0.5 : 1}
-                >
-                  {title}
-                </Heading>
-              )}
-              {subTitleContent}
+              {leftContent}
             </Flex>
-            {rightContent}
+
+            {/* Center/Right: title and rightContent */}
+            <Flex
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              gap={4}
+              flex="1"
+              data-testid={headerTestId}
+            >
+              <Flex direction="column" gap={2} alignItems="flex-start">
+                {title && (
+                  <Heading
+                    level="h2"
+                    textTransform="uppercase"
+                    alignSelf="flex-start"
+                    transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
+                    transition="transform 0.3s ease"
+                    opacity={disabled ? 0.5 : 1}
+                  >
+                    {title}
+                  </Heading>
+                )}
+                {!compact && subTitleContent}
+              </Flex>
+              {rightContent}
+            </Flex>
           </Flex>
-        </Flex>
+          {compact && subTitleContent}
+        </VStack>
       )}
       {children && (
         <Flex
@@ -127,8 +146,8 @@ export function RoundedBox({
           justifyContent={justifyContent}
           w="full"
           p={bodyPadding ?? 4}
-          pt={0}
           flex="1"
+          minH="fit-content"
         >
           {children}
         </Flex>

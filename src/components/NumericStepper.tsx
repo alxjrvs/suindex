@@ -10,6 +10,7 @@ interface NumericStepperProps {
   max?: number
   step?: number
   disabled?: boolean
+  flash?: boolean
 }
 
 export default function NumericStepper({
@@ -20,6 +21,7 @@ export default function NumericStepper({
   max,
   step = 1,
   disabled = false,
+  flash = false,
 }: NumericStepperProps) {
   const handleIncrement = useCallback(() => {
     if (max === undefined || value < max) {
@@ -45,7 +47,13 @@ export default function NumericStepper({
 
   return (
     <HStack gap={1} alignItems="flex-end" role="group" aria-labelledby={labelId}>
-      <StatDisplay disabled={disabled} label={label} value={displayValue} labelId={labelId} />
+      <StatDisplay
+        disabled={disabled}
+        label={label}
+        value={displayValue}
+        labelId={labelId}
+        flash={flash}
+      />
       <VStack gap={1} pb={2.5}>
         <IconButton
           onClick={handleIncrement}

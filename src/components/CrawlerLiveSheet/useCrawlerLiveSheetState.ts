@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { CrawlerLiveSheetState, CrawlerBay } from './types'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
+import { deleteEntity as deleteEntityAPI } from '../../lib/api'
 
 const INITIAL_techLevel = 1
 const MAX_UPGRADE = 25
@@ -24,6 +26,8 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
   bays: [],
   cargo: [],
   notes: null,
+  choices: null,
+  active: false,
   npc: {
     name: '',
     notes: '',
@@ -33,6 +37,7 @@ const INITIAL_CRAWLER_STATE: Omit<CrawlerLiveSheetState, 'id'> = {
 }
 
 export function useCrawlerLiveSheetState(id?: string) {
+  const navigate = useNavigate()
   const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
   const allBays = SalvageUnionReference.CrawlerBays.all()
   const allCrawlers = SalvageUnionReference.Crawlers.all()
@@ -96,9 +101,17 @@ export function useCrawlerLiveSheetState(id?: string) {
 
   // Track previous tech level to detect changes
   const prevTechLevelRef = useRef(crawler.tech_level)
+  const isInitialLoadRef = useRef(true)
 
-  // Reset damage and upgrade when tech level changes
+  // Reset damage and upgrade when tech level changes (but not on initial load)
   useEffect(() => {
+    // Skip on initial load
+    if (isInitialLoadRef.current) {
+      isInitialLoadRef.current = false
+      prevTechLevelRef.current = crawler.tech_level
+      return
+    }
+
     if (prevTechLevelRef.current !== crawler.tech_level && currentTechLevel?.structurePoints) {
       prevTechLevelRef.current = crawler.tech_level
       updateEntity({
@@ -174,7 +187,13 @@ export function useCrawlerLiveSheetState(id?: string) {
   )
 
   const handleAddCargo = useCallback(
-    (amount: number, description: string, color: string) => {
+    (
+      amount: number,
+      description: string,
+      color: string,
+      ref?: string,
+      position?: { row: number; col: number }
+    ) => {
       updateEntity({
         cargo: [
           ...(crawler.cargo ?? []),
@@ -183,6 +202,8 @@ export function useCrawlerLiveSheetState(id?: string) {
             amount,
             description,
             color,
+            ref,
+            position,
           },
         ],
       })
@@ -199,16 +220,54 @@ export function useCrawlerLiveSheetState(id?: string) {
     [crawler.cargo, updateEntity]
   )
 
+  const handleUpdateChoice = useCallback(
+    (choiceId: string, value: string | undefined) => {
+      const currentChoices = (crawler.choices as Record<string, string>) ?? {}
+
+      if (value === undefined) {
+        // Remove the choice by creating a new object without it
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [choiceId]: _, ...remainingChoices } = currentChoices
+        updateEntity({
+          choices: remainingChoices,
+        })
+      } else {
+        // Add or update the choice
+        updateEntity({
+          choices: {
+            ...currentChoices,
+            [choiceId]: value,
+          },
+        })
+      }
+    },
+    [crawler.choices, updateEntity]
+  )
+
+  const handleDeleteEntity = useCallback(async () => {
+    if (!id) return
+
+    try {
+      await deleteEntityAPI('crawlers', id)
+      navigate('/dashboard/crawlers')
+    } catch (error) {
+      console.error('Error deleting crawler:', error)
+      throw error
+    }
+  }, [id, navigate])
+
   return {
     crawler,
     selectedCrawlerType,
     upkeep,
     maxSP,
     maxUpgrade: MAX_UPGRADE,
+    handleUpdateChoice,
     handleCrawlerTypeChange,
     handleUpdateBay,
     handleAddCargo,
     handleRemoveCargo,
+    deleteEntity: handleDeleteEntity,
     updateEntity,
     loading,
     error,

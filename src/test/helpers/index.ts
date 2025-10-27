@@ -11,7 +11,7 @@ export {
   addEquipment,
 } from './userInteractions'
 
-// Reference data helpers
+// Reference data helpers - imported directly from utils
 export {
   getCoreClasses,
   getHybridClasses,
@@ -31,7 +31,7 @@ export {
   getAllClasses,
   findClassById,
   getClassNameById,
-} from './referenceData'
+} from '../../utils/referenceDataHelpers'
 
 // Stepper helpers
 export {
