@@ -1,5 +1,4 @@
 import { Grid, VStack } from '@chakra-ui/react'
-import { Heading } from '../../base/Heading'
 import { EntityDisplay } from '../../shared/EntityDisplay'
 import { ActionCard } from '../../shared/ActionCard'
 import type { SURefAbility } from 'salvageunion-reference'
@@ -55,7 +54,7 @@ export function AbilityDisplay({
     >
       {data.effect && <SheetDisplay label="Effect" value={data.effect} />}
       {options && (
-        <Grid gridTemplateColumns="repeat(2, 1fr)" gap={1}>
+        <Grid gridTemplateColumns="repeat(2, 1fr)" gridAutoFlow="dense" gap={1}>
           {options.map((option, optIndex) => {
             const label = typeof option === 'string' ? '' : option.label
             const value = typeof option === 'string' ? option : option.value
@@ -66,9 +65,6 @@ export function AbilityDisplay({
 
       {data.subAbilities && data.subAbilities.length > 0 && (
         <VStack gap={3} alignItems="stretch">
-          <Heading level="h4" mb={2}>
-            Sub-Abilities:
-          </Heading>
           {data.subAbilities.map((subAbility, index) => (
             <ActionCard key={index} action={subAbility} activationCurrency="AP" />
           ))}
