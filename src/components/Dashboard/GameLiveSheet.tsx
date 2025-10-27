@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { Box, Flex, Grid, Input, Text, Textarea, VStack, HStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Input, Textarea, VStack, HStack } from '@chakra-ui/react'
+import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
-import { Heading } from '.././base/Heading'
+
 import {
   createGameInvite,
   expireGameInvite,
@@ -286,7 +287,6 @@ export function GameLiveSheet() {
 
   // Get all mechs from pilots and separate active/inactive
   const allMechs = pilots.map((p) => p.mech).filter((m) => m !== null)
-  const activeMechs = allMechs.filter((m) => m.active)
   const inactiveMechs = allMechs.filter((m) => !m.active)
 
   return (
@@ -420,16 +420,17 @@ export function GameLiveSheet() {
       </RoundedBox>
       {/* Main Content - Grid Layout with max 5 cells wide */}
       <Grid
-        templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+        templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }}
         gap={4}
         maxW="100%"
         gridAutoFlow="dense"
       >
         {/* Row 1: Crawler Container */}
         <RoundedBox
-          bg="su.crawlerPink"
+          bg="su.gameBlue"
           title="Crawler"
-          gridColumn={{ base: '1 / -1', md: 'span 2' }}
+          gridColumn={{ base: '1 / -1', md: '1 / 4' }}
+          gridRow={{ base: 'auto', md: '1' }}
         >
           {crawler ? (
             <VStack gap={2} align="stretch" w="full" p={4}>
@@ -478,16 +479,21 @@ export function GameLiveSheet() {
           )}
         </RoundedBox>
 
-        {/* Row 2: Members and Invites Stack */}
-        <VStack gridColumn={{ base: '1 / -1', md: 'span 1' }} gap={4} align="stretch">
+        {/* Row 1 Right Column: Members, Invites, and Resources Stack */}
+        <VStack
+          gridColumn={{ base: '1 / -1', md: '4 / 5' }}
+          gridRow={{ base: 'auto', md: '1' }}
+          gap={4}
+          align="stretch"
+        >
           {/* Members */}
-          <RoundedBox bg="su.lightBlue" title="Members">
+          <RoundedBox bg="su.gameBlue" title="Members">
             {gameWithRelationships.members.length === 0 ? (
               <Text color="su.brick" p={4}>
                 No members in this game yet.
               </Text>
             ) : (
-              <VStack gap={2} align="stretch" p={4}>
+              <VStack gap={2} align="stretch" w="full">
                 {gameWithRelationships.members.map((member) => (
                   <Flex
                     key={member.user_id}
@@ -521,163 +527,150 @@ export function GameLiveSheet() {
             )}
           </RoundedBox>
 
+          {/* Invites (mediator only) */}
           {isMediator && (
-            <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
-              <Flex align="center" justify="space-between" mb={3}>
-                <Heading level="h2">Invites</Heading>
-                {invites.length === 0 && (
+            <RoundedBox
+              bg="su.gameBlue"
+              title="Invites"
+              rightContent={
+                invites.length === 0 ? (
                   <Button
                     onClick={createInvite}
                     bg="su.brick"
                     color="su.white"
                     fontWeight="bold"
-                    py={2}
-                    px={4}
+                    fontSize="sm"
+                    py={1}
+                    px={3}
                     _hover={{ opacity: 0.9 }}
                   >
-                    Create Invite
+                    + Create
                   </Button>
-                )}
-              </Flex>
+                ) : undefined
+              }
+            >
               {inviteError && (
-                <Text color="red.600" mb={3} fontSize="sm">
+                <Text color="red.600" p={4} fontSize="sm">
                   {inviteError}
                 </Text>
               )}
               {invitesLoading ? (
-                <Text color="su.brick">Loading invites…</Text>
+                <Text color="su.brick" p={4}>
+                  Loading invites…
+                </Text>
               ) : invites.length === 0 ? (
-                <Text color="su.brick">No invites yet. Create one to invite players.</Text>
+                <Text color="su.brick" p={4}>
+                  No invites yet.
+                </Text>
               ) : (
-                <VStack gap={3} align="stretch">
+                <VStack gap={2} align="stretch" p={4}>
                   {invites.map((inv) => (
-                    <Flex
-                      key={inv.id}
-                      align="center"
-                      justify="space-between"
-                      p={3}
-                      bg="su.lightOrange"
-                      borderRadius="lg"
-                    >
-                      <Box>
-                        <Text fontSize="sm" color="su.brick">
-                          Uses: {inv.uses}
-                          {inv.max_uses ? ` / ${inv.max_uses}` : ''}
-                          {inv.expires_at
-                            ? ` · Expires ${new Date(inv.expires_at).toLocaleString()}`
-                            : ''}
+                    <Box key={inv.id} p={2} bg="su.white" borderRadius="md">
+                      <Text fontSize="xs" color="su.brick">
+                        Uses: {inv.uses}
+                        {inv.max_uses ? ` / ${inv.max_uses}` : ''}
+                      </Text>
+                      <Flex gap={2} mt={1} alignItems="center">
+                        <Text fontSize="xs" color="su.black" fontFamily="mono" flex="1">
+                          {inv.code}
                         </Text>
-                        <Text
+                        <Button
+                          onClick={() =>
+                            navigator.clipboard.writeText(
+                              `${window.location.origin}/dashboard/join?code=${inv.code}`
+                            )
+                          }
+                          variant="plain"
+                          color="su.brick"
                           fontSize="xs"
-                          color="su.black"
-                          fontFamily="mono"
-                          wordBreak="break-all"
-                          mt={1}
+                          p={1}
+                          _hover={{ textDecoration: 'underline' }}
                         >
-                          {`${window.location.origin}/dashboard/join?code=${inv.code}`}
-                          <Button
-                            as="button"
-                            type="button"
-                            onClick={() =>
-                              navigator.clipboard.writeText(
-                                `${window.location.origin}/dashboard/join?code=${inv.code}`
-                              )
+                          Copy
+                        </Button>
+                        <Button
+                          onClick={async () => {
+                            try {
+                              setInviteError(null)
+                              await expireGameInvite(inv.id)
+                              setInvites((prev) => prev.filter((i) => i.id !== inv.id))
+                            } catch (err) {
+                              const msg =
+                                err instanceof Error ? err.message : 'Failed to expire invite'
+                              setInviteError(msg)
                             }
-                            variant="plain"
-                            ml={2}
-                            color="su.brick"
-                            cursor="pointer"
-                            _hover={{ textDecoration: 'underline' }}
-                          >
-                            Copy
-                          </Button>
-                          <Button
-                            as="button"
-                            type="button"
-                            onClick={async () => {
-                              try {
-                                setInviteError(null)
-                                await expireGameInvite(inv.id)
-                                setInvites((prev) => prev.filter((i) => i.id !== inv.id))
-                              } catch (err) {
-                                const msg =
-                                  err instanceof Error ? err.message : 'Failed to expire invite'
-                                if (msg.includes('forbidden')) {
-                                  setInviteError('Only mediators can expire invites.')
-                                } else if (msg.includes('invite_not_found')) {
-                                  setInviteError('Invite not found or already expired.')
-                                } else {
-                                  setInviteError(msg)
-                                }
-                              }
-                            }}
-                            variant="plain"
-                            ml={2}
-                            color="su.brick"
-                            cursor="pointer"
-                            _hover={{ textDecoration: 'underline' }}
-                          >
-                            Expire
-                          </Button>
-                        </Text>
-                      </Box>
-                    </Flex>
+                          }}
+                          variant="plain"
+                          color="su.brick"
+                          fontSize="xs"
+                          p={1}
+                          _hover={{ textDecoration: 'underline' }}
+                        >
+                          Expire
+                        </Button>
+                      </Flex>
+                    </Box>
                   ))}
                 </VStack>
               )}
-            </Box>
+            </RoundedBox>
           )}
 
           {/* Resources Section */}
-          <Box bg="su.white" borderWidth="1px" borderColor="su.lightBlue" borderRadius="lg" p={4}>
-            <Flex align="center" justify="space-between" mb={3}>
-              <Heading level="h2">Resources</Heading>
-              {isMediator && (
+          <RoundedBox
+            bg="su.gameBlue"
+            title="Resources"
+            rightContent={
+              isMediator ? (
                 <Button
                   onClick={() => setIsLinkModalOpen(true)}
                   bg="su.brick"
                   color="su.white"
                   fontWeight="bold"
-                  w={8}
-                  h={8}
-                  fontSize="xl"
-                  lineHeight="none"
+                  fontSize="sm"
+                  py={1}
+                  px={3}
                   _hover={{ opacity: 0.9 }}
-                  aria-label="Add external link"
                 >
-                  +
+                  + Add
                 </Button>
-              )}
-            </Flex>
+              ) : undefined
+            }
+          >
             {linksError && (
-              <Text color="red.600" mb={3} fontSize="sm">
+              <Text color="red.600" p={4} fontSize="sm">
                 {linksError}
               </Text>
             )}
             {linksLoading ? (
-              <Text color="su.brick">Loading resources…</Text>
+              <Text color="su.brick" p={4}>
+                Loading resources…
+              </Text>
             ) : externalLinks.length === 0 ? (
-              <Text color="su.brick">No external links yet.</Text>
+              <Text color="su.brick" p={4}>
+                No external links yet.
+              </Text>
             ) : (
-              <VStack gap={2} align="stretch">
+              <VStack gap={2} align="stretch" p={4}>
                 {externalLinks.map((link) => (
                   <Flex
                     key={link.id}
                     align="center"
                     justify="space-between"
                     p={2}
-                    bg="su.lightOrange"
-                    borderRadius="lg"
+                    bg="su.white"
+                    borderRadius="md"
                   >
                     <a
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        color: 'su.brick',
+                        color: 'inherit',
                         fontWeight: 'medium',
                         flex: 1,
                         textDecoration: 'none',
+                        fontSize: '0.875rem',
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
                       onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
@@ -693,11 +686,9 @@ export function GameLiveSheet() {
                         }}
                         variant="plain"
                         color="su.brick"
-                        fontWeight="bold"
                         fontSize="sm"
-                        ml={2}
+                        p={1}
                         _hover={{ color: 'red.700' }}
-                        aria-label="Delete link"
                       >
                         ✕
                       </Button>
@@ -706,16 +697,178 @@ export function GameLiveSheet() {
                 ))}
               </VStack>
             )}
-          </Box>
+          </RoundedBox>
+        </VStack>
 
-          {/* Delete Game Section */}
-          {isMediator && (
-            <Box bg="su.white" borderWidth="1px" borderColor="red.600" borderRadius="lg" p={4}>
-              <Heading level="h2" mb={3}>
-                Danger Zone
-              </Heading>
+        {/* Row 3+: Active Pilot Containers (diagonal split: orange top-left for pilot, green bottom-right for active mech) */}
+        {activePilots.map(({ pilot, mech }) => {
+          const className = pilot.class_id
+            ? getClassNameById(pilot.class_id, 'Unknown Class')
+            : 'No Class'
+          const chassisName = mech?.chassis_id
+            ? getChassisNameById(mech.chassis_id, 'Unknown Chassis')
+            : null
+          const mechDisplayName = mech ? mech.pattern || chassisName || 'Unnamed Mech' : null
+
+          return (
+            <Box
+              key={pilot.id}
+              position="relative"
+              overflow="hidden"
+              borderRadius="2xl"
+              borderWidth="3px"
+              borderColor="su.black"
+              minH="150px"
+              gridColumn={{ base: '1 / -1', md: 'span 1' }}
+            >
+              {/* Diagonal split background */}
+              <Box
+                position="absolute"
+                top={0}
+                left={0}
+                right={0}
+                bottom={0}
+                bg="linear-gradient(to bottom right, su.orange 0%, su.orange 50%, su.green 50%, su.green 100%)"
+                clipPath="polygon(0 0, 100% 0, 100% 100%, 0 100%)"
+              />
+
+              {/* Content */}
+              <Flex direction="column" position="relative" zIndex={1} p={4} gap={2} h="full">
+                {/* Pilot info (top-left) */}
+                <Button
+                  onClick={() => navigate(`/dashboard/pilots/${pilot.id}`)}
+                  variant="plain"
+                  color="su.white"
+                  textAlign="left"
+                  p={0}
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  <VStack align="flex-start" gap={0}>
+                    <Text fontSize="lg" fontWeight="bold" color="su.white">
+                      {pilot.callsign}
+                    </Text>
+                    <Text fontSize="sm" color="su.white" opacity={0.9}>
+                      {className}
+                    </Text>
+                  </VStack>
+                </Button>
+
+                {/* Mech info (bottom-right) */}
+                {mechDisplayName && mech ? (
+                  <Button
+                    onClick={() => navigate(`/dashboard/mechs/${mech.id}`)}
+                    variant="plain"
+                    color="su.white"
+                    textAlign="right"
+                    p={0}
+                    ml="auto"
+                    mt="auto"
+                    _hover={{ textDecoration: 'underline' }}
+                  >
+                    <VStack align="flex-end" gap={0}>
+                      <Text fontSize="lg" fontWeight="bold" color="su.white">
+                        {mechDisplayName}
+                      </Text>
+                      {mech.pattern && chassisName && (
+                        <Text fontSize="sm" color="su.white" opacity={0.9}>
+                          {chassisName}
+                        </Text>
+                      )}
+                    </VStack>
+                  </Button>
+                ) : (
+                  <Text
+                    fontSize="sm"
+                    color="su.white"
+                    fontStyle="italic"
+                    ml="auto"
+                    mt="auto"
+                    opacity={0.8}
+                  >
+                    No mech assigned
+                  </Text>
+                )}
+              </Flex>
+            </Box>
+          )
+        })}
+
+        {/* Inactive Pilots Grid */}
+        {inactivePilots.length > 0 && (
+          <RoundedBox bg="su.gameBlue" title="Inactive Pilots" gridColumn="1 / -1">
+            <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={2} p={4}>
+              {inactivePilots.map(({ pilot }) => {
+                const className = pilot.class_id
+                  ? getClassNameById(pilot.class_id, 'Unknown Class')
+                  : 'No Class'
+
+                return (
+                  <Button
+                    key={pilot.id}
+                    onClick={() => navigate(`/dashboard/pilots/${pilot.id}`)}
+                    bg="su.white"
+                    p={3}
+                    borderRadius="md"
+                    textAlign="left"
+                    _hover={{ bg: 'su.lightBlue' }}
+                  >
+                    <VStack align="flex-start" gap={0}>
+                      <Text fontSize="md" fontWeight="bold" color="su.black">
+                        {pilot.callsign}
+                      </Text>
+                      <Text fontSize="sm" color="su.brick">
+                        {className}
+                      </Text>
+                    </VStack>
+                  </Button>
+                )
+              })}
+            </Grid>
+          </RoundedBox>
+        )}
+
+        {/* Inactive Mechs Grid (showing pilot names) */}
+        {inactiveMechs.length > 0 && (
+          <RoundedBox bg="su.gameBlue" title="Inactive Mechs" gridColumn="1 / -1">
+            <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={2} p={4}>
+              {inactiveMechs.map((mech) => {
+                const chassisName = mech.chassis_id
+                  ? getChassisNameById(mech.chassis_id, 'Unknown Chassis')
+                  : 'No Chassis'
+                const pilotName =
+                  pilots.find((p) => p.mech?.id === mech.id)?.pilot.callsign || 'Unassigned'
+
+                return (
+                  <Button
+                    key={mech.id}
+                    onClick={() => navigate(`/dashboard/mechs/${mech.id}`)}
+                    bg="su.white"
+                    p={3}
+                    borderRadius="md"
+                    textAlign="left"
+                    _hover={{ bg: 'su.lightBlue' }}
+                  >
+                    <VStack align="flex-start" gap={0}>
+                      <Text fontSize="md" fontWeight="bold" color="su.black">
+                        {mech.pattern || chassisName}
+                      </Text>
+                      <Text fontSize="sm" color="su.brick">
+                        Pilot: {pilotName}
+                      </Text>
+                    </VStack>
+                  </Button>
+                )
+              })}
+            </Grid>
+          </RoundedBox>
+        )}
+
+        {/* Danger Zone (mediator only) */}
+        {isMediator && (
+          <RoundedBox bg="red.600" title="Danger Zone" gridColumn="1 / -1">
+            <VStack gap={2} align="stretch" p={4}>
               {deleteError && (
-                <Text color="red.600" mb={3} fontSize="sm">
+                <Text color="red.200" fontSize="sm">
                   {deleteError}
                 </Text>
               )}
@@ -723,23 +876,23 @@ export function GameLiveSheet() {
                 onClick={handleDeleteGame}
                 disabled={deleteLoading}
                 w="full"
-                bg="red.600"
-                color="white"
+                bg="su.white"
+                color="red.600"
                 fontWeight="bold"
                 py={3}
                 px={4}
-                _hover={{ bg: 'red.700' }}
+                _hover={{ bg: 'red.100' }}
                 _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
               >
                 {deleteLoading ? 'Deleting...' : 'DELETE THIS GAME'}
               </Button>
-              <Text fontSize="xs" color="su.brick" mt={2}>
+              <Text fontSize="xs" color="su.white" textAlign="center">
                 This will permanently delete this game and all associated data. This action cannot
                 be undone.
               </Text>
-            </Box>
-          )}
-        </VStack>
+            </VStack>
+          </RoundedBox>
+        )}
       </Grid>
 
       {/* External Link Modal */}
