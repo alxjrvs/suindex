@@ -150,13 +150,24 @@ describe('CrawlerLiveSheet', () => {
       const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
       await user.selectOptions(crawlerTypeSelect, testCrawler.id)
 
+      // Add scrap first - need at least 5 TL1 scrap to increment (step is 5, tech level is 1)
+      const tl1IncrementButton = screen.getByRole('button', {
+        name: /Increment TL1/i,
+      })
+
+      // Add 5 scrap
+      for (let i = 0; i < 5; i++) {
+        await user.click(tl1IncrementButton)
+      }
+
       const upgradeStepper = screen.getByRole('group', { name: /UPGRADE/i })
       const incrementButton = within(upgradeStepper).getByRole('button', {
         name: /Increment UPGRADE/i,
       })
 
+      // Now increment upgrade - should step by 5
       await user.click(incrementButton)
-      expect(within(upgradeStepper).getByText('1/25')).toBeInTheDocument()
+      expect(within(upgradeStepper).getByText('5/25')).toBeInTheDocument()
     })
   })
 

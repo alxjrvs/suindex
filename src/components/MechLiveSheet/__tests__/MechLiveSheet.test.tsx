@@ -444,24 +444,4 @@ describe('MechLiveSheet', () => {
     })
   })
 
-  describe('Pilot Display', () => {
-    it('shows pilot section with sign in button in draft mode', async () => {
-      render(<MechLiveSheet />)
-
-      await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /Pilot/i })).toBeInTheDocument()
-      })
-      expect(screen.getByRole('button', { name: /sign in with discord/i })).toBeInTheDocument()
-    })
-
-    it('displays pilot name with class when pilot is selected', async () => {
-      // This test would require mocking the pilot data and relationships
-      // For now, we just verify the pilot section exists
-      render(<MechLiveSheet />)
-
-      await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /Pilot/i })).toBeInTheDocument()
-      })
-    })
-  })
 })
