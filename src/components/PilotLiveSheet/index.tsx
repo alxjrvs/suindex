@@ -147,7 +147,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         notes={pilot.notes ?? ''}
         onChange={(value) => updateEntity({ notes: value })}
         backgroundColor="bg.builder.pilot"
-        borderWidth={8}
         placeholder="Add notes about your pilot..."
         disabled={!selectedClass}
       />

@@ -29,8 +29,14 @@ export function EntityDisplayModal({
     return null
   }
 
+  // Get title from entity - most entities have 'name', ability-tree-requirements has 'tree'
+  const title =
+    ('name' in entity && typeof entity.name === 'string' && entity.name) ||
+    ('tree' in entity && typeof entity.tree === 'string' && entity.tree) ||
+    'Entity Details'
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={entity.name || 'Entity Details'}>
+    <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <EntityDisplay schemaName={schemaName} data={entity} collapsible={false} />
     </Modal>
   )

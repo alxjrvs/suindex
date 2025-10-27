@@ -179,7 +179,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
             notes={crawler.notes ?? ''}
             onChange={(value) => updateEntity({ notes: value })}
             backgroundColor="bg.builder.crawler"
-            borderWidth={4}
             placeholder="Add notes about your crawler..."
             disabled={!selectedCrawlerType}
             flex="1"

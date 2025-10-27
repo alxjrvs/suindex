@@ -216,7 +216,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           onChange={(value) => updateEntity({ notes: value })}
           disabled={!selectedChassis}
           backgroundColor="bg.builder.mech"
-          borderWidth={8}
           placeholder="Add notes about your mech..."
         />
       </Grid>

@@ -443,5 +443,4 @@ describe('MechLiveSheet', () => {
       expect(notesTextarea).toHaveValue('This mech is equipped for long-range combat')
     })
   })
-
 })
