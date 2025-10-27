@@ -85,7 +85,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
       )}
       {/* Header Section */}
-      <Grid templateColumns="1fr auto" gap={6}>
+      <Flex gap={6} w="full" alignItems="stretch">
         <CrawlerHeaderInputs
           maxSP={maxSP}
           currentSP={maxSP - (crawler.current_damage ?? 0)}
@@ -106,12 +106,13 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           updateEntity={updateEntity}
           disabled={!selectedCrawlerType}
         />
-      </Grid>
+      </Flex>
 
-      <Flex gap={6}>
+      <Flex gap={6} w="full">
         <CrawlerAbilities
           upkeep={upkeep}
           updateEntity={updateEntity}
+          onUpdateChoice={(choiceId, value) => handleUpdateChoice(choiceId, value)}
           maxUpgrade={maxUpgrade}
           crawlerRef={selectedCrawlerType}
           crawler={crawler}
@@ -164,7 +165,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
             borderWidth={4}
             placeholder="Add notes about your crawler..."
             disabled={!selectedCrawlerType}
-            h="500px"
+            flex="1"
+            minH="300px"
           />
           {/* Cargo Bay */}
         </VStack>

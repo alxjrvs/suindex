@@ -9,7 +9,7 @@ interface CrawlerBayDisplayProps {
 
 export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
   return (
-    <EntityDisplay entityName="CrawlerBay" data={data} headerColor="su.pink">
+    <EntityDisplay schemaName="crawler-bays" data={data} headerColor="su.pink">
       <VStack gap={4} alignItems="stretch">
         {data.damagedEffect && (
           <SheetDisplay

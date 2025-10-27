@@ -38,6 +38,7 @@ export function DeleteEntity({ entityName, onConfirmDelete, disabled = false }: 
       disabled={disabled || isDeleting}
       border="su.black"
       borderWidth="3px"
+      borderColor="su.black"
       bg="su.brick"
       color="su.white"
       w="full"

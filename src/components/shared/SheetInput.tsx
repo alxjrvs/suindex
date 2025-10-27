@@ -103,7 +103,7 @@ export function SheetInput({
           disabled={disabled}
           placeholder={placeholder}
           flex="1"
-          minW="190px"
+          minW="120px"
           p={3}
           borderWidth="3px"
           borderColor="su.black"

@@ -12,7 +12,7 @@ import { getTiltRotation } from '../../utils/tiltUtils'
 interface BayCardProps {
   bay: CrawlerBay
   crawler: CrawlerLiveSheetState
-  onUpdateChoice: (id: string, value: string) => void
+  onUpdateChoice: (id: string, value: string | undefined) => void
   onUpdateBay: (updates: Partial<CrawlerBay>) => void
   disabled?: boolean
 }
@@ -49,7 +49,6 @@ export function BayCard({
           disabled={disabled}
         />
       }
-      h="full"
     >
       <Box position="relative" w="full">
         {bay.damaged && referenceBay?.damagedEffect && (
@@ -88,7 +87,11 @@ export function BayCard({
             transition="transform 0.3s ease"
             opacity={bay.damaged ? 0.5 : 1}
           >
-            <BayInfo referenceBay={referenceBay} crawler={crawler} />
+            <BayInfo
+              referenceBay={referenceBay}
+              crawler={crawler}
+              onUpdateChoice={onUpdateChoice}
+            />
           </Box>
         </VStack>
       </Box>

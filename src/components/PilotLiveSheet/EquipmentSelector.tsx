@@ -11,10 +11,11 @@ export function EquipmentSelector({ isOpen, onClose, onSelectEquipment }: Equipm
     <EntitySelectionModal
       isOpen={isOpen}
       onClose={onClose}
-      entityTypes={['Equipment']}
+      schemaNames={['equipment']}
       onSelect={(equipmentId) => onSelectEquipment(equipmentId)}
       title="Add Equipment"
       showTechLevelFilter={true}
+      selectButtonTextPrefix="Equip"
     />
   )
 }

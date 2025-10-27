@@ -55,8 +55,6 @@ export function CrawlerHeaderInputs({
     <RoundedBox
       title="Crawler"
       bg="bg.builder.crawler"
-      h="full"
-      w="full"
       flex="1"
       disabled={disabled}
       leftContent={<StatDisplay label="TL" value={currentTechLevel} disabled={disabled} />}
@@ -94,7 +92,7 @@ export function CrawlerHeaderInputs({
       }
     >
       <VStack gap={4} alignItems="stretch" w="full" h="full" flex="1">
-        <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+        <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full">
           <SheetInput
             label="Name"
             value={name}
@@ -113,7 +111,7 @@ export function CrawlerHeaderInputs({
           </SheetSelect>
         </Grid>
 
-        <Flex flex="1" direction="column" minH="0">
+        <Flex flex="1" direction="column" minH="0" w="full">
           <SheetTextarea
             label="Description"
             value={description}

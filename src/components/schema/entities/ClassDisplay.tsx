@@ -143,10 +143,9 @@ function AbilityItem({ ability }: { ability: SURefAbility }) {
 }
 
 export function ClassDisplay({ data }: ClassDisplayProps) {
-  const abilities = SalvageUnionReference.Abilities.all()
-
   // Determine class type based on which fields are present
   const isCoreClass = 'coreTrees' in data
+  const isHybridClass = 'hybridTree' in data
 
   const coreAbilities: HydratedAbilities = {}
 
@@ -154,9 +153,10 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
   if (isCoreClass) {
     const coreClass = data as SURefCoreClass
     coreClass.coreTrees.forEach((tree) => {
-      coreAbilities[tree] = abilities
-        .filter((a) => a.tree === tree)
-        .sort((a, b) => Number(a.level) - Number(b.level))
+      coreAbilities[tree] = SalvageUnionReference.findAllIn(
+        'abilities',
+        (a) => a.tree === tree
+      ).sort((a, b) => Number(a.level) - Number(b.level))
     })
   }
 
@@ -164,24 +164,31 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
   // Advanced and Hybrid classes have advancedTree
   if ('advancedTree' in data) {
     const classWithAdvanced = data as SURefAdvancedClass | SURefHybridClass
-    advancedAbilities[classWithAdvanced.advancedTree] = abilities
-      .filter((a) => a.tree === classWithAdvanced.advancedTree)
-      .sort((a, b) => Number(a.level) - Number(b.level))
+    advancedAbilities[classWithAdvanced.advancedTree] = SalvageUnionReference.findAllIn(
+      'abilities',
+      (a) => a.tree === classWithAdvanced.advancedTree
+    ).sort((a, b) => Number(a.level) - Number(b.level))
   }
 
   const legendaryAbilities: HydratedAbilities = {}
   if ('legendaryTree' in data && data.legendaryTree) {
     const classWithLegendary = data as SURefAdvancedClass | SURefHybridClass
-    legendaryAbilities[classWithLegendary.legendaryTree] = abilities
-      .filter((a) => a.tree === classWithLegendary.legendaryTree)
-      .sort((a, b) => Number(a.level) - Number(b.level))
+    legendaryAbilities[classWithLegendary.legendaryTree] = SalvageUnionReference.findAllIn(
+      'abilities',
+      (a) => a.tree === classWithLegendary.legendaryTree
+    ).sort((a, b) => Number(a.level) - Number(b.level))
   }
 
-  // Determine header color based on class type
+  // Determine header color and schema name based on class type
   const headerColor = isCoreClass ? 'su.orange' : 'su.pink'
+  const schemaName = isCoreClass
+    ? 'classes.core'
+    : isHybridClass
+      ? 'classes.hybrid'
+      : 'classes.advanced'
 
   return (
-    <EntityDisplay entityName="Class" data={data} headerColor={headerColor}>
+    <EntityDisplay schemaName={schemaName} data={data} headerColor={headerColor}>
       <VStack gap={6} alignItems="stretch">
         {Object.keys(coreAbilities).length > 0 && (
           <AbilitySection title="Core Abilities" abilities={coreAbilities} headerColor="su.brick" />

@@ -25,7 +25,7 @@ export function EquipmentDisplay({
   const config = ENTITY_DISPLAY_CONFIGS.Equipment || {}
   return (
     <EntityDisplay
-      entityName="Equipment"
+      schemaName="equipment"
       data={data}
       onClick={onClick}
       showSelectButton={showSelectButton}

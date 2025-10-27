@@ -33,11 +33,11 @@ const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
 
 export function usePilotLiveSheetState(id?: string) {
   const navigate = useNavigate()
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
-  const allHybridClasses = SalvageUnionReference.HybridClasses.all()
-  const allAbilities = SalvageUnionReference.Abilities.all()
-  const allEquipment = SalvageUnionReference.Equipment.all()
+  const allCoreClasses = SalvageUnionReference.findAllIn('classes.core', () => true)
+  const allAdvancedClasses = SalvageUnionReference.findAllIn('classes.advanced', () => true)
+  const allHybridClasses = SalvageUnionReference.findAllIn('classes.hybrid', () => true)
+  const allAbilities = SalvageUnionReference.findAllIn('abilities', () => true)
+  const allEquipment = SalvageUnionReference.findAllIn('equipment', () => true)
 
   const {
     entity: pilot,
@@ -82,12 +82,12 @@ export function usePilotLiveSheetState(id?: string) {
       return []
     }
 
-    const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
     const results: AdvancedClassOption[] = []
 
     // Check hybrid classes - filter based on tree requirements
     allHybridClasses.forEach((hybridClass) => {
-      const treeRequirement = allTreeRequirements.find(
+      const treeRequirement = SalvageUnionReference.findIn(
+        'ability-tree-requirements',
         (req) => req.tree === hybridClass.advancedTree
       )
 
@@ -115,7 +115,8 @@ export function usePilotLiveSheetState(id?: string) {
       const advancedClass = allAdvancedClasses.find((ac) => ac.id === selectedClass.id)
 
       if (advancedClass) {
-        const treeRequirement = allTreeRequirements.find(
+        const treeRequirement = SalvageUnionReference.findIn(
+          'ability-tree-requirements',
           (req) => req.tree === advancedClass.advancedTree
         )
 

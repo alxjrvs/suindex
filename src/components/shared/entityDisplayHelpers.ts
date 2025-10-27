@@ -1,4 +1,9 @@
-import type { SURefActionMetaList, SURefEntity, SURefEntityName } from 'salvageunion-reference'
+import type {
+  SURefActionMetaList,
+  SURefEntity,
+  SURefEntityName,
+  SURefSchemaName,
+} from 'salvageunion-reference'
 import type { DataValue } from '../../types/common'
 import { formatTraits } from '../../utils/displayUtils'
 
@@ -99,6 +104,37 @@ export function detectEntityType(data: SURefEntity): SURefEntityName {
   }
 
   return 'Keyword'
+}
+
+/**
+ * Convert SURefSchemaName (kebab-case like "systems") to SURefEntityName (PascalCase like "System")
+ */
+export function schemaNameToEntityName(schemaName: SURefSchemaName | string): SURefEntityName {
+  const mapping: Record<string, SURefEntityName> = {
+    vehicles: 'Vehicle',
+    creatures: 'Creature',
+    drones: 'Drone',
+    'bio-titans': 'BioTitan',
+    npcs: 'NPC',
+    squads: 'Squad',
+    meld: 'Meld',
+    keywords: 'Keyword',
+    traits: 'Trait',
+    systems: 'System',
+    modules: 'Module',
+    equipment: 'Equipment',
+    abilities: 'Ability',
+    'ability-tree-requirements': 'AbilityTreeRequirement',
+    crawlers: 'Crawler',
+    'roll-tables': 'RollTable',
+    'crawler-tech-levels': 'CrawlerTechLevel',
+    'classes.core': 'Class',
+    'classes.advanced': 'Class',
+    'classes.hybrid': 'Class',
+    chassis: 'Chassis',
+    'crawler-bays': 'CrawlerBay',
+  }
+  return mapping[schemaName]
 }
 
 /**

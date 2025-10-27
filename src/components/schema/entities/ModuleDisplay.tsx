@@ -12,5 +12,5 @@ interface ModuleDisplayProps {
  */
 export function ModuleDisplay({ data }: ModuleDisplayProps) {
   const config = ENTITY_DISPLAY_CONFIGS.Module || {}
-  return <EntityDisplay entityName="Module" data={data} {...config} />
+  return <EntityDisplay schemaName="modules" data={data} {...config} />
 }

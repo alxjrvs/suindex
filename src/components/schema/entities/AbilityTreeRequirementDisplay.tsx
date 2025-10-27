@@ -21,7 +21,11 @@ export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDi
   }
 
   return (
-    <EntityDisplay entityName="AbilityTreeRequirement" data={data} headerColor={getHeaderColor()}>
+    <EntityDisplay
+      schemaName="ability-tree-requirements"
+      data={data}
+      headerColor={getHeaderColor()}
+    >
       <VStack gap={3} alignItems="stretch">
         <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
           Requirements

@@ -204,13 +204,25 @@ export function useCrawlerLiveSheetState(id?: string) {
   )
 
   const handleUpdateChoice = useCallback(
-    (choiceId: string, value: string) => {
-      updateEntity({
-        choices: {
-          ...((crawler.choices as Record<string, string>) ?? {}),
-          [choiceId]: value,
-        },
-      })
+    (choiceId: string, value: string | undefined) => {
+      const currentChoices = (crawler.choices as Record<string, string>) ?? {}
+
+      if (value === undefined) {
+        // Remove the choice by creating a new object without it
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [choiceId]: _, ...remainingChoices } = currentChoices
+        updateEntity({
+          choices: remainingChoices,
+        })
+      } else {
+        // Add or update the choice
+        updateEntity({
+          choices: {
+            ...currentChoices,
+            [choiceId]: value,
+          },
+        })
+      }
     },
     [crawler.choices, updateEntity]
   )

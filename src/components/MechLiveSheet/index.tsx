@@ -50,9 +50,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     hasPendingChanges,
   } = useMechLiveSheetState(id)
 
-  const allChassis = SalvageUnionReference.Chassis.all()
-  const allSystems = SalvageUnionReference.Systems.all()
-  const allModules = SalvageUnionReference.Modules.all()
+  const allChassis = SalvageUnionReference.findAllIn('chassis', () => true)
 
   const stats = selectedChassis?.stats
 
@@ -122,7 +120,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
             }
             title="Mech Chassis"
             bg="su.green"
-            h="full"
             w="full"
             disabled={!selectedChassis}
           >
@@ -216,16 +213,10 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
       </Grid>
 
       <SystemModuleSelector
-        availableSystemSlots={Number(stats?.systemSlots) - usedSystemSlots || 0}
-        availableModuleSlots={Number(stats?.moduleSlots) - usedModuleSlots || 0}
         isOpen={isSelectorOpen}
         onClose={() => setIsSelectorOpen(false)}
-        systems={allSystems}
-        modules={allModules}
         onSelectSystem={handleAddSystem}
         onSelectModule={handleAddModule}
-        selectedSystemIds={mech.systems ?? []}
-        selectedModuleIds={mech.modules ?? []}
       />
 
       <CargoModal

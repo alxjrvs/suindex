@@ -89,7 +89,7 @@ export function RoundedBox({
           pb={2}
           cursor={actualHeaderCursor}
           onClick={onHeaderClick}
-          alignItems="flex-start"
+          alignItems="center"
         >
           {/* Left side: leftContent + subTitleContent stacked */}
           <Flex direction="column" gap={2} alignItems="flex-start">

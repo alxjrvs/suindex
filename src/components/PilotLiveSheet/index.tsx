@@ -84,7 +84,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
           hasPendingChanges={hasPendingChanges}
         />
       )}
-      <Flex gap={6}>
+      <Flex gap={6} w="full">
         <PilotInfoInputs
           callsign={pilot.callsign}
           motto={pilot.motto ?? ''}

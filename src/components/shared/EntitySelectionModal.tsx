@@ -4,7 +4,7 @@ import { Button } from '@chakra-ui/react'
 import {
   SalvageUnionReference,
   type SURefEntity,
-  type SURefEntityName,
+  type SURefSchemaName,
 } from 'salvageunion-reference'
 import Modal from '../Modal'
 import { EntityDisplay } from './EntityDisplay'
@@ -12,62 +12,46 @@ import { EntityDisplay } from './EntityDisplay'
 interface EntitySelectionModalProps {
   isOpen: boolean
   onClose: () => void
-  /** Array of schema names to search from (e.g., ['Equipment', 'Module']) */
-  entityTypes: SURefEntityName[]
+  /** Array of schema names to search from (e.g., ['equipment', 'modules']) */
+  schemaNames: SURefSchemaName[] | undefined
   /** Callback when an entity is selected - receives the entity ID and schema name */
-  onSelect: (entityId: string, schemaName: SURefEntityName) => void
+  onSelect: (entityId: string, schemaName: SURefSchemaName) => void
   /** Whether to show tech level filtering */
   showTechLevelFilter?: boolean
   /** Modal title */
   title?: string
+  bg?: string
+  /** Prefix for select button text (e.g., "Equip", "Select", "Add") */
+  selectButtonTextPrefix?: string
 }
 
 export function EntitySelectionModal({
   isOpen,
   onClose,
-  entityTypes,
+  schemaNames = [],
   onSelect,
   showTechLevelFilter = true,
+  bg = 'su.green',
   title = 'Select Item',
+  selectButtonTextPrefix = 'Select',
 }: EntitySelectionModalProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [techLevelFilter, setTechLevelFilter] = useState<number | null>(null)
 
   // Fetch all entities from the specified types
   const allEntities = useMemo(() => {
-    const entities: Array<{ entity: SURefEntity; schemaName: SURefEntityName }> = []
+    const entities: Array<{ entity: SURefEntity; schemaName: SURefSchemaName }> = []
 
-    entityTypes.forEach((typeName) => {
-      // Map entity type names to collection names in SalvageUnionReference
-      // Equipment -> Equipment (already plural)
-      // Module -> Modules
-      // System -> Systems
-      // Chassis -> Chassis (irregular plural)
-      const collectionMap: Record<string, string> = {
-        Equipment: 'Equipment',
-        Module: 'Modules',
-        System: 'Systems',
-        Chassis: 'Chassis',
-        Ability: 'Abilities',
-        Crawler: 'Crawlers',
-        CrawlerBay: 'CrawlerBays',
-      }
-
-      const collectionName = collectionMap[typeName] || `${typeName}s`
-
-      // Access the reference library dynamically
-      const collection = SalvageUnionReference[collectionName as keyof typeof SalvageUnionReference]
-
-      if (collection && typeof collection === 'object' && 'all' in collection) {
-        const items = (collection as { all: () => SURefEntity[] }).all()
-        items.forEach((item) => {
-          entities.push({ entity: item, schemaName: typeName })
-        })
-      }
+    schemaNames.forEach((schemaName) => {
+      // Use findAllIn to get all items from the schema
+      const items = SalvageUnionReference.findAllIn(schemaName, () => true)
+      items.forEach((item) => {
+        entities.push({ entity: item, schemaName })
+      })
     })
 
     return entities
-  }, [entityTypes])
+  }, [schemaNames])
 
   // Filter entities based on search term and tech level
   const filteredEntities = useMemo(() => {
@@ -107,7 +91,7 @@ export function EntitySelectionModal({
       })
   }, [allEntities, searchTerm, techLevelFilter, showTechLevelFilter])
 
-  const handleSelect = (entityId: string, schemaName: SURefEntityName) => {
+  const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
     onSelect(entityId, schemaName)
     onClose()
   }
@@ -117,15 +101,18 @@ export function EntitySelectionModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <VStack gap={0} alignItems="stretch" h="80vh">
-        {/* Fixed Header: Search Input and Filters */}
         <VStack
           gap={4}
           alignItems="stretch"
           flexShrink={0}
           borderBottomWidth="3px"
           borderColor="su.black"
-          pb={2}
+          pb={4}
           boxShadow="0 6px 8px -2px rgba(0, 0, 0, 0.3)"
+          position="sticky"
+          top={0}
+          bg={bg}
+          zIndex={1}
         >
           {/* Search Input */}
           <Input
@@ -187,12 +174,12 @@ export function EntitySelectionModal({
             filteredEntities.map(({ entity, schemaName }) => {
               const entityId = 'id' in entity ? (entity.id as string) : ''
               const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
-              const buttonText = `Select ${entityName}`
+              const buttonText = `${selectButtonTextPrefix} ${entityName}`
 
               return (
                 <EntityDisplay
                   key={`${schemaName}-${entityId}`}
-                  entityName={schemaName}
+                  schemaName={schemaName}
                   data={entity}
                   showSelectButton
                   selectButtonText={buttonText}

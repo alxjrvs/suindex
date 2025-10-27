@@ -44,7 +44,6 @@ export function ControlBarContainer({
       bg={backgroundColor}
       px={6}
       py={3}
-      borderWidth="4px"
       leftContent={<HStack gap={4}>{leftContent}</HStack>}
       rightContent={
         <HStack gap={3}>

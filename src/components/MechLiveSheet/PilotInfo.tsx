@@ -60,7 +60,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     return (
       <RoundedBox
         rightContent={<DiscordSignInButton disabled={disabled} />}
-        w="full"
+        flex="1"
         title="Pilot"
         disabled={true}
         bg="su.orange"
@@ -71,7 +71,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   // State 2: Mech ID but no pilot ID - show selector
   if (!pilotId) {
     return (
-      <RoundedBox w="full" title="Pilot" disabled={disabled} bg="su.orange">
+      <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
         <Flex justify="center" align="center" h="full" py={2}>
           <SheetSelect
             label="Pilot"
@@ -89,7 +89,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   // State 3: Mech ID and pilot ID - show pilot info
   if (loadingPilot) {
     return (
-      <RoundedBox w="full" title="Pilot" disabled={disabled} bg="su.orange">
+      <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
         <Flex justify="center" align="center" h="full" py={4}>
           <Text fontSize="sm" color="gray.500" fontFamily="mono">
             Loading...
@@ -101,7 +101,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
 
   if (!pilot) {
     return (
-      <RoundedBox w="full" title="Pilot" disabled={disabled} bg="su.orange">
+      <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
         <Flex justify="center" align="center" h="full" py={4}>
           <Text fontSize="sm" color="red.500" fontFamily="mono">
             Pilot not found
@@ -117,7 +117,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     : getClassNameById(pilot.class_id)
 
   return (
-    <RoundedBox w="full" title="Pilot" disabled={disabled} bg="su.orange">
+    <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
       <VStack gap={3} align="stretch" py={2} px={3}>
         <Text fontSize="lg" fontWeight="bold" fontFamily="mono" textAlign="center">
           {pilot.callsign} the {className}

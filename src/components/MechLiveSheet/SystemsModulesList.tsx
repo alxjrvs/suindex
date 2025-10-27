@@ -37,8 +37,8 @@ export function SystemsModulesList({
   onAddClick,
   disabled = false,
 }: SystemsModulesListProps) {
-  const allSystems = useMemo(() => SalvageUnionReference.Systems.all(), [])
-  const allModules = useMemo(() => SalvageUnionReference.Modules.all(), [])
+  const allSystems = useMemo(() => SalvageUnionReference.findAllIn('systems', () => true), [])
+  const allModules = useMemo(() => SalvageUnionReference.findAllIn('modules', () => true), [])
 
   const sortedSystems = useMemo(() => {
     return systems

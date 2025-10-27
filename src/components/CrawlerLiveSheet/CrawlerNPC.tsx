@@ -11,13 +11,20 @@ export function CrawlerNPC({
   disabled = false,
 }: {
   crawler: CrawlerLiveSheetState
-  onUpdateChoice: (choiceId: string, value: string) => void
+  onUpdateChoice: (choiceId: string, value: string | undefined) => void
   onUpdate: (updates: Partial<CrawlerLiveSheetState>) => void
   crawlerRef: SURefCrawler | undefined
   disabled?: boolean
 }) {
   return (
-    <RoundedBox bg="bg.builder.crawler" title="NPC" disabled={disabled} w="full">
+    <RoundedBox
+      bg="bg.builder.crawler"
+      title="NPC"
+      disabled={disabled}
+      w="full"
+      maxW="50%"
+      flex="1"
+    >
       {crawler.npc && (
         <NPCCard
           npc={crawler.npc}

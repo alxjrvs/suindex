@@ -10,7 +10,6 @@ interface AbilityDisplayProps {
   data: SURefAbility
   onClick?: () => void
   dimmed?: boolean
-  showRemoveButton?: boolean
   disableRemove?: boolean
   onRemove?: () => void
   collapsible?: boolean
@@ -25,7 +24,6 @@ export function AbilityDisplay({
   data,
   onClick,
   dimmed = false,
-  showRemoveButton = false,
   disableRemove = false,
   onRemove,
   collapsible = false,
@@ -41,12 +39,11 @@ export function AbilityDisplay({
 
   return (
     <EntityDisplay
-      entityName="Ability"
+      schemaName="abilities"
       data={data}
       headerColor={headerColor}
       onClick={onClick}
       dimmed={dimmed}
-      showRemoveButton={showRemoveButton}
       disableRemove={disableRemove}
       onRemove={onRemove}
       collapsible={collapsible}

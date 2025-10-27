@@ -2,15 +2,19 @@ import { type SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import type { CrawlerLiveSheetState } from './types'
-import { Button, VStack } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
+import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 
 export function CrawlerAbilities({
   crawlerRef,
+  onUpdateChoice,
+  crawler,
   disabled = false,
 }: {
   upkeep: string
   updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
   crawlerRef: SURefCrawler | undefined
+  onUpdateChoice: (choiceId: string, value: string | undefined) => void
   crawler: CrawlerLiveSheetState
   maxUpgrade: number
   disabled?: boolean
@@ -22,6 +26,8 @@ export function CrawlerAbilities({
       justifyContent={'flex-start'}
       disabled={disabled}
       w="full"
+      maxW="50%"
+      flex="1"
     >
       {(
         crawlerRef?.abilities || [
@@ -31,36 +37,39 @@ export function CrawlerAbilities({
           },
         ]
       ).map((ability, idx) => (
-        <CrawlerAbility key={idx} ability={ability} />
+        <CrawlerAbility
+          onUpdateChoice={onUpdateChoice}
+          key={idx}
+          ability={ability}
+          choices={crawler.choices}
+        />
       ))}
     </RoundedBox>
   )
 }
 
-function CrawlerAbility({ ability }: { ability: SURefCrawler['abilities'][0] }) {
+function CrawlerAbility({
+  ability,
+  onUpdateChoice,
+  choices,
+}: {
+  ability: SURefCrawler['abilities'][0]
+  onUpdateChoice: (choiceId: string, value: string | undefined) => void
+  choices: Record<string, string> | null
+}) {
   const hasChoices = 'choices' in ability && ability.choices && ability.choices.length > 0
 
   return (
     <VStack gap={3} alignItems="stretch" w="full">
       <SheetDisplay label={ability.name} value={ability.description} />
       {(hasChoices ? ability.choices : []).map((choice, idx) => (
-        <CrawlerAbilityChoiceDisplay key={idx} choice={choice} />
+        <SheetEntityChoiceDisplay
+          onUpdateChoice={onUpdateChoice}
+          key={idx}
+          choice={choice}
+          selectedValue={choices?.[choice.id] || null}
+        />
       ))}
     </VStack>
-  )
-}
-
-type CrawlerAbilityChoice = {
-  id: string
-  name: string
-  description: string
-  schema: string | string[]
-}
-
-function CrawlerAbilityChoiceDisplay({ choice }: { choice: CrawlerAbilityChoice }) {
-  return (
-    <SheetDisplay label={choice.name} value={choice.description}>
-      <Button onClick={() => console.log('clicked')}>CLICK</Button>
-    </SheetDisplay>
   )
 }

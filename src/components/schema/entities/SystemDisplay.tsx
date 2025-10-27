@@ -12,5 +12,5 @@ interface SystemDisplayProps {
  */
 export function SystemDisplay({ data }: SystemDisplayProps) {
   const config = ENTITY_DISPLAY_CONFIGS.System || {}
-  return <EntityDisplay entityName="System" data={data} {...config} />
+  return <EntityDisplay schemaName="systems" data={data} {...config} />
 }

@@ -14,9 +14,9 @@ import type {
  */
 export function getAllClasses(): (SURefCoreClass | SURefAdvancedClass | SURefHybridClass)[] {
   return [
-    ...SalvageUnionReference.CoreClasses.all(),
-    ...SalvageUnionReference.AdvancedClasses.all(),
-    ...SalvageUnionReference.HybridClasses.all(),
+    ...SalvageUnionReference.findAllIn('classes.core', () => true),
+    ...SalvageUnionReference.findAllIn('classes.advanced', () => true),
+    ...SalvageUnionReference.findAllIn('classes.hybrid', () => true),
   ]
 }
 
@@ -28,8 +28,12 @@ export function getAllClasses(): (SURefCoreClass | SURefAdvancedClass | SURefHyb
 export function findClassById(
   classId: string
 ): SURefCoreClass | SURefAdvancedClass | SURefHybridClass | undefined {
-  const allClasses = getAllClasses()
-  return allClasses.find((c) => c.id === classId)
+  // Try to find in each class type using findIn
+  return (
+    SalvageUnionReference.findIn('classes.core', (c) => c.id === classId) ||
+    SalvageUnionReference.findIn('classes.advanced', (c) => c.id === classId) ||
+    SalvageUnionReference.findIn('classes.hybrid', (c) => c.id === classId)
+  )
 }
 
 /**
@@ -49,7 +53,7 @@ export function getClassNameById(classId: string | null, fallback = 'Unknown'): 
  * @returns The chassis object or undefined if not found
  */
 export function findChassisById(chassisId: string): SURefChassis | undefined {
-  return SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
+  return SalvageUnionReference.findIn('chassis', (c) => c.id === chassisId)
 }
 
 /**
@@ -69,7 +73,7 @@ export function getChassisNameById(chassisId: string | null, fallback = 'Unknown
  * @returns The crawler object or undefined if not found
  */
 export function findCrawlerById(crawlerId: string): SURefCrawler | undefined {
-  return SalvageUnionReference.Crawlers.find((c) => c.id === crawlerId)
+  return SalvageUnionReference.findIn('crawlers', (c) => c.id === crawlerId)
 }
 
 /**

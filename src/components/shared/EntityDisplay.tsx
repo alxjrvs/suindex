@@ -11,7 +11,6 @@ import { RollTable } from './RollTable'
 import { RoundedBox } from './RoundedBox'
 import { techLevelColors } from '../../theme'
 import {
-  getSchemaName,
   getActivationCurrency,
   extractHeaderStats,
   extractDetails,
@@ -25,8 +24,10 @@ import {
   extractTechLevelEffects,
   extractAbilities,
   extractTechLevel,
+  schemaNameToEntityName,
+  getSchemaName,
 } from './entityDisplayHelpers'
-import type { SURefEntity, SURefEntityName } from 'salvageunion-reference'
+import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { SheetDisplay } from './SheetDisplay'
 
 interface EntityDisplayProps {
@@ -37,7 +38,6 @@ interface EntityDisplayProps {
   children?: ReactNode
   onClick?: () => void
   dimmed?: boolean
-  showRemoveButton?: boolean
   disableRemove?: boolean
   onRemove?: () => void
   collapsible?: boolean
@@ -47,7 +47,7 @@ interface EntityDisplayProps {
   showSelectButton?: boolean
   selectButtonText?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
-  entityName: SURefEntityName
+  schemaName: SURefSchemaName
 }
 
 export function EntityDisplay({
@@ -58,7 +58,6 @@ export function EntityDisplay({
   children,
   onClick,
   dimmed = false,
-  showRemoveButton = false,
   disableRemove = false,
   onRemove,
   collapsible = false,
@@ -68,10 +67,12 @@ export function EntityDisplay({
   showSelectButton = false,
   selectButtonText,
   contentJustify = 'flex-start',
-  entityName,
+  schemaName,
 }: EntityDisplayProps) {
-  const schemaName = getSchemaName(entityName)
-  const variableCost = 'activationCost' in data && entityName === 'Ability'
+  // Convert schemaName to entityName for helper functions
+  const entityName = schemaNameToEntityName(schemaName)
+
+  const variableCost = 'activationCost' in data && schemaName === 'abilities'
   const activationCurrency = getActivationCurrency(entityName, variableCost)
 
   const header = extractHeader(data, entityName)
@@ -86,6 +87,13 @@ export function EntityDisplay({
   const techLevel = extractTechLevel(data)
   const techLevelEffects = extractTechLevelEffects(data)
   const abilities = extractAbilities(data)
+
+  // Detect entity type from data properties
+  const hasSlots = 'slotsRequired' in data
+  const isModule = hasSlots && 'recommended' in data
+  const isSystem = hasSlots && ('statBonus' in data || 'table' in data)
+  const isEquipment = hasSlots && !isModule && !isSystem
+  const headerDescription = !isEquipment && !isModule && !isSystem
 
   // Expansion state management (from Frame)
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
@@ -123,13 +131,6 @@ export function EntityDisplay({
   // Build left content (expand icon + level)
   const leftContentElement = (
     <>
-      {collapsible && (
-        <Flex alignItems="center" justifyContent="center" minW="25px" alignSelf="center">
-          <Text color="su.white" fontSize="lg">
-            {isExpanded ? '▼' : '▶'}
-          </Text>
-        </Flex>
-      )}
       {techLevel && <StatDisplay label="TL" value={techLevel} />}
       {level && <StatDisplay label="LVL" value={level} />}
     </>
@@ -143,7 +144,7 @@ export function EntityDisplay({
   // Build right content (description + stats + remove button)
   const rightContentElement = (
     <Flex alignItems="center" gap={2} alignSelf="center" maxW="50%" mt={2}>
-      {description && (
+      {description && headerDescription && (
         <Text
           color="su.white"
           fontStyle="italic"
@@ -161,7 +162,7 @@ export function EntityDisplay({
           <StatList stats={stats} />
         </Box>
       )}
-      {showRemoveButton && onRemove && (
+      {onRemove && (
         <Button
           onClick={(e) => {
             e.stopPropagation()
@@ -193,6 +194,13 @@ export function EntityDisplay({
         >
           ✕
         </Button>
+      )}
+      {collapsible && (
+        <Flex alignItems="center" justifyContent="center" minW="25px" alignSelf="center">
+          <Text color="su.white" fontSize="lg">
+            {isExpanded ? '▼' : '▶'}
+          </Text>
+        </Flex>
       )}
     </Flex>
   )
@@ -245,8 +253,30 @@ export function EntityDisplay({
           >
             {/* Notes */}
             {notes && (
-              <Text color="su.black" fontWeight="medium" lineHeight="relaxed" fontStyle="italic">
+              <Text
+                color="su.black"
+                fontWeight="medium"
+                lineHeight="relaxed"
+                fontStyle="italic"
+                wordBreak="break-word"
+                overflowWrap="break-word"
+                whiteSpace="normal"
+              >
                 {notes}
+              </Text>
+            )}
+
+            {description && !headerDescription && (
+              <Text
+                color="su.black"
+                fontWeight="medium"
+                lineHeight="relaxed"
+                fontStyle="italic"
+                wordBreak="break-word"
+                overflowWrap="break-word"
+                whiteSpace="normal"
+              >
+                {description}
               </Text>
             )}
 
@@ -339,16 +369,6 @@ export function EntityDisplay({
             )}
 
             {children}
-
-            {/* Page Reference */}
-            {pageRef && (
-              <PageReferenceDisplay
-                source={pageRef.source}
-                page={pageRef.page}
-                schemaName={schemaName}
-              />
-            )}
-
             {/* Select Button - Only shown in modal */}
             {showSelectButton && onClick && (
               <Button
@@ -376,6 +396,15 @@ export function EntityDisplay({
               >
                 {selectButtonText || 'Select'}
               </Button>
+            )}
+
+            {/* Page Reference */}
+            {pageRef && (
+              <PageReferenceDisplay
+                source={pageRef.source}
+                page={pageRef.page}
+                schemaName={getSchemaName(entityName)}
+              />
             )}
           </VStack>
         </Flex>

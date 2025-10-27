@@ -71,7 +71,7 @@ export function PilotInfoInputs({
   }
 
   return (
-    <RoundedBox title="Pilot" bg="bg.builder.pilot" w="full" disabled={disabled}>
+    <RoundedBox title="Pilot" bg="bg.builder.pilot" flex="1" minW="0" disabled={disabled}>
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
         {/* Callsign */}
         <SheetInput

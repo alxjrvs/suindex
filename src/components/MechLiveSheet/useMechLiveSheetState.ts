@@ -26,9 +26,9 @@ const INITIAL_MECH_STATE: MechLiveSheetState = {
 
 export function useMechLiveSheetState(id?: string) {
   const navigate = useNavigate()
-  const allChassis = SalvageUnionReference.Chassis.all()
-  const allSystems = SalvageUnionReference.Systems.all()
-  const allModules = SalvageUnionReference.Modules.all()
+  const allChassis = SalvageUnionReference.findAllIn('chassis', () => true)
+  const allSystems = SalvageUnionReference.findAllIn('systems', () => true)
+  const allModules = SalvageUnionReference.findAllIn('modules', () => true)
 
   const {
     entity: mech,
