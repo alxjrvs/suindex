@@ -128,7 +128,7 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   if (item.label) {
     return (
       <DetailWrapper compact={compact}>
-        <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight}>
+        <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
           {item.label}
         </Text>
         <Text
