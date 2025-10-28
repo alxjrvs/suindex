@@ -49,9 +49,9 @@ export function SheetSelect({
           w="full"
           px={3}
           py={2}
-          borderWidth="3px"
+          borderWidth="1px"
           borderColor="su.black"
-          borderRadius="2xl"
+          borderRadius="xl"
           bg="su.white"
           color="su.black"
           fontWeight="semibold"

@@ -77,7 +77,7 @@ export function SheetInput({
               <ChakraCheckbox.HiddenInput aria-label={`${label} ${toggleLabel}`} />
               <ChakraCheckbox.Control
                 bg="su.white"
-                borderWidth="3px"
+                borderWidth="1px"
                 mb={2}
                 borderColor="su.black"
                 h="14px"
@@ -105,9 +105,9 @@ export function SheetInput({
           flex="1"
           minW="120px"
           p={3}
-          borderWidth="3px"
+          borderWidth="1px"
           borderColor="su.black"
-          borderRadius="2xl"
+          borderRadius="xl"
           bg="su.white"
           color="su.black"
           fontWeight="semibold"
@@ -119,7 +119,7 @@ export function SheetInput({
             px={3}
             bg="su.black"
             color="su.white"
-            borderWidth="3px"
+            borderWidth="1px"
             borderColor="su.black"
             borderRadius="0"
             fontWeight="semibold"
@@ -139,7 +139,7 @@ export function SheetInput({
             bg="su.black"
             _hover={{ bg: 'su.brick' }}
             _disabled={{ opacity: 0.3, cursor: 'not-allowed' }}
-            borderWidth="3px"
+            borderWidth="1px"
             borderColor="su.black"
             borderRadius="0"
             aria-label={diceRollAriaLabel || `Roll for ${label}`}

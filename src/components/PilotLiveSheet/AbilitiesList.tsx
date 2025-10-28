@@ -1,154 +1,311 @@
-import { useMemo } from 'react'
-import { Box, Flex, VStack } from '@chakra-ui/react'
+import { useMemo, useCallback } from 'react'
+import { Box, Flex, Grid, VStack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefAbility } from 'salvageunion-reference'
+import type {
+  SURefAbility,
+  SURefCoreClass,
+  SURefAdvancedClass,
+  SURefHybridClass,
+} from 'salvageunion-reference'
 import { AbilityDisplay } from '../schema/entities/AbilityDisplay'
 import { StatDisplay } from '../StatDisplay'
-import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
+import { getAbilityCost } from './utils/getAbilityCost'
 
 interface AbilitiesListProps {
-  abilities: string[] // Array of Ability IDs
-  legendaryAbility: SURefAbility | null
+  abilities: string[] // Array of selected Ability IDs
+  legendaryAbilityId: string | null
+  onAdd: (id: string) => void
   onRemove: (id: string) => void
+  onAddLegendary: (id: string) => void
   onRemoveLegendary: () => void
-  onAddClick: () => void
   currentTP: number
   disabled?: boolean
-  coreTreeNames?: string[]
+  selectedClass: SURefCoreClass | undefined
+  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
 }
 
 export function AbilitiesList({
   abilities,
-  legendaryAbility,
+  legendaryAbilityId,
+  onAdd,
   onRemove,
+  onAddLegendary,
   onRemoveLegendary,
-  onAddClick,
   currentTP,
   disabled = false,
-  coreTreeNames = [],
+  selectedClass,
+  selectedAdvancedClass,
 }: AbilitiesListProps) {
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
 
-  // Organize selected abilities by tree, separating core from advanced/hybrid
-  const { coreAbilitiesByTree, advancedAbilitiesByTree } = useMemo(() => {
-    const coreByTree: Record<string, SURefAbility[]> = {}
-    const advancedByTree: Record<string, SURefAbility[]> = {}
+  // Get all available levels for a tree (any level where all previous levels are selected)
+  const getAvailableLevels = useCallback(
+    (treeName: string, treeAbilities: SURefAbility[]): Set<number> => {
+      const selectedLevelsInTree = new Set(
+        abilities
+          .map((id) => allAbilities.find((a) => a.id === id))
+          .filter((a) => a && a.tree === treeName)
+          .map((a) => Number(a!.level))
+      )
 
-    abilities.forEach((abilityId) => {
+      const availableLevels = new Set<number>()
+
+      // Check each level in the tree
+      treeAbilities.forEach((ability) => {
+        const level = Number(ability.level)
+
+        // Level is available if all previous levels are selected
+        let allPreviousSelected = true
+        for (let i = 1; i < level; i++) {
+          if (!selectedLevelsInTree.has(i)) {
+            allPreviousSelected = false
+            break
+          }
+        }
+
+        if (allPreviousSelected) {
+          availableLevels.add(level)
+        }
+      })
+
+      return availableLevels
+    },
+    [abilities, allAbilities]
+  )
+
+  // Organize ALL abilities by tree (not just selected ones)
+  const { coreTreeAbilities, advancedClassTreeAbilities, advancedClassLegendaryAbilities } =
+    useMemo(() => {
+      if (!selectedClass) {
+        return {
+          coreTreeAbilities: {},
+          advancedClassTreeAbilities: [],
+          advancedClassLegendaryAbilities: [],
+        }
+      }
+
+      const coreTreeAbilities: Record<string, SURefAbility[]> = {}
+      const advancedClassTreeAbilities: SURefAbility[] = []
+      const advancedClassLegendaryAbilities: SURefAbility[] = []
+
+      // Initialize core tree arrays
+      selectedClass.coreTrees.forEach((tree) => {
+        coreTreeAbilities[tree] = []
+      })
+
+      allAbilities.forEach((ability) => {
+        // Check if it's a legendary ability from advanced class
+        if (
+          selectedAdvancedClass?.legendaryTree &&
+          ability.tree === selectedAdvancedClass.legendaryTree
+        ) {
+          advancedClassLegendaryAbilities.push(ability)
+          return
+        }
+
+        // Check if it's in a core tree
+        if (selectedClass.coreTrees.includes(ability.tree)) {
+          coreTreeAbilities[ability.tree].push(ability)
+          return
+        }
+
+        // Check if it's in the advanced tree
+        if (selectedAdvancedClass && ability.tree === selectedAdvancedClass.advancedTree) {
+          advancedClassTreeAbilities.push(ability)
+        }
+      })
+
+      // Sort abilities by level within each tree
+      Object.keys(coreTreeAbilities).forEach((tree) => {
+        coreTreeAbilities[tree].sort((a, b) => Number(a.level) - Number(b.level))
+      })
+      advancedClassTreeAbilities.sort((a, b) => Number(a.level) - Number(b.level))
+      advancedClassLegendaryAbilities.sort((a, b) => a.name.localeCompare(b.name))
+
+      return {
+        coreTreeAbilities,
+        advancedClassTreeAbilities,
+        advancedClassLegendaryAbilities,
+      }
+    }, [allAbilities, selectedClass, selectedAdvancedClass])
+
+  const coreTreeNames = selectedClass?.coreTrees || []
+
+  const handleSelect = useCallback(
+    (abilityId: string, isLegendary: boolean = false) => {
       const ability = allAbilities.find((a) => a.id === abilityId)
       if (!ability) return
 
-      const tree = ability.tree
-      const isCore = coreTreeNames.includes(tree)
+      const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
+      const confirmed = window.confirm(
+        `Are you sure you want to select "${ability.name}"?\n\nThis will cost ${cost} TP.`
+      )
 
-      if (isCore) {
-        if (!coreByTree[tree]) {
-          coreByTree[tree] = []
+      if (confirmed) {
+        if (isLegendary) {
+          onAddLegendary(abilityId)
+        } else {
+          onAdd(abilityId)
         }
-        coreByTree[tree].push(ability)
-      } else {
-        if (!advancedByTree[tree]) {
-          advancedByTree[tree] = []
-        }
-        advancedByTree[tree].push(ability)
       }
-    })
+    },
+    [allAbilities, selectedClass, selectedAdvancedClass, onAdd, onAddLegendary]
+  )
 
-    // Sort abilities by level within each tree
-    Object.keys(coreByTree).forEach((tree) => {
-      coreByTree[tree].sort((a, b) => Number(a.level) - Number(b.level))
-    })
-    Object.keys(advancedByTree).forEach((tree) => {
-      advancedByTree[tree].sort((a, b) => Number(a.level) - Number(b.level))
-    })
+  const isSelected = useCallback((abilityId: string) => abilities.includes(abilityId), [abilities])
 
-    return { coreAbilitiesByTree: coreByTree, advancedAbilitiesByTree: advancedByTree }
-  }, [abilities, coreTreeNames, allAbilities])
+  // Check if all advanced abilities are selected (for legendary unlock)
+  const allAdvancedSelected = useMemo(() => {
+    if (!selectedAdvancedClass || advancedClassTreeAbilities.length === 0) return true
+    return advancedClassTreeAbilities.every((ability) => isSelected(ability.id))
+  }, [selectedAdvancedClass, advancedClassTreeAbilities, isSelected])
 
-  const coreTreeNamesDisplay = Object.keys(coreAbilitiesByTree).sort()
-  const advancedTreeNamesDisplay = Object.keys(advancedAbilitiesByTree).sort()
+  const hasLegendary = legendaryAbilityId !== null
 
   return (
-    <RoundedBox
-      headerBg="bg.builder.pilot"
-      bg="su.lightBlue"
-      title="Abilities"
-      disabled={disabled}
-      rightContent={
-        <Flex alignItems="center" gap={4}>
-          <AddStatButton
-            onClick={onAddClick}
-            disabled={disabled || currentTP === 0}
-            ariaLabel="Add ability"
-          />
-          <StatDisplay label="TP" value={`${currentTP}`} disabled={disabled} />
-        </Flex>
-      }
-    >
-      {coreTreeNamesDisplay.length > 0 && (
-        <Box mb={4} w="full">
-          {coreTreeNamesDisplay.map((treeName) => (
-            <Box key={treeName} mb={4}>
-              <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
+    <VStack w="full">
+      <RoundedBox
+        headerBg="bg.builder.pilot"
+        bg="su.lightBlue"
+        w="full"
+        title="Abilities"
+        disabled={disabled}
+        rightContent={
+          <Flex alignItems="center" gap={4}>
+            <StatDisplay label="TP" value={`${currentTP}`} disabled={disabled} />
+          </Flex>
+        }
+      />
+      {/* Core Trees in horizontal row (3 columns) */}
+      {coreTreeNames.length > 0 && (
+        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={1} mb={4} w="full">
+          {coreTreeNames.map((treeName) => (
+            <Box key={treeName}>
+              <Heading level="h3" textTransform="uppercase" textAlign="center">
                 {treeName}
               </Heading>
               <VStack gap={2} alignItems="stretch">
-                {coreAbilitiesByTree[treeName].map((ability) => (
-                  <AbilityDisplay
-                    key={ability.id}
-                    data={ability}
-                    disableRemove={currentTP < 1}
-                    onRemove={() => onRemove(ability.id)}
-                    collapsible
-                    defaultExpanded={false}
-                  />
-                ))}
+                {coreTreeAbilities[treeName]?.map((ability) => {
+                  const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
+                  const canAfford = currentTP >= cost
+                  const alreadySelected = isSelected(ability.id)
+                  const availableLevels = getAvailableLevels(
+                    treeName,
+                    coreTreeAbilities[treeName] || []
+                  )
+                  const abilityLevel = Number(ability.level)
+                  const isAvailable = availableLevels.has(abilityLevel)
+                  const canSelect = canAfford && isAvailable
+                  const shouldDim = !alreadySelected
+
+                  return (
+                    <AbilityDisplay
+                      key={ability.id}
+                      data={ability}
+                      onClick={alreadySelected ? undefined : () => handleSelect(ability.id)}
+                      onRemove={() => onRemove(ability.id)}
+                      disableRemove={!alreadySelected || currentTP < 1}
+                      disabled={!canSelect && !alreadySelected}
+                      dimmed={shouldDim}
+                      trained={alreadySelected}
+                      collapsible
+                      defaultExpanded={false}
+                      showSelectButton={!alreadySelected}
+                      selectButtonText={`Add to Pilot (${cost} TP)`}
+                    />
+                  )
+                })}
               </VStack>
             </Box>
           ))}
-        </Box>
+        </Grid>
       )}
 
-      {advancedTreeNamesDisplay.length > 0 && (
-        <Box mb={4}>
-          {advancedTreeNamesDisplay.map((treeName) => (
-            <Box key={treeName} mb={4}>
+      {/* Advanced/Hybrid and Legendary in 2-column grid */}
+      {(advancedClassTreeAbilities.length > 0 || advancedClassLegendaryAbilities.length > 0) && (
+        <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} mb={4} w="full">
+          {/* Advanced Tree */}
+          {advancedClassTreeAbilities.length > 0 && selectedAdvancedClass && (
+            <Box>
               <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
-                {treeName}
+                {selectedAdvancedClass.advancedTree}
               </Heading>
               <VStack gap={2} alignItems="stretch">
-                {advancedAbilitiesByTree[treeName].map((ability) => (
-                  <AbilityDisplay
-                    key={ability.id}
-                    data={ability}
-                    disableRemove={currentTP < 1}
-                    onRemove={() => onRemove(ability.id)}
-                    collapsible
-                    defaultExpanded={false}
-                  />
-                ))}
+                {advancedClassTreeAbilities.map((ability) => {
+                  const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
+                  const canAfford = currentTP >= cost
+                  const alreadySelected = isSelected(ability.id)
+                  const availableLevels = getAvailableLevels(
+                    selectedAdvancedClass.advancedTree,
+                    advancedClassTreeAbilities
+                  )
+                  const abilityLevel = Number(ability.level)
+                  const isAvailable = availableLevels.has(abilityLevel)
+                  const canSelect = canAfford && isAvailable
+                  const shouldDim = !alreadySelected
+
+                  return (
+                    <AbilityDisplay
+                      key={ability.id}
+                      data={ability}
+                      onClick={alreadySelected ? undefined : () => handleSelect(ability.id)}
+                      onRemove={alreadySelected ? () => onRemove(ability.id) : undefined}
+                      disableRemove={currentTP < 1}
+                      disabled={!canSelect && !alreadySelected}
+                      dimmed={shouldDim}
+                      trained={alreadySelected}
+                      collapsible
+                      defaultExpanded={false}
+                      showSelectButton={!alreadySelected}
+                      selectButtonText={`Add to Pilot (${cost} TP)`}
+                    />
+                  )
+                })}
               </VStack>
             </Box>
-          ))}
-        </Box>
-      )}
+          )}
 
-      {legendaryAbility && (
-        <Box>
-          <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
-            Legendary Ability
-          </Heading>
-          <AbilityDisplay
-            data={legendaryAbility}
-            disableRemove={currentTP < 1}
-            onRemove={onRemoveLegendary}
-            collapsible
-            defaultExpanded={false}
-          />
-        </Box>
+          {/* Legendary Abilities - show both until one is selected */}
+          {advancedClassLegendaryAbilities.length > 0 && (
+            <Box>
+              <Heading level="h3" textTransform="uppercase" mb={2} textAlign="center">
+                Legendary Ability
+              </Heading>
+              <VStack gap={2} alignItems="stretch">
+                {advancedClassLegendaryAbilities.map((ability) => {
+                  const alreadySelected = legendaryAbilityId === ability.id
+                  const cost = 3 // Legendary abilities always cost 3 TP
+                  const canAfford = currentTP >= cost
+                  const isSelectable = canAfford && !hasLegendary && allAdvancedSelected
+                  const shouldDim = !alreadySelected
+
+                  // Hide this legendary if another one is selected
+                  if (hasLegendary && !alreadySelected) return null
+
+                  return (
+                    <AbilityDisplay
+                      key={ability.id}
+                      data={ability}
+                      onClick={alreadySelected ? undefined : () => handleSelect(ability.id, true)}
+                      onRemove={alreadySelected ? onRemoveLegendary : undefined}
+                      disableRemove={currentTP < 3}
+                      disabled={!isSelectable && !alreadySelected}
+                      dimmed={shouldDim}
+                      trained={alreadySelected}
+                      collapsible
+                      defaultExpanded={false}
+                      showSelectButton={!alreadySelected}
+                      selectButtonText={`Add to Pilot (${cost} TP)`}
+                    />
+                  )
+                })}
+              </VStack>
+            </Box>
+          )}
+        </Grid>
       )}
-    </RoundedBox>
+    </VStack>
   )
 }

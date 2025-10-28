@@ -8,6 +8,8 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   bg: string
   /** Optional background color for the header section (defaults to bg if not provided) */
   headerBg?: string
+  /** Optional opacity for the header section (defaults to 1) */
+  headerOpacity?: number
   /** Optional title to display at the top */
   title?: string
   /** Optional content to display on the left side of the header (e.g., buttons, stats) */
@@ -41,6 +43,7 @@ export function RoundedBox({
   compact = false,
   bg,
   headerBg,
+  headerOpacity = 1,
   title,
   leftContent,
   rightContent,
@@ -73,7 +76,7 @@ export function RoundedBox({
       bg={actualBodyBg}
       borderWidth="3px"
       borderColor={actualBorderColor}
-      borderRadius="2xl"
+      borderRadius="lg"
       p={0}
       shadow="lg"
       overflow="hidden"
@@ -94,7 +97,15 @@ export function RoundedBox({
         </Text>
       )}
       {hasHeader && (
-        <VStack pb={2} p={2} gap={0} alignItems="stretch" w="full" bg={actualHeaderBg}>
+        <VStack
+          pb={2}
+          p={2}
+          gap={0}
+          alignItems="stretch"
+          w="full"
+          bg={actualHeaderBg}
+          opacity={headerOpacity}
+        >
           <Flex
             direction="row"
             w="full"
@@ -114,7 +125,7 @@ export function RoundedBox({
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              gap={4}
+              gap="0"
               flex="1"
               data-testid={headerTestId}
             >

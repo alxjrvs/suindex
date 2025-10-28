@@ -5,6 +5,8 @@ import { useMemo } from 'react'
 import { packCargoGrid } from '../../utils/cargoGridPacking'
 import { lookupEntityByRef } from '../../utils/referenceUtils'
 import { techLevelColors, suColors } from '../../theme'
+import { useEntityModal } from '../../providers/EntityViewerModalProvider'
+import type { SURefSchemaName } from 'salvageunion-reference'
 
 interface BayItem {
   id: string
@@ -40,6 +42,8 @@ export function DynamicBay({
   disabled = false,
   singleCellMode = false,
 }: DynamicBayProps) {
+  const { openEntityModal } = useEntityModal()
+
   // Determine background color for a cargo item based on its ref
   const getCargoItemBgColor = (ref?: string): string => {
     if (!ref) return 'bg.input' // Default color for items without ref
@@ -194,7 +198,7 @@ export function DynamicBay({
             const entity = lookupEntityByRef(bayItem.ref)
             if (entity) {
               const [schemaName, entityId] = bayItem.ref.split('||')
-              window.open(`/schema/${schemaName}/item/${entityId}`, '_blank')
+              openEntityModal(schemaName as SURefSchemaName, entityId)
             }
           }
         }

@@ -47,9 +47,9 @@ export function StatDisplay({
   const commonProps = {
     w: compact ? 10 : 16,
     h: compact ? 10 : 16,
-    borderRadius: compact ? 'xl' : ('2xl' as const),
+    borderRadius: compact ? 'lg' : 'xl',
     bg,
-    borderWidth: compact ? '2px' : '3px',
+    borderWidth: compact ? '1px' : '2px',
     borderColor,
     display: 'flex' as const,
     alignItems: 'center' as const,

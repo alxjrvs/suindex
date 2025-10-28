@@ -89,7 +89,7 @@ export function DetailsList({ schemaName, data, compact = false }: DetailsListPr
   if (values.length === 0) return null
 
   return (
-    <Flex display="inline-flex" flexWrap="wrap" gap={compact ? 1 : 2} alignItems="center">
+    <Flex display="inline-flex" flexWrap="wrap" alignItems="center" gap="0.5">
       {values.map((item, index) => (
         <DetailItem key={index} item={item} compact={compact} />
       ))}
@@ -105,7 +105,7 @@ const DetailWrapper = ({ children }: { children: React.ReactNode; compact: boole
 function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
   const boldFontWeight = compact ? 'semibold' : 'bold'
-  const fontSize = compact ? 'xs' : 'md'
+  const fontSize = compact ? 'xs' : 'sm'
 
   if (item.type === 'cost') {
     return (
@@ -116,10 +116,13 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   }
 
   if (item.type === 'trait') {
+    console.log('----')
+    console.log('item', item)
+    console.log('here')
     return (
       <DetailWrapper compact={compact}>
-        <Text variant="pseudoheader" as="span" fontWeight={boldFontWeight} fontSize={fontSize}>
-          {item.value}
+        <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
+          {item.label}
         </Text>
       </DetailWrapper>
     )

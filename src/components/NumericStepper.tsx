@@ -67,7 +67,7 @@ export default function NumericStepper({
           color="fg.input"
           fontSize="xs"
           fontWeight="bold"
-          borderWidth="3px"
+          borderWidth="1px"
           borderColor="su.black"
           borderRadius="md"
           _hover={{ bg: 'bg.muted' }}
@@ -92,7 +92,7 @@ export default function NumericStepper({
           color="fg.input"
           fontSize="xs"
           fontWeight="bold"
-          borderWidth="3px"
+          borderWidth="1px"
           borderColor="su.black"
           borderRadius="md"
           _hover={{ bg: 'bg.muted' }}

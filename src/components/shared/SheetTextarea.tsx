@@ -60,7 +60,7 @@ export function SheetTextarea({
         borderWidth="3px"
         borderColor="su.black"
         minHeight="40"
-        borderRadius="2xl"
+        borderRadius="xl"
         bg="su.white"
         color="su.black"
         fontWeight="semibold"

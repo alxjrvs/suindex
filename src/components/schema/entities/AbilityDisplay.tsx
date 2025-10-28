@@ -9,6 +9,7 @@ interface AbilityDisplayProps {
   data: SURefAbility | undefined
   onClick?: () => void
   disabled?: boolean
+  dimmed?: boolean
   disableRemove?: boolean
   onRemove?: () => void
   collapsible?: boolean
@@ -17,12 +18,14 @@ interface AbilityDisplayProps {
   onToggleExpanded?: () => void
   showSelectButton?: boolean
   selectButtonText?: string
+  trained?: boolean
 }
 
 export function AbilityDisplay({
   data,
   onClick,
   disabled = false,
+  dimmed = false,
   disableRemove = false,
   onRemove,
   collapsible = false,
@@ -31,10 +34,26 @@ export function AbilityDisplay({
   onToggleExpanded,
   showSelectButton = false,
   selectButtonText,
+  trained = true,
 }: AbilityDisplayProps) {
   if (!data) return null
   const isLegendary = String(data.level).toUpperCase() === 'L' || data.tree.includes('Legendary')
-  const headerColor = isLegendary ? 'su.pink' : 'su.orange'
+  const isAdvancedOrHybrid = data.tree.includes('Advanced') || data.tree.includes('Hybrid')
+
+  // Determine header color based on ability type
+  let headerColor: string
+  if (isLegendary) {
+    headerColor = 'su.pink'
+  } else if (isAdvancedOrHybrid) {
+    headerColor = 'su.darkOrange'
+  } else {
+    // Core ability
+    headerColor = 'su.orange'
+  }
+
+  // Make header opaque when untrained
+  const headerOpacity = trained ? 1 : 0.5
+
   const options = extractOptions(data)
 
   return (
@@ -42,8 +61,10 @@ export function AbilityDisplay({
       schemaName="abilities"
       data={data}
       headerColor={headerColor}
+      headerOpacity={headerOpacity}
       onClick={onClick}
       disabled={disabled}
+      dimmed={dimmed}
       disableRemove={disableRemove}
       onRemove={onRemove}
       collapsible={collapsible}

@@ -13,6 +13,7 @@ interface DigestedRollTable {
 interface RollTableDisplayProps {
   table: SURefMetaTable
   showCommand?: boolean
+  disabled?: boolean
   compact?: boolean
   tableName?: string
 }
@@ -43,6 +44,7 @@ function digestRollTable(table: SURefMetaTable): DigestedRollTable[] {
 
 export function RollTable({
   compact,
+  disabled,
   table,
   showCommand = false,
   tableName,
@@ -83,7 +85,7 @@ export function RollTable({
             mb={compact ? 1 : 2}
           >
             <Text fontSize={compact ? 'xs' : 'md'}>ROLL THE DIE:</Text>
-            {tableName && (
+            {tableName && !disabled && (
               <IconButton
                 onClick={handleRoll}
                 color="su.white"
@@ -132,49 +134,67 @@ export function RollTable({
               zIndex={isHighlighted ? 1 : 0}
               gap={compact ? 1 : 2}
             >
+              {/* Reroll button - absolutely positioned below the row */}
+              {isHighlighted && (
+                <Button
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    handleRoll()
+                  }}
+                  position="absolute"
+                  bottom="-26px"
+                  left="50%"
+                  transform="translateX(-50%)"
+                  px={compact ? 2 : 3}
+                  py={0}
+                  h="auto"
+                  minH="auto"
+                  bg="su.black"
+                  color="su.white"
+                  fontSize={compact ? 'xs' : 'sm'}
+                  fontWeight="bold"
+                  _hover={{ bg: 'su.brick' }}
+                  borderRadius={0}
+                  zIndex={2}
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                >
+                  Reroll
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height={compact ? '14' : '16'}
+                    viewBox="0 -960 960 960"
+                    width={compact ? '14' : '16'}
+                    fill="currentColor"
+                  >
+                    <path d="M240-120q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM240-600q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240 240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm240-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z" />
+                  </svg>
+                </Button>
+              )}
               <Flex
                 flex="1"
                 flexDirection="column"
                 alignItems="center"
                 justifyContent="center"
-                gap={isHighlighted ? 0.5 : 0}
                 minH="100%"
                 alignSelf="stretch"
+                py={compact ? 1 : 2}
               >
                 <Text
                   fontSize={compact ? 'md' : 'xl'}
                   fontWeight="bold"
                   color="su.black"
                   textAlign="center"
-                  alignSelf="center"
                 >
                   {key}
                 </Text>
-                {isHighlighted && (
-                  <Button
-                    onClick={(e: React.MouseEvent) => {
-                      e.stopPropagation()
-                      handleRoll()
-                    }}
-                    w={compact ? 'auto' : 'full'}
-                    px={compact ? 2 : undefined}
-                    bg="su.black"
-                    alignSelf="flex-end"
-                    color="su.white"
-                    fontSize={compact ? 'xs' : 'sm'}
-                    fontWeight="bold"
-                    _hover={{ bg: 'su.brick' }}
-                    borderRadius="md"
-                  >
-                    Reroll
-                  </Button>
-                )}
               </Flex>
               <Flex
                 flex="4"
                 flexDirection="row"
                 flexWrap="wrap"
-                alignItems="flex-end"
+                alignItems="center"
                 py={compact ? 0.5 : 1}
               >
                 <Text color="su.black" fontSize={compact ? 'xs' : 'md'}>
