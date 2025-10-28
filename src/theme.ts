@@ -5,6 +5,7 @@ import { textRecipe } from './recipes/text.recipe'
 // Salvage Union color palette - raw values
 export const suColors = {
   blue: 'rgb(143, 195, 216)',
+  gameBlue: 'rgb(125, 206, 235)', // Tech level 1 blue - for games
   green: 'rgb(122, 151, 138)',
   darkGreen: 'rgb(92, 121, 108)', // Slightly darker mech green
   orange: 'rgb(239, 137, 79)',
@@ -55,6 +56,7 @@ const config = defineConfig({
       colors: {
         su: {
           blue: { value: suColors.blue },
+          gameBlue: { value: suColors.gameBlue },
           green: { value: suColors.green },
           darkGreen: { value: suColors.darkGreen },
           orange: { value: suColors.orange },
@@ -109,7 +111,7 @@ const config = defineConfig({
         'bg.builder': { value: '{colors.su.green}' },
         'bg.builder.mech': { value: '{colors.su.green}' },
         'bg.builder.pilot': { value: '{colors.su.orange}' },
-        'bg.builder.crawler': { value: '{colors.su.crawlerPink}' },
+        'bg.builder.crawler': { value: '{colors.su.gameBlue}' },
         'bg.input': { value: '{colors.su.inputBg}' },
 
         // Text colors
@@ -123,7 +125,7 @@ const config = defineConfig({
         'border.default': { value: '{colors.su.black}' },
         'border.builder': { value: '{colors.su.green}' },
         'border.builder.pilot': { value: '{colors.su.orange}' },
-        'border.builder.crawler': { value: '{colors.su.crawlerPink}' },
+        'border.builder.crawler': { value: '{colors.su.gameBlue}' },
 
         // Brand colors
         'brand.solid': { value: '{colors.su.orange}' },
