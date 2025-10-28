@@ -56,11 +56,6 @@ export default function UpkeepStepper({
     }
   }, [value, min, step, onChange])
 
-  const displayValue = useMemo(
-    () => (max !== undefined ? `${value}/${max}` : `${value}`),
-    [value, max]
-  )
-
   const labelId = useMemo(
     () => `stepper-label-${label.toLowerCase().replace(/\s+/g, '-')}`,
     [label]
@@ -71,7 +66,8 @@ export default function UpkeepStepper({
       <StatDisplay
         disabled={disabled}
         label={label}
-        value={displayValue}
+        value={value}
+        outOfMax={max}
         labelId={labelId}
         flash={flash}
       />

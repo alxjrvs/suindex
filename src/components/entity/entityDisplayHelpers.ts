@@ -2,6 +2,7 @@ import type { SURefActionMetaList, SURefEntity, SURefSchemaName } from 'salvageu
 
 export interface Stat {
   label: string
+  bottomLabel?: string
   value: number | string
 }
 
@@ -104,8 +105,8 @@ export function detectSchemaName(data: SURefEntity): SURefSchemaName {
 /**
  * Get display name for schema (for page references, headers, etc.)
  */
-export function getSchemaDisplayName(schemaName: SURefSchemaName): string {
-  const displayNames: Partial<Record<SURefSchemaName, string>> = {
+export function getSchemaDisplayName(schemaName: SURefSchemaName | 'actions'): string {
+  const displayNames: Partial<Record<SURefSchemaName | 'actions', string>> = {
     vehicles: 'Vehicle',
     creatures: 'Creature',
     drones: 'Drone',
@@ -136,7 +137,7 @@ export function getSchemaDisplayName(schemaName: SURefSchemaName): string {
  * Get activation currency based on schema name
  */
 export function getActivationCurrency(
-  schemaName: SURefSchemaName | undefined,
+  schemaName: SURefSchemaName | 'actions' | undefined,
   variable: boolean = false
 ): 'AP' | 'EP' | 'XP' {
   if (variable) return 'XP'
@@ -149,7 +150,7 @@ export function getActivationCurrency(
 /**
  * Extract header stats (HP, SP, chassis stats)
  */
-export function extractHeaderStats(data: SURefEntity): Stat[] {
+export function extractHeaderStats(data: SURefEntity | SURefActionMetaList): Stat[] {
   const stats: Stat[] = []
 
   // Chassis has nested stats object
@@ -174,10 +175,10 @@ export function extractHeaderStats(data: SURefEntity): Stat[] {
       stats.push({ label: 'Heat', value: chassisStats.heat_cap })
     }
     if (chassisStats.systemSlots !== undefined) {
-      stats.push({ label: 'Sys. Slots', value: chassisStats.systemSlots })
+      stats.push({ label: 'Sys.', bottomLabel: 'Slots', value: chassisStats.systemSlots })
     }
     if (chassisStats.moduleSlots !== undefined) {
-      stats.push({ label: 'Mod. Slots', value: chassisStats.moduleSlots })
+      stats.push({ label: 'Mod.', bottomLabel: 'Slots', value: chassisStats.moduleSlots })
     }
     if (chassisStats.cargoCap !== undefined) {
       stats.push({ label: 'Cargo Cap', value: chassisStats.cargoCap })
@@ -198,7 +199,7 @@ export function extractHeaderStats(data: SURefEntity): Stat[] {
 /**
  * Extract sidebar data (tech level, salvage value, slots)
  */
-export function extractSidebarData(data: SURefEntity): SidebarData {
+export function extractSidebarData(data: SURefEntity | SURefActionMetaList): SidebarData {
   let salvageValue: number | undefined
   let slotsRequired: number | undefined
 
@@ -231,7 +232,7 @@ export function extractSidebarData(data: SURefEntity): SidebarData {
 /**
  * Determine which content sections to show
  */
-export function extractContentSections(data: SURefEntity): ContentSections {
+export function extractContentSections(data: SURefEntity | SURefActionMetaList): ContentSections {
   return {
     showStatBonus: 'statBonus' in data && data.statBonus !== undefined,
     showActions: 'actions' in data && data.actions !== undefined && data.actions.length > 0,
@@ -248,7 +249,10 @@ export function extractContentSections(data: SURefEntity): ContentSections {
 /**
  * Extract header text
  */
-export function extractHeader(data: SURefEntity, schemaName: SURefSchemaName): string {
+export function extractHeader(
+  data: SURefEntity | SURefActionMetaList,
+  schemaName: SURefSchemaName | 'actions'
+): string {
   // AbilityTreeRequirement uses 'tree' instead of 'name'
   if (schemaName === 'ability-tree-requirements' && 'tree' in data) {
     return `${data.tree} Tree`
@@ -259,44 +263,44 @@ export function extractHeader(data: SURefEntity, schemaName: SURefSchemaName): s
 /**
  * Extract level (for abilities)
  */
-export function extractLevel(data: SURefEntity): string | number | undefined {
+export function extractLevel(data: SURefEntity | SURefActionMetaList): string | number | undefined {
   return 'level' in data ? data.level : undefined
 }
 
 /**
  * Extract description
  */
-export function extractDescription(data: SURefEntity): string | undefined {
+export function extractDescription(data: SURefEntity | SURefActionMetaList): string | undefined {
   return 'description' in data ? data.description : undefined
 }
 
 /**
  * Extract notes
  */
-export function extractNotes(data: SURefEntity): string | undefined {
+export function extractNotes(data: SURefEntity | SURefActionMetaList): string | undefined {
   return 'notes' in data ? data.notes : undefined
 }
 
 /**
  * Check if entity has page reference
  */
-export function hasPageReference(data: SURefEntity): boolean {
+export function hasPageReference(data: SURefEntity | SURefActionMetaList): boolean {
   return 'page' in data
 }
 
 export function extractOptions(
-  data: SURefEntity
+  data: SURefEntity | SURefActionMetaList
 ): string[] | { label: string; value: string }[] | undefined {
   return 'options' in data ? data.options : undefined
 }
 
-export function extractAbilities(data: SURefEntity): SURefActionMetaList[] {
+export function extractAbilities(data: SURefEntity | SURefActionMetaList): SURefActionMetaList[] {
   const abilities = 'abilities' in data ? data.abilities : undefined
   if (!abilities) return []
   return abilities
 }
 
-export function extractTechLevel(data: SURefEntity): number | undefined {
+export function extractTechLevel(data: SURefEntity | SURefActionMetaList): number | undefined {
   if ('stats' in data && typeof data.stats === 'object' && data.stats) {
     return (data.stats as { techLevel?: number }).techLevel
   } else if ('techLevel' in data) {
@@ -305,7 +309,7 @@ export function extractTechLevel(data: SURefEntity): number | undefined {
   return undefined
 }
 
-export function extractTechLevelEffects(data: SURefEntity): {
+export function extractTechLevelEffects(data: SURefEntity | SURefActionMetaList): {
   techLevelMin: number
   techLevelMax: number
   effect: string
@@ -318,11 +322,11 @@ export function extractTechLevelEffects(data: SURefEntity): {
 /**
  * Extract page reference data
  */
-export function extractPageReference(data: SURefEntity): {
+export function extractPageReference(data: SURefEntity | SURefActionMetaList): {
   source?: string
   page: number
 } | null {
-  if (!hasPageReference(data)) return null
+  if (!('page' in data && typeof data.page === 'number')) return null
   return {
     source: 'source' in data ? data.source : undefined,
     page: data.page as number,

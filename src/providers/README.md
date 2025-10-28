@@ -55,6 +55,7 @@ toaster.update(id, { title: 'Complete!', type: 'success' })
 ### Configuration
 
 The toaster is configured in `src/components/ui/toaster.tsx` with:
+
 - Placement: `bottom-end`
 - Auto-pause on page idle
 - Gap between toasts: 2
@@ -67,7 +68,7 @@ The `EntityViewerModalProvider` provides a global modal for viewing any entity f
 ### Usage
 
 ```tsx
-import { useEntityModal } from '@/providers/EntityViewerModalProvider'
+import { useEntityModal } from '@/providers/useEntityModal'
 
 function MyComponent() {
   const { openEntityModal } = useEntityModal()
@@ -93,6 +94,7 @@ Returns an object with:
 #### Supported Schema Names
 
 Any valid `SURefSchemaName` from salvageunion-reference:
+
 - `'abilities'`
 - `'systems'`
 - `'modules'`
@@ -132,6 +134,51 @@ function ItemCard({ itemId }: { itemId: string }) {
 }
 ```
 
+## Entity Display Tooltip
+
+The `EntityDisplayTooltip` component shows entity details in a hover card when hovering over wrapped content.
+
+### Usage
+
+```tsx
+import { EntityDisplayTooltip } from '@/components/entity/EntityDisplayTooltip'
+import { Text } from '@/components/base/Text'
+
+function MyComponent() {
+  return (
+    <EntityDisplayTooltip schemaName="systems" entityId="laser-cannon-id">
+      <Text>Hover me to see system details</Text>
+    </EntityDisplayTooltip>
+  )
+}
+
+// With custom width and delays
+function CustomTooltip() {
+  return (
+    <EntityDisplayTooltip
+      schemaName="abilities"
+      entityId="ability-id"
+      width="500px"
+      openDelay={300}
+      closeDelay={200}
+      showArrow={true}
+    >
+      <Button>Hover for ability details</Button>
+    </EntityDisplayTooltip>
+  )
+}
+```
+
+### Props
+
+- `schemaName`: The schema name (e.g., 'systems', 'abilities', 'modules')
+- `entityId`: The entity ID to display
+- `children`: The trigger element to wrap
+- `width`: Fixed width for tooltip content (default: '400px')
+- `showArrow`: Whether to show arrow pointing to trigger (default: false)
+- `openDelay`: Delay before showing in ms (default: 200)
+- `closeDelay`: Delay before hiding in ms (default: 100)
+
 ## Setup
 
 Both providers are already configured in `src/App.tsx`:
@@ -152,4 +199,3 @@ function App() {
 ```
 
 No additional setup is required to use these features in your components.
-

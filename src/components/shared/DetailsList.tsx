@@ -2,16 +2,21 @@ import { Flex } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
 import type { DataValue } from '../../types/common'
 import { Text } from '../base/Text'
-import type { SURefActionMetaList, SURefEntity, SURefSchemaName } from 'salvageunion-reference'
-import { getActivationCurrency } from './entityDisplayHelpers'
-import { formatTraits } from '../../utils/displayUtils'
+import type {
+  SURefActionMetaList,
+  SURefEntity,
+  SURefSchemaName,
+  SURefTraitMetaList,
+} from 'salvageunion-reference'
+import { getActivationCurrency } from '../entity/entityDisplayHelpers'
+import { EntityDetailDisplay } from '../entity/EntityDetailDisplay'
 
 /**
  * Extract details for header (activation cost, range, damage, traits)
  */
 function extractDetails(
   data: SURefEntity | SURefActionMetaList,
-  schemaName?: SURefSchemaName
+  schemaName?: SURefSchemaName | 'actions'
 ): DataValue[] {
   const details: DataValue[] = []
   const variableCost = 'activationCurrency' in data && schemaName === 'abilities'
@@ -37,19 +42,19 @@ function extractDetails(
         ? data.actionType
         : `${data.actionType} Action`
 
-      details.push({ label: mechActionType, value: '(Mech)' })
-      details.push({ label: actionType, value: '(Pilot)' })
+      details.push({ label: mechActionType, value: 'Mech', type: 'keyword' })
+      details.push({ label: actionType, value: 'Pilot', type: 'keyword' })
     } else {
       const actionType = data.actionType.includes('action')
         ? data.actionType
         : `${data.actionType} Action`
-      details.push({ label: actionType })
+      details.push({ label: actionType, type: 'keyword' })
     }
   }
 
   // Range - no "Range:" prefix for abilities
   if ('range' in data && data.range) {
-    details.push({ label: 'Range', value: data.range })
+    details.push({ label: 'Range', value: data.range, type: 'keyword' })
   }
 
   // Damage
@@ -61,26 +66,26 @@ function extractDetails(
   }
 
   // Traits
-  const traits = 'traits' in data ? formatTraits(data.traits) : []
+  const traits: SURefTraitMetaList = 'traits' in data && data.traits?.length ? data.traits : []
   traits.forEach((t) => {
-    if (t.includes('(')) {
-      const [label, value] = t.split('(')
-      details.push({ label, value: `${value.replace(')', '')}` })
-      return
+    const label = t.type.charAt(0).toUpperCase() + t.type.slice(1)
+    if (label === 'HOT') {
+      console.log('here', t)
     }
-    details.push({ label: t, type: 'trait' })
+    const value = 'amount' in t && t.amount !== undefined ? Number(t.amount) : undefined
+    details.push({ label, value, type: 'trait' })
   })
 
   // Recommended (for modules)
   if ('recommended' in data && data.recommended) {
-    details.push({ label: 'Recommended' })
+    details.push({ label: 'Recommended', type: 'meta' })
   }
 
   return details
 }
 interface DetailsListProps {
   data: SURefEntity | SURefActionMetaList
-  schemaName?: SURefSchemaName
+  schemaName?: SURefSchemaName | 'actions'
   compact?: boolean
 }
 
@@ -104,8 +109,7 @@ const DetailWrapper = ({ children }: { children: React.ReactNode; compact: boole
 
 function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
-  const boldFontWeight = compact ? 'semibold' : 'bold'
-  const fontSize = compact ? 'xs' : 'sm'
+  const fontSize = compact ? 'sm' : 'md'
 
   if (item.type === 'cost') {
     return (
@@ -116,24 +120,52 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   }
 
   if (item.type === 'trait') {
-    console.log('----')
-    console.log('item', item)
-    console.log('here')
     return (
       <DetailWrapper compact={compact}>
-        <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
+        <EntityDetailDisplay
+          label={item.label}
+          value={item.value}
+          compact={compact}
+          schemaName="traits"
+        />
+      </DetailWrapper>
+    )
+  }
+
+  if (item.type === 'keyword') {
+    return (
+      <DetailWrapper compact={compact}>
+        <EntityDetailDisplay
+          label={item.label}
+          value={item.value}
+          compact={compact}
+          schemaName="keywords"
+        />
+      </DetailWrapper>
+    )
+  }
+
+  if (item.type === 'meta') {
+    return (
+      <DetailWrapper compact={compact}>
+        <Text
+          variant="pseudoheaderInverse"
+          as="span"
+          fontWeight={semiFontWeight}
+          fontSize={fontSize}
+        >
           {item.label}
         </Text>
       </DetailWrapper>
     )
   }
 
-  if (item.label) {
-    return (
-      <DetailWrapper compact={compact}>
-        <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
-          {item.label}
-        </Text>
+  return (
+    <DetailWrapper compact={compact}>
+      <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
+        {item.label}
+      </Text>
+      {item.value && (
         <Text
           variant="pseudoheaderInverse"
           as="span"
@@ -142,15 +174,7 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
         >
           {item.value}
         </Text>
-      </DetailWrapper>
-    )
-  }
-
-  return (
-    <DetailWrapper compact={compact}>
-      <Text variant="pseudoheader" fontWeight={boldFontWeight} fontSize={fontSize}>
-        {item.value}
-      </Text>
+      )}
     </DetailWrapper>
   )
 }

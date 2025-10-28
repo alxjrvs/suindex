@@ -7,6 +7,7 @@ import {
   getAbilitiesForClass,
   getAbilitiesByLevel,
   incrementStepper,
+  expandAllAbilities,
 } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Ability Selection', () => {
@@ -93,10 +94,13 @@ describe('PilotLiveSheet - Ability Selection', () => {
       // Set TP to 5
       await incrementStepper(user, 'TP', 5)
 
+      // Expand all abilities to see the "Add to Pilot (X TP)" buttons
+      await expandAllAbilities(user)
+
       await waitFor(() => {
-        // Core abilities should cost 1 TP
-        const abilityCards = screen.getAllByText(/1 TP/i)
-        expect(abilityCards.length).toBeGreaterThan(0)
+        // Core abilities should cost 1 TP - shown in "Add to Pilot (1 TP)" buttons
+        const abilityButtons = screen.getAllByText(/Add to Pilot \(1 TP\)/i)
+        expect(abilityButtons.length).toBeGreaterThan(0)
       })
     })
   })
@@ -125,6 +129,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
         }
       })
 
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
+
       // Verify that level 1 abilities have enabled "Add to Pilot" buttons
       const level1Buttons = screen.getAllByRole('button', { name: /Add to Pilot \(1 TP\)/i })
       expect(level1Buttons.length).toBeGreaterThan(0)
@@ -145,6 +152,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
       await waitFor(() => {
         expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument()
       })
+
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
       await waitFor(() => screen.getByText(testLevel1Ability.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
@@ -174,6 +184,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
 
       // Set TP to 10
       await incrementStepper(user, 'TP', 10)
+
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
       // Select level 1 ability
       await waitFor(() => expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument())
@@ -211,6 +224,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
       // Increase TP to 5
       await incrementStepper(user, 'TP', 5)
 
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
+
       // Wait for the "Add to Pilot" buttons to appear
       const addButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
@@ -235,6 +251,9 @@ describe('PilotLiveSheet - Ability Selection', () => {
 
       // Set TP to 10 to have enough for multiple abilities
       await incrementStepper(user, 'TP', 10)
+
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
       // Select level 1 ability
       await waitFor(() => expect(screen.getByText(testLevel1Ability.name)).toBeInTheDocument())

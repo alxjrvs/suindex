@@ -61,7 +61,7 @@ export function BayInfo({
             _hover={{ bg: 'su.brick' }}
             fontWeight="bold"
             py={2}
-            borderRadius="lg"
+            borderRadius="md"
           >
             {isFunctionExpanded ? 'Hide Info' : 'Show Info'}
           </Button>
@@ -77,7 +77,7 @@ export function BayInfo({
             _hover={{ bg: 'su.brick' }}
             fontWeight="bold"
             py={2}
-            borderRadius="lg"
+            borderRadius="md"
           >
             {isAbilitiesExpanded ? 'Hide Abilities' : 'Show Abilities'}
           </Button>

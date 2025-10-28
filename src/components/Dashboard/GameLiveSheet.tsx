@@ -715,7 +715,7 @@ export function GameLiveSheet() {
               key={pilot.id}
               position="relative"
               overflow="hidden"
-              borderRadius="xl"
+              borderRadius="md"
               borderWidth="3px"
               borderColor="su.black"
               minH="150px"

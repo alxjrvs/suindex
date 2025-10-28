@@ -74,9 +74,9 @@ export function JoinGame() {
         as="form"
         onSubmit={handleSubmit}
         bg="su.white"
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor="su.lightBlue"
-        borderRadius="lg"
+        borderRadius="md"
         p={6}
       >
         <VStack gap={4} align="stretch">

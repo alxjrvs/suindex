@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { findCoreClass, findHybridClass } from '../../../test/helpers'
+import { findCoreClass, findHybridClass, expandAllAbilities } from '../../../test/helpers'
 
 describe('PilotLiveSheet - Advanced Classes', () => {
   // Use real data from salvageunion-reference
@@ -46,43 +46,24 @@ describe('PilotLiveSheet - Advanced Classes', () => {
         await user.click(tpIncrementButton)
       }
 
-      // Select 6 abilities but spread across trees (not completing any)
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select 3 from Hacking, but we need to select them progressively
+      // Select 6 abilities but spread across trees (not completing any)
+      // Abilities are now shown inline - select 3 from Hacking progressively
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
-      // Select 3 from Tech
+      // Select 3 from Tech - abilities are now shown inline
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Advanced class should now be enabled (we have 6 abilities and completed trees)
@@ -123,42 +104,23 @@ describe('PilotLiveSheet - Advanced Classes', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select 3 from Electronics tree (shared with Fabricator)
+      // Select 3 from Electronics tree (shared with Fabricator) - abilities are now shown inline
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Select 3 from another Hacker tree
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Advanced class should now be enabled
@@ -194,50 +156,34 @@ describe('PilotLiveSheet - Advanced Classes', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select 6 abilities to unlock advanced class
+      // Select 6 abilities to unlock advanced class - abilities are now shown inline
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Select Fabricator
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, fabricatorClass.id)
 
-      // Should show Fabricator class name in the UI
+      // Should show Fabricator class name in the UI - verify the select has the right value
       await waitFor(() => {
-        expect(screen.getByText(/Fabricator/i)).toBeInTheDocument()
+        expect(advancedClassSelect).toHaveValue(fabricatorClass.id)
+        // Also verify Fabricator appears in the dropdown options
+        const fabricatorOption = screen.getByRole('option', { name: /Fabricator/i })
+        expect(fabricatorOption).toBeInTheDocument()
       })
     })
   })

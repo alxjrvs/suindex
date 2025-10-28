@@ -16,7 +16,7 @@ export function LinkButton({ to, label }: LinkButtonProps) {
       color="black"
       borderWidth="2px"
       borderColor="black"
-      borderRadius="lg"
+      borderRadius="md"
       fontFamily="mono"
       fontSize="sm"
       fontWeight="semibold"

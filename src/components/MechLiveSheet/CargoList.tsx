@@ -28,7 +28,7 @@ export function CargoList({
       title="Cargo"
       disabled={disabled}
       rightContent={
-        <StatDisplay label="Cargo" value={`${totalCargo}/${maxCargo}`} disabled={disabled} />
+        <StatDisplay label="Cargo" value={totalCargo} outOfMax={maxCargo} disabled={disabled} />
       }
     >
       <DynamicBay

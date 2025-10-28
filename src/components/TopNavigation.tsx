@@ -28,7 +28,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         bg="su.orange"
         color="su.white"
         p={2}
-        borderRadius="lg"
+        borderRadius="md"
         aria-label="Toggle menu"
       >
         <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">

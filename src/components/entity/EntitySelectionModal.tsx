@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Flex, Input, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import {
   SalvageUnionReference,
@@ -135,20 +135,17 @@ export function EntitySelectionModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
-      <VStack gap={0} alignItems="stretch" h="80vh">
+      <VStack gap={0} alignItems="stretch" h="80vh" overflow="hidden">
         <VStack
           gap={4}
           alignItems="stretch"
           flexShrink={0}
-          borderBottomWidth="3px"
+          borderBottomWidth="1px"
           borderColor="su.black"
           pb={4}
           px={6}
           pt={4}
-          position="sticky"
-          top={0}
           bg="su.mediumGrey"
-          zIndex={1}
           w="full"
         >
           {/* Search Input */}
@@ -177,7 +174,7 @@ export function EntitySelectionModal({
           >
             {/* Tech Level Filter */}
             {showTechLevelFilter && (
-              <Flex gap={2} flexWrap="wrap">
+              <Flex gap={1} flexWrap="wrap">
                 {TECH_LEVELS.map((tl) => (
                   <Button
                     key={tl}
@@ -244,17 +241,18 @@ export function EntitySelectionModal({
           </Flex>
         </VStack>
 
-        {/* Scrollable Entity List */}
-        <VStack
-          gap={4}
+        {/* Scrollable Entity List - Two Column Bento Layout */}
+        <Box
           overflowY="auto"
-          alignItems="stretch"
           flex="1"
           minH={0}
-          borderWidth="3px"
-          borderColor="su.black"
           p={4}
-          bg="su.darkGrey"
+          scrollbar="hidden"
+          css={{
+            columns: '1',
+            '@media (min-width: 768px)': { columns: '2' },
+            gap: '0.5rem',
+          }}
         >
           {filteredEntities.length === 0 ? (
             <Text textAlign="center" color="su.black" py={8}>
@@ -268,19 +266,23 @@ export function EntitySelectionModal({
               const isDisabled = shouldDisableEntity ? shouldDisableEntity(entity) : false
 
               return (
-                <EntityDisplay
-                  key={`${schemaName}-${entityId}`}
-                  schemaName={schemaName}
-                  data={entity}
-                  showSelectButton
-                  selectButtonText={buttonText}
-                  onClick={() => handleSelect(entityId, schemaName)}
-                  disabled={isDisabled}
-                />
+                <Box key={`${schemaName}-${entityId}`} css={{ breakInside: 'avoid' }} mb={2}>
+                  <EntityDisplay
+                    schemaName={schemaName}
+                    compact
+                    data={entity}
+                    showSelectButton
+                    selectButtonText={buttonText}
+                    onClick={() => handleSelect(entityId, schemaName)}
+                    defaultExpanded={!isDisabled}
+                    collapsible={isDisabled}
+                    disabled={isDisabled}
+                  />
+                </Box>
               )
             })
           )}
-        </VStack>
+        </Box>
       </VStack>
     </Modal>
   )

@@ -1,6 +1,7 @@
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react'
 import { headingRecipe } from './recipes/heading.recipe'
 import { textRecipe } from './recipes/text.recipe'
+import { buttonRecipe } from './recipes/button.recipe'
 
 // Salvage Union color palette - raw values
 export const suColors = {
@@ -53,6 +54,7 @@ const config = defineConfig({
     recipes: {
       heading: headingRecipe,
       text: textRecipe,
+      button: buttonRecipe,
     },
     tokens: {
       colors: {

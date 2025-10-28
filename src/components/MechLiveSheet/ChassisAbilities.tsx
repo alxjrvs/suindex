@@ -2,16 +2,27 @@ import { Box, Text, VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import { RoundedBox } from '../shared/RoundedBox'
+import { StatDisplay } from '../StatDisplay'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
   stats: SURefChassis['stats'] | undefined
+  totalSalvageValue: number
   disabled?: boolean
 }
 
-export function ChassisAbilities({ chassis, disabled = false }: ChassisAbilitiesProps) {
+export function ChassisAbilities({
+  totalSalvageValue,
+  chassis,
+  disabled = false,
+}: ChassisAbilitiesProps) {
   return (
-    <RoundedBox bg="su.green" title="Abilities" disabled={!chassis}>
+    <RoundedBox
+      rightContent={<StatDisplay label="Abilities" value={totalSalvageValue} disabled={disabled} />}
+      bg="su.green"
+      title="Abilities"
+      disabled={!chassis}
+    >
       <VStack gap={3} alignItems="stretch" w="full">
         {(
           chassis?.chassisAbilities || [

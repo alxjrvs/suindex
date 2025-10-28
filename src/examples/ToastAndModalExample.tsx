@@ -7,7 +7,7 @@
 
 import { Button, Stack, VStack, Text } from '@chakra-ui/react'
 import { toaster } from '../components/ui/toaster'
-import { useEntityModal } from '../providers/EntityViewerModalProvider'
+import { useEntityModal } from '../providers/useEntityModal'
 import { SalvageUnionReference } from 'salvageunion-reference'
 
 export function ToastAndModalExample() {
@@ -140,4 +140,3 @@ export function ToastAndModalExample() {
     </VStack>
   )
 }
-

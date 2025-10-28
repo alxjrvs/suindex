@@ -30,21 +30,27 @@ export function ChassisStatsGrid({
         alignItems="center"
       >
         <StatDisplay
-          label="Sys. Slots"
-          value={`${usedSystemSlots}/${stats?.systemSlots || 0}`}
+          label="System"
+          bottomLabel="Slots"
+          value={usedSystemSlots}
+          outOfMax={stats?.systemSlots || 0}
           disabled={disabled}
         />
         <StatDisplay
-          label="Mod. Slots"
-          value={`${usedModuleSlots}/${stats?.moduleSlots || 0}`}
+          label="Module"
+          bottomLabel="Slots"
+          value={usedModuleSlots}
+          outOfMax={stats?.moduleSlots || 0}
           disabled={disabled}
         />
         <StatDisplay
-          label="Cargo Cap"
-          value={`${totalCargo}/${stats?.cargoCap || 0}`}
+          label="Cargo"
+          bottomLabel="Cap"
+          value={totalCargo}
+          outOfMax={stats?.cargoCap || 0}
           disabled={disabled}
         />
-        <StatDisplay label="Total SV" value={totalSalvageValue} disabled={disabled} />
+        <StatDisplay label="Total" bottomLabel="SV" value={totalSalvageValue} disabled={disabled} />
       </Flex>
     </RoundedBox>
   )

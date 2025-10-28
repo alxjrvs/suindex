@@ -1,0 +1,67 @@
+import type { SURefSchemaName } from 'salvageunion-reference'
+import {
+  DialogRoot,
+  DialogContent,
+  DialogBackdrop,
+  DialogCloseTrigger,
+  DialogPositioner,
+} from '@chakra-ui/react'
+import { EntityDisplay } from './EntityDisplay'
+import { lookupEntityByRef } from '../../utils/referenceUtils'
+
+interface EntityDisplayModalProps {
+  isOpen: boolean
+  onClose: () => void
+  schemaName: SURefSchemaName | null
+  entityId: string | null
+}
+
+/**
+ * Modal that displays an entity using EntityDisplay component.
+ * Used for showing detailed entity information when clicking on cargo items.
+ */
+export function EntityDisplayModal({
+  isOpen,
+  onClose,
+  schemaName,
+  entityId,
+}: EntityDisplayModalProps) {
+  // Only render the dialog content if we have valid data
+  const hasValidData = schemaName && entityId
+  const ref = hasValidData ? `${schemaName}||${entityId}` : null
+  const entity = ref ? lookupEntityByRef(ref) : null
+
+  if (!hasValidData || !entity || !schemaName) {
+    return null
+  }
+
+  return (
+    <DialogRoot
+      open={isOpen}
+      onOpenChange={(e) => !e.open && onClose()}
+      size="xl"
+      placement="center"
+    >
+      <DialogBackdrop bg="blackAlpha.700" />
+      <DialogPositioner>
+        <DialogContent maxW="6xl" maxH="90vh" bg="transparent" border="none" shadow="none" p={0}>
+          <DialogCloseTrigger
+            position="absolute"
+            top={2}
+            right={2}
+            color="su.white"
+            bg="su.black"
+            borderRadius="md"
+            _hover={{ bg: 'su.brick' }}
+            fontSize="2xl"
+            fontWeight="bold"
+            zIndex={10}
+            w={10}
+            h={10}
+          />
+          <EntityDisplay schemaName={schemaName} data={entity} collapsible={false} />
+        </DialogContent>
+      </DialogPositioner>
+    </DialogRoot>
+  )
+}

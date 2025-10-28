@@ -182,7 +182,7 @@ export function ScrapConversionModal({
 
         {/* Conversion Preview */}
         {conversionResult && (
-          <VStack gap={2} align="stretch" p={4} bg="bg.muted" borderRadius="md" borderWidth="1px">
+          <VStack gap={2} align="stretch" p={4} bg="bg.muted" borderRadius="md" borderWidth="2px">
             <Text fontWeight="bold" fontFamily="mono" fontSize="sm">
               Conversion Preview:
             </Text>

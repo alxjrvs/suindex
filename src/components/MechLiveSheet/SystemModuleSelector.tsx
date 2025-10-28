@@ -1,5 +1,5 @@
 import type { SURefSchemaName } from 'salvageunion-reference'
-import { EntitySelectionModal } from '../shared/EntitySelectionModal'
+import { EntitySelectionModal } from '../entity/EntitySelectionModal'
 
 interface SystemModuleSelectorProps {
   isOpen: boolean

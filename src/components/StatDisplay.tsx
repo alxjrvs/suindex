@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 
 interface StatDisplayProps {
   label: string
-  value: string | number
+  value: number | string
+  outOfMax?: number // When provided, displays "value/outOfMax"
+  bottomLabel?: string // Optional label positioned below the value
   labelId?: string
   disabled?: boolean
   onClick?: () => void
@@ -19,6 +21,8 @@ interface StatDisplayProps {
 export function StatDisplay({
   label,
   value,
+  outOfMax,
+  bottomLabel,
   labelId,
   disabled,
   onClick,
@@ -31,6 +35,9 @@ export function StatDisplay({
 }: StatDisplayProps) {
   const [isFlashing, setIsFlashing] = useState(false)
   const WrapperComponent = onClick ? Button : Box
+
+  // Combine label and bottomLabel for aria-label
+  const combinedAriaLabel = ariaLabel || (bottomLabel ? `${label} ${bottomLabel}` : label)
 
   useEffect(() => {
     if (!flash) return
@@ -47,7 +54,7 @@ export function StatDisplay({
   const commonProps = {
     w: compact ? 10 : 16,
     h: compact ? 10 : 16,
-    borderRadius: compact ? 'lg' : 'xl',
+    borderRadius: 0,
     bg,
     borderWidth: compact ? '1px' : '2px',
     borderColor,
@@ -69,12 +76,14 @@ export function StatDisplay({
         onClick,
         bg: disabled ? 'gray.200' : bg,
         _hover: !disabled ? { opacity: 0.8 } : undefined,
-        'aria-label': ariaLabel || String(value),
+        'aria-label': combinedAriaLabel,
+        m: 0,
+        p: 0,
       }
     : commonProps
 
   return (
-    <VStack gap={0} alignItems="center">
+    <VStack gap={0} alignItems="center" aria-label={combinedAriaLabel}>
       <style>
         {`
           @keyframes growShrink {
@@ -112,9 +121,22 @@ export function StatDisplay({
             containerType: 'inline-size',
           }}
         >
-          {value}
+          {outOfMax !== undefined ? `${value}/${outOfMax}` : value}
         </Text>
       </WrapperComponent>
+      <Text
+        textTransform={'uppercase'}
+        mt={compact ? -1.5 : -2}
+        fontSize={compact ? '2xs' : 'xs'}
+        alignSelf="center"
+        variant="pseudoheader"
+        zIndex={1}
+        bg={disabled ? 'gray.600' : undefined}
+        color={disabled ? 'gray.300' : undefined}
+        visibility={bottomLabel ? 'visible' : 'hidden'}
+      >
+        {bottomLabel || '\u00A0'}
+      </Text>
     </VStack>
   )
 }

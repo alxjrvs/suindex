@@ -180,7 +180,7 @@ export function AbilitiesList({
       />
       {/* Core Trees in horizontal row (3 columns) */}
       {coreTreeNames.length > 0 && (
-        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={1} mb={4} w="full">
+        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} mb={4} w="full">
           {coreTreeNames.map((treeName) => (
             <Box key={treeName}>
               <Heading level="h3" textTransform="uppercase" textAlign="center">
@@ -202,11 +202,12 @@ export function AbilitiesList({
 
                   return (
                     <AbilityDisplay
+                      compact
                       key={ability.id}
                       data={ability}
                       onClick={alreadySelected ? undefined : () => handleSelect(ability.id)}
-                      onRemove={() => onRemove(ability.id)}
-                      disableRemove={!alreadySelected || currentTP < 1}
+                      onRemove={alreadySelected ? () => onRemove(ability.id) : undefined}
+                      disableRemove={currentTP < 2}
                       disabled={!canSelect && !alreadySelected}
                       dimmed={shouldDim}
                       trained={alreadySelected}
@@ -248,11 +249,12 @@ export function AbilitiesList({
 
                   return (
                     <AbilityDisplay
+                      compact
                       key={ability.id}
                       data={ability}
                       onClick={alreadySelected ? undefined : () => handleSelect(ability.id)}
                       onRemove={alreadySelected ? () => onRemove(ability.id) : undefined}
-                      disableRemove={currentTP < 1}
+                      disableRemove={currentTP < 2}
                       disabled={!canSelect && !alreadySelected}
                       dimmed={shouldDim}
                       trained={alreadySelected}
@@ -286,6 +288,7 @@ export function AbilitiesList({
 
                   return (
                     <AbilityDisplay
+                      compact
                       key={ability.id}
                       data={ability}
                       onClick={alreadySelected ? undefined : () => handleSelect(ability.id, true)}

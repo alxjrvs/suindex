@@ -1,13 +1,7 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import type { SURefSchemaName } from 'salvageunion-reference'
-import { EntityDisplayModal } from '../components/shared/EntityDisplayModal'
-
-interface EntityViewerModalContextValue {
-  openEntityModal: (schemaName: SURefSchemaName, entityId: string) => void
-  closeEntityModal: () => void
-}
-
-const EntityViewerModalContext = createContext<EntityViewerModalContextValue | null>(null)
+import { EntityDisplayModal } from '../components/entity/EntityDisplayModal'
+import { EntityViewerModalContext } from './EntityViewerModalContext'
 
 interface EntityViewerModalProviderProps {
   children: ReactNode
@@ -45,20 +39,3 @@ export function EntityViewerModalProvider({ children }: EntityViewerModalProvide
     </EntityViewerModalContext.Provider>
   )
 }
-
-/**
- * Hook to access the entity viewer modal.
- * Provides functions to open and close the modal with entity data.
- *
- * @example
- * const { openEntityModal } = useEntityModal()
- * openEntityModal('abilities', 'some-ability-id')
- */
-export function useEntityModal() {
-  const context = useContext(EntityViewerModalContext)
-  if (!context) {
-    throw new Error('useEntityModal must be used within EntityViewerModalProvider')
-  }
-  return context
-}
-

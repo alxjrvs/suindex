@@ -2,9 +2,6 @@ import { useState } from 'react'
 import { Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { SystemModuleSelector } from './SystemModuleSelector'
-import { ChassisSelector } from './ChassisSelector'
-import { PatternSelector } from './PatternSelector'
-import { ChassisStatsGrid } from './ChassisStatsGrid'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
 import { SystemsModulesList } from './SystemsModulesList'
@@ -14,8 +11,7 @@ import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { RoundedBox } from '../shared/RoundedBox'
 import { useMechLiveSheetState } from './useMechLiveSheetState'
-import { QuirkInput } from './QuirkInput'
-import { AppearanceInput } from './AppearanceInput'
+import { ChassisInputs } from './ChassisInputs'
 import { StatDisplay } from '../StatDisplay'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
@@ -106,27 +102,36 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         <VStack flex="1" gap={6} alignItems="stretch">
           <RoundedBox
             leftContent={
-              <StatDisplay label="TL" value={stats?.techLevel || 0} disabled={!selectedChassis} />
+              <StatDisplay
+                label="tech"
+                bottomLabel="Level"
+                value={stats?.techLevel || 0}
+                disabled={!selectedChassis}
+              />
             }
             rightContent={
               <Flex flexDirection="row" justifyContent="space-between" gap={4}>
                 <StatDisplay
-                  label="Sys. Slots"
+                  label="Sys."
+                  bottomLabel="Slots"
                   value={stats?.systemSlots || 0}
                   disabled={!selectedChassis}
                 />
                 <StatDisplay
-                  label="Mod. Slots"
+                  label="Mod."
+                  bottomLabel="Slots"
                   value={stats?.moduleSlots || 0}
                   disabled={!selectedChassis}
                 />
                 <StatDisplay
-                  label="Cargo Cap"
+                  label="Cargo"
+                  bottomLabel="Cap"
                   value={stats?.cargoCap || 0}
                   disabled={!selectedChassis}
                 />
                 <StatDisplay
-                  label="SV"
+                  label="Salvage"
+                  bottomLabel="Value"
                   value={stats?.salvageValue || 0}
                   disabled={!selectedChassis}
                 />
@@ -135,40 +140,21 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
             title="Mech Chassis"
             bg="su.green"
             w="full"
+            h="full"
             disabled={!selectedChassis}
           >
-            <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
-              <ChassisSelector
-                chassisId={mech.chassis_id ?? null}
-                allChassis={allChassis}
-                onChange={handleChassisChange}
-              />
-              <PatternSelector
-                pattern={mech.pattern ?? ''}
-                selectedChassis={selectedChassis}
-                onChange={handlePatternChange}
-              />
-
-              <QuirkInput
-                quirk={mech.quirk ?? ''}
-                disabled={!selectedChassis}
-                updateEntity={updateEntity}
-              />
-              <AppearanceInput
-                appearance={mech.appearance ?? ''}
-                disabled={!selectedChassis}
-                updateEntity={updateEntity}
-              />
-            </Grid>
+            <ChassisInputs
+              chassisId={mech.chassis_id ?? null}
+              pattern={mech.pattern ?? ''}
+              quirk={mech.quirk ?? ''}
+              appearance={mech.appearance ?? ''}
+              allChassis={allChassis}
+              selectedChassis={selectedChassis}
+              onChassisChange={handleChassisChange}
+              onPatternChange={handlePatternChange}
+              updateEntity={updateEntity}
+            />
           </RoundedBox>
-          <ChassisStatsGrid
-            stats={stats}
-            totalSalvageValue={totalSalvageValue}
-            usedSystemSlots={usedSystemSlots}
-            usedModuleSlots={usedModuleSlots}
-            totalCargo={totalCargo}
-            disabled={!selectedChassis}
-          />
         </VStack>
 
         <MechResourceSteppers
@@ -181,7 +167,12 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         />
       </Flex>
 
-      <ChassisAbilities stats={stats} chassis={selectedChassis} disabled={!selectedChassis} />
+      <ChassisAbilities
+        totalSalvageValue={totalSalvageValue}
+        stats={stats}
+        chassis={selectedChassis}
+        disabled={!selectedChassis}
+      />
 
       <SystemsModulesList
         systems={mech.systems ?? []}

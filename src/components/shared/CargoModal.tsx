@@ -3,7 +3,7 @@ import { Box, Button, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import Modal from '../Modal'
 import { generateUniqueColor } from '../../utils/colorUtils'
 import { composeReference } from '../../utils/referenceUtils'
-import { EntitySelectionModal } from './EntitySelectionModal'
+import { EntitySelectionModal } from '../entity/EntitySelectionModal'
 import type { CargoItem } from '../../types/common'
 import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -177,7 +177,7 @@ export function CargoModal({
                   w="full"
                   p={1.5}
                   borderWidth={0}
-                  borderRadius="lg"
+                  borderRadius="md"
                   bg="su.inputBg"
                   color="su.inputText"
                   fontWeight="semibold"
@@ -203,7 +203,7 @@ export function CargoModal({
                   w="full"
                   p={1.5}
                   borderWidth={0}
-                  borderRadius="lg"
+                  borderRadius="md"
                   bg="su.inputBg"
                   color="su.inputText"
                   fontWeight="semibold"
@@ -230,7 +230,7 @@ export function CargoModal({
                 w="full"
                 p={1.5}
                 borderWidth={0}
-                borderRadius="lg"
+                borderRadius="md"
                 bg="su.inputBg"
                 color="su.inputText"
                 fontWeight="semibold"
@@ -245,7 +245,7 @@ export function CargoModal({
               color="su.white"
               px={3}
               py={1.5}
-              borderRadius="lg"
+              borderRadius="md"
               fontWeight="bold"
               _hover={{ bg: 'su.black' }}
               fontSize="sm"
@@ -259,7 +259,7 @@ export function CargoModal({
               color="su.white"
               px={3}
               py={1.5}
-              borderRadius="lg"
+              borderRadius="md"
               fontWeight="bold"
               _hover={{ bg: 'su.lightOrange' }}
               _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}

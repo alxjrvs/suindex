@@ -40,14 +40,11 @@ export default function Modal({
           bg={backgroundColor}
           borderWidth="3px"
           borderColor="su.black"
-          borderRadius="24px"
+          borderRadius="md"
           shadow="lg"
         >
           <DialogHeader
-            bg="su.orange"
-            borderBottomWidth="4px"
-            borderBottomColor="su.black"
-            borderTopRadius="24px"
+            borderTopRadius="md"
             pl={6}
             pr={2}
             py={2}
@@ -55,7 +52,13 @@ export default function Modal({
             justifyContent="space-between"
             alignItems="center"
           >
-            <DialogTitle fontSize="2xl" fontWeight="bold" color="su.white">
+            <DialogTitle
+              backgroundColor="su.black"
+              fontSize="4xl"
+              fontWeight="bold"
+              mt="2"
+              color="su.white"
+            >
               {title}
             </DialogTitle>
             <DialogCloseTrigger
@@ -65,7 +68,19 @@ export default function Modal({
               fontWeight="bold"
             />
           </DialogHeader>
-          <DialogBody flex="1" overflowY="auto" p={6}>
+          <DialogBody
+            flex="1"
+            overflowY="auto"
+            p={6}
+            pt={0}
+            css={{
+              '&::-webkit-scrollbar': {
+                display: 'none',
+              },
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
+          >
             {children}
           </DialogBody>
         </DialogContent>

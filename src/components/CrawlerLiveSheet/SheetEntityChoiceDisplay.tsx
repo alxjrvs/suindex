@@ -2,8 +2,8 @@ import { Button } from '@chakra-ui/react'
 import { useState, useMemo } from 'react'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import { getModel } from '../../utils/modelMap'
-import { EntityDisplay } from '../shared/EntityDisplay'
-import { EntitySelectionModal } from '../shared/EntitySelectionModal'
+import { EntityDisplay } from '../entity/EntityDisplay'
+import { EntitySelectionModal } from '../entity/EntitySelectionModal'
 
 type CrawlerAbilityChoice = {
   id: string

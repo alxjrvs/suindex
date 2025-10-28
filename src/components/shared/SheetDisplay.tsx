@@ -47,9 +47,9 @@ export function SheetDisplay({
         h={height}
         minH={minHeight}
         p={3}
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor={borderColor}
-        borderRadius="xl"
+        borderRadius="md"
         bg="su.white"
         color="su.black"
         whiteSpace="pre-wrap"

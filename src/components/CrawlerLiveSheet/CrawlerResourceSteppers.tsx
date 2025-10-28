@@ -130,7 +130,7 @@ export function CrawlerResourceSteppers({
           _hover={{ bg: 'su.brick' }}
           fontWeight="bold"
           py={2}
-          borderRadius="lg"
+          borderRadius="md"
           onClick={() => setIsConversionModalOpen(true)}
           disabled={disabled || totalInTl1 <= 1}
         >

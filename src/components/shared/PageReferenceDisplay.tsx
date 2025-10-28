@@ -22,11 +22,12 @@ export function PageReferenceDisplay({ source, page, schemaName }: PageReference
       {/* Left side - Schema name */}
       {schemaName && (
         <Text
-          fontWeight="bold"
+          fontWeight="semibold"
           textTransform="uppercase"
           overflow="hidden"
           textOverflow="ellipsis"
           whiteSpace="nowrap"
+          fontSize="xs"
           flex="0 1 auto"
           minW="0"
         >
@@ -37,11 +38,13 @@ export function PageReferenceDisplay({ source, page, schemaName }: PageReference
       {/* Right side - Source and page */}
       <Box ml="auto" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" flex="0 1 auto">
         {source && (
-          <Text as="span" mr={4} fontWeight="bold" textTransform="uppercase">
+          <Text as="span" mr={4} fontSize="xs" fontWeight="bold" textTransform="uppercase">
             {source}
           </Text>
         )}
-        Page {page}
+        <Text as="span" fontSize="xs" fontWeight="semibold">
+          Page {page}
+        </Text>
       </Box>
     </Flex>
   )

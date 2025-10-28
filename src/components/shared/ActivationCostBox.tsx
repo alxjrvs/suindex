@@ -23,13 +23,13 @@ export function ActivationCostBox({
       <Flex
         bg="su.black"
         color="su.white"
-        fontWeight="bold"
+        fontWeight="semibold"
         textTransform="uppercase"
         alignItems="center"
         justifyContent="center"
         whiteSpace="nowrap"
-        fontSize={compact ? '2xs' : 'xs'}
-        px={2}
+        fontSize={compact ? 'xs' : 'sm'}
+        px={1}
         lineHeight="1.2"
         zIndex={2}
       >
@@ -38,9 +38,9 @@ export function ActivationCostBox({
       <Box
         w={0}
         h={0}
-        borderTop={compact ? '6px solid transparent' : '8px solid transparent'}
-        borderBottom={compact ? '6px solid transparent' : '8px solid transparent'}
-        borderLeft={compact ? '6px solid' : '8px solid'}
+        borderTop={compact ? '6px solid transparent' : '7px solid transparent'}
+        borderBottom={compact ? '6px solid transparent' : '7px solid transparent'}
+        borderLeft={compact ? '6px solid' : '7px solid'}
         borderLeftColor="su.black"
         ml={0}
         zIndex={1}

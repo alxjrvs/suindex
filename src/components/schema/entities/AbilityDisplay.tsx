@@ -1,8 +1,7 @@
-import { Grid, VStack } from '@chakra-ui/react'
-import { EntityDisplay } from '../../shared/EntityDisplay'
-import { ActionCard } from '../../shared/ActionCard'
+import { Grid } from '@chakra-ui/react'
+import { EntityDisplay } from '../../entity/EntityDisplay'
 import type { SURefAbility } from 'salvageunion-reference'
-import { extractOptions } from '../../shared/entityDisplayHelpers'
+import { extractOptions } from '../../entity/entityDisplayHelpers'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 
 interface AbilityDisplayProps {
@@ -19,9 +18,11 @@ interface AbilityDisplayProps {
   showSelectButton?: boolean
   selectButtonText?: string
   trained?: boolean
+  compact?: boolean
 }
 
 export function AbilityDisplay({
+  compact = false,
   data,
   onClick,
   disabled = false,
@@ -51,13 +52,13 @@ export function AbilityDisplay({
     headerColor = 'su.orange'
   }
 
-  // Make header opaque when untrained
   const headerOpacity = trained ? 1 : 0.5
 
   const options = extractOptions(data)
 
   return (
     <EntityDisplay
+      compact={compact}
       schemaName="abilities"
       data={data}
       headerColor={headerColor}
@@ -83,14 +84,6 @@ export function AbilityDisplay({
             return <SheetDisplay key={optIndex} label={label} value={value} />
           })}
         </Grid>
-      )}
-
-      {data.subAbilities && data.subAbilities.length > 0 && (
-        <VStack gap={3} alignItems="stretch">
-          {data.subAbilities.map((subAbility, index) => (
-            <ActionCard key={index} action={subAbility} activationCurrency="AP" />
-          ))}
-        </VStack>
       )}
     </EntityDisplay>
   )

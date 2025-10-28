@@ -171,9 +171,9 @@ export default function DataTable({ data, schema }: DataTableProps) {
         mb={6}
         bg="su.white"
         p={4}
-        borderRadius="lg"
+        borderRadius="md"
         shadow="md"
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor="su.lightBlue"
       >
         <Box mb={4}>
@@ -258,10 +258,10 @@ export default function DataTable({ data, schema }: DataTableProps) {
 
       <Box
         bg="su.white"
-        borderRadius="lg"
+        borderRadius="md"
         shadow="md"
         overflow="hidden"
-        borderWidth="1px"
+        borderWidth="2px"
         borderColor="su.lightBlue"
       >
         <Box overflowX="auto">
