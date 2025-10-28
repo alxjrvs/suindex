@@ -23,7 +23,7 @@ function extractDetails(
     const costValue = isVariable
       ? `X ${activationCurrency}`
       : `${data.activationCost} ${activationCurrency}`
-    details.push({ value: costValue, type: 'cost' })
+    details.push({ label: costValue, type: 'cost' })
   }
 
   // Action type
@@ -43,7 +43,7 @@ function extractDetails(
       const actionType = data.actionType.includes('action')
         ? data.actionType
         : `${data.actionType} Action`
-      details.push({ value: actionType })
+      details.push({ label: actionType })
     }
   }
 
@@ -63,12 +63,17 @@ function extractDetails(
   // Traits
   const traits = 'traits' in data ? formatTraits(data.traits) : []
   traits.forEach((t) => {
-    details.push({ value: t, type: 'trait' })
+    if (t.includes('(')) {
+      const [label, value] = t.split('(')
+      details.push({ label, value: `${value.replace(')', '')}` })
+      return
+    }
+    details.push({ label: t, type: 'trait' })
   })
 
   // Recommended (for modules)
   if ('recommended' in data && data.recommended) {
-    details.push({ value: 'Recommended' })
+    details.push({ label: 'Recommended' })
   }
 
   return details
@@ -105,7 +110,7 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   if (item.type === 'cost') {
     return (
       <DetailWrapper compact={compact}>
-        <ActivationCostBox cost={item.value} currency="" compact={compact} />
+        <ActivationCostBox cost={item.label} currency="" compact={compact} />
       </DetailWrapper>
     )
   }

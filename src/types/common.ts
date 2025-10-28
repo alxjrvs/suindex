@@ -1,8 +1,8 @@
 import type { Database } from './database-generated.types'
 
 export interface DataValue {
-  label?: string
-  value: string | number
+  label: string | number
+  value?: string | number
   type?: string
 }
 

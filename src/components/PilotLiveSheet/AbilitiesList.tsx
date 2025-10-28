@@ -72,7 +72,8 @@ export function AbilitiesList({
 
   return (
     <RoundedBox
-      bg="bg.builder.pilot"
+      headerBg="bg.builder.pilot"
+      bg="su.lightBlue"
       title="Abilities"
       disabled={disabled}
       rightContent={

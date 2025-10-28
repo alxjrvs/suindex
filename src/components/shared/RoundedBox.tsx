@@ -105,7 +105,7 @@ export function RoundedBox({
             alignItems="center"
           >
             {/* Left side: leftContent + subTitleContent stacked */}
-            <Flex direction="column" gap={2} alignItems="flex-start">
+            <Flex direction="column" gap={1} alignItems="flex-start">
               {leftContent}
             </Flex>
 
@@ -118,7 +118,7 @@ export function RoundedBox({
               flex="1"
               data-testid={headerTestId}
             >
-              <Flex direction="column" gap={2} alignItems="flex-start">
+              <Flex direction="column" gap={1} alignItems="flex-start">
                 {title && (
                   <Heading
                     level="h2"
