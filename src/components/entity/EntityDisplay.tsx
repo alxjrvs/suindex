@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { Box, Button, Flex, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Grid, VStack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { DetailsList } from '../shared/DetailsList'
 import { StatDisplay } from '../StatDisplay'
@@ -22,6 +22,7 @@ import {
   extractTechLevelEffects,
   extractTechLevel,
   getSchemaDisplayName,
+  extractOptions,
 } from './entityDisplayHelpers'
 import type { SURefSchemaName, SURefMetaEntity } from 'salvageunion-reference'
 import { SheetDisplay } from '../shared/SheetDisplay'
@@ -43,6 +44,7 @@ interface EntityDisplayProps {
   expanded?: boolean
   onToggleExpanded?: () => void
   showSelectButton?: boolean
+  hideLevel?: boolean
   selectButtonText?: string
   label?: string
   contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
@@ -76,6 +78,7 @@ export function EntityDisplay({
   data,
   label,
   headerColor,
+  hideLevel = false,
   headerOpacity = 1,
   children,
   onClick,
@@ -107,6 +110,7 @@ export function EntityDisplay({
   const pageRef = extractPageReference(data)
   const techLevel = extractTechLevel(data)
   const techLevelEffects = extractTechLevelEffects(data)
+  const options = extractOptions(data)
 
   const headerDescription = schemaName === 'abilities'
 
@@ -218,7 +222,7 @@ export function EntityDisplay({
 
   return (
     <RoundedBox
-      absoluteElements={level && <LevelDisplay level={level} compact={compact} />}
+      absoluteElements={level && !hideLevel && <LevelDisplay level={level} compact={compact} />}
       borderWidth="2px"
       compact={compact}
       bg="su.lightBlue"
@@ -275,7 +279,7 @@ export function EntityDisplay({
             minW="0"
             borderBottomRightRadius="md"
           >
-            <Box opacity={opacityValue}>
+            <Box flexDirection="column" display="flex" opacity={opacityValue} gap={compact ? 3 : 6}>
               <Flex
                 flexDirection="row"
                 justifyContent="space-between"
@@ -333,6 +337,18 @@ export function EntityDisplay({
                   </VStack>
                 )}
               {/* Roll Table (for Systems/Modules/Equipment) */}
+              {'effect' in data && data.effect && (
+                <SheetDisplay label="Effect" value={data.effect} />
+              )}
+              {options && (
+                <Grid gridTemplateColumns="repeat(2, 1fr)" gridAutoFlow="dense" gap={1}>
+                  {options.map((option, optIndex) => {
+                    const label = typeof option === 'string' ? '' : option.label
+                    const value = typeof option === 'string' ? option : option.value
+                    return <SheetDisplay key={optIndex} label={label} value={value} />
+                  })}
+                </Grid>
+              )}
               {sections.showRollTable && 'table' in data && data.table && (
                 <Box borderRadius="md" position="relative" zIndex={10}>
                   <RollTable

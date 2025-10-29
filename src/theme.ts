@@ -117,7 +117,7 @@ const config = defineConfig({
         'bg.builder': { value: '{colors.su.green}' },
         'bg.builder.mech': { value: '{colors.su.green}' },
         'bg.builder.pilot': { value: '{colors.su.orange}' },
-        'bg.builder.crawler': { value: '{colors.su.gameBlue}' },
+        'bg.builder.crawler': { value: '{colors.su.crawlerPink}' },
         'bg.input': { value: '{colors.su.inputBg}' },
 
         // Text colors

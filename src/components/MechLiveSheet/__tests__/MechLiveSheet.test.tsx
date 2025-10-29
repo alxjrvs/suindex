@@ -233,7 +233,12 @@ describe('MechLiveSheet', () => {
 
   describe('Systems and Modules', () => {
     it('shows add system/module buttons disabled when no chassis selected', async () => {
+      const user = userEvent.setup()
       render(<MechLiveSheet />)
+
+      // Click on the Systems & Modules tab
+      const systemsModulesTab = screen.getByRole('tab', { name: /^systems & modules$/i })
+      await user.click(systemsModulesTab)
 
       await waitFor(() => {
         // Find the add buttons in the Systems and Modules sections
@@ -250,6 +255,10 @@ describe('MechLiveSheet', () => {
 
       const chassisSelect = screen.getByRole('combobox')
       await user.selectOptions(chassisSelect, testChassis.id)
+
+      // Click on the Systems & Modules tab
+      const systemsModulesTab = screen.getByRole('tab', { name: /^systems & modules$/i })
+      await user.click(systemsModulesTab)
 
       await waitFor(
         () => {

@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Box, Flex, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
-import { AbilitiesList } from './AbilitiesList'
+import { ClassAbilitiesList } from './ClassAbilitiesList'
+import { GeneralAbilitiesList } from './GeneralAbilitiesList'
 import { PilotInventory } from './PilotInventory'
 import { EquipmentSelector } from './EquipmentSelector'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
@@ -115,36 +116,54 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         />
       </Flex>
 
-      {/* Abilities Section */}
-      <AbilitiesList
-        abilities={pilot.abilities ?? []}
-        legendaryAbilityId={pilot.legendary_ability_id ?? null}
-        onAdd={handleAddAbility}
-        onRemove={handleRemoveAbility}
-        onAddLegendary={handleAddLegendaryAbility}
-        onRemoveLegendary={handleRemoveLegendaryAbility}
-        currentTP={pilot.current_tp ?? 0}
-        disabled={!selectedClass}
-        selectedClass={selectedClass}
-        selectedAdvancedClass={selectedAdvancedClass}
-      />
+      <Tabs.Root defaultValue="class-abilities">
+        <Tabs.List>
+          <Tabs.Trigger value="class-abilities">Class Abilities</Tabs.Trigger>
+          <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
+          <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
+        </Tabs.List>
 
-      {/* Equipment Section */}
-      <PilotInventory
-        equipment={pilot.equipment ?? []}
-        onAddClick={() => setIsEquipmentSelectorOpen(true)}
-        onRemove={handleRemoveEquipment}
-        disabled={!selectedClass}
-      />
+        <Tabs.Content value="class-abilities">
+          <Box mt={6}>
+            <ClassAbilitiesList
+              abilities={pilot.abilities ?? []}
+              legendaryAbilityId={pilot.legendary_ability_id ?? null}
+              onAdd={handleAddAbility}
+              onRemove={handleRemoveAbility}
+              onAddLegendary={handleAddLegendaryAbility}
+              onRemoveLegendary={handleRemoveLegendaryAbility}
+              currentTP={pilot.current_tp ?? 0}
+              selectedClass={selectedClass}
+              selectedAdvancedClass={selectedAdvancedClass}
+            />
+          </Box>
+        </Tabs.Content>
 
-      {/* Notes Section */}
-      <Notes
-        notes={pilot.notes ?? ''}
-        onChange={(value) => updateEntity({ notes: value })}
-        backgroundColor="bg.builder.pilot"
-        placeholder="Add notes about your pilot..."
-        disabled={!selectedClass}
-      />
+        <Tabs.Content value="general-abilities">
+          <Box mt={6}>
+            <GeneralAbilitiesList />
+          </Box>
+        </Tabs.Content>
+
+        <Tabs.Content value="inventory">
+          <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
+            <PilotInventory
+              equipment={pilot.equipment ?? []}
+              onAddClick={() => setIsEquipmentSelectorOpen(true)}
+              onRemove={handleRemoveEquipment}
+              disabled={!selectedClass}
+            />
+
+            <Notes
+              notes={pilot.notes ?? ''}
+              onChange={(value) => updateEntity({ notes: value })}
+              backgroundColor="bg.builder.pilot"
+              placeholder="Add notes about your pilot..."
+              disabled={!selectedClass}
+            />
+          </Grid>
+        </Tabs.Content>
+      </Tabs.Root>
 
       {/* Equipment Selector Modal */}
       <EquipmentSelector

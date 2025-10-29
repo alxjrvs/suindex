@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
@@ -169,55 +169,71 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         />
       </Flex>
 
-      <ChassisAbilities
-        totalSalvageValue={totalSalvageValue}
-        stats={stats}
-        chassis={selectedChassis}
-        disabled={!selectedChassis}
-      />
+      <Tabs.Root defaultValue="abilities">
+        <Tabs.List>
+          <Tabs.Trigger value="abilities">Abilities</Tabs.Trigger>
+          <Tabs.Trigger value="systems-modules">Systems & Modules</Tabs.Trigger>
+          <Tabs.Trigger value="storage">Storage</Tabs.Trigger>
+        </Tabs.List>
 
-      <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
-        <SystemsList
-          systems={mech.systems ?? []}
-          usedSystemSlots={usedSystemSlots}
-          totalSystemSlots={stats?.systemSlots || 0}
-          onRemoveSystem={handleRemoveSystem}
-          onAddSystem={handleAddSystem}
-          disabled={!selectedChassis}
-        />
+        <Tabs.Content value="abilities">
+          <Box mt={6}>
+            <ChassisAbilities
+              totalSalvageValue={totalSalvageValue}
+              stats={stats}
+              chassis={selectedChassis}
+              disabled={!selectedChassis}
+            />
+          </Box>
+        </Tabs.Content>
 
-        <ModulesList
-          modules={mech.modules ?? []}
-          usedModuleSlots={usedModuleSlots}
-          totalModuleSlots={stats?.moduleSlots || 0}
-          onRemoveModule={handleRemoveModule}
-          onAddModule={handleAddModule}
-          disabled={!selectedChassis}
-        />
-      </Grid>
+        <Tabs.Content value="systems-modules">
+          <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
+            <SystemsList
+              systems={mech.systems ?? []}
+              usedSystemSlots={usedSystemSlots}
+              totalSystemSlots={stats?.systemSlots || 0}
+              onRemoveSystem={handleRemoveSystem}
+              onAddSystem={handleAddSystem}
+              disabled={!selectedChassis}
+            />
 
-      <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
-        <CargoList
-          cargo={mech.cargo ?? []}
-          totalCargo={totalCargo}
-          maxCargo={stats?.cargoCap || 0}
-          canAddCargo={!!selectedChassis}
-          onRemove={handleRemoveCargo}
-          onAddClick={(position) => {
-            setCargoPosition(position)
-            setIsCargoModalOpen(true)
-          }}
-          disabled={!selectedChassis}
-        />
+            <ModulesList
+              modules={mech.modules ?? []}
+              usedModuleSlots={usedModuleSlots}
+              totalModuleSlots={stats?.moduleSlots || 0}
+              onRemoveModule={handleRemoveModule}
+              onAddModule={handleAddModule}
+              disabled={!selectedChassis}
+            />
+          </Grid>
+        </Tabs.Content>
 
-        <Notes
-          notes={mech.notes ?? ''}
-          onChange={(value) => updateEntity({ notes: value })}
-          disabled={!selectedChassis}
-          backgroundColor="bg.builder.mech"
-          placeholder="Add notes about your mech..."
-        />
-      </Grid>
+        <Tabs.Content value="storage">
+          <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
+            <CargoList
+              cargo={mech.cargo ?? []}
+              totalCargo={totalCargo}
+              maxCargo={stats?.cargoCap || 0}
+              canAddCargo={!!selectedChassis}
+              onRemove={handleRemoveCargo}
+              onAddClick={(position) => {
+                setCargoPosition(position)
+                setIsCargoModalOpen(true)
+              }}
+              disabled={!selectedChassis}
+            />
+
+            <Notes
+              notes={mech.notes ?? ''}
+              onChange={(value) => updateEntity({ notes: value })}
+              disabled={!selectedChassis}
+              backgroundColor="bg.builder.mech"
+              placeholder="Add notes about your mech..."
+            />
+          </Grid>
+        </Tabs.Content>
+      </Tabs.Root>
 
       <CargoModal
         isOpen={isCargoModalOpen}
@@ -232,7 +248,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         position={cargoPosition}
       />
 
-      {/* Delete Button - Only show when editing existing entity */}
       {id && (
         <DeleteEntity
           entityName="Mech"

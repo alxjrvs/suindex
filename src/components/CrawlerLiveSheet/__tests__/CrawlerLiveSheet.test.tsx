@@ -58,15 +58,20 @@ describe('CrawlerLiveSheet', () => {
       expect(scrapSection).toBeInTheDocument()
     })
 
-    it('displays all bay cards', () => {
+    it('displays all bay cards', async () => {
+      const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
+
+      // Click on the Bays tab to see the bay cards
+      const baysTab = screen.getByRole('tab', { name: /^bays$/i })
+      await user.click(baysTab)
 
       // Should show at least one bay from real data
       if (allBays.length > 0) {
-        // Check for Storage Bay which should always exist
-        const storageBay = allBays.find((b) => b.name === 'Storage Bay')
-        if (storageBay) {
-          expect(screen.getByText('Storage Bay')).toBeInTheDocument()
+        // Check for a non-storage bay (since storage bay is in a different tab)
+        const regularBay = allBays.find((b) => b.name !== 'Storage Bay')
+        if (regularBay) {
+          expect(screen.getByText(regularBay.name)).toBeInTheDocument()
         }
       }
     })
@@ -210,6 +215,10 @@ describe('CrawlerLiveSheet', () => {
       const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
       await user.selectOptions(crawlerTypeSelect, testCrawler.id)
 
+      // Click on the Bays tab to see the bay cards
+      const baysTab = screen.getByRole('tab', { name: /^bays$/i })
+      await user.click(baysTab)
+
       // Find any bay operator input (placeholder is "Enter operator name...")
       const operatorInputs = screen.getAllByPlaceholderText(/enter operator name/i)
       if (operatorInputs.length > 0) {
@@ -227,6 +236,10 @@ describe('CrawlerLiveSheet', () => {
       const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
       await user.selectOptions(crawlerTypeSelect, testCrawler.id)
 
+      // Click on the Bays tab to see the bay cards
+      const baysTab = screen.getByRole('tab', { name: /^bays$/i })
+      await user.click(baysTab)
+
       // Find bay notes inputs (placeholder is "Enter operator notes...")
       const bayNotes = screen.getAllByPlaceholderText(/enter operator notes/i)
       const firstBayNotes = bayNotes[0]
@@ -237,18 +250,30 @@ describe('CrawlerLiveSheet', () => {
   })
 
   describe('Storage Bay', () => {
-    it('displays storage bay separately from other bays', () => {
+    it('displays storage bay separately from other bays', async () => {
+      const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
-      // Storage Bay should be visible
-      expect(screen.getByText('Storage Bay')).toBeInTheDocument()
+      // Click on the Storage Bay tab
+      const storageBayTab = screen.getByRole('tab', { name: /^storage bay$/i })
+      await user.click(storageBayTab)
+
+      // Storage Bay should be visible in the content
+      const storageBayHeadings = screen.getAllByText('Storage Bay')
+      // Should have at least 2: one in the tab, one in the content
+      expect(storageBayHeadings.length).toBeGreaterThanOrEqual(2)
     })
 
-    it('shows clickable empty cells with + icon', () => {
+    it('shows clickable empty cells with + icon', async () => {
+      const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
 
+      // Click on the Storage Bay tab
+      const storageBayTab = screen.getByRole('tab', { name: /^storage bay$/i })
+      await user.click(storageBayTab)
+
       // Empty cells should show + icon
-      expect(screen.getAllByText('+')).toHaveLength(54) // 54 is maxCapacity for crawler storage
+      expect(screen.getAllByText('+')).toHaveLength(25) // 25 is maxCapacity for crawler storage
     })
 
     it('opens cargo modal when empty cell is clicked', async () => {
@@ -258,6 +283,10 @@ describe('CrawlerLiveSheet', () => {
       // Select a crawler type first to enable inputs
       const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
       await user.selectOptions(crawlerTypeSelect, testCrawler.id)
+
+      // Click on the Storage Bay tab
+      const storageBayTab = screen.getByRole('tab', { name: /^storage bay$/i })
+      await user.click(storageBayTab)
 
       // Click any empty cell (they all have + text)
       const emptyCells = screen.getAllByText('+')
@@ -271,8 +300,13 @@ describe('CrawlerLiveSheet', () => {
   })
 
   describe('Notes', () => {
-    it('shows notes section', () => {
+    it('shows notes section', async () => {
+      const user = userEvent.setup()
       render(<CrawlerLiveSheet />)
+
+      // Click on the Storage Bay tab where Notes is located
+      const storageBayTab = screen.getByRole('tab', { name: /^storage bay$/i })
+      await user.click(storageBayTab)
 
       expect(screen.getByPlaceholderText(/add notes about your crawler/i)).toBeInTheDocument()
     })
@@ -284,6 +318,10 @@ describe('CrawlerLiveSheet', () => {
       // Select a crawler type first to enable inputs
       const crawlerTypeSelect = screen.getByRole('combobox', { name: /type/i })
       await user.selectOptions(crawlerTypeSelect, testCrawler.id)
+
+      // Click on the Storage Bay tab where Notes is located
+      const storageBayTab = screen.getByRole('tab', { name: /^storage bay$/i })
+      await user.click(storageBayTab)
 
       const notesTextarea = screen.getByPlaceholderText(/add notes about your crawler/i)
 

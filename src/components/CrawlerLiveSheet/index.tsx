@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Box, Button, Flex, Grid, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
@@ -125,80 +125,94 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         />
       </Flex>
 
-      <Flex gap={6} w="full">
-        <CrawlerAbilities
-          upkeep={upkeep}
-          updateEntity={updateEntity}
-          onUpdateChoice={(choiceId, value) => handleUpdateChoice(choiceId, value)}
-          maxUpgrade={maxUpgrade}
-          crawlerRef={selectedCrawlerType}
-          crawler={crawler}
-          disabled={!selectedCrawlerType}
-        />
-        <CrawlerNPC
-          crawler={crawler}
-          onUpdate={updateEntity}
-          onUpdateChoice={(choiceId, value) => handleUpdateChoice(choiceId, value)}
-          crawlerRef={selectedCrawlerType}
-          disabled={!selectedCrawlerType}
-        />
-      </Flex>
+      <Tabs.Root defaultValue="abilities">
+        <Tabs.List>
+          <Tabs.Trigger value="abilities">Abilities</Tabs.Trigger>
+          <Tabs.Trigger value="bays">Bays</Tabs.Trigger>
+          <Tabs.Trigger value="storage">Storage Bay</Tabs.Trigger>
+        </Tabs.List>
 
-      {/* Bays Grid - Dynamic Layout */}
-      {regularBays.length > 0 && (
-        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-          {regularBays.map((bay) => (
-            <BayCard
+        <Tabs.Content value="abilities">
+          <Flex gap={6} w="full" mt={6}>
+            <CrawlerAbilities
+              upkeep={upkeep}
+              updateEntity={updateEntity}
+              onUpdateChoice={(choiceId, value) => handleUpdateChoice(choiceId, value)}
+              maxUpgrade={maxUpgrade}
+              crawlerRef={selectedCrawlerType}
               crawler={crawler}
-              key={bay.id}
-              bay={bay}
-              onUpdateChoice={(id, value) => handleUpdateChoice(id, value)}
-              onUpdateBay={(updates) => handleUpdateBay(bay.id, updates)}
               disabled={!selectedCrawlerType}
             />
-          ))}
-        </Grid>
-      )}
-
-      {/* Storage Bay, Cargo Bay, and Notes */}
-      <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-        {/* Storage Bay and Cargo Bay Column */}
-        <VStack gap={4} alignItems="stretch">
-          {/* Storage Bay */}
-          {storageBay && (
-            <BayCard
+            <CrawlerNPC
               crawler={crawler}
-              bay={storageBay}
-              onUpdateChoice={(id, value) => handleUpdateChoice(id, value)}
-              onUpdateBay={(updates) => handleUpdateBay(storageBay.id, updates)}
+              onUpdate={updateEntity}
+              onUpdateChoice={(choiceId, value) => handleUpdateChoice(choiceId, value)}
+              crawlerRef={selectedCrawlerType}
               disabled={!selectedCrawlerType}
             />
+          </Flex>
+        </Tabs.Content>
+
+        <Tabs.Content value="bays">
+          {/* Bays Grid - Dynamic Layout */}
+          {regularBays.length > 0 && (
+            <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
+              {regularBays.map((bay) => (
+                <BayCard
+                  crawler={crawler}
+                  key={bay.id}
+                  bay={bay}
+                  onUpdateChoice={(id, value) => handleUpdateChoice(id, value)}
+                  onUpdateBay={(updates) => handleUpdateBay(bay.id, updates)}
+                  disabled={!selectedCrawlerType}
+                />
+              ))}
+            </Grid>
           )}
+        </Tabs.Content>
 
-          <Notes
-            notes={crawler.notes ?? ''}
-            onChange={(value) => updateEntity({ notes: value })}
-            backgroundColor="bg.builder.crawler"
-            placeholder="Add notes about your crawler..."
-            disabled={!selectedCrawlerType}
-            flex="1"
-            minH="300px"
-          />
-          {/* Cargo Bay */}
-        </VStack>
-        <StorageCargoBay
-          cargo={crawler.cargo ?? []}
-          onAddCargo={(position) => {
-            setCargoPosition(position)
-            setIsCargoModalOpen(true)
-          }}
-          onRemoveCargo={handleRemoveCargo}
-          damaged={storageBay?.damaged}
-          disabled={!selectedCrawlerType}
-        />
+        <Tabs.Content value="storage">
+          <VStack gap="0" alignItems="stretch" mt={6}>
+            {/* Storage Bay and Notes Row */}
+            <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+              {/* Storage Bay */}
+              {storageBay && (
+                <BayCard
+                  crawler={crawler}
+                  bay={storageBay}
+                  onUpdateChoice={(id, value) => handleUpdateChoice(id, value)}
+                  onUpdateBay={(updates) => handleUpdateBay(storageBay.id, updates)}
+                  disabled={!selectedCrawlerType}
+                />
+              )}
 
-        {/* Notes */}
-      </Grid>
+              {/* Notes */}
+              <Box pb="5">
+                <Notes
+                  notes={crawler.notes ?? ''}
+                  onChange={(value) => updateEntity({ notes: value })}
+                  backgroundColor="bg.builder.crawler"
+                  placeholder="Add notes about your crawler..."
+                  disabled={!selectedCrawlerType}
+                  minH="300px"
+                />
+              </Box>
+            </Grid>
+
+            {/* Storage Cargo Bay - Full Width */}
+            <StorageCargoBay
+              cargo={crawler.cargo ?? []}
+              onAddCargo={(position) => {
+                setCargoPosition(position)
+                setIsCargoModalOpen(true)
+              }}
+              onRemoveCargo={handleRemoveCargo}
+              damaged={storageBay?.damaged}
+              disabled={!selectedCrawlerType}
+            />
+          </VStack>
+        </Tabs.Content>
+      </Tabs.Root>
 
       {/* Downgrade Tech Level Button */}
       <Button
@@ -222,6 +236,16 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
       >
         DOWNGRADE TECH LEVEL
       </Button>
+
+      {id && (
+        <Box mt={6}>
+          <DeleteEntity
+            entityName="Crawler"
+            onConfirmDelete={deleteEntity}
+            disabled={!id || hasPendingChanges}
+          />
+        </Box>
+      )}
 
       <DeleteEntity
         entityName="Crawler"
