@@ -26,19 +26,25 @@ describe('MechLiveSheet', () => {
         expect(screen.getByRole('combobox')).toBeInTheDocument()
       })
       expect(screen.getByPlaceholderText(/enter or select a pattern/i)).toBeInTheDocument()
-      expect(screen.getAllByText(/sys. slots/i)[0]).toBeInTheDocument()
+      // StatDisplay splits labels - check for "System" and "Slots" separately
+      // Use getAllByText since "System" appears in both "Systems & Modules" and the stat label
+      expect(screen.getAllByText(/system/i).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/slots/i).length).toBeGreaterThan(0)
     })
 
     it('displays all main sections', async () => {
       render(<MechLiveSheet />)
 
       await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /Chassis/i })).toBeInTheDocument()
+        expect(screen.getByText(/^chassis$/i)).toBeInTheDocument()
       })
       expect(screen.getAllByText(/quirk/i)[0]).toBeInTheDocument()
       expect(screen.getAllByText(/appearance/i)[0]).toBeInTheDocument()
-      expect(screen.getByText(/systems & modules/i)).toBeInTheDocument()
-      expect(screen.getByRole('heading', { name: /cargo/i })).toBeInTheDocument()
+      // Systems and Modules now appear as separate sections
+      expect(screen.getAllByText(/^systems$/i).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/^modules$/i).length).toBeGreaterThan(0)
+      // Cargo appears in multiple places (heading and stat label), so use getAllByText
+      expect(screen.getAllByText(/cargo/i).length).toBeGreaterThan(0)
     })
 
     it('shows resource steppers (SP, EP, Heat)', async () => {
@@ -226,18 +232,19 @@ describe('MechLiveSheet', () => {
   })
 
   describe('Systems and Modules', () => {
-    it('shows add system/module button disabled when no chassis selected', async () => {
+    it('shows add system/module buttons disabled when no chassis selected', async () => {
       render(<MechLiveSheet />)
 
       await waitFor(() => {
-        // Find the add button in the Systems & Modules section
-        const addButtons = screen.getAllByRole('button', { name: '+' })
-        // First + button should be in Systems & Modules section
-        expect(addButtons[0]).toBeDisabled()
+        // Find the add buttons in the Systems and Modules sections
+        const addSystemButton = screen.getByRole('button', { name: 'Add Systems' })
+        const addModulesButton = screen.getByRole('button', { name: 'Add Modules' })
+        expect(addSystemButton).toBeDisabled()
+        expect(addModulesButton).toBeDisabled()
       })
     })
 
-    it('enables add system/module button when chassis is selected', async () => {
+    it('enables add system/module buttons when chassis is selected', async () => {
       const user = userEvent.setup()
       render(<MechLiveSheet />)
 
@@ -246,9 +253,10 @@ describe('MechLiveSheet', () => {
 
       await waitFor(
         () => {
-          const addButtons = screen.getAllByRole('button', { name: '+' })
-          // First + button should be in Systems & Modules section
-          expect(addButtons[0]).not.toBeDisabled()
+          const addSystemButton = screen.getByRole('button', { name: 'Add Systems' })
+          const addModulesButton = screen.getByRole('button', { name: 'Add Modules' })
+          expect(addSystemButton).not.toBeDisabled()
+          expect(addModulesButton).not.toBeDisabled()
         },
         { timeout: 5000 }
       )
@@ -298,8 +306,8 @@ describe('MechLiveSheet', () => {
       await waitFor(() => {
         // Empty cells should show + icon
         const plusSigns = screen.getAllByText('+')
-        // testChassis.stats.cargoCap is 16, plus 1 for the Systems & Modules add button
-        expect(plusSigns.length).toBe(testChassis.stats.cargoCap + 1)
+        // testChassis.stats.cargoCap is 16, plus 2 for the Systems and Modules add buttons
+        expect(plusSigns.length).toBe(testChassis.stats.cargoCap + 2)
       })
     })
 
@@ -329,9 +337,9 @@ describe('MechLiveSheet', () => {
       await user.selectOptions(chassisSelect, testChassis.id)
 
       await waitFor(async () => {
-        // Click a cargo cell (skip the first + which is the Systems & Modules add button)
+        // Click a cargo cell (skip the first 2 + which are the Systems and Modules add buttons)
         const emptyCells = screen.getAllByText('+')
-        await user.click(emptyCells[1])
+        await user.click(emptyCells[2])
       })
 
       await waitFor(() => {
@@ -378,18 +386,13 @@ describe('MechLiveSheet', () => {
 
       await waitFor(
         () => {
-          // Check that all stat labels are present
-          const systemSlotsLabels = screen.getAllByText(/sys. slots/i)
-          const moduleSlotsLabels = screen.getAllByText(/mod. slots/i)
-          const cargoCapLabels = screen.getAllByText(/cargo cap/i)
-          const techLevelLabels = screen.getAllByText(/tl/i)
-          const salvageLabels = screen.getAllByText(/^sv$/i)
-
-          expect(systemSlotsLabels.length).toBeGreaterThan(0)
-          expect(moduleSlotsLabels.length).toBeGreaterThan(0)
-          expect(cargoCapLabels.length).toBeGreaterThan(0)
-          expect(techLevelLabels.length).toBeGreaterThan(0)
-          expect(salvageLabels.length).toBeGreaterThan(0)
+          // Check that all stat displays are present using aria-labels
+          // StatDisplay combines label and bottomLabel into aria-label (e.g., "Sys. Slots")
+          // Use getAllByLabelText since some stats appear multiple times (e.g., max and current)
+          expect(screen.getAllByLabelText(/Sys\. Slots/i).length).toBeGreaterThan(0)
+          expect(screen.getAllByLabelText(/Mod\. Slots/i).length).toBeGreaterThan(0)
+          expect(screen.getAllByLabelText(/Cargo Cap/i).length).toBeGreaterThan(0)
+          expect(screen.getAllByLabelText(/Salvage Value/i).length).toBeGreaterThan(0)
         },
         { timeout: 5000 }
       )

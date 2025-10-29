@@ -1,6 +1,7 @@
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react'
 import { headingRecipe } from './recipes/heading.recipe'
 import { textRecipe } from './recipes/text.recipe'
+import { buttonRecipe } from './recipes/button.recipe'
 
 // Salvage Union color palette - raw values
 export const suColors = {
@@ -9,6 +10,7 @@ export const suColors = {
   green: 'rgb(122, 151, 138)',
   darkGreen: 'rgb(92, 121, 108)', // Slightly darker mech green
   orange: 'rgb(239, 137, 79)',
+  darkOrange: 'rgb(200, 100, 50)', // Darker orange for advanced/hybrid abilities
   lightOrange: 'rgb(245, 193, 163)',
   lightBlue: 'rgb(199, 223, 231)',
   oneBlue: 'rgb(115, 201, 230)',
@@ -26,6 +28,7 @@ export const suColors = {
   lightGrey: 'rgb(100, 100, 100)',
   mediumGrey: 'rgb(130, 130, 130)',
   darkGrey: 'rgb(80, 80, 80)',
+  deepPurple: 'rgb(60, 30, 80)', // Deep rich purple for legendary abilities
   // Derived colors for UI components
   inputBg: 'rgb(232, 229, 216)', // #e8e5d8
   inputText: 'rgb(45, 62, 54)', // #2d3e36
@@ -51,6 +54,7 @@ const config = defineConfig({
     recipes: {
       heading: headingRecipe,
       text: textRecipe,
+      button: buttonRecipe,
     },
     tokens: {
       colors: {
@@ -60,6 +64,7 @@ const config = defineConfig({
           green: { value: suColors.green },
           darkGreen: { value: suColors.darkGreen },
           orange: { value: suColors.orange },
+          darkOrange: { value: suColors.darkOrange },
           lightOrange: { value: suColors.lightOrange },
           lightBlue: { value: suColors.lightBlue },
           oneBlue: { value: suColors.oneBlue },
@@ -77,6 +82,7 @@ const config = defineConfig({
           lightGrey: { value: suColors.lightGrey },
           mediumGrey: { value: suColors.mediumGrey },
           darkGrey: { value: suColors.darkGrey },
+          deepPurple: { value: suColors.deepPurple },
           inputBg: { value: suColors.inputBg },
           inputText: { value: suColors.inputText },
           crawlerPink: { value: suColors.crawlerPink },

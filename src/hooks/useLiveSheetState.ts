@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import { fetchEntity, updateEntity as updateEntityAPI } from '../lib/api'
 import type { ValidTable } from '../types/common'
 import { DEBOUNCE_TIMINGS } from '../constants/gameRules'
+import { toaster } from '../components/ui/toaster'
 
 export interface UseLiveSheetStateConfig<T> {
   table: ValidTable
@@ -75,9 +76,26 @@ export function useLiveSheetState<T extends { id: string }>(
 
         await updateEntityAPI<T>(config.table, config.id, updates)
         setError(null)
+
+        // Show success toast
+        const resourceName = config.table.slice(0, -1) // Remove 's' from table name (e.g., 'mechs' -> 'mech')
+        const capitalizedResource = resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+        toaster.create({
+          title: `${capitalizedResource} updated`,
+          type: 'success',
+          duration: 2000,
+        })
       } catch (err) {
         console.error(`Error saving ${config.table}:`, err)
         setError(err instanceof Error ? err.message : `Failed to save ${config.table}`)
+
+        // Show error toast
+        toaster.create({
+          title: 'Failed to save changes',
+          description: err instanceof Error ? err.message : 'An unknown error occurred',
+          type: 'error',
+          duration: 4000,
+        })
       } finally {
         isSavingRef.current = false
         pendingUpdatesRef.current = null

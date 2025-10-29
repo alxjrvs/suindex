@@ -7,7 +7,7 @@ export function DashboardContent() {
     <Box p={8}>
       <Flex align="center" justify="center" minH="60vh">
         <Box textAlign="center">
-          <Heading level="h1" color="su.black" mb={4}>
+          <Heading level="h1" mb={4}>
             Welcome to SUIndex
           </Heading>
           <Text fontSize="lg" color="su.brick">

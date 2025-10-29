@@ -161,7 +161,13 @@ export function CrawlerHeaderInputs({
             flash={flashTL}
           />
         ) : (
-          <StatDisplay label="TL" value={currentTechLevel} disabled={disabled} flash={flashTL} />
+          <StatDisplay
+            label="TECH"
+            bottomLabel="LEVEL"
+            value={currentTechLevel}
+            disabled={disabled}
+            flash={flashTL}
+          />
         )
       }
       rightContent={

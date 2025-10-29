@@ -18,9 +18,9 @@ describe('PilotLiveSheet', () => {
 
       // Check for main sections by their content
       expect(screen.getByPlaceholderText(/enter callsign/i)).toBeInTheDocument()
-      expect(screen.getByRole('heading', { name: /abilities/i })).toBeInTheDocument()
-      expect(screen.getByRole('heading', { name: /inventory/i })).toBeInTheDocument()
-      expect(screen.getByRole('heading', { name: /notes/i })).toBeInTheDocument()
+      expect(screen.getByText(/^abilities$/i)).toBeInTheDocument()
+      expect(screen.getByText(/^inventory$/i)).toBeInTheDocument()
+      expect(screen.getByText(/^notes$/i)).toBeInTheDocument()
     })
 
     it('displays all main sections', () => {

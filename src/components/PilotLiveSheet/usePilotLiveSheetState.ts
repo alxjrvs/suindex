@@ -99,7 +99,7 @@ export function usePilotLiveSheetState(id?: string) {
           completeTrees.includes(requiredTree)
         )
       })
-      .map((treeReq) => treeReq.tree)
+      .map((treeReq) => treeReq.name)
 
     const results: AdvancedClassOption[] = []
 
@@ -165,6 +165,8 @@ export function usePilotLiveSheetState(id?: string) {
         updateEntity({
           class_id: classId,
           abilities: [],
+          max_ap: 5,
+          current_ap: 5,
         })
       }
     },

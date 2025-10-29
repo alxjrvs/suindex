@@ -8,7 +8,7 @@ interface StatBonusDisplayProps {
 
 export function StatBonusDisplay({ bonus, stat }: StatBonusDisplayProps) {
   return (
-    <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+    <Box bg="su.white" borderWidth="2px" borderColor="su.black" borderRadius="md" p={3}>
       <Text as="span" fontWeight="bold" color="su.brick">
         Stat Bonus:{' '}
       </Text>

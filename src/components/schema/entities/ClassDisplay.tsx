@@ -7,7 +7,7 @@ import type {
   SURefHybridClass,
   SURefAbility,
 } from 'salvageunion-reference'
-import { EntityDisplay } from '../../shared/EntityDisplay'
+import { EntityDisplay } from '../../entity/EntityDisplay'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import { AbilityDisplay } from './AbilityDisplay'
 

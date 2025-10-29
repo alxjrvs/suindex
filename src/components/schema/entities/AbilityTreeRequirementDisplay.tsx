@@ -1,6 +1,6 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
 import { Heading } from '../../base/Heading'
-import { EntityDisplay } from '../../shared/EntityDisplay'
+import { EntityDisplay } from '../../entity/EntityDisplay'
 import type { SURefAbilityTreeRequirement } from 'salvageunion-reference'
 
 interface AbilityTreeRequirementDisplayProps {
@@ -9,11 +9,11 @@ interface AbilityTreeRequirementDisplayProps {
 
 export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDisplayProps) {
   const getHeaderColor = () => {
-    if (data.tree.toLowerCase().includes('legendary')) {
+    if (data.name.toLowerCase().includes('legendary')) {
       return 'su.pink'
     } else if (
-      data.tree.toLowerCase().includes('advanced') ||
-      data.tree.toLowerCase().includes('hybrid')
+      data.name.toLowerCase().includes('advanced') ||
+      data.name.toLowerCase().includes('hybrid')
     ) {
       return 'su.brick'
     }
@@ -30,7 +30,7 @@ export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDi
         <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
           Requirements
         </Heading>
-        <Box bg="su.white" borderWidth="1px" borderColor="su.black" borderRadius="md" p={3}>
+        <Box bg="su.white" borderWidth="2px" borderColor="su.black" borderRadius="md" p={3}>
           <Text color="su.black">
             <Text as="span" fontWeight="bold" color="su.brick">
               Must have all abilities from:{' '}

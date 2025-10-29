@@ -1,5 +1,5 @@
 import { VStack } from '@chakra-ui/react'
-import { EntityDisplay } from '../../shared/EntityDisplay'
+import { EntityDisplay } from '../../entity/EntityDisplay'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 

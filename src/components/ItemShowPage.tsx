@@ -132,10 +132,10 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
           ) : (
             <Box
               bg="su.white"
-              borderRadius="lg"
+              borderRadius="md"
               shadow="lg"
               p={8}
-              borderWidth="1px"
+              borderWidth="2px"
               borderColor="su.lightBlue"
             >
               <VStack gap={6} alignItems="stretch">

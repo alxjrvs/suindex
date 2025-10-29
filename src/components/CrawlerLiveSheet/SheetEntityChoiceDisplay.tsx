@@ -1,23 +1,16 @@
 import { Button } from '@chakra-ui/react'
 import { useState, useMemo } from 'react'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
 import { getModel } from '../../utils/modelMap'
-import { EntityDisplay } from '../shared/EntityDisplay'
-import { EntitySelectionModal } from '../shared/EntitySelectionModal'
-
-type CrawlerAbilityChoice = {
-  id: string
-  name: string
-  description: string
-  schema: string[]
-}
+import { EntityDisplay } from '../entity/EntityDisplay'
+import { EntitySelectionModal } from '../entity/EntitySelectionModal'
 
 export function SheetEntityChoiceDisplay({
   choice,
   onUpdateChoice,
   selectedValue,
 }: {
-  choice: CrawlerAbilityChoice
+  choice: SURefMetaChoice
   onUpdateChoice: (choiceId: string, value: string | undefined) => void
   selectedValue: string | null
 }) {
@@ -44,8 +37,9 @@ export function SheetEntityChoiceDisplay({
   // Convert schema to schema names for the modal
   // Normalize plural schema names to kebab-case (e.g., "Systems" -> "systems")
   const schemaNames = useMemo(() => {
-    const schemas = Array.isArray(choice.schema) ? choice.schema : [choice.schema]
+    const { schema } = choice
 
+    if (!schema) return []
     // Map plural to kebab-case schema names
     const pluralToSchemaName: Record<string, SURefSchemaName> = {
       Systems: 'systems',
@@ -65,7 +59,7 @@ export function SheetEntityChoiceDisplay({
       CrawlerTechLevels: 'crawler-tech-levels',
     }
 
-    return schemas.map((schema) => {
+    return schema.map((schema) => {
       // If it's in the map, use the mapped value
       if (schema in pluralToSchemaName) {
         return pluralToSchemaName[schema as keyof typeof pluralToSchemaName]
@@ -73,7 +67,7 @@ export function SheetEntityChoiceDisplay({
       // Otherwise assume it's already a schema name
       return schema as SURefSchemaName
     })
-  }, [choice.schema])
+  }, [choice])
 
   const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
     onUpdateChoice(choice.id, `${schemaName}||${entityId}`)

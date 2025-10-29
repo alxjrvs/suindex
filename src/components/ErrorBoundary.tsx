@@ -36,9 +36,9 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             w="full"
             p={6}
             bg="su.lightBlue"
-            borderRadius="lg"
+            borderRadius="md"
             shadow="lg"
-            borderWidth="1px"
+            borderWidth="2px"
             borderColor="su.brick"
           >
             <Heading level="h1" fontSize="2xl" fontWeight="bold" color="su.brick" mb={4}>
@@ -53,7 +53,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
               p={3}
               bg="su.white"
               borderRadius="md"
-              borderWidth="1px"
+              borderWidth="2px"
               borderColor="su.lightOrange"
             >
               <Text as="summary" cursor="pointer" fontWeight="semibold" color="su.black">
@@ -70,7 +70,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
               py={2}
               bg="su.orange"
               color="su.white"
-              borderRadius="lg"
+              borderRadius="md"
               _hover={{ bg: 'su.brick' }}
               fontWeight="medium"
             >

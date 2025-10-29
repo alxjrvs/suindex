@@ -19,7 +19,7 @@ export function DataCell({
   rightContent,
 }: DataCellProps) {
   return (
-    <Flex borderRadius="md" overflow="hidden" borderWidth="1px" borderColor="su.black">
+    <Flex borderRadius="md" overflow="hidden" borderWidth="2px" borderColor="su.black">
       <Box bg={leftBg} px={2} py={1} w="33.33%">
         <Text fontSize="xs" fontWeight="bold" color={leftTextColor}>
           {leftContent}

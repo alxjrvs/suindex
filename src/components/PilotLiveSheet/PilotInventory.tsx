@@ -46,11 +46,12 @@ export function PilotInventory({
           <AddStatButton
             onClick={onAddClick}
             disabled={disabled || isFull}
-            ariaLabel="Add equipment"
+            bottomLabel="Equipment"
           />
           <StatDisplay
             label="Equipment"
-            value={`${equipment.length}/${MAX_SLOTS}`}
+            value={equipment.length}
+            outOfMax={MAX_SLOTS}
             disabled={disabled}
           />
         </Flex>

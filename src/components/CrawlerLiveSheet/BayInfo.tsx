@@ -23,14 +23,14 @@ export function BayInfo({
   // Don't render if there's no reference bay or no content to show
   if (
     !referenceBay ||
-    (!referenceBay.description && (!referenceBay.abilities || referenceBay.abilities.length === 0))
+    (!referenceBay.description && (!referenceBay.actions || referenceBay.actions.length === 0))
   ) {
     return null
   }
 
   const hasFunction = !!referenceBay.description
   const hasAbilities =
-    !!(referenceBay.abilities && referenceBay.abilities.length > 0) ||
+    !!(referenceBay.actions && referenceBay.actions.length > 0) ||
     (!!referenceBay.techLevelEffects && referenceBay.techLevelEffects.length > 0)
 
   const techLevelEffects =
@@ -61,7 +61,7 @@ export function BayInfo({
             _hover={{ bg: 'su.brick' }}
             fontWeight="bold"
             py={2}
-            borderRadius="lg"
+            borderRadius="md"
           >
             {isFunctionExpanded ? 'Hide Info' : 'Show Info'}
           </Button>
@@ -77,7 +77,7 @@ export function BayInfo({
             _hover={{ bg: 'su.brick' }}
             fontWeight="bold"
             py={2}
-            borderRadius="lg"
+            borderRadius="md"
           >
             {isAbilitiesExpanded ? 'Hide Abilities' : 'Show Abilities'}
           </Button>
@@ -94,7 +94,7 @@ export function BayInfo({
       {/* Abilities Section */}
       {isAbilitiesExpanded && hasAbilities && (
         <VStack gap={3} alignItems="stretch" w="full">
-          {referenceBay.abilities!.map((ability, idx) => (
+          {referenceBay.actions!.map((ability, idx) => (
             <SheetDisplay key={idx} label={ability.name}>
               <Text lineHeight="relaxed">{ability.description}</Text>
             </SheetDisplay>

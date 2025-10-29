@@ -2,7 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { findCoreClass, findHybridClass, getEquipment } from '../../../test/helpers'
+import {
+  findCoreClass,
+  findHybridClass,
+  getEquipment,
+  expandAllAbilities,
+} from '../../../test/helpers'
 
 describe('PilotLiveSheet - Integration Tests', () => {
   // Get real data from salvageunion-reference
@@ -50,13 +55,12 @@ describe('PilotLiveSheet - Integration Tests', () => {
         await user.click(tpIncrementButton)
       }
 
-      // Step 4: Select 6 core abilities
-      const addAbilityButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select 6 core abilities
+      // Step 4: Select 6 core abilities - abilities are now shown inline
       for (let i = 0; i < 6; i++) {
-        await user.click(addAbilityButton)
-        // Wait for the "Add to Pilot" buttons to appear in the modal
+        // Wait for the "Add to Pilot" buttons to appear
         const addButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
@@ -73,16 +77,19 @@ describe('PilotLiveSheet - Integration Tests', () => {
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, fabricatorClass.id)
 
-      // Step 6: Select hybrid class ability
-      await user.click(addAbilityButton)
+      // Step 6: Select hybrid class ability - abilities are now shown inline
+      // Give React time to render the advanced abilities, then expand them
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      await expandAllAbilities(user)
+
       // Click the first "Add to Pilot" button for a hybrid ability (advanced ability costs 2 TP)
-      const hybridAddButton = await screen.findByRole('button', {
+      const hybridAddButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(2 TP\)/i,
       })
-      await user.click(hybridAddButton)
+      await user.click(hybridAddButtons[0])
 
       // Step 7: Add equipment
-      const addEquipmentButton = screen.getByRole('button', { name: 'Add equipment' })
+      const addEquipmentButton = screen.getByRole('button', { name: /add equipment/i })
 
       await user.click(addEquipmentButton)
       // Wait for the equipment selector modal to open and find the first equipment button
@@ -151,11 +158,11 @@ describe('PilotLiveSheet - Integration Tests', () => {
       ) as HTMLButtonElement
       await user.click(tpIncrementButton)
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select first ability (costs 1 TP)
-      await user.click(addButton)
-      // Wait for the "Add to Pilot" buttons to appear in the modal
+      // Select first ability (costs 1 TP) - abilities are now shown inline
+      // Wait for the "Add to Pilot" buttons to appear
       const addButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
@@ -167,9 +174,14 @@ describe('PilotLiveSheet - Integration Tests', () => {
         expect(within(tpStepper).getByText('0')).toBeInTheDocument()
       })
 
-      // Try to open the modal again - the add button should be disabled since TP is 0
+      // All "Add to Pilot" buttons should be disabled since TP is 0
       await waitFor(() => {
-        expect(addButton).toBeDisabled()
+        const addToCharacterButtons = screen.queryAllByRole('button', {
+          name: /Add to Pilot \(1 TP\)/i,
+        })
+        addToCharacterButtons.forEach((button) => {
+          expect(button).toBeDisabled()
+        })
       })
     })
   })
@@ -190,19 +202,14 @@ describe('PilotLiveSheet - Integration Tests', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      await user.click(addButton)
-      // Wait for the "Add to Pilot" buttons to appear in the modal
+      // Abilities are now shown inline - select one
       const addButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
       await user.click(addButtons[0])
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-      })
 
       // Change class - should reset abilities
       await user.selectOptions(classSelect, '')

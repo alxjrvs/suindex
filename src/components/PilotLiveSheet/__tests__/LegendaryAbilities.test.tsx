@@ -2,7 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { findCoreClass, findAdvancedClass, getAbilities } from '../../../test/helpers'
+import {
+  findCoreClass,
+  findAdvancedClass,
+  getAbilities,
+  expandAllAbilities,
+} from '../../../test/helpers'
 
 describe('PilotLiveSheet - Legendary Abilities', () => {
   // Get real data from salvageunion-reference
@@ -45,41 +50,22 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select 6 core abilities
+      // Select 6 core abilities - abilities are now shown inline
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Wait for advanced class to be enabled
@@ -92,54 +78,29 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, hackerAdvancedClass.id)
 
-      // Select only 2 advanced abilities (not all 3)
-      await user.click(addButton)
+      // Expand all abilities again to see the advanced abilities
+      await expandAllAbilities(user)
 
+      // Select only 2 advanced abilities (not all 3) - abilities are now shown inline
       const addToCharacterButtons1 = await screen.findAllByRole('button', {
         name: /Add to Pilot \(2 TP\)/i,
       })
       await user.click(addToCharacterButtons1[0])
-
-      // Close the modal
-      let closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
-
-      await user.click(addButton)
 
       const addToCharacterButtons2 = await screen.findAllByRole('button', {
         name: /Add to Pilot \(2 TP\)/i,
       })
       await user.click(addToCharacterButtons2[0])
 
-      // Close the modal
-      closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
-
-      // Open modal - legendary should be visible but NOT selectable yet
-      await user.click(addButton)
-
-      // Wait for modal to open
-      await waitFor(() => {
-        expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument()
-      })
-
-      // Legendary ability should be visible
+      // Legendary ability should be visible in the inline display
       expect(screen.getByText(testLegendaryAbility.name)).toBeInTheDocument()
 
-      // But the "Add to Pilot (3 TP)" button should NOT be present (hidden when not selectable)
-      expect(
-        screen.queryByRole('button', { name: /Add to Pilot \(3 TP\)/i })
-      ).not.toBeInTheDocument()
+      // The "Add to Pilot (3 TP)" buttons should be present but disabled (not all advanced abilities selected)
+      const legendaryButtons = screen.queryAllByRole('button', { name: /Add to Pilot \(3 TP\)/i })
+      expect(legendaryButtons.length).toBeGreaterThan(0)
+      legendaryButtons.forEach((button) => {
+        expect(button).toBeDisabled()
+      })
     })
 
     it('shows legendary abilities after all advanced abilities are selected', async () => {
@@ -159,41 +120,22 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select 6 core abilities
+      // Select 6 core abilities - abilities are now shown inline
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Wait for advanced class to be enabled
@@ -206,26 +148,18 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, hackerAdvancedClass.id)
 
-      // Select all 3 advanced abilities
+      // Expand all abilities again to see the advanced abilities
+      await expandAllAbilities(user)
+
+      // Select all 3 advanced abilities - abilities are now shown inline
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(2 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
-      // Open modal - legendary should now be visible
-      await user.click(addButton)
+      // Legendary should now be visible in the inline display
       await waitFor(() => {
         expect(screen.getByText(testLegendaryAbility.name)).toBeInTheDocument()
       })
@@ -248,41 +182,22 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select all required abilities
+      // Select all required abilities - abilities are now shown inline
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Wait for advanced class to be enabled
@@ -294,21 +209,14 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, hackerAdvancedClass.id)
 
+      // Expand all abilities again to see the advanced abilities
+      await expandAllAbilities(user)
+
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(2 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Check current TP (30 - 6 core - 6 advanced = 18)
@@ -317,8 +225,10 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         expect(tpValue).toBeInTheDocument()
       })
 
-      // Select legendary ability
-      await user.click(addButton)
+      // Expand all abilities again to see the legendary abilities
+      await expandAllAbilities(user)
+
+      // Select legendary ability - abilities are now shown inline
       await waitFor(() => screen.getByText(testLegendaryAbility.name))
 
       // Find and click the "Add to Pilot (3 TP)" button
@@ -326,15 +236,6 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         name: /Add to Pilot \(3 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
-
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
 
       // TP should be reduced by 3 (18 - 3 = 15)
       await waitFor(() => {
@@ -360,41 +261,22 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select all required abilities
+      // Select all required abilities - abilities are now shown inline
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(1 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
       // Wait for advanced class to be enabled
@@ -406,58 +288,34 @@ describe('PilotLiveSheet - Legendary Abilities', () => {
       const advancedClassSelect = screen.getAllByRole('combobox')[1] // Second combobox is Advanced Class
       await user.selectOptions(advancedClassSelect, hackerAdvancedClass.id)
 
+      // Expand all abilities again to see the advanced abilities
+      await expandAllAbilities(user)
+
       for (let i = 0; i < 3; i++) {
-        await user.click(addButton)
         const addToCharacterButtons = await screen.findAllByRole('button', {
           name: /Add to Pilot \(2 TP\)/i,
         })
         await user.click(addToCharacterButtons[0])
-
-        // Close the modal
-        const closeButton = screen.getByRole('button', { name: /close/i })
-        await user.click(closeButton)
-
-        // Wait for modal to close
-        await waitFor(() => {
-          expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-        })
       }
 
-      // Select legendary ability
-      await user.click(addButton)
+      // Expand all abilities again to see the legendary abilities
+      await expandAllAbilities(user)
+
+      // Select legendary ability - abilities are now shown inline
       await waitFor(() => screen.getByText(testLegendaryAbility.name))
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(3 TP\)/i,
       })
       await user.click(addToCharacterButtons[0])
 
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
-
       // Legendary ability should now be displayed in the abilities list
       await waitFor(() => {
         expect(screen.getByText(testLegendaryAbility.name)).toBeInTheDocument()
       })
 
-      // Open modal again - legendary section should be visible but button should not be present (already selected one)
-      await user.click(addButton)
-      await waitFor(() => {
-        expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument()
-      })
-
-      // Legendary section should be visible
-      expect(screen.getByText(/legendary abilities/i)).toBeInTheDocument()
-
-      // But the "Add to Pilot (3 TP)" button should NOT be present (already selected one)
-      expect(
-        screen.queryByRole('button', { name: /Add to Pilot \(3 TP\)/i })
-      ).not.toBeInTheDocument()
+      // After selecting one legendary ability, the "Add to Pilot (3 TP)" button should NOT be present for other legendary abilities
+      // (only one legendary ability can be selected)
+      expect(screen.queryAllByRole('button', { name: /Add to Pilot \(3 TP\)/i })).toHaveLength(0)
     })
   })
 })

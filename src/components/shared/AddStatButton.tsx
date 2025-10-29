@@ -4,6 +4,7 @@ interface AddStatButtonProps {
   onClick: () => void
   disabled?: boolean
   label?: string
+  bottomLabel?: string
   ariaLabel?: string
 }
 
@@ -15,17 +16,19 @@ export function AddStatButton({
   onClick,
   disabled = false,
   label = 'Add',
+  bottomLabel,
   ariaLabel,
 }: AddStatButtonProps) {
   return (
     <StatDisplay
       label={label}
+      bottomLabel={bottomLabel}
       value="+"
       disabled={disabled}
       onClick={onClick}
       bg="su.brick"
       valueColor="su.white"
-      ariaLabel={ariaLabel || '+'}
+      ariaLabel={ariaLabel}
     />
   )
 }

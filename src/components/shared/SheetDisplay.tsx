@@ -47,13 +47,13 @@ export function SheetDisplay({
         h={height}
         minH={minHeight}
         p={3}
-        borderWidth="3px"
+        borderWidth="2px"
         borderColor={borderColor}
-        borderRadius="2xl"
+        borderRadius="md"
         bg="su.white"
         color="su.black"
-        fontWeight="semibold"
         whiteSpace="pre-wrap"
+        fontSize="sm"
         overflowY="auto"
         opacity={disabled ? 0.5 : 1}
         cursor={disabled ? 'not-allowed' : 'default'}

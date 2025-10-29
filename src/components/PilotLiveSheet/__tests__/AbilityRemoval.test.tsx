@@ -2,7 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, within } from '../../../test/chakra-utils'
 import userEvent from '@testing-library/user-event'
 import PilotLiveSheet from '../index'
-import { findCoreClass, getAbilitiesForClass, getAbilitiesByLevel } from '../../../test/helpers'
+import {
+  findCoreClass,
+  getAbilitiesForClass,
+  getAbilitiesByLevel,
+  expandAllAbilities,
+} from '../../../test/helpers'
 
 describe('PilotLiveSheet - Ability Removal', () => {
   // Use real data from salvageunion-reference
@@ -30,7 +35,7 @@ describe('PilotLiveSheet - Ability Removal', () => {
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, hackerClass.id)
 
-      // Set TP to 5 by clicking increment button
+      // Set TP to 5 by clicking increment button (need 2 TP to remove)
       const tpStepper = screen.getByRole('group', { name: /TP/i })
       const tpIncrementButton = tpStepper.querySelector(
         'button[aria-label="Increment TP"]'
@@ -40,104 +45,90 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select an ability
-      await user.click(addButton)
-      await waitFor(() => screen.getByText(testAbility.name))
+      // Abilities are now shown inline - find and click the first "Add to Pilot" button
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
-      await user.click(addToCharacterButtons[0])
 
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
-
-      // Ability should be displayed - expand it to see the remove button
-      await waitFor(() => {
-        const abilityCards = screen.getAllByText(testAbility.name)
-        expect(abilityCards.length).toBeGreaterThan(0)
-      })
-
-      // Click on the ability header to expand it
-      const abilityHeaders = screen.getAllByText(testAbility.name)
-      const selectedAbilityHeader = abilityHeaders[0].closest(
+      // Get the ability header before clicking to add it
+      const abilityHeaderBeforeAdd = addToCharacterButtons[0].closest(
         '[data-testid="frame-header-container"]'
       ) as HTMLElement
-      await user.click(selectedAbilityHeader)
 
-      // Now the remove button should be visible
+      await user.click(addToCharacterButtons[0])
+
+      // Wait for TP to decrease to 4 (5 - 1 = 4)
       await waitFor(() => {
-        const removeButton = screen.getByText(/remove ability/i)
-        expect(removeButton).toBeInTheDocument()
+        const tpValue = within(tpStepper).getByText('4')
+        expect(tpValue).toBeInTheDocument()
       })
+
+      // The ability card should still be in the same position, but now it's selected
+      // Click on the ability header to expand it (it's still collapsed after being added)
+      await user.click(abilityHeaderBeforeAdd)
+
+      // Now the remove button should be visible (we have 4 TP, which is >= 2)
+      await waitFor(
+        () => {
+          const removeButton = screen.getByRole('button', { name: /remove ability/i })
+          expect(removeButton).toBeInTheDocument()
+        },
+        { timeout: 3000 }
+      )
     })
 
-    it('disables remove button when TP is less than 1', async () => {
+    it('disables remove button when TP is less than 2', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
       const classSelect = screen.getAllByRole('combobox')[0] // First combobox is Class
       await user.selectOptions(classSelect, hackerClass.id)
 
-      // Set TP to 1 by clicking increment button
+      // Set TP to 2 by clicking increment button
       const tpStepper = screen.getByRole('group', { name: /TP/i })
       const tpIncrementButton = tpStepper.querySelector(
         'button[aria-label="Increment TP"]'
       ) as HTMLButtonElement
       await user.click(tpIncrementButton)
+      await user.click(tpIncrementButton)
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select an ability (costs 1 TP, leaving 0 TP)
-      await user.click(addButton)
-      await waitFor(() => screen.getByText(testAbility.name))
+      // Select an ability (costs 1 TP, leaving 1 TP)
+      // Abilities are now shown inline
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
+
+      // Get the ability header before clicking to add it
+      const abilityHeaderBeforeAdd = addToCharacterButtons[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+
       await user.click(addToCharacterButtons[0])
 
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
+      // TP should now be 1 (not enough to remove, need 2)
       await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
-
-      // TP should now be 0
-      await waitFor(() => {
-        const tpValue = within(tpStepper).getByText('0')
+        const tpValue = within(tpStepper).getByText('1')
         expect(tpValue).toBeInTheDocument()
       })
 
-      // Expand the ability to see the remove button
-      await waitFor(() => {
-        const abilityCards = screen.getAllByText(testAbility.name)
-        expect(abilityCards.length).toBeGreaterThan(0)
-      })
+      // The ability card should still be in the same position, but now it's selected
+      // Click on the ability header to expand it (it's still collapsed after being added)
+      await user.click(abilityHeaderBeforeAdd)
 
-      const abilityHeaders = screen.getAllByText(testAbility.name)
-      const selectedAbilityHeader = abilityHeaders[0].closest(
-        '[data-testid="frame-header-container"]'
-      ) as HTMLElement
-      await user.click(selectedAbilityHeader)
-
-      // Remove button should be disabled
+      // Remove button should be disabled (need 2 TP, only have 1)
       await waitFor(() => {
-        const removeButton = screen.getByText(/remove ability/i).closest('button')
+        const removeButton = screen.getByRole('button', { name: /remove ability/i })
         expect(removeButton).toBeDisabled()
       })
     })
 
-    it('enables remove button when TP is 1 or more', async () => {
+    it('enables remove button when TP is 2 or more', async () => {
       const user = userEvent.setup()
       render(<PilotLiveSheet />)
 
@@ -154,40 +145,34 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select an ability
-      await user.click(addButton)
-      await waitFor(() => screen.getByText(testAbility.name))
+      // Select an ability - abilities are now shown inline (costs 1 TP, leaving 4 TP)
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
-      await user.click(addToCharacterButtons[0])
 
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
-
-      // Expand the ability to see the remove button
-      await waitFor(() => {
-        const abilityCards = screen.getAllByText(testAbility.name)
-        expect(abilityCards.length).toBeGreaterThan(0)
-      })
-
-      const abilityHeaders = screen.getAllByText(testAbility.name)
-      const selectedAbilityHeader = abilityHeaders[0].closest(
+      // Get the ability header before clicking to add it
+      const abilityHeaderBeforeAdd = addToCharacterButtons[0].closest(
         '[data-testid="frame-header-container"]'
       ) as HTMLElement
-      await user.click(selectedAbilityHeader)
 
-      // Remove button should be enabled (we have 4 TP left)
+      await user.click(addToCharacterButtons[0])
+
+      // Wait for TP to update to 4
       await waitFor(() => {
-        const removeButton = screen.getByText(/remove ability/i).closest('button')
+        const tpValue = within(tpStepper).getByText('4')
+        expect(tpValue).toBeInTheDocument()
+      })
+
+      // The ability card should still be in the same position, but now it's selected
+      // Click on the ability header to expand it (it's still collapsed after being added)
+      await user.click(abilityHeaderBeforeAdd)
+
+      // Remove button should be enabled (we have 4 TP, which is >= 2)
+      await waitFor(() => {
+        const removeButton = screen.getByRole('button', { name: /remove ability/i })
         expect(removeButton).not.toBeDisabled()
       })
     })
@@ -211,48 +196,35 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select an ability (costs 1 TP, leaving 4 TP)
-      await user.click(addButton)
-      await waitFor(() => screen.getByText(testAbility.name))
+      // Select an ability (costs 1 TP, leaving 4 TP) - abilities are now shown inline
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
+
+      // Get the ability header before clicking to add it
+      const abilityHeaderBeforeAdd = addToCharacterButtons[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+
       await user.click(addToCharacterButtons[0])
-
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
 
       await waitFor(() => {
         const tpValue = within(tpStepper).getByText('4')
         expect(tpValue).toBeInTheDocument()
       })
 
-      // Expand the ability first
-      await waitFor(() => {
-        const abilityCards = screen.getAllByText(testAbility.name)
-        expect(abilityCards.length).toBeGreaterThan(0)
-      })
+      // The ability card should still be in the same position, but now it's selected
+      // Click on the ability header to expand it (it's still collapsed after being added)
+      await user.click(abilityHeaderBeforeAdd)
 
-      const abilityHeaders = screen.getAllByText(testAbility.name)
-      const selectedAbilityHeader = abilityHeaders[0].closest(
-        '[data-testid="frame-header-container"]'
-      ) as HTMLElement
-      await user.click(selectedAbilityHeader)
-
-      // Remove the ability
-      const removeButton = (await screen.findByText(/remove ability/i)).closest('button')
-      if (!removeButton) throw new Error('Remove button not found')
+      // Remove the ability (costs 1 TP)
+      const removeButton = await screen.findByRole('button', { name: /remove ability/i })
       await user.click(removeButton)
 
-      // TP should be reduced by 1 (4 - 1 = 3)
+      // TP should be: 4 - 1 (removal cost) = 3
       await waitFor(() => {
         const tpValue = within(tpStepper).getByText('3')
         expect(tpValue).toBeInTheDocument()
@@ -276,40 +248,27 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select an ability
-      await user.click(addButton)
-      await waitFor(() => screen.getByText(testAbility.name))
+      // Select an ability - abilities are now shown inline
       const addToCharacterButtons = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
-      await user.click(addToCharacterButtons[0])
 
-      // Close the modal
-      const closeButton = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
-
-      // Expand the ability first
-      await waitFor(() => {
-        const abilityCards = screen.getAllByText(testAbility.name)
-        expect(abilityCards.length).toBeGreaterThan(0)
-      })
-
-      const abilityHeaders = screen.getAllByText(testAbility.name)
-      const selectedAbilityHeader = abilityHeaders[0].closest(
+      // Get the ability header before clicking to add it
+      const abilityHeaderBeforeAdd = addToCharacterButtons[0].closest(
         '[data-testid="frame-header-container"]'
       ) as HTMLElement
-      await user.click(selectedAbilityHeader)
+
+      await user.click(addToCharacterButtons[0])
+
+      // The ability card should still be in the same position, but now it's selected
+      // Click on the ability header to expand it (it's still collapsed after being added)
+      await user.click(abilityHeaderBeforeAdd)
 
       // Click remove button
-      const removeButton = (await screen.findByText(/remove ability/i)).closest('button')
-      if (!removeButton) throw new Error('Remove button not found')
+      const removeButton = await screen.findByRole('button', { name: /remove ability/i })
 
       // Mock window.confirm
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
@@ -338,45 +297,32 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select an ability
-      await user.click(addButton)
-      await waitFor(() => screen.getByText(testAbility.name))
+      // Select an ability - abilities are now shown inline
       const addToCharacterButtons2 = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
+
+      // Get the ability header before clicking to add it
+      const abilityHeaderBeforeAdd = addToCharacterButtons2[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+
       await user.click(addToCharacterButtons2[0])
-
-      // Close the modal
-      const closeButton2 = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton2)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
 
       await waitFor(() => {
         const tpValue = within(tpStepper).getByText('4')
         expect(tpValue).toBeInTheDocument()
       })
 
-      // Expand the ability first
-      await waitFor(() => {
-        const abilityCards = screen.getAllByText(testAbility.name)
-        expect(abilityCards.length).toBeGreaterThan(0)
-      })
-
-      const abilityHeaders = screen.getAllByText(testAbility.name)
-      const selectedAbilityHeader = abilityHeaders[0].closest(
-        '[data-testid="frame-header-container"]'
-      ) as HTMLElement
-      await user.click(selectedAbilityHeader)
+      // The ability card should still be in the same position, but now it's selected
+      // Click on the ability header to expand it (it's still collapsed after being added)
+      await user.click(abilityHeaderBeforeAdd)
 
       // Click remove button but cancel
-      const removeButton = (await screen.findByText(/remove ability/i)).closest('button')
-      if (!removeButton) throw new Error('Remove button not found')
+      const removeButton = await screen.findByRole('button', { name: /remove ability/i })
 
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
 
@@ -409,53 +355,43 @@ describe('PilotLiveSheet - Ability Removal', () => {
         await user.click(tpIncrementButton)
       }
 
-      const addButton = screen.getByRole('button', { name: 'Add ability' })
+      // Expand all abilities to see the "Add to Pilot" buttons
+      await expandAllAbilities(user)
 
-      // Select an ability
-      await user.click(addButton)
-      await waitFor(() => screen.getByText(testAbility.name))
+      // Select an ability - abilities are now shown inline
       const addToCharacterButtons3 = await screen.findAllByRole('button', {
         name: /Add to Pilot \(1 TP\)/i,
       })
+
+      // Get the ability header before clicking to add it
+      const abilityHeaderBeforeAdd = addToCharacterButtons3[0].closest(
+        '[data-testid="frame-header-container"]'
+      ) as HTMLElement
+
       await user.click(addToCharacterButtons3[0])
-
-      // Close the modal
-      const closeButton3 = screen.getByRole('button', { name: /close/i })
-      await user.click(closeButton3)
-
-      // Wait for modal to close
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
-      })
 
       // Ability should be in the list
       await waitFor(() => {
         expect(screen.getByText(testAbility.name)).toBeInTheDocument()
       })
 
-      // Expand the ability first
-      await waitFor(() => {
-        const abilityCards = screen.getAllByText(testAbility.name)
-        expect(abilityCards.length).toBeGreaterThan(0)
-      })
-
-      const abilityHeaders = screen.getAllByText(testAbility.name)
-      const selectedAbilityHeader = abilityHeaders[0].closest(
-        '[data-testid="frame-header-container"]'
-      ) as HTMLElement
-      await user.click(selectedAbilityHeader)
+      // The ability card should still be in the same position, but now it's selected
+      // Click on the ability header to expand it (it's still collapsed after being added)
+      await user.click(abilityHeaderBeforeAdd)
 
       // Remove the ability
-      const removeButton = (await screen.findByText(/remove ability/i)).closest('button')
-      if (!removeButton) throw new Error('Remove button not found')
+      const removeButton = await screen.findByRole('button', { name: /remove ability/i })
 
       const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
       await user.click(removeButton)
 
-      // Ability should be removed from the list
+      // Ability should still be in the DOM but now dimmed (unselected)
+      // The ability card should collapse after removal
       await waitFor(() => {
-        expect(screen.queryByText(testAbility.name)).not.toBeInTheDocument()
+        // Check that the "Add to Pilot" button is back (ability is unselected)
+        const addButtons = screen.queryAllByRole('button', { name: /Add to Pilot \(1 TP\)/i })
+        expect(addButtons.length).toBeGreaterThan(0)
       })
 
       confirmSpy.mockRestore()

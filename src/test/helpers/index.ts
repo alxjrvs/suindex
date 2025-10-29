@@ -9,6 +9,8 @@ export {
   waitForTPValue,
   addAbility,
   addEquipment,
+  selectAbilityByTPCost,
+  expandAllAbilities,
 } from './userInteractions'
 
 // Reference data helpers - imported directly from utils

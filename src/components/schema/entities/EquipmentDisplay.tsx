@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { SURefEquipment } from 'salvageunion-reference'
-import { EntityDisplay } from '../../shared/EntityDisplay'
+import { EntityDisplay } from '../../entity/EntityDisplay'
 import { ENTITY_DISPLAY_CONFIGS } from './entityDisplayConfig'
 
 interface EquipmentDisplayProps {

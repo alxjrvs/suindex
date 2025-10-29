@@ -14,6 +14,11 @@ export function DiscordSignInButton({
 }: DiscordSignInButtonProps) {
   const [loading, setLoading] = useState(false)
 
+  // Check if Discord sign-in should be shown
+  if (import.meta.env.VITE_SHOW_DISCORD_SIGNIN !== '1') {
+    return null
+  }
+
   const handleDiscordLogin = async () => {
     try {
       setLoading(true)

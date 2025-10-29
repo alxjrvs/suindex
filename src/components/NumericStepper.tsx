@@ -35,26 +35,22 @@ export default function NumericStepper({
     }
   }, [value, min, step, onChange])
 
-  const displayValue = useMemo(
-    () => (max !== undefined ? `${value}/${max}` : `${value}`),
-    [value, max]
-  )
-
   const labelId = useMemo(
     () => `stepper-label-${label.toLowerCase().replace(/\s+/g, '-')}`,
     [label]
   )
 
   return (
-    <HStack gap={1} alignItems="flex-end" role="group" aria-labelledby={labelId}>
+    <HStack gap={0} alignItems="flex-end" role="group" aria-labelledby={labelId}>
       <StatDisplay
         disabled={disabled}
         label={label}
-        value={displayValue}
+        value={value}
+        outOfMax={max}
         labelId={labelId}
         flash={flash}
       />
-      <VStack gap={1} pb={2.5}>
+      <VStack h="full" justifyContent="center" gap={1} ml={-0.5}>
         <IconButton
           onClick={handleIncrement}
           disabled={disabled || (max !== undefined && value >= max)}
@@ -63,13 +59,14 @@ export default function NumericStepper({
           h={5}
           minW={5}
           minH={5}
-          bg="bg.input"
-          color="fg.input"
+          pb="1"
+          bg="su.white"
+          color="su.black"
           fontSize="xs"
           fontWeight="bold"
-          borderWidth="3px"
+          borderWidth="2px"
+          borderRadius="none"
           borderColor="su.black"
-          borderRadius="md"
           _hover={{ bg: 'bg.muted' }}
           _disabled={{
             opacity: 0.3,
@@ -88,13 +85,13 @@ export default function NumericStepper({
           h={5}
           minW={5}
           minH={5}
-          bg="bg.input"
+          borderRadius="none"
+          bg="su.white"
           color="fg.input"
           fontSize="xs"
           fontWeight="bold"
-          borderWidth="3px"
+          borderWidth="2px"
           borderColor="su.black"
-          borderRadius="md"
           _hover={{ bg: 'bg.muted' }}
           _disabled={{
             opacity: 0.3,

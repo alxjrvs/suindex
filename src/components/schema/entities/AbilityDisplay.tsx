@@ -1,14 +1,14 @@
-import { Grid, VStack } from '@chakra-ui/react'
-import { EntityDisplay } from '../../shared/EntityDisplay'
-import { ActionCard } from '../../shared/ActionCard'
+import { Grid } from '@chakra-ui/react'
+import { EntityDisplay } from '../../entity/EntityDisplay'
 import type { SURefAbility } from 'salvageunion-reference'
-import { extractOptions } from '../../shared/entityDisplayHelpers'
+import { extractOptions } from '../../entity/entityDisplayHelpers'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 
 interface AbilityDisplayProps {
   data: SURefAbility | undefined
   onClick?: () => void
   disabled?: boolean
+  dimmed?: boolean
   disableRemove?: boolean
   onRemove?: () => void
   collapsible?: boolean
@@ -17,12 +17,16 @@ interface AbilityDisplayProps {
   onToggleExpanded?: () => void
   showSelectButton?: boolean
   selectButtonText?: string
+  trained?: boolean
+  compact?: boolean
 }
 
 export function AbilityDisplay({
+  compact = false,
   data,
   onClick,
   disabled = false,
+  dimmed = false,
   disableRemove = false,
   onRemove,
   collapsible = false,
@@ -31,19 +35,37 @@ export function AbilityDisplay({
   onToggleExpanded,
   showSelectButton = false,
   selectButtonText,
+  trained = true,
 }: AbilityDisplayProps) {
   if (!data) return null
   const isLegendary = String(data.level).toUpperCase() === 'L' || data.tree.includes('Legendary')
-  const headerColor = isLegendary ? 'su.pink' : 'su.orange'
+  const isAdvancedOrHybrid = data.tree.includes('Advanced') || data.tree.includes('Hybrid')
+
+  // Determine header color based on ability type
+  let headerColor: string
+  if (isLegendary) {
+    headerColor = 'su.pink'
+  } else if (isAdvancedOrHybrid) {
+    headerColor = 'su.darkOrange'
+  } else {
+    // Core ability
+    headerColor = 'su.orange'
+  }
+
+  const headerOpacity = trained ? 1 : 0.5
+
   const options = extractOptions(data)
 
   return (
     <EntityDisplay
+      compact={compact}
       schemaName="abilities"
       data={data}
       headerColor={headerColor}
+      headerOpacity={headerOpacity}
       onClick={onClick}
       disabled={disabled}
+      dimmed={dimmed}
       disableRemove={disableRemove}
       onRemove={onRemove}
       collapsible={collapsible}
@@ -62,14 +84,6 @@ export function AbilityDisplay({
             return <SheetDisplay key={optIndex} label={label} value={value} />
           })}
         </Grid>
-      )}
-
-      {data.subAbilities && data.subAbilities.length > 0 && (
-        <VStack gap={3} alignItems="stretch">
-          {data.subAbilities.map((subAbility, index) => (
-            <ActionCard key={index} action={subAbility} activationCurrency="AP" />
-          ))}
-        </VStack>
       )}
     </EntityDisplay>
   )

@@ -1,6 +1,6 @@
 import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { Heading } from '../../base/Heading'
-import { EntityDisplay } from '../../shared/EntityDisplay'
+import { EntityDisplay } from '../../entity/EntityDisplay'
 import type { SURefChassis } from 'salvageunion-reference'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 
@@ -48,7 +48,7 @@ export function ChassisDisplay({ data }: ChassisDisplayProps) {
           <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} alignItems="stretch">
             {data.patterns.map((pattern, index) => (
               <SheetDisplay label={pattern.name}>
-                <VStack key={index} gap={3} alignItems="stretch" borderRadius="lg" p={4} w="full">
+                <VStack key={index} gap={3} alignItems="stretch" borderRadius="md" p={4} w="full">
                   <Flex alignItems="center" gap={2} flexWrap="wrap">
                     {'legalStarting' in pattern && pattern.legalStarting && (
                       <Text

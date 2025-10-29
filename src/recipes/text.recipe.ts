@@ -13,6 +13,7 @@ export const textRecipe = defineRecipe({
         display: 'inline-block',
         alignSelf: 'flex-start',
         lineHeight: 1,
+        width: 'fit-content',
       },
       pseudoheaderInverse: {
         fontWeight: 'bold',
@@ -22,6 +23,7 @@ export const textRecipe = defineRecipe({
         display: 'inline-block',
         alignSelf: 'flex-start',
         lineHeight: 1,
+        width: 'fit-content',
       },
     },
   },

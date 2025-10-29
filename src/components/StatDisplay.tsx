@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 
 interface StatDisplayProps {
   label: string
-  value: string | number
+  value: number | string
+  outOfMax?: number // When provided, displays "value/outOfMax"
+  bottomLabel?: string // Optional label positioned below the value
   labelId?: string
   disabled?: boolean
   onClick?: () => void
@@ -14,11 +16,14 @@ interface StatDisplayProps {
   ariaLabel?: string
   compact?: boolean
   flash?: boolean // Trigger flash animation
+  inverse?: boolean
 }
 
 export function StatDisplay({
   label,
   value,
+  outOfMax,
+  bottomLabel,
   labelId,
   disabled,
   onClick,
@@ -28,9 +33,15 @@ export function StatDisplay({
   ariaLabel,
   compact = false,
   flash = false,
+  inverse = false,
 }: StatDisplayProps) {
   const [isFlashing, setIsFlashing] = useState(false)
   const WrapperComponent = onClick ? Button : Box
+
+  // Combine label and bottomLabel for aria-label
+  const combinedAriaLabel = ariaLabel || (bottomLabel ? `${label} ${bottomLabel}` : label)
+  const trueBg = inverse ? 'su.black' : bg
+  const trueValueColor = inverse ? 'su.white' : valueColor
 
   useEffect(() => {
     if (!flash) return
@@ -47,9 +58,9 @@ export function StatDisplay({
   const commonProps = {
     w: compact ? 10 : 16,
     h: compact ? 10 : 16,
-    borderRadius: compact ? 'xl' : ('2xl' as const),
-    bg,
-    borderWidth: compact ? '2px' : '3px',
+    borderRadius: 0,
+    bg: trueBg,
+    borderWidth: compact ? '1px' : '2px',
     borderColor,
     display: 'flex' as const,
     alignItems: 'center' as const,
@@ -69,12 +80,14 @@ export function StatDisplay({
         onClick,
         bg: disabled ? 'gray.200' : bg,
         _hover: !disabled ? { opacity: 0.8 } : undefined,
-        'aria-label': ariaLabel || String(value),
+        'aria-label': combinedAriaLabel,
+        m: 0,
+        p: 0,
       }
     : commonProps
 
   return (
-    <VStack gap={0} alignItems="center">
+    <VStack gap={0} alignItems="center" aria-label={combinedAriaLabel}>
       <style>
         {`
           @keyframes growShrink {
@@ -101,7 +114,7 @@ export function StatDisplay({
         <Text
           fontSize={compact ? 'sm' : 'md'}
           fontWeight="bold"
-          color={disabled ? 'su.black' : valueColor}
+          color={disabled ? 'su.black' : trueValueColor}
           textAlign="center"
           overflow="hidden"
           whiteSpace="nowrap"
@@ -112,9 +125,22 @@ export function StatDisplay({
             containerType: 'inline-size',
           }}
         >
-          {value}
+          {outOfMax !== undefined ? `${value}/${outOfMax}` : value}
         </Text>
       </WrapperComponent>
+      <Text
+        textTransform={'uppercase'}
+        mt={compact ? -1.5 : -2}
+        fontSize={compact ? '2xs' : 'xs'}
+        alignSelf="center"
+        variant="pseudoheader"
+        zIndex={1}
+        bg={disabled ? 'gray.600' : undefined}
+        color={disabled ? 'gray.300' : undefined}
+        visibility={bottomLabel ? 'visible' : 'hidden'}
+      >
+        {bottomLabel || '\u00A0'}
+      </Text>
     </VStack>
   )
 }

@@ -107,3 +107,43 @@ export async function addEquipment(user: UserEvent, equipmentName: string) {
   const addButton = screen.getByRole('button', { name: new RegExp(`Equip ${equipmentName}`, 'i') })
   await user.click(addButton)
 }
+
+/**
+ * Expand all collapsed abilities in the abilities section
+ * Abilities are displayed inline and collapsed by default.
+ * This helper expands all of them so their "Add to Pilot" buttons become visible.
+ *
+ * @param user - UserEvent instance from userEvent.setup()
+ */
+export async function expandAllAbilities(user: UserEvent) {
+  // Find all ability headers that are collapsed (have ▶ symbol)
+  const allHeaders = screen.queryAllByTestId('frame-header-container')
+
+  for (const header of allHeaders) {
+    const hasExpandArrow = header.textContent?.includes('▶')
+    if (hasExpandArrow) {
+      await user.click(header)
+      // Small delay to allow expansion
+      await new Promise((resolve) => setTimeout(resolve, 50))
+    }
+  }
+}
+
+/**
+ * Select the first available ability with a specific TP cost
+ * Abilities are displayed inline and collapsed by default, so this helper:
+ * 1. Expands all abilities to make "Add to Pilot" buttons visible
+ * 2. Finds and clicks the first "Add to Pilot (X TP)" button
+ *
+ * @param user - UserEvent instance from userEvent.setup()
+ * @param tpCost - The TP cost of the ability (e.g., 1, 2, or 3)
+ */
+export async function selectAbilityByTPCost(user: UserEvent, tpCost: number) {
+  // Expand all abilities first
+  await expandAllAbilities(user)
+
+  // Now find and click the button
+  const buttonPattern = new RegExp(`Add to Pilot \\(${tpCost} TP\\)`, 'i')
+  const addButtons = await screen.findAllByRole('button', { name: buttonPattern })
+  await user.click(addButtons[0])
+}

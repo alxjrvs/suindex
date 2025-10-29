@@ -4,7 +4,6 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { AbilitiesList } from './AbilitiesList'
-import { AbilitySelector } from './AbilitySelector'
 import { PilotInventory } from './PilotInventory'
 import { EquipmentSelector } from './EquipmentSelector'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
@@ -19,11 +18,9 @@ interface PilotLiveSheetProps {
 }
 
 export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
-  const [isAbilitySelectorOpen, setIsAbilitySelectorOpen] = useState(false)
   const [isEquipmentSelectorOpen, setIsEquipmentSelectorOpen] = useState(false)
 
   const allCoreClasses = SalvageUnionReference.CoreClasses.all()
-  const allAbilities = SalvageUnionReference.Abilities.all()
 
   const {
     pilot,
@@ -121,17 +118,15 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
       {/* Abilities Section */}
       <AbilitiesList
         abilities={pilot.abilities ?? []}
-        legendaryAbility={
-          pilot.legendary_ability_id
-            ? allAbilities.find((a) => a.id === pilot.legendary_ability_id) || null
-            : null
-        }
+        legendaryAbilityId={pilot.legendary_ability_id ?? null}
+        onAdd={handleAddAbility}
         onRemove={handleRemoveAbility}
+        onAddLegendary={handleAddLegendaryAbility}
         onRemoveLegendary={handleRemoveLegendaryAbility}
-        onAddClick={() => setIsAbilitySelectorOpen(true)}
         currentTP={pilot.current_tp ?? 0}
         disabled={!selectedClass}
-        coreTreeNames={selectedClass?.coreTrees || []}
+        selectedClass={selectedClass}
+        selectedAdvancedClass={selectedAdvancedClass}
       />
 
       {/* Equipment Section */}
@@ -149,20 +144,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         backgroundColor="bg.builder.pilot"
         placeholder="Add notes about your pilot..."
         disabled={!selectedClass}
-      />
-
-      {/* Ability Selector Modal */}
-      <AbilitySelector
-        isOpen={isAbilitySelectorOpen}
-        onClose={() => setIsAbilitySelectorOpen(false)}
-        abilities={allAbilities}
-        onSelectAbility={handleAddAbility}
-        onSelectLegendaryAbility={handleAddLegendaryAbility}
-        selectedAbilityIds={pilot.abilities ?? []}
-        selectedLegendaryAbilityId={pilot.legendary_ability_id ?? null}
-        selectedClass={selectedClass}
-        selectedAdvancedClass={selectedAdvancedClass}
-        currentTP={pilot.current_tp ?? 0}
       />
 
       {/* Equipment Selector Modal */}

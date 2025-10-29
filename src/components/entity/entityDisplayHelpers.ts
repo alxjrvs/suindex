@@ -1,7 +1,8 @@
-import type { SURefActionMetaList, SURefEntity, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEntity, SURefMetaEntity, SURefSchemaName } from 'salvageunion-reference'
 
 export interface Stat {
   label: string
+  bottomLabel?: string
   value: number | string
 }
 
@@ -104,8 +105,8 @@ export function detectSchemaName(data: SURefEntity): SURefSchemaName {
 /**
  * Get display name for schema (for page references, headers, etc.)
  */
-export function getSchemaDisplayName(schemaName: SURefSchemaName): string {
-  const displayNames: Partial<Record<SURefSchemaName, string>> = {
+export function getSchemaDisplayName(schemaName: SURefSchemaName | 'actions'): string {
+  const displayNames: Partial<Record<SURefSchemaName | 'actions', string>> = {
     vehicles: 'Vehicle',
     creatures: 'Creature',
     drones: 'Drone',
@@ -136,7 +137,7 @@ export function getSchemaDisplayName(schemaName: SURefSchemaName): string {
  * Get activation currency based on schema name
  */
 export function getActivationCurrency(
-  schemaName: SURefSchemaName | undefined,
+  schemaName: SURefSchemaName | 'actions' | undefined,
   variable: boolean = false
 ): 'AP' | 'EP' | 'XP' {
   if (variable) return 'XP'
@@ -149,47 +150,45 @@ export function getActivationCurrency(
 /**
  * Extract header stats (HP, SP, chassis stats)
  */
-export function extractHeaderStats(data: SURefEntity): Stat[] {
+export function extractHeaderStats(data: SURefMetaEntity): Stat[] {
   const stats: Stat[] = []
 
-  // Chassis has nested stats object
-  if ('stats' in data && typeof data.stats === 'object' && data.stats) {
-    const chassisStats = data.stats as {
-      structure_pts?: number
-      energy_pts?: number
-      heat_cap?: number
-      systemSlots?: number
-      moduleSlots?: number
-      cargoCap?: number
-      techLevel?: number
-      salvageValue?: number
+  const chassisStats = 'stats' in data && typeof data.stats === 'object' ? data.stats : undefined
+
+  if (chassisStats) {
+    if (chassisStats.structurePts) {
+      stats.push({ label: 'SP', value: chassisStats.structurePts })
     }
-    if (chassisStats.structure_pts !== undefined) {
-      stats.push({ label: 'SP', value: chassisStats.structure_pts })
+    if (chassisStats.energyPts) {
+      stats.push({ label: 'EP', value: chassisStats.energyPts })
     }
-    if (chassisStats.energy_pts !== undefined) {
-      stats.push({ label: 'EP', value: chassisStats.energy_pts })
+    if (chassisStats.heatCap) {
+      stats.push({ label: 'Heat', value: chassisStats.heatCap })
     }
-    if (chassisStats.heat_cap !== undefined) {
-      stats.push({ label: 'Heat', value: chassisStats.heat_cap })
+    if (chassisStats.systemSlots) {
+      stats.push({ label: 'Sys.', bottomLabel: 'Slots', value: chassisStats.systemSlots })
     }
-    if (chassisStats.systemSlots !== undefined) {
-      stats.push({ label: 'Sys. Slots', value: chassisStats.systemSlots })
+    if (chassisStats.moduleSlots) {
+      stats.push({ label: 'Mod.', bottomLabel: 'Slots', value: chassisStats.moduleSlots })
     }
-    if (chassisStats.moduleSlots !== undefined) {
-      stats.push({ label: 'Mod. Slots', value: chassisStats.moduleSlots })
+    if (chassisStats.cargoCap) {
+      stats.push({ label: 'Cargo', bottomLabel: 'Cap', value: chassisStats.cargoCap })
     }
-    if (chassisStats.cargoCap !== undefined) {
-      stats.push({ label: 'Cargo Cap', value: chassisStats.cargoCap })
+    if (chassisStats.salvageValue) {
+      stats.push({ label: 'Salvage', bottomLabel: 'Value', value: chassisStats.salvageValue })
     }
-  } else {
-    // Regular entities - only HP and SP (not SV)
-    if ('hitPoints' in data && data.hitPoints !== undefined) {
-      stats.push({ label: 'HP', value: data.hitPoints })
+    if (chassisStats.techLevel) {
+      stats.push({ label: 'Tech', bottomLabel: 'Level', value: chassisStats.techLevel })
     }
-    if ('structurePoints' in data && data.structurePoints !== undefined) {
-      stats.push({ label: 'SP', value: data.structurePoints })
-    }
+  }
+
+  if ('hitPoints' in data && !!data.hitPoints) {
+    const label = 'damageType' in data && data.damageType ? data.damageType : 'HP'
+    stats.push({ label, value: data.hitPoints })
+  }
+
+  if ('structurePoints' in data && !!data.structurePoints) {
+    stats.push({ label: 'SP', value: data.structurePoints })
   }
 
   return stats
@@ -198,7 +197,7 @@ export function extractHeaderStats(data: SURefEntity): Stat[] {
 /**
  * Extract sidebar data (tech level, salvage value, slots)
  */
-export function extractSidebarData(data: SURefEntity): SidebarData {
+export function extractSidebarData(data: SURefMetaEntity): SidebarData {
   let salvageValue: number | undefined
   let slotsRequired: number | undefined
 
@@ -219,7 +218,7 @@ export function extractSidebarData(data: SURefEntity): SidebarData {
     slotsRequired = data.slotsRequired as number | undefined
   }
 
-  const showSidebar = salvageValue !== undefined || slotsRequired !== undefined
+  const showSidebar = !!salvageValue || !!slotsRequired
 
   return {
     showSidebar,
@@ -231,24 +230,24 @@ export function extractSidebarData(data: SURefEntity): SidebarData {
 /**
  * Determine which content sections to show
  */
-export function extractContentSections(data: SURefEntity): ContentSections {
+export function extractContentSections(data: SURefMetaEntity): ContentSections {
   return {
-    showStatBonus: 'statBonus' in data && data.statBonus !== undefined,
-    showActions: 'actions' in data && data.actions !== undefined && data.actions.length > 0,
-    showRollTable: 'table' in data && data.table !== undefined,
-    showSystems: 'systems' in data && data.systems !== undefined && data.systems.length > 0,
+    showStatBonus: 'statBonus' in data && !!data.statBonus,
+    showActions: 'actions' in data && !!data.actions && data.actions.length > 0,
+    showRollTable: 'table' in data && !!data.table,
+    showSystems: 'systems' in data && !!data.systems && data.systems.length > 0,
     showAbilities:
-      ('abilities' in data && data.abilities !== undefined && data.abilities.length > 0) ||
-      ('techLevelEffects' in data &&
-        data.techLevelEffects !== undefined &&
-        data.techLevelEffects.length > 0),
+      'techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0,
   }
 }
 
 /**
  * Extract header text
  */
-export function extractHeader(data: SURefEntity, schemaName: SURefSchemaName): string {
+export function extractHeader(
+  data: SURefMetaEntity,
+  schemaName: SURefSchemaName | 'actions'
+): string {
   // AbilityTreeRequirement uses 'tree' instead of 'name'
   if (schemaName === 'ability-tree-requirements' && 'tree' in data) {
     return `${data.tree} Tree`
@@ -259,44 +258,38 @@ export function extractHeader(data: SURefEntity, schemaName: SURefSchemaName): s
 /**
  * Extract level (for abilities)
  */
-export function extractLevel(data: SURefEntity): string | number | undefined {
+export function extractLevel(data: SURefMetaEntity): string | number | undefined {
   return 'level' in data ? data.level : undefined
 }
 
 /**
  * Extract description
  */
-export function extractDescription(data: SURefEntity): string | undefined {
+export function extractDescription(data: SURefMetaEntity): string | undefined {
   return 'description' in data ? data.description : undefined
 }
 
 /**
  * Extract notes
  */
-export function extractNotes(data: SURefEntity): string | undefined {
+export function extractNotes(data: SURefMetaEntity): string | undefined {
   return 'notes' in data ? data.notes : undefined
 }
 
 /**
  * Check if entity has page reference
  */
-export function hasPageReference(data: SURefEntity): boolean {
+export function hasPageReference(data: SURefMetaEntity): boolean {
   return 'page' in data
 }
 
 export function extractOptions(
-  data: SURefEntity
+  data: SURefMetaEntity
 ): string[] | { label: string; value: string }[] | undefined {
   return 'options' in data ? data.options : undefined
 }
 
-export function extractAbilities(data: SURefEntity): SURefActionMetaList[] {
-  const abilities = 'abilities' in data ? data.abilities : undefined
-  if (!abilities) return []
-  return abilities
-}
-
-export function extractTechLevel(data: SURefEntity): number | undefined {
+export function extractTechLevel(data: SURefMetaEntity): number | undefined {
   if ('stats' in data && typeof data.stats === 'object' && data.stats) {
     return (data.stats as { techLevel?: number }).techLevel
   } else if ('techLevel' in data) {
@@ -305,7 +298,7 @@ export function extractTechLevel(data: SURefEntity): number | undefined {
   return undefined
 }
 
-export function extractTechLevelEffects(data: SURefEntity): {
+export function extractTechLevelEffects(data: SURefMetaEntity): {
   techLevelMin: number
   techLevelMax: number
   effect: string
@@ -318,11 +311,11 @@ export function extractTechLevelEffects(data: SURefEntity): {
 /**
  * Extract page reference data
  */
-export function extractPageReference(data: SURefEntity): {
+export function extractPageReference(data: SURefMetaEntity): {
   source?: string
   page: number
 } | null {
-  if (!hasPageReference(data)) return null
+  if (!('page' in data && typeof data.page === 'number')) return null
   return {
     source: 'source' in data ? data.source : undefined,
     page: data.page as number,

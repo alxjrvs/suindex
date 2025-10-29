@@ -1,13 +1,15 @@
 import { Flex, VStack, type FlexProps } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
 import type { ReactNode } from 'react'
 import { Text } from '../base/Text'
+import { CardHeader } from './CardHeader'
 
 interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderColor'> {
   /** Background color token (e.g., 'bg.builder.pilot', 'su.orange', 'su.green') */
   bg: string
   /** Optional background color for the header section (defaults to bg if not provided) */
   headerBg?: string
+  /** Optional opacity for the header section (defaults to 1) */
+  headerOpacity?: number
   /** Optional title to display at the top */
   title?: string
   /** Optional content to display on the left side of the header (e.g., buttons, stats) */
@@ -32,6 +34,7 @@ interface RoundedBoxProps extends Omit<FlexProps, 'bg' | 'children' | 'borderCol
   headerCursor?: 'pointer' | 'default'
   /** Optional test ID for the header container */
   headerTestId?: string
+  absoluteElements?: ReactNode
   label?: string
   compact?: boolean
 }
@@ -41,11 +44,13 @@ export function RoundedBox({
   compact = false,
   bg,
   headerBg,
+  headerOpacity = 1,
   title,
   leftContent,
   rightContent,
   subTitleContent,
   children,
+  absoluteElements,
   justifyContent = 'space-between',
   titleRotation = 0,
   disabled = false,
@@ -65,6 +70,10 @@ export function RoundedBox({
   // Infer cursor from presence of onHeaderClick if not explicitly set
   const actualHeaderCursor = headerCursor ?? (onHeaderClick ? 'pointer' : 'default')
 
+  // When collapsed (no children), header should have full border radius
+  // When expanded (has children), header should have 0 bottom radius
+  const actualHeaderBottomRadius = children ? '0' : 'xs'
+
   return (
     <Flex
       direction="column"
@@ -73,14 +82,16 @@ export function RoundedBox({
       bg={actualBodyBg}
       borderWidth="3px"
       borderColor={actualBorderColor}
-      borderRadius="2xl"
+      borderRadius="md"
       p={0}
       shadow="lg"
-      overflow="hidden"
+      // overflow="hidden"
       minH="fit-content"
       flexShrink={0}
+      position="relative"
       {...flexProps}
     >
+      {absoluteElements}
       {label && (
         <Text
           position="absolute"
@@ -89,23 +100,46 @@ export function RoundedBox({
           textTransform="uppercase"
           ml={3}
           mt={-2}
+          whiteSpace={compact ? 'nowrap' : undefined}
+          maxW={compact ? '80%' : undefined}
+          css={
+            compact
+              ? {
+                  transformOrigin: 'left center',
+                  transform: 'scaleX(0.85)',
+                }
+              : undefined
+          }
         >
           {label}
         </Text>
       )}
       {hasHeader && (
-        <VStack pb={2} p={2} gap={0} alignItems="stretch" w="full" bg={actualHeaderBg}>
+        <VStack
+          p={compact ? 1 : 2}
+          gap={0}
+          borderTopRadius="xs"
+          borderBottomRadius={actualHeaderBottomRadius}
+          alignItems="stretch"
+          w="full"
+          bg={actualHeaderBg}
+          opacity={headerOpacity}
+          height={compact ? '70px' : undefined}
+          overflow={compact ? 'hidden' : undefined}
+        >
           <Flex
             direction="row"
             w="full"
             bg={actualHeaderBg}
             px="0"
+            gap={1}
+            h="full"
             cursor={actualHeaderCursor}
             onClick={onHeaderClick}
             alignItems="center"
           >
             {/* Left side: leftContent + subTitleContent stacked */}
-            <Flex direction="column" gap={2} alignItems="flex-start">
+            <Flex direction="column" gap={1} alignItems="flex-start">
               {leftContent}
             </Flex>
 
@@ -114,29 +148,24 @@ export function RoundedBox({
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              gap={4}
+              gap="0"
               flex="1"
               data-testid={headerTestId}
             >
-              <Flex direction="column" gap={2} alignItems="flex-start">
+              <Flex direction="column" gap={1} justifyContent="space-between" h="full">
                 {title && (
-                  <Heading
-                    level="h2"
-                    textTransform="uppercase"
-                    alignSelf="flex-start"
-                    transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
-                    transition="transform 0.3s ease"
-                    opacity={disabled ? 0.5 : 1}
-                  >
-                    {title}
-                  </Heading>
+                  <CardHeader
+                    disabled={disabled}
+                    title={title}
+                    titleRotation={titleRotation}
+                    compact={compact}
+                  />
                 )}
-                {!compact && subTitleContent}
+                {subTitleContent}
               </Flex>
               {rightContent}
             </Flex>
           </Flex>
-          {compact && subTitleContent}
         </VStack>
       )}
       {children && (
@@ -148,6 +177,7 @@ export function RoundedBox({
           p={bodyPadding ?? 4}
           flex="1"
           minH="fit-content"
+          borderBottomRadius="md"
         >
           {children}
         </Flex>

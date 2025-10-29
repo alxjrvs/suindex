@@ -5,6 +5,8 @@ import { useMemo } from 'react'
 import { packCargoGrid } from '../../utils/cargoGridPacking'
 import { lookupEntityByRef } from '../../utils/referenceUtils'
 import { techLevelColors, suColors } from '../../theme'
+import { EntityDisplayTooltip } from '../entity/EntityDisplayTooltip'
+import type { SURefSchemaName } from 'salvageunion-reference'
 
 interface BayItem {
   id: string
@@ -105,7 +107,7 @@ export function DynamicBay({
       gap={0}
       w="full"
       aspectRatio={`${cols} / ${rows}`}
-      borderRadius="lg"
+      borderRadius="md"
       overflow="hidden"
     >
       {packedGrid.map((cell, index) => {
@@ -189,16 +191,6 @@ export function DynamicBay({
           onRemove(bayItem.id)
         }
 
-        const handleCellClick = () => {
-          if (bayItem.ref) {
-            const entity = lookupEntityByRef(bayItem.ref)
-            if (entity) {
-              const [schemaName, entityId] = bayItem.ref.split('||')
-              window.open(`/schema/${schemaName}/item/${entityId}`, '_blank')
-            }
-          }
-        }
-
         // Use ref-based color if available, otherwise use stored color
         const itemBgColor = bayItem.ref
           ? getCargoItemBgColor(bayItem.ref)
@@ -207,7 +199,10 @@ export function DynamicBay({
         // Check if this is a chassis item
         const isChassis = bayItem.ref?.startsWith('chassis||')
 
-        return (
+        // Parse ref for tooltip
+        const [schemaName, entityId] = bayItem.ref ? bayItem.ref.split('||') : [null, null]
+
+        const boxContent = (
           <Box
             key={`item-${index}`}
             position="relative"
@@ -226,7 +221,6 @@ export function DynamicBay({
             alignItems="center"
             justifyContent="center"
             minH="60px"
-            onClick={bayItem.ref ? handleCellClick : undefined}
             cursor={bayItem.ref ? 'pointer' : 'default'}
             _hover={bayItem.ref ? { opacity: 0.8 } : undefined}
             _before={
@@ -305,6 +299,20 @@ export function DynamicBay({
               </Box>
             )}
           </Box>
+        )
+
+        // Wrap with tooltip if item has a ref
+        return bayItem.ref && schemaName && entityId ? (
+          <EntityDisplayTooltip
+            key={`item-${index}`}
+            schemaName={schemaName as SURefSchemaName}
+            entityId={entityId}
+            openDelay={300}
+          >
+            {boxContent}
+          </EntityDisplayTooltip>
+        ) : (
+          boxContent
         )
       })}
     </Grid>
