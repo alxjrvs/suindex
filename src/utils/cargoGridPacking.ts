@@ -404,36 +404,18 @@ export function packCargoGrid(
       }
     }
 
-    // Sort items: items with positions first, then by amount (ascending) for optimal packing
-    const sortedItems = [...items].sort((a, b) => {
-      // Items with positions come first
-      if (a.position && !b.position) return -1
-      if (!a.position && b.position) return 1
-      // Otherwise sort by amount
-      return a.amount - b.amount
-    })
+    // Clear positions from all items to allow free rearrangement
+    // Sort by amount (descending) for better packing - larger items first
+    const sortedItems = [...items]
+      .map((item) => ({ ...item, position: undefined }))
+      .sort((a, b) => b.amount - a.amount)
 
     // Try to place each item
     for (const item of sortedItems) {
       const preferredShape = findBestShape(item.amount, cols)
 
-      // If item has a position, try to place it including that cell
-      let region: number[] | null = null
-      if (item.position) {
-        region = findConnectedRegionIncludingCell(
-          cells,
-          rows,
-          cols,
-          item.amount,
-          item.position,
-          preferredShape
-        )
-      }
-
-      // If no position or couldn't place at position, use normal placement
-      if (!region) {
-        region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
-      }
+      // Find any available region (no position constraints during repack)
+      const region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
 
       if (!region) {
         console.warn(`Could not fit item ${item.id} with amount ${item.amount}`)

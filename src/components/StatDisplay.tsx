@@ -16,6 +16,7 @@ interface StatDisplayProps {
   ariaLabel?: string
   compact?: boolean
   flash?: boolean // Trigger flash animation
+  inverse?: boolean
 }
 
 export function StatDisplay({
@@ -32,12 +33,15 @@ export function StatDisplay({
   ariaLabel,
   compact = false,
   flash = false,
+  inverse = false,
 }: StatDisplayProps) {
   const [isFlashing, setIsFlashing] = useState(false)
   const WrapperComponent = onClick ? Button : Box
 
   // Combine label and bottomLabel for aria-label
   const combinedAriaLabel = ariaLabel || (bottomLabel ? `${label} ${bottomLabel}` : label)
+  const trueBg = inverse ? 'su.black' : bg
+  const trueValueColor = inverse ? 'su.white' : valueColor
 
   useEffect(() => {
     if (!flash) return
@@ -55,7 +59,7 @@ export function StatDisplay({
     w: compact ? 10 : 16,
     h: compact ? 10 : 16,
     borderRadius: 0,
-    bg,
+    bg: trueBg,
     borderWidth: compact ? '1px' : '2px',
     borderColor,
     display: 'flex' as const,
@@ -110,7 +114,7 @@ export function StatDisplay({
         <Text
           fontSize={compact ? 'sm' : 'md'}
           fontWeight="bold"
-          color={disabled ? 'su.black' : valueColor}
+          color={disabled ? 'su.black' : trueValueColor}
           textAlign="center"
           overflow="hidden"
           whiteSpace="nowrap"

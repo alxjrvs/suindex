@@ -99,8 +99,8 @@ describe('CrawlerLiveSheet', () => {
 
       await waitFor(() => {
         // Check that at least one ability is displayed if the crawler has abilities
-        if (testCrawler.abilities && testCrawler.abilities.length > 0) {
-          const firstAbility = testCrawler.abilities[0]
+        if (testCrawler.actions && testCrawler.actions.length > 0) {
+          const firstAbility = testCrawler.actions[0]
           expect(screen.getByText(firstAbility.name)).toBeInTheDocument()
         }
       })

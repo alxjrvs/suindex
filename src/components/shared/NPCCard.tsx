@@ -8,6 +8,7 @@ import { useRef, useEffect, useState, useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
 import type { CrawlerBay, CrawlerLiveSheetState } from '../CrawlerLiveSheet/types'
 import { rollTable } from '@randsum/salvageunion'
+import type { SURefCrawler } from 'salvageunion-reference'
 
 export function NPCCard({
   position,
@@ -23,9 +24,7 @@ export function NPCCard({
 }: {
   choices: CrawlerLiveSheetState['choices']
   npc: CrawlerNPC
-  referenceBay:
-    | { npc: { choices: { id: string; name: string; description: string }[] } }
-    | undefined
+  referenceBay: SURefCrawler | undefined
   onUpdateBay: (updates: Partial<CrawlerBay>) => void
   onUpdateChoice: (id: string, value: string) => void
   position: string

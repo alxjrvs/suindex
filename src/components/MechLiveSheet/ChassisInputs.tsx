@@ -31,22 +31,14 @@ export function ChassisInputs({
 }: ChassisInputsProps) {
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
-      <ChassisSelector
-        chassisId={chassisId}
-        allChassis={allChassis}
-        onChange={onChassisChange}
-      />
+      <ChassisSelector chassisId={chassisId} allChassis={allChassis} onChange={onChassisChange} />
       <PatternSelector
         pattern={pattern}
         selectedChassis={selectedChassis}
         onChange={onPatternChange}
       />
 
-      <QuirkInput
-        quirk={quirk}
-        disabled={!selectedChassis}
-        updateEntity={updateEntity}
-      />
+      <QuirkInput quirk={quirk} disabled={!selectedChassis} updateEntity={updateEntity} />
       <AppearanceInput
         appearance={appearance}
         disabled={!selectedChassis}
@@ -55,4 +47,3 @@ export function ChassisInputs({
     </Grid>
   )
 }
-

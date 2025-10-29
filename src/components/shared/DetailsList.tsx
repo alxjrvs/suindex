@@ -3,10 +3,11 @@ import { ActivationCostBox } from './ActivationCostBox'
 import type { DataValue } from '../../types/common'
 import { Text } from '../base/Text'
 import type {
-  SURefActionMetaList,
+  SURefMetaAction,
   SURefEntity,
   SURefSchemaName,
-  SURefTraitMetaList,
+  SURefMetaEntity,
+  SURefMetaTraits,
 } from 'salvageunion-reference'
 import { getActivationCurrency } from '../entity/entityDisplayHelpers'
 import { EntityDetailDisplay } from '../entity/EntityDetailDisplay'
@@ -15,7 +16,7 @@ import { EntityDetailDisplay } from '../entity/EntityDetailDisplay'
  * Extract details for header (activation cost, range, damage, traits)
  */
 function extractDetails(
-  data: SURefEntity | SURefActionMetaList,
+  data: SURefMetaEntity,
   schemaName?: SURefSchemaName | 'actions'
 ): DataValue[] {
   const details: DataValue[] = []
@@ -33,23 +34,18 @@ function extractDetails(
 
   // Action type
   if ('actionType' in data && data.actionType) {
-    if ('mechActionType' in data && data.mechActionType) {
-      const mechActionType = data.mechActionType.includes('action')
-        ? data.mechActionType
-        : `${data.mechActionType} Action`
+    const actionType = data.actionType.includes('action')
+      ? data.actionType
+      : `${data.actionType} Action`
+    details.push({ label: actionType, value: 'Pilot', type: 'keyword' })
+  }
 
-      const actionType = data.actionType.includes('action')
-        ? data.actionType
-        : `${data.actionType} Action`
+  if ('mechActionType' in data && data.mechActionType) {
+    const mechActionType = data.mechActionType.includes('action')
+      ? data.mechActionType
+      : `${data.mechActionType} Action`
 
-      details.push({ label: mechActionType, value: 'Mech', type: 'keyword' })
-      details.push({ label: actionType, value: 'Pilot', type: 'keyword' })
-    } else {
-      const actionType = data.actionType.includes('action')
-        ? data.actionType
-        : `${data.actionType} Action`
-      details.push({ label: actionType, type: 'keyword' })
-    }
+    details.push({ label: mechActionType, value: 'Mech', type: 'keyword' })
   }
 
   // Range - no "Range:" prefix for abilities
@@ -61,12 +57,12 @@ function extractDetails(
   if ('damage' in data && data.damage) {
     details.push({
       label: 'Damage',
-      value: `${data.damage.amount}${data.damage.type}`,
+      value: `${data.damage.amount}${data.damage.damageType}`,
     })
   }
 
   // Traits
-  const traits: SURefTraitMetaList = 'traits' in data && data.traits?.length ? data.traits : []
+  const traits: SURefMetaTraits = 'traits' in data && data.traits?.length ? data.traits : []
   traits.forEach((t) => {
     const label = t.type.charAt(0).toUpperCase() + t.type.slice(1)
     if (label === 'HOT') {
@@ -84,7 +80,7 @@ function extractDetails(
   return details
 }
 interface DetailsListProps {
-  data: SURefEntity | SURefActionMetaList
+  data: SURefEntity | SURefMetaAction
   schemaName?: SURefSchemaName | 'actions'
   compact?: boolean
 }

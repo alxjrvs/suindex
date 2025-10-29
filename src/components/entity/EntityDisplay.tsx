@@ -20,16 +20,15 @@ import {
   extractNotes,
   extractPageReference,
   extractTechLevelEffects,
-  extractAbilities,
   extractTechLevel,
   getSchemaDisplayName,
 } from './entityDisplayHelpers'
-import type { SURefActionMetaList, SURefEntity, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefSchemaName, SURefMetaEntity } from 'salvageunion-reference'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import { LevelDisplay } from '../shared/LevelDisplay'
 
 interface EntityDisplayProps {
-  data: SURefEntity | SURefActionMetaList | undefined
+  data: SURefMetaEntity | undefined
   headerColor?: string
   headerOpacity?: number
   children?: ReactNode
@@ -108,7 +107,6 @@ export function EntityDisplay({
   const pageRef = extractPageReference(data)
   const techLevel = extractTechLevel(data)
   const techLevelEffects = extractTechLevelEffects(data)
-  const abilities = extractAbilities(data)
 
   const headerDescription = schemaName === 'abilities'
 
@@ -147,7 +145,7 @@ export function EntityDisplay({
   const leftContentElement = (
     <>
       {techLevel && (
-        <StatDisplay label="Tech" bottomLabel="Level" value={techLevel} compact={compact} />
+        <StatDisplay inverse label="Tech" bottomLabel="Level" value={techLevel} compact={compact} />
       )}
     </>
   )
@@ -390,9 +388,6 @@ export function EntityDisplay({
                   >
                     Abilities
                   </Heading>
-                  {abilities.map((ability, index) => (
-                    <EntityDisplay compact key={index} data={ability} schemaName="actions" />
-                  ))}
                   {techLevelEffects.map((tle, index) => (
                     <SheetDisplay
                       key={index}

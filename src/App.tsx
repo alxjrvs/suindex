@@ -13,7 +13,7 @@ import { getSchemaCatalog } from 'salvageunion-reference'
 import { getSession, onAuthStateChange } from './lib/api'
 import type { User } from '@supabase/supabase-js'
 import { RulesReferenceLanding } from './components/Reference/RulesReferenceLanding'
-import { Toaster } from './components/ui/toaster'
+import { Toaster } from './components/ui/ToasterComponent'
 import { EntityViewerModalProvider } from './providers/EntityViewerModalProvider'
 
 const schemaIndexData = getSchemaCatalog()

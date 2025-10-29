@@ -181,14 +181,9 @@ export function useMechLiveSheetState(id?: string) {
   }
 
   const handleRemoveSystem = (systemId: string) => {
-    const system = allSystems.find((s) => s.id === systemId)
-    const systemName = system?.name || 'this system'
-
-    if (window.confirm(`Are you sure you want to remove ${systemName}?`)) {
-      updateEntity({
-        systems: (mech.systems ?? []).filter((id) => id !== systemId),
-      })
-    }
+    updateEntity({
+      systems: (mech.systems ?? []).filter((id) => id !== systemId),
+    })
   }
 
   const handleAddModule = (moduleId: string) => {
@@ -201,14 +196,9 @@ export function useMechLiveSheetState(id?: string) {
   }
 
   const handleRemoveModule = (moduleId: string) => {
-    const module = allModules.find((m) => m.id === moduleId)
-    const moduleName = module?.name || 'this module'
-
-    if (window.confirm(`Are you sure you want to remove ${moduleName}?`)) {
-      updateEntity({
-        modules: (mech.modules ?? []).filter((id) => id !== moduleId),
-      })
-    }
+    updateEntity({
+      modules: (mech.modules ?? []).filter((id) => id !== moduleId),
+    })
   }
 
   const handleAddCargo = (

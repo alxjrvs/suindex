@@ -18,7 +18,7 @@ export interface CargoItem {
 export interface CrawlerNPC {
   name: string
   notes: string
-  hitPoints: number
+  hitPoints: number | null
   damage: number
 }
 

@@ -31,7 +31,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.4",
-    "salvageunion-reference": "^1.33.0",
+    "salvageunion-reference": "^1.40.8",
     "type-fest": "^5.1.0"
   },
   "devDependencies": {
@@ -39,7 +39,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.9.2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.1.0",

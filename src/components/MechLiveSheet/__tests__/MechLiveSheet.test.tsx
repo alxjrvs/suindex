@@ -40,7 +40,8 @@ describe('MechLiveSheet', () => {
       })
       expect(screen.getAllByText(/quirk/i)[0]).toBeInTheDocument()
       expect(screen.getAllByText(/appearance/i)[0]).toBeInTheDocument()
-      expect(screen.getByText(/systems & modules/i)).toBeInTheDocument()
+      expect(screen.getByText(/^systems$/i)).toBeInTheDocument()
+      expect(screen.getByText(/^modules$/i)).toBeInTheDocument()
       // Cargo appears in multiple places (heading and stat label), so use getAllByText
       expect(screen.getAllByText(/cargo/i).length).toBeGreaterThan(0)
     })
@@ -230,17 +231,19 @@ describe('MechLiveSheet', () => {
   })
 
   describe('Systems and Modules', () => {
-    it('shows add system/module button disabled when no chassis selected', async () => {
+    it('shows add system/module buttons disabled when no chassis selected', async () => {
       render(<MechLiveSheet />)
 
       await waitFor(() => {
-        // Find the add button in the Systems & Modules section
-        const addButton = screen.getByRole('button', { name: 'Add System' })
-        expect(addButton).toBeDisabled()
+        // Find the add buttons in the Systems and Modules sections
+        const addSystemButton = screen.getByRole('button', { name: 'Add Systems' })
+        const addModulesButton = screen.getByRole('button', { name: 'Add Modules' })
+        expect(addSystemButton).toBeDisabled()
+        expect(addModulesButton).toBeDisabled()
       })
     })
 
-    it('enables add system/module button when chassis is selected', async () => {
+    it('enables add system/module buttons when chassis is selected', async () => {
       const user = userEvent.setup()
       render(<MechLiveSheet />)
 
@@ -249,8 +252,10 @@ describe('MechLiveSheet', () => {
 
       await waitFor(
         () => {
-          const addButton = screen.getByRole('button', { name: 'Add System' })
-          expect(addButton).not.toBeDisabled()
+          const addSystemButton = screen.getByRole('button', { name: 'Add Systems' })
+          const addModulesButton = screen.getByRole('button', { name: 'Add Modules' })
+          expect(addSystemButton).not.toBeDisabled()
+          expect(addModulesButton).not.toBeDisabled()
         },
         { timeout: 5000 }
       )

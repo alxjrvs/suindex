@@ -7,4 +7,3 @@ export const buttonRecipe = defineRecipe({
     borderRadius: 'md',
   },
 })
-

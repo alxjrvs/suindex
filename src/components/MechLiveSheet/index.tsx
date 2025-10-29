@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Flex, Grid, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { SystemModuleSelector } from './SystemModuleSelector'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
-import { SystemsModulesList } from './SystemsModulesList'
+import { SystemsList } from './SystemsList'
+import { ModulesList } from './ModulesList'
 import { CargoList } from './CargoList'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
@@ -22,7 +22,6 @@ interface MechLiveSheetProps {
 }
 
 export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
-  const [isSelectorOpen, setIsSelectorOpen] = useState(false)
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
   const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
 
@@ -51,9 +50,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   const allChassis = SalvageUnionReference.findAllIn('chassis', () => true)
 
   const stats = selectedChassis?.stats
-
-  const canAddMore =
-    stats && (usedSystemSlots < stats.systemSlots || usedModuleSlots < stats.moduleSlots)
 
   if (loading) {
     return (
@@ -174,19 +170,25 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         disabled={!selectedChassis}
       />
 
-      <SystemsModulesList
-        systems={mech.systems ?? []}
-        modules={mech.modules ?? []}
-        usedSystemSlots={usedSystemSlots}
-        usedModuleSlots={usedModuleSlots}
-        totalSystemSlots={stats?.systemSlots || 0}
-        totalModuleSlots={stats?.moduleSlots || 0}
-        canAddMore={!!canAddMore}
-        onRemoveSystem={handleRemoveSystem}
-        onRemoveModule={handleRemoveModule}
-        onAddClick={() => setIsSelectorOpen(true)}
-        disabled={!selectedChassis}
-      />
+      <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
+        <SystemsList
+          systems={mech.systems ?? []}
+          usedSystemSlots={usedSystemSlots}
+          totalSystemSlots={stats?.systemSlots || 0}
+          onRemoveSystem={handleRemoveSystem}
+          onAddSystem={handleAddSystem}
+          disabled={!selectedChassis}
+        />
+
+        <ModulesList
+          modules={mech.modules ?? []}
+          usedModuleSlots={usedModuleSlots}
+          totalModuleSlots={stats?.moduleSlots || 0}
+          onRemoveModule={handleRemoveModule}
+          onAddModule={handleAddModule}
+          disabled={!selectedChassis}
+        />
+      </Grid>
 
       <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
         <CargoList
@@ -210,13 +212,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           placeholder="Add notes about your mech..."
         />
       </Grid>
-
-      <SystemModuleSelector
-        isOpen={isSelectorOpen}
-        onClose={() => setIsSelectorOpen(false)}
-        onSelectSystem={handleAddSystem}
-        onSelectModule={handleAddModule}
-      />
 
       <CargoModal
         isOpen={isCargoModalOpen}

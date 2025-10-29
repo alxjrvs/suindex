@@ -30,7 +30,7 @@ export function CrawlerAbilities({
       flex="1"
     >
       {(
-        crawlerRef?.abilities || [
+        crawlerRef?.actions || [
           {
             name: '',
             description: 'No crawler type selected.',
@@ -55,17 +55,17 @@ function CrawlerAbility({
   disabled = false,
   choices,
 }: {
-  ability: SURefCrawler['abilities'][0]
+  ability: SURefCrawler['actions'][0]
   disabled?: boolean
   onUpdateChoice: (choiceId: string, value: string | undefined) => void
   choices: Record<string, string> | null
 }) {
-  const hasChoices = 'choices' in ability && ability.choices && ability.choices.length > 0
+  const wrappedChoice = 'choices' in ability ? (ability.choices ?? []) : []
 
   return (
     <VStack gap={3} alignItems="stretch" w="full">
       <SheetDisplay disabled={disabled} label={ability.name} value={ability.description} />
-      {(hasChoices ? ability.choices : []).map((choice, idx) => (
+      {wrappedChoice.map((choice, idx) => (
         <SheetEntityChoiceDisplay
           onUpdateChoice={onUpdateChoice}
           key={idx}
