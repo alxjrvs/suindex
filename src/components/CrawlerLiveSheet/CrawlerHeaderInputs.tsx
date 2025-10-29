@@ -144,7 +144,7 @@ export function CrawlerHeaderInputs({
 
   return (
     <RoundedBox
-      title="Crawler"
+      title={crawler.name ?? 'Crawler'}
       bg="bg.builder.crawler"
       flex="1"
       disabled={disabled}
@@ -164,6 +164,7 @@ export function CrawlerHeaderInputs({
           <StatDisplay
             label="TECH"
             bottomLabel="LEVEL"
+            inverse
             value={currentTechLevel}
             disabled={disabled}
             flash={flashTL}

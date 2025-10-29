@@ -1,8 +1,5 @@
-import { Grid } from '@chakra-ui/react'
 import { EntityDisplay } from '../../entity/EntityDisplay'
 import type { SURefAbility } from 'salvageunion-reference'
-import { extractOptions } from '../../entity/entityDisplayHelpers'
-import { SheetDisplay } from '../../shared/SheetDisplay'
 
 interface AbilityDisplayProps {
   data: SURefAbility | undefined
@@ -18,6 +15,7 @@ interface AbilityDisplayProps {
   showSelectButton?: boolean
   selectButtonText?: string
   trained?: boolean
+  hideLevel?: boolean
   compact?: boolean
 }
 
@@ -25,6 +23,7 @@ export function AbilityDisplay({
   compact = false,
   data,
   onClick,
+  hideLevel = false,
   disabled = false,
   dimmed = false,
   disableRemove = false,
@@ -54,8 +53,6 @@ export function AbilityDisplay({
 
   const headerOpacity = trained ? 1 : 0.5
 
-  const options = extractOptions(data)
-
   return (
     <EntityDisplay
       compact={compact}
@@ -70,21 +67,11 @@ export function AbilityDisplay({
       onRemove={onRemove}
       collapsible={collapsible}
       defaultExpanded={defaultExpanded}
+      hideLevel={hideLevel}
       expanded={expanded}
       onToggleExpanded={onToggleExpanded}
       showSelectButton={showSelectButton}
       selectButtonText={selectButtonText}
-    >
-      {data.effect && <SheetDisplay label="Effect" value={data.effect} />}
-      {options && (
-        <Grid gridTemplateColumns="repeat(2, 1fr)" gridAutoFlow="dense" gap={1}>
-          {options.map((option, optIndex) => {
-            const label = typeof option === 'string' ? '' : option.label
-            const value = typeof option === 'string' ? option : option.value
-            return <SheetDisplay key={optIndex} label={label} value={value} />
-          })}
-        </Grid>
-      )}
-    </EntityDisplay>
+    />
   )
 }

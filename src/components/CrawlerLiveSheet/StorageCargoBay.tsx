@@ -26,13 +26,12 @@ export function StorageCargoBay({
       bg={damaged ? 'su.grey' : 'bg.builder.crawler'}
       w="full"
       justifyContent="flex-start"
-      title="Storage"
       titleRotation={damaged ? titleRotation : 0}
       disabled={disabled}
     >
       <DynamicBay
         items={cargo}
-        maxCapacity={54}
+        maxCapacity={25}
         onRemove={onRemoveCargo}
         onAddClick={onAddCargo}
         disabled={disabled}

@@ -25,13 +25,13 @@
     "@randsum/roller": "^0.27.0",
     "@randsum/salvageunion": "^0.37.0",
     "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.76.1",
+    "@supabase/supabase-js": "^2.77.0",
     "framer-motion": "^12.23.24",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.4",
-    "salvageunion-reference": "^1.40.8",
+    "salvageunion-reference": "^1.40.11",
     "type-fest": "^5.1.0"
   },
   "devDependencies": {

@@ -18,9 +18,10 @@ describe('PilotLiveSheet', () => {
 
       // Check for main sections by their content
       expect(screen.getByPlaceholderText(/enter callsign/i)).toBeInTheDocument()
-      expect(screen.getByText(/^abilities$/i)).toBeInTheDocument()
-      expect(screen.getByText(/^inventory$/i)).toBeInTheDocument()
-      expect(screen.getByText(/^notes$/i)).toBeInTheDocument()
+      // Abilities and Inventory now appear as tabs (and section titles), so check for multiple
+      expect(screen.getAllByText(/^abilities$/i).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/^inventory$/i).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/^notes$/i).length).toBeGreaterThan(0)
     })
 
     it('displays all main sections', () => {

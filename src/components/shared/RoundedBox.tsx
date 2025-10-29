@@ -85,7 +85,7 @@ export function RoundedBox({
       borderRadius="md"
       p={0}
       shadow="lg"
-      // overflow="hidden"
+      overflow="visible"
       minH="fit-content"
       flexShrink={0}
       position="relative"

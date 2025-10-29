@@ -89,6 +89,10 @@ describe('PilotLiveSheet - Integration Tests', () => {
       await user.click(hybridAddButtons[0])
 
       // Step 7: Add equipment
+      // Click on the Inventory tab to access equipment
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
+
       const addEquipmentButton = screen.getByRole('button', { name: /add equipment/i })
 
       await user.click(addEquipmentButton)
@@ -108,6 +112,11 @@ describe('PilotLiveSheet - Integration Tests', () => {
         name: new RegExp(testEquipment[1].name, 'i'),
       })
       await user.click(equipment2Button)
+
+      // Wait for modal to close
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      })
 
       // Step 8: Add notes
       await user.type(

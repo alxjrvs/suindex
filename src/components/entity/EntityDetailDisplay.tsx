@@ -15,7 +15,7 @@ export function EntityDetailDisplay({
   schemaName: SURefSchemaName
 }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
-  const fontSize = compact ? 'sm' : 'md'
+  const fontSize = compact ? 'xs' : 'sm'
   const id = SalvageUnionReference.findIn(
     schemaName,
     (t) => t.name.toLowerCase() === String(label).toLowerCase()

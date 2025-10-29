@@ -16,6 +16,7 @@ export function ActivationCostBox({
   currency = 'AP',
   compact = false,
 }: ActivationCostBoxProps) {
+  if (cost === undefined) return null
   const displayCost = cost === 'Variable' ? 'X' : cost
 
   return (

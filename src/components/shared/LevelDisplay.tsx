@@ -24,9 +24,16 @@ export function LevelDisplay({
       justifyContent="center"
       fontWeight="bold"
       fontSize={fontSize}
-      zIndex={1}
+      zIndex={10}
       opacity={1}
-      css={{ opacity: '1 !important' }}
+      css={{
+        opacity: '1 !important',
+        // Prevent clipping in column layouts
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+      }}
+      // Ensure the element is not clipped by parent overflow
+      pointerEvents="none"
     >
       {level}
     </Box>

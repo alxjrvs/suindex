@@ -21,17 +21,27 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
     it('shows inventory section', () => {
       render(<PilotLiveSheet />)
 
-      expect(screen.getByText(/^inventory$/i)).toBeInTheDocument()
+      expect(screen.getAllByText(/^inventory$/i).length).toBeGreaterThan(0)
     })
 
-    it('shows equipment count as 0/6 initially', () => {
+    it('shows equipment count as 0/6 initially', async () => {
+      const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Click on the Inventory tab to see the equipment count
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       expect(screen.getByText(/0\/6/)).toBeInTheDocument()
     })
 
-    it('shows Add button for equipment', () => {
+    it('shows Add button for equipment', async () => {
+      const user = userEvent.setup()
       render(<PilotLiveSheet />)
+
+      // Click on the Inventory tab to see the Add button
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       const addButton = screen.getByRole('button', { name: /add equipment/i })
       expect(addButton).toBeInTheDocument()
@@ -55,6 +65,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
+
       const addButton = screen.getByRole('button', { name: /add equipment/i })
       await user.click(addButton)
 
@@ -70,6 +84,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
+
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       const addButton = screen.getByRole('button', { name: /add equipment/i })
       await user.click(addButton)
@@ -88,6 +106,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
+
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       const addButton = screen.getByRole('button', { name: /add equipment/i })
       await user.click(addButton)
@@ -118,6 +140,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
+
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       const addButton = screen.getByRole('button', { name: /add equipment/i })
 
@@ -158,6 +184,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
+
       const addButton = screen.getByRole('button', { name: /add equipment/i })
       await user.click(addButton)
 
@@ -180,6 +210,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
+
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       const addButton = screen.getByRole('button', { name: /add equipment/i })
 
@@ -225,6 +259,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
+
       const addButton = screen.getByRole('button', { name: /add equipment/i })
 
       // Add 6 items
@@ -267,6 +305,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
+
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       const addButton = screen.getByRole('button', { name: /add equipment/i })
 
@@ -326,6 +368,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
 
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
+
       const addButton = screen.getByRole('button', { name: /add equipment/i })
 
       await user.click(addButton)
@@ -353,6 +399,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
+
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       const addButton = screen.getByRole('button', { name: /add equipment/i })
 
@@ -386,6 +436,10 @@ describe('PilotLiveSheet - Equipment Inventory', () => {
       // Select a class first to enable inputs
       const classSelect = screen.getByRole('combobox', { name: /class/i })
       await user.selectOptions(classSelect, hackerClass.id)
+
+      // Click on the Inventory tab
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i })
+      await user.click(inventoryTab)
 
       const addButton = screen.getByRole('button', { name: /add equipment/i })
 
