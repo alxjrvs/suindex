@@ -6,16 +6,18 @@ import { DiscordIcon } from './shared/DiscordIcon'
 
 interface DiscordSignInButtonProps extends ButtonProps {
   redirectTo?: string
+  respect?: boolean
 }
 
 export function DiscordSignInButton({
   redirectTo = `${window.location.origin}/dashboard`,
+  respect = true,
   ...props
 }: DiscordSignInButtonProps) {
   const [loading, setLoading] = useState(false)
 
   // Check if Discord sign-in should be shown
-  if (import.meta.env.VITE_SHOW_DISCORD_SIGNIN !== '1') {
+  if (respect && import.meta.env.VITE_SHOW_DISCORD_SIGNIN !== '1') {
     return null
   }
 
