@@ -18,7 +18,9 @@ export function ChassisAbilities({
 }: ChassisAbilitiesProps) {
   return (
     <RoundedBox
-      rightContent={<StatDisplay label="Abilities" value={totalSalvageValue} disabled={disabled} />}
+      rightContent={
+        <StatDisplay label="Total" bottomLabel="SV" value={totalSalvageValue} disabled={disabled} />
+      }
       bg="su.green"
       title="Abilities"
       disabled={!chassis}

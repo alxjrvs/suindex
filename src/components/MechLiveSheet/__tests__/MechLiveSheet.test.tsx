@@ -40,8 +40,9 @@ describe('MechLiveSheet', () => {
       })
       expect(screen.getAllByText(/quirk/i)[0]).toBeInTheDocument()
       expect(screen.getAllByText(/appearance/i)[0]).toBeInTheDocument()
-      expect(screen.getByText(/^systems$/i)).toBeInTheDocument()
-      expect(screen.getByText(/^modules$/i)).toBeInTheDocument()
+      // Systems and Modules now appear as separate sections
+      expect(screen.getAllByText(/^systems$/i).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/^modules$/i).length).toBeGreaterThan(0)
       // Cargo appears in multiple places (heading and stat label), so use getAllByText
       expect(screen.getAllByText(/cargo/i).length).toBeGreaterThan(0)
     })
@@ -305,8 +306,8 @@ describe('MechLiveSheet', () => {
       await waitFor(() => {
         // Empty cells should show + icon
         const plusSigns = screen.getAllByText('+')
-        // testChassis.stats.cargoCap is 16, plus 1 for the Systems & Modules add button
-        expect(plusSigns.length).toBe(testChassis.stats.cargoCap + 1)
+        // testChassis.stats.cargoCap is 16, plus 2 for the Systems and Modules add buttons
+        expect(plusSigns.length).toBe(testChassis.stats.cargoCap + 2)
       })
     })
 
@@ -336,9 +337,9 @@ describe('MechLiveSheet', () => {
       await user.selectOptions(chassisSelect, testChassis.id)
 
       await waitFor(async () => {
-        // Click a cargo cell (skip the first + which is the Systems & Modules add button)
+        // Click a cargo cell (skip the first 2 + which are the Systems and Modules add buttons)
         const emptyCells = screen.getAllByText('+')
-        await user.click(emptyCells[1])
+        await user.click(emptyCells[2])
       })
 
       await waitFor(() => {

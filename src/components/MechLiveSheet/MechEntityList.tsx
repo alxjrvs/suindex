@@ -96,9 +96,7 @@ export function MechEntityList({
               key={entity.id}
               schemaName={schemaName}
               data={entity}
-              collapsible
               compact
-              defaultExpanded={false}
               onRemove={() => onRemove(entity.id)}
               removeConfirmMessage={`Are you sure you want to remove "${entity.name}"?`}
               disabled={disabled}

@@ -80,6 +80,11 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     )
   }
 
+  const title =
+    selectedChassis?.name && mech.pattern
+      ? `${selectedChassis.name} "${mech.pattern}"`
+      : 'Mech Chassis'
+
   return (
     <LiveSheetLayout>
       {id && (
@@ -99,6 +104,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           <RoundedBox
             leftContent={
               <StatDisplay
+                inverse
                 label="tech"
                 bottomLabel="Level"
                 value={stats?.techLevel || 0}
@@ -133,7 +139,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
                 />
               </Flex>
             }
-            title="Mech Chassis"
+            title={title}
             bg="su.green"
             w="full"
             h="full"

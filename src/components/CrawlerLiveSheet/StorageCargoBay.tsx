@@ -12,7 +12,7 @@ interface CargoBayProps {
   disabled?: boolean
 }
 
-export function CargoBay({
+export function StorageCargoBay({
   cargo,
   onAddCargo,
   onRemoveCargo,

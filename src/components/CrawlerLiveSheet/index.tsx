@@ -5,7 +5,7 @@ import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
 import { CrawlerResourceSteppers } from './CrawlerResourceSteppers'
 import { BayCard } from './BayCard'
-import { CargoBay } from './CargoBay'
+import { StorageCargoBay } from './StorageCargoBay'
 import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
@@ -186,7 +186,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           />
           {/* Cargo Bay */}
         </VStack>
-        <CargoBay
+        <StorageCargoBay
           cargo={crawler.cargo ?? []}
           onAddCargo={(position) => {
             setCargoPosition(position)
