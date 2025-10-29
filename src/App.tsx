@@ -15,6 +15,7 @@ import type { User } from '@supabase/supabase-js'
 import { RulesReferenceLanding } from './components/Reference/RulesReferenceLanding'
 import { Toaster } from './components/ui/ToasterComponent'
 import { EntityViewerModalProvider } from './providers/EntityViewerModalProvider'
+import { DiscordSignInButton } from './components/DiscordSignInButton'
 
 const schemaIndexData = getSchemaCatalog()
 
@@ -58,6 +59,14 @@ function AppContent() {
                   element={<ItemShowPage schemas={schemaIndexData.schemas} />}
                 />
                 <Route path="/dashboard/*" element={<Dashboard />} />
+                <Route
+                  path="/super_secret_haven_login"
+                  element={
+                    <Flex alignItems="center" justifyContent="center" h="full">
+                      <DiscordSignInButton respect={false} />
+                    </Flex>
+                  }
+                />
               </Routes>
             </Box>
           </Flex>
