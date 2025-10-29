@@ -36,7 +36,7 @@ export function BayCard({
     <RoundedBox
       bg={bay.damaged ? 'su.grey' : 'su.crawlerPink'}
       justifyContent="flex-start"
-      title={bay.name}
+      title={referenceBay?.name || 'Unknown Bay'}
       titleRotation={bay.damaged ? titleRotation : 0}
       disabled={disabled}
       rightContent={

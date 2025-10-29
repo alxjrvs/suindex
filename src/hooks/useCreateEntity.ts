@@ -39,7 +39,6 @@ export function useCreateEntity<T extends ValidTable>(
     const initialBays: CrawlerBay[] = allBays.map((bay) => ({
       id: `${bay.id}-${Date.now()}-${Math.random()}`,
       bayId: bay.id,
-      name: bay.name,
       damaged: false,
       npc: {
         name: '',
@@ -47,7 +46,6 @@ export function useCreateEntity<T extends ValidTable>(
         hitPoints: bay.npc.hitPoints,
         damage: 0,
       },
-      description: '',
     }))
 
     const initialNPC: CrawlerNPC = {

@@ -83,8 +83,15 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
   }
 
   // Separate storage bay from other bays
-  const storageBay = (crawler.bays ?? []).find((bay) => bay.name === 'Storage Bay')
-  const regularBays = (crawler.bays ?? []).filter((bay) => bay.name !== 'Storage Bay')
+  const allBays = SalvageUnionReference.CrawlerBays.all()
+  const storageBay = (crawler.bays ?? []).find((bay) => {
+    const referenceBay = allBays.find((b) => b.id === bay.bayId)
+    return referenceBay?.name === 'Storage Bay'
+  })
+  const regularBays = (crawler.bays ?? []).filter((bay) => {
+    const referenceBay = allBays.find((b) => b.id === bay.bayId)
+    return referenceBay?.name !== 'Storage Bay'
+  })
 
   return (
     <LiveSheetLayout>

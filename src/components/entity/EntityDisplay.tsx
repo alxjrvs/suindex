@@ -28,28 +28,50 @@ import type { SURefSchemaName, SURefMetaEntity } from 'salvageunion-reference'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import { LevelDisplay } from '../shared/LevelDisplay'
 
-interface EntityDisplayProps {
+type EntityDisplayProps = {
+  /** Entity data to display */
   data: SURefMetaEntity | undefined
-  headerColor?: string
-  headerOpacity?: number
-  children?: ReactNode
-  onClick?: () => void
-  disabled?: boolean
-  dimmed?: boolean
-  disableRemove?: boolean
-  onRemove?: () => void
-  removeConfirmMessage?: string
-  collapsible?: boolean
-  defaultExpanded?: boolean
-  expanded?: boolean
-  onToggleExpanded?: () => void
-  showSelectButton?: boolean
-  hideLevel?: boolean
-  selectButtonText?: string
-  label?: string
-  contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
-  rightLabel?: string
+  /** Schema name for the entity */
   schemaName: SURefSchemaName | 'actions'
+  /** Optional header background color override */
+  headerColor?: string
+  /** Optional header opacity (0-1, defaults to 1) */
+  headerOpacity?: number
+  /** Optional children to render in the content area */
+  children?: ReactNode
+  /** Optional click handler for the entity */
+  onClick?: () => void
+  /** Whether the entity is disabled (affects opacity and click behavior) */
+  disabled?: boolean
+  /** Whether the entity is dimmed (affects opacity) */
+  dimmed?: boolean
+  /** Whether the remove button is disabled */
+  disableRemove?: boolean
+  /** Optional remove handler */
+  onRemove?: () => void
+  /** Optional custom confirmation message for removal */
+  removeConfirmMessage?: string
+  /** Whether the entity can be collapsed/expanded */
+  collapsible?: boolean
+  /** Default expanded state (only used if expanded is not controlled) */
+  defaultExpanded?: boolean
+  /** Controlled expanded state */
+  expanded?: boolean
+  /** Callback when expanded state changes */
+  onToggleExpanded?: () => void
+  /** Whether to show a select button (used in modals) */
+  showSelectButton?: boolean
+  /** Whether to hide the level display */
+  hideLevel?: boolean
+  /** Optional custom text for the select button */
+  selectButtonText?: string
+  /** Optional label displayed above the entity */
+  label?: string
+  /** Content justification for the main content area */
+  contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
+  /** Optional label displayed in the top-right corner */
+  rightLabel?: string
+  /** Whether to use compact styling */
   compact?: boolean
 }
 
@@ -58,19 +80,52 @@ function calculateBGColor(
   headerColor: string = '',
   techLevel: number | undefined
 ) {
-  if (schemaName === 'chassis') {
-    return 'su.green'
-  }
-  if (schemaName === 'actions') {
-    return 'su.twoBlue'
-  }
-  if (headerColor) {
-    return headerColor
-  }
-  if (techLevel) {
-    return techLevelColors[techLevel]
-  }
+  if (schemaName === 'chassis') return 'su.green'
+  if (schemaName === 'actions') return 'su.twoBlue'
+  if (headerColor) return headerColor
+  if (techLevel) return techLevelColors[techLevel]
   return 'su.orange'
+}
+
+type SidebarStatsProps = {
+  slotsRequired?: number
+  salvageValue?: number
+  compact: boolean
+}
+
+function SidebarStats({ slotsRequired, salvageValue, compact }: SidebarStatsProps) {
+  return (
+    <>
+      {slotsRequired && <StatDisplay label="Slots" value={slotsRequired} compact={compact} />}
+      {salvageValue && (
+        <StatDisplay label="Salvage" bottomLabel="Value" value={salvageValue} compact={compact} />
+      )}
+    </>
+  )
+}
+
+type ItalicTextProps = {
+  children: string
+  compact: boolean
+}
+
+function ItalicText({ children, compact }: ItalicTextProps) {
+  return (
+    <Text
+      color="su.black"
+      fontWeight="medium"
+      lineHeight="relaxed"
+      fontStyle="italic"
+      wordBreak="break-word"
+      overflowWrap="break-word"
+      whiteSpace="normal"
+      overflow="hidden"
+      maxW="100%"
+      fontSize={compact ? 'xs' : 'sm'}
+    >
+      {children}
+    </Text>
+  )
 }
 
 export function EntityDisplay({
@@ -112,8 +167,6 @@ export function EntityDisplay({
   const techLevelEffects = extractTechLevelEffects(data)
   const options = extractOptions(data)
 
-  const headerDescription = schemaName === 'abilities'
-
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
   const handleToggle = () => {
     if (onToggleExpanded) {
@@ -124,8 +177,7 @@ export function EntityDisplay({
   }
 
   const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel)
-
-  const opacityValue = disabled || dimmed ? 0.5 : 1
+  const contentOpacity = disabled || dimmed ? 0.5 : 1
 
   // Click handling for header only
   const handleHeaderClick = () => {
@@ -142,27 +194,20 @@ export function EntityDisplay({
     }
   }
 
-  const headerCursorStyle =
-    !showSelectButton && onClick && !disabled ? 'pointer' : collapsible ? 'pointer' : 'default'
-
-  // Build left content (expand icon + level)
-  const leftContentElement = (
-    <>
-      {techLevel && (
-        <StatDisplay inverse label="Tech" bottomLabel="Level" value={techLevel} compact={compact} />
-      )}
-    </>
-  )
-
-  // Build title content (header + details)
-  const subTitleContentElement = header ? (
-    <DetailsList data={data} schemaName={schemaName} compact={compact} />
+  // Build left content (tech level display)
+  const leftContentElement = techLevel ? (
+    <StatDisplay inverse label="Tech" bottomLabel="Level" value={techLevel} compact={compact} />
   ) : undefined
+
+  // Build subtitle content (details list)
+  const subTitleContentElement = header && (
+    <DetailsList data={data} schemaName={schemaName} compact={compact} />
+  )
 
   // Build right content (description + stats + collapsible indicator)
   const rightContentElement = (
     <Flex alignItems="center" gap={2} alignSelf="center" maxW="50%" mt={2}>
-      {description && headerDescription && (
+      {description && schemaName === 'abilities' && (
         <Text
           color="su.white"
           fontStyle="italic"
@@ -178,26 +223,13 @@ export function EntityDisplay({
         </Text>
       )}
       {compact && sidebar.showSidebar && (sidebar.slotsRequired || sidebar.salvageValue) && (
-        <Flex
-          alignItems="center"
-          flexDirection="row"
-          justifyContent="flex-end"
-          pb={2}
-          gap={2}
-          overflow="visible"
-        >
+        <Flex alignItems="center" flexDirection="row" justifyContent="flex-end" pb={2} gap={2}>
           {stats.length > 0 && <StatList stats={stats} compact={compact} />}
-          {sidebar.slotsRequired && (
-            <StatDisplay label="Slots" value={sidebar.slotsRequired} compact={compact} />
-          )}
-          {sidebar.salvageValue && (
-            <StatDisplay
-              label="Salvage"
-              bottomLabel="Value"
-              value={sidebar.salvageValue}
-              compact={compact}
-            />
-          )}
+          <SidebarStats
+            slotsRequired={sidebar.slotsRequired}
+            salvageValue={sidebar.salvageValue}
+            compact={compact}
+          />
         </Flex>
       )}
       {!compact && stats.length > 0 && (
@@ -235,7 +267,6 @@ export function EntityDisplay({
       rightContent={rightContentElement}
       bodyPadding={0}
       onHeaderClick={handleHeaderClick}
-      headerCursor={headerCursorStyle}
       headerTestId="frame-header-container"
       label={label}
     >
@@ -248,23 +279,16 @@ export function EntityDisplay({
               justifyContent="flex-start"
               pb={3}
               gap={2}
-              minW={'80px'}
-              maxW={'80px'}
-              overflow="visible"
-              opacity={opacityValue}
+              minW="80px"
+              maxW="80px"
+              opacity={contentOpacity}
               borderBottomLeftRadius="md"
             >
-              {sidebar.slotsRequired && (
-                <StatDisplay label="Slots" value={sidebar.slotsRequired} compact={compact} />
-              )}
-              {sidebar.salvageValue && (
-                <StatDisplay
-                  label="Salvage"
-                  bottomLabel="Value"
-                  value={sidebar.salvageValue}
-                  compact={compact}
-                />
-              )}
+              <SidebarStats
+                slotsRequired={sidebar.slotsRequired}
+                salvageValue={sidebar.salvageValue}
+                compact={compact}
+              />
             </VStack>
           )}
           {/* Main content area */}
@@ -275,146 +299,105 @@ export function EntityDisplay({
             gap={compact ? 3 : 6}
             alignItems="stretch"
             justifyContent={contentJustify}
-            overflow="visible"
             minW="0"
             borderBottomRightRadius="md"
+            opacity={contentOpacity}
           >
-            <Box flexDirection="column" display="flex" opacity={opacityValue} gap={compact ? 3 : 6}>
-              <Flex
-                flexDirection="row"
-                justifyContent="space-between"
-                w="full"
-                overflow="visible"
-              ></Flex>
-
-              {notes && (
-                <Text
-                  color="su.black"
-                  fontWeight="medium"
-                  lineHeight="relaxed"
-                  fontStyle="italic"
-                  wordBreak="break-word"
-                  overflowWrap="break-word"
-                  whiteSpace="normal"
-                  overflow="hidden"
-                  maxW="100%"
-                  fontSize={compact ? 'xs' : 'sm'}
-                >
-                  {notes}
-                </Text>
+            {notes && <ItalicText compact={compact}>{notes}</ItalicText>}
+            {description && schemaName !== 'abilities' && (
+              <ItalicText compact={compact}>{description}</ItalicText>
+            )}
+            {/* Stat Bonus (for Systems/Modules/Equipment) */}
+            {sections.showStatBonus && 'statBonus' in data && data.statBonus && (
+              <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
+            )}
+            {/* Actions (for Systems/Modules/Equipment) */}
+            {sections.showActions &&
+              'actions' in data &&
+              data.actions &&
+              data.actions.length > 0 && (
+                <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
+                  {data.actions.map((action, index) => (
+                    <EntityDisplay compact key={index} data={action} schemaName="actions" />
+                  ))}
+                </VStack>
               )}
-              {description && !headerDescription && (
-                <Text
-                  color="su.black"
-                  fontWeight="medium"
-                  lineHeight="relaxed"
-                  fontStyle="italic"
-                  wordBreak="break-word"
-                  overflowWrap="break-word"
-                  whiteSpace="normal"
-                  overflow="hidden"
-                  maxW="100%"
-                  fontSize={compact ? 'xs' : 'sm'}
-                >
-                  {description}
-                </Text>
-              )}
-              {/* Stat Bonus (for Systems/Modules/Equipment) */}
-              {sections.showStatBonus && 'statBonus' in data && data.statBonus && (
-                <Box borderRadius="md">
-                  <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
-                </Box>
-              )}
-              {/* Actions (for Systems/Modules/Equipment) */}
-              {sections.showActions &&
-                'actions' in data &&
-                data.actions &&
-                data.actions.length > 0 && (
-                  <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
-                    {data.actions.map((action, index) => (
-                      <EntityDisplay compact key={index} data={action} schemaName="actions" />
-                    ))}
-                  </VStack>
-                )}
-              {/* Roll Table (for Systems/Modules/Equipment) */}
-              {'effect' in data && data.effect && (
-                <SheetDisplay label="Effect" value={data.effect} />
-              )}
-              {options && (
-                <Grid gridTemplateColumns="repeat(2, 1fr)" gridAutoFlow="dense" gap={1}>
-                  {options.map((option, optIndex) => {
-                    const label = typeof option === 'string' ? '' : option.label
-                    const value = typeof option === 'string' ? option : option.value
-                    return <SheetDisplay key={optIndex} label={label} value={value} />
-                  })}
-                </Grid>
-              )}
-              {sections.showRollTable && 'table' in data && data.table && (
-                <Box borderRadius="md" position="relative" zIndex={10}>
-                  <RollTable
-                    disabled={disabled || dimmed}
-                    table={data.table}
-                    showCommand
-                    compact
-                    tableName={'name' in data ? String(data.name) : undefined}
-                  />
-                </Box>
-              )}
-              {/* Systems (for Vehicles and Drones) */}
-              {sections.showSystems &&
-                'systems' in data &&
-                data.systems &&
-                data.systems.length > 0 && (
-                  <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
-                    <Heading
-                      level="h3"
-                      fontSize={compact ? 'md' : 'lg'}
-                      fontWeight="bold"
-                      color="su.brick"
-                    >
-                      Systems
-                    </Heading>
-                    {data.systems.map((system, index) => (
-                      <VStack
-                        key={index}
-                        gap={2}
-                        alignItems="stretch"
-                        bg="su.white"
-                        borderWidth="2px"
-                        borderColor="su.black"
-                        borderRadius="md"
-                        p={compact ? 2 : 3}
-                      >
-                        <Text fontWeight="bold" color="su.black" fontSize={compact ? 'sm' : 'md'}>
-                          {system}
-                        </Text>
-                      </VStack>
-                    ))}
-                  </VStack>
-                )}
-              {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds, Crawlers) */}
-              {sections.showAbilities && (
+            {/* Roll Table (for Systems/Modules/Equipment) */}
+            {'effect' in data && data.effect && <SheetDisplay label="Effect" value={data.effect} />}
+            {options && (
+              <Grid gridTemplateColumns="repeat(2, 1fr)" gridAutoFlow="dense" gap={1}>
+                {options.map((option, optIndex) => {
+                  const label = typeof option === 'string' ? '' : option.label
+                  const value = typeof option === 'string' ? option : option.value
+                  return <SheetDisplay key={optIndex} label={label} value={value} />
+                })}
+              </Grid>
+            )}
+            {sections.showRollTable && 'table' in data && data.table && (
+              <Box borderRadius="md" position="relative" zIndex={10}>
+                <RollTable
+                  disabled={disabled || dimmed}
+                  table={data.table}
+                  showCommand
+                  compact
+                  tableName={'name' in data ? String(data.name) : undefined}
+                />
+              </Box>
+            )}
+            {/* Systems (for Vehicles and Drones) */}
+            {sections.showSystems &&
+              'systems' in data &&
+              data.systems &&
+              data.systems.length > 0 && (
                 <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
                   <Heading
                     level="h3"
                     fontSize={compact ? 'md' : 'lg'}
                     fontWeight="bold"
-                    color="su.black"
-                    textTransform="uppercase"
+                    color="su.brick"
                   >
-                    Abilities
+                    Systems
                   </Heading>
-                  {techLevelEffects.map((tle, index) => (
-                    <SheetDisplay
+                  {data.systems.map((system, index) => (
+                    <VStack
                       key={index}
-                      label={`Tech Level ${tle.techLevelMin}`}
-                      value={tle.effect}
-                    />
+                      gap={2}
+                      alignItems="stretch"
+                      bg="su.white"
+                      borderWidth="2px"
+                      borderColor="su.black"
+                      borderRadius="md"
+                      p={compact ? 2 : 3}
+                    >
+                      <Text fontWeight="bold" color="su.black" fontSize={compact ? 'sm' : 'md'}>
+                        {system}
+                      </Text>
+                    </VStack>
                   ))}
                 </VStack>
               )}
-              <Box mt="3">{children}</Box>
-            </Box>
+            {/* Abilities (for Creatures, BioTitans, NPCs, Squads, Melds, Crawlers) */}
+            {sections.showAbilities && (
+              <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
+                <Heading
+                  level="h3"
+                  fontSize={compact ? 'md' : 'lg'}
+                  fontWeight="bold"
+                  color="su.black"
+                  textTransform="uppercase"
+                >
+                  Abilities
+                </Heading>
+                {techLevelEffects.map((tle, index) => (
+                  <SheetDisplay
+                    key={index}
+                    label={`Tech Level ${tle.techLevelMin}`}
+                    value={tle.effect}
+                  />
+                ))}
+              </VStack>
+            )}
+            {children && <Box mt="3">{children}</Box>}
             {/* Select Button - Only shown in modal */}
             {showSelectButton && onClick && (
               <Button
