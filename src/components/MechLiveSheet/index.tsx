@@ -112,7 +112,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
               />
             }
             rightContent={
-              <Flex flexDirection="row" justifyContent="space-between" gap={4}>
+              <Flex flexDirection="row" justifyContent="flex-end" gap={4}>
                 <StatDisplay
                   label="Sys."
                   bottomLabel="Slots"

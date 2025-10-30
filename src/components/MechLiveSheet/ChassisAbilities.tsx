@@ -1,8 +1,8 @@
-import { Box, Text, VStack } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
-import { SheetDisplay } from '../shared/SheetDisplay'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
+import { EntityChassisAbility } from '../entity/EntityDisplay/EntityChassisAbility'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
@@ -16,6 +16,7 @@ export function ChassisAbilities({
   chassis,
   disabled = false,
 }: ChassisAbilitiesProps) {
+  console.log('Chassis abilities:', chassis)
   return (
     <RoundedBox
       rightContent={
@@ -35,25 +36,7 @@ export function ChassisAbilities({
             },
           ]
         ).map((ability, idx) => (
-          <SheetDisplay key={idx} label={ability.name || undefined} disabled={disabled}>
-            <Text lineHeight="relaxed">{ability.description}</Text>
-            {'options' in ability &&
-              ability.options &&
-              Array.isArray(ability.options) &&
-              ability.options.length > 0 && (
-                <VStack mt={3} ml={4} gap={1} alignItems="stretch">
-                  {ability.options.map((option, optIndex) => (
-                    <Box key={optIndex}>
-                      <Text as="span" fontWeight="bold">
-                        {option.label}
-                        {option.label.includes('•') || option.label.length === 0 ? '' : ':'}
-                      </Text>{' '}
-                      {option.value}
-                    </Box>
-                  ))}
-                </VStack>
-              )}
-          </SheetDisplay>
+          <EntityChassisAbility key={idx} action={ability} compact disabled={disabled} />
         ))}
       </VStack>
     </RoundedBox>

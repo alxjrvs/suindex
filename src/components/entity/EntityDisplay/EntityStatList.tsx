@@ -95,7 +95,7 @@ export function StatList({ header, data, compact = false }: StatListProps) {
   if (!compact && !header) return null
 
   return (
-    <Flex gap={2} flexWrap="wrap">
+    <Flex gap={2} justifyContent="flex-end">
       {stats.map((stat, index) => {
         const visible = compact ? (header ? stat.compactHeader : !stat.compactHeader) : true
 

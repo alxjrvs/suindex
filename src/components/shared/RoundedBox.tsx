@@ -195,12 +195,16 @@ export function RoundedBox({
                   justifyContent="flex-end"
                   flex="1"
                   minW="0"
-                  css={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}
+                  css={
+                    compact
+                      ? {
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }
+                      : {}
+                  }
                 >
                   {rightContent}
                 </Flex>

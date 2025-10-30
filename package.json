@@ -14,9 +14,8 @@
     "format:check": "prettier --check .",
     "preview": "vite preview",
     "gen:types": "bunx supabase gen types typescript --project-id opxrguskxuogghzcnppk --schema public > src/types/database-generated.types.ts",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test": "bun test",
+    "test:watch": "bun test --watch"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.28.0",

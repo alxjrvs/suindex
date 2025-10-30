@@ -1,86 +1,59 @@
-import { expect, afterEach, vi } from 'vitest'
+import '@testing-library/jest-dom'
 import { cleanup } from '@testing-library/react'
-import * as matchers from '@testing-library/jest-dom/matchers'
+import { afterEach, mock } from 'bun:test'
 import { configure } from '@testing-library/dom'
-
-expect.extend(matchers)
 
 configure({ asyncUtilTimeout: 5000 })
 
 // Cleanup after each test
 afterEach(() => {
   cleanup()
-  vi.clearAllMocks()
-  vi.resetModules()
 })
 
 // Mock Supabase environment variables for tests
 process.env.VITE_SUPABASE_URL = 'https://test.supabase.co'
 process.env.VITE_SUPABASE_ANON_KEY = 'test-anon-key'
 
-// Mock Supabase globally for all tests
-vi.mock('../lib/supabase', () => ({
-  supabase: {
-    auth: {
-      getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
-    },
-    from: vi.fn(() => ({
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: null, error: null }),
-      insert: vi.fn().mockResolvedValue({ data: null, error: null }),
-      update: vi.fn().mockReturnThis(),
-      delete: vi.fn().mockReturnThis(),
-    })),
-  },
-}))
+// Only set up DOM mocks if we're in a DOM environment
+if (typeof window !== 'undefined') {
+  // IntersectionObserver mock
+  const IntersectionObserverMock = mock(
+    () =>
+      ({
+        disconnect: mock(),
+        observe: mock(),
+        takeRecords: mock(),
+        unobserve: mock(),
+        root: null,
+        rootMargin: '',
+        thresholds: [],
+      }) as unknown as IntersectionObserver
+  )
+  ;(globalThis as typeof globalThis & { IntersectionObserver: unknown }).IntersectionObserver =
+    IntersectionObserverMock as unknown as typeof IntersectionObserver
 
-// Mock react-router globally for all tests
-vi.mock('react-router', async () => {
-  const actual = await vi.importActual('react-router')
-  return {
-    ...actual,
-    useNavigate: () => vi.fn(),
+  // Scroll Methods mock
+  if (typeof Element !== 'undefined') {
+    Element.prototype.scrollTo = () => {}
+    Element.prototype.scrollIntoView = () => {}
   }
-})
 
-// IntersectionObserver mock
-const IntersectionObserverMock = vi.fn(
-  () =>
-    ({
-      disconnect: vi.fn(),
-      observe: vi.fn(),
-      takeRecords: vi.fn(),
-      unobserve: vi.fn(),
-      root: null,
-      rootMargin: '',
-      thresholds: [],
-    }) as unknown as IntersectionObserver
-)
-vi.stubGlobal('IntersectionObserver', IntersectionObserverMock)
-;(window as Window & typeof globalThis).IntersectionObserver =
-  IntersectionObserverMock as unknown as typeof IntersectionObserver
+  // requestAnimationFrame mock
+  globalThis.requestAnimationFrame = (cb: FrameRequestCallback): number =>
+    setTimeout(cb, 1000 / 60) as unknown as number
 
-// Scroll Methods mock
-window.Element.prototype.scrollTo = () => {}
-window.Element.prototype.scrollIntoView = () => {}
+  // URL object mock
+  if (typeof URL !== 'undefined') {
+    URL.createObjectURL = (): string => 'https://i.pravatar.cc/300'
+    URL.revokeObjectURL = (): void => {}
+  }
 
-// requestAnimationFrame mock
-window.requestAnimationFrame = (cb: FrameRequestCallback): number =>
-  setTimeout(cb, 1000 / 60) as unknown as number
-
-// URL object mock
-window.URL.createObjectURL = (): string => 'https://i.pravatar.cc/300'
-window.URL.revokeObjectURL = (): void => {}
-
-// navigator mock
-Object.defineProperty(window, 'navigator', {
-  value: {
-    clipboard: {
-      writeText: vi.fn(),
+  // navigator mock
+  Object.defineProperty(globalThis, 'navigator', {
+    value: {
+      clipboard: {
+        writeText: mock(),
+      },
     },
-  },
-})
-
-// Override globalThis
-Object.assign(global, { window, document: window.document })
+  })
+}
