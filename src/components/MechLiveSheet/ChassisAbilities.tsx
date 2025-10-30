@@ -36,7 +36,7 @@ export function ChassisAbilities({
             },
           ]
         ).map((ability, idx) => (
-          <EntityChassisAbility key={idx} action={ability} compact disabled={disabled} />
+          <EntityChassisAbility key={idx} action={ability} disabled={disabled} />
         ))}
       </VStack>
     </RoundedBox>

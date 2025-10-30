@@ -129,7 +129,8 @@ export function EntityDisplay({
   const hasPatterns = 'patterns' in data && data.patterns && data.patterns.length > 0
 
   // Only show padding if there's content beyond just actions
-  const hasContentBeyondActions =
+  const hasContent =
+    hasActions ||
     hasNotes ||
     hasDescription ||
     hasEffect ||
@@ -141,9 +142,6 @@ export function EntityDisplay({
     showSelectButton ||
     onRemove ||
     pageRef
-
-  const contentPadding =
-    hasActions && !hasContentBeyondActions ? (compact ? 1 : 2) : compact ? 1 : 3
 
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
   const handleToggle = () => {
@@ -207,7 +205,7 @@ export function EntityDisplay({
       headerTestId="frame-header-container"
       label={label}
     >
-      {(!collapsible || isExpanded) && (
+      {(!collapsible || isExpanded) && hasContent && (
         <Flex bg={backgroundColor} w="full" borderBottomRadius="md" overflow="hidden">
           {/* Sidebar */}
           <EntitySidebar
@@ -222,7 +220,7 @@ export function EntityDisplay({
             bg="su.lightBlue"
             borderBottomRightRadius="md"
             opacity={contentOpacity}
-            p={contentPadding}
+            p={compact ? 2 : 4}
             gap={compact ? 3 : 6}
             alignItems="stretch"
             justifyContent={contentJustify}

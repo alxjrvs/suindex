@@ -10,10 +10,10 @@ export function EntityChassisPatternDisplay({ data, compact }: EntityDisplaySubP
   return (
     <VStack gap={4} alignItems="stretch">
       <EntitySubheader compact={compact} label="Patterns" />
-      <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} alignItems="stretch">
+      <VStack gap={4} alignItems="stretch">
         {data.patterns.map((pattern, index) => (
-          <SheetDisplay compact={compact} label={pattern.name}>
-            <VStack key={index} gap={3} alignItems="stretch" borderRadius="md" p={4} w="full">
+          <SheetDisplay compact={compact} label={pattern.name} key={index}>
+            <VStack gap={3} alignItems="stretch" borderRadius="md" p={4} w="full">
               <Flex alignItems="center" gap={2} flexWrap="wrap">
                 {'legalStarting' in pattern && pattern.legalStarting && (
                   <Text
@@ -64,7 +64,7 @@ export function EntityChassisPatternDisplay({ data, compact }: EntityDisplaySubP
             </VStack>
           </SheetDisplay>
         ))}
-      </Grid>
+      </VStack>
     </VStack>
   )
 }

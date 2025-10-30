@@ -68,6 +68,7 @@ export function RoundedBox({
   const headerCursor = onHeaderClick ? 'pointer' : 'default'
   const headerBottomRadius = children ? '0' : 'xs'
 
+  console.log(children)
   return (
     <Flex
       direction="column"

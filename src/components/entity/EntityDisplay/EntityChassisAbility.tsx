@@ -6,11 +6,11 @@ import type { SURefMetaAction } from 'salvageunion-reference'
 export function EntityChassisAbility({
   action,
   disabled = false,
-  compact,
+  compact = false,
 }: {
   action: SURefMetaAction
   disabled?: boolean
-  compact: boolean
+  compact?: boolean
 }) {
   const fontWeight = compact ? 'normal' : 'semibold'
   const fontSize = compact ? 'xs' : 'sm'
