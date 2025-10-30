@@ -189,11 +189,9 @@ export function RoundedBox({
               {rightContent && (
                 <Flex
                   direction="row"
-                  gap={1}
                   alignItems="flex-start"
                   flexWrap="wrap"
                   justifyContent="flex-end"
-                  flexShrink={0}
                   css={{
                     display: '-webkit-box',
                     WebkitLineClamp: 3,

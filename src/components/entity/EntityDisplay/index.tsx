@@ -6,7 +6,6 @@ import { PageReferenceDisplay } from '../../shared/PageReferenceDisplay'
 import { RollTable } from '../../shared/RollTable'
 import { RoundedBox } from '../../shared/RoundedBox'
 import { SheetDisplay } from '../../shared/SheetDisplay'
-import { StatBonusDisplay } from '../../shared/StatBonusDisplay'
 import {
   extractHeader,
   extractContentSections,
@@ -122,7 +121,6 @@ export function EntityDisplay({
   const hasNotes = 'notes' in data && data.notes
   const hasDescription = 'description' in data && data.description && schemaName !== 'abilities'
   const hasActions = 'actions' in data && data.actions && data.actions.length > 0
-  const hasStatBonus = sections.showStatBonus && 'statBonus' in data && data.statBonus
   const hasEffect = 'effect' in data && data.effect
   const hasOptions = 'options' in data && data.options && data.options.length > 0
   const hasRollTable = sections.showRollTable && 'table' in data && data.table
@@ -134,7 +132,6 @@ export function EntityDisplay({
   const hasContentBeyondActions =
     hasNotes ||
     hasDescription ||
-    hasStatBonus ||
     hasEffect ||
     hasOptions ||
     hasRollTable ||
@@ -239,10 +236,6 @@ export function EntityDisplay({
             />
             {!hideActions && (
               <EntityChassisPatternDisplay data={data} schemaName={schemaName} compact={compact} />
-            )}
-
-            {sections.showStatBonus && 'statBonus' in data && data.statBonus && (
-              <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
             )}
 
             {'effect' in data && data.effect && (
