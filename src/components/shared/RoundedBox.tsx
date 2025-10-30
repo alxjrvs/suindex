@@ -162,11 +162,7 @@ export function RoundedBox({
                     whiteSpace="nowrap"
                     overflow="hidden"
                     textOverflow="ellipsis"
-                    css={{
-                      fontSize: compact
-                        ? 'clamp(0.3rem, 1.5vw, 1rem)'
-                        : 'clamp(0.6rem, 1.5vw, 2rem)',
-                    }}
+                    fontSize={compact ? '1rem' : '2rem'}
                   >
                     {title}
                   </Text>
@@ -177,10 +173,15 @@ export function RoundedBox({
                     overflow="hidden"
                     gap="1"
                     minW="0"
-                    css={{
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                    }}
+                    flexWrap={compact ? 'wrap' : 'nowrap'}
+                    css={
+                      compact
+                        ? {
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                          }
+                        : {}
+                    }
                   >
                     {subTitleContent}
                   </Flex>

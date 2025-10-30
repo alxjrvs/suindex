@@ -100,7 +100,7 @@ export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
               key={`${schemaId}-${item.id}-${index}`}
               flexShrink={0}
               minW="300px"
-              maxW="500px"
+              maxW="600px"
               transition="all 0.3s ease-in-out"
               transform={isHovered ? 'scale(1.05)' : 'scale(1)'}
               zIndex={isHovered ? 10 : 1}

@@ -10,6 +10,7 @@ import type {
 } from 'salvageunion-reference'
 import { getActivationCurrency } from '../entity/entityDisplayHelpers'
 import { EntityDetailDisplay } from '../entity/EntityDetailDisplay'
+import { Box } from '@chakra-ui/react'
 
 /**
  * Extract details for header (activation cost, range, damage, traits)
@@ -102,7 +103,7 @@ const DetailWrapper = ({ children }: { children: React.ReactNode; compact: boole
 
 function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
-  const fontSize = compact ? 'sm' : 'md'
+  const fontSize = compact ? 'xs' : 'md'
 
   if (item.type === 'cost') {
     return (
@@ -155,19 +156,21 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
 
   return (
     <DetailWrapper compact={compact}>
-      <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
-        {item.label}
-      </Text>
-      {item.value && (
-        <Text
-          variant="pseudoheaderInverse"
-          as="span"
-          fontWeight={semiFontWeight}
-          fontSize={fontSize}
-        >
-          {item.value}
+      <Box display="inline-flex" gap={0}>
+        <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
+          {item.label}
         </Text>
-      )}
+        {item.value !== undefined && (
+          <Text
+            variant="pseudoheaderInverse"
+            as="span"
+            fontWeight={semiFontWeight}
+            fontSize={fontSize}
+          >
+            {item.value}
+          </Text>
+        )}
+      </Box>
     </DetailWrapper>
   )
 }
