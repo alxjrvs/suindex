@@ -156,10 +156,6 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
             })}
           </Flex>
         )}
-
-        <Text fontSize="sm" color="su.brick">
-          Showing {filteredData.length} of {data.length} items
-        </Text>
       </ReferenceHeader>
 
       <Box flex="1" overflowY="auto" p={6}>

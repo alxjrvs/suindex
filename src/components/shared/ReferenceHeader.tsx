@@ -14,7 +14,7 @@ export function ReferenceHeader({ title, children, ...boxProps }: ReferenceHeade
       shadow="sm"
       borderBottomWidth="1px"
       borderColor="su.lightBlue"
-      p={6}
+      p={4}
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -22,7 +22,7 @@ export function ReferenceHeader({ title, children, ...boxProps }: ReferenceHeade
       {...boxProps}
     >
       {title && (
-        <Heading level="h1" mb={6} textAlign="center" alignSelf="center">
+        <Heading level="h1" mb={2} textAlign="center" alignSelf="center">
           {title}
         </Heading>
       )}

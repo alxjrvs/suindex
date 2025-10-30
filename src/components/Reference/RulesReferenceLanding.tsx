@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Flex, Input, VStack } from '@chakra-ui/react'
+import { Box, Flex, Link, Input, VStack } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { ReferenceHeader } from '../shared/ReferenceHeader'
 import Footer from '../Footer'
@@ -162,6 +162,20 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       <Box position="relative" zIndex={20} bg="su.white">
         <ReferenceHeader title="Salvage Union Rules Reference">
           <Box position="relative" maxW="2xl" w="full">
+            <Text fontSize="sm" color="su.brick" mb={3} textAlign="center">
+              An Online SRD for the{' '}
+              <Link
+                href="https://leyline.press/collections/salvage-union"
+                target="_blank"
+                rel="noopener noreferrer"
+                color="su.brick"
+                textDecoration="underline"
+                _hover={{ color: 'su.orange' }}
+              >
+                Salvage Union
+              </Link>{' '}
+              TTRPG
+            </Text>
             <Input
               ref={inputRef}
               value={searchQuery}
@@ -225,11 +239,6 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
               </Box>
             )}
           </Box>
-
-          <Text fontSize="sm" color="su.brick" mt={4}>
-            Search across all {schemas.length} schemas and{' '}
-            {Array.from(allItems.values()).reduce((sum, items) => sum + items.length, 0)} items
-          </Text>
         </ReferenceHeader>
       </Box>
 
