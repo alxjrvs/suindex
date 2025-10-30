@@ -21,11 +21,24 @@ export default function DataTable({ data, schema }: DataTableProps) {
     dispatch({ type: 'RESET' })
   }, [schemaId, dispatch])
 
-  const allFields: (keyof SURefEntity)[] = useMemo(() => {
+  const allFields: string[] = useMemo(() => {
     if (data.length === 0) return []
-    const fieldSet = new Set<keyof SURefEntity>()
+    const fieldSet = new Set<string>()
     data.forEach((item) => {
-      Object.keys(item).forEach((key) => fieldSet.add(key as keyof SURefEntity))
+      Object.keys(item).forEach((key) => {
+        // For chassis, flatten the stats object
+        if (key === 'stats') {
+          const statsValue = item[key as keyof SURefEntity]
+          if (statsValue && typeof statsValue === 'object' && !Array.isArray(statsValue)) {
+            const stats = statsValue as Record<string, unknown>
+            Object.keys(stats).forEach((statKey) => {
+              fieldSet.add(`stats.${statKey}`)
+            })
+          }
+        } else {
+          fieldSet.add(key)
+        }
+      })
     })
     return Array.from(fieldSet).sort()
   }, [data])
@@ -35,7 +48,16 @@ export default function DataTable({ data, schema }: DataTableProps) {
     allFields.forEach((field) => {
       values[field] = new Set()
       data.forEach((item) => {
-        const value = item[field]
+        // Handle flattened stats fields
+        let value: unknown
+        if (field.startsWith('stats.')) {
+          const statKey = field.substring(6)
+          const stats = item['stats' as keyof SURefEntity] as Record<string, unknown> | undefined
+          value = stats?.[statKey]
+        } else {
+          value = item[field as keyof SURefEntity]
+        }
+
         if (value !== undefined && value !== null && value !== '') {
           if (Array.isArray(value)) {
             value.forEach((v) => {
@@ -77,7 +99,16 @@ export default function DataTable({ data, schema }: DataTableProps) {
       for (const [field, filterValue] of Object.entries(filterState.filters)) {
         if (!filterValue) continue
 
-        const itemValue = item[field as keyof SURefEntity]
+        // Handle flattened stats fields
+        let itemValue: unknown
+        if (field.startsWith('stats.')) {
+          const statKey = field.substring(6)
+          const stats = item['stats' as keyof SURefEntity] as Record<string, unknown> | undefined
+          itemValue = stats?.[statKey]
+        } else {
+          itemValue = item[field as keyof SURefEntity]
+        }
+
         if (itemValue === undefined || itemValue === null) return false
 
         if (Array.isArray(itemValue)) {
@@ -93,8 +124,20 @@ export default function DataTable({ data, schema }: DataTableProps) {
 
   const sortedData = useMemo(() => {
     return [...filteredData].sort((a, b) => {
-      const aVal = a[filterState.sortField as keyof SURefEntity]
-      const bVal = b[filterState.sortField as keyof SURefEntity]
+      // Handle flattened stats fields
+      let aVal: unknown
+      let bVal: unknown
+
+      if (filterState.sortField.startsWith('stats.')) {
+        const statKey = filterState.sortField.substring(6)
+        const aStats = a['stats' as keyof SURefEntity] as Record<string, unknown> | undefined
+        const bStats = b['stats' as keyof SURefEntity] as Record<string, unknown> | undefined
+        aVal = aStats?.[statKey]
+        bVal = bStats?.[statKey]
+      } else {
+        aVal = a[filterState.sortField as keyof SURefEntity]
+        bVal = b[filterState.sortField as keyof SURefEntity]
+      }
 
       if (aVal === undefined || aVal === null) return 1
       if (bVal === undefined || bVal === null) return -1
@@ -132,7 +175,18 @@ export default function DataTable({ data, schema }: DataTableProps) {
     [filterState.sortField, filterState.sortDirection, dispatch]
   )
 
-  const formatValue = useCallback((value: unknown): string => {
+  const formatValue = useCallback((item: SURefEntity, field: string): string => {
+    let value: unknown
+
+    // Handle flattened stats fields
+    if (field.startsWith('stats.')) {
+      const statKey = field.substring(6)
+      const stats = item['stats' as keyof SURefEntity] as Record<string, unknown> | undefined
+      value = stats?.[statKey]
+    } else {
+      value = item[field as keyof SURefEntity]
+    }
+
     if (value === undefined || value === null) return '-'
     if (Array.isArray(value)) return value.join(', ')
     if (typeof value === 'object') return JSON.stringify(value)
@@ -140,20 +194,57 @@ export default function DataTable({ data, schema }: DataTableProps) {
   }, [])
 
   const displayFields = useMemo(() => {
-    const fields = ['name', ...schema.requiredFields.filter((f) => f !== 'name' && f !== 'id')]
-    ;['description', 'effect', 'type', 'category'].forEach((f) => {
-      if (allFields.includes(f as keyof SURefEntity) && !fields.includes(f)) {
+    // Start with name if it exists
+    const fields: string[] = []
+    if (allFields.includes('name')) {
+      fields.push('name')
+    }
+
+    // Add all required fields (except id and name)
+    schema.requiredFields
+      .filter((f) => f !== 'name' && f !== 'id')
+      .forEach((f) => {
+        if (allFields.includes(f) && !fields.includes(f)) {
+          fields.push(f)
+        }
+      })
+
+    // Add common important fields if they exist
+    const importantFields = ['techLevel', 'description', 'effect', 'type', 'category', 'level']
+    importantFields.forEach((f) => {
+      if (allFields.includes(f) && !fields.includes(f)) {
         fields.push(f)
       }
     })
 
-    const result = fields
-      .filter(
-        (f) =>
-          allFields.includes(f as keyof SURefEntity) && f !== 'id' && f !== 'source' && f !== 'page'
-      )
-      .slice(0, 4)
+    // Add flattened stats fields for chassis (in a specific order)
+    const statsFields = allFields.filter((f) => f.startsWith('stats.'))
+    const statsOrder = [
+      'stats.structurePts',
+      'stats.energyPts',
+      'stats.heatCap',
+      'stats.systemSlots',
+      'stats.moduleSlots',
+      'stats.cargoCap',
+      'stats.salvageValue',
+    ]
+    statsOrder.forEach((f) => {
+      if (statsFields.includes(f) && !fields.includes(f)) {
+        fields.push(f)
+      }
+    })
 
+    // Add any remaining stats fields not in the order
+    statsFields.forEach((f) => {
+      if (!fields.includes(f)) {
+        fields.push(f)
+      }
+    })
+
+    // Filter out id, source, and page from the main list
+    const result = fields.filter((f) => f !== 'id' && f !== 'source' && f !== 'page')
+
+    // Add page and source at the end if they exist
     if (allFields.includes('page')) {
       result.push('page')
     }
@@ -285,7 +376,12 @@ export default function DataTable({ data, schema }: DataTableProps) {
                     _hover={{ bg: 'su.blue' }}
                   >
                     <Flex align="center" gap={1}>
-                      {field.replace(/([A-Z])/g, ' $1').trim()}
+                      {field.startsWith('stats.')
+                        ? field
+                            .substring(6)
+                            .replace(/([A-Z])/g, ' $1')
+                            .trim()
+                        : field.replace(/([A-Z])/g, ' $1').trim()}
                       {filterState.sortField === field && (
                         <Text as="span">{filterState.sortDirection === 'asc' ? '↑' : '↓'}</Text>
                       )}
@@ -310,12 +406,8 @@ export default function DataTable({ data, schema }: DataTableProps) {
                   >
                     {displayFields.map((field) => (
                       <Box as="td" key={field} px={6} py={6} fontSize="sm" color="su.black">
-                        <Box
-                          maxW="xs"
-                          truncate
-                          title={formatValue(item[field as keyof SURefEntity])}
-                        >
-                          {formatValue(item[field as keyof SURefEntity])}
+                        <Box maxW="xs" truncate title={formatValue(item, field)}>
+                          {formatValue(item, field)}
                         </Box>
                       </Box>
                     ))}

@@ -14,9 +14,6 @@ const AbilityTreeRequirementDisplay = lazy(() =>
     default: m.AbilityTreeRequirementDisplay,
   }))
 )
-const ChassisDisplay = lazy(() =>
-  import('./schema/entities/ChassisDisplay').then((m) => ({ default: m.ChassisDisplay }))
-)
 const ClassDisplay = lazy(() =>
   import('./schema/entities/ClassDisplay').then((m) => ({ default: m.ClassDisplay }))
 )
@@ -31,7 +28,6 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   // Complex components with custom logic/children
   abilities: AbilityDisplay as unknown as DisplayComponentType,
   'ability-tree-requirements': AbilityTreeRequirementDisplay as unknown as DisplayComponentType,
-  chassis: ChassisDisplay as unknown as DisplayComponentType,
   classes: ClassDisplay as unknown as DisplayComponentType,
   'classes.core': ClassDisplay as unknown as DisplayComponentType,
   'classes.advanced': ClassDisplay as unknown as DisplayComponentType,
@@ -41,6 +37,7 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
 
   // Simple displays created via factory pattern
   'bio-titans': createEntityDisplay('bio-titans'),
+  chassis: createEntityDisplay('chassis'),
   crawlers: createEntityDisplay('crawlers'),
   creatures: createEntityDisplay('creatures'),
   drones: createEntityDisplay('drones'),

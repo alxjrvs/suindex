@@ -27,7 +27,7 @@ export function ChassisAbilities({
     >
       <VStack gap={3} alignItems="stretch" w="full">
         {(
-          chassis?.chassisAbilities || [
+          chassis?.actions || [
             {
               name: '',
               description: 'No chassis selected.',

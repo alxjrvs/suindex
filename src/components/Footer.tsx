@@ -41,6 +41,19 @@ export default function Footer() {
             </Link>
             .
           </Text>
+          <Text>
+            All Workshop Manual Images are used with special permission from{' '}
+            <Link
+              href="https://leyline.press"
+              target="_blank"
+              rel="noopener noreferrer"
+              textDecoration="underline"
+              _hover={{ color: 'su.brick' }}
+            >
+              Leyline Press
+            </Link>
+            .
+          </Text>
         </Box>
         <Image src="/Powered_by_Salvage_Black.webp" alt="Powered by Salvage" h="12" w="auto" />
       </Flex>
