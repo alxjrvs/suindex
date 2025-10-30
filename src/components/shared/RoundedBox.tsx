@@ -193,6 +193,8 @@ export function RoundedBox({
                   alignItems="flex-start"
                   flexWrap="wrap"
                   justifyContent="flex-end"
+                  flex="1"
+                  minW="0"
                   css={{
                     display: '-webkit-box',
                     WebkitLineClamp: 3,
