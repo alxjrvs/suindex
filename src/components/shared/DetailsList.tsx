@@ -57,7 +57,7 @@ function extractDetails(
   if ('damage' in data && data.damage) {
     details.push({
       label: 'Damage',
-      value: `${data.damage.amount}${data.damage.damageType}`,
+      value: `${data.damage.amount}${data.damage.damageType ?? 'HP'}`,
     })
   }
 
