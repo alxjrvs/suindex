@@ -102,34 +102,6 @@ export function extractSidebarData(
 }
 
 /**
- * Determine which content sections to show
- */
-export function extractContentSections(data: SURefMetaEntity): ContentSections {
-  return {
-    showStatBonus: 'statBonus' in data && !!data.statBonus,
-    showActions: 'actions' in data && !!data.actions && data.actions.length > 0,
-    showRollTable: 'table' in data && !!data.table,
-    showSystems: 'systems' in data && !!data.systems && data.systems.length > 0,
-    showTLE:
-      'techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0,
-  }
-}
-
-/**
- * Extract header text
- */
-export function extractHeader(
-  data: SURefMetaEntity,
-  schemaName: SURefMetaSchemaName | 'actions'
-): string {
-  // AbilityTreeRequirement uses 'tree' instead of 'name'
-  if (schemaName === 'ability-tree-requirements' && 'tree' in data) {
-    return `${data.tree} Tree`
-  }
-  return (data as { name: string }).name
-}
-
-/**
  * Extract level (for abilities)
  */
 export function extractLevel(data: SURefMetaEntity): string | number | undefined {
@@ -194,4 +166,58 @@ export function extractPageReference(data: SURefMetaEntity): {
     source: 'source' in data ? data.source : undefined,
     page: data.page as number,
   }
+}
+
+export function extractName(data: SURefMetaEntity, schemaName: SURefMetaSchemaName): string {
+  if (schemaName === 'ability-tree-requirements') {
+    return data.name + ' Tree Requirements'
+  }
+  return data.name
+}
+
+/**
+ * Calculate background color for entity display based on schema, tech level, and entity data
+ */
+export function calculateBackgroundColor(
+  schemaName: SURefSchemaName | 'actions',
+  headerColor: string = '',
+  techLevel: number | undefined,
+  data: SURefMetaEntity,
+  techLevelColors: Record<number, string>
+): string {
+  if (schemaName === 'chassis') return 'su.green'
+  if (schemaName === 'actions') return 'su.twoBlue'
+
+  // Auto-calculate header color for abilities based on type
+  if (schemaName === 'abilities' && !headerColor) {
+    const isLegendary =
+      ('level' in data && String(data.level).toUpperCase() === 'L') ||
+      ('tree' in data && String(data.tree).includes('Legendary'))
+    const isAdvancedOrHybrid =
+      'tree' in data &&
+      (String(data.tree).includes('Advanced') || String(data.tree).includes('Hybrid'))
+
+    if (isLegendary) {
+      return 'su.pink'
+    } else if (isAdvancedOrHybrid) {
+      return 'su.darkOrange'
+    } else {
+      return 'su.orange'
+    }
+  }
+
+  // Auto-calculate header color for ability-tree-requirements based on name
+  if (schemaName === 'ability-tree-requirements' && !headerColor) {
+    const name = 'name' in data ? String(data.name).toLowerCase() : ''
+    if (name.includes('legendary')) {
+      return 'su.pink'
+    } else if (name.includes('advanced') || name.includes('hybrid')) {
+      return 'su.brick'
+    }
+    return 'su.orange'
+  }
+
+  if (headerColor) return headerColor
+  if (techLevel) return techLevelColors[techLevel]
+  return 'su.orange'
 }

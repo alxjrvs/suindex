@@ -1,7 +1,7 @@
 import { Box, Image } from '@chakra-ui/react'
 import { useState } from 'react'
 import type { EntityDisplaySubProps } from './types'
-import { extractHeader } from '../entityDisplayHelpers'
+import { extractName } from '../entityDisplayHelpers'
 
 export function EntityImage({ data, schemaName }: EntityDisplaySubProps) {
   const [showImage, setShowImage] = useState(true)
@@ -10,7 +10,7 @@ export function EntityImage({ data, schemaName }: EntityDisplaySubProps) {
   const trueSchemaName = isAdvanced ? 'classes.core' : schemaName
   const trueName = data.name.toLowerCase().replace('advanced ', '')
   const imagePath = `/lp/${trueSchemaName}/${trueName}.${ext}`
-  const header = extractHeader(data, schemaName)
+  const header = extractName(data, schemaName)
 
   if (!showImage) return null
 

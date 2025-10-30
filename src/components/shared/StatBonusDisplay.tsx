@@ -1,5 +1,4 @@
 import { Box, Text } from '@chakra-ui/react'
-import { formatStatName } from '../../utils/displayUtils'
 
 interface StatBonusDisplayProps {
   bonus: number
@@ -13,7 +12,7 @@ export function StatBonusDisplay({ bonus, stat }: StatBonusDisplayProps) {
         Stat Bonus:{' '}
       </Text>
       <Text as="span" color="su.black">
-        +{bonus} {formatStatName(stat)}
+        +{bonus} {stat.replace(/_/g, ' ')}
       </Text>
     </Box>
   )

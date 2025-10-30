@@ -65,9 +65,6 @@ function extractDetails(
   const traits: SURefMetaTraits = 'traits' in data && data.traits?.length ? data.traits : []
   traits.forEach((t) => {
     const label = t.type.charAt(0).toUpperCase() + t.type.slice(1)
-    if (label === 'HOT') {
-      console.log('here', t)
-    }
     const value = 'amount' in t && t.amount !== undefined ? Number(t.amount) : undefined
     details.push({ label, value, type: 'trait' })
   })
@@ -92,80 +89,60 @@ export function DetailsList({ schemaName, data, compact = false }: DetailsListPr
     </>
   )
 }
-const DetailWrapper = ({ children }: { children: React.ReactNode; compact: boolean }) => (
-  <>{children}</>
-)
 
 function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
   const fontSize = compact ? 'xs' : 'md'
 
   if (item.type === 'cost') {
-    return (
-      <DetailWrapper compact={compact}>
-        <ActivationCostBox cost={item.label} currency="" compact={compact} />
-      </DetailWrapper>
-    )
+    return <ActivationCostBox cost={item.label} currency="" compact={compact} />
   }
 
   if (item.type === 'trait') {
     return (
-      <DetailWrapper compact={compact}>
-        <EntityDetailDisplay
-          label={item.label}
-          value={item.value}
-          compact={compact}
-          schemaName="traits"
-        />
-      </DetailWrapper>
+      <EntityDetailDisplay
+        label={item.label}
+        value={item.value}
+        compact={compact}
+        schemaName="traits"
+      />
     )
   }
 
   if (item.type === 'keyword') {
     return (
-      <DetailWrapper compact={compact}>
-        <EntityDetailDisplay
-          label={item.label}
-          value={item.value}
-          compact={compact}
-          schemaName="keywords"
-        />
-      </DetailWrapper>
+      <EntityDetailDisplay
+        label={item.label}
+        value={item.value}
+        compact={compact}
+        schemaName="keywords"
+      />
     )
   }
 
   if (item.type === 'meta') {
     return (
-      <DetailWrapper compact={compact}>
+      <Text variant="pseudoheaderInverse" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
+        {item.label}
+      </Text>
+    )
+  }
+
+  return (
+    <Box display="inline-flex" gap={0}>
+      <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
+        {item.label}
+      </Text>
+      {item.value !== undefined && (
         <Text
           variant="pseudoheaderInverse"
           as="span"
           fontWeight={semiFontWeight}
           fontSize={fontSize}
         >
-          {item.label}
+          {item.value}
         </Text>
-      </DetailWrapper>
-    )
-  }
-
-  return (
-    <DetailWrapper compact={compact}>
-      <Box display="inline-flex" gap={0}>
-        <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
-          {item.label}
-        </Text>
-        {item.value !== undefined && (
-          <Text
-            variant="pseudoheaderInverse"
-            as="span"
-            fontWeight={semiFontWeight}
-            fontSize={fontSize}
-          >
-            {item.value}
-          </Text>
-        )}
-      </Box>
-    </DetailWrapper>
+      )}
+    </Box>
   )
 }

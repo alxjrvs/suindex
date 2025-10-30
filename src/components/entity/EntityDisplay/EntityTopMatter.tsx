@@ -1,9 +1,9 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
-import { ItalicText } from './ItalicText'
 import type { EntityDisplaySubProps } from './types'
 import { StatList } from './EntityStatList'
+import { Text } from '../../base/Text'
 
 export function EntityTopMatter({
   data,
@@ -35,9 +35,39 @@ export function EntityTopMatter({
         <Box ml="auto">
           <StatList header={false} data={data} compact={compact} />
         </Box>
-        {showDescription && <ItalicText compact={compact}>{description}</ItalicText>}
+        {showDescription && (
+          <Text
+            color="su.black"
+            fontWeight="medium"
+            lineHeight="relaxed"
+            fontStyle="italic"
+            wordBreak="break-word"
+            overflowWrap="break-word"
+            whiteSpace="normal"
+            overflow="hidden"
+            maxW="100%"
+            fontSize={compact ? 'xs' : 'sm'}
+          >
+            {description}
+          </Text>
+        )}
         {!hideActions && <EntityActions data={data} compact={compact} schemaName={schemaName} />}
-        {notes && <ItalicText compact={compact}>{notes}</ItalicText>}
+        {notes && (
+          <Text
+            color="su.black"
+            fontWeight="medium"
+            lineHeight="relaxed"
+            fontStyle="italic"
+            wordBreak="break-word"
+            overflowWrap="break-word"
+            whiteSpace="normal"
+            overflow="hidden"
+            maxW="100%"
+            fontSize={compact ? 'xs' : 'sm'}
+          >
+            {notes}
+          </Text>
+        )}
       </VStack>
     </Flex>
   )
