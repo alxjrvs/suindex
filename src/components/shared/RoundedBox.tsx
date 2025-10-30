@@ -83,6 +83,10 @@ export function RoundedBox({
       minH="fit-content"
       flexShrink={0}
       position="relative"
+      // Ensure absolute elements are never clipped
+      css={{
+        isolation: 'isolate',
+      }}
       {...flexProps}
     >
       {absoluteElements}

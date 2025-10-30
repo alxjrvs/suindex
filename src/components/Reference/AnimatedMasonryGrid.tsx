@@ -104,14 +104,14 @@ export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
         `}
       </style>
       <Flex gap={4} px={4} h="full" alignItems="flex-start" justifyContent="center">
-        <Box flex="1" maxW="400px" overflow="hidden">
-          {renderColumn(column1, 0)}
+        <Box flex="1" maxW="400px" overflow="hidden" position="relative">
+          <Box pl="12px">{renderColumn(column1, 0)}</Box>
         </Box>
-        <Box flex="1" maxW="400px" overflow="hidden">
-          {renderColumn(column2, 1)}
+        <Box flex="1" maxW="400px" overflow="hidden" position="relative">
+          <Box pl="12px">{renderColumn(column2, 1)}</Box>
         </Box>
-        <Box flex="1" maxW="400px" overflow="hidden">
-          {renderColumn(column3, 2)}
+        <Box flex="1" maxW="400px" overflow="hidden" position="relative">
+          <Box pl="12px">{renderColumn(column3, 2)}</Box>
         </Box>
       </Flex>
     </Box>

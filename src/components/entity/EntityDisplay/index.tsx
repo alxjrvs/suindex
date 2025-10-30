@@ -66,10 +66,6 @@ type EntityDisplayProps = {
   showSelectButton?: boolean
   /** Optional custom text for the select button */
   selectButtonText?: string
-  /** Optional label displayed above the entity */
-  label?: string
-  /** Content justification for the main content area */
-  contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
   /** Optional label displayed in the top-right corner */
   rightLabel?: string
   /** Whether to use compact styling */
@@ -126,7 +122,6 @@ function calculateBGColor(
 export function EntityDisplay({
   rightLabel,
   data,
-  label,
   hideLevel = false,
   headerColor,
   trained = true,
@@ -144,11 +139,11 @@ export function EntityDisplay({
   showSelectButton = false,
   selectButtonText,
   hideActions = false,
-  contentJustify = 'flex-start',
   schemaName,
   compact = false,
 }: EntityDisplayProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
+
   if (!data) return null
 
   const header = extractHeader(data, schemaName)
@@ -156,36 +151,27 @@ export function EntityDisplay({
   const pageRef = extractPageReference(data)
   const techLevel = extractTechLevel(data)
 
-  // Calculate header opacity based on trained state
+  const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel, data)
   const headerOpacity = trained ? 1 : 0.5
+  const contentOpacity = disabled || dimmed ? 0.5 : 1
 
-  // Check if there's any content to render (besides actions)
-  const hasNotes = 'notes' in data && data.notes
-  const hasDescription = 'description' in data && data.description && schemaName !== 'abilities'
-  const hasActions = 'actions' in data && data.actions && data.actions.length > 0
-  const hasEffect = 'effect' in data && data.effect
-  const hasOptions = 'options' in data && data.options && data.options.length > 0
-  const hasRollTable = sections.showRollTable && 'table' in data && data.table
-  const hasTechLevelEffects =
-    'techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0
-  const hasPatterns = 'patterns' in data && data.patterns && data.patterns.length > 0
-
-  // Only show padding if there's content beyond just actions
+  // Check if there's any content to render
   const hasContent =
-    hasActions ||
-    hasNotes ||
-    hasDescription ||
-    hasEffect ||
-    hasOptions ||
-    hasRollTable ||
-    hasTechLevelEffects ||
-    hasPatterns ||
-    children ||
+    ('actions' in data && data.actions && data.actions.length > 0) ||
+    ('notes' in data && !!data.notes) ||
+    ('description' in data && !!data.description && schemaName !== 'abilities') ||
+    ('effect' in data && !!data.effect) ||
+    ('options' in data && data.options && data.options.length > 0) ||
+    (sections.showRollTable && 'table' in data && !!data.table) ||
+    ('techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0) ||
+    ('patterns' in data && data.patterns && data.patterns.length > 0) ||
+    !!children ||
     showSelectButton ||
-    onRemove ||
-    pageRef
+    !!onRemove ||
+    !!pageRef
 
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
+
   const handleToggle = () => {
     if (onToggleExpanded) {
       onToggleExpanded()
@@ -194,20 +180,13 @@ export function EntityDisplay({
     }
   }
 
-  const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel, data)
-  const contentOpacity = disabled || dimmed ? 0.5 : 1
-
   const handleHeaderClick = () => {
-    if (showSelectButton) {
-      if (collapsible) {
-        handleToggle()
-      }
-    } else {
-      if (onClick && !disabled) {
-        onClick()
-      } else if (collapsible) {
-        handleToggle()
-      }
+    if (showSelectButton && collapsible) {
+      handleToggle()
+    } else if (onClick && !disabled) {
+      onClick()
+    } else if (collapsible) {
+      handleToggle()
     }
   }
 
@@ -247,7 +226,6 @@ export function EntityDisplay({
       bodyPadding="0"
       onHeaderClick={handleHeaderClick}
       headerTestId="frame-header-container"
-      label={label}
     >
       {(!collapsible || isExpanded) && hasContent && (
         <Flex bg={backgroundColor} w="full" borderBottomRadius="md" overflow="hidden">
@@ -267,7 +245,6 @@ export function EntityDisplay({
             p={compact ? 1 : 3}
             gap={compact ? 3 : 6}
             alignItems="stretch"
-            justifyContent={contentJustify}
             minW="0"
           >
             <EntityTopMatter
