@@ -22,7 +22,7 @@ export default defineConfig({
     VitePluginRadar({
       // Google Analytics 4
       analytics: {
-        id: import.meta.env.VITE_GA_MEASUREMENT_ID || '',
+        id: process.env.VITE_GA_MEASUREMENT_ID || '',
       },
       // Only enable in production
       enableDev: false,
