@@ -6,13 +6,22 @@ import { extractHeader } from '../entityDisplayHelpers'
 export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps) {
   const [showImage, setShowImage] = useState(true)
   const ext = schemaName === 'chassis' ? 'png' : 'jpg'
-  const imagePath = `/lp/${schemaName}/${data.name.toLowerCase()}.${ext}`
+  const isAdvanced = schemaName === 'classes.advanced'
+  const trueSchemaName = isAdvanced ? 'classes.core' : schemaName
+  const trueName = data.name.toLowerCase().replace('advanced ', '')
+  const imagePath = `/lp/${trueSchemaName}/${trueName}.${ext}`
   const header = extractHeader(data, schemaName)
 
   if (compact || !showImage) return null
 
   return (
-    <Box borderColor="su.black" bg="su.white" borderWidth="2px" maxW="40%" flexShrink={0}>
+    <Box
+      borderColor={isAdvanced ? 'su.crawlerPink' : 'su.black'}
+      bg="su.white"
+      borderWidth="2px"
+      maxW="40%"
+      flexShrink={0}
+    >
       <Image
         src={imagePath}
         alt={header}

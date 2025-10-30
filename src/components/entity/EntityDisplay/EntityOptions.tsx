@@ -1,4 +1,4 @@
-import { VStack, Grid } from '@chakra-ui/react'
+import { VStack, Box } from '@chakra-ui/react'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import type { EntityDisplaySubProps } from './types'
 import { EntitySubheader } from './EntitySubheader'
@@ -8,13 +8,22 @@ export function EntityOptions({ data, compact }: EntityDisplaySubProps) {
   return (
     <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
       <EntitySubheader compact={compact} label="Options" />
-      <Grid gridTemplateColumns="repeat(2, 1fr)" gridAutoFlow="dense" gap={1}>
+      <Box
+        css={{
+          columnCount: 2,
+          columnGap: '0.25rem',
+          '& > *': {
+            breakInside: 'avoid',
+            marginBottom: '0.25rem',
+          },
+        }}
+      >
         {data.options.map((option, optIndex) => {
           const label = typeof option === 'string' ? '' : option.label
           const value = typeof option === 'string' ? option : option.value
-          return <SheetDisplay key={optIndex} label={label} value={value} />
+          return <SheetDisplay compact={compact} key={optIndex} label={label} value={value} />
         })}
-      </Grid>
+      </Box>
     </VStack>
   )
 }

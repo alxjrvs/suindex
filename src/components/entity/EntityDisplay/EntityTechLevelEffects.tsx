@@ -12,7 +12,12 @@ export function EntityTechLevelEffects({ data, compact }: EntityDisplaySubProps)
     <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
       <EntitySubheader compact={compact} label="Abilities" />
       {data.techLevelEffects.map((tle, index) => (
-        <SheetDisplay key={index} label={`Tech Level ${tle.techLevelMin}`} value={tle.effect} />
+        <SheetDisplay
+          compact={compact}
+          key={index}
+          label={`Tech Level ${tle.techLevelMin}`}
+          value={tle.effect}
+        />
       ))}
     </VStack>
   )

@@ -115,6 +115,36 @@ export function EntityDisplay({
   const pageRef = extractPageReference(data)
   const techLevel = extractTechLevel(data)
 
+  // Check if there's any content to render (besides actions)
+  const hasNotes = 'notes' in data && data.notes
+  const hasDescription = 'description' in data && data.description && schemaName !== 'abilities'
+  const hasActions = 'actions' in data && data.actions && data.actions.length > 0
+  const hasStatBonus = sections.showStatBonus && 'statBonus' in data && data.statBonus
+  const hasEffect = 'effect' in data && data.effect
+  const hasOptions = 'options' in data && data.options && data.options.length > 0
+  const hasRollTable = sections.showRollTable && 'table' in data && data.table
+  const hasTechLevelEffects =
+    'techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0
+  const hasPatterns = 'patterns' in data && data.patterns && data.patterns.length > 0
+
+  // Only show padding if there's content beyond just actions
+  const hasContentBeyondActions =
+    hasNotes ||
+    hasDescription ||
+    hasStatBonus ||
+    hasEffect ||
+    hasOptions ||
+    hasRollTable ||
+    hasTechLevelEffects ||
+    hasPatterns ||
+    children ||
+    showSelectButton ||
+    onRemove ||
+    pageRef
+
+  const contentPadding =
+    hasActions && !hasContentBeyondActions ? (compact ? 0 : 2) : compact ? 0 : 3
+
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
   const handleToggle = () => {
     if (onToggleExpanded) {
@@ -127,7 +157,6 @@ export function EntityDisplay({
   const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel)
   const contentOpacity = disabled || dimmed ? 0.5 : 1
 
-  // Click handling for header only
   const handleHeaderClick = () => {
     if (showSelectButton) {
       if (collapsible) {
@@ -193,7 +222,7 @@ export function EntityDisplay({
             bg="su.lightBlue"
             borderBottomRightRadius="md"
             opacity={contentOpacity}
-            p={compact ? 2 : 3}
+            p={contentPadding}
             gap={compact ? 3 : 6}
             alignItems="stretch"
             justifyContent={contentJustify}
@@ -206,7 +235,9 @@ export function EntityDisplay({
               <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
             )}
 
-            {'effect' in data && data.effect && <SheetDisplay value={data.effect} />}
+            {'effect' in data && data.effect && (
+              <SheetDisplay compact={compact} value={data.effect} />
+            )}
 
             <EntityOptions data={data} compact={compact} schemaName={schemaName} />
 

@@ -7,6 +7,14 @@ import type { EntityDisplaySubProps } from './types'
 export function EntityTopMatter({ data, schemaName, compact }: EntityDisplaySubProps) {
   const notes = 'notes' in data ? data.notes : undefined
   const description = 'description' in data ? data.description : undefined
+  const hasActions = 'actions' in data && data.actions && data.actions.length > 0
+  const showDescription = description && schemaName !== 'abilities'
+
+  // Don't render if there's no content to show
+  if (!notes && !showDescription && !hasActions) {
+    return null
+  }
+
   return (
     <Flex gap={compact ? 2 : 3} alignItems="flex-start">
       <EntityImage data={data} schemaName={schemaName} compact={compact} />
@@ -19,9 +27,7 @@ export function EntityTopMatter({ data, schemaName, compact }: EntityDisplaySubP
         minW="0"
       >
         {notes && <ItalicText compact={compact}>{notes}</ItalicText>}
-        {description && schemaName !== 'abilities' && (
-          <ItalicText compact={compact}>{description}</ItalicText>
-        )}
+        {showDescription && <ItalicText compact={compact}>{description}</ItalicText>}
 
         <EntityActions data={data} compact={compact} schemaName={schemaName} />
       </VStack>

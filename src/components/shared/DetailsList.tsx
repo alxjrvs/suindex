@@ -1,3 +1,4 @@
+import { Flex } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
 import type { DataValue } from '../../types/common'
 import { Text } from '../base/Text'
@@ -89,53 +90,74 @@ export function DetailsList({ schemaName, data, compact = false }: DetailsListPr
   if (values.length === 0) return null
 
   return (
-    <>
+    <Flex display="inline-flex" flexWrap="wrap" alignItems="center" gap="0.5">
       {values.map((item, index) => (
         <DetailItem key={index} item={item} compact={compact} />
       ))}
-    </>
+    </Flex>
   )
 }
+const DetailWrapper = ({ children }: { children: React.ReactNode; compact: boolean }) => (
+  <Flex display="inline-flex" alignItems="center" gap="0">
+    {children}
+  </Flex>
+)
+
 function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
   const fontSize = compact ? 'sm' : 'md'
 
   if (item.type === 'cost') {
-    return <ActivationCostBox cost={item.label} currency="" compact={compact} />
+    return (
+      <DetailWrapper compact={compact}>
+        <ActivationCostBox cost={item.label} currency="" compact={compact} />
+      </DetailWrapper>
+    )
   }
 
   if (item.type === 'trait') {
     return (
-      <EntityDetailDisplay
-        label={item.label}
-        value={item.value}
-        compact={compact}
-        schemaName="traits"
-      />
+      <DetailWrapper compact={compact}>
+        <EntityDetailDisplay
+          label={item.label}
+          value={item.value}
+          compact={compact}
+          schemaName="traits"
+        />
+      </DetailWrapper>
     )
   }
 
   if (item.type === 'keyword') {
     return (
-      <EntityDetailDisplay
-        label={item.label}
-        value={item.value}
-        compact={compact}
-        schemaName="keywords"
-      />
+      <DetailWrapper compact={compact}>
+        <EntityDetailDisplay
+          label={item.label}
+          value={item.value}
+          compact={compact}
+          schemaName="keywords"
+        />
+      </DetailWrapper>
     )
   }
 
   if (item.type === 'meta') {
     return (
-      <Text variant="pseudoheaderInverse" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
-        {item.label}
-      </Text>
+      <DetailWrapper compact={compact}>
+        <Text
+          variant="pseudoheaderInverse"
+          as="span"
+          fontWeight={semiFontWeight}
+          fontSize={fontSize}
+        >
+          {item.label}
+        </Text>
+      </DetailWrapper>
     )
   }
 
   return (
-    <>
+    <DetailWrapper compact={compact}>
       <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
         {item.label}
       </Text>
@@ -149,6 +171,6 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
           {item.value}
         </Text>
       )}
-    </>
+    </DetailWrapper>
   )
 }
