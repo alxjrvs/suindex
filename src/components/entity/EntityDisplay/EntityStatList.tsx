@@ -92,6 +92,7 @@ function extractHeaderStats(data: SURefMetaEntity): Stat[] {
 
 export function StatList({ header, data, compact = false }: StatListProps) {
   const stats = extractHeaderStats(data)
+  if (!compact && !header) return null
 
   return (
     <Flex gap={2} flexWrap="wrap">

@@ -35,10 +35,9 @@ export function EntityTopMatter({
         <Box ml="auto" mr="auto">
           <StatList header={false} data={data} compact={compact} />
         </Box>
-        {notes && <ItalicText compact={compact}>{notes}</ItalicText>}
         {showDescription && <ItalicText compact={compact}>{description}</ItalicText>}
-
         {!hideActions && <EntityActions data={data} compact={compact} schemaName={schemaName} />}
+        {notes && <ItalicText compact={compact}>{notes}</ItalicText>}
       </VStack>
     </Flex>
   )
