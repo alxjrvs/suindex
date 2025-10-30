@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { VitePluginRadar } from 'vite-plugin-radar'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,6 +18,14 @@ export default defineConfig({
       open: false,
       gzipSize: true,
       filename: 'dist/bundle-analysis.html',
+    }),
+    VitePluginRadar({
+      // Google Analytics 4
+      analytics: {
+        id: process.env.VITE_GA_MEASUREMENT_ID || '',
+      },
+      // Only enable in production
+      enableDev: false,
     }),
   ],
   optimizeDeps: {

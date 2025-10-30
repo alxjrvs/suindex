@@ -271,12 +271,23 @@ export function EntitySelectionModal({
                     schemaName={schemaName}
                     compact
                     data={entity}
-                    showSelectButton
-                    selectButtonText={buttonText}
-                    onClick={() => handleSelect(entityId, schemaName)}
                     defaultExpanded={!isDisabled}
                     collapsible={isDisabled}
                     disabled={isDisabled}
+                    buttonConfig={{
+                      bg: 'su.orange',
+                      color: 'su.white',
+                      fontWeight: 'bold',
+                      _hover: { bg: 'su.black' },
+                      _disabled: {
+                        opacity: 0.5,
+                        cursor: 'not-allowed',
+                        _hover: { bg: 'su.orange' },
+                      },
+                      disabled: isDisabled,
+                      onClick: () => handleSelect(entityId, schemaName),
+                      children: buttonText,
+                    }}
                   />
                 </Box>
               )

@@ -97,9 +97,24 @@ export function MechEntityList({
               schemaName={schemaName}
               data={entity}
               compact
-              onRemove={() => onRemove(entity.id)}
-              removeConfirmMessage={`Are you sure you want to remove "${entity.name}"?`}
               disabled={disabled}
+              buttonConfig={{
+                bg: 'su.brick',
+                color: 'su.white',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                _hover: { bg: 'su.black' },
+                onClick: (e) => {
+                  e.stopPropagation()
+                  const confirmed = window.confirm(
+                    `Are you sure you want to remove "${entity.name}"?`
+                  )
+                  if (confirmed) {
+                    onRemove(entity.id)
+                  }
+                },
+                children: `Remove ${schemaName === 'systems' ? 'System' : 'Module'}`,
+              }}
             />
           ))}
         </VStack>

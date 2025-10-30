@@ -11,7 +11,7 @@ interface EntityDisplayConfig {
 
 /**
  * Entity display configurations for simple wrapper components.
- * Complex components with custom logic/children are not included here.
+ * EntityDisplay now handles most complex logic internally (abilities, classes, etc.)
  */
 export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefSchemaName, EntityDisplayConfig>> = {
   npcs: {
@@ -39,5 +39,23 @@ export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefSchemaName, EntityDispl
   },
   chassis: {
     headerColor: 'su.green',
+  },
+  abilities: {
+    // Header color auto-calculated in EntityDisplay based on ability type
+  },
+  'ability-tree-requirements': {
+    // Header color auto-calculated in EntityDisplay based on name
+  },
+  'classes.core': {
+    headerColor: 'su.orange',
+  },
+  'classes.advanced': {
+    headerColor: 'su.pink',
+  },
+  'classes.hybrid': {
+    headerColor: 'su.pink',
+  },
+  'crawler-bays': {
+    headerColor: 'su.pink',
   },
 }

@@ -1,6 +1,12 @@
-import { Box, Flex, VStack, Button } from '@chakra-ui/react'
+import { Box, Flex, VStack, Button, type ButtonProps } from '@chakra-ui/react'
 import { type ReactNode, useState } from 'react'
-import type { SURefMetaEntity, SURefSchemaName } from 'salvageunion-reference'
+import type {
+  SURefAdvancedClass,
+  SURefCoreClass,
+  SURefHybridClass,
+  SURefMetaEntity,
+  SURefSchemaName,
+} from 'salvageunion-reference'
 import { techLevelColors } from '../../../theme'
 import { PageReferenceDisplay } from '../../shared/PageReferenceDisplay'
 import { RollTable } from '../../shared/RollTable'
@@ -22,6 +28,8 @@ import { EntityChassisPatternDisplay } from './EntityChassisPatternDisplay'
 import { EntityTechLevelEffects } from './EntityTechLevelEffects'
 import { EntityOptions } from './EntityOptions'
 import { EntityTopMatter } from './EntityTopMatter'
+import { EntityRequirementDisplay } from './EntityRequirementDisplay'
+import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
 
 type EntityDisplayProps = {
   /** Entity data to display */
@@ -30,8 +38,8 @@ type EntityDisplayProps = {
   schemaName: SURefSchemaName | 'actions'
   /** Optional header background color override */
   headerColor?: string
-  /** Optional header opacity (0-1, defaults to 1) */
-  headerOpacity?: number
+  /** Whether the ability is trained (affects header opacity for abilities) */
+  trained?: boolean
   /** Optional children to render in the content area */
   children?: ReactNode
   /** Optional click handler for the entity */
@@ -40,12 +48,6 @@ type EntityDisplayProps = {
   disabled?: boolean
   /** Whether the entity is dimmed (affects opacity) */
   dimmed?: boolean
-  /** Whether the remove button is disabled */
-  disableRemove?: boolean
-  /** Optional remove handler */
-  onRemove?: () => void
-  /** Optional custom confirmation message for removal */
-  removeConfirmMessage?: string
   /** Whether the entity can be collapsed/expanded */
   collapsible?: boolean
   /** Default expanded state (only used if expanded is not controlled) */
@@ -54,14 +56,8 @@ type EntityDisplayProps = {
   expanded?: boolean
   /** Callback when expanded state changes */
   onToggleExpanded?: () => void
-  /** Whether to show a select button (used in modals) */
-  showSelectButton?: boolean
-  /** Optional custom text for the select button */
-  selectButtonText?: string
-  /** Optional label displayed above the entity */
-  label?: string
-  /** Content justification for the main content area */
-  contentJustify?: 'flex-start' | 'flex-end' | 'space-between' | 'stretch'
+  /** Optional button configuration - if provided, renders a button at the bottom of the entity */
+  buttonConfig?: ButtonProps & { children: ReactNode }
   /** Optional label displayed in the top-right corner */
   rightLabel?: string
   /** Whether to use compact styling */
@@ -75,10 +71,41 @@ type EntityDisplayProps = {
 function calculateBGColor(
   schemaName: SURefSchemaName | 'actions',
   headerColor: string = '',
-  techLevel: number | undefined
+  techLevel: number | undefined,
+  data: SURefMetaEntity
 ) {
   if (schemaName === 'chassis') return 'su.green'
   if (schemaName === 'actions') return 'su.twoBlue'
+
+  // Auto-calculate header color for abilities based on type
+  if (schemaName === 'abilities' && !headerColor) {
+    const isLegendary =
+      ('level' in data && String(data.level).toUpperCase() === 'L') ||
+      ('tree' in data && String(data.tree).includes('Legendary'))
+    const isAdvancedOrHybrid =
+      'tree' in data &&
+      (String(data.tree).includes('Advanced') || String(data.tree).includes('Hybrid'))
+
+    if (isLegendary) {
+      return 'su.pink'
+    } else if (isAdvancedOrHybrid) {
+      return 'su.darkOrange'
+    } else {
+      return 'su.orange'
+    }
+  }
+
+  // Auto-calculate header color for ability-tree-requirements based on name
+  if (schemaName === 'ability-tree-requirements' && !headerColor) {
+    const name = 'name' in data ? String(data.name).toLowerCase() : ''
+    if (name.includes('legendary')) {
+      return 'su.pink'
+    } else if (name.includes('advanced') || name.includes('hybrid')) {
+      return 'su.brick'
+    }
+    return 'su.orange'
+  }
+
   if (headerColor) return headerColor
   if (techLevel) return techLevelColors[techLevel]
   return 'su.orange'
@@ -87,29 +114,24 @@ function calculateBGColor(
 export function EntityDisplay({
   rightLabel,
   data,
-  label,
   hideLevel = false,
   headerColor,
-  headerOpacity = 1,
+  trained = true,
   children,
   onClick,
   disabled = false,
   dimmed = false,
-  disableRemove = false,
-  onRemove,
-  removeConfirmMessage,
   collapsible = false,
   defaultExpanded = true,
   expanded,
   onToggleExpanded,
-  showSelectButton = false,
-  selectButtonText,
+  buttonConfig,
   hideActions = false,
-  contentJustify = 'flex-start',
   schemaName,
   compact = false,
 }: EntityDisplayProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
+
   if (!data) return null
 
   const header = extractHeader(data, schemaName)
@@ -117,33 +139,26 @@ export function EntityDisplay({
   const pageRef = extractPageReference(data)
   const techLevel = extractTechLevel(data)
 
-  // Check if there's any content to render (besides actions)
-  const hasNotes = 'notes' in data && data.notes
-  const hasDescription = 'description' in data && data.description && schemaName !== 'abilities'
-  const hasActions = 'actions' in data && data.actions && data.actions.length > 0
-  const hasEffect = 'effect' in data && data.effect
-  const hasOptions = 'options' in data && data.options && data.options.length > 0
-  const hasRollTable = sections.showRollTable && 'table' in data && data.table
-  const hasTechLevelEffects =
-    'techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0
-  const hasPatterns = 'patterns' in data && data.patterns && data.patterns.length > 0
+  const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel, data)
+  const headerOpacity = trained ? 1 : 0.5
+  const contentOpacity = disabled || dimmed ? 0.5 : 1
 
-  // Only show padding if there's content beyond just actions
+  // Check if there's any content to render
   const hasContent =
-    hasActions ||
-    hasNotes ||
-    hasDescription ||
-    hasEffect ||
-    hasOptions ||
-    hasRollTable ||
-    hasTechLevelEffects ||
-    hasPatterns ||
-    children ||
-    showSelectButton ||
-    onRemove ||
-    pageRef
+    ('actions' in data && data.actions && data.actions.length > 0) ||
+    ('notes' in data && !!data.notes) ||
+    ('description' in data && !!data.description && schemaName !== 'abilities') ||
+    ('effect' in data && !!data.effect) ||
+    ('options' in data && data.options && data.options.length > 0) ||
+    (sections.showRollTable && 'table' in data && !!data.table) ||
+    ('techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0) ||
+    ('patterns' in data && data.patterns && data.patterns.length > 0) ||
+    !!children ||
+    !!buttonConfig ||
+    !!pageRef
 
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
+
   const handleToggle = () => {
     if (onToggleExpanded) {
       onToggleExpanded()
@@ -152,22 +167,17 @@ export function EntityDisplay({
     }
   }
 
-  const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel)
-  const contentOpacity = disabled || dimmed ? 0.5 : 1
-
   const handleHeaderClick = () => {
-    if (showSelectButton) {
-      if (collapsible) {
-        handleToggle()
-      }
-    } else {
-      if (onClick && !disabled) {
-        onClick()
-      } else if (collapsible) {
-        handleToggle()
-      }
+    if (buttonConfig && collapsible) {
+      handleToggle()
+    } else if (onClick && !disabled) {
+      onClick()
+    } else if (collapsible) {
+      handleToggle()
     }
   }
+
+  const displayExtraSection = compact ? !hideActions : true
 
   return (
     <RoundedBox
@@ -203,7 +213,6 @@ export function EntityDisplay({
       bodyPadding="0"
       onHeaderClick={handleHeaderClick}
       headerTestId="frame-header-container"
-      label={label}
     >
       {(!collapsible || isExpanded) && hasContent && (
         <Flex bg={backgroundColor} w="full" borderBottomRadius="md" overflow="hidden">
@@ -223,7 +232,6 @@ export function EntityDisplay({
             p={compact ? 1 : 3}
             gap={compact ? 3 : 6}
             alignItems="stretch"
-            justifyContent={contentJustify}
             minW="0"
           >
             <EntityTopMatter
@@ -232,101 +240,68 @@ export function EntityDisplay({
               schemaName={schemaName}
               compact={compact}
             />
-            {!hideActions && (
-              <EntityChassisPatternDisplay data={data} schemaName={schemaName} compact={compact} />
-            )}
 
             {'effect' in data && data.effect && (
               <SheetDisplay compact={compact} value={data.effect} />
             )}
 
-            {compact && !hideActions && (
-              <EntityOptions data={data} compact={compact} schemaName={schemaName} />
-            )}
-
-            {compact && !hideActions && sections.showRollTable && 'table' in data && data.table && (
-              <Box borderRadius="md" position="relative" zIndex={10}>
-                <RollTable
-                  disabled={disabled || dimmed}
-                  table={data.table}
-                  showCommand
-                  compact
-                  tableName={'name' in data ? String(data.name) : undefined}
+            {displayExtraSection && (
+              <>
+                <EntityChassisPatternDisplay
+                  data={data}
+                  schemaName={schemaName}
+                  compact={compact}
                 />
-              </Box>
+                <EntityOptions data={data} compact={compact} schemaName={schemaName} />
+                {sections.showRollTable && 'table' in data && data.table && (
+                  <Box borderRadius="md" position="relative" zIndex={10}>
+                    <RollTable
+                      disabled={disabled || dimmed}
+                      table={data.table}
+                      showCommand
+                      compact
+                      tableName={'name' in data ? String(data.name) : undefined}
+                    />
+                  </Box>
+                )}
+                <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
+                {'damagedEffect' in data && data.damagedEffect && compact && (
+                  <SheetDisplay
+                    labelBgColor="su.brick"
+                    borderColor="su.brick"
+                    label="Damaged Effect"
+                    value={data.damagedEffect}
+                  />
+                )}
+                <EntityRequirementDisplay data={data} compact={compact} schemaName={schemaName} />
+                {schemaName.includes('classes') && (
+                  <ClassAbilitiesList
+                    selectedClass={
+                      schemaName === 'classes.core' ? (data as SURefCoreClass) : undefined
+                    }
+                    selectedAdvancedClass={
+                      schemaName === 'classes.advanced' || schemaName === 'classes.hybrid'
+                        ? (data as SURefAdvancedClass | SURefHybridClass)
+                        : undefined
+                    }
+                  />
+                )}
+                {children && <Box mt="3">{children}</Box>}
+                {buttonConfig && (
+                  <Button
+                    w="full"
+                    mt={3}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      buttonConfig.onClick?.(e)
+                    }}
+                    {...buttonConfig}
+                  >
+                    {buttonConfig.children}
+                  </Button>
+                )}
+              </>
             )}
-
-            {compact && !hideActions && (
-              <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
-            )}
-
-            {children && <Box mt="3">{children}</Box>}
-            {/* Select Button - Only shown in modal */}
-            {showSelectButton && onClick && (
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (!disabled) {
-                    onClick()
-                  }
-                }}
-                disabled={disabled}
-                w="full"
-                mt={3}
-                bg="su.orange"
-                color="su.white"
-                px={4}
-                py={2}
-                borderRadius="md"
-                fontWeight="bold"
-                _hover={{ bg: 'su.black' }}
-                _disabled={{
-                  opacity: 0.5,
-                  cursor: 'not-allowed',
-                  _hover: { bg: 'su.orange' },
-                }}
-              >
-                {selectButtonText || 'Select'}
-              </Button>
-            )}
-            {/* Remove Button */}
-            {onRemove && (
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (disableRemove) return
-
-                  const message =
-                    removeConfirmMessage || `Are you sure you want to remove "${header}"?`
-
-                  const confirmed = window.confirm(message)
-
-                  if (confirmed) {
-                    onRemove()
-                  }
-                }}
-                disabled={disableRemove}
-                w="full"
-                mt={3}
-                bg="su.brick"
-                color="su.white"
-                px={4}
-                py={2}
-                borderRadius="md"
-                fontWeight="bold"
-                textTransform="uppercase"
-                _hover={{ bg: 'su.black' }}
-                _disabled={{
-                  opacity: 0.5,
-                  cursor: 'not-allowed',
-                  _hover: { bg: 'su.brick' },
-                }}
-                aria-label={`Remove ${getSchemaDisplayName(schemaName)}`}
-              >
-                Remove {getSchemaDisplayName(schemaName)}
-              </Button>
-            )}
-            {/* Page Reference */}
             {pageRef && (
               <Box mt="auto">
                 <PageReferenceDisplay

@@ -6,7 +6,7 @@ import { EntityChassisAbility } from './EntityChassisAbility'
 
 export function EntityActions({ data, compact, schemaName }: EntityDisplaySubProps) {
   if (!('actions' in data) || !data.actions || data.actions.length === 0) return null
-  const simple = schemaName === 'chassis'
+  const simple = schemaName === 'chassis' || schemaName === 'actions'
 
   const label = schemaName === 'chassis' ? 'Chassis Abilities' : 'Actions'
 
