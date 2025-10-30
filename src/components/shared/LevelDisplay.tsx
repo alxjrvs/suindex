@@ -13,8 +13,8 @@ export function LevelDisplay({
   return (
     <Box
       position="absolute"
-      top="-8px"
-      left="-12px"
+      top="-2px"
+      left="-15px"
       width={size}
       height={size}
       bg="black"
