@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Box, Flex } from '@chakra-ui/react'
+import { Flex, Grid } from '@chakra-ui/react'
 import { SalvageUnionReference, type SURefEquipment } from 'salvageunion-reference'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
@@ -56,9 +56,10 @@ export function PilotInventory({
         </Flex>
       }
     >
-      <Box css={{ columns: '2', gap: '0.75rem' }}>
+      <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={3}>
         {equipmentItems.map((item) => (
           <EntityDisplay
+            key={`${item.id}-${item.index}`}
             buttonConfig={{
               bg: 'su.brick',
               color: 'su.white',
@@ -80,7 +81,7 @@ export function PilotInventory({
             data={item.equipment}
           />
         ))}
-      </Box>
+      </Grid>
     </RoundedBox>
   )
 }
