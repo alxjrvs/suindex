@@ -1,4 +1,4 @@
-import { Flex, Box } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { StatList } from './EntityStatList'
 import type { EntityDisplaySubProps } from './types'
 import { extractDescription, extractSidebarData } from '../entityDisplayHelpers'
@@ -62,9 +62,7 @@ export function EntityRightContent({
           />
         </Flex>
       )}
-      <Box flexShrink={0}>
-        <StatList header data={data} compact={compact} />
-      </Box>
+      <StatList header data={data} compact={compact} />
       {rightLabel && (
         <Text variant="pseudoheader" fontSize="lg" flexShrink={0}>
           {rightLabel}

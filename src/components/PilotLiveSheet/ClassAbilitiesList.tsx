@@ -153,6 +153,8 @@ export function ClassAbilitiesList({
             onAdd={onAdd}
             onRemove={onRemove}
             getAvailableLevels={getAvailableLevels}
+            abilities={abilities}
+            allAbilities={allAbilities}
           />
         ))}
       </Grid>
@@ -174,6 +176,8 @@ export function ClassAbilitiesList({
                 onRemove={onRemove}
                 isSelected={isSelected}
                 getAvailableLevels={getAvailableLevels}
+                abilities={abilities}
+                allAbilities={allAbilities}
               />
             )}
 
@@ -192,6 +196,8 @@ export function ClassAbilitiesList({
                 isSelected={(id) => legendaryAbilityId === id}
                 getAvailableLevels={getAvailableLevels}
                 hideUnchosen={true}
+                abilities={abilities}
+                allAbilities={allAbilities}
               />
             )}
         </Grid>
@@ -211,6 +217,8 @@ function TreeSection({
   onRemove,
   treeName,
   hideUnchosen = false,
+  abilities,
+  allAbilities,
 }: {
   treeName: string
   treeAbilities: SURefAbility[]
@@ -222,9 +230,14 @@ function TreeSection({
   getAvailableLevels: (treeName: string, treeAbilities: SURefAbility[]) => Set<number>
   isSelected: (id: string) => boolean
   hideUnchosen?: boolean
+  abilities?: string[]
+  allAbilities: SURefAbility[]
 }) {
   // If currentTP is undefined, we're in read-only mode
   const isReadOnly = currentTP === undefined
+
+  // Check if this is a legendary tree
+  const isLegendaryTree = selectedAdvancedClass?.legendaryTree === treeName
 
   // Check if any abilities in this tree are selected (for hideUnchosen logic)
   const hasSelectedAbilities = useMemo(() => {
@@ -232,12 +245,32 @@ function TreeSection({
   }, [treeAbilities, isSelected])
 
   // Filter abilities if hideUnchosen is enabled and some are selected
+  // For legendary trees, always show all abilities (even when hideUnchosen is true)
+  // so that disabled buttons can be displayed
   const displayedAbilities = useMemo(() => {
-    if (hideUnchosen && hasSelectedAbilities) {
+    if (hideUnchosen && hasSelectedAbilities && !isLegendaryTree) {
       return treeAbilities.filter((ability) => isSelected(ability.id))
     }
     return treeAbilities
-  }, [hideUnchosen, hasSelectedAbilities, treeAbilities, isSelected])
+  }, [hideUnchosen, hasSelectedAbilities, treeAbilities, isSelected, isLegendaryTree])
+
+  // Check if all advanced abilities are selected
+  const allAdvancedAbilitiesSelected = useMemo(() => {
+    if (!isLegendaryTree || !selectedAdvancedClass?.advancedTree) return true
+
+    const advancedTreeAbilities = allAbilities.filter(
+      (a) => a.tree === selectedAdvancedClass.advancedTree
+    )
+
+    // Check if all advanced abilities are selected
+    return advancedTreeAbilities.every((ability) => abilities?.includes(ability.id))
+  }, [isLegendaryTree, selectedAdvancedClass, allAbilities, abilities])
+
+  // Check if a legendary ability is already selected
+  const hasLegendaryAbilitySelected = useMemo(() => {
+    if (!isLegendaryTree) return false
+    return treeAbilities.some((ability) => isSelected(ability.id))
+  }, [isLegendaryTree, treeAbilities, isSelected])
 
   return (
     <Box>
@@ -270,7 +303,12 @@ function TreeSection({
           const abilityLevel = Number(ability.level)
           const isAvailable = availableLevels.has(abilityLevel)
 
-          const canSelect = canAfford && isAvailable
+          // For legendary abilities, also check if all advanced abilities are selected
+          const canSelect = canAfford && isAvailable && allAdvancedAbilitiesSelected
+
+          // For legendary abilities, only show the select button if no legendary ability is already selected
+          const showSelectButton =
+            !alreadySelected && !(isLegendaryTree && hasLegendaryAbilitySelected)
 
           return (
             <AbilityDisplay
@@ -284,7 +322,7 @@ function TreeSection({
               trained={isReadOnly || alreadySelected}
               collapsible
               defaultExpanded={false}
-              showSelectButton={!alreadySelected}
+              showSelectButton={showSelectButton}
               selectButtonText={`Add to Pilot (${cost} TP)`}
             />
           )

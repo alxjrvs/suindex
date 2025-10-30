@@ -116,7 +116,8 @@ export function RoundedBox({
           w="full"
           bg={actualHeaderBg}
           opacity={headerOpacity}
-          {...(compact && { height: '70px', overflow: 'hidden' })}
+          h={compact ? '70px' : undefined}
+          overflow="visible"
         >
           <Flex
             direction="row"
@@ -127,30 +128,22 @@ export function RoundedBox({
             cursor={headerCursor}
             onClick={onHeaderClick}
             alignItems="center"
+            data-testid={headerTestId}
           >
-            {leftContent && (
-              <Flex direction="column" gap={1} alignItems="flex-start" flexShrink={0}>
-                {leftContent}
-              </Flex>
-            )}
-
-            <Flex
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              gap={2}
-              flex="1"
-              minW="0"
-              data-testid={headerTestId}
-            >
+            {/* Left section: leftContent + title/subtitle (65% base, can grow) */}
+            <Flex direction="row" gap={2} alignItems="center" flex="65" minW="0" overflow="visible">
+              {leftContent && (
+                <Flex direction="column" gap={1} alignItems="flex-start" flexShrink={0}>
+                  {leftContent}
+                </Flex>
+              )}
               <Flex
                 direction="column"
                 gap={1}
                 justifyContent="space-between"
                 h="full"
-                flexShrink={1}
+                overflow="visible"
                 minW="0"
-                overflow="hidden"
               >
                 {title && (
                   <Text
@@ -159,53 +152,37 @@ export function RoundedBox({
                     transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
                     transition="transform 0.3s ease"
                     opacity={disabled ? 0.5 : 1}
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                    textOverflow="ellipsis"
+                    whiteSpace={compact ? 'normal' : 'nowrap'}
+                    overflow={compact ? 'visible' : 'hidden'}
+                    textOverflow={compact ? 'clip' : 'ellipsis'}
                     fontSize={compact ? '1rem' : '2rem'}
+                    lineHeight={compact ? '1.2' : 'normal'}
                   >
                     {title}
                   </Text>
                 )}
                 {subTitleContent && (
-                  <Flex
-                    flex="1"
-                    overflow="hidden"
-                    gap="1"
-                    minW="0"
-                    flexWrap={compact ? 'wrap' : 'nowrap'}
-                    css={
-                      compact
-                        ? {
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                          }
-                        : {}
-                    }
-                  >
+                  <Flex overflow="visible" gap="1" flexWrap="wrap" alignItems="center" zIndex={10}>
                     {subTitleContent}
                   </Flex>
                 )}
               </Flex>
-              {rightContent && (
-                <Flex
-                  direction="row"
-                  alignItems="flex-start"
-                  flexWrap="wrap"
-                  justifyContent="flex-end"
-                  flex="1"
-                  minW="0"
-                  css={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {rightContent}
-                </Flex>
-              )}
             </Flex>
+
+            {/* Right section: rightContent (35% base, can grow) */}
+            {rightContent && (
+              <Flex
+                direction="row"
+                alignItems="flex-start"
+                flexWrap="wrap"
+                justifyContent="flex-end"
+                gap={1}
+                flex="35"
+                flexShrink={0}
+              >
+                {rightContent}
+              </Flex>
+            )}
           </Flex>
         </VStack>
       )}

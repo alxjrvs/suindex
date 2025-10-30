@@ -1,6 +1,6 @@
-import { useState, useMemo, Suspense } from 'react'
+import { useMemo, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import type { SURefEntity } from 'salvageunion-reference'
 import { getDisplayComponent } from '../componentRegistry'
 import { roll } from '@randsum/roller'
@@ -16,10 +16,9 @@ interface ItemWithSchema {
 
 export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
   const navigate = useNavigate()
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
-  // Get random selection of items (50 items, duplicated for seamless loop)
-  const randomItems = useMemo(() => {
+  // Get random selection of items (90 items total, 30 per column, duplicated for seamless loop)
+  const { column1, column2, column3 } = useMemo(() => {
     const allItemsArray: ItemWithSchema[] = []
 
     // Collect all items from all schemas
@@ -38,74 +37,44 @@ export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
       ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
     }
 
-    const selected = shuffled.slice(0, 50)
+    // Select 90 items and distribute across 3 columns
+    const selected = shuffled.slice(0, 90)
+    const col1 = selected.slice(0, 30)
+    const col2 = selected.slice(30, 60)
+    const col3 = selected.slice(60, 90)
 
-    // Duplicate the array for seamless looping
-    return [...selected, ...selected]
+    // Duplicate each column for seamless looping
+    return {
+      column1: [...col1, ...col1],
+      column2: [...col2, ...col2],
+      column3: [...col3, ...col3],
+    }
   }, [allItems])
 
   const handleItemClick = (schemaId: string, itemId: string) => {
     navigate(`/schema/${schemaId}/item/${itemId}`)
   }
 
-  return (
-    <Box
-      position="relative"
-      w="full"
-      overflowX="auto"
-      overflowY="hidden"
-      display="flex"
-      alignItems="center"
-      bg="su.white"
-      borderTopWidth="2px"
-      borderBottomWidth="2px"
-      borderColor="su.orange"
-      css={{
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
-        scrollbarWidth: 'none',
-        msOverflowStyle: 'none',
-      }}
-    >
-      <style>
-        {`
-          @keyframes scrollLeft {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-        `}
-      </style>
+  const renderColumn = (items: ItemWithSchema[], columnIndex: number) => {
+    return (
       <Box
+        key={columnIndex}
         display="flex"
-        alignItems="center"
+        flexDirection="column"
         gap={4}
-        py={4}
         css={{
-          animation: 'scrollLeft 150s linear infinite',
+          animation: 'scrollUp 120s linear infinite',
         }}
       >
-        {randomItems.map(({ item, schemaId }, index) => {
+        {items.map(({ item, schemaId }, index) => {
           const DisplayComponent = getDisplayComponent(schemaId)
           if (!DisplayComponent) return null
 
-          const isHovered = hoveredId === `${schemaId}-${item.id}-${index}`
-
           return (
             <Box
-              key={`${schemaId}-${item.id}-${index}`}
+              key={`${schemaId}-${item.id}-${columnIndex}-${index}`}
               flexShrink={0}
-              minW="300px"
-              maxW="600px"
-              transition="all 0.3s ease-in-out"
-              transform={isHovered ? 'scale(1.05)' : 'scale(1)'}
-              zIndex={isHovered ? 10 : 1}
-              onMouseEnter={() => setHoveredId(`${schemaId}-${item.id}-${index}`)}
-              onMouseLeave={() => setHoveredId(null)}
+              w="full"
               onClick={() => handleItemClick(schemaId, item.id)}
               cursor="pointer"
               position="relative"
@@ -117,6 +86,34 @@ export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
           )
         })}
       </Box>
+    )
+  }
+
+  return (
+    <Box position="absolute" top={0} left={0} right={0} bottom={0} overflow="hidden" bg="su.white">
+      <style>
+        {`
+          @keyframes scrollUp {
+            0% {
+              transform: translateY(0);
+            }
+            100% {
+              transform: translateY(-50%);
+            }
+          }
+        `}
+      </style>
+      <Flex gap={4} px={4} h="full" alignItems="flex-start" justifyContent="center">
+        <Box flex="1" maxW="400px" overflow="hidden">
+          {renderColumn(column1, 0)}
+        </Box>
+        <Box flex="1" maxW="400px" overflow="hidden">
+          {renderColumn(column2, 1)}
+        </Box>
+        <Box flex="1" maxW="400px" overflow="hidden">
+          {renderColumn(column3, 2)}
+        </Box>
+      </Flex>
     </Box>
   )
 }

@@ -14,7 +14,7 @@ interface StatListProps {
   header: boolean
 }
 
-function extractHeaderStats(data: SURefMetaEntity): Stat[] {
+function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
   const stats: Stat[] = []
 
   const chassisStats = 'stats' in data && typeof data.stats === 'object' ? data.stats : undefined
@@ -23,7 +23,7 @@ function extractHeaderStats(data: SURefMetaEntity): Stat[] {
     if (chassisStats.structurePts) {
       stats.push({
         compactHeader: true,
-        label: 'Structure',
+        label: compact ? 'Strct' : 'Structure',
         bottomLabel: 'Pts',
         value: chassisStats.structurePts,
       })
@@ -31,7 +31,7 @@ function extractHeaderStats(data: SURefMetaEntity): Stat[] {
     if (chassisStats.energyPts) {
       stats.push({
         compactHeader: true,
-        label: 'Energy',
+        label: compact ? 'En' : 'Energy',
         bottomLabel: 'Pts',
         value: chassisStats.energyPts,
       })
@@ -47,7 +47,7 @@ function extractHeaderStats(data: SURefMetaEntity): Stat[] {
     if (chassisStats.systemSlots) {
       stats.push({
         compactHeader: false,
-        label: 'Sys.',
+        label: 'Sys',
         bottomLabel: 'Slots',
         value: chassisStats.systemSlots,
       })
@@ -55,7 +55,7 @@ function extractHeaderStats(data: SURefMetaEntity): Stat[] {
     if (chassisStats.moduleSlots) {
       stats.push({
         compactHeader: false,
-        label: 'Mod.',
+        label: 'Mod',
         bottomLabel: 'Slots',
         value: chassisStats.moduleSlots,
       })
@@ -71,7 +71,7 @@ function extractHeaderStats(data: SURefMetaEntity): Stat[] {
     if (chassisStats.salvageValue) {
       stats.push({
         compactHeader: false,
-        label: 'Salvage',
+        label: compact ? 'Salv' : 'Salvage',
         bottomLabel: 'Value',
         value: chassisStats.salvageValue,
       })
@@ -91,11 +91,11 @@ function extractHeaderStats(data: SURefMetaEntity): Stat[] {
 }
 
 export function StatList({ header, data, compact = false }: StatListProps) {
-  const stats = extractHeaderStats(data)
+  const stats = extractHeaderStats(data, compact)
   if (!compact && !header) return null
 
   return (
-    <Flex gap={2} flexWrap="wrap">
+    <Flex gap={2} justifyContent="flex-end">
       {stats.map((stat, index) => {
         const visible = compact ? (header ? stat.compactHeader : !stat.compactHeader) : true
 

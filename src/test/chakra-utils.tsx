@@ -11,7 +11,9 @@ export function render(ui: ReactNode) {
   return rtlRender(ui, {
     wrapper: ({ children }: { children: ReactNode }) => (
       <MemoryRouter>
-        <ChakraProvider value={system}>{children}</ChakraProvider>
+        <ChakraProvider value={system}>
+          <div style={{ width: '1920px', minWidth: '1920px' }}>{children}</div>
+        </ChakraProvider>
       </MemoryRouter>
     ),
   })

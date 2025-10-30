@@ -20,18 +20,19 @@ export function ActivationCostBox({
   const displayCost = cost === 'Variable' ? 'X' : cost
 
   return (
-    <Flex alignItems="center" overflow="visible" p={0}>
+    <Flex alignItems="center" overflow="visible" p={0} display="inline-flex">
       <Flex
         bg="su.black"
         color="su.white"
-        fontWeight="semibold"
+        fontWeight="bold"
         textTransform="uppercase"
         alignItems="center"
         justifyContent="center"
         whiteSpace="nowrap"
         fontSize={compact ? 'xs' : 'sm'}
-        px={1}
-        lineHeight="1.2"
+        px={0.5}
+        lineHeight={1}
+        display="inline-flex"
         zIndex={2}
       >
         {`${displayCost} ${currency}`}
@@ -39,12 +40,13 @@ export function ActivationCostBox({
       <Box
         w={0}
         h={0}
-        borderTop={compact ? '6px solid transparent' : '7px solid transparent'}
-        borderBottom={compact ? '6px solid transparent' : '7px solid transparent'}
+        borderTop={compact ? '0.5em solid transparent' : '7px solid transparent'}
+        borderBottom={compact ? '0.5em solid transparent' : '7px solid transparent'}
         borderLeft={compact ? '6px solid' : '7px solid'}
         borderLeftColor="su.black"
         ml={0}
         zIndex={1}
+        alignSelf="center"
       />
     </Flex>
   )

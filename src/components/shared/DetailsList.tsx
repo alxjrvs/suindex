@@ -57,7 +57,7 @@ function extractDetails(
   if ('damage' in data && data.damage) {
     details.push({
       label: 'Damage',
-      value: `${data.damage.amount}${data.damage.damageType}`,
+      value: `${data.damage.amount}${data.damage.damageType ?? 'HP'}`,
     })
   }
 
@@ -71,11 +71,6 @@ function extractDetails(
     const value = 'amount' in t && t.amount !== undefined ? Number(t.amount) : undefined
     details.push({ label, value, type: 'trait' })
   })
-
-  // Recommended (for modules)
-  if ('recommended' in data && data.recommended) {
-    details.push({ label: 'Recommended', type: 'meta' })
-  }
 
   return details
 }
