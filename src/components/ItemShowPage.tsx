@@ -1,7 +1,5 @@
 import { Suspense } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
 import Footer from './Footer'
 import type { SchemaInfo } from '../types/schema'
@@ -15,7 +13,6 @@ interface ItemShowPageProps {
 
 export default function ItemShowPage({ schemas }: ItemShowPageProps) {
   const { schemaId, itemId } = useSchemaParams()
-  const navigate = useNavigate()
   const { data, loading, error } = useSchemaData(schemaId)
 
   const currentSchema = schemas.find((s) => s.id === schemaId)
@@ -111,20 +108,6 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
 
   return (
     <Flex h="full" flexDirection="column" bg="su.white">
-      <Box bg="su.white" shadow="sm" borderBottomWidth="1px" borderColor="su.lightBlue" p={6}>
-        <Flex alignItems="center" gap={4} mb={4}>
-          <Button
-            onClick={() => navigate(`/schema/${schemaId}`)}
-            color="su.orange"
-            _hover={{ color: 'su.brick' }}
-            fontWeight="medium"
-            variant="plain"
-          >
-            ← Back to {currentSchema.title}
-          </Button>
-        </Flex>
-      </Box>
-
       <Box flex="1" overflowY="auto" p={6}>
         <Box maxW="6xl" mx="auto">
           {specializedContent ? (
