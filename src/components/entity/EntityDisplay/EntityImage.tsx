@@ -3,7 +3,7 @@ import { useState } from 'react'
 import type { EntityDisplaySubProps } from './types'
 import { extractHeader } from '../entityDisplayHelpers'
 
-export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps) {
+export function EntityImage({ data, schemaName }: EntityDisplaySubProps) {
   const [showImage, setShowImage] = useState(true)
   const ext = schemaName === 'chassis' ? 'png' : 'jpg'
   const isAdvanced = schemaName === 'classes.advanced'
@@ -12,7 +12,7 @@ export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps
   const imagePath = `/lp/${trueSchemaName}/${trueName}.${ext}`
   const header = extractHeader(data, schemaName)
 
-  if (compact || !showImage) return null
+  if (!showImage) return null
 
   return (
     <Box

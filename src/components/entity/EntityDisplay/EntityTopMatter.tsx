@@ -1,10 +1,16 @@
-import { Flex, VStack } from '@chakra-ui/react'
+import { Box, Flex, VStack } from '@chakra-ui/react'
 import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
 import { ItalicText } from './ItalicText'
 import type { EntityDisplaySubProps } from './types'
+import { StatList } from './EntityStatList'
 
-export function EntityTopMatter({ data, schemaName, compact }: EntityDisplaySubProps) {
+export function EntityTopMatter({
+  data,
+  schemaName,
+  hideActions,
+  compact,
+}: EntityDisplaySubProps & { hideActions: boolean }) {
   const notes = 'notes' in data ? data.notes : undefined
   const description = 'description' in data ? data.description : undefined
   const hasActions = 'actions' in data && data.actions && data.actions.length > 0
@@ -26,10 +32,13 @@ export function EntityTopMatter({ data, schemaName, compact }: EntityDisplaySubP
         h="full"
         minW="0"
       >
+        <Box ml="auto" mr="auto">
+          <StatList header={false} data={data} compact={compact} />
+        </Box>
         {notes && <ItalicText compact={compact}>{notes}</ItalicText>}
         {showDescription && <ItalicText compact={compact}>{description}</ItalicText>}
 
-        <EntityActions data={data} compact={compact} schemaName={schemaName} />
+        {!hideActions && <EntityActions data={data} compact={compact} schemaName={schemaName} />}
       </VStack>
     </Flex>
   )

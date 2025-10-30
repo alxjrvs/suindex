@@ -9,6 +9,7 @@ interface EquipmentDisplayProps {
   showSelectButton?: boolean
   selectButtonText?: string
   children?: ReactNode
+  hideActions?: boolean
 }
 
 /**
@@ -21,6 +22,7 @@ export function EquipmentDisplay({
   showSelectButton = false,
   selectButtonText,
   children,
+  hideActions = false,
 }: EquipmentDisplayProps) {
   const config = ENTITY_DISPLAY_CONFIGS.equipment || {}
   return (
@@ -30,6 +32,7 @@ export function EquipmentDisplay({
       onClick={onClick}
       showSelectButton={showSelectButton}
       selectButtonText={selectButtonText}
+      hideActions={hideActions}
       {...config}
     >
       {children}

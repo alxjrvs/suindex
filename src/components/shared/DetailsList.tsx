@@ -1,4 +1,3 @@
-import { Flex } from '@chakra-ui/react'
 import { ActivationCostBox } from './ActivationCostBox'
 import type { DataValue } from '../../types/common'
 import { Text } from '../base/Text'
@@ -90,17 +89,15 @@ export function DetailsList({ schemaName, data, compact = false }: DetailsListPr
   if (values.length === 0) return null
 
   return (
-    <Flex display="inline-flex" flexWrap="wrap" alignItems="center" gap="0.5">
+    <>
       {values.map((item, index) => (
         <DetailItem key={index} item={item} compact={compact} />
       ))}
-    </Flex>
+    </>
   )
 }
 const DetailWrapper = ({ children }: { children: React.ReactNode; compact: boolean }) => (
-  <Flex display="inline-flex" alignItems="center" gap="0">
-    {children}
-  </Flex>
+  <>{children}</>
 )
 
 function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {

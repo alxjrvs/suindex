@@ -69,6 +69,8 @@ type EntityDisplayProps = {
   compact?: boolean
   /** Whether to hide the level display */
   hideLevel?: boolean
+  /** Whether or not to show the actions */
+  hideActions?: boolean
 }
 
 function calculateBGColor(
@@ -103,6 +105,7 @@ export function EntityDisplay({
   onToggleExpanded,
   showSelectButton = false,
   selectButtonText,
+  hideActions = false,
   contentJustify = 'flex-start',
   schemaName,
   compact = false,
@@ -143,7 +146,7 @@ export function EntityDisplay({
     pageRef
 
   const contentPadding =
-    hasActions && !hasContentBeyondActions ? (compact ? 0 : 2) : compact ? 0 : 3
+    hasActions && !hasContentBeyondActions ? (compact ? 1 : 2) : compact ? 1 : 3
 
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
   const handleToggle = () => {
@@ -228,8 +231,15 @@ export function EntityDisplay({
             justifyContent={contentJustify}
             minW="0"
           >
-            <EntityTopMatter data={data} schemaName={schemaName} compact={compact} />
-            <EntityChassisPatternDisplay data={data} schemaName={schemaName} compact={compact} />
+            <EntityTopMatter
+              hideActions={hideActions}
+              data={data}
+              schemaName={schemaName}
+              compact={compact}
+            />
+            {!hideActions && (
+              <EntityChassisPatternDisplay data={data} schemaName={schemaName} compact={compact} />
+            )}
 
             {sections.showStatBonus && 'statBonus' in data && data.statBonus && (
               <StatBonusDisplay bonus={data.statBonus.bonus} stat={data.statBonus.stat} />
@@ -239,9 +249,11 @@ export function EntityDisplay({
               <SheetDisplay compact={compact} value={data.effect} />
             )}
 
-            <EntityOptions data={data} compact={compact} schemaName={schemaName} />
+            {compact && !hideActions && (
+              <EntityOptions data={data} compact={compact} schemaName={schemaName} />
+            )}
 
-            {sections.showRollTable && 'table' in data && data.table && (
+            {compact && !hideActions && sections.showRollTable && 'table' in data && data.table && (
               <Box borderRadius="md" position="relative" zIndex={10}>
                 <RollTable
                   disabled={disabled || dimmed}
@@ -253,7 +265,9 @@ export function EntityDisplay({
               </Box>
             )}
 
-            <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
+            {compact && !hideActions && (
+              <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
+            )}
 
             {children && <Box mt="3">{children}</Box>}
             {/* Select Button - Only shown in modal */}

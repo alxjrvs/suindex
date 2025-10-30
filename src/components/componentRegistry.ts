@@ -3,7 +3,16 @@ import { lazy } from 'react'
 import { createEntityDisplay } from './schema/entities/createEntityDisplay'
 import type { SURefEntity } from 'salvageunion-reference'
 
-type DisplayComponentType = ComponentType<{ data: SURefEntity }>
+export interface DisplayComponentProps {
+  data: SURefEntity
+  hideActions?: boolean
+  compact?: boolean
+  collapsible?: boolean
+  defaultExpanded?: boolean
+  onClick?: () => void
+}
+
+type DisplayComponentType = ComponentType<DisplayComponentProps>
 
 // Complex components with custom logic/children - keep as separate files
 const AbilityDisplay = lazy(() =>

@@ -5,9 +5,19 @@ import type { SURefAbilityTreeRequirement } from 'salvageunion-reference'
 
 interface AbilityTreeRequirementDisplayProps {
   data: SURefAbilityTreeRequirement
+  compact?: boolean
+  collapsible?: boolean
+  defaultExpanded?: boolean
+  onClick?: () => void
 }
 
-export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDisplayProps) {
+export function AbilityTreeRequirementDisplay({
+  data,
+  compact = false,
+  collapsible = false,
+  defaultExpanded = true,
+  onClick,
+}: AbilityTreeRequirementDisplayProps) {
   const getHeaderColor = () => {
     if (data.name.toLowerCase().includes('legendary')) {
       return 'su.pink'
@@ -25,6 +35,10 @@ export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDi
       schemaName="ability-tree-requirements"
       data={data}
       headerColor={getHeaderColor()}
+      compact={compact}
+      collapsible={collapsible}
+      defaultExpanded={defaultExpanded}
+      onClick={onClick}
     >
       <VStack gap={3} alignItems="stretch">
         <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">

@@ -1,11 +1,5 @@
 import type { SURefMetaEntity, SURefMetaSchemaName, SURefSchemaName } from 'salvageunion-reference'
 
-export interface Stat {
-  label: string
-  bottomLabel?: string
-  value: number | string
-}
-
 /**
  * Extract image path for an entity based on schema and entity properties
  * Returns the path to the image in the public directory, or undefined if no image exists
@@ -77,50 +71,7 @@ export function getActivationCurrency(
 }
 
 /**
- * Extract header stats (HP, SP, chassis stats)
- */
-export function extractHeaderStats(data: SURefMetaEntity): Stat[] {
-  const stats: Stat[] = []
 
-  const chassisStats = 'stats' in data && typeof data.stats === 'object' ? data.stats : undefined
-
-  if (chassisStats) {
-    if (chassisStats.structurePts) {
-      stats.push({ label: 'Structure', bottomLabel: 'Pts', value: chassisStats.structurePts })
-    }
-    if (chassisStats.energyPts) {
-      stats.push({ label: 'Energy', bottomLabel: 'Pts', value: chassisStats.energyPts })
-    }
-    if (chassisStats.heatCap) {
-      stats.push({ label: 'Heat', bottomLabel: 'Cap', value: chassisStats.heatCap })
-    }
-    if (chassisStats.systemSlots) {
-      stats.push({ label: 'Sys.', bottomLabel: 'Slots', value: chassisStats.systemSlots })
-    }
-    if (chassisStats.moduleSlots) {
-      stats.push({ label: 'Mod.', bottomLabel: 'Slots', value: chassisStats.moduleSlots })
-    }
-    if (chassisStats.cargoCap) {
-      stats.push({ label: 'Cargo', bottomLabel: 'Cap', value: chassisStats.cargoCap })
-    }
-    if (chassisStats.salvageValue) {
-      stats.push({ label: 'Salvage', bottomLabel: 'Value', value: chassisStats.salvageValue })
-    }
-  }
-
-  if ('hitPoints' in data && !!data.hitPoints) {
-    const label = 'damageType' in data && data.damageType ? data.damageType : 'HP'
-    stats.push({ label, value: data.hitPoints })
-  }
-
-  if ('structurePoints' in data && !!data.structurePoints) {
-    stats.push({ label: 'SP', value: data.structurePoints })
-  }
-
-  return stats
-}
-
-/**
  * Extract sidebar data (tech level, salvage value, slots)
  */
 export function extractSidebarData(

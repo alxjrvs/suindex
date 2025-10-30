@@ -1,7 +1,7 @@
 import { Flex, Box } from '@chakra-ui/react'
-import { StatList } from '../../shared/StatList'
+import { StatList } from './EntityStatList'
 import type { EntityDisplaySubProps } from './types'
-import { extractDescription, extractHeaderStats, extractSidebarData } from '../entityDisplayHelpers'
+import { extractDescription, extractSidebarData } from '../entityDisplayHelpers'
 import { Text } from '../../base/Text'
 import { SidebarStats } from './SidebarStats'
 
@@ -15,7 +15,6 @@ export function EntityRightContent({
 }: EntityDisplaySubProps & { isExpanded: boolean; collapsible: boolean; rightLabel?: string }) {
   const description = extractDescription(data)
   const sidebar = extractSidebarData(data, schemaName)
-  const stats = extractHeaderStats(data)
 
   return (
     <Flex alignItems="center" gap={2} alignSelf="center" mt={2} flexShrink={0}>
@@ -42,11 +41,9 @@ export function EntityRightContent({
           />
         </Flex>
       )}
-      {!compact && stats.length > 0 && (
-        <Box ml="auto">
-          <StatList stats={stats} compact={compact} />
-        </Box>
-      )}
+      <Box ml="auto">
+        <StatList header data={data} compact={compact} />
+      </Box>
       {rightLabel && (
         <Text variant="pseudoheader" fontSize="lg" ml="auto">
           {rightLabel}

@@ -1,7 +1,6 @@
 import { Flex, VStack, type FlexProps } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
 import { Text } from '../base/Text'
-import { CardHeader } from './CardHeader'
 
 type RoundedBoxProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'direction'> & {
   /** Background color token (e.g., 'bg.builder.pilot', 'su.orange', 'su.green') */
@@ -149,21 +148,36 @@ export function RoundedBox({
                 gap={1}
                 justifyContent="space-between"
                 h="full"
-                flexShrink={0}
+                flexShrink={1}
+                minW="0"
+                overflow="hidden"
               >
                 {title && (
-                  <CardHeader
-                    disabled={disabled}
-                    title={title}
-                    titleRotation={titleRotation}
-                    compact={compact}
-                  />
+                  <Text
+                    variant="pseudoheader"
+                    textTransform="uppercase"
+                    transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
+                    transition="transform 0.3s ease"
+                    opacity={disabled ? 0.5 : 1}
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    css={{
+                      fontSize: compact
+                        ? 'clamp(0.3rem, 1.5vw, 1rem)'
+                        : 'clamp(0.6rem, 1.5vw, 2rem)',
+                    }}
+                  >
+                    {title}
+                  </Text>
                 )}
                 {subTitleContent && (
                   <Flex
+                    flex="1"
                     overflow="hidden"
+                    gap="1"
+                    minW="0"
                     css={{
-                      display: '-webkit-box',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
                     }}
@@ -179,6 +193,7 @@ export function RoundedBox({
                   alignItems="flex-start"
                   flexWrap="wrap"
                   justifyContent="flex-end"
+                  flexShrink={0}
                   css={{
                     display: '-webkit-box',
                     WebkitLineClamp: 3,

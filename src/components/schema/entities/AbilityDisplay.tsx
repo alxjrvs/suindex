@@ -10,6 +10,7 @@ interface AbilityDisplayProps {
   onRemove?: () => void
   collapsible?: boolean
   defaultExpanded?: boolean
+  hideActions?: boolean
   expanded?: boolean
   onToggleExpanded?: () => void
   showSelectButton?: boolean
@@ -33,6 +34,7 @@ export function AbilityDisplay({
   expanded,
   onToggleExpanded,
   showSelectButton = false,
+  hideActions = false,
   selectButtonText,
   trained = true,
 }: AbilityDisplayProps) {
@@ -57,6 +59,7 @@ export function AbilityDisplay({
     <EntityDisplay
       compact={compact}
       schemaName="abilities"
+      hideActions={hideActions}
       data={data}
       headerColor={headerColor}
       headerOpacity={headerOpacity}

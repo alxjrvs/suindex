@@ -10,13 +10,25 @@ import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
 
 interface ClassDisplayProps {
   data: SURefCoreClass | SURefAdvancedClass | SURefHybridClass
+  compact?: boolean
+  collapsible?: boolean
+  defaultExpanded?: boolean
+  onClick?: () => void
+  hideActions?: boolean
 }
 
 interface HydratedAbilities {
   [key: string]: SURefAbility[]
 }
 
-export function ClassDisplay({ data }: ClassDisplayProps) {
+export function ClassDisplay({
+  data,
+  compact = false,
+  collapsible = false,
+  defaultExpanded = true,
+  onClick,
+  hideActions = false,
+}: ClassDisplayProps) {
   // Determine class type based on which fields are present
   const isCoreClass = 'coreTrees' in data
   const isHybridClass = !isCoreClass && !data.name.includes('Advanced')
@@ -64,13 +76,25 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
   const label = isCoreClass ? 'Core Class' : isHybridClass ? 'Hybrid Class' : 'Advanced Class'
 
   return (
-    <EntityDisplay schemaName={schemaName} rightLabel={label} data={data} headerColor={headerColor}>
-      <ClassAbilitiesList
-        selectedClass={isCoreClass ? (data as SURefCoreClass) : undefined}
-        selectedAdvancedClass={
-          !isCoreClass ? (data as SURefAdvancedClass | SURefHybridClass) : undefined
-        }
-      />
+    <EntityDisplay
+      schemaName={schemaName}
+      rightLabel={label}
+      data={data}
+      headerColor={headerColor}
+      compact={compact}
+      collapsible={collapsible}
+      defaultExpanded={defaultExpanded}
+      onClick={onClick}
+      hideActions={hideActions}
+    >
+      {!hideActions && (
+        <ClassAbilitiesList
+          selectedClass={isCoreClass ? (data as SURefCoreClass) : undefined}
+          selectedAdvancedClass={
+            !isCoreClass ? (data as SURefAdvancedClass | SURefHybridClass) : undefined
+          }
+        />
+      )}
     </EntityDisplay>
   )
 }
