@@ -157,83 +157,91 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   }, [selectedIndex, searchResults])
 
   return (
-    <Flex flexDirection="column" bg="su.white" minH="100%">
-      <ReferenceHeader title="Salvage Union Rules Reference">
-        <Box position="relative" maxW="2xl" w="full">
-          <Input
-            ref={inputRef}
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value)
-              setSelectedIndex(0)
-            }}
-            placeholder="Search all rules, items, and schemas..."
-            size="lg"
-            bg="su.white"
-            borderWidth="2px"
-            borderColor="su.lightBlue"
-            _focus={{
-              borderColor: 'su.orange',
-              outline: 'none',
-            }}
-            _hover={{
-              borderColor: 'su.orange',
-            }}
-          />
-
-          {searchResults.length > 0 && (
-            <Box
-              ref={resultsRef}
-              position="absolute"
-              top="100%"
-              left={0}
-              right={0}
-              mt={2}
+    <Flex flexDirection="column" bg="su.white" minH="100vh" position="relative">
+      {/* Search bar and header - positioned above the masonry grid */}
+      <Box position="relative" zIndex={20} bg="su.white">
+        <ReferenceHeader title="Salvage Union Rules Reference">
+          <Box position="relative" maxW="2xl" w="full">
+            <Input
+              ref={inputRef}
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setSelectedIndex(0)
+              }}
+              placeholder="Search all rules, items, and schemas..."
+              size="lg"
               bg="su.white"
               borderWidth="2px"
               borderColor="su.lightBlue"
-              borderRadius="md"
-              shadow="lg"
-              maxH="400px"
-              overflowY="auto"
-              zIndex={10}
-            >
-              <VStack gap={0} alignItems="stretch">
-                {searchResults.map((result, index) => (
-                  <Box
-                    key={`${result.type}-${result.schemaId}-${result.itemId || ''}`}
-                    px={4}
-                    py={3}
-                    cursor="pointer"
-                    bg={index === selectedIndex ? 'su.lightBlue' : 'transparent'}
-                    _hover={{ bg: 'su.lightOrange' }}
-                    onClick={() => handleSelectResult(result)}
-                    borderBottomWidth={index < searchResults.length - 1 ? '1px' : 0}
-                    borderBottomColor="su.lightBlue"
-                  >
-                    <Text fontWeight="semibold" color="su.black">
-                      {result.matchText}
-                    </Text>
-                    <Text fontSize="sm" color="su.brick">
-                      {result.type === 'schema' ? 'Schema' : result.schemaTitle}
-                    </Text>
-                  </Box>
-                ))}
-              </VStack>
-            </Box>
-          )}
-        </Box>
+              _focus={{
+                borderColor: 'su.orange',
+                outline: 'none',
+              }}
+              _hover={{
+                borderColor: 'su.orange',
+              }}
+            />
 
-        <Text fontSize="sm" color="su.brick" mt={4}>
-          Search across all {schemas.length} schemas and{' '}
-          {Array.from(allItems.values()).reduce((sum, items) => sum + items.length, 0)} items
-        </Text>
-      </ReferenceHeader>
+            {searchResults.length > 0 && (
+              <Box
+                ref={resultsRef}
+                position="absolute"
+                top="100%"
+                left={0}
+                right={0}
+                mt={2}
+                bg="su.white"
+                borderWidth="2px"
+                borderColor="su.lightBlue"
+                borderRadius="md"
+                shadow="lg"
+                maxH="400px"
+                overflowY="auto"
+                zIndex={30}
+              >
+                <VStack gap={0} alignItems="stretch">
+                  {searchResults.map((result, index) => (
+                    <Box
+                      key={`${result.type}-${result.schemaId}-${result.itemId || ''}`}
+                      px={4}
+                      py={3}
+                      cursor="pointer"
+                      bg={index === selectedIndex ? 'su.lightBlue' : 'transparent'}
+                      _hover={{ bg: 'su.lightOrange' }}
+                      onClick={() => handleSelectResult(result)}
+                      borderBottomWidth={index < searchResults.length - 1 ? '1px' : 0}
+                      borderBottomColor="su.lightBlue"
+                    >
+                      <Text fontWeight="semibold" color="su.black">
+                        {result.matchText}
+                      </Text>
+                      <Text fontSize="sm" color="su.brick">
+                        {result.type === 'schema' ? 'Schema' : result.schemaTitle}
+                      </Text>
+                    </Box>
+                  ))}
+                </VStack>
+              </Box>
+            )}
+          </Box>
 
-      <Box flex="1" overflowY="auto">
+          <Text fontSize="sm" color="su.brick" mt={4}>
+            Search across all {schemas.length} schemas and{' '}
+            {Array.from(allItems.values()).reduce((sum, items) => sum + items.length, 0)} items
+          </Text>
+        </ReferenceHeader>
+      </Box>
+
+      {/* Masonry grid - positioned behind header and footer */}
+      <Box flex="1" position="relative" zIndex={1}>
         <AnimatedMasonryGrid allItems={allItems} />
       </Box>
-      <Footer />
+
+      {/* Footer - sticky at bottom, positioned above the masonry grid */}
+      <Box position="sticky" bottom={0} zIndex={20} bg="su.white">
+        <Footer />
+      </Box>
     </Flex>
   )
 }

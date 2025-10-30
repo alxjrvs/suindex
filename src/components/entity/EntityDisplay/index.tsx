@@ -220,7 +220,7 @@ export function EntityDisplay({
             bg="su.lightBlue"
             borderBottomRightRadius="md"
             opacity={contentOpacity}
-            p={compact ? 2 : 4}
+            p={compact ? 1 : 3}
             gap={compact ? 3 : 6}
             alignItems="stretch"
             justifyContent={contentJustify}

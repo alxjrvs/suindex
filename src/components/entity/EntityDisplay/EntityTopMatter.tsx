@@ -32,7 +32,7 @@ export function EntityTopMatter({
         h="full"
         minW="0"
       >
-        <Box ml="auto" mr="auto">
+        <Box ml="auto">
           <StatList header={false} data={data} compact={compact} />
         </Box>
         {showDescription && <ItalicText compact={compact}>{description}</ItalicText>}

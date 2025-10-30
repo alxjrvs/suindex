@@ -72,11 +72,6 @@ function extractDetails(
     details.push({ label, value, type: 'trait' })
   })
 
-  // Recommended (for modules)
-  if ('recommended' in data && data.recommended) {
-    details.push({ label: 'Recommended', type: 'meta' })
-  }
-
   return details
 }
 interface DetailsListProps {
