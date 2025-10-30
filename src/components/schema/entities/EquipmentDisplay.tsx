@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { ButtonProps } from '@chakra-ui/react'
 import type { SURefEquipment } from 'salvageunion-reference'
 import { EntityDisplay } from '../../entity/EntityDisplay'
 import { ENTITY_DISPLAY_CONFIGS } from './entityDisplayConfig'
@@ -6,8 +7,7 @@ import { ENTITY_DISPLAY_CONFIGS } from './entityDisplayConfig'
 interface EquipmentDisplayProps {
   data: SURefEquipment
   onClick?: () => void
-  showSelectButton?: boolean
-  selectButtonText?: string
+  buttonConfig?: ButtonProps & { children: ReactNode }
   children?: ReactNode
   hideActions?: boolean
 }
@@ -19,8 +19,7 @@ interface EquipmentDisplayProps {
 export function EquipmentDisplay({
   data,
   onClick,
-  showSelectButton = false,
-  selectButtonText,
+  buttonConfig,
   children,
   hideActions = false,
 }: EquipmentDisplayProps) {
@@ -30,8 +29,7 @@ export function EquipmentDisplay({
       schemaName="equipment"
       data={data}
       onClick={onClick}
-      showSelectButton={showSelectButton}
-      selectButtonText={selectButtonText}
+      buttonConfig={buttonConfig}
       hideActions={hideActions}
       {...config}
     >

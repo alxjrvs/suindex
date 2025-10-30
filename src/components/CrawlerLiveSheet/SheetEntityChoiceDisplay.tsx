@@ -92,13 +92,25 @@ export function SheetEntityChoiceDisplay({
       ) : (
         <EntityDisplay
           schemaName={selectedEntity.schemaName as SURefSchemaName}
-          onRemove={handleRemove}
-          removeConfirmMessage={`Are you sure you want to remove "${entityName}"?`}
           data={selectedEntity.entity}
           compact
           collapsible
-          label={choice.name}
           defaultExpanded={false}
+          buttonConfig={{
+            bg: 'su.brick',
+            color: 'su.white',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            _hover: { bg: 'su.black' },
+            onClick: (e) => {
+              e.stopPropagation()
+              const confirmed = window.confirm(`Are you sure you want to remove "${entityName}"?`)
+              if (confirmed) {
+                handleRemove()
+              }
+            },
+            children: `Remove ${choice.name}`,
+          }}
         />
       )}
 

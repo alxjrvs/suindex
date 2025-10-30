@@ -291,9 +291,9 @@ function TreeSection({
                 key={ability.id}
                 data={ability}
                 trained={true}
-                collapsible
+                collapsible={!alreadySelected}
                 disabled={false}
-                defaultExpanded={false}
+                defaultExpanded={alreadySelected}
               />
             )
           }
@@ -311,21 +311,63 @@ function TreeSection({
           const showSelectButton =
             !alreadySelected && !(isLegendaryTree && hasLegendaryAbilitySelected)
 
+          // Determine button config based on state
+          let buttonConfig = undefined
+          if (alreadySelected && onRemove) {
+            // Show remove button
+            buttonConfig = {
+              bg: 'su.brick',
+              color: 'su.white',
+              fontWeight: 'bold',
+              textTransform: 'uppercase' as const,
+              _hover: { bg: 'su.black' },
+              _disabled: {
+                opacity: 0.5,
+                cursor: 'not-allowed',
+                _hover: { bg: 'su.brick' },
+              },
+              disabled: !canAfford,
+              onClick: (e: React.MouseEvent) => {
+                e.stopPropagation()
+                if (!canAfford) return
+                const confirmed = window.confirm(
+                  `Are you sure you want to remove "${ability.name}"?`
+                )
+                if (confirmed) {
+                  onRemove(ability.id)
+                }
+              },
+              children: 'Remove Ability',
+            }
+          } else if (showSelectButton && onAdd) {
+            // Show select button
+            buttonConfig = {
+              bg: 'su.orange',
+              color: 'su.white',
+              fontWeight: 'bold',
+              _hover: { bg: 'su.black' },
+              _disabled: {
+                opacity: 0.5,
+                cursor: 'not-allowed',
+                _hover: { bg: 'su.orange' },
+              },
+              disabled: !canSelect,
+              onClick: () => onAdd(ability.id),
+              children: `Add to Pilot (${cost} TP)`,
+            }
+          }
+
           return (
             <EntityDisplay
               schemaName="abilities"
               compact
               key={ability.id}
               data={ability}
-              onClick={alreadySelected || !onAdd ? undefined : () => onAdd(ability.id)}
-              onRemove={alreadySelected && onRemove ? () => onRemove(ability.id) : undefined}
-              disableRemove={currentTP < 2}
               disabled={isReadOnly ? false : !canSelect && !alreadySelected}
               trained={isReadOnly || alreadySelected}
-              collapsible
-              defaultExpanded={false}
-              showSelectButton={showSelectButton}
-              selectButtonText={`Add to Pilot (${cost} TP)`}
+              collapsible={!alreadySelected}
+              defaultExpanded={alreadySelected}
+              buttonConfig={buttonConfig}
             />
           )
         })}

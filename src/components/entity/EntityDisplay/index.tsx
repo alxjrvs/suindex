@@ -1,4 +1,4 @@
-import { Box, Flex, VStack, Button } from '@chakra-ui/react'
+import { Box, Flex, VStack, Button, type ButtonProps } from '@chakra-ui/react'
 import { type ReactNode, useState } from 'react'
 import type {
   SURefAdvancedClass,
@@ -48,12 +48,6 @@ type EntityDisplayProps = {
   disabled?: boolean
   /** Whether the entity is dimmed (affects opacity) */
   dimmed?: boolean
-  /** Whether the remove button is disabled */
-  disableRemove?: boolean
-  /** Optional remove handler */
-  onRemove?: () => void
-  /** Optional custom confirmation message for removal */
-  removeConfirmMessage?: string
   /** Whether the entity can be collapsed/expanded */
   collapsible?: boolean
   /** Default expanded state (only used if expanded is not controlled) */
@@ -62,10 +56,8 @@ type EntityDisplayProps = {
   expanded?: boolean
   /** Callback when expanded state changes */
   onToggleExpanded?: () => void
-  /** Whether to show a select button (used in modals) */
-  showSelectButton?: boolean
-  /** Optional custom text for the select button */
-  selectButtonText?: string
+  /** Optional button configuration - if provided, renders a button at the bottom of the entity */
+  buttonConfig?: ButtonProps & { children: ReactNode }
   /** Optional label displayed in the top-right corner */
   rightLabel?: string
   /** Whether to use compact styling */
@@ -129,15 +121,11 @@ export function EntityDisplay({
   onClick,
   disabled = false,
   dimmed = false,
-  disableRemove = false,
-  onRemove,
-  removeConfirmMessage,
   collapsible = false,
   defaultExpanded = true,
   expanded,
   onToggleExpanded,
-  showSelectButton = false,
-  selectButtonText,
+  buttonConfig,
   hideActions = false,
   schemaName,
   compact = false,
@@ -166,8 +154,7 @@ export function EntityDisplay({
     ('techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0) ||
     ('patterns' in data && data.patterns && data.patterns.length > 0) ||
     !!children ||
-    showSelectButton ||
-    !!onRemove ||
+    !!buttonConfig ||
     !!pageRef
 
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
@@ -181,7 +168,7 @@ export function EntityDisplay({
   }
 
   const handleHeaderClick = () => {
-    if (showSelectButton && collapsible) {
+    if (buttonConfig && collapsible) {
       handleToggle()
     } else if (onClick && !disabled) {
       onClick()
@@ -287,78 +274,30 @@ export function EntityDisplay({
                   />
                 )}
                 <EntityRequirementDisplay data={data} compact={compact} schemaName={schemaName} />
-                <ClassAbilitiesList
-                  selectedClass={
-                    schemaName === 'classes.core' ? (data as SURefCoreClass) : undefined
-                  }
-                  selectedAdvancedClass={
-                    schemaName === 'classes.advanced' || schemaName === 'classes.hybrid'
-                      ? (data as SURefAdvancedClass | SURefHybridClass)
-                      : undefined
-                  }
-                />
-                {children && <Box mt="3">{children}</Box>}
-                {showSelectButton && onClick && (
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      if (!disabled) {
-                        onClick()
-                      }
-                    }}
-                    disabled={disabled}
-                    w="full"
-                    mt={3}
-                    bg="su.orange"
-                    color="su.white"
-                    px={4}
-                    py={2}
-                    borderRadius="md"
-                    fontWeight="bold"
-                    _hover={{ bg: 'su.black' }}
-                    _disabled={{
-                      opacity: 0.5,
-                      cursor: 'not-allowed',
-                      _hover: { bg: 'su.orange' },
-                    }}
-                  >
-                    {selectButtonText || 'Select'}
-                  </Button>
+                {schemaName.includes('classes') && (
+                  <ClassAbilitiesList
+                    selectedClass={
+                      schemaName === 'classes.core' ? (data as SURefCoreClass) : undefined
+                    }
+                    selectedAdvancedClass={
+                      schemaName === 'classes.advanced' || schemaName === 'classes.hybrid'
+                        ? (data as SURefAdvancedClass | SURefHybridClass)
+                        : undefined
+                    }
+                  />
                 )}
-                {onRemove && (
+                {children && <Box mt="3">{children}</Box>}
+                {buttonConfig && (
                   <Button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      if (disableRemove) return
-
-                      const message =
-                        removeConfirmMessage || `Are you sure you want to remove "${header}"?`
-
-                      const confirmed = window.confirm(message)
-
-                      if (confirmed) {
-                        onRemove()
-                      }
-                    }}
-                    disabled={disableRemove}
                     w="full"
                     mt={3}
-                    bg="su.brick"
-                    color="su.white"
-                    px={4}
-                    py={2}
-                    borderRadius="md"
-                    fontWeight="bold"
-                    textTransform="uppercase"
-                    _hover={{ bg: 'su.black' }}
-                    _disabled={{
-                      opacity: 0.5,
-                      cursor: 'not-allowed',
-                      _hover: { bg: 'su.brick' },
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      buttonConfig.onClick?.(e)
                     }}
-                    aria-label={`Remove ${getSchemaDisplayName(schemaName)}`}
+                    {...buttonConfig}
                   >
-                    Remove {getSchemaDisplayName(schemaName)}
+                    {buttonConfig.children}
                   </Button>
                 )}
               </>
