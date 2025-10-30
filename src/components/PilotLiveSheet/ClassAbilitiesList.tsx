@@ -8,7 +8,7 @@ import type {
   SURefAdvancedClass,
   SURefHybridClass,
 } from 'salvageunion-reference'
-import { AbilityDisplay } from '../schema/entities/AbilityDisplay'
+import { EntityDisplay } from '../entity/EntityDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
 
 interface AbilitiesListProps {
@@ -285,7 +285,8 @@ function TreeSection({
           // Read-only mode: no dimming, no add/remove buttons
           if (isReadOnly) {
             return (
-              <AbilityDisplay
+              <EntityDisplay
+                schemaName="abilities"
                 compact
                 key={ability.id}
                 data={ability}
@@ -311,7 +312,8 @@ function TreeSection({
             !alreadySelected && !(isLegendaryTree && hasLegendaryAbilitySelected)
 
           return (
-            <AbilityDisplay
+            <EntityDisplay
+              schemaName="abilities"
               compact
               key={ability.id}
               data={ability}

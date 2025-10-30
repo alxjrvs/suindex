@@ -1,6 +1,12 @@
 import { Box, Flex, VStack, Button } from '@chakra-ui/react'
 import { type ReactNode, useState } from 'react'
-import type { SURefMetaEntity, SURefSchemaName } from 'salvageunion-reference'
+import type {
+  SURefAdvancedClass,
+  SURefCoreClass,
+  SURefHybridClass,
+  SURefMetaEntity,
+  SURefSchemaName,
+} from 'salvageunion-reference'
 import { techLevelColors } from '../../../theme'
 import { PageReferenceDisplay } from '../../shared/PageReferenceDisplay'
 import { RollTable } from '../../shared/RollTable'
@@ -22,6 +28,8 @@ import { EntityChassisPatternDisplay } from './EntityChassisPatternDisplay'
 import { EntityTechLevelEffects } from './EntityTechLevelEffects'
 import { EntityOptions } from './EntityOptions'
 import { EntityTopMatter } from './EntityTopMatter'
+import { EntityRequirementDisplay } from './EntityRequirementDisplay'
+import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
 
 type EntityDisplayProps = {
   /** Entity data to display */
@@ -30,8 +38,8 @@ type EntityDisplayProps = {
   schemaName: SURefSchemaName | 'actions'
   /** Optional header background color override */
   headerColor?: string
-  /** Optional header opacity (0-1, defaults to 1) */
-  headerOpacity?: number
+  /** Whether the ability is trained (affects header opacity for abilities) */
+  trained?: boolean
   /** Optional children to render in the content area */
   children?: ReactNode
   /** Optional click handler for the entity */
@@ -75,10 +83,41 @@ type EntityDisplayProps = {
 function calculateBGColor(
   schemaName: SURefSchemaName | 'actions',
   headerColor: string = '',
-  techLevel: number | undefined
+  techLevel: number | undefined,
+  data: SURefMetaEntity
 ) {
   if (schemaName === 'chassis') return 'su.green'
   if (schemaName === 'actions') return 'su.twoBlue'
+
+  // Auto-calculate header color for abilities based on type
+  if (schemaName === 'abilities' && !headerColor) {
+    const isLegendary =
+      ('level' in data && String(data.level).toUpperCase() === 'L') ||
+      ('tree' in data && String(data.tree).includes('Legendary'))
+    const isAdvancedOrHybrid =
+      'tree' in data &&
+      (String(data.tree).includes('Advanced') || String(data.tree).includes('Hybrid'))
+
+    if (isLegendary) {
+      return 'su.pink'
+    } else if (isAdvancedOrHybrid) {
+      return 'su.darkOrange'
+    } else {
+      return 'su.orange'
+    }
+  }
+
+  // Auto-calculate header color for ability-tree-requirements based on name
+  if (schemaName === 'ability-tree-requirements' && !headerColor) {
+    const name = 'name' in data ? String(data.name).toLowerCase() : ''
+    if (name.includes('legendary')) {
+      return 'su.pink'
+    } else if (name.includes('advanced') || name.includes('hybrid')) {
+      return 'su.brick'
+    }
+    return 'su.orange'
+  }
+
   if (headerColor) return headerColor
   if (techLevel) return techLevelColors[techLevel]
   return 'su.orange'
@@ -90,7 +129,7 @@ export function EntityDisplay({
   label,
   hideLevel = false,
   headerColor,
-  headerOpacity = 1,
+  trained = true,
   children,
   onClick,
   disabled = false,
@@ -116,6 +155,9 @@ export function EntityDisplay({
   const sections = extractContentSections(data)
   const pageRef = extractPageReference(data)
   const techLevel = extractTechLevel(data)
+
+  // Calculate header opacity based on trained state
+  const headerOpacity = trained ? 1 : 0.5
 
   // Check if there's any content to render (besides actions)
   const hasNotes = 'notes' in data && data.notes
@@ -152,7 +194,7 @@ export function EntityDisplay({
     }
   }
 
-  const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel)
+  const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel, data)
   const contentOpacity = disabled || dimmed ? 0.5 : 1
 
   const handleHeaderClick = () => {
@@ -168,6 +210,8 @@ export function EntityDisplay({
       }
     }
   }
+
+  const displayExtraSection = compact ? !hideActions : true
 
   return (
     <RoundedBox
@@ -232,101 +276,116 @@ export function EntityDisplay({
               schemaName={schemaName}
               compact={compact}
             />
-            {!hideActions && (
-              <EntityChassisPatternDisplay data={data} schemaName={schemaName} compact={compact} />
-            )}
 
             {'effect' in data && data.effect && (
               <SheetDisplay compact={compact} value={data.effect} />
             )}
 
-            {compact && !hideActions && (
-              <EntityOptions data={data} compact={compact} schemaName={schemaName} />
-            )}
-
-            {compact && !hideActions && sections.showRollTable && 'table' in data && data.table && (
-              <Box borderRadius="md" position="relative" zIndex={10}>
-                <RollTable
-                  disabled={disabled || dimmed}
-                  table={data.table}
-                  showCommand
-                  compact
-                  tableName={'name' in data ? String(data.name) : undefined}
+            {displayExtraSection && (
+              <>
+                <EntityChassisPatternDisplay
+                  data={data}
+                  schemaName={schemaName}
+                  compact={compact}
                 />
-              </Box>
-            )}
-
-            {compact && !hideActions && (
-              <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
-            )}
-
-            {children && <Box mt="3">{children}</Box>}
-            {/* Select Button - Only shown in modal */}
-            {showSelectButton && onClick && (
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (!disabled) {
-                    onClick()
+                <EntityOptions data={data} compact={compact} schemaName={schemaName} />
+                {sections.showRollTable && 'table' in data && data.table && (
+                  <Box borderRadius="md" position="relative" zIndex={10}>
+                    <RollTable
+                      disabled={disabled || dimmed}
+                      table={data.table}
+                      showCommand
+                      compact
+                      tableName={'name' in data ? String(data.name) : undefined}
+                    />
+                  </Box>
+                )}
+                <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
+                {'damagedEffect' in data && data.damagedEffect && compact && (
+                  <SheetDisplay
+                    labelBgColor="su.brick"
+                    borderColor="su.brick"
+                    label="Damaged Effect"
+                    value={data.damagedEffect}
+                  />
+                )}
+                <EntityRequirementDisplay data={data} compact={compact} schemaName={schemaName} />
+                <ClassAbilitiesList
+                  selectedClass={
+                    schemaName === 'classes.core' ? (data as SURefCoreClass) : undefined
                   }
-                }}
-                disabled={disabled}
-                w="full"
-                mt={3}
-                bg="su.orange"
-                color="su.white"
-                px={4}
-                py={2}
-                borderRadius="md"
-                fontWeight="bold"
-                _hover={{ bg: 'su.black' }}
-                _disabled={{
-                  opacity: 0.5,
-                  cursor: 'not-allowed',
-                  _hover: { bg: 'su.orange' },
-                }}
-              >
-                {selectButtonText || 'Select'}
-              </Button>
-            )}
-            {/* Remove Button */}
-            {onRemove && (
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (disableRemove) return
-
-                  const message =
-                    removeConfirmMessage || `Are you sure you want to remove "${header}"?`
-
-                  const confirmed = window.confirm(message)
-
-                  if (confirmed) {
-                    onRemove()
+                  selectedAdvancedClass={
+                    schemaName === 'classes.advanced' || schemaName === 'classes.hybrid'
+                      ? (data as SURefAdvancedClass | SURefHybridClass)
+                      : undefined
                   }
-                }}
-                disabled={disableRemove}
-                w="full"
-                mt={3}
-                bg="su.brick"
-                color="su.white"
-                px={4}
-                py={2}
-                borderRadius="md"
-                fontWeight="bold"
-                textTransform="uppercase"
-                _hover={{ bg: 'su.black' }}
-                _disabled={{
-                  opacity: 0.5,
-                  cursor: 'not-allowed',
-                  _hover: { bg: 'su.brick' },
-                }}
-                aria-label={`Remove ${getSchemaDisplayName(schemaName)}`}
-              >
-                Remove {getSchemaDisplayName(schemaName)}
-              </Button>
+                />
+                {children && <Box mt="3">{children}</Box>}
+                {showSelectButton && onClick && (
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (!disabled) {
+                        onClick()
+                      }
+                    }}
+                    disabled={disabled}
+                    w="full"
+                    mt={3}
+                    bg="su.orange"
+                    color="su.white"
+                    px={4}
+                    py={2}
+                    borderRadius="md"
+                    fontWeight="bold"
+                    _hover={{ bg: 'su.black' }}
+                    _disabled={{
+                      opacity: 0.5,
+                      cursor: 'not-allowed',
+                      _hover: { bg: 'su.orange' },
+                    }}
+                  >
+                    {selectButtonText || 'Select'}
+                  </Button>
+                )}
+                {onRemove && (
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (disableRemove) return
+
+                      const message =
+                        removeConfirmMessage || `Are you sure you want to remove "${header}"?`
+
+                      const confirmed = window.confirm(message)
+
+                      if (confirmed) {
+                        onRemove()
+                      }
+                    }}
+                    disabled={disableRemove}
+                    w="full"
+                    mt={3}
+                    bg="su.brick"
+                    color="su.white"
+                    px={4}
+                    py={2}
+                    borderRadius="md"
+                    fontWeight="bold"
+                    textTransform="uppercase"
+                    _hover={{ bg: 'su.black' }}
+                    _disabled={{
+                      opacity: 0.5,
+                      cursor: 'not-allowed',
+                      _hover: { bg: 'su.brick' },
+                    }}
+                    aria-label={`Remove ${getSchemaDisplayName(schemaName)}`}
+                  >
+                    Remove {getSchemaDisplayName(schemaName)}
+                  </Button>
+                )}
+              </>
             )}
-            {/* Page Reference */}
             {pageRef && (
               <Box mt="auto">
                 <PageReferenceDisplay

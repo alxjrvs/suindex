@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Box } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { AbilityDisplay } from '../schema/entities/AbilityDisplay'
+import { EntityDisplay } from '../entity/EntityDisplay'
 
 export function GeneralAbilitiesList() {
   // Get all abilities with level === "G" (Generic)
@@ -37,7 +37,7 @@ export function GeneralAbilitiesList() {
           position="relative"
           overflow="visible"
         >
-          <AbilityDisplay hideLevel data={ability} compact />
+          <EntityDisplay schemaName="abilities" hideLevel data={ability} compact />
         </Box>
       ))}
     </Box>
