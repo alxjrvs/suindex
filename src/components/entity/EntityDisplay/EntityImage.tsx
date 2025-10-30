@@ -5,8 +5,10 @@ import { extractHeader } from '../entityDisplayHelpers'
 
 export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps) {
   const [showImage, setShowImage] = useState(true)
-  const imagePath = `/lp/${schemaName}/${data.name.toLowerCase()}.png`
+  const ext = schemaName === 'chassis' ? 'png' : 'jpg'
+  const imagePath = `/lp/${schemaName}/${data.name.toLowerCase()}.${ext}`
   const header = extractHeader(data, schemaName)
+  console.log('imagePath', imagePath)
 
   if (compact || !showImage) return null
 

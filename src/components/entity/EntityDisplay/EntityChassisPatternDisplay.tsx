@@ -3,14 +3,13 @@ import { Text } from '../../base/Text'
 import { Heading } from '../../base/Heading'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import type { EntityDisplaySubProps } from './types'
+import { EntitySubheader } from './EntitySubheader'
 
-export function EntityChassisPatternDisplay({ data }: EntityDisplaySubProps) {
+export function EntityChassisPatternDisplay({ data, compact }: EntityDisplaySubProps) {
   if (!('patterns' in data) || !data.patterns || data.patterns.length === 0) return null
   return (
     <VStack gap={4} alignItems="stretch">
-      <Heading level="h3" textTransform="uppercase">
-        Patterns
-      </Heading>
+      <EntitySubheader compact={compact} label="Patterns" />
       <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} alignItems="stretch">
         {data.patterns.map((pattern, index) => (
           <SheetDisplay label={pattern.name}>

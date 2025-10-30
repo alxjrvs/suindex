@@ -1,16 +1,14 @@
 import { VStack } from '@chakra-ui/react'
-import { Heading } from '../../base/Heading'
 import { Text } from '../../base/Text'
 import type { EntityDisplaySubProps } from './types'
+import { EntitySubheader } from './EntitySubheader'
 
 export function EntitySystemDisplay({ data, compact }: EntityDisplaySubProps) {
   if (!('systems' in data) || !data.systems || data.systems.length === 0) return null
 
   return (
     <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
-      <Heading level="h3" fontSize={compact ? 'md' : 'lg'} fontWeight="bold" color="su.brick">
-        Systems
-      </Heading>
+      <EntitySubheader compact={compact} label="Systems" />
       {data.systems.map((system, index) => (
         <VStack
           key={index}
