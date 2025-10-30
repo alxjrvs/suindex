@@ -1,11 +1,10 @@
 import { useMemo } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
 import { SalvageUnionReference, type SURefEquipment } from 'salvageunion-reference'
-import { EquipmentDisplay } from '../schema/entities/EquipmentDisplay'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { RoundedBox } from '../shared/RoundedBox'
+import { EntityDisplay } from '../entity/EntityDisplay'
 
 interface PilotInventoryProps {
   equipment: string[] // Array of Equipment IDs
@@ -59,36 +58,27 @@ export function PilotInventory({
     >
       <Box css={{ columns: '2', gap: '0.75rem' }}>
         {equipmentItems.map((item) => (
-          <Box
-            key={`${item.id}-${item.index}`}
-            position="relative"
-            css={{ breakInside: 'avoid' }}
-            mb={3}
-          >
-            <EquipmentDisplay data={item.equipment} />
-            <Button
-              onClick={() => onRemove(item.index)}
-              position="absolute"
-              top="2"
-              right="2"
-              bg="su.brick"
-              color="su.white"
-              w="6"
-              h="6"
-              borderRadius="md"
-              fontWeight="bold"
-              _hover={{ bg: 'su.black' }}
-              fontSize="xs"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              zIndex="10"
-              aria-label="Remove equipment"
-              disabled={disabled}
-            >
-              ✕
-            </Button>
-          </Box>
+          <EntityDisplay
+            buttonConfig={{
+              bg: 'su.brick',
+              color: 'su.white',
+              fontWeight: 'bold',
+              _hover: { bg: 'su.black' },
+              onClick: (e) => {
+                e.stopPropagation()
+                const confirmed = window.confirm(
+                  `Are you sure you want to remove "${item.equipment.name}"?`
+                )
+                if (confirmed) {
+                  onRemove(item.index)
+                }
+              },
+              children: `Remove ${item.equipment.name}`,
+            }}
+            schemaName="equipment"
+            compact
+            data={item.equipment}
+          />
         ))}
       </Box>
     </RoundedBox>
