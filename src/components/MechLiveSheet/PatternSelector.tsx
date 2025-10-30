@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { VStack, Flex, Badge, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
+import { rollTable } from '@randsum/salvageunion'
 import { SheetInput } from '../shared/SheetInput'
 import type { SURefChassis } from 'salvageunion-reference'
 
@@ -20,6 +21,13 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
     )
   }, [selectedChassis, pattern])
 
+  const handleRollPattern = () => {
+    const {
+      result: { label },
+    } = rollTable('Mech Pattern Names')
+    onChange(label)
+  }
+
   return (
     <SheetInput
       label="Pattern"
@@ -34,6 +42,9 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
       }}
       disabled={!selectedChassis}
       placeholder="Enter or select a pattern..."
+      onDiceRoll={handleRollPattern}
+      diceRollAriaLabel="Roll for pattern name"
+      diceRollTitle="Roll on the Mech Pattern Names table"
     >
       {showSuggestions && selectedChassis && filteredPatterns.length > 0 && (
         <VStack
