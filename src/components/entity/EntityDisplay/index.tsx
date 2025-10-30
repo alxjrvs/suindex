@@ -142,8 +142,6 @@ export function EntityDisplay({
     }
   }
 
-  console.log('EntityDisplay', data)
-
   return (
     <RoundedBox
       borderWidth="2px"
