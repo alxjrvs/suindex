@@ -123,14 +123,14 @@ export function RoundedBox({
             direction="row"
             w="full"
             px="0"
-            gap={1}
+            gap={2}
             h="full"
             cursor={headerCursor}
             onClick={onHeaderClick}
             alignItems="center"
           >
             {leftContent && (
-              <Flex direction="column" gap={1} alignItems="flex-start">
+              <Flex direction="column" gap={1} alignItems="flex-start" flexShrink={0}>
                 {leftContent}
               </Flex>
             )}
@@ -139,11 +139,18 @@ export function RoundedBox({
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              gap="0"
+              gap={2}
               flex="1"
+              minW="0"
               data-testid={headerTestId}
             >
-              <Flex direction="column" gap={1} justifyContent="space-between" h="full">
+              <Flex
+                direction="column"
+                gap={1}
+                justifyContent="space-between"
+                h="full"
+                flexShrink={0}
+              >
                 {title && (
                   <CardHeader
                     disabled={disabled}
@@ -152,9 +159,36 @@ export function RoundedBox({
                     compact={compact}
                   />
                 )}
-                {subTitleContent}
+                {subTitleContent && (
+                  <Flex
+                    overflow="hidden"
+                    css={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                  >
+                    {subTitleContent}
+                  </Flex>
+                )}
               </Flex>
-              {rightContent}
+              {rightContent && (
+                <Flex
+                  direction="row"
+                  gap={1}
+                  alignItems="flex-start"
+                  flexWrap="wrap"
+                  justifyContent="flex-end"
+                  css={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {rightContent}
+                </Flex>
+              )}
             </Flex>
           </Flex>
         </VStack>
