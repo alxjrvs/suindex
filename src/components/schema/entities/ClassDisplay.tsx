@@ -1,5 +1,3 @@
-import { VStack } from '@chakra-ui/react'
-import { Heading } from '../../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type {
   SURefCoreClass,
@@ -8,78 +6,29 @@ import type {
   SURefAbility,
 } from 'salvageunion-reference'
 import { EntityDisplay } from '../../entity/EntityDisplay'
-import { SheetDisplay } from '../../shared/SheetDisplay'
-import { AbilityDisplay } from './AbilityDisplay'
+import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
 
 interface ClassDisplayProps {
   data: SURefCoreClass | SURefAdvancedClass | SURefHybridClass
+  compact?: boolean
+  collapsible?: boolean
+  defaultExpanded?: boolean
+  onClick?: () => void
+  hideActions?: boolean
 }
 
 interface HydratedAbilities {
   [key: string]: SURefAbility[]
 }
 
-function AbilitySection({
-  title,
-  abilities,
-  headerColor,
-}: {
-  title: string
-  abilities: HydratedAbilities
-  headerColor: string
-}) {
-  const abilityKeys = Object.keys(abilities)
-
-  if (abilityKeys.length === 0) return null
-
-  return (
-    <VStack gap={3} alignItems="stretch">
-      <Heading level="h3" textTransform="uppercase" textAlign="center" py={2}>
-        {title}
-      </Heading>
-      <VStack gap={4} alignItems="stretch">
-        {abilityKeys.map((key) => (
-          <AbilityList
-            key={key}
-            treeKey={key}
-            abilities={abilities[key]}
-            headerColor={headerColor}
-          />
-        ))}
-      </VStack>
-    </VStack>
-  )
-}
-
-function AbilityList({
-  treeKey,
-  abilities,
-}: {
-  treeKey: string
-  abilities: SURefAbility[]
-  headerColor: string
-}) {
-  if (abilities.length === 0) return null
-
-  return (
-    <SheetDisplay label={treeKey}>
-      <VStack gap={3} alignItems="stretch">
-        {abilities.map((ability, index) => {
-          const data = SalvageUnionReference.findIn('abilities', (ref) => ref.id === ability.id)
-          console.log('data', data)
-          return (
-            <AbilityDisplay
-              key={index}
-              data={SalvageUnionReference.findIn('abilities', (ref) => ref.id === ability.id)}
-            />
-          )
-        })}
-      </VStack>
-    </SheetDisplay>
-  )
-}
-
-export function ClassDisplay({ data }: ClassDisplayProps) {
+export function ClassDisplay({
+  data,
+  compact = false,
+  collapsible = false,
+  defaultExpanded = true,
+  onClick,
+  hideActions = false,
+}: ClassDisplayProps) {
   // Determine class type based on which fields are present
   const isCoreClass = 'coreTrees' in data
   const isHybridClass = !isCoreClass && !data.name.includes('Advanced')
@@ -125,29 +74,27 @@ export function ClassDisplay({ data }: ClassDisplayProps) {
       : 'classes.advanced'
 
   const label = isCoreClass ? 'Core Class' : isHybridClass ? 'Hybrid Class' : 'Advanced Class'
+
   return (
-    <EntityDisplay schemaName={schemaName} rightLabel={label} data={data} headerColor={headerColor}>
-      <VStack gap={6} alignItems="stretch">
-        {Object.keys(coreAbilities).length > 0 && (
-          <AbilitySection title="Core Abilities" abilities={coreAbilities} headerColor="su.brick" />
-        )}
-
-        {Object.keys(advancedAbilities).length > 0 && (
-          <AbilitySection
-            title="Advanced Abilities"
-            abilities={advancedAbilities}
-            headerColor="su.orange"
-          />
-        )}
-
-        {Object.keys(legendaryAbilities).length > 0 && (
-          <AbilitySection
-            title="Legendary Abilities"
-            abilities={legendaryAbilities}
-            headerColor="su.pink"
-          />
-        )}
-      </VStack>
+    <EntityDisplay
+      schemaName={schemaName}
+      rightLabel={label}
+      data={data}
+      headerColor={headerColor}
+      compact={compact}
+      collapsible={collapsible}
+      defaultExpanded={defaultExpanded}
+      onClick={onClick}
+      hideActions={hideActions}
+    >
+      {!hideActions && (
+        <ClassAbilitiesList
+          selectedClass={isCoreClass ? (data as SURefCoreClass) : undefined}
+          selectedAdvancedClass={
+            !isCoreClass ? (data as SURefAdvancedClass | SURefHybridClass) : undefined
+          }
+        />
+      )}
     </EntityDisplay>
   )
 }

@@ -67,7 +67,6 @@ export function useCrawlerLiveSheetState(id?: string) {
       const initialBays: CrawlerBay[] = allBays.map((bay) => ({
         id: `${bay.id}-${Date.now()}-${Math.random()}`,
         bayId: bay.id,
-        name: bay.name,
         damaged: false,
         npc: {
           name: '',
@@ -75,7 +74,6 @@ export function useCrawlerLiveSheetState(id?: string) {
           hitPoints: bay.npc.hitPoints,
           damage: 0,
         },
-        description: '',
       }))
       updateEntity({ bays: initialBays })
     }
@@ -149,7 +147,6 @@ export function useCrawlerLiveSheetState(id?: string) {
           bays: allBays.map((bay) => ({
             id: `${bay.id}-${Date.now()}-${Math.random()}`,
             bayId: bay.id,
-            name: bay.name,
             damaged: false,
             npc: {
               name: '',
@@ -157,7 +154,6 @@ export function useCrawlerLiveSheetState(id?: string) {
               hitPoints: bay.npc.hitPoints,
               damage: 0,
             },
-            description: '',
           })),
           npc: {
             name: '',

@@ -41,8 +41,8 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             borderWidth="2px"
             borderColor="su.brick"
           >
-            <Heading level="h1" fontSize="2xl" fontWeight="bold" color="su.brick" mb={4}>
-              Oops! Something went wrong
+            <Heading level="h1" fontSize="2xl" fontWeight="bold" mb={4}>
+              REACTOR OVERLOAD
             </Heading>
             <Text color="su.black" mb={4}>
               An unexpected error occurred. Please try refreshing the page.

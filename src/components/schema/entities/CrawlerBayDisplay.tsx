@@ -5,11 +5,32 @@ import { SheetDisplay } from '../../shared/SheetDisplay'
 
 interface CrawlerBayDisplayProps {
   data: SURefCrawlerBay
+  compact?: boolean
+  collapsible?: boolean
+  defaultExpanded?: boolean
+  onClick?: () => void
+  hideActions?: boolean
 }
 
-export function CrawlerBayDisplay({ data }: CrawlerBayDisplayProps) {
+export function CrawlerBayDisplay({
+  data,
+  compact = false,
+  collapsible = false,
+  defaultExpanded = true,
+  onClick,
+  hideActions = false,
+}: CrawlerBayDisplayProps) {
   return (
-    <EntityDisplay schemaName="crawler-bays" data={data} headerColor="su.pink">
+    <EntityDisplay
+      schemaName="crawler-bays"
+      data={data}
+      headerColor="su.pink"
+      compact={compact}
+      collapsible={collapsible}
+      defaultExpanded={defaultExpanded}
+      onClick={onClick}
+      hideActions={hideActions}
+    >
       <VStack gap={4} alignItems="stretch">
         {data.damagedEffect && (
           <SheetDisplay

@@ -71,6 +71,7 @@ describe('CrawlerLiveSheet', () => {
         // Check for a non-storage bay (since storage bay is in a different tab)
         const regularBay = allBays.find((b) => b.name !== 'Storage Bay')
         if (regularBay) {
+          // Bay name is now derived from reference data via bayId
           expect(screen.getByText(regularBay.name)).toBeInTheDocument()
         }
       }

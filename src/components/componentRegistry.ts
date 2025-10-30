@@ -3,7 +3,16 @@ import { lazy } from 'react'
 import { createEntityDisplay } from './schema/entities/createEntityDisplay'
 import type { SURefEntity } from 'salvageunion-reference'
 
-type DisplayComponentType = ComponentType<{ data: SURefEntity }>
+export interface DisplayComponentProps {
+  data: SURefEntity
+  hideActions?: boolean
+  compact?: boolean
+  collapsible?: boolean
+  defaultExpanded?: boolean
+  onClick?: () => void
+}
+
+type DisplayComponentType = ComponentType<DisplayComponentProps>
 
 // Complex components with custom logic/children - keep as separate files
 const AbilityDisplay = lazy(() =>
@@ -13,9 +22,6 @@ const AbilityTreeRequirementDisplay = lazy(() =>
   import('./schema/entities/AbilityTreeRequirementDisplay').then((m) => ({
     default: m.AbilityTreeRequirementDisplay,
   }))
-)
-const ChassisDisplay = lazy(() =>
-  import('./schema/entities/ChassisDisplay').then((m) => ({ default: m.ChassisDisplay }))
 )
 const ClassDisplay = lazy(() =>
   import('./schema/entities/ClassDisplay').then((m) => ({ default: m.ClassDisplay }))
@@ -31,7 +37,6 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   // Complex components with custom logic/children
   abilities: AbilityDisplay as unknown as DisplayComponentType,
   'ability-tree-requirements': AbilityTreeRequirementDisplay as unknown as DisplayComponentType,
-  chassis: ChassisDisplay as unknown as DisplayComponentType,
   classes: ClassDisplay as unknown as DisplayComponentType,
   'classes.core': ClassDisplay as unknown as DisplayComponentType,
   'classes.advanced': ClassDisplay as unknown as DisplayComponentType,
@@ -41,6 +46,7 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
 
   // Simple displays created via factory pattern
   'bio-titans': createEntityDisplay('bio-titans'),
+  chassis: createEntityDisplay('chassis'),
   crawlers: createEntityDisplay('crawlers'),
   creatures: createEntityDisplay('creatures'),
   drones: createEntityDisplay('drones'),

@@ -11,6 +11,7 @@ interface SheetDisplayProps {
   children?: ReactNode
   disabled?: boolean
   labelBgColor?: string
+  compact?: boolean
 }
 
 export function SheetDisplay({
@@ -21,18 +22,19 @@ export function SheetDisplay({
   borderColor = 'su.black',
   labelBgColor = 'su.black',
   children,
+  compact = false,
   disabled = false,
 }: SheetDisplayProps) {
   return (
     <Flex direction="column" w="full">
       {/* Label with pseudoheader styling */}
       {label && (
-        <Flex alignItems="center" mb={-2} zIndex={1}>
+        <Flex alignItems="center" mb={compact ? -1 : -2} zIndex={1}>
           <Text
             variant="pseudoheader"
-            fontSize="sm"
+            fontSize={compact ? 'xs' : 'sm'}
             textTransform="uppercase"
-            ml={3}
+            ml={compact ? 2 : 3}
             bg={disabled ? 'gray.600' : labelBgColor}
             color={disabled ? 'gray.300' : undefined}
           >
@@ -45,15 +47,15 @@ export function SheetDisplay({
       <Box
         w="full"
         h={height}
-        minH={minHeight}
-        p={3}
+        minH={compact ? '16' : minHeight}
+        p={compact ? 2 : 3}
         borderWidth="2px"
         borderColor={borderColor}
         borderRadius="md"
         bg="su.white"
         color="su.black"
         whiteSpace="pre-wrap"
-        fontSize="sm"
+        fontSize={compact ? 'xs' : 'sm'}
         overflowY="auto"
         opacity={disabled ? 0.5 : 1}
         cursor={disabled ? 'not-allowed' : 'default'}

@@ -4,10 +4,8 @@ import type { CargoItem, CrawlerNPC } from '../../types/common'
 export interface CrawlerBay {
   id: string
   bayId: string
-  name: string
   damaged: boolean
   npc: CrawlerNPC
-  description: string
 }
 
 export type CrawlerLiveSheetState = Omit<

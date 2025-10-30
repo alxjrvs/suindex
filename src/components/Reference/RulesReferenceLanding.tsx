@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Flex, Input, VStack, Grid } from '@chakra-ui/react'
+import { Box, Flex, Input, VStack } from '@chakra-ui/react'
 import { Text } from '../base/Text'
-import { Heading } from '../base/Heading'
 import { ReferenceHeader } from '../shared/ReferenceHeader'
 import Footer from '../Footer'
 import type { SchemaInfo } from '../../types/schema'
 import { getModel } from '../../utils/modelMap'
 import type { SURefEntity } from 'salvageunion-reference'
+import { AnimatedMasonryGrid } from './AnimatedMasonryGrid'
 
 interface RulesReferenceLandingProps {
   schemas: SchemaInfo[]
@@ -230,42 +230,8 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         </Text>
       </ReferenceHeader>
 
-      <Box flex="1" p={6} overflowY="auto">
-        <Box maxW="6xl" mx="auto">
-          <Heading level="h3" mb={4}>
-            Browse by Category
-          </Heading>
-          <Grid
-            templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-            gap={4}
-          >
-            {schemas.map((schema) => {
-              const title = schema.title.replace('Salvage Union ', '')
-              const description = schema.description.replace('Salvage Union ', '')
-
-              return (
-                <Box
-                  key={schema.id}
-                  p={4}
-                  bg="su.white"
-                  borderWidth="2px"
-                  borderColor="su.lightBlue"
-                  borderRadius="md"
-                  cursor="pointer"
-                  _hover={{ bg: 'su.lightOrange', borderColor: 'su.orange' }}
-                  onClick={() => navigate(`/schema/${schema.id}`)}
-                >
-                  <Text fontWeight="semibold" color="su.black" fontSize="lg">
-                    {title}
-                  </Text>
-                  <Text fontSize="sm" color="su.brick" mt={1}>
-                    {description.replace('in Salvage Union', '')} ({schema.itemCount} items)
-                  </Text>
-                </Box>
-              )
-            })}
-          </Grid>
-        </Box>
+      <Box flex="1" overflowY="auto">
+        <AnimatedMasonryGrid allItems={allItems} />
       </Box>
       <Footer />
     </Flex>

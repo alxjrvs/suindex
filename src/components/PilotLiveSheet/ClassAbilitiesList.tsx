@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react'
-import { Box, Grid } from '@chakra-ui/react'
+import { Box, Grid, Stack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type {
@@ -12,15 +12,15 @@ import { AbilityDisplay } from '../schema/entities/AbilityDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
 
 interface AbilitiesListProps {
-  abilities: string[] // Array of selected Ability IDs
-  legendaryAbilityId: string | null
-  onAdd: (id: string) => void
-  onRemove: (id: string) => void
-  onAddLegendary: (id: string) => void
-  onRemoveLegendary: () => void
-  currentTP: number
-  selectedClass: SURefCoreClass | undefined
-  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
+  abilities?: string[] // Array of selected Ability IDs
+  legendaryAbilityId?: string | null
+  onAdd?: (id: string) => void
+  onRemove?: (id: string) => void
+  onAddLegendary?: (id: string) => void
+  onRemoveLegendary?: () => void
+  currentTP?: number
+  selectedClass?: SURefCoreClass | undefined
+  selectedAdvancedClass?: SURefAdvancedClass | SURefHybridClass | undefined
 }
 
 export function ClassAbilitiesList({
@@ -41,7 +41,7 @@ export function ClassAbilitiesList({
     (treeName: string, treeAbilities: SURefAbility[]): Set<number> => {
       const selectedLevelsInTree = new Set(
         abilities
-          .map((id) => allAbilities.find((a) => a.id === id))
+          ?.map((id) => allAbilities.find((a) => a.id === id))
           .filter((a) => a && a.tree === treeName)
           .map((a) => Number(a!.level))
       )
@@ -73,7 +73,7 @@ export function ClassAbilitiesList({
 
   // Organize ALL abilities by tree (not just selected ones)
   const { allTreeAbilities } = useMemo(() => {
-    if (!selectedClass) {
+    if (!selectedClass && !selectedAdvancedClass) {
       return {
         allTreeAbilities: {},
       }
@@ -82,9 +82,11 @@ export function ClassAbilitiesList({
     const allTreeAbilities: Record<string, SURefAbility[]> = {}
 
     // Initialize core tree arrays
-    selectedClass.coreTrees.forEach((tree) => {
-      allTreeAbilities[tree] = []
-    })
+    if (selectedClass) {
+      selectedClass.coreTrees.forEach((tree) => {
+        allTreeAbilities[tree] = []
+      })
+    }
 
     // Initialize advanced tree if exists
     if (selectedAdvancedClass?.advancedTree) {
@@ -121,71 +123,84 @@ export function ClassAbilitiesList({
 
   const coreTreeNames = selectedClass?.coreTrees || []
 
-  const isSelected = useCallback((abilityId: string) => abilities.includes(abilityId), [abilities])
+  const isSelected = useCallback(
+    (abilityId: string) => abilities?.includes(abilityId) ?? false,
+    [abilities]
+  )
+
+  const hasAdvancedOrLegendary =
+    (selectedAdvancedClass?.advancedTree && allTreeAbilities[selectedAdvancedClass.advancedTree]) ||
+    (selectedAdvancedClass?.legendaryTree && allTreeAbilities[selectedAdvancedClass.legendaryTree])
 
   return (
-    <Grid
-      gridTemplateColumns="repeat(auto-fit, minmax(400px, 1fr))"
-      gap={4}
-      mb={4}
-      w="full"
-      autoFlow="dense"
-    >
-      {/* Core Trees */}
-      {coreTreeNames.map((treeName) => (
-        <Tree
-          key={treeName}
-          treeName={treeName}
-          treeAbilities={allTreeAbilities[treeName] || []}
-          selectedClass={selectedClass}
-          isSelected={isSelected}
-          selectedAdvancedClass={selectedAdvancedClass}
-          currentTP={currentTP}
-          onAdd={onAdd}
-          onRemove={onRemove}
-          getAvailableLevels={getAvailableLevels}
-        />
-      ))}
-
-      {/* Advanced Tree */}
-      {selectedAdvancedClass?.advancedTree &&
-        allTreeAbilities[selectedAdvancedClass.advancedTree] && (
-          <Tree
-            key={selectedAdvancedClass.advancedTree}
-            treeName={selectedAdvancedClass.advancedTree}
-            treeAbilities={allTreeAbilities[selectedAdvancedClass.advancedTree] || []}
+    <Box w="full">
+      {/* Core Trees - 3 column grid */}
+      <Grid
+        gridTemplateColumns="repeat(3, 1fr)"
+        gap={2}
+        mb={hasAdvancedOrLegendary ? 4 : 0}
+        w="full"
+      >
+        {coreTreeNames.map((treeName) => (
+          <TreeSection
+            key={treeName}
+            treeName={treeName}
+            treeAbilities={allTreeAbilities[treeName] || []}
             selectedClass={selectedClass}
+            isSelected={isSelected}
             selectedAdvancedClass={selectedAdvancedClass}
             currentTP={currentTP}
             onAdd={onAdd}
             onRemove={onRemove}
-            isSelected={isSelected}
             getAvailableLevels={getAvailableLevels}
           />
-        )}
+        ))}
+      </Grid>
 
-      {/* Legendary Tree */}
-      {selectedAdvancedClass?.legendaryTree &&
-        allTreeAbilities[selectedAdvancedClass.legendaryTree] && (
-          <Tree
-            key={selectedAdvancedClass.legendaryTree}
-            treeName={selectedAdvancedClass.legendaryTree}
-            treeAbilities={allTreeAbilities[selectedAdvancedClass.legendaryTree] || []}
-            selectedClass={selectedClass}
-            selectedAdvancedClass={selectedAdvancedClass}
-            currentTP={currentTP}
-            onAdd={onAddLegendary}
-            onRemove={onRemoveLegendary}
-            isSelected={(id) => legendaryAbilityId === id}
-            getAvailableLevels={getAvailableLevels}
-            hideUnchosen={true}
-          />
-        )}
-    </Grid>
+      {/* Advanced and Legendary Trees - 2 column grid */}
+      {hasAdvancedOrLegendary && (
+        <Grid gridTemplateColumns="repeat(2, 1fr)" gap={2} w="full">
+          {/* Advanced Tree */}
+          {selectedAdvancedClass?.advancedTree &&
+            allTreeAbilities[selectedAdvancedClass.advancedTree] && (
+              <TreeSection
+                key={selectedAdvancedClass.advancedTree}
+                treeName={selectedAdvancedClass.advancedTree}
+                treeAbilities={allTreeAbilities[selectedAdvancedClass.advancedTree] || []}
+                selectedClass={selectedClass}
+                selectedAdvancedClass={selectedAdvancedClass}
+                currentTP={currentTP}
+                onAdd={onAdd}
+                onRemove={onRemove}
+                isSelected={isSelected}
+                getAvailableLevels={getAvailableLevels}
+              />
+            )}
+
+          {/* Legendary Tree */}
+          {selectedAdvancedClass?.legendaryTree &&
+            allTreeAbilities[selectedAdvancedClass.legendaryTree] && (
+              <TreeSection
+                key={selectedAdvancedClass.legendaryTree}
+                treeName={selectedAdvancedClass.legendaryTree}
+                treeAbilities={allTreeAbilities[selectedAdvancedClass.legendaryTree] || []}
+                selectedClass={selectedClass}
+                selectedAdvancedClass={selectedAdvancedClass}
+                currentTP={currentTP}
+                onAdd={onAddLegendary}
+                onRemove={onRemoveLegendary}
+                isSelected={(id) => legendaryAbilityId === id}
+                getAvailableLevels={getAvailableLevels}
+                hideUnchosen={true}
+              />
+            )}
+        </Grid>
+      )}
+    </Box>
   )
 }
 
-function Tree({
+function TreeSection({
   treeAbilities,
   selectedClass,
   selectedAdvancedClass,
@@ -201,13 +216,16 @@ function Tree({
   treeAbilities: SURefAbility[]
   selectedClass: SURefCoreClass | undefined
   selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
-  currentTP: number
-  onAdd: (id: string) => void
-  onRemove: (id: string) => void
+  currentTP?: number
+  onAdd?: (id: string) => void
+  onRemove?: (id: string) => void
   getAvailableLevels: (treeName: string, treeAbilities: SURefAbility[]) => Set<number>
   isSelected: (id: string) => boolean
   hideUnchosen?: boolean
 }) {
+  // If currentTP is undefined, we're in read-only mode
+  const isReadOnly = currentTP === undefined
+
   // Check if any abilities in this tree are selected (for hideUnchosen logic)
   const hasSelectedAbilities = useMemo(() => {
     return treeAbilities.some((ability) => isSelected(ability.id))
@@ -222,51 +240,56 @@ function Tree({
   }, [hideUnchosen, hasSelectedAbilities, treeAbilities, isSelected])
 
   return (
-    <Box key={treeName}>
+    <Box>
       <Heading level="h3" textTransform="uppercase" textAlign="center" mb={2}>
         {treeName}
       </Heading>
-      <Grid
-        gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
-        gap={2}
-        w="full"
-        autoFlow="dense"
-      >
+      <Stack gap={2}>
         {displayedAbilities.map((ability) => {
           const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
-          const canAfford = currentTP >= cost
           const alreadySelected = isSelected(ability.id)
 
-          // For legendary abilities, check level progression
+          // Read-only mode: no dimming, no add/remove buttons
+          if (isReadOnly) {
+            return (
+              <AbilityDisplay
+                compact
+                key={ability.id}
+                data={ability}
+                trained={true}
+                collapsible
+                disabled={false}
+                defaultExpanded={false}
+              />
+            )
+          }
+
+          // Interactive mode: check affordability and availability
+          const canAfford = currentTP >= cost
           const availableLevels = getAvailableLevels(treeName, treeAbilities)
           const abilityLevel = Number(ability.level)
           const isAvailable = availableLevels.has(abilityLevel)
 
           const canSelect = canAfford && isAvailable
-          const shouldDim = !alreadySelected
-
-          // Hide select button if this ability is already selected
-          const showSelect = !alreadySelected
 
           return (
             <AbilityDisplay
               compact
               key={ability.id}
               data={ability}
-              onClick={alreadySelected ? undefined : () => onAdd(ability.id)}
-              onRemove={alreadySelected ? () => onRemove(ability.id) : undefined}
+              onClick={alreadySelected || !onAdd ? undefined : () => onAdd(ability.id)}
+              onRemove={alreadySelected && onRemove ? () => onRemove(ability.id) : undefined}
               disableRemove={currentTP < 2}
-              disabled={!canSelect && !alreadySelected}
-              dimmed={shouldDim}
-              trained={alreadySelected}
+              disabled={isReadOnly ? false : !canSelect && !alreadySelected}
+              trained={isReadOnly || alreadySelected}
               collapsible
               defaultExpanded={false}
-              showSelectButton={showSelect}
+              showSelectButton={!alreadySelected}
               selectButtonText={`Add to Pilot (${cost} TP)`}
             />
           )
         })}
-      </Grid>
+      </Stack>
     </Box>
   )
 }

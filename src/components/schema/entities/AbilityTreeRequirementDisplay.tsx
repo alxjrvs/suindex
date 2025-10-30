@@ -5,9 +5,19 @@ import type { SURefAbilityTreeRequirement } from 'salvageunion-reference'
 
 interface AbilityTreeRequirementDisplayProps {
   data: SURefAbilityTreeRequirement
+  compact?: boolean
+  collapsible?: boolean
+  defaultExpanded?: boolean
+  onClick?: () => void
 }
 
-export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDisplayProps) {
+export function AbilityTreeRequirementDisplay({
+  data,
+  compact = false,
+  collapsible = false,
+  defaultExpanded = true,
+  onClick,
+}: AbilityTreeRequirementDisplayProps) {
   const getHeaderColor = () => {
     if (data.name.toLowerCase().includes('legendary')) {
       return 'su.pink'
@@ -25,6 +35,10 @@ export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDi
       schemaName="ability-tree-requirements"
       data={data}
       headerColor={getHeaderColor()}
+      compact={compact}
+      collapsible={collapsible}
+      defaultExpanded={defaultExpanded}
+      onClick={onClick}
     >
       <VStack gap={3} alignItems="stretch">
         <Heading level="h3" fontSize="lg" fontWeight="bold" color="su.brick">
@@ -32,19 +46,27 @@ export function AbilityTreeRequirementDisplay({ data }: AbilityTreeRequirementDi
         </Heading>
         <Box bg="su.white" borderWidth="2px" borderColor="su.black" borderRadius="md" p={3}>
           <Text color="su.black">
-            <Text as="span" fontWeight="bold" color="su.brick">
-              Must have all abilities from:{' '}
-            </Text>
-            {data.requirement.map((req, index) => (
-              <Text as="span" key={index}>
-                {index > 0 && ', '}
-                <Text as="span" fontWeight="bold">
-                  {req}
+            {data.requirement && data.requirement.length > 0 ? (
+              <>
+                <Text as="span" fontWeight="bold" color="su.brick">
+                  Must have all abilities from one of the following:{' '}
                 </Text>
+                {data.requirement.map((req, index) => (
+                  <Text as="span" key={index}>
+                    {index > 0 && ', '}
+                    <Text as="span" fontWeight="bold">
+                      {req}
+                    </Text>
+                  </Text>
+                ))}
+                {' tree'}
+                {data.requirement.length > 1 ? 's' : ''}
+              </>
+            ) : (
+              <Text as="span" fontStyle="italic" color="su.brick">
+                No requirements specified
               </Text>
-            ))}
-            {' tree'}
-            {data.requirement.length > 1 ? 's' : ''}
+            )}
           </Text>
         </Box>
       </VStack>

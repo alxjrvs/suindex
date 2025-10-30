@@ -21,8 +21,7 @@ export const modelMap = {
   keywords: SalvageUnionReference.Keywords,
   meld: SalvageUnionReference.Meld,
   modules: SalvageUnionReference.Modules,
-  // NPCs model exists in the library but is undefined (not yet implemented)
-  // npcs: SalvageUnionReference.NPCs,
+  npcs: SalvageUnionReference.NPCs,
   squads: SalvageUnionReference.Squads,
   systems: SalvageUnionReference.Systems,
   'roll-tables': SalvageUnionReference.RollTables,
@@ -34,7 +33,8 @@ export type SchemaId = keyof typeof modelMap
 
 export function getModel(schemaId: string): (typeof modelMap)[SchemaId] | undefined {
   if (schemaId in modelMap) {
-    return modelMap[schemaId as SchemaId]
+    const model = modelMap[schemaId as SchemaId]
+    return model
   }
   return undefined
 }
