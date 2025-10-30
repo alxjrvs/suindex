@@ -12,7 +12,7 @@ import { PageReferenceDisplay } from '../../shared/PageReferenceDisplay'
 import { RollTable } from '../../shared/RollTable'
 import { RoundedBox } from '../../shared/RoundedBox'
 import { SheetDisplay } from '../../shared/SheetDisplay'
-import { extractName, extractTechLevel } from '../entityDisplayHelpers'
+import { calculateBackgroundColor, extractName, extractTechLevel } from '../entityDisplayHelpers'
 import { EntityAbsoluteContent } from './EntityAbsoluteContent'
 import { EntitySubTitleElement } from './EntitySubTitleContent'
 import { EntityLeftContent } from './EntityLeftContent'
@@ -62,49 +62,6 @@ type EntityDisplayProps = {
   hideActions?: boolean
 }
 
-function calculateBGColor(
-  schemaName: SURefSchemaName | 'actions',
-  headerColor: string = '',
-  techLevel: number | undefined,
-  data: SURefMetaEntity
-) {
-  if (schemaName === 'chassis') return 'su.green'
-  if (schemaName === 'actions') return 'su.twoBlue'
-
-  // Auto-calculate header color for abilities based on type
-  if (schemaName === 'abilities' && !headerColor) {
-    const isLegendary =
-      ('level' in data && String(data.level).toUpperCase() === 'L') ||
-      ('tree' in data && String(data.tree).includes('Legendary'))
-    const isAdvancedOrHybrid =
-      'tree' in data &&
-      (String(data.tree).includes('Advanced') || String(data.tree).includes('Hybrid'))
-
-    if (isLegendary) {
-      return 'su.pink'
-    } else if (isAdvancedOrHybrid) {
-      return 'su.darkOrange'
-    } else {
-      return 'su.orange'
-    }
-  }
-
-  // Auto-calculate header color for ability-tree-requirements based on name
-  if (schemaName === 'ability-tree-requirements' && !headerColor) {
-    const name = 'name' in data ? String(data.name).toLowerCase() : ''
-    if (name.includes('legendary')) {
-      return 'su.pink'
-    } else if (name.includes('advanced') || name.includes('hybrid')) {
-      return 'su.brick'
-    }
-    return 'su.orange'
-  }
-
-  if (headerColor) return headerColor
-  if (techLevel) return techLevelColors[techLevel]
-  return 'su.orange'
-}
-
 export function EntityDisplay({
   rightLabel,
   data,
@@ -131,7 +88,13 @@ export function EntityDisplay({
   const title = extractName(data, schemaName)
   const techLevel = extractTechLevel(data)
 
-  const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel, data)
+  const backgroundColor = calculateBackgroundColor(
+    schemaName,
+    headerColor,
+    techLevel,
+    data,
+    techLevelColors
+  )
   const headerOpacity = trained ? 1 : 0.5
   const contentOpacity = disabled || dimmed ? 0.5 : 1
 
