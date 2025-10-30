@@ -8,7 +8,6 @@ export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps
   const ext = schemaName === 'chassis' ? 'png' : 'jpg'
   const imagePath = `/lp/${schemaName}/${data.name.toLowerCase()}.${ext}`
   const header = extractHeader(data, schemaName)
-  console.log('imagePath', imagePath)
 
   if (compact || !showImage) return null
 
