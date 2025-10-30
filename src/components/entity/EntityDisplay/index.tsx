@@ -12,13 +12,7 @@ import { PageReferenceDisplay } from '../../shared/PageReferenceDisplay'
 import { RollTable } from '../../shared/RollTable'
 import { RoundedBox } from '../../shared/RoundedBox'
 import { SheetDisplay } from '../../shared/SheetDisplay'
-import {
-  extractHeader,
-  extractContentSections,
-  extractPageReference,
-  extractTechLevel,
-  getSchemaDisplayName,
-} from '../entityDisplayHelpers'
+import { extractName, extractTechLevel } from '../entityDisplayHelpers'
 import { EntityAbsoluteContent } from './EntityAbsoluteContent'
 import { EntitySubTitleElement } from './EntitySubTitleContent'
 import { EntityLeftContent } from './EntityLeftContent'
@@ -134,9 +128,7 @@ export function EntityDisplay({
 
   if (!data) return null
 
-  const header = extractHeader(data, schemaName)
-  const sections = extractContentSections(data)
-  const pageRef = extractPageReference(data)
+  const title = extractName(data, schemaName)
   const techLevel = extractTechLevel(data)
 
   const backgroundColor = calculateBGColor(schemaName, headerColor, techLevel, data)
@@ -150,12 +142,12 @@ export function EntityDisplay({
     ('description' in data && !!data.description && schemaName !== 'abilities') ||
     ('effect' in data && !!data.effect) ||
     ('options' in data && data.options && data.options.length > 0) ||
-    (sections.showRollTable && 'table' in data && !!data.table) ||
+    ('table' in data && !!data.table) ||
     ('techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0) ||
     ('patterns' in data && data.patterns && data.patterns.length > 0) ||
     !!children ||
     !!buttonConfig ||
-    !!pageRef
+    ('page' in data && data.page)
 
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
 
@@ -209,7 +201,7 @@ export function EntityDisplay({
         />
       }
       compact={compact}
-      title={header}
+      title={title}
       bodyPadding="0"
       onHeaderClick={handleHeaderClick}
       headerTestId="frame-header-container"
@@ -253,7 +245,7 @@ export function EntityDisplay({
                   compact={compact}
                 />
                 <EntityOptions data={data} compact={compact} schemaName={schemaName} />
-                {sections.showRollTable && 'table' in data && data.table && (
+                {'table' in data && data.table && (
                   <Box borderRadius="md" position="relative" zIndex={10}>
                     <RollTable
                       disabled={disabled || dimmed}
@@ -302,15 +294,9 @@ export function EntityDisplay({
                 )}
               </>
             )}
-            {pageRef && (
-              <Box mt="auto">
-                <PageReferenceDisplay
-                  source={pageRef.source}
-                  page={pageRef.page}
-                  schemaName={getSchemaDisplayName(schemaName)}
-                />
-              </Box>
-            )}
+            <Box mt="auto">
+              <PageReferenceDisplay compact={compact} data={data} schemaName={schemaName} />
+            </Box>
           </VStack>
         </Flex>
       )}
