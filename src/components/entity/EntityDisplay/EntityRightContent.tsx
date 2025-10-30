@@ -17,7 +17,15 @@ export function EntityRightContent({
   const sidebar = extractSidebarData(data, schemaName)
 
   return (
-    <Flex alignItems="center" gap={2} alignSelf="center" mt={1} flex="1" minW="0">
+    <Flex
+      alignItems="center"
+      gap={2}
+      alignSelf="center"
+      mt={1}
+      flex="1"
+      minW="0"
+      justifyContent="flex-end"
+    >
       {description && schemaName === 'abilities' && (
         <Text
           color="su.white"

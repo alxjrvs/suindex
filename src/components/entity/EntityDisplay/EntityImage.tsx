@@ -5,7 +5,7 @@ import { extractHeader } from '../entityDisplayHelpers'
 
 export function EntityImage({ data, schemaName }: EntityDisplaySubProps) {
   const [showImage, setShowImage] = useState(true)
-  const ext = schemaName === 'chassis' ? 'png' : 'jpg'
+  const ext = schemaName === 'chassis' && data.name !== 'Gopher' ? 'png' : 'jpg'
   const isAdvanced = schemaName === 'classes.advanced'
   const trueSchemaName = isAdvanced ? 'classes.core' : schemaName
   const trueName = data.name.toLowerCase().replace('advanced ', '')
