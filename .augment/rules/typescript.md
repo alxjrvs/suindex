@@ -18,6 +18,25 @@ type: 'always_apply'
   import { SURefEntity } from 'salvageunion-reference'
   ```
 
+- **NEVER use `any`** - Always use specific types
+- **Avoid `unknown`** - Prefer specific types or type guards when possible
+- **Avoid typing returns** - Let TypeScript infer return types wherever possible
+
+  ```typescript
+  // ✅ Correct - inferred return type
+  function calculateTotal(items: Item[]) {
+    return items.reduce((sum, item) => sum + item.price, 0)
+  }
+
+  // ❌ Wrong - unnecessary explicit return type
+  function calculateTotal(items: Item[]): number {
+    return items.reduce((sum, item) => sum + item.price, 0)
+  }
+  ```
+
+- **NEVER use `any`** - Always use specific types
+- **Avoid `unknown`** - Prefer specific types or type guards when possible
+
 ## Type Imports
 
 - Always use `type` keyword for type-only imports (required by `verbatimModuleSyntax`)
