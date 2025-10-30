@@ -1,4 +1,4 @@
-import { VStack, Box } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import type { EntityDisplaySubProps } from './types'
 import { EntitySubheader } from './EntitySubheader'

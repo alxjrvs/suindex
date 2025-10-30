@@ -1,4 +1,4 @@
-import { useState, useMemo, Suspense } from 'react'
+import { useMemo, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Flex } from '@chakra-ui/react'
 import type { SURefEntity } from 'salvageunion-reference'
@@ -16,7 +16,6 @@ interface ItemWithSchema {
 
 export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
   const navigate = useNavigate()
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   // Get random selection of items (90 items total, 30 per column, duplicated for seamless loop)
   const { column1, column2, column3 } = useMemo(() => {

@@ -1,4 +1,4 @@
-import { VStack, Grid, Flex, Box } from '@chakra-ui/react'
+import { VStack, Flex, Box } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
 import { Heading } from '../../base/Heading'
 import { SheetDisplay } from '../../shared/SheetDisplay'
