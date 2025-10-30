@@ -18,10 +18,10 @@ describe('PilotLiveSheet', () => {
 
       // Check for main sections by their content
       expect(screen.getByPlaceholderText(/enter callsign/i)).toBeInTheDocument()
-      // Abilities and Inventory now appear as tabs (and section titles), so check for multiple
-      expect(screen.getAllByText(/^abilities$/i).length).toBeGreaterThan(0)
-      expect(screen.getAllByText(/^inventory$/i).length).toBeGreaterThan(0)
-      expect(screen.getAllByText(/^notes$/i).length).toBeGreaterThan(0)
+      // Check for tab labels
+      expect(screen.getByRole('tab', { name: /class abilities/i })).toBeInTheDocument()
+      expect(screen.getByRole('tab', { name: /general abilities/i })).toBeInTheDocument()
+      expect(screen.getByRole('tab', { name: /inventory/i })).toBeInTheDocument()
     })
 
     it('displays all main sections', () => {
