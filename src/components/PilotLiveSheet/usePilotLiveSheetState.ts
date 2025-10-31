@@ -43,6 +43,7 @@ export function usePilotLiveSheetState(id?: string) {
   const {
     entity: pilot,
     updateEntity,
+    handleUpdateChoice,
     loading,
     error,
     hasPendingChanges,
@@ -294,6 +295,7 @@ export function usePilotLiveSheetState(id?: string) {
     selectedClass,
     selectedAdvancedClass,
     availableAdvancedClasses,
+    handleUpdateChoice,
     handleClassChange,
     handleAddAbility,
     handleRemoveAbility,

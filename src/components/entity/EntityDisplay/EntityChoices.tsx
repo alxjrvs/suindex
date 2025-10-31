@@ -30,13 +30,6 @@ export function EntityChoices({
   // If onChoiceSelection is undefined, we're in schema page mode (not a live sheet)
   const isSchemaPageMode = onChoiceSelection === undefined
 
-  // Handler for choice changes
-  const handleChoiceChange = (choiceId: string, value: string) => {
-    if (onChoiceSelection) {
-      onChoiceSelection(choiceId, value || undefined)
-    }
-  }
-
   if (!isSchemaPageMode) {
     // Live sheet mode - show WIP for now
     return (
@@ -58,7 +51,6 @@ export function EntityChoices({
             compact={compact}
             userChoices={userChoices}
             onChoiceSelection={onChoiceSelection}
-            handleChoiceChange={handleChoiceChange}
           />
         )
       })}

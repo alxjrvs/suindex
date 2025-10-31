@@ -13,6 +13,7 @@ export interface UseLiveSheetStateConfig<T> {
 export interface UseLiveSheetStateResult<T> {
   entity: T
   updateEntity: (updates: Partial<T>) => void
+  handleUpdateChoice: (choiceId: string, value: string | undefined) => void
   loading: boolean
   error: string | null
   hasPendingChanges: boolean
@@ -136,6 +137,31 @@ export function useLiveSheetState<T extends { id: string }>(
     [config.id, saveToDatabase]
   )
 
+  const handleUpdateChoice = useCallback(
+    (choiceId: string, value: string | undefined) => {
+      const currentChoices =
+        ((entity as { choices?: unknown }).choices as Record<string, string>) ?? {}
+
+      if (value === undefined) {
+        // Remove the choice by creating a new object without it
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [choiceId]: _, ...remainingChoices } = currentChoices
+        updateEntity({
+          choices: remainingChoices,
+        } as unknown as Partial<T>)
+      } else {
+        // Add or update the choice
+        updateEntity({
+          choices: {
+            ...currentChoices,
+            [choiceId]: value,
+          },
+        } as unknown as Partial<T>)
+      }
+    },
+    [entity, updateEntity]
+  )
+
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
@@ -148,6 +174,7 @@ export function useLiveSheetState<T extends { id: string }>(
   return {
     entity,
     updateEntity,
+    handleUpdateChoice,
     loading,
     error,
     hasPendingChanges: pendingChanges,

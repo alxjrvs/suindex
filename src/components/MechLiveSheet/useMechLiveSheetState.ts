@@ -34,6 +34,7 @@ export function useMechLiveSheetState(id?: string) {
   const {
     entity: mech,
     updateEntity,
+    handleUpdateChoice,
     loading,
     error,
     hasPendingChanges,
@@ -267,6 +268,7 @@ export function useMechLiveSheetState(id?: string) {
     usedSystemSlots,
     usedModuleSlots,
     totalCargo,
+    handleUpdateChoice,
     handleChassisChange,
     handlePatternChange,
     handleAddSystem,
