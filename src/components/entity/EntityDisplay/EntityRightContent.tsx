@@ -18,8 +18,8 @@ export function EntityRightContent({
 
   return (
     <Flex
+      gap={0}
       alignItems="center"
-      gap={2}
       alignSelf="center"
       mt={1}
       flex="1"
@@ -52,7 +52,7 @@ export function EntityRightContent({
           flexDirection="row"
           justifyContent="flex-end"
           pb={2}
-          gap={2}
+          gap={1}
           flexShrink={0}
         >
           <SidebarStats

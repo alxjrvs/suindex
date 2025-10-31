@@ -1,9 +1,10 @@
 import { describe, test, expect } from 'bun:test'
-import { render } from '../test/chakra-utils'
+import { render, waitFor } from '../test/chakra-utils'
 import { EntityDisplay } from '../components/entity/EntityDisplay'
 import { getSchemaCatalog } from 'salvageunion-reference'
 import { getModel } from '../utils/modelMap'
 import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
+import { act } from '@testing-library/react'
 
 const schemaCatalog = getSchemaCatalog()
 
@@ -100,24 +101,30 @@ describe('Schema Entity Display Tests', () => {
 
       // Test each entity in the schema
       for (const entity of allEntities) {
-        test(`displays all properties for: ${entity.name}`, () => {
-          // Render the EntityDisplay component
-          const result = render(
-            <EntityDisplay
-              data={entity as SURefEntity}
-              schemaName={schemaId}
-              hideActions={false}
-              compact={false}
-              collapsible={false}
-            />
-          )
+        test(`displays all properties for: ${entity.name}`, async () => {
+          // Render the EntityDisplay component wrapped in act() to handle Tabs state updates
+          let result: ReturnType<typeof render>
+          await act(async () => {
+            result = render(
+              <EntityDisplay
+                data={entity as SURefEntity}
+                schemaName={schemaId}
+                hideActions={false}
+                compact={false}
+                collapsible={false}
+              />
+            )
+          })
 
-          // Verify entity name appears in the rendered output
-          const entityNameElements = result.getAllByText(entity.name, { exact: false })
-          expect(entityNameElements.length).toBeGreaterThan(0)
+          // Wait for any async updates to complete (for Tabs component)
+          await waitFor(() => {
+            // Verify entity name appears in the rendered output
+            const entityNameElements = result!.getAllByText(entity.name, { exact: false })
+            expect(entityNameElements.length).toBeGreaterThan(0)
+          })
 
           // Verify properties are rendered
-          const textContent = result.container.textContent || ''
+          const textContent = result!.container.textContent || ''
           verifyEntityProperties(textContent, entity, schemaId)
         })
       }

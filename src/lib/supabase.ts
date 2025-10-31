@@ -1,8 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../types/database-generated.types'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// In test environment, use process.env; in production, use import.meta.env
+const isTest = typeof process !== 'undefined' && process.env.NODE_ENV === 'test'
+const supabaseUrl = isTest ? process.env.VITE_SUPABASE_URL : import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = isTest
+  ? process.env.VITE_SUPABASE_ANON_KEY
+  : import.meta.env.VITE_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables')

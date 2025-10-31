@@ -18,7 +18,7 @@ import { EntitySubTitleElement } from './EntitySubTitleContent'
 import { EntityLeftContent } from './EntityLeftContent'
 import { EntityRightContent } from './EntityRightContent'
 import { EntitySidebar } from './EntitySidebar'
-import { EntityChassisPatternDisplay } from './EntityChassisPatternDisplay'
+import { EntityChassisPatterns } from './EntityChassisPatterns'
 import { EntityTechLevelEffects } from './EntityTechLevelEffects'
 import { EntityOptions } from './EntityOptions'
 import { EntityTopMatter } from './EntityTopMatter'
@@ -200,13 +200,10 @@ export function EntityDisplay({
               <SheetDisplay compact={compact} value={data.effect} />
             )}
 
+            <EntityRequirementDisplay data={data} compact={compact} schemaName={schemaName} />
             {displayExtraSection && (
               <>
-                <EntityChassisPatternDisplay
-                  data={data}
-                  schemaName={schemaName}
-                  compact={compact}
-                />
+                <EntityChassisPatterns data={data} schemaName={schemaName} compact={compact} />
                 <EntityOptions data={data} compact={compact} schemaName={schemaName} />
                 {'table' in data && data.table && (
                   <Box borderRadius="md" position="relative" zIndex={10}>
@@ -228,7 +225,6 @@ export function EntityDisplay({
                     value={data.damagedEffect}
                   />
                 )}
-                <EntityRequirementDisplay data={data} compact={compact} schemaName={schemaName} />
                 {schemaName.includes('classes') && (
                   <ClassAbilitiesList
                     selectedClass={

@@ -4,7 +4,7 @@ import { Text } from '../base/Text'
 
 type RoundedBoxProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'direction'> & {
   /** Background color token (e.g., 'bg.builder.pilot', 'su.orange', 'su.green') */
-  bg: string
+  bg?: string
   /** Optional background color for the header section (defaults to bg if not provided) */
   headerBg?: string
   /** Optional opacity for the header section (0-1, defaults to 1) */
@@ -42,7 +42,7 @@ type RoundedBoxProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'dire
 export function RoundedBox({
   label,
   compact = false,
-  bg,
+  bg = 'su.lightBlue',
   headerBg,
   headerOpacity = 1,
   title,
