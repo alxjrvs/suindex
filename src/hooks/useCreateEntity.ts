@@ -95,6 +95,17 @@ export function useCreateEntity<T extends ValidTable>(
       game_members: {
         role: 'member',
       },
+      entities: {
+        schema_name: 'abilities',
+        schema_ref_id: '',
+      },
+      cargo: {
+        name: 'Unknown Cargo',
+      },
+      player_choices: {
+        choice_ref_id: '',
+        value: '',
+      },
     }
 
     return {

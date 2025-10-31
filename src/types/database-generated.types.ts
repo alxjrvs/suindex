@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      cargo: {
+        Row: {
+          amount: number | null
+          crawler_id: string | null
+          created_at: string
+          id: string
+          mech_id: string | null
+          metadata: Json | null
+          name: string
+          schema_name: string | null
+          schema_ref_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          name: string
+          schema_name?: string | null
+          schema_ref_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          name?: string
+          schema_name?: string | null
+          schema_ref_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cargo_crawler_id_fkey"
+            columns: ["crawler_id"]
+            isOneToOne: false
+            referencedRelation: "crawlers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cargo_mech_id_fkey"
+            columns: ["mech_id"]
+            isOneToOne: false
+            referencedRelation: "mechs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crawlers: {
         Row: {
           active: boolean
@@ -91,6 +145,64 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      entities: {
+        Row: {
+          crawler_id: string | null
+          created_at: string
+          id: string
+          mech_id: string | null
+          metadata: Json | null
+          pilot_id: string | null
+          schema_name: string
+          schema_ref_id: string
+          updated_at: string
+        }
+        Insert: {
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          pilot_id?: string | null
+          schema_name: string
+          schema_ref_id: string
+          updated_at?: string
+        }
+        Update: {
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          pilot_id?: string | null
+          schema_name?: string
+          schema_ref_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entities_crawler_id_fkey"
+            columns: ["crawler_id"]
+            isOneToOne: false
+            referencedRelation: "crawlers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entities_mech_id_fkey"
+            columns: ["mech_id"]
+            isOneToOne: false
+            referencedRelation: "mechs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entities_pilot_id_fkey"
+            columns: ["pilot_id"]
+            isOneToOne: false
+            referencedRelation: "pilots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       external_links: {
         Row: {
@@ -387,6 +499,41 @@ export type Database = {
             columns: ["crawler_id"]
             isOneToOne: false
             referencedRelation: "crawlers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      player_choices: {
+        Row: {
+          choice_ref_id: string
+          created_at: string
+          entity_id: string
+          id: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          choice_ref_id: string
+          created_at?: string
+          entity_id: string
+          id?: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          choice_ref_id?: string
+          created_at?: string
+          entity_id?: string
+          id?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_choices_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
             referencedColumns: ["id"]
           },
         ]
