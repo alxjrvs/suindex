@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import { StatDisplay } from '../../StatDisplay'
-import type { SURefMetaEntity } from 'salvageunion-reference'
+import type { SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
 
 export interface Stat {
   label: string
@@ -9,6 +9,7 @@ export interface Stat {
   compactHeader: boolean
 }
 interface StatListProps {
+  schemaName: SURefMetaSchemaName
   data: SURefMetaEntity
   compact?: boolean
   header: boolean
@@ -90,9 +91,9 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
   return stats
 }
 
-export function StatList({ header, data, compact = false }: StatListProps) {
+export function StatList({ header, data, compact = false, schemaName }: StatListProps) {
   const stats = extractHeaderStats(data, compact)
-  if (!compact && !header) return null
+  if (!compact && !header && schemaName !== 'actions') return null
 
   return (
     <Flex gap={2} justifyContent="flex-end">

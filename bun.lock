@@ -10,13 +10,13 @@
         "@randsum/roller": "^0.27.0",
         "@randsum/salvageunion": "^0.37.0",
         "@supabase/ssr": "^0.7.0",
-        "@supabase/supabase-js": "^2.77.0",
+        "@supabase/supabase-js": "^2.78.0",
         "framer-motion": "^12.23.24",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "react-hook-form": "^7.65.0",
         "react-router-dom": "^7.9.5",
-        "salvageunion-reference": "^1.42.3",
+        "salvageunion-reference": "^1.48.1",
         "type-fest": "^5.1.0",
       },
       "devDependencies": {
@@ -932,7 +932,7 @@
 
     "safer-buffer": ["safer-buffer@2.1.2", "", {}, "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="],
 
-    "salvageunion-reference": ["salvageunion-reference@1.44.0", "", {}, "sha512-jypInVu70kH2kHH+5OjcRPSKgXgWJLLtI7bs5aSQ5CKK+4cGE/Et5oanrcRGWb30c/WxJmemVbie0HJU/o1P5w=="],
+    "salvageunion-reference": ["salvageunion-reference@1.48.2", "", {}, "sha512-cNSuovmIkL1Til8/pNlMzJiI38B61a3lJxuNouM/6g8qiGHgBX3QBtfNSCDFv9vtlEBH2mrQEuP59igWFzC7HQ=="],
 
     "saxes": ["saxes@6.0.0", "", { "dependencies": { "xmlchars": "^2.2.0" } }, "sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA=="],
 

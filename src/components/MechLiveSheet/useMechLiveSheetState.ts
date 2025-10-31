@@ -34,6 +34,7 @@ export function useMechLiveSheetState(id?: string) {
   const {
     entity: mech,
     updateEntity,
+    handleUpdateChoice,
     loading,
     error,
     hasPendingChanges,
@@ -140,17 +141,31 @@ export function useMechLiveSheetState(id?: string) {
         const patternSystems: string[] = []
         const patternModules: string[] = []
 
-        matchingPattern.systems?.forEach((systemName) => {
-          const system = allSystems.find((s) => s.name === systemName)
+        matchingPattern.systems?.forEach((systemEntry) => {
+          const system = allSystems.find((s) => s.name === systemEntry.name)
           if (system) {
-            patternSystems.push(system.id)
+            const count =
+              'count' in systemEntry && typeof systemEntry.count === 'number'
+                ? systemEntry.count
+                : 1
+            // Add the system ID multiple times if count > 1
+            for (let i = 0; i < count; i++) {
+              patternSystems.push(system.id)
+            }
           }
         })
 
-        matchingPattern.modules?.forEach((moduleName) => {
-          const module = allModules.find((m) => m.name === moduleName)
+        matchingPattern.modules?.forEach((moduleEntry) => {
+          const module = allModules.find((m) => m.name === moduleEntry.name)
           if (module) {
-            patternModules.push(module.id)
+            const count =
+              'count' in moduleEntry && typeof moduleEntry.count === 'number'
+                ? moduleEntry.count
+                : 1
+            // Add the module ID multiple times if count > 1
+            for (let i = 0; i < count; i++) {
+              patternModules.push(module.id)
+            }
           }
         })
 
@@ -253,6 +268,7 @@ export function useMechLiveSheetState(id?: string) {
     usedSystemSlots,
     usedModuleSlots,
     totalCargo,
+    handleUpdateChoice,
     handleChassisChange,
     handlePatternChange,
     handleAddSystem,

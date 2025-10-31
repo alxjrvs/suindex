@@ -92,7 +92,8 @@ export function extractSidebarData(
     slotsRequired = data.slotsRequired as number | undefined
   }
 
-  const showSidebar = schemaName === 'modules' || schemaName === 'systems'
+  const showSidebar =
+    schemaName === 'modules' || schemaName === 'systems' || schemaName === 'actions'
 
   return {
     showSidebar,
@@ -186,7 +187,10 @@ export function calculateBackgroundColor(
   techLevelColors: Record<number, string>
 ): string {
   if (schemaName === 'chassis') return 'su.green'
-  if (schemaName === 'actions') return 'su.twoBlue'
+  if (schemaName === 'actions') {
+    if (techLevel) return techLevelColors[techLevel]
+    return 'su.threeBlue'
+  }
 
   // Auto-calculate header color for abilities based on type
   if (schemaName === 'abilities' && !headerColor) {

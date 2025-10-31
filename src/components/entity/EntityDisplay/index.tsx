@@ -23,6 +23,7 @@ import { EntityTechLevelEffects } from './EntityTechLevelEffects'
 import { EntityOptions } from './EntityOptions'
 import { EntityTopMatter } from './EntityTopMatter'
 import { EntityRequirementDisplay } from './EntityRequirementDisplay'
+import { EntityChoices } from './EntityChoices'
 import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
 
 type EntityDisplayProps = {
@@ -60,6 +61,10 @@ type EntityDisplayProps = {
   hideLevel?: boolean
   /** Whether or not to show the actions */
   hideActions?: boolean
+  /** User choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
+  userChoices?: Record<string, string> | null
+  /** Callback when a choice is selected - if undefined, we're in schema page mode (not a live sheet) */
+  onChoiceSelection?: (choiceId: string, value: string | undefined) => void
 }
 
 export function EntityDisplay({
@@ -80,6 +85,8 @@ export function EntityDisplay({
   hideActions = false,
   schemaName,
   compact = false,
+  userChoices,
+  onChoiceSelection,
 }: EntityDisplayProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
 
@@ -108,6 +115,8 @@ export function EntityDisplay({
     ('table' in data && !!data.table) ||
     ('techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0) ||
     ('patterns' in data && data.patterns && data.patterns.length > 0) ||
+    ('choices' in data && data.choices && data.choices.length > 0) ||
+    (compact && 'stats' in data && !!data.stats) ||
     !!children ||
     !!buttonConfig ||
     ('page' in data && data.page)
@@ -137,7 +146,7 @@ export function EntityDisplay({
   return (
     <RoundedBox
       borderWidth="2px"
-      bg="su.lightBlue"
+      bg={'su.lightBlue'}
       w="full"
       headerBg={backgroundColor}
       headerOpacity={headerOpacity}
@@ -171,17 +180,15 @@ export function EntityDisplay({
     >
       {(!collapsible || isExpanded) && hasContent && (
         <Flex bg={backgroundColor} w="full" borderBottomRadius="md" overflow="hidden">
-          {/* Sidebar */}
           <EntitySidebar
             data={data}
             schemaName={schemaName}
             compact={compact}
             contentOpacity={contentOpacity}
           />
-          {/* Main content area */}
           <VStack
             flex="1"
-            bg="su.lightBlue"
+            bg={schemaName === 'actions' ? 'su.blue' : 'su.lightBlue'}
             borderBottomRightRadius="md"
             opacity={contentOpacity}
             p={compact ? 1 : 3}
@@ -237,6 +244,13 @@ export function EntityDisplay({
                     }
                   />
                 )}
+                <EntityChoices
+                  data={data}
+                  schemaName={schemaName}
+                  compact={compact}
+                  userChoices={userChoices}
+                  onChoiceSelection={onChoiceSelection}
+                />
                 {children && <Box mt="3">{children}</Box>}
                 {buttonConfig && (
                   <Button

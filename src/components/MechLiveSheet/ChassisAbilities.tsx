@@ -2,7 +2,7 @@ import { VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
-import { EntityChassisAbility } from '../entity/EntityDisplay/EntityChassisAbility'
+import { EntityDisplay } from '../entity/EntityDisplay'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
@@ -16,7 +16,6 @@ export function ChassisAbilities({
   chassis,
   disabled = false,
 }: ChassisAbilitiesProps) {
-  console.log('Chassis abilities:', chassis)
   return (
     <RoundedBox
       rightContent={
@@ -36,7 +35,7 @@ export function ChassisAbilities({
             },
           ]
         ).map((ability, idx) => (
-          <EntityChassisAbility key={idx} action={ability} disabled={disabled} />
+          <EntityDisplay key={idx} data={ability} disabled={disabled} schemaName="actions" />
         ))}
       </VStack>
     </RoundedBox>
