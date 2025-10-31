@@ -45,7 +45,7 @@ export function EntityChoices({ data, compact, choices, onChoiceSelection }: Ent
 
   // Schema page mode - show all available options
   return (
-    <VStack gap={compact ? 2 : 3} alignItems="stretch">
+    <VStack gap={compact ? 2 : 3} alignItems="stretch" px="2">
       {entityChoices.map((choice) => {
         return (
           <EntityChoice
