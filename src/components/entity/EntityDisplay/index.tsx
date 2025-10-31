@@ -23,6 +23,7 @@ import { EntityTechLevelEffects } from './EntityTechLevelEffects'
 import { EntityOptions } from './EntityOptions'
 import { EntityTopMatter } from './EntityTopMatter'
 import { EntityRequirementDisplay } from './EntityRequirementDisplay'
+import { EntityChoices } from './EntityChoices'
 import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
 
 type EntityDisplayProps = {
@@ -60,6 +61,8 @@ type EntityDisplayProps = {
   hideLevel?: boolean
   /** Whether or not to show the actions */
   hideActions?: boolean
+  /** Choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
+  choices?: Record<string, string> | null
 }
 
 export function EntityDisplay({
@@ -80,6 +83,7 @@ export function EntityDisplay({
   hideActions = false,
   schemaName,
   compact = false,
+  choices,
 }: EntityDisplayProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
 
@@ -108,6 +112,7 @@ export function EntityDisplay({
     ('table' in data && !!data.table) ||
     ('techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0) ||
     ('patterns' in data && data.patterns && data.patterns.length > 0) ||
+    (compact && 'stats' in data && !!data.stats) ||
     !!children ||
     !!buttonConfig ||
     ('page' in data && data.page)
@@ -171,14 +176,12 @@ export function EntityDisplay({
     >
       {(!collapsible || isExpanded) && hasContent && (
         <Flex bg={backgroundColor} w="full" borderBottomRadius="md" overflow="hidden">
-          {/* Sidebar */}
           <EntitySidebar
             data={data}
             schemaName={schemaName}
             compact={compact}
             contentOpacity={contentOpacity}
           />
-          {/* Main content area */}
           <VStack
             flex="1"
             bg="su.lightBlue"
@@ -237,6 +240,12 @@ export function EntityDisplay({
                     }
                   />
                 )}
+                <EntityChoices
+                  data={data}
+                  schemaName={schemaName}
+                  compact={compact}
+                  choices={choices}
+                />
                 {children && <Box mt="3">{children}</Box>}
                 {buttonConfig && (
                   <Button

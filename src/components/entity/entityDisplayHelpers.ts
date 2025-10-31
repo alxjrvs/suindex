@@ -186,7 +186,10 @@ export function calculateBackgroundColor(
   techLevelColors: Record<number, string>
 ): string {
   if (schemaName === 'chassis') return 'su.green'
-  if (schemaName === 'actions') return 'su.twoBlue'
+  if (schemaName === 'actions') {
+    if ('stats' in data && data.stats) return 'su.green'
+    return 'su.twoBlue'
+  }
 
   // Auto-calculate header color for abilities based on type
   if (schemaName === 'abilities' && !headerColor) {

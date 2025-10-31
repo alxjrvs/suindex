@@ -15,9 +15,9 @@ export function EntityTopMatter({
   const description = 'description' in data ? data.description : undefined
   const hasActions = 'actions' in data && data.actions && data.actions.length > 0
   const showDescription = description && schemaName !== 'abilities'
+  const hasStats = compact && 'stats' in data && data.stats
 
-  // Don't render if there's no content to show
-  if (!notes && !showDescription && !hasActions) {
+  if (!notes && !showDescription && !hasActions && !hasStats) {
     return null
   }
 
@@ -33,7 +33,7 @@ export function EntityTopMatter({
         minW="0"
       >
         <Box ml="auto">
-          <StatList header={false} data={data} compact={compact} />
+          <StatList schemaName={schemaName} header={false} data={data} compact={compact} />
         </Box>
         {showDescription && (
           <Text

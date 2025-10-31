@@ -62,7 +62,7 @@ export function EntityRightContent({
           />
         </Flex>
       )}
-      <StatList header data={data} compact={compact} />
+      <StatList header data={data} compact={compact} schemaName={schemaName} />
       {rightLabel && (
         <Text variant="pseudoheader" fontSize="lg" flexShrink={0}>
           {rightLabel}

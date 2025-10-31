@@ -32,8 +32,8 @@ export default function Modal({
       size="xl"
       placement="center"
     >
-      <DialogBackdrop />
-      <DialogPositioner>
+      <DialogBackdrop zIndex={1400} />
+      <DialogPositioner zIndex={1400}>
         <DialogContent
           maxW="6xl"
           maxH="90vh"
@@ -42,6 +42,7 @@ export default function Modal({
           borderColor="su.black"
           borderRadius="md"
           shadow="lg"
+          zIndex={1400}
         >
           <DialogHeader
             borderTopRadius="md"

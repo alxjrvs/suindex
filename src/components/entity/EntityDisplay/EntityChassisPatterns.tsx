@@ -1,6 +1,6 @@
 import { VStack, Grid, Tabs, Box } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefChassis } from 'salvageunion-reference'
+import type { SURefChassis, SURefModule, SURefSystem } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import { EntityDisplay } from './index'
@@ -9,16 +9,23 @@ import { EntitySubheader } from './EntitySubheader'
 
 function EntityChassisPatternContent({ pattern }: { pattern: SURefChassis['patterns'][0] }) {
   // Get systems and modules from reference data (patterns store names, not IDs)
+  // Duplicate entries based on count property (e.g., count: 2 means show the system twice)
   const systems = pattern.systems
-    ? pattern.systems
-        .map((systemName) => SalvageUnionReference.findIn('systems', (s) => s.name === systemName))
-        .filter((s): s is NonNullable<typeof s> => s !== undefined)
+    ? pattern.systems.flatMap((system) => {
+        const found = SalvageUnionReference.findIn('systems', (s) => s.name === system.name)
+        if (!found) return []
+        const count = 'count' in system && typeof system.count === 'number' ? system.count : 1
+        return Array(count).fill(found) as SURefSystem[]
+      })
     : []
 
   const modules = pattern.modules
-    ? pattern.modules
-        .map((moduleName) => SalvageUnionReference.findIn('modules', (m) => m.name === moduleName))
-        .filter((m): m is NonNullable<typeof m> => m !== undefined)
+    ? pattern.modules.flatMap((module) => {
+        const found = SalvageUnionReference.findIn('modules', (m) => m.name === module.name)
+        if (!found) return []
+        const count = 'count' in module && typeof module.count === 'number' ? module.count : 1
+        return Array(count).fill(found) as SURefModule[]
+      })
     : []
 
   const isLegalStarting = 'legalStarting' in pattern && pattern.legalStarting
