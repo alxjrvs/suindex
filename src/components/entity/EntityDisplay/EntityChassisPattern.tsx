@@ -74,7 +74,7 @@ export function EntityChassisPattern({ pattern }: EntityChassisPatternProps) {
                   data={system.entity}
                   schemaName="systems"
                   compact={true}
-                  choices={system.preselectedChoices}
+                  userChoices={system.preselectedChoices}
                   collapsible={true}
                   defaultExpanded={false}
                 />
@@ -96,7 +96,7 @@ export function EntityChassisPattern({ pattern }: EntityChassisPatternProps) {
                   data={module.entity}
                   schemaName="modules"
                   compact={true}
-                  choices={module.preselectedChoices}
+                  userChoices={module.preselectedChoices}
                   collapsible={true}
                   defaultExpanded={false}
                 />

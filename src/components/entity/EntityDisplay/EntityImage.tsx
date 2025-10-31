@@ -10,6 +10,7 @@ import { extractName } from '../entityDisplayHelpers'
  */
 const SCHEMAS_WITH_IMAGES: ReadonlySet<SURefSchemaName | 'actions'> = new Set([
   'bio-titans',
+  'actions',
   'chassis',
   'classes.core',
   'classes.advanced', // Maps to classes.core images
@@ -22,7 +23,7 @@ const SCHEMAS_WITH_IMAGES: ReadonlySet<SURefSchemaName | 'actions'> = new Set([
   'vehicles',
 ])
 
-export function EntityImage({ data, schemaName }: EntityDisplaySubProps) {
+export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps) {
   const [showImage, setShowImage] = useState(true)
 
   // Early return if this schema doesn't have images
@@ -51,6 +52,7 @@ export function EntityImage({ data, schemaName }: EntityDisplaySubProps) {
         src={imagePath}
         alt={header}
         w="full"
+        maxW={compact ? `200px` : undefined}
         h="auto"
         objectFit="contain"
         onError={() => {

@@ -61,8 +61,8 @@ type EntityDisplayProps = {
   hideLevel?: boolean
   /** Whether or not to show the actions */
   hideActions?: boolean
-  /** Choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
-  choices?: Record<string, string> | null
+  /** User choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
+  userChoices?: Record<string, string> | null
   /** Callback when a choice is selected - if undefined, we're in schema page mode (not a live sheet) */
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
 }
@@ -85,7 +85,7 @@ export function EntityDisplay({
   hideActions = false,
   schemaName,
   compact = false,
-  choices,
+  userChoices,
   onChoiceSelection,
 }: EntityDisplayProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
@@ -248,7 +248,7 @@ export function EntityDisplay({
                   data={data}
                   schemaName={schemaName}
                   compact={compact}
-                  choices={choices}
+                  userChoices={userChoices}
                   onChoiceSelection={onChoiceSelection}
                 />
                 {children && <Box mt="3">{children}</Box>}

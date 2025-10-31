@@ -7,13 +7,18 @@ export interface EntityChoicesProps {
   data: SURefMetaEntity
   schemaName: SURefSchemaName | 'actions'
   compact: boolean
-  /** Choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
-  choices?: Record<string, string> | null
+  /** User choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
+  userChoices?: Record<string, string> | null
   /** Callback when a choice is selected - if undefined, we're in schema page mode (not a live sheet) */
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
 }
 
-export function EntityChoices({ data, compact, choices, onChoiceSelection }: EntityChoicesProps) {
+export function EntityChoices({
+  data,
+  compact,
+  userChoices,
+  onChoiceSelection,
+}: EntityChoicesProps) {
   // Extract choices from the entity data
   const entityChoices: SURefMetaChoice[] = ('choices' in data && data.choices) || []
 
@@ -43,7 +48,6 @@ export function EntityChoices({ data, compact, choices, onChoiceSelection }: Ent
     )
   }
 
-  // Schema page mode - show all available options
   return (
     <VStack gap={compact ? 2 : 3} alignItems="stretch" px="2">
       {entityChoices.map((choice) => {
@@ -52,7 +56,7 @@ export function EntityChoices({ data, compact, choices, onChoiceSelection }: Ent
             key={choice.id}
             choice={choice}
             compact={compact}
-            choices={choices}
+            userChoices={userChoices}
             onChoiceSelection={onChoiceSelection}
             handleChoiceChange={handleChoiceChange}
           />

@@ -25,7 +25,7 @@ export function EntityTopMatter({
     <Flex gap={compact ? 2 : 3} alignItems="flex-start">
       <EntityImage data={data} schemaName={schemaName} compact={compact} />
       <VStack
-        justifyContent="space-around"
+        justifyContent="space-between"
         flex="1"
         gap={compact ? 2 : 3}
         alignItems="stretch"
