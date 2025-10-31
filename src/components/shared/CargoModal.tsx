@@ -1,10 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Box, Button, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import Modal from '../Modal'
-import { generateUniqueColor } from '../../utils/colorUtils'
-import { composeReference } from '../../utils/referenceUtils'
 import { EntitySelectionModal } from '../entity/EntitySelectionModal'
-import type { CargoItem } from '../../types/common'
 import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { SalvageUnionReference } from 'salvageunion-reference'
 
@@ -18,7 +15,6 @@ interface CargoModalProps {
     ref?: string,
     position?: { row: number; col: number }
   ) => void
-  existingCargo?: CargoItem[] // Optional - existing cargo items to avoid color duplication
   maxCargo?: number // Optional - if provided, shows amount input and tracking
   currentCargo?: number // Optional - if provided, shows available cargo
   backgroundColor?: string // For different builder colors
@@ -29,7 +25,6 @@ export function CargoModal({
   isOpen,
   onClose,
   onAdd,
-  existingCargo = [],
   maxCargo,
   currentCargo = 0,
   backgroundColor,
@@ -73,11 +68,8 @@ export function CargoModal({
 
   // Handle entity selection from the modal
   const handleEntitySelect = (entityId: string, schemaName: SURefSchemaName) => {
-    // Get the entity name from the reference data
-    const entity = SalvageUnionReference.findIn(
-      schemaName,
-      (e: SURefEntity) => 'id' in e && e.id === entityId
-    )
+    // Get the entity from reference data using the newer .get() method
+    const entity = SalvageUnionReference.get(schemaName, entityId)
     if (entity && 'name' in entity) {
       const entityName = entity.name as string
 
@@ -93,11 +85,12 @@ export function CargoModal({
         salvageValue = (entity.salvageValue as number) || 1
       }
 
-      const ref = composeReference(schemaName, entityId)
+      // Compose reference string for database storage
+      const ref = SalvageUnionReference.composeRef(schemaName, entityId)
       onAdd(
         salvageValue,
         entityName,
-        generateUniqueColor(existingCargo.map((item) => item.color)),
+        '', // Color is ignored - determined by ref data at render time
         ref,
         position ?? undefined
       )
@@ -108,11 +101,8 @@ export function CargoModal({
 
   const handleSubmit = () => {
     if (isValid) {
-      // Get all currently used colors
-      const usedColors = existingCargo.map((item) => item.color)
-      // Generate a unique color that hasn't been used
-      const color = generateUniqueColor(usedColors)
-      onAdd(hasCargoTracking ? amount : 1, description, color, undefined, position ?? undefined)
+      // Color is ignored - not stored in database
+      onAdd(hasCargoTracking ? amount : 1, description, '', undefined, position ?? undefined)
       setAmount(0)
       setDescription('')
       onClose()

@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import { HoverCard, Portal } from '@chakra-ui/react'
 import { EntityDisplay } from './EntityDisplay'
-import { lookupEntityByRef } from '../../utils/referenceUtils'
 
 interface EntityDisplayTooltipProps {
   schemaName: SURefSchemaName
@@ -37,8 +37,7 @@ export function EntityDisplayTooltip({
   openDelay = 200,
   closeDelay = 100,
 }: EntityDisplayTooltipProps) {
-  const ref = `${schemaName}||${entityId}`
-  const entity = lookupEntityByRef(ref)
+  const entity = SalvageUnionReference.get(schemaName, entityId)
 
   // If entity doesn't exist, just render children without tooltip
   if (!entity) {

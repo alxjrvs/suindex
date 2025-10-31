@@ -7,3 +7,6 @@ export * from './games'
 export * from './crawlers'
 export * from './pilots'
 export * from './mechs'
+
+// Cargo API
+export * from './cargo'

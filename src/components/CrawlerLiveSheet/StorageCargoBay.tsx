@@ -1,11 +1,11 @@
 import { RoundedBox } from '../shared/RoundedBox'
 import { DynamicBay } from '../shared/DynamicBay'
-import type { CargoItem } from '../../types/common'
+import type { HydratedCargo } from '../../types/hydrated'
 import { useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
 
 interface CargoBayProps {
-  cargo: CargoItem[]
+  cargo: HydratedCargo[]
   onAddCargo: (position: { row: number; col: number }) => void
   onRemoveCargo: (id: string) => void
   damaged?: boolean

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { MechResourceSteppers } from './MechResourceSteppers'
@@ -16,6 +16,7 @@ import { StatDisplay } from '../StatDisplay'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
+import { useCreateCargo } from '../../hooks/useCargo'
 
 interface MechLiveSheetProps {
   id?: string
@@ -27,6 +28,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
   const {
     mech,
+    cargo,
     selectedChassis,
     usedSystemSlots,
     usedModuleSlots,
@@ -37,7 +39,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     handleRemoveSystem,
     handleAddModule,
     handleRemoveModule,
-    handleAddCargo,
     handleRemoveCargo,
     deleteEntity,
     updateEntity,
@@ -46,6 +47,43 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
     error,
     hasPendingChanges,
   } = useMechLiveSheetState(id)
+
+  // Use TanStack Query hook directly for cargo creation
+  const createCargo = useCreateCargo()
+
+  // Handle adding cargo with position support
+  const handleAddCargo = useCallback(
+    async (
+      amount: number,
+      name: string,
+      _color: string, // Ignored - color is determined by ref data at render time
+      ref?: string, // Reference string in format "schema::id"
+      position?: { row: number; col: number } // Position in cargo grid
+    ) => {
+      if (!id) return
+
+      // Parse reference string if provided
+      let schemaName: string | null = null
+      let schemaRefId: string | null = null
+      if (ref) {
+        const parsed = SalvageUnionReference.parseRef(ref)
+        if (parsed) {
+          schemaName = parsed.schemaName
+          schemaRefId = parsed.id
+        }
+      }
+
+      await createCargo.mutateAsync({
+        mech_id: id,
+        name,
+        amount,
+        schema_name: schemaName,
+        schema_ref_id: schemaRefId,
+        metadata: position ? { position } : null,
+      })
+    },
+    [id, createCargo]
+  )
 
   const allChassis = SalvageUnionReference.findAllIn('chassis', () => true)
 
@@ -212,7 +250,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         <Tabs.Content value="storage">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
             <CargoList
-              cargo={mech.cargo ?? []}
+              cargo={cargo}
               totalCargo={totalCargo}
               maxCargo={stats?.cargoCap || 0}
               canAddCargo={!!selectedChassis}
@@ -242,7 +280,6 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
           setCargoPosition(null)
         }}
         onAdd={handleAddCargo}
-        existingCargo={mech.cargo ?? []}
         maxCargo={stats?.cargoCap || 0}
         currentCargo={totalCargo}
         position={cargoPosition}

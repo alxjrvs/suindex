@@ -4,6 +4,7 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 import type { CrawlerLiveSheetState, CrawlerBay } from './types'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
 import { deleteEntity as deleteEntityAPI } from '../../lib/api'
+import { useCargo, useCreateCargo, useDeleteCargo } from '../../hooks/useCargo'
 
 const INITIAL_techLevel = 1
 const MAX_UPGRADE = 25
@@ -43,18 +44,32 @@ export function useCrawlerLiveSheetState(id?: string) {
   const allCrawlers = SalvageUnionReference.Crawlers.all()
   const hasInitializedBaysRef = useRef(false)
 
+  // Crawler entity state (name, tech level, etc.)
   const {
     entity: crawler,
     updateEntity,
-    handleUpdateChoice,
-    loading,
-    error,
+    loading: crawlerLoading,
+    error: crawlerError,
     hasPendingChanges,
   } = useLiveSheetState<CrawlerLiveSheetState>({
     table: 'crawlers',
     initialState: { ...INITIAL_CRAWLER_STATE, id: id || '' },
     id: id || '',
   })
+
+  // Normalized cargo
+  const {
+    data: cargoItems = [],
+    isLoading: cargoLoading,
+    error: cargoError,
+  } = useCargo('crawler', id)
+
+  const createCargo = useCreateCargo()
+  const deleteCargo = useDeleteCargo()
+
+  // Combined loading/error states
+  const loading = crawlerLoading || cargoLoading
+  const error = crawlerError || (cargoError ? String(cargoError) : null)
 
   // Initialize all bays on mount (only once)
   useEffect(() => {
@@ -98,6 +113,10 @@ export function useCrawlerLiveSheetState(id?: string) {
     return `5 TL${crawler.tech_level}`
   }, [crawler.tech_level])
 
+  const totalCargo = useMemo(() => {
+    return cargoItems.reduce((sum, item) => sum + (item.amount || 0), 0)
+  }, [cargoItems])
+
   // Track previous tech level to detect changes
   const prevTechLevelRef = useRef(crawler.tech_level)
   const isInitialLoadRef = useRef(true)
@@ -121,7 +140,7 @@ export function useCrawlerLiveSheetState(id?: string) {
   }, [crawler.tech_level, currentTechLevel, updateEntity])
 
   const handleCrawlerTypeChange = useCallback(
-    (crawlerTypeId: string | null) => {
+    async (crawlerTypeId: string | null) => {
       // If null or empty, just update to null
       if (!crawlerTypeId) {
         updateEntity({ crawler_type_id: null })
@@ -132,6 +151,19 @@ export function useCrawlerLiveSheetState(id?: string) {
 
       // If there's already a crawler type selected and user is changing it, reset data
       if (crawler.crawler_type_id && crawler.crawler_type_id !== crawlerTypeId) {
+        // Delete all existing cargo items
+        if (id && cargoItems.length > 0) {
+          await Promise.all(
+            cargoItems.map((cargo) =>
+              deleteCargo.mutateAsync({
+                id: cargo.id,
+                parentType: 'crawler',
+                parentId: id,
+              })
+            )
+          )
+        }
+
         // Reset to initial state but keep the new crawler_type_id
         updateEntity({
           ...crawler,
@@ -162,7 +194,6 @@ export function useCrawlerLiveSheetState(id?: string) {
             hitPoints: newCrawlerType?.npc.hitPoints || 0,
             damage: 0,
           },
-          cargo: [],
         })
       } else {
         // First time selection or same selection
@@ -171,7 +202,7 @@ export function useCrawlerLiveSheetState(id?: string) {
         })
       }
     },
-    [allBays, allCrawlers, crawler, updateEntity]
+    [id, allBays, allCrawlers, crawler, cargoItems, updateEntity, deleteCargo]
   )
 
   const handleUpdateBay = useCallback(
@@ -184,37 +215,38 @@ export function useCrawlerLiveSheetState(id?: string) {
   )
 
   const handleAddCargo = useCallback(
-    (
+    async (
       amount: number,
-      description: string,
-      color: string,
-      ref?: string,
-      position?: { row: number; col: number }
+      name: string,
+      _color: string, // Ignored - color is not stored in database
+      _ref?: string, // Ignored - we use schema_name/schema_ref_id instead
+      position?: { row: number; col: number } // Position in cargo grid
     ) => {
-      updateEntity({
-        cargo: [
-          ...(crawler.cargo ?? []),
-          {
-            id: `cargo-${Date.now()}-${Math.random()}`,
-            amount,
-            description,
-            color,
-            ref,
-            position,
-          },
-        ],
+      if (!id) return
+
+      await createCargo.mutateAsync({
+        crawler_id: id,
+        name,
+        amount,
+        schema_name: null,
+        schema_ref_id: null,
+        metadata: position ? { position } : null,
       })
     },
-    [crawler.cargo, updateEntity]
+    [id, createCargo]
   )
 
   const handleRemoveCargo = useCallback(
-    (cargoId: string) => {
-      updateEntity({
-        cargo: (crawler.cargo ?? []).filter((c) => c.id !== cargoId),
+    async (cargoId: string) => {
+      if (!id) return
+
+      await deleteCargo.mutateAsync({
+        id: cargoId,
+        parentType: 'crawler',
+        parentId: id,
       })
     },
-    [crawler.cargo, updateEntity]
+    [id, deleteCargo]
   )
 
   const handleDeleteEntity = useCallback(async () => {
@@ -231,11 +263,12 @@ export function useCrawlerLiveSheetState(id?: string) {
 
   return {
     crawler,
+    cargo: cargoItems, // HydratedCargo[] with optional ref
+    totalCargo,
     selectedCrawlerType,
     upkeep,
     maxSP,
     maxUpgrade: MAX_UPGRADE,
-    handleUpdateChoice,
     handleCrawlerTypeChange,
     handleUpdateBay,
     handleAddCargo,

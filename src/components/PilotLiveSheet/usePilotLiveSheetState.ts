@@ -1,10 +1,13 @@
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { SalvageUnionReference } from 'salvageunion-reference'
+import type { SURefAbility } from 'salvageunion-reference'
 import type { PilotLiveSheetState, AdvancedClassOption } from './types'
 import { getAbilityCost } from './utils/getAbilityCost'
 import { useLiveSheetState } from '../../hooks/useLiveSheetState'
 import { deleteEntity as deleteEntityAPI } from '../../lib/api'
+import { useEntities, useCreateEntity, useDeleteEntity } from '../../hooks/useEntities'
+import type { HydratedEntity } from '../../types/hydrated'
 
 const INITIAL_PILOT_STATE: Omit<PilotLiveSheetState, 'id'> = {
   user_id: '',
@@ -37,21 +40,38 @@ export function usePilotLiveSheetState(id?: string) {
   const allCoreClasses = SalvageUnionReference.findAllIn('classes.core', () => true)
   const allAdvancedClasses = SalvageUnionReference.findAllIn('classes.advanced', () => true)
   const allHybridClasses = SalvageUnionReference.findAllIn('classes.hybrid', () => true)
-  const allAbilities = SalvageUnionReference.findAllIn('abilities', () => true)
-  const allEquipment = SalvageUnionReference.findAllIn('equipment', () => true)
 
+  // Pilot entity state (name, HP, AP, etc.)
   const {
     entity: pilot,
     updateEntity,
     handleUpdateChoice,
-    loading,
-    error,
+    loading: pilotLoading,
+    error: pilotError,
     hasPendingChanges,
   } = useLiveSheetState<PilotLiveSheetState>({
     table: 'pilots',
     initialState: { ...INITIAL_PILOT_STATE, id: id || '' },
     id,
   })
+
+  // Normalized entities (abilities, equipment)
+  const {
+    data: entities = [],
+    isLoading: entitiesLoading,
+    error: entitiesError,
+  } = useEntities('pilot', id)
+
+  const createEntity = useCreateEntity()
+  const deleteEntity = useDeleteEntity()
+
+  // Derive typed lists from hydrated entities
+  const abilities: HydratedEntity[] = entities.filter((e) => e.schema_name === 'abilities')
+  const equipment: HydratedEntity[] = entities.filter((e) => e.schema_name === 'equipment')
+
+  // Combined loading/error states
+  const loading = pilotLoading || entitiesLoading
+  const error = pilotError || (entitiesError ? String(entitiesError) : null)
 
   const selectedClass = allCoreClasses.find((c) => c.id === pilot.class_id)
 
@@ -62,7 +82,7 @@ export function usePilotLiveSheetState(id?: string) {
 
   const availableAdvancedClasses = useMemo(() => {
     // Early exit conditions
-    if ((pilot.abilities ?? []).length < 6) {
+    if (abilities.length < 6) {
       return []
     }
 
@@ -72,9 +92,8 @@ export function usePilotLiveSheetState(id?: string) {
 
     // Count abilities by tree
     const abilitiesByTree: Record<string, number> = {}
-    ;(pilot.abilities ?? []).forEach((abilityId) => {
-      const ability = allAbilities.find((a) => a.id === abilityId)
-      if (!ability) return
+    abilities.forEach((entity) => {
+      const ability = entity.ref as SURefAbility
       const tree = ability.tree
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
     })
@@ -125,10 +144,10 @@ export function usePilotLiveSheetState(id?: string) {
     })
 
     return results
-  }, [allHybridClasses, allAdvancedClasses, pilot.abilities, selectedClass, allAbilities])
+  }, [allHybridClasses, allAdvancedClasses, abilities, selectedClass])
 
   const handleClassChange = useCallback(
-    (classId: string | null) => {
+    async (classId: string | null) => {
       // If null or empty, just update to null
       if (!classId) {
         updateEntity({ class_id: null })
@@ -136,7 +155,17 @@ export function usePilotLiveSheetState(id?: string) {
       }
 
       // If there's already a class selected and user is changing it, reset data
-      if (pilot.class_id && pilot.class_id !== classId) {
+      if (pilot.class_id && pilot.class_id !== classId && id) {
+        // Delete all existing abilities and equipment
+        await Promise.all([
+          ...abilities.map((ability) =>
+            deleteEntity.mutateAsync({ id: ability.id, parentType: 'pilot', parentId: id })
+          ),
+          ...equipment.map((equip) =>
+            deleteEntity.mutateAsync({ id: equip.id, parentType: 'pilot', parentId: id })
+          ),
+        ])
+
         // Reset to initial state but keep the new class_id
         updateEntity({
           ...pilot,
@@ -152,8 +181,6 @@ export function usePilotLiveSheetState(id?: string) {
           background_used: null,
           appearance: null,
           legendary_ability_id: null,
-          abilities: [],
-          equipment: [],
           max_hp: 10,
           current_damage: 0,
           max_ap: 5,
@@ -165,18 +192,19 @@ export function usePilotLiveSheetState(id?: string) {
         // First time selection or same selection
         updateEntity({
           class_id: classId,
-          abilities: [],
           max_ap: 5,
           current_ap: 5,
         })
       }
     },
-    [id, pilot, updateEntity]
+    [id, pilot, updateEntity, abilities, equipment, deleteEntity]
   )
 
   const handleAddAbility = useCallback(
-    (abilityId: string) => {
-      const ability = allAbilities.find((a) => a.id === abilityId)
+    async (abilityId: string) => {
+      if (!id) return
+
+      const ability = SalvageUnionReference.get('abilities', abilityId)
       if (!ability) return
 
       const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
@@ -189,35 +217,39 @@ export function usePilotLiveSheetState(id?: string) {
         return
       }
 
+      // Create entity in database
+      await createEntity.mutateAsync({
+        pilot_id: id,
+        schema_name: 'abilities',
+        schema_ref_id: abilityId,
+      })
+
+      // Update pilot's TP
       updateEntity({
         current_tp: (pilot.current_tp ?? 0) - cost,
-        abilities: [...(pilot.abilities ?? []), abilityId],
       })
     },
-    [
-      allAbilities,
-      selectedClass,
-      selectedAdvancedClass,
-      pilot.current_tp,
-      pilot.abilities,
-      updateEntity,
-    ]
+    [id, selectedClass, selectedAdvancedClass, pilot.current_tp, updateEntity, createEntity]
   )
 
   const handleRemoveAbility = useCallback(
-    (abilityId: string) => {
+    async (entityId: string) => {
+      if (!id) return
+
+      // Delete entity from database
+      await deleteEntity.mutateAsync({ id: entityId, parentType: 'pilot', parentId: id })
+
       // Removing an ability costs 1 TP (confirmation handled in AbilityDisplay)
       updateEntity({
         current_tp: (pilot.current_tp ?? 0) - 1,
-        abilities: (pilot.abilities ?? []).filter((id) => id !== abilityId),
       })
     },
-    [pilot.current_tp, pilot.abilities, updateEntity]
+    [id, pilot.current_tp, updateEntity, deleteEntity]
   )
 
   const handleAddLegendaryAbility = useCallback(
     (abilityId: string) => {
-      const ability = allAbilities.find((a) => a.id === abilityId)
+      const ability = SalvageUnionReference.get('abilities', abilityId)
       if (!ability) return
 
       const cost = 3 // Legendary abilities always cost 3 TP
@@ -232,7 +264,7 @@ export function usePilotLiveSheetState(id?: string) {
         legendary_ability_id: abilityId,
       })
     },
-    [allAbilities, pilot.current_tp, updateEntity]
+    [pilot.current_tp, updateEntity]
   )
 
   const handleRemoveLegendaryAbility = useCallback(() => {
@@ -244,38 +276,47 @@ export function usePilotLiveSheetState(id?: string) {
   }, [pilot.current_tp, updateEntity])
 
   const handleAddEquipment = useCallback(
-    (equipmentId: string) => {
-      const equipment = allEquipment.find((e) => e.id === equipmentId)
-      if (!equipment) return
+    async (equipmentId: string) => {
+      if (!id) return
+
+      const equipmentRef = SalvageUnionReference.get('equipment', equipmentId)
+      if (!equipmentRef) return
 
       // Check if inventory is full (max 6 slots)
-      if ((pilot.equipment ?? []).length >= 6) {
+      if (equipment.length >= 6) {
         alert('Inventory is full! You can only carry 6 items.')
         return
       }
 
-      updateEntity({
-        equipment: [...(pilot.equipment ?? []), equipmentId],
+      // Create entity in database
+      await createEntity.mutateAsync({
+        pilot_id: id,
+        schema_name: 'equipment',
+        schema_ref_id: equipmentId,
       })
     },
-    [allEquipment, pilot.equipment, updateEntity]
+    [id, equipment, createEntity]
   )
 
   const handleRemoveEquipment = useCallback(
-    (index: number) => {
-      const equipmentId = (pilot.equipment ?? [])[index]
-      if (!equipmentId) return
+    async (entityIdOrIndex: string | number) => {
+      if (!id) return
 
-      const equipment = allEquipment.find((e) => e.id === equipmentId)
-      const equipmentName = equipment?.name || 'this equipment'
+      // Support both old index-based API and new entity ID-based API
+      const entity =
+        typeof entityIdOrIndex === 'number'
+          ? equipment[entityIdOrIndex]
+          : equipment.find((e) => e.id === entityIdOrIndex)
+
+      if (!entity) return
+
+      const equipmentName = entity.ref.name || 'this equipment'
 
       if (window.confirm(`Are you sure you want to remove ${equipmentName}?`)) {
-        updateEntity({
-          equipment: (pilot.equipment ?? []).filter((_, i) => i !== index),
-        })
+        await deleteEntity.mutateAsync({ id: entity.id, parentType: 'pilot', parentId: id })
       }
     },
-    [pilot.equipment, allEquipment, updateEntity]
+    [id, equipment, deleteEntity]
   )
 
   const handleDeleteEntity = useCallback(async () => {
@@ -292,6 +333,8 @@ export function usePilotLiveSheetState(id?: string) {
 
   return {
     pilot,
+    abilities, // HydratedEntity[] with ref and choices
+    equipment, // HydratedEntity[] with ref and choices
     selectedClass,
     selectedAdvancedClass,
     availableAdvancedClasses,

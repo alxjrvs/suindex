@@ -27,6 +27,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
   const {
     crawler,
+    cargo,
+    totalCargo,
     selectedCrawlerType,
     upkeep,
     maxSP,
@@ -208,7 +210,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
             {/* Storage Cargo Bay - Full Width */}
             <StorageCargoBay
-              cargo={crawler.cargo ?? []}
+              cargo={cargo}
               onAddCargo={(position) => {
                 setCargoPosition(position)
                 setIsCargoModalOpen(true)
@@ -268,9 +270,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           setCargoPosition(null)
         }}
         onAdd={handleAddCargo}
-        existingCargo={crawler.cargo ?? []}
         maxCargo={54}
-        currentCargo={(crawler.cargo ?? []).reduce((sum, item) => sum + item.amount, 0)}
+        currentCargo={totalCargo}
         backgroundColor="bg.builder.crawler"
         position={cargoPosition}
       />

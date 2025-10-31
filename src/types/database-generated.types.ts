@@ -507,24 +507,27 @@ export type Database = {
         Row: {
           choice_ref_id: string
           created_at: string
-          entity_id: string
+          entity_id: string | null
           id: string
+          player_choice_id: string | null
           updated_at: string
           value: string
         }
         Insert: {
           choice_ref_id: string
           created_at?: string
-          entity_id: string
+          entity_id?: string | null
           id?: string
+          player_choice_id?: string | null
           updated_at?: string
           value: string
         }
         Update: {
           choice_ref_id?: string
           created_at?: string
-          entity_id?: string
+          entity_id?: string | null
           id?: string
+          player_choice_id?: string | null
           updated_at?: string
           value?: string
         }
@@ -534,6 +537,13 @@ export type Database = {
             columns: ["entity_id"]
             isOneToOne: false
             referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_choices_player_choice_id_fkey"
+            columns: ["player_choice_id"]
+            isOneToOne: false
+            referencedRelation: "player_choices"
             referencedColumns: ["id"]
           },
         ]
@@ -590,6 +600,10 @@ export type Database = {
           jwt_sub: string
           uid: string
         }[]
+      }
+      user_owns_choice: {
+        Args: { choice_id: string; user_id: string }
+        Returns: boolean
       }
     }
     Enums: {

@@ -1,10 +1,10 @@
 import { StatDisplay } from '../StatDisplay'
 import { RoundedBox } from '../shared/RoundedBox'
 import { DynamicBay } from '../shared/DynamicBay'
-import type { CargoItem } from '../../types/common'
+import type { HydratedCargo } from '../../types/hydrated'
 
 interface CargoListProps {
-  cargo: CargoItem[]
+  cargo: HydratedCargo[]
   totalCargo: number
   maxCargo: number
   canAddCargo: boolean
