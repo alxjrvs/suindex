@@ -1,23 +1,60 @@
-import { useMemo, Suspense } from 'react'
+import { useMemo, Suspense, useState, useEffect, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Flex } from '@chakra-ui/react'
+import { getSchemaCatalog } from 'salvageunion-reference'
 import type { SURefEntity } from 'salvageunion-reference'
 import { getDisplayComponent } from '../componentRegistry'
+import { getModel } from '../../utils/modelMap'
 import { roll } from '@randsum/roller'
-
-interface AnimatedMasonryGridProps {
-  allItems: Map<string, SURefEntity[]>
-}
 
 interface ItemWithSchema {
   item: SURefEntity
   schemaId: string
 }
 
-export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
+function AnimatedMasonryGridComponent() {
   const navigate = useNavigate()
+  const [isVisible, setIsVisible] = useState(true)
 
-  // Get random selection of items (90 items total, 30 per column, duplicated for seamless loop)
+  // Pause animation when page is not visible to save CPU/battery
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsVisible(!document.hidden)
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [])
+
+  // Load all data from all schemas
+  const allItems = useMemo(() => {
+    const itemsMap = new Map<string, SURefEntity[]>()
+    const catalog = getSchemaCatalog()
+    const schemas = catalog.schemas
+
+    for (const schema of schemas) {
+      try {
+        const model = getModel(schema.id)
+        if (model) {
+          const data = model.all() as SURefEntity[]
+          itemsMap.set(schema.id, data)
+        } else {
+          // Only warn in development, not in tests
+          if (import.meta.env.MODE !== 'test') {
+            console.warn(`No model found for schema: ${schema.id}`)
+          }
+          itemsMap.set(schema.id, [])
+        }
+      } catch (error) {
+        console.error(`Failed to load data for ${schema.id}:`, error)
+        itemsMap.set(schema.id, [])
+      }
+    }
+
+    return itemsMap
+  }, [])
+
+  // Get random selection of items (60 items total, 20 per column, duplicated for seamless loop)
   const { column1, column2, column3 } = useMemo(() => {
     const allItemsArray: ItemWithSchema[] = []
 
@@ -37,11 +74,11 @@ export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
       ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
     }
 
-    // Select 90 items and distribute across 3 columns
-    const selected = shuffled.slice(0, 90)
-    const col1 = selected.slice(0, 30)
-    const col2 = selected.slice(30, 60)
-    const col3 = selected.slice(60, 90)
+    // Select 60 items and distribute across 3 columns (20 each)
+    const selected = shuffled.slice(0, 60)
+    const col1 = selected.slice(0, 20)
+    const col2 = selected.slice(20, 40)
+    const col3 = selected.slice(40, 60)
 
     // Duplicate each column for seamless looping
     return {
@@ -63,7 +100,7 @@ export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
         flexDirection="column"
         gap={4}
         css={{
-          animation: 'scrollUp 120s linear infinite',
+          animation: isVisible ? 'scrollUp 120s linear infinite' : 'none',
         }}
       >
         {items.map(({ item, schemaId }, index) => {
@@ -117,3 +154,7 @@ export function AnimatedMasonryGrid({ allItems }: AnimatedMasonryGridProps) {
     </Box>
   )
 }
+
+// Memoize the component to prevent re-renders when parent re-renders
+// This is critical for performance since this component renders 120 entity displays
+export const AnimatedMasonryGrid = memo(AnimatedMasonryGridComponent)
