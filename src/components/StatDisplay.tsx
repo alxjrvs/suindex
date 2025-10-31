@@ -56,8 +56,8 @@ export function StatDisplay({
   }, [flash])
 
   const commonProps = {
-    w: compact ? 10 : 16,
-    h: compact ? 10 : 16,
+    w: compact ? 7 : 16,
+    h: compact ? 7 : 16,
     borderRadius: 0,
     bg: trueBg,
     borderWidth: compact ? '1px' : '2px',
@@ -99,7 +99,7 @@ export function StatDisplay({
       </style>
       <Text
         textTransform={'uppercase'}
-        mb={compact ? -1.5 : -2}
+        mb={compact ? -2 : -2}
         fontSize={compact ? '2xs' : 'xs'}
         alignSelf="center"
         variant="pseudoheader"
@@ -112,7 +112,6 @@ export function StatDisplay({
       </Text>
       <WrapperComponent {...buttonProps}>
         <Text
-          fontSize={compact ? 'sm' : 'md'}
           fontWeight="bold"
           color={disabled ? 'su.black' : trueValueColor}
           textAlign="center"
@@ -121,7 +120,7 @@ export function StatDisplay({
           maxW="full"
           w="full"
           css={{
-            fontSize: compact ? 'clamp(0.4rem, 4.5cqw, 0.875rem)' : 'clamp(0.5rem, 4.5cqw, 1rem)',
+            fontSize: compact ? 'clamp(0.3rem, 4.5cqw, 0.75rem)' : 'clamp(0.5rem, 4.5cqw, 1rem)',
             containerType: 'inline-size',
           }}
         >
@@ -130,7 +129,7 @@ export function StatDisplay({
       </WrapperComponent>
       <Text
         textTransform={'uppercase'}
-        mt={compact ? -1.5 : -2}
+        mt={compact ? -2 : -2}
         fontSize={compact ? '2xs' : 'xs'}
         alignSelf="center"
         variant="pseudoheader"

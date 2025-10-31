@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { SalvageUnionReference, getEnergyPoints } from 'salvageunion-reference'
 import { useHydratedMech } from './useHydratedMech'
 import { useUpdateMech } from './useMechs'
 import { useDeleteEntity, useCreateEntity } from '../suentity/useSUEntities'
@@ -61,7 +61,7 @@ export function useChangeMechChassis(id: string | undefined) {
             quirk: null,
             appearance: null,
             current_damage: 0,
-            current_ep: newChassis?.stats.energyPts || 0,
+            current_ep: newChassis ? (getEnergyPoints(newChassis) ?? 0) : 0,
             current_heat: 0,
             notes: null,
           },
@@ -77,7 +77,7 @@ export function useChangeMechChassis(id: string | undefined) {
 
         updateMech.mutate({
           id,
-          updates: { current_ep: newChassis?.stats.energyPts || 0 },
+          updates: { current_ep: newChassis ? (getEnergyPoints(newChassis) ?? 0) : 0 },
         })
       }
     },

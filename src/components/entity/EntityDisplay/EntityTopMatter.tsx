@@ -1,9 +1,9 @@
-import { Box, Flex, VStack } from '@chakra-ui/react'
+import { Flex, VStack } from '@chakra-ui/react'
 import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
 import type { EntityDisplaySubProps } from './types'
-import { StatList } from './EntityStatList'
 import { Text } from '../../base/Text'
+import { hasActions } from 'salvageunion-reference'
 
 export function EntityTopMatter({
   data,
@@ -13,11 +13,9 @@ export function EntityTopMatter({
 }: EntityDisplaySubProps & { hideActions: boolean }) {
   const notes = 'notes' in data ? data.notes : undefined
   const description = 'description' in data ? data.description : undefined
-  const hasActions = 'actions' in data && data.actions && data.actions.length > 0
   const showDescription = description && schemaName !== 'abilities'
-  const hasStats = compact && 'stats' in data && data.stats
 
-  if (!notes && !showDescription && !hasActions && !hasStats) {
+  if (!notes && !showDescription && !hasActions(data)) {
     return null
   }
 
@@ -32,9 +30,6 @@ export function EntityTopMatter({
         h="full"
         minW="0"
       >
-        <Box ml="auto">
-          <StatList schemaName={schemaName} header={false} data={data} compact={compact} />
-        </Box>
         {showDescription && (
           <Text
             color="su.black"

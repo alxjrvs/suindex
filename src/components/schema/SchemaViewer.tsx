@@ -9,6 +9,7 @@ import { useMemo, useState, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getDisplayComponent } from '../componentRegistry'
 import type { SURefEntity } from 'salvageunion-reference'
+import { getTechLevel } from 'salvageunion-reference'
 
 interface SchemaViewerProps {
   schemas: SchemaInfo[]
@@ -27,8 +28,9 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
   const techLevels = useMemo(() => {
     const levels = new Set<number>()
     data.forEach((item) => {
-      if ('techLevel' in item && typeof item.techLevel === 'number') {
-        levels.add(item.techLevel)
+      const techLevel = getTechLevel(item)
+      if (techLevel !== undefined) {
+        levels.add(techLevel)
       }
     })
     return Array.from(levels).sort()
@@ -49,7 +51,8 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
 
       // Tech level filter
       if (techLevelFilters.size > 0) {
-        const itemTechLevel = 'techLevel' in item && item.techLevel?.toString()
+        const techLevel = getTechLevel(item)
+        const itemTechLevel = techLevel?.toString()
         if (!itemTechLevel || !techLevelFilters.has(itemTechLevel)) {
           return false
         }
@@ -177,9 +180,9 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
               cursor="pointer"
               transition="all 0.2s ease-in-out"
               _hover={{
-                transform: 'scale(1.05) translateY(-4px)',
-                zIndex: 10,
-                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+                transform: { base: 'none', md: 'scale(1.05) translateY(-4px)' },
+                zIndex: { base: 'auto', md: 10 },
+                boxShadow: { base: 'none', md: '0 8px 16px rgba(0, 0, 0, 0.2)' },
               }}
               onClick={() => navigate(`/schema/${schemaId}/item/${item.id}`)}
             >

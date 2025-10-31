@@ -4,6 +4,7 @@ import { DynamicBay } from '../shared/DynamicBay'
 import { CargoModal } from '../shared/CargoModal'
 import { useState } from 'react'
 import type { SURefChassis } from 'salvageunion-reference'
+import { getCargoCapacity } from 'salvageunion-reference'
 import { useManageMechCargo } from '../../hooks/mech/useManageMechCargo'
 import { useHydratedMech } from '../../hooks/mech'
 
@@ -15,7 +16,7 @@ interface CargoListProps {
 export function CargoList({ id, disabled = false }: CargoListProps) {
   const { cargo, selectedChassis, totalCargo } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
-  const maxCargo = chassisRef?.stats?.cargoCap || 0
+  const maxCargo = chassisRef ? (getCargoCapacity(chassisRef) ?? 0) : 0
   const canAddCargo = !!selectedChassis
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
   const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)

@@ -1,10 +1,11 @@
 import { Flex } from '@chakra-ui/react'
 import { StatDisplay } from '../StatDisplay'
 import type { SURefChassis } from 'salvageunion-reference'
+import { getSystemSlots, getModuleSlots, getCargoCapacity } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 
 interface ChassisStatsGridProps {
-  stats: SURefChassis['stats'] | undefined
+  chassis: SURefChassis | undefined
   usedSystemSlots: number
   usedModuleSlots: number
   totalCargo: number
@@ -13,7 +14,7 @@ interface ChassisStatsGridProps {
 }
 
 export function ChassisStatsGrid({
-  stats,
+  chassis,
   usedSystemSlots,
   usedModuleSlots,
   totalCargo,
@@ -33,21 +34,21 @@ export function ChassisStatsGrid({
           label="System"
           bottomLabel="Slots"
           value={usedSystemSlots}
-          outOfMax={stats?.systemSlots || 0}
+          outOfMax={chassis ? (getSystemSlots(chassis) ?? 0) : 0}
           disabled={disabled}
         />
         <StatDisplay
           label="Module"
           bottomLabel="Slots"
           value={usedModuleSlots}
-          outOfMax={stats?.moduleSlots || 0}
+          outOfMax={chassis ? (getModuleSlots(chassis) ?? 0) : 0}
           disabled={disabled}
         />
         <StatDisplay
           label="Cargo"
           bottomLabel="Cap"
           value={totalCargo}
-          outOfMax={stats?.cargoCap || 0}
+          outOfMax={chassis ? (getCargoCapacity(chassis) ?? 0) : 0}
           disabled={disabled}
         />
         <StatDisplay label="Total" bottomLabel="SV" value={totalSalvageValue} disabled={disabled} />

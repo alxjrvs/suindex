@@ -1,6 +1,18 @@
 import { Flex } from '@chakra-ui/react'
 import { StatDisplay } from '../../StatDisplay'
 import type { SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
+import {
+  hasSalvageValue,
+  isChassis,
+  getHitPoints,
+  getStructurePoints,
+  getSalvageValue,
+  getEnergyPoints,
+  getHeatCapacity,
+  getSystemSlots,
+  getModuleSlots,
+  getCargoCapacity,
+} from 'salvageunion-reference'
 
 export interface Stat {
   label: string
@@ -18,74 +30,98 @@ interface StatListProps {
 function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
   const stats: Stat[] = []
 
-  const chassisStats = 'stats' in data && typeof data.stats === 'object' ? data.stats : undefined
+  // Chassis properties - use type guard and extractors for better type safety
+  if (isChassis(data)) {
+    const structurePoints = getStructurePoints(data)
+    const energyPoints = getEnergyPoints(data)
+    const heatCapacity = getHeatCapacity(data)
+    const systemSlots = getSystemSlots(data)
+    const moduleSlots = getModuleSlots(data)
+    const cargoCapacity = getCargoCapacity(data)
+    const salvageValue = getSalvageValue(data)
 
-  if (chassisStats) {
-    if (chassisStats.structurePts) {
+    if (structurePoints !== undefined) {
       stats.push({
         compactHeader: true,
         label: compact ? 'Strct' : 'Structure',
-        bottomLabel: 'Pts',
-        value: chassisStats.structurePts,
+        bottomLabel: 'Points',
+        value: structurePoints,
       })
     }
-    if (chassisStats.energyPts) {
+    if (energyPoints !== undefined) {
       stats.push({
         compactHeader: true,
         label: compact ? 'En' : 'Energy',
-        bottomLabel: 'Pts',
-        value: chassisStats.energyPts,
+        bottomLabel: 'Points',
+        value: energyPoints,
       })
     }
-    if (chassisStats.heatCap) {
+    if (heatCapacity !== undefined) {
       stats.push({
         compactHeader: true,
         label: 'Heat',
-        bottomLabel: 'Cap',
-        value: chassisStats.heatCap,
+        bottomLabel: 'Capacity',
+        value: heatCapacity,
       })
     }
-    if (chassisStats.systemSlots) {
+    if (systemSlots !== undefined) {
       stats.push({
         compactHeader: false,
         label: 'Sys',
         bottomLabel: 'Slots',
-        value: chassisStats.systemSlots,
+        value: systemSlots,
       })
     }
-    if (chassisStats.moduleSlots) {
+    if (moduleSlots !== undefined) {
       stats.push({
         compactHeader: false,
         label: 'Mod',
         bottomLabel: 'Slots',
-        value: chassisStats.moduleSlots,
+        value: moduleSlots,
       })
     }
-    if (chassisStats.cargoCap) {
+    if (cargoCapacity !== undefined) {
       stats.push({
         compactHeader: false,
         label: 'Cargo',
-        bottomLabel: 'Cap',
-        value: chassisStats.cargoCap,
+        bottomLabel: 'Capacity',
+        value: cargoCapacity,
       })
     }
-    if (chassisStats.salvageValue) {
+    if (salvageValue !== undefined) {
       stats.push({
         compactHeader: false,
         label: compact ? 'Salv' : 'Salvage',
         bottomLabel: 'Value',
-        value: chassisStats.salvageValue,
+        value: salvageValue,
       })
     }
   }
 
-  if ('hitPoints' in data && !!data.hitPoints) {
-    const label = 'damageType' in data && data.damageType ? data.damageType : 'HP'
-    stats.push({ compactHeader: true, label, value: data.hitPoints })
+  // Salvage value - use type guard and extractor
+  if (hasSalvageValue(data) && !isChassis(data)) {
+    const salvageValue = getSalvageValue(data)
+    if (salvageValue !== undefined) {
+      stats.push({
+        compactHeader: false,
+        label: compact ? 'Salv' : 'Salvage',
+        bottomLabel: 'Value',
+        value: salvageValue,
+      })
+    }
   }
 
-  if ('structurePoints' in data && !!data.structurePoints) {
-    stats.push({ compactHeader: true, label: 'SP', value: data.structurePoints })
+  // Hit points - use extractor
+  const hitPoints = getHitPoints(data)
+  if (hitPoints !== undefined) {
+    const label = 'damageType' in data && data.damageType ? String(data.damageType) : 'HP'
+    stats.push({ compactHeader: true, label, value: hitPoints })
+  }
+
+  // Structure points - use extractor
+  const structurePoints = getStructurePoints(data)
+  if (structurePoints !== undefined) {
+    stats.push({ compactHeader: true, label: 'SP', value: structurePoints })
   }
 
   return stats

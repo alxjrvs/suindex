@@ -131,7 +131,15 @@ export function RoundedBox({
             data-testid={headerTestId}
           >
             {/* Left section: leftContent + title/subtitle (65% base, can grow) */}
-            <Flex direction="row" gap={2} alignItems="center" flex="65" minW="0" overflow="visible">
+            <Flex
+              direction="row"
+              gap={compact ? 0.5 : 1}
+              alignItems="center"
+              minW="0"
+              flexGrow="1"
+              overflow="visible"
+              flexShrink="1"
+            >
               {leftContent && (
                 <Flex direction="column" gap={1} alignItems="flex-start" flexShrink={0}>
                   {leftContent}
@@ -139,7 +147,7 @@ export function RoundedBox({
               )}
               <Flex
                 direction="column"
-                gap={1}
+                gap={compact ? 0.5 : 1}
                 justifyContent="space-between"
                 h="full"
                 overflow="visible"
@@ -176,9 +184,8 @@ export function RoundedBox({
                 alignItems="flex-start"
                 flexWrap="wrap"
                 justifyContent="flex-end"
-                gap={1}
-                flex="35"
-                flexShrink={0}
+                gap={compact ? 0.5 : 1}
+                flexShrink={1}
               >
                 {rightContent}
               </Flex>

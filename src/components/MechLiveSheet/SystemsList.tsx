@@ -1,4 +1,5 @@
 import type { SURefChassis } from 'salvageunion-reference'
+import { getSystemSlots } from 'salvageunion-reference'
 import { useHydratedMech } from '../../hooks/mech'
 import { useManageMechSystemsAndModules } from '../../hooks/mech/useManageMechSystemsAndModules'
 import { MechEntityList } from './MechEntityList'
@@ -12,7 +13,7 @@ interface SystemsListProps {
 export function SystemsList({ id, disabled = false }: SystemsListProps) {
   const { systems, selectedChassis, usedSystemSlots } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
-  const totalSystemSlots = chassisRef?.stats.systemSlots ?? 0
+  const totalSystemSlots = chassisRef ? (getSystemSlots(chassisRef) ?? 0) : 0
   const { handleRemoveSystem, handleAddSystem } = useManageMechSystemsAndModules(id)
 
   return (

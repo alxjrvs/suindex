@@ -1,59 +1,21 @@
 import type { SURefMetaEntity, SURefMetaSchemaName, SURefSchemaName } from 'salvageunion-reference'
+import { getSchemaCatalog } from 'salvageunion-reference'
 
-/**
- * Extract image path for an entity based on schema and entity properties
- * Returns the path to the image in the public directory, or undefined if no image exists
- */
-export function extractImagePath(
-  data: SURefMetaEntity,
-  schemaName: SURefSchemaName | 'actions'
-): string {
-  return `/images/${schemaName}/${data.name.toLowerCase()}.png`
-}
-
-export interface SidebarData {
-  showSidebar: boolean
-  salvageValue?: number
-  slotsRequired?: number
-}
-
-export interface ContentSections {
-  showStatBonus: boolean
-  showActions: boolean
-  showRollTable: boolean
-  showSystems: boolean
-  showTLE: boolean
-}
+// Cache the schema catalog for performance
+const schemaCatalog = getSchemaCatalog()
+const schemaDisplayNameMap = new Map(schemaCatalog.schemas.map((s) => [s.id, s.displayName]))
 
 /**
  * Get display name for schema (for page references, headers, etc.)
+ * Uses package metadata for display names
  */
 export function getSchemaDisplayName(schemaName: SURefMetaSchemaName | 'actions'): string {
-  const displayNames: Partial<Record<SURefMetaSchemaName | 'actions', string>> = {
-    vehicles: 'Vehicle',
-    creatures: 'Creature',
-    drones: 'Drone',
-    'bio-titans': 'Bio-Titan',
-    npcs: 'NPC',
-    squads: 'Squad',
-    meld: 'Meld',
-    keywords: 'Keyword',
-    traits: 'Trait',
-    systems: 'System',
-    modules: 'Module',
-    equipment: 'Equipment',
-    abilities: 'Ability',
-    'ability-tree-requirements': 'Ability Tree Requirement',
-    crawlers: 'Crawler',
-    'roll-tables': 'Roll Table',
-    'crawler-tech-levels': 'Crawler Tech Level',
-    'classes.core': 'Class',
-    'classes.advanced': 'Advanced Class',
-    'classes.hybrid': 'Hybrid Class',
-    'crawler-bays': 'Crawler Bay',
-    chassis: 'Chassis',
+  // Special case for 'actions' which is not a schema but a sub-entity type
+  if (schemaName === 'actions') {
+    return 'Action'
   }
-  return displayNames[schemaName] || schemaName
+
+  return schemaDisplayNameMap.get(schemaName) || schemaName
 }
 
 /**
@@ -71,102 +33,10 @@ export function getActivationCurrency(
 }
 
 /**
-
- * Extract sidebar data (tech level, salvage value, slots)
- */
-export function extractSidebarData(
-  data: SURefMetaEntity,
-  schemaName: SURefMetaSchemaName
-): SidebarData {
-  let salvageValue: number | undefined
-  let slotsRequired: number | undefined
-
-  // Salvage value
-
-  if ('salvageValue' in data) {
-    salvageValue = data.salvageValue as number | undefined
-  }
-
-  // Slots required
-  if ('slotsRequired' in data) {
-    slotsRequired = data.slotsRequired as number | undefined
-  }
-
-  const showSidebar =
-    schemaName === 'modules' || schemaName === 'systems' || schemaName === 'actions'
-
-  return {
-    showSidebar,
-    salvageValue,
-    slotsRequired,
-  }
-}
-
-/**
  * Extract level (for abilities)
  */
 export function extractLevel(data: SURefMetaEntity): string | number | undefined {
   return 'level' in data ? data.level : undefined
-}
-
-/**
- * Extract description
- */
-export function extractDescription(data: SURefMetaEntity): string | undefined {
-  return 'description' in data ? data.description : undefined
-}
-
-/**
- * Extract notes
- */
-export function extractNotes(data: SURefMetaEntity): string | undefined {
-  return 'notes' in data ? data.notes : undefined
-}
-
-/**
- * Check if entity has page reference
- */
-export function hasPageReference(data: SURefMetaEntity): boolean {
-  return 'page' in data
-}
-
-export function extractOptions(
-  data: SURefMetaEntity
-): string[] | { label: string; value: string }[] | undefined {
-  return 'options' in data ? data.options : undefined
-}
-
-export function extractTechLevel(data: SURefMetaEntity): number | undefined {
-  if ('stats' in data && typeof data.stats === 'object' && data.stats) {
-    return (data.stats as { techLevel?: number }).techLevel
-  } else if ('techLevel' in data) {
-    return data.techLevel as number | undefined
-  }
-  return undefined
-}
-
-export function extractTechLevelEffects(data: SURefMetaEntity): {
-  techLevelMin: number
-  techLevelMax: number
-  effect: string
-}[] {
-  const techLevelEffects = 'techLevelEffects' in data ? data.techLevelEffects : undefined
-  if (!techLevelEffects) return []
-  return techLevelEffects
-}
-
-/**
- * Extract page reference data
- */
-export function extractPageReference(data: SURefMetaEntity): {
-  source?: string
-  page: number
-} | null {
-  if (!('page' in data && typeof data.page === 'number')) return null
-  return {
-    source: 'source' in data ? data.source : undefined,
-    page: data.page as number,
-  }
 }
 
 export function extractName(data: SURefMetaEntity, schemaName: SURefMetaSchemaName): string {

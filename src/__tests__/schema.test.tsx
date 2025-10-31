@@ -34,7 +34,7 @@ const SCHEMA_PROPERTY_CHECKS: Record<string, PropertyCheckConfig> = {
   systems: { numericProps: ['slotsRequired', 'heat', 'ep'] },
   modules: { numericProps: ['slotsRequired', 'heat', 'ep'] },
   equipment: { numericProps: ['slotsRequired'] },
-  crawlers: { numericProps: ['systemSlots', 'moduleSlots', 'cargoCap'] },
+  crawlers: { numericProps: ['systemSlots', 'moduleSlots', 'cargoCapacity'] },
   creatures: { numericProps: ['structurePoints', 'energyPoints'] },
   drones: { numericProps: ['structurePoints', 'energyPoints'] },
   vehicles: { numericProps: ['structurePoints'] },

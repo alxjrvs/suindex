@@ -1,6 +1,13 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
+import {
+  getTechLevel,
+  getSystemSlots,
+  getModuleSlots,
+  getCargoCapacity,
+  getSalvageValue,
+} from 'salvageunion-reference'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
 import { SystemsList } from './SystemsList'
@@ -21,7 +28,6 @@ export default function MechLiveSheet({ id }: { id: string }) {
 
   const { mech, isLocal, loading, error, selectedChassis, totalSalvageValue } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
-  const stats = chassisRef?.stats
   const updateMech = useUpdateMech()
   const deleteMech = useDeleteMech()
 
@@ -91,7 +97,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
                 inverse
                 label="tech"
                 bottomLabel="Level"
-                value={stats?.techLevel || 0}
+                value={chassisRef ? (getTechLevel(chassisRef) ?? 0) : 0}
                 disabled={!selectedChassis}
               />
             }
@@ -100,25 +106,25 @@ export default function MechLiveSheet({ id }: { id: string }) {
                 <StatDisplay
                   label="Sys."
                   bottomLabel="Slots"
-                  value={stats?.systemSlots || 0}
+                  value={chassisRef ? (getSystemSlots(chassisRef) ?? 0) : 0}
                   disabled={!selectedChassis}
                 />
                 <StatDisplay
                   label="Mod."
                   bottomLabel="Slots"
-                  value={stats?.moduleSlots || 0}
+                  value={chassisRef ? (getModuleSlots(chassisRef) ?? 0) : 0}
                   disabled={!selectedChassis}
                 />
                 <StatDisplay
                   label="Cargo"
                   bottomLabel="Cap"
-                  value={stats?.cargoCap || 0}
+                  value={chassisRef ? (getCargoCapacity(chassisRef) ?? 0) : 0}
                   disabled={!selectedChassis}
                 />
                 <StatDisplay
                   label="Salvage"
                   bottomLabel="Value"
-                  value={stats?.salvageValue || 0}
+                  value={chassisRef ? (getSalvageValue(chassisRef) ?? 0) : 0}
                   disabled={!selectedChassis}
                 />
               </Flex>
@@ -147,7 +153,6 @@ export default function MechLiveSheet({ id }: { id: string }) {
           <Box mt={6}>
             <ChassisAbilities
               totalSalvageValue={totalSalvageValue}
-              stats={stats}
               chassis={chassisRef}
               disabled={!selectedChassis}
             />
