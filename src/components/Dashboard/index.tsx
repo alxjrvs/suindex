@@ -28,9 +28,6 @@ export default function Dashboard() {
       const hash = window.location.hash
 
       if (code) {
-        console.log('Processing PKCE OAuth callback with code:', code)
-        console.log('LocalStorage keys:', Object.keys(localStorage))
-
         // Check if we have the PKCE verifier
         const pkceVerifier = localStorage.getItem('supabase.auth.token')
         console.log('PKCE verifier in storage:', pkceVerifier ? 'found' : 'NOT FOUND')
@@ -48,7 +45,6 @@ export default function Dashboard() {
           window.history.replaceState({}, document.title, window.location.pathname)
         }
       } else if (hash) {
-        console.log('Processing implicit OAuth callback with hash...')
         // Give Supabase a moment to process the hash
         await new Promise((resolve) => setTimeout(resolve, 100))
         // Clean up the URL
@@ -57,7 +53,6 @@ export default function Dashboard() {
 
       // Now check for session
       const session = await getSession()
-      console.log('Final session check:', session ? 'found' : 'not found')
       setUser(session?.user ?? null)
       setLoading(false)
     }
@@ -66,7 +61,6 @@ export default function Dashboard() {
 
     // Listen for auth changes
     const subscription = onAuthStateChange((authUser) => {
-      console.log('Auth state changed:', authUser ? 'logged in' : 'logged out')
       setUser(authUser)
     })
 

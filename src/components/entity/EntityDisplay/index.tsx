@@ -63,6 +63,8 @@ type EntityDisplayProps = {
   hideActions?: boolean
   /** Choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
   choices?: Record<string, string> | null
+  /** Callback when a choice is selected - if undefined, we're in schema page mode (not a live sheet) */
+  onChoiceSelection?: (choiceId: string, value: string | undefined) => void
 }
 
 export function EntityDisplay({
@@ -84,6 +86,7 @@ export function EntityDisplay({
   schemaName,
   compact = false,
   choices,
+  onChoiceSelection,
 }: EntityDisplayProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
 
@@ -112,6 +115,7 @@ export function EntityDisplay({
     ('table' in data && !!data.table) ||
     ('techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0) ||
     ('patterns' in data && data.patterns && data.patterns.length > 0) ||
+    ('choices' in data && data.choices && data.choices.length > 0) ||
     (compact && 'stats' in data && !!data.stats) ||
     !!children ||
     !!buttonConfig ||
@@ -142,7 +146,7 @@ export function EntityDisplay({
   return (
     <RoundedBox
       borderWidth="2px"
-      bg="su.lightBlue"
+      bg={'su.lightBlue'}
       w="full"
       headerBg={backgroundColor}
       headerOpacity={headerOpacity}
@@ -184,7 +188,7 @@ export function EntityDisplay({
           />
           <VStack
             flex="1"
-            bg="su.lightBlue"
+            bg={schemaName === 'actions' ? 'su.blue' : 'su.lightBlue'}
             borderBottomRightRadius="md"
             opacity={contentOpacity}
             p={compact ? 1 : 3}
@@ -245,6 +249,7 @@ export function EntityDisplay({
                   schemaName={schemaName}
                   compact={compact}
                   choices={choices}
+                  onChoiceSelection={onChoiceSelection}
                 />
                 {children && <Box mt="3">{children}</Box>}
                 {buttonConfig && (

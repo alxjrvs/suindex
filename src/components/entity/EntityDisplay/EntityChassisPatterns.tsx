@@ -1,100 +1,34 @@
-import { VStack, Grid, Tabs, Box } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefChassis, SURefModule, SURefSystem } from 'salvageunion-reference'
+import { VStack, Tabs } from '@chakra-ui/react'
+import { useSearchParams } from 'react-router-dom'
 import { Text } from '../../base/Text'
-import { SheetDisplay } from '../../shared/SheetDisplay'
-import { EntityDisplay } from './index'
 import type { EntityDisplaySubProps } from './types'
 import { EntitySubheader } from './EntitySubheader'
-
-function EntityChassisPatternContent({ pattern }: { pattern: SURefChassis['patterns'][0] }) {
-  // Get systems and modules from reference data (patterns store names, not IDs)
-  // Duplicate entries based on count property (e.g., count: 2 means show the system twice)
-  const systems = pattern.systems
-    ? pattern.systems.flatMap((system) => {
-        const found = SalvageUnionReference.findIn('systems', (s) => s.name === system.name)
-        if (!found) return []
-        const count = 'count' in system && typeof system.count === 'number' ? system.count : 1
-        return Array(count).fill(found) as SURefSystem[]
-      })
-    : []
-
-  const modules = pattern.modules
-    ? pattern.modules.flatMap((module) => {
-        const found = SalvageUnionReference.findIn('modules', (m) => m.name === module.name)
-        if (!found) return []
-        const count = 'count' in module && typeof module.count === 'number' ? module.count : 1
-        return Array(count).fill(found) as SURefModule[]
-      })
-    : []
-
-  const isLegalStarting = 'legalStarting' in pattern && pattern.legalStarting
-
-  return (
-    <VStack gap={4} alignItems="stretch">
-      {/* Legal Starting Pattern Banner */}
-      {isLegalStarting && (
-        <Box bg="su.green" color="su.white" px={4} py={2} textAlign="center" fontWeight="bold">
-          LEGAL STARTING PATTERN
-        </Box>
-      )}
-
-      {/* Description - Full Width (no label) */}
-      <SheetDisplay compact={false}>{pattern.description}</SheetDisplay>
-
-      {/* Systems and Modules - Two Column Layout */}
-      <Grid gridTemplateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={4}>
-        {/* Systems Section */}
-        <VStack gap={2} alignItems="stretch">
-          <Text variant="pseudoheader" fontSize="lg" textAlign="center">
-            SYSTEMS
-          </Text>
-          {systems.length > 0 ? (
-            <VStack gap={2} alignItems="stretch">
-              {systems.map((system) => (
-                <EntityDisplay key={system.id} data={system} schemaName="systems" compact={true} />
-              ))}
-            </VStack>
-          ) : (
-            <Text fontSize="sm" color="gray.500">
-              No systems
-            </Text>
-          )}
-        </VStack>
-
-        {/* Modules Section */}
-        <VStack gap={2} alignItems="stretch">
-          <Text variant="pseudoheader" fontSize="lg" textAlign="center">
-            MODULES
-          </Text>
-          {modules.length > 0 ? (
-            <VStack gap={2} alignItems="stretch">
-              {modules.map((module) => (
-                <EntityDisplay key={module.id} data={module} schemaName="modules" compact={true} />
-              ))}
-            </VStack>
-          ) : (
-            <Text fontSize="sm" color="gray.500">
-              No modules
-            </Text>
-          )}
-        </VStack>
-      </Grid>
-    </VStack>
-  )
-}
+import { EntityChassisPattern } from './EntityChassisPattern'
 
 export function EntityChassisPatterns({ data }: EntityDisplaySubProps) {
+  const [searchParams, setSearchParams] = useSearchParams()
+
   if (!('patterns' in data) || !data.patterns || data.patterns.length === 0) return null
 
   // Get the first pattern as default value
   const defaultPattern = data.patterns[0].name.replace(/\s+Pattern$/i, '')
 
+  // Get pattern from URL or use default
+  const patternParam = searchParams.get('pattern')
+  const selectedPattern = patternParam || defaultPattern
+
+  // Handle tab change - update URL
+  const handlePatternChange = (value: string) => {
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('pattern', value)
+    setSearchParams(newParams, { replace: true })
+  }
+
   return (
     <VStack gap={4} alignItems="stretch">
       <EntitySubheader compact={false} label="Patterns" />
 
-      <Tabs.Root defaultValue={defaultPattern}>
+      <Tabs.Root value={selectedPattern} onValueChange={(e) => handlePatternChange(e.value)}>
         <Tabs.List borderBottom="3px solid" borderColor="su.black">
           {data.patterns.map((pattern) => {
             const displayName = pattern.name.replace(/\s+Pattern$/i, '')
@@ -127,7 +61,7 @@ export function EntityChassisPatterns({ data }: EntityDisplaySubProps) {
           const displayName = pattern.name.replace(/\s+Pattern$/i, '')
           return (
             <Tabs.Content key={pattern.name} value={displayName}>
-              <EntityChassisPatternContent pattern={pattern} />
+              <EntityChassisPattern pattern={pattern} />
             </Tabs.Content>
           )
         })}

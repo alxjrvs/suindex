@@ -16,7 +16,6 @@ export function ChassisAbilities({
   chassis,
   disabled = false,
 }: ChassisAbilitiesProps) {
-  console.log('Chassis abilities:', chassis)
   return (
     <RoundedBox
       rightContent={
