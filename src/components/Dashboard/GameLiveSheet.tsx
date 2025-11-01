@@ -18,15 +18,11 @@ import {
 } from '../../lib/api'
 import { ExternalLinkModal } from './ExternalLinkModal'
 import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
-import {
-  getCrawlerNameById,
-  getStructurePointsForTechLevel,
-  getClassNameById,
-  getChassisNameById,
-} from '../../utils/referenceDataHelpers'
+import { getStructurePointsForTechLevel } from '../../utils/referenceDataHelpers'
 import { ActiveToggle } from '../shared/ActiveToggle'
 import { RoundedBox } from '../shared/RoundedBox'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
+import { useCrawlerTypes, usePilotClasses, useMechChassis } from '../../hooks/suentity'
 
 type GameInviteRow = GameInvite
 type ExternalLinkRow = ExternalLink
@@ -48,6 +44,27 @@ export function GameLiveSheet() {
     if (!gameWithRelationships) return false
     return gameWithRelationships.members.some((m) => m.role === 'mediator')
   }, [gameWithRelationships])
+
+  // Fetch singleton entities for efficient display
+  const crawlerIds = useMemo(
+    () => (gameWithRelationships?.crawler ? [gameWithRelationships.crawler.id] : []),
+    [gameWithRelationships?.crawler]
+  )
+  const pilotIds = useMemo(
+    () => gameWithRelationships?.pilots.map((p) => p.pilot.id) || [],
+    [gameWithRelationships?.pilots]
+  )
+  const mechIds = useMemo(
+    () =>
+      (gameWithRelationships?.pilots
+        .map((p) => p.mech?.id)
+        .filter((id) => id !== null) as string[]) || [],
+    [gameWithRelationships?.pilots]
+  )
+
+  const { data: crawlerTypes } = useCrawlerTypes(crawlerIds)
+  const { data: pilotClassData } = usePilotClasses(pilotIds)
+  const { data: mechChassisData } = useMechChassis(mechIds)
 
   const [invites, setInvites] = useState<GameInviteRow[]>([])
   const [invitesLoading, setInvitesLoading] = useState(false)
@@ -73,7 +90,7 @@ export function GameLiveSheet() {
   // Crawler creation
   const { createEntity: createCrawler, isLoading: isCreatingCrawler } = useCreateEntity({
     table: 'crawlers',
-    navigationPath: (id) => `/dashboard/crawlers/${id}`,
+    navigationPath: (id: string) => `/dashboard/crawlers/${id}`,
     placeholderData: gameId ? { game_id: gameId, active: true } : undefined,
   })
 
@@ -275,9 +292,8 @@ export function GameLiveSheet() {
 
   const { crawler, pilots } = gameWithRelationships
 
-  const crawlerTypeName = crawler?.crawler_type_id
-    ? getCrawlerNameById(crawler.crawler_type_id)
-    : ''
+  const crawlerTypeData = crawler ? crawlerTypes?.get(crawler.id) : null
+  const crawlerTypeName = crawlerTypeData?.name || ''
 
   const crawlerMaxSP = crawler?.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
 
@@ -702,12 +718,10 @@ export function GameLiveSheet() {
 
         {/* Row 3+: Active Pilot Containers (diagonal split: orange top-left for pilot, green bottom-right for active mech) */}
         {activePilots.map(({ pilot, mech }) => {
-          const className = pilot.class_id
-            ? getClassNameById(pilot.class_id, 'Unknown Class')
-            : 'No Class'
-          const chassisName = mech?.chassis_id
-            ? getChassisNameById(mech.chassis_id, 'Unknown Chassis')
-            : null
+          const classData = pilotClassData?.classes.get(pilot.id)
+          const className = classData?.name || 'No Class'
+          const chassisData = mech ? mechChassisData?.get(mech.id) : null
+          const chassisName = chassisData?.name || null
           const mechDisplayName = mech ? mech.pattern || chassisName || 'Unnamed Mech' : null
 
           return (
@@ -798,9 +812,8 @@ export function GameLiveSheet() {
           <RoundedBox bg="su.gameBlue" title="Inactive Pilots" gridColumn="1 / -1">
             <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={2} p={4}>
               {inactivePilots.map(({ pilot }) => {
-                const className = pilot.class_id
-                  ? getClassNameById(pilot.class_id, 'Unknown Class')
-                  : 'No Class'
+                const classData = pilotClassData?.classes.get(pilot.id)
+                const className = classData?.name || 'No Class'
 
                 return (
                   <Button
@@ -832,9 +845,8 @@ export function GameLiveSheet() {
           <RoundedBox bg="su.gameBlue" title="Inactive Mechs" gridColumn="1 / -1">
             <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={2} p={4}>
               {inactiveMechs.map((mech) => {
-                const chassisName = mech.chassis_id
-                  ? getChassisNameById(mech.chassis_id, 'Unknown Chassis')
-                  : 'No Chassis'
+                const chassisData = mechChassisData?.get(mech.id)
+                const chassisName = chassisData?.name || 'No Chassis'
                 const pilotName =
                   pilots.find((p) => p.mech?.id === mech.id)?.pilot.callsign || 'Unassigned'
 

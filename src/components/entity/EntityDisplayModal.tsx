@@ -1,3 +1,4 @@
+import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import {
   DialogRoot,
@@ -7,7 +8,6 @@ import {
   DialogPositioner,
 } from '@chakra-ui/react'
 import { EntityDisplay } from './EntityDisplay'
-import { lookupEntityByRef } from '../../utils/referenceUtils'
 
 interface EntityDisplayModalProps {
   isOpen: boolean
@@ -28,8 +28,7 @@ export function EntityDisplayModal({
 }: EntityDisplayModalProps) {
   // Only render the dialog content if we have valid data
   const hasValidData = schemaName && entityId
-  const ref = hasValidData ? `${schemaName}||${entityId}` : null
-  const entity = ref ? lookupEntityByRef(ref) : null
+  const entity = hasValidData ? SalvageUnionReference.get(schemaName, entityId) : null
 
   if (!hasValidData || !entity || !schemaName) {
     return null

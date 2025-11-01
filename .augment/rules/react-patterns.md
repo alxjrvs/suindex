@@ -45,7 +45,12 @@ export function MyComponent({ data, onUpdate }: MyComponentProps) {
 ## State Management
 
 - **Local state**: `useState` for component-specific state
-- **Live sheets**: `useLiveSheetState` hook (see `src/hooks/useLiveSheetState.ts`)
+- **TanStack Query**: Resource-specific hooks organized by entity type
+  - `src/hooks/pilot/` - Pilot hooks (usePilot, useUpdatePilot, useHydratedPilot)
+  - `src/hooks/mech/` - Mech hooks (useMech, useUpdateMech, useHydratedMech)
+  - `src/hooks/crawler/` - Crawler hooks (useCrawler, useUpdateCrawler, useHydratedCrawler)
+  - `src/hooks/entity/` - Entity hooks (useEntitiesFor, usePlayerChoices)
+  - `src/hooks/cargo/` - Cargo hooks (useCargo, useCreateCargo, useDeleteCargo)
 - **Auto-save**: Debounced updates to Supabase (1000ms delay)
 
 ## Component Organization

@@ -1,55 +1,41 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import type { SURefChassis } from 'salvageunion-reference'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
 import { SystemsList } from './SystemsList'
 import { ModulesList } from './ModulesList'
 import { CargoList } from './CargoList'
-import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { RoundedBox } from '../shared/RoundedBox'
-import { useMechLiveSheetState } from './useMechLiveSheetState'
 import { ChassisInputs } from './ChassisInputs'
 import { StatDisplay } from '../StatDisplay'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
+import { useUpdateMech, useHydratedMech, useDeleteMech } from '../../hooks/mech'
 
-interface MechLiveSheetProps {
-  id?: string
-}
+export default function MechLiveSheet({ id }: { id: string }) {
+  const navigate = useNavigate()
 
-export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
-  const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
-  const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
+  const { mech, isLocal, loading, error, selectedChassis, totalSalvageValue } = useHydratedMech(id)
+  const chassisRef = selectedChassis?.ref as SURefChassis | undefined
+  const stats = chassisRef?.stats
+  const updateMech = useUpdateMech()
+  const deleteMech = useDeleteMech()
 
-  const {
-    mech,
-    selectedChassis,
-    usedSystemSlots,
-    usedModuleSlots,
-    totalCargo,
-    handleChassisChange,
-    handlePatternChange,
-    handleAddSystem,
-    handleRemoveSystem,
-    handleAddModule,
-    handleRemoveModule,
-    handleAddCargo,
-    handleRemoveCargo,
-    deleteEntity,
-    updateEntity,
-    loading,
-    totalSalvageValue,
-    error,
-    hasPendingChanges,
-  } = useMechLiveSheetState(id)
-
-  const allChassis = SalvageUnionReference.findAllIn('chassis', () => true)
-
-  const stats = selectedChassis?.stats
+  if (!mech && !loading) {
+    return (
+      <LiveSheetLayout>
+        <Flex alignItems="center" justifyContent="center" h="64">
+          <Text fontSize="xl" fontFamily="mono">
+            Mech not found
+          </Text>
+        </Flex>
+      </LiveSheetLayout>
+    )
+  }
 
   if (loading) {
     return (
@@ -81,21 +67,19 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
   }
 
   const title =
-    selectedChassis?.name && mech.pattern
-      ? `${selectedChassis.name} "${mech.pattern}"`
-      : 'Mech Chassis'
+    chassisRef?.name && mech?.pattern ? `${chassisRef.name} "${mech.pattern}"` : 'Mech Chassis'
 
   return (
     <LiveSheetLayout>
-      {id && (
+      {!isLocal && (
         <LiveSheetControlBar
           config={MECH_CONTROL_BAR_CONFIG}
-          relationId={mech.pilot_id}
-          savedRelationId={mech.pilot_id}
-          onRelationChange={(pilotId) => updateEntity({ pilot_id: pilotId })}
-          hasPendingChanges={hasPendingChanges}
-          active={mech.active ?? false}
-          onActiveChange={(active) => updateEntity({ active })}
+          relationId={mech?.pilot_id}
+          savedRelationId={mech?.pilot_id}
+          onRelationChange={(pilotId) => updateMech.mutate({ id, updates: { pilot_id: pilotId } })}
+          hasPendingChanges={updateMech.isPending}
+          active={mech?.active ?? false}
+          onActiveChange={(active) => updateMech.mutate({ id, updates: { active } })}
           disabled={!selectedChassis}
         />
       )}
@@ -145,28 +129,11 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
             h="full"
             disabled={!selectedChassis}
           >
-            <ChassisInputs
-              chassisId={mech.chassis_id ?? null}
-              pattern={mech.pattern ?? ''}
-              quirk={mech.quirk ?? ''}
-              appearance={mech.appearance ?? ''}
-              allChassis={allChassis}
-              selectedChassis={selectedChassis}
-              onChassisChange={handleChassisChange}
-              onPatternChange={handlePatternChange}
-              updateEntity={updateEntity}
-            />
+            <ChassisInputs id={id} />
           </RoundedBox>
         </VStack>
 
-        <MechResourceSteppers
-          stats={stats}
-          currentDamage={mech.current_damage ?? 0}
-          currentEP={mech.current_ep ?? 0}
-          currentHeat={mech.current_heat ?? 0}
-          updateEntity={updateEntity}
-          disabled={!selectedChassis}
-        />
+        <MechResourceSteppers id={id} disabled={!selectedChassis} />
       </Flex>
 
       <Tabs.Root defaultValue="abilities">
@@ -181,7 +148,7 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
             <ChassisAbilities
               totalSalvageValue={totalSalvageValue}
               stats={stats}
-              chassis={selectedChassis}
+              chassis={chassisRef}
               disabled={!selectedChassis}
             />
           </Box>
@@ -189,44 +156,19 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
 
         <Tabs.Content value="systems-modules">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <SystemsList
-              systems={mech.systems ?? []}
-              usedSystemSlots={usedSystemSlots}
-              totalSystemSlots={stats?.systemSlots || 0}
-              onRemoveSystem={handleRemoveSystem}
-              onAddSystem={handleAddSystem}
-              disabled={!selectedChassis}
-            />
+            <SystemsList id={id} disabled={!selectedChassis} />
 
-            <ModulesList
-              modules={mech.modules ?? []}
-              usedModuleSlots={usedModuleSlots}
-              totalModuleSlots={stats?.moduleSlots || 0}
-              onRemoveModule={handleRemoveModule}
-              onAddModule={handleAddModule}
-              disabled={!selectedChassis}
-            />
+            <ModulesList id={id} disabled={!selectedChassis} />
           </Grid>
         </Tabs.Content>
 
         <Tabs.Content value="storage">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <CargoList
-              cargo={mech.cargo ?? []}
-              totalCargo={totalCargo}
-              maxCargo={stats?.cargoCap || 0}
-              canAddCargo={!!selectedChassis}
-              onRemove={handleRemoveCargo}
-              onAddClick={(position) => {
-                setCargoPosition(position)
-                setIsCargoModalOpen(true)
-              }}
-              disabled={!selectedChassis}
-            />
+            <CargoList id={id} disabled={!selectedChassis} />
 
             <Notes
-              notes={mech.notes ?? ''}
-              onChange={(value) => updateEntity({ notes: value })}
+              notes={mech?.notes ?? ''}
+              onChange={(value) => updateMech.mutate({ id, updates: { notes: value } })}
               disabled={!selectedChassis}
               backgroundColor="bg.builder.mech"
               placeholder="Add notes about your mech..."
@@ -235,24 +177,17 @@ export default function MechLiveSheet({ id }: MechLiveSheetProps = {}) {
         </Tabs.Content>
       </Tabs.Root>
 
-      <CargoModal
-        isOpen={isCargoModalOpen}
-        onClose={() => {
-          setIsCargoModalOpen(false)
-          setCargoPosition(null)
-        }}
-        onAdd={handleAddCargo}
-        existingCargo={mech.cargo ?? []}
-        maxCargo={stats?.cargoCap || 0}
-        currentCargo={totalCargo}
-        position={cargoPosition}
-      />
-
-      {id && (
+      {!isLocal && (
         <DeleteEntity
           entityName="Mech"
-          onConfirmDelete={deleteEntity}
-          disabled={!id || hasPendingChanges}
+          onConfirmDelete={() =>
+            deleteMech.mutate(id, {
+              onSuccess: () => {
+                navigate('/dashboard/mechs')
+              },
+            })
+          }
+          disabled={!id || updateMech.isPending}
         />
       )}
     </LiveSheetLayout>

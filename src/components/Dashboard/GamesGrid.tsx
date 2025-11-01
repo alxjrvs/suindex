@@ -10,7 +10,7 @@ export function GamesGrid() {
 
   const { createEntity: createGame, isLoading: isCreating } = useCreateEntity({
     table: 'games',
-    navigationPath: (id) => `/dashboard/games/${id}`,
+    navigationPath: (id: string) => `/dashboard/games/${id}`,
   })
 
   const handleCreateGame = async () => {

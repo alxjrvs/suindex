@@ -1,5 +1,5 @@
 import { Box, Flex, VStack, Button, type ButtonProps } from '@chakra-ui/react'
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useState, memo } from 'react'
 import type {
   SURefAdvancedClass,
   SURefCoreClass,
@@ -67,7 +67,7 @@ type EntityDisplayProps = {
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
 }
 
-export function EntityDisplay({
+export const EntityDisplay = memo(function EntityDisplay({
   rightLabel,
   data,
   hideLevel = false,
@@ -275,4 +275,4 @@ export function EntityDisplay({
       )}
     </RoundedBox>
   )
-}
+})

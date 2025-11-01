@@ -47,7 +47,7 @@ export function EntityGrid<T extends ValidTable>({
 
   const { createEntity, isLoading: isCreating } = useCreateEntity({
     table,
-    navigationPath: (id) => `/dashboard/${table}/${id}`,
+    navigationPath: (id: string) => `/dashboard/${table}/${id}`,
   })
 
   const handleCreate = async () => {

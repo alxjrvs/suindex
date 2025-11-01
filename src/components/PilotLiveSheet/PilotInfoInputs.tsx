@@ -4,70 +4,97 @@ import { SheetInput } from '../shared/SheetInput'
 import { SheetSelect } from '../shared/SheetSelect'
 import { RoundedBox } from '../shared/RoundedBox'
 import { rollTable } from '@randsum/salvageunion'
-import type { SURefCoreClass } from 'salvageunion-reference'
-import type { AdvancedClassOption, PilotLiveSheetState } from './types'
+import { SalvageUnionReference, type SURefAbility } from 'salvageunion-reference'
+import { useChangePilotClass } from '../../hooks/pilot/useChangePilotClass'
+import { useChangePilotAdvancedClass } from '../../hooks/pilot/useChangePilotAdvancedClass'
+import { useHydratedPilot, useUpdatePilot } from '../../hooks/pilot'
 
 interface PilotInfoInputsProps {
-  callsign: string
-  motto: string
-  mottoUsed: boolean
-  keepsake: string
-  keepsakeUsed: boolean
-  background: string
-  backgroundUsed: boolean
-  appearance: string
-  classId: string | null
-  advancedClassId: string | null
-  allCoreClasses: SURefCoreClass[]
-  availableAdvancedClasses: AdvancedClassOption[]
   disabled?: boolean
-  updateEntity: (updates: Partial<PilotLiveSheetState>) => void
-  onClassChange: (classId: string | null) => void
-  onAdvancedClassChange: (classId: string | null) => void
+  id: string
 }
 
-export function PilotInfoInputs({
-  callsign,
-  motto,
-  mottoUsed,
-  keepsake,
-  keepsakeUsed,
-  background,
-  backgroundUsed,
-  appearance,
-  classId,
-  advancedClassId,
-  allCoreClasses,
-  availableAdvancedClasses,
-  disabled = false,
-  updateEntity,
-  onClassChange,
-  onAdvancedClassChange,
-}: PilotInfoInputsProps) {
-  // Sort core classes alphabetically
+export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) {
+  const { pilot, abilities, selectedClass, selectedAdvancedClass } = useHydratedPilot(id)
+  const onClassChange = useChangePilotClass(id)
+  const onAdvancedClassChange = useChangePilotAdvancedClass(id)
+  const updatePilot = useUpdatePilot()
+  const motto = pilot?.motto ?? ''
+  const mottoUsed = pilot?.motto_used ?? false
+  const keepsake = pilot?.keepsake ?? ''
+  const keepsakeUsed = pilot?.keepsake_used ?? false
+  const background = pilot?.background ?? ''
+  const backgroundUsed = pilot?.background_used ?? false
+  const appearance = pilot?.appearance ?? ''
+  const callsign = pilot?.callsign ?? ''
+  const classId = selectedClass?.schema_ref_id ?? null
+  const advancedClassId = selectedAdvancedClass?.schema_ref_id ?? null
+  const allAdvancedClasses = useMemo(() => SalvageUnionReference.AdvancedClasses.all(), [])
+  const allHybridClasses = useMemo(() => SalvageUnionReference.HybridClasses.all(), [])
+  const allCoreClasses = useMemo(() => SalvageUnionReference.CoreClasses.all(), [])
   const sortedCoreClasses = useMemo(() => {
     return [...allCoreClasses].sort((a, b) => a.name.localeCompare(b.name))
   }, [allCoreClasses])
-  const handleMottoRoll = () => {
+
+  const availableAdvancedClasses = useMemo(() => {
+    // Early exit conditions
+    if (abilities.length < 6) {
+      return []
+    }
+
+    if (
+      selectedClass?.ref &&
+      'advanceable' in selectedClass.ref &&
+      selectedClass.ref.advanceable === false
+    ) {
+      return []
+    }
+
+    // Count abilities by tree
+    const abilitiesByTree: Record<string, number> = {}
+    abilities.forEach((entity) => {
+      const ability = entity.ref as SURefAbility
+      const tree = ability.tree
+      abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
+    })
+
+    // Map advanced classes to AdvancedClassOption
+    const available = allAdvancedClasses.map((advClass) => ({
+      id: advClass.id,
+      name: advClass.name,
+      isAdvancedVersion: true,
+    }))
+
+    // Map hybrid classes to AdvancedClassOption
+    const availableHybrid = allHybridClasses.map((hybridClass) => ({
+      id: hybridClass.id,
+      name: hybridClass.name,
+      isAdvancedVersion: false,
+    }))
+
+    return [...available, ...availableHybrid]
+  }, [abilities, selectedClass, allAdvancedClasses, allHybridClasses])
+
+  const handleMottoRoll = async () => {
     const {
       result: { label },
     } = rollTable('Motto')
 
-    updateEntity({ motto: label })
+    await updatePilot.mutate({ id, updates: { motto: label } })
   }
 
-  const handleKeepsakeRoll = () => {
+  const handleKeepsakeRoll = async () => {
     const {
       result: { label },
     } = rollTable('Keepsake')
-    updateEntity({ keepsake: label })
+    await updatePilot.mutate({ id, updates: { keepsake: label } })
   }
 
-  const handleAppearanceRoll = () => {
+  const handleAppearanceRoll = async () => {
     const {
       result: { label },
     } = rollTable('Pilot Appearance')
-    updateEntity({ appearance: label })
+    await updatePilot.mutate({ id, updates: { appearance: label } })
   }
 
   return (
@@ -77,20 +104,19 @@ export function PilotInfoInputs({
         <SheetInput
           label="Callsign"
           value={callsign}
-          onChange={(value) => updateEntity({ callsign: value })}
+          onChange={(value) => updatePilot.mutate({ id, updates: { callsign: value } })}
           placeholder="Enter callsign"
           disabled={disabled}
         />
 
-        {/* Motto */}
         <SheetInput
           label="Motto"
           value={motto}
-          onChange={(value) => updateEntity({ motto: value })}
+          onChange={(value) => updatePilot.mutate({ id, updates: { motto: value } })}
           placeholder="Enter motto"
           disabled={disabled}
           toggleChecked={mottoUsed}
-          onToggleChange={(value) => updateEntity({ motto_used: value })}
+          onToggleChange={(value) => updatePilot.mutate({ id, updates: { motto_used: value } })}
           onDiceRoll={handleMottoRoll}
           diceRollAriaLabel="Roll on the Motto table"
           diceRollTitle="Roll on the Motto table"
@@ -104,7 +130,6 @@ export function PilotInfoInputs({
               label="Class"
               value={classId}
               onChange={onClassChange}
-              disabled={false}
               placeholder="Select..."
             >
               {sortedCoreClasses.map((cls) => (
@@ -137,11 +162,11 @@ export function PilotInfoInputs({
         <SheetInput
           label="Keepsake"
           value={keepsake}
-          onChange={(value) => updateEntity({ keepsake: value })}
+          onChange={(value) => updatePilot.mutate({ id, updates: { keepsake: value } })}
           placeholder="Enter keepsake"
           disabled={disabled}
           toggleChecked={keepsakeUsed}
-          onToggleChange={(value) => updateEntity({ keepsake_used: value })}
+          onToggleChange={(value) => updatePilot.mutate({ id, updates: { keepsake_used: value } })}
           onDiceRoll={handleKeepsakeRoll}
           diceRollAriaLabel="Roll on the Keepsake table"
           diceRollTitle="Roll on the Keepsake table"
@@ -151,7 +176,7 @@ export function PilotInfoInputs({
         <SheetInput
           label="Appearance"
           value={appearance}
-          onChange={(value) => updateEntity({ appearance: value })}
+          onChange={(value) => updatePilot.mutate({ id, updates: { appearance: value } })}
           placeholder="Enter appearance"
           disabled={disabled}
           onDiceRoll={handleAppearanceRoll}
@@ -163,11 +188,13 @@ export function PilotInfoInputs({
         <SheetInput
           label="Background"
           value={background}
-          onChange={(value) => updateEntity({ background: value })}
+          onChange={(value) => updatePilot.mutate({ id, updates: { background: value } })}
           placeholder="Enter background"
           disabled={disabled}
           toggleChecked={backgroundUsed}
-          onToggleChange={(value) => updateEntity({ background_used: value })}
+          onToggleChange={(value) =>
+            updatePilot.mutate({ id, updates: { background_used: value } })
+          }
         />
       </Grid>
     </RoundedBox>

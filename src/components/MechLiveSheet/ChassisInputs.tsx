@@ -3,32 +3,23 @@ import { ChassisSelector } from './ChassisSelector'
 import { PatternSelector } from './PatternSelector'
 import { QuirkInput } from './QuirkInput'
 import { AppearanceInput } from './AppearanceInput'
-import type { SURefChassis } from 'salvageunion-reference'
-import type { MechLiveSheetState } from './types'
+import { SalvageUnionReference } from 'salvageunion-reference'
+import { useHydratedMech } from '../../hooks/mech'
+import { useChangeMechChassis } from '../../hooks/mech/useChangeMechChassis'
+import { useChangeMechChassisPattern } from '../../hooks/mech/useChangeMechChassisPattern'
 
 interface ChassisInputsProps {
-  chassisId: string | null
-  pattern: string
-  quirk: string
-  appearance: string
-  allChassis: SURefChassis[]
-  selectedChassis: SURefChassis | undefined
-  onChassisChange: (chassisId: string | null) => void
-  onPatternChange: (pattern: string) => void
-  updateEntity: (updates: Partial<MechLiveSheetState>) => void
+  id: string
 }
 
-export function ChassisInputs({
-  chassisId,
-  pattern,
-  quirk,
-  appearance,
-  allChassis,
-  selectedChassis,
-  onChassisChange,
-  onPatternChange,
-  updateEntity,
-}: ChassisInputsProps) {
+export function ChassisInputs({ id }: ChassisInputsProps) {
+  const { mech, selectedChassis } = useHydratedMech(id)
+  const onChassisChange = useChangeMechChassis(id)
+  const onPatternChange = useChangeMechChassisPattern(id)
+  const allChassis = SalvageUnionReference.Chassis.all()
+  const chassisId = selectedChassis?.schema_ref_id ?? null
+  const pattern = mech?.pattern ?? ''
+
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
       <ChassisSelector chassisId={chassisId} allChassis={allChassis} onChange={onChassisChange} />
@@ -38,12 +29,8 @@ export function ChassisInputs({
         onChange={onPatternChange}
       />
 
-      <QuirkInput quirk={quirk} disabled={!selectedChassis} updateEntity={updateEntity} />
-      <AppearanceInput
-        appearance={appearance}
-        disabled={!selectedChassis}
-        updateEntity={updateEntity}
-      />
+      <QuirkInput id={id} disabled={!selectedChassis} />
+      <AppearanceInput id={id} disabled={!selectedChassis} />
     </Grid>
   )
 }

@@ -41,7 +41,7 @@ export default function NumericStepper({
   )
 
   return (
-    <HStack gap={0} alignItems="flex-end" role="group" aria-labelledby={labelId}>
+    <HStack gap={0} alignItems="center" role="group" aria-labelledby={labelId}>
       <StatDisplay
         disabled={disabled}
         label={label}

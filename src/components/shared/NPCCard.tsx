@@ -2,13 +2,13 @@ import { Box, Flex, VStack } from '@chakra-ui/react'
 import { SheetInput } from './SheetInput'
 import { SheetTextarea } from './SheetTextarea'
 import type { CrawlerNPC } from '../../types/common'
+import type { Tables } from '../../types/database-generated.types'
 import NumericStepper from '../NumericStepper'
 import { Text } from '../base/Text'
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
-import type { CrawlerBay, CrawlerLiveSheetState } from '../CrawlerLiveSheet/types'
 import { rollTable } from '@randsum/salvageunion'
-import type { SURefCrawler } from 'salvageunion-reference'
+import type { SURefCrawler, SURefCrawlerBay } from 'salvageunion-reference'
 
 export function NPCCard({
   position,
@@ -22,16 +22,15 @@ export function NPCCard({
   onUpdateChoice,
   onUpdateBay,
 }: {
-  choices: CrawlerLiveSheetState['choices']
+  choices: Tables<'player_choices'>[]
   npc: CrawlerNPC
-  referenceBay: SURefCrawler | undefined
-  onUpdateBay: (updates: Partial<CrawlerBay>) => void
+  referenceBay: SURefCrawler | SURefCrawlerBay | undefined
+  onUpdateBay: (updates: Partial<{ npc: CrawlerNPC }>) => void
   onUpdateChoice: (id: string, value: string) => void
   position: string
   description: string
   maxHP: number
   tilted?: boolean
-
   disabled?: boolean
 }) {
   const textRef = useRef<HTMLParagraphElement>(null)
@@ -40,6 +39,32 @@ export function NPCCard({
   const onUpdateDamage = (value: number) => onUpdateBay({ npc: { ...npc!, damage: value } })
   const onUpdateName = (value: string) => onUpdateBay({ npc: { ...npc!, name: value } })
   const onUpdateNotes = (value: string) => onUpdateBay({ npc: { ...npc!, notes: value } })
+
+  // Get choice definitions from reference data
+  // Crawler types have npc.choices, crawler bays have choices at top level
+  const choiceDefinitions = useMemo(() => {
+    if (!referenceBay) return []
+    // Check if it's a crawler bay (has choices at top level)
+    if ('choices' in referenceBay && referenceBay.choices) {
+      return referenceBay.choices
+    }
+    // Check if it's a crawler type (has npc.choices)
+    if ('npc' in referenceBay && referenceBay.npc && 'choices' in referenceBay.npc) {
+      return referenceBay.npc.choices || []
+    }
+    return []
+  }, [referenceBay])
+
+  // Convert choices array to lookup map
+  const choicesMap = useMemo(() => {
+    return choices.reduce(
+      (acc, choice) => {
+        acc[choice.choice_ref_id] = choice.value
+        return acc
+      },
+      {} as Record<string, string>
+    )
+  }, [choices])
 
   useEffect(() => {
     const adjustFontSize = () => {
@@ -126,7 +151,7 @@ export function NPCCard({
           disabled={disabled}
         />
       </Box>
-      {referenceBay?.npc.choices?.map((choice) => (
+      {choiceDefinitions.map((choice) => (
         <SheetInput
           key={choice.id}
           label={choice.name}
@@ -137,7 +162,7 @@ export function NPCCard({
             } = rollTable(choice.name)
             onUpdateChoice(choice.id, label)
           }}
-          value={(choices as Record<string, string> | null)?.[choice.id] || ''}
+          value={choicesMap[choice.id] || ''}
           onChange={(value) => onUpdateChoice(choice.id, value)}
           disabled={disabled}
         />

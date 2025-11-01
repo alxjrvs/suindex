@@ -1,24 +1,16 @@
 import { Box, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { packCargoGrid } from '../../utils/cargoGridPacking'
-import { lookupEntityByRef } from '../../utils/referenceUtils'
-import { techLevelColors, suColors } from '../../theme'
+import { techLevelColors } from '../../theme'
 import { EntityDisplayTooltip } from '../entity/EntityDisplayTooltip'
 import type { SURefSchemaName } from 'salvageunion-reference'
-
-interface BayItem {
-  id: string
-  description: string
-  amount: number
-  color?: string
-  ref?: string
-  position?: { row: number; col: number }
-}
+import type { HydratedCargo } from '../../types/hydrated'
+import { useUpdateCargo } from '../../hooks/cargo/useCargo'
 
 interface DynamicBayProps {
-  items: BayItem[]
+  items: HydratedCargo[]
   maxCapacity: number
   onRemove: (id: string) => void
   onAddClick?: (position: { row: number; col: number }) => void
@@ -42,25 +34,25 @@ export function DynamicBay({
   disabled = false,
   singleCellMode = false,
 }: DynamicBayProps) {
-  // Determine background color for a cargo item based on its ref
-  const getCargoItemBgColor = (ref?: string): string => {
-    if (!ref) return 'bg.input' // Default color for items without ref
+  const updateCargo = useUpdateCargo()
 
-    const parts = ref.split('||')
-    const schemaName = parts[0]
+  // Determine background color for a cargo item based on its hydrated ref
+  const getCargoItemBgColor = (item: HydratedCargo): string => {
+    if (!item.ref) return 'bg.input' // Default color for items without ref
+
+    const schemaName = item.schema_name
 
     // Systems and Modules use tech level colors
     if (schemaName === 'systems' || schemaName === 'modules') {
-      const entity = lookupEntityByRef(ref)
-      if (entity && 'techLevel' in entity) {
-        const techLevel = entity.techLevel as number
+      if ('techLevel' in item.ref) {
+        const techLevel = item.ref.techLevel as number
         return techLevelColors[techLevel] || 'bg.input'
       }
     }
 
-    // Chassis uses mech green
+    // Chassis uses dark mech green
     if (schemaName === 'chassis') {
-      return 'su.green'
+      return 'su.darkGreen'
     }
 
     return 'bg.input' // Default for other schemas
@@ -69,12 +61,20 @@ export function DynamicBay({
   // Create a stable key for this instance
   const instanceKey = `${maxCapacity}`
 
-  const { rows, cols, packedGrid, itemsMap } = useMemo(() => {
-    // In single cell mode, normalize all items to amount: 1
-    const normalizedItems = singleCellMode ? items.map((item) => ({ ...item, amount: 1 })) : items
+  const { rows, cols, packedGrid, itemsMap, newPositions } = useMemo(() => {
+    // Convert HydratedCargo to format expected by packCargoGrid
+    const packableItems = items.map((item) => {
+      // Extract position from metadata
+      const metadata = item.metadata as { position?: { row: number; col: number } } | null
+      return {
+        id: item.id,
+        amount: singleCellMode ? 1 : item.amount || 1,
+        position: metadata?.position, // Use position from metadata
+      }
+    })
 
     const previousGrid = previousGrids.get(instanceKey)
-    const packed = packCargoGrid(normalizedItems, maxCapacity, previousGrid)
+    const packed = packCargoGrid(packableItems, maxCapacity, previousGrid)
 
     // Store for next render
     previousGrids.set(instanceKey, packed)
@@ -82,13 +82,49 @@ export function DynamicBay({
     // Create a map of item IDs to item data for quick lookup
     const map = new Map(items.map((item) => [item.id, item]))
 
+    // Extract new positions from packed grid
+    const positions = new Map<string, { row: number; col: number }>()
+    packed.cells.forEach((cell, index) => {
+      if (cell.itemId && cell.isCenter) {
+        const row = Math.floor(index / packed.cols)
+        const col = index % packed.cols
+        positions.set(cell.itemId, { row, col })
+      }
+    })
+
     return {
       rows: packed.rows,
       cols: packed.cols,
       packedGrid: packed.cells,
       itemsMap: map,
+      newPositions: positions,
     }
   }, [items, maxCapacity, instanceKey, singleCellMode])
+
+  // Save position changes to database (or cache for local items)
+  useEffect(() => {
+    // Only save positions if we have items and positions have changed
+    if (items.length === 0 || disabled) return
+
+    items.forEach((item) => {
+      const newPosition = newPositions.get(item.id)
+      // Extract old position from metadata
+      const metadata = item.metadata as { position?: { row: number; col: number } } | null
+      const oldPosition = metadata?.position
+
+      // Check if position changed
+      if (
+        newPosition &&
+        (!oldPosition || newPosition.row !== oldPosition.row || newPosition.col !== oldPosition.col)
+      ) {
+        // Use the hook which handles both local and API-backed cargo
+        updateCargo.mutate({
+          id: item.id,
+          updates: { metadata: { position: newPosition } },
+        })
+      }
+    })
+  }, [items, newPositions, disabled, updateCargo])
 
   // Helper to check if two cells belong to the same item
   const isSameItem = (index1: number, index2: number): boolean => {
@@ -183,30 +219,26 @@ export function DynamicBay({
         const bottomLeftRounded = showBottomBorder && showLeftBorder
         const bottomRightRounded = showBottomBorder && showRightBorder
 
-        const bayItem = itemsMap.get(cell.itemId)
-        if (!bayItem) return null // Should never happen
+        const cargoItem = itemsMap.get(cell.itemId)
+        if (!cargoItem) return null // Should never happen
 
         const handleRemoveClick = (e: React.MouseEvent) => {
           e.stopPropagation()
-          onRemove(bayItem.id)
+          onRemove(cargoItem.id)
         }
 
-        // Use ref-based color if available, otherwise use stored color
-        const itemBgColor = bayItem.ref
-          ? getCargoItemBgColor(bayItem.ref)
-          : bayItem.color || 'bg.input'
+        // Use hydrated ref for color
+        const itemBgColor = getCargoItemBgColor(cargoItem)
 
-        // Check if this is a chassis item
-        const isChassis = bayItem.ref?.startsWith('chassis||')
-
-        // Parse ref for tooltip
-        const [schemaName, entityId] = bayItem.ref ? bayItem.ref.split('||') : [null, null]
+        // Get schema name and entity ID for tooltip
+        const schemaName = cargoItem.schema_name
+        const entityId = cargoItem.schema_ref_id
 
         const boxContent = (
           <Box
             key={`item-${index}`}
             position="relative"
-            bg={isChassis ? 'transparent' : itemBgColor}
+            bg={itemBgColor}
             borderTopWidth={showTopBorder ? '3px' : '0'}
             borderBottomWidth={showBottomBorder ? '3px' : '0'}
             borderLeftWidth={showLeftBorder ? '3px' : '0'}
@@ -221,26 +253,8 @@ export function DynamicBay({
             alignItems="center"
             justifyContent="center"
             minH="60px"
-            cursor={bayItem.ref ? 'pointer' : 'default'}
-            _hover={bayItem.ref ? { opacity: 0.8 } : undefined}
-            _before={
-              isChassis
-                ? {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundImage: `repeating-linear-gradient(45deg, ${suColors.green}, ${suColors.green} 8px, ${suColors.darkGreen} 8px, ${suColors.darkGreen} 16px)`,
-                    pointerEvents: 'none',
-                    borderTopLeftRadius: topLeftRounded ? 'lg' : '0',
-                    borderTopRightRadius: topRightRounded ? 'lg' : '0',
-                    borderBottomLeftRadius: bottomLeftRounded ? 'lg' : '0',
-                    borderBottomRightRadius: bottomRightRounded ? 'lg' : '0',
-                  }
-                : undefined
-            }
+            cursor={cargoItem.ref ? 'pointer' : 'default'}
+            _hover={cargoItem.ref ? { opacity: 0.8 } : undefined}
           >
             {cell.isTopRight && (
               <Button
@@ -288,13 +302,13 @@ export function DynamicBay({
               >
                 <Text
                   variant="pseudoheader"
-                  fontSize={bayItem.amount === 1 ? '10px' : 'sm'}
+                  fontSize={cargoItem.amount === 1 ? '10px' : 'sm'}
                   fontWeight="bold"
                   textAlign="center"
                   lineHeight="1.1"
                   maxW="100%"
                 >
-                  {bayItem.description} ({bayItem.amount})
+                  {cargoItem.name} ({cargoItem.amount})
                 </Text>
               </Box>
             )}
@@ -302,7 +316,7 @@ export function DynamicBay({
         )
 
         // Wrap with tooltip if item has a ref
-        return bayItem.ref && schemaName && entityId ? (
+        return cargoItem.ref && schemaName && entityId ? (
           <EntityDisplayTooltip
             key={`item-${index}`}
             schemaName={schemaName as SURefSchemaName}

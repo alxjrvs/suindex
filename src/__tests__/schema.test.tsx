@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'bun:test'
-import { render, waitFor } from '../test/chakra-utils'
+import { render, waitFor } from '../test/render'
 import { EntityDisplay } from '../components/entity/EntityDisplay'
 import { getSchemaCatalog } from 'salvageunion-reference'
 import { getModel } from '../utils/modelMap'

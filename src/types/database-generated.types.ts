@@ -14,13 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      cargo: {
+        Row: {
+          amount: number | null
+          crawler_id: string | null
+          created_at: string
+          id: string
+          mech_id: string | null
+          metadata: Json | null
+          name: string
+          schema_name: string | null
+          schema_ref_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          name: string
+          schema_name?: string | null
+          schema_ref_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          name?: string
+          schema_name?: string | null
+          schema_ref_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cargo_crawler_id_fkey"
+            columns: ["crawler_id"]
+            isOneToOne: false
+            referencedRelation: "crawlers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cargo_mech_id_fkey"
+            columns: ["mech_id"]
+            isOneToOne: false
+            referencedRelation: "mechs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crawlers: {
         Row: {
           active: boolean
-          bays: Json | null
-          cargo: Json | null
-          choices: Json | null
-          crawler_type_id: string | null
           created_at: string | null
           current_damage: number | null
           description: string | null
@@ -42,10 +92,6 @@ export type Database = {
         }
         Insert: {
           active?: boolean
-          bays?: Json | null
-          cargo?: Json | null
-          choices?: Json | null
-          crawler_type_id?: string | null
           created_at?: string | null
           current_damage?: number | null
           description?: string | null
@@ -67,10 +113,6 @@ export type Database = {
         }
         Update: {
           active?: boolean
-          bays?: Json | null
-          cargo?: Json | null
-          choices?: Json | null
-          crawler_type_id?: string | null
           created_at?: string | null
           current_damage?: number | null
           description?: string | null
@@ -226,10 +268,6 @@ export type Database = {
         Row: {
           active: boolean
           appearance: string | null
-          cargo: Json | null
-          chassis_ability: string | null
-          chassis_id: string | null
-          choices: Json | null
           created_at: string | null
           current_damage: number | null
           current_ep: number | null
@@ -247,10 +285,6 @@ export type Database = {
         Insert: {
           active?: boolean
           appearance?: string | null
-          cargo?: Json | null
-          chassis_ability?: string | null
-          chassis_id?: string | null
-          choices?: Json | null
           created_at?: string | null
           current_damage?: number | null
           current_ep?: number | null
@@ -268,10 +302,6 @@ export type Database = {
         Update: {
           active?: boolean
           appearance?: string | null
-          cargo?: Json | null
-          chassis_ability?: string | null
-          chassis_id?: string | null
-          choices?: Json | null
           created_at?: string | null
           current_damage?: number | null
           current_ep?: number | null
@@ -300,13 +330,10 @@ export type Database = {
         Row: {
           abilities: string[] | null
           active: boolean
-          advanced_class_id: string | null
           appearance: string | null
           background: string | null
           background_used: boolean | null
           callsign: string
-          choices: Json | null
-          class_id: string | null
           crawler_id: string | null
           created_at: string | null
           current_ap: number | null
@@ -316,7 +343,6 @@ export type Database = {
           id: string
           keepsake: string | null
           keepsake_used: boolean | null
-          legendary_ability_id: string | null
           max_ap: number | null
           max_hp: number | null
           motto: string | null
@@ -328,13 +354,10 @@ export type Database = {
         Insert: {
           abilities?: string[] | null
           active?: boolean
-          advanced_class_id?: string | null
           appearance?: string | null
           background?: string | null
           background_used?: boolean | null
           callsign: string
-          choices?: Json | null
-          class_id?: string | null
           crawler_id?: string | null
           created_at?: string | null
           current_ap?: number | null
@@ -344,7 +367,6 @@ export type Database = {
           id?: string
           keepsake?: string | null
           keepsake_used?: boolean | null
-          legendary_ability_id?: string | null
           max_ap?: number | null
           max_hp?: number | null
           motto?: string | null
@@ -356,13 +378,10 @@ export type Database = {
         Update: {
           abilities?: string[] | null
           active?: boolean
-          advanced_class_id?: string | null
           appearance?: string | null
           background?: string | null
           background_used?: boolean | null
           callsign?: string
-          choices?: Json | null
-          class_id?: string | null
           crawler_id?: string | null
           created_at?: string | null
           current_ap?: number | null
@@ -372,7 +391,6 @@ export type Database = {
           id?: string
           keepsake?: string | null
           keepsake_used?: boolean | null
-          legendary_ability_id?: string | null
           max_ap?: number | null
           max_hp?: number | null
           motto?: string | null
@@ -387,6 +405,109 @@ export type Database = {
             columns: ["crawler_id"]
             isOneToOne: false
             referencedRelation: "crawlers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      player_choices: {
+        Row: {
+          choice_ref_id: string
+          created_at: string
+          entity_id: string | null
+          id: string
+          player_choice_id: string | null
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          choice_ref_id: string
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          player_choice_id?: string | null
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          choice_ref_id?: string
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          player_choice_id?: string | null
+          updated_at?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_choices_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "suentities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_choices_player_choice_id_fkey"
+            columns: ["player_choice_id"]
+            isOneToOne: false
+            referencedRelation: "player_choices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suentities: {
+        Row: {
+          crawler_id: string | null
+          created_at: string
+          id: string
+          mech_id: string | null
+          metadata: Json | null
+          pilot_id: string | null
+          schema_name: string
+          schema_ref_id: string
+          updated_at: string
+        }
+        Insert: {
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          pilot_id?: string | null
+          schema_name: string
+          schema_ref_id: string
+          updated_at?: string
+        }
+        Update: {
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          pilot_id?: string | null
+          schema_name?: string
+          schema_ref_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entities_crawler_id_fkey"
+            columns: ["crawler_id"]
+            isOneToOne: false
+            referencedRelation: "crawlers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entities_mech_id_fkey"
+            columns: ["mech_id"]
+            isOneToOne: false
+            referencedRelation: "mechs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entities_pilot_id_fkey"
+            columns: ["pilot_id"]
+            isOneToOne: false
+            referencedRelation: "pilots"
             referencedColumns: ["id"]
           },
         ]
@@ -443,6 +564,10 @@ export type Database = {
           jwt_sub: string
           uid: string
         }[]
+      }
+      user_owns_choice: {
+        Args: { choice_id: string; user_id: string }
+        Returns: boolean
       }
     }
     Enums: {

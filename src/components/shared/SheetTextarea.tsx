@@ -1,5 +1,7 @@
 import { Flex, Textarea } from '@chakra-ui/react'
 import { Text } from '../base/Text'
+import { useState, useEffect } from 'react'
+import { DEBOUNCE_TIMINGS } from '../../constants/gameRules'
 
 interface SheetTextareaProps {
   label?: string
@@ -20,8 +22,27 @@ export function SheetTextarea({
   height = '20',
   rows,
 }: SheetTextareaProps) {
+  // Local state for immediate UI updates
+  const [localValue, setLocalValue] = useState(value)
+
+  // Sync local value when prop value changes (e.g., from external updates)
+  useEffect(() => {
+    setLocalValue(value)
+  }, [value])
+
+  // Debounce the onChange callback
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localValue !== value) {
+        onChange(localValue)
+      }
+    }, DEBOUNCE_TIMINGS.autoSave)
+
+    return () => clearTimeout(timer)
+  }, [localValue, value, onChange])
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(e.target.value)
+    setLocalValue(e.target.value)
   }
 
   return (
@@ -49,7 +70,7 @@ export function SheetTextarea({
 
       {/* Textarea with consistent border styling */}
       <Textarea
-        value={value}
+        value={localValue}
         onChange={handleChange}
         disabled={disabled}
         placeholder={placeholder}

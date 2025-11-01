@@ -4,22 +4,23 @@ import { Button } from '@chakra-ui/react'
 import { rollTable } from '@randsum/salvageunion'
 import { SheetInput } from '../shared/SheetInput'
 import type { SURefChassis } from 'salvageunion-reference'
+import type { HydratedEntity } from '../../types/hydrated'
 
 interface PatternSelectorProps {
   pattern: string
-  selectedChassis: SURefChassis | undefined
+  selectedChassis: HydratedEntity | undefined
   onChange: (patternName: string) => void
 }
 
 export function PatternSelector({ pattern, selectedChassis, onChange }: PatternSelectorProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
 
+  const chassisRef = selectedChassis?.ref as SURefChassis | undefined
+
   const filteredPatterns = useMemo(() => {
-    if (!selectedChassis?.patterns || !pattern) return selectedChassis?.patterns || []
-    return selectedChassis.patterns.filter((p) =>
-      p.name.toLowerCase().includes(pattern.toLowerCase())
-    )
-  }, [selectedChassis, pattern])
+    if (!chassisRef?.patterns || !pattern) return chassisRef?.patterns || []
+    return chassisRef.patterns.filter((p) => p.name.toLowerCase().includes(pattern.toLowerCase()))
+  }, [chassisRef, pattern])
 
   const handleRollPattern = () => {
     const {

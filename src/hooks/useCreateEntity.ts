@@ -1,18 +1,17 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import type { TablesInsert } from '../types/database-generated.types'
 import type { ValidTable, CrawlerNPC } from '../types/common'
 import { getUser, createEntity as createEntityAPI } from '../lib/api'
-import type { CrawlerBay } from '../components/CrawlerLiveSheet/types'
+import { useCreateCrawler } from './crawler/useCrawlers'
 
-interface UseCreateEntityConfig<T extends ValidTable> {
+interface useCreateEntityConfig<T extends ValidTable> {
   table: T
   navigationPath: (id: string) => string
   placeholderData?: Partial<TablesInsert<T>>
 }
 
-interface UseCreateEntityResult {
+interface useCreateEntityResult {
   createEntity: () => Promise<void>
   isLoading: boolean
   error: string | null
@@ -26,28 +25,16 @@ interface UseCreateEntityResult {
  * @returns Object with createEntity function, isLoading state, and error state
  */
 export function useCreateEntity<T extends ValidTable>(
-  config: UseCreateEntityConfig<T>
-): UseCreateEntityResult {
+  config: useCreateEntityConfig<T>
+): useCreateEntityResult {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const createCrawlerMutation = useCreateCrawler()
 
   // Get placeholder data based on table type
   const getPlaceholderData = useCallback((): Record<string, unknown> => {
-    // Initialize crawler bays and NPC
-    const allBays = SalvageUnionReference.CrawlerBays.all()
-    const initialBays: CrawlerBay[] = allBays.map((bay) => ({
-      id: `${bay.id}-${Date.now()}-${Math.random()}`,
-      bayId: bay.id,
-      damaged: false,
-      npc: {
-        name: '',
-        notes: '',
-        hitPoints: bay.npc.hitPoints,
-        damage: 0,
-      },
-    }))
-
+    // Initialize crawler NPC
     const initialNPC: CrawlerNPC = {
       name: '',
       notes: '',
@@ -65,7 +52,7 @@ export function useCreateEntity<T extends ValidTable>(
       pilots: {
         callsign: 'Unknown Name',
         max_hp: 10,
-        max_ap: 3,
+        max_ap: 5,
         current_damage: 0,
         current_ap: 0,
       },
@@ -78,7 +65,6 @@ export function useCreateEntity<T extends ValidTable>(
         scrap_tl_four: 0,
         scrap_tl_five: 0,
         scrap_tl_six: 0,
-        bays: initialBays,
         npc: initialNPC,
         tech_level: 1,
       },
@@ -94,6 +80,17 @@ export function useCreateEntity<T extends ValidTable>(
       },
       game_members: {
         role: 'member',
+      },
+      suentities: {
+        schema_name: 'abilities',
+        schema_ref_id: '',
+      },
+      cargo: {
+        name: 'Unknown Cargo',
+      },
+      player_choices: {
+        choice_ref_id: '',
+        value: '',
       },
     }
 
@@ -134,11 +131,18 @@ export function useCreateEntity<T extends ValidTable>(
         }
       }
 
-      // Create entity using API
-      const createdEntity = await createEntityAPI(config.table, data as never)
+      // Create entity using appropriate method
+      let createdEntity: { id: string }
+      if (config.table === 'crawlers') {
+        // Use crawler mutation to ensure bays are created
+        createdEntity = await createCrawlerMutation.mutateAsync(data as never)
+      } else {
+        // Use generic API for other tables
+        createdEntity = await createEntityAPI(config.table, data as never)
+      }
 
       // Navigate to the newly created entity
-      const navigationUrl = config.navigationPath((createdEntity as { id: string }).id)
+      const navigationUrl = config.navigationPath(createdEntity.id)
       navigate(navigationUrl)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : `Failed to create ${config.table}`
@@ -148,7 +152,7 @@ export function useCreateEntity<T extends ValidTable>(
     } finally {
       setIsLoading(false)
     }
-  }, [config, getPlaceholderData, navigate])
+  }, [config, getPlaceholderData, navigate, createCrawlerMutation])
 
   return {
     createEntity,

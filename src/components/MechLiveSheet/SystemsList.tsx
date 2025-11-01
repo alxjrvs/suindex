@@ -1,37 +1,29 @@
+import type { SURefChassis } from 'salvageunion-reference'
+import { useHydratedMech } from '../../hooks/mech'
+import { useManageMechSystemsAndModules } from '../../hooks/mech/useManageMechSystemsAndModules'
 import { MechEntityList } from './MechEntityList'
 
 interface SystemsListProps {
-  /** Array of System IDs */
-  systems: string[]
-  /** Number of used system slots */
-  usedSystemSlots: number
-  /** Total available system slots */
-  totalSystemSlots: number
-  /** Callback when a system is removed */
-  onRemoveSystem: (id: string) => void
-  /** Callback when a system is added */
-  onAddSystem: (id: string) => void
+  id: string
   /** Whether the component is disabled */
   disabled?: boolean
 }
 
-export function SystemsList({
-  systems,
-  usedSystemSlots,
-  totalSystemSlots,
-  onRemoveSystem,
-  onAddSystem,
-  disabled = false,
-}: SystemsListProps) {
+export function SystemsList({ id, disabled = false }: SystemsListProps) {
+  const { systems, selectedChassis, usedSystemSlots } = useHydratedMech(id)
+  const chassisRef = selectedChassis?.ref as SURefChassis | undefined
+  const totalSystemSlots = chassisRef?.stats.systemSlots ?? 0
+  const { handleRemoveSystem, handleAddSystem } = useManageMechSystemsAndModules(id)
+
   return (
     <MechEntityList
       title="Systems"
       schemaName="systems"
-      entityIds={systems}
+      entityIds={systems.map((s) => s.ref.id)}
       usedSlots={usedSystemSlots}
       totalSlots={totalSystemSlots}
-      onRemove={onRemoveSystem}
-      onAdd={onAddSystem}
+      onRemove={handleRemoveSystem}
+      onAdd={handleAddSystem}
       disabled={disabled}
     />
   )

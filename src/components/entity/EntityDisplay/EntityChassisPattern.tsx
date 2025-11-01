@@ -15,6 +15,7 @@ export function EntityChassisPattern({ pattern }: EntityChassisPatternProps) {
   // Also extract preselectedChoices if present
   const systems = pattern.systems
     ? pattern.systems.flatMap((system) => {
+        // Find by name since patterns store names, not IDs
         const found = SalvageUnionReference.findIn('systems', (s) => s.name === system.name)
         if (!found) return []
         const count = 'count' in system && typeof system.count === 'number' ? system.count : 1
@@ -31,6 +32,7 @@ export function EntityChassisPattern({ pattern }: EntityChassisPatternProps) {
 
   const modules = pattern.modules
     ? pattern.modules.flatMap((module) => {
+        // Find by name since patterns store names, not IDs
         const found = SalvageUnionReference.findIn('modules', (m) => m.name === module.name)
         if (!found) return []
         const count = 'count' in module && typeof module.count === 'number' ? module.count : 1

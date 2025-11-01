@@ -2,14 +2,13 @@ import { HStack, VStack, IconButton } from '@chakra-ui/react'
 import { useCallback, useMemo } from 'react'
 import { StatDisplay } from './StatDisplay'
 import { calculateScrapRemoval, hasEnoughScrap } from '../utils/scrapCalculations'
+import { MAX_UPGRADE, UPKEEP_STEP } from '../constants/gameRules'
 
 interface UpkeepStepperProps {
   label: string
   value: number
   onChange: (value: number, scrapUpdates?: Record<string, number>, affectedTLs?: number[]) => void
   min?: number
-  max?: number
-  step?: number
   disabled?: boolean
   techLevel: number
   scrapByTL: Record<number, number>
@@ -21,8 +20,6 @@ export default function UpkeepStepper({
   value,
   onChange,
   min = 0,
-  max,
-  step = 5, // Upkeep increments by 5
   disabled = false,
   techLevel,
   scrapByTL,
@@ -30,14 +27,14 @@ export default function UpkeepStepper({
 }: UpkeepStepperProps) {
   // Calculate upkeep cost in TL1 equivalent
   const upkeepCost = useMemo(() => {
-    return step * techLevel // 5 * current tech level
-  }, [step, techLevel])
+    return UPKEEP_STEP * techLevel // 5 * current tech level
+  }, [techLevel])
 
   // Check if we have enough scrap to increment
   const canIncrement = useMemo(() => {
-    if (max !== undefined && value >= max) return false
+    if (value >= MAX_UPGRADE) return false
     return hasEnoughScrap(upkeepCost, scrapByTL)
-  }, [upkeepCost, scrapByTL, value, max])
+  }, [upkeepCost, scrapByTL, value])
 
   const handleIncrement = useCallback(() => {
     if (!canIncrement) return
@@ -46,15 +43,15 @@ export default function UpkeepStepper({
     const { updates, affectedTLs } = calculateScrapRemoval(upkeepCost, scrapByTL)
 
     // Call onChange with new value and scrap updates
-    onChange(value + step, updates, affectedTLs)
-  }, [canIncrement, upkeepCost, scrapByTL, value, step, onChange])
+    onChange(value + UPKEEP_STEP, updates, affectedTLs)
+  }, [canIncrement, upkeepCost, scrapByTL, value, onChange])
 
   const handleDecrement = useCallback(() => {
     if (value > min) {
       // Down button doesn't interact with scrap
-      onChange(Math.max(value - step, min))
+      onChange(Math.max(value - UPKEEP_STEP, min))
     }
-  }, [value, min, step, onChange])
+  }, [value, min, onChange])
 
   const labelId = useMemo(
     () => `stepper-label-${label.toLowerCase().replace(/\s+/g, '-')}`,
@@ -67,7 +64,7 @@ export default function UpkeepStepper({
         disabled={disabled}
         label={label}
         value={value}
-        outOfMax={max}
+        outOfMax={MAX_UPGRADE}
         labelId={labelId}
         flash={flash}
       />

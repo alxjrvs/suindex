@@ -1,28 +1,38 @@
 import { Button } from '@chakra-ui/react'
 import { useState, useMemo } from 'react'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
 import { getModel } from '../../utils/modelMap'
 import { EntityDisplay } from '../entity/EntityDisplay'
 import { EntitySelectionModal } from '../entity/EntitySelectionModal'
+import { usePlayerChoices } from '../../hooks/suentity'
 
 export function SheetEntityChoiceDisplay({
   choice,
   onUpdateChoice,
-  selectedValue,
+  entityId,
 }: {
   choice: SURefMetaChoice
   onUpdateChoice: (choiceId: string, value: string | undefined) => void
-  selectedValue: string | null
+  entityId: string | undefined
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { data: playerChoices } = usePlayerChoices(entityId)
+
+  // Get the selected value from player choices
+  const selectedValue = useMemo(() => {
+    const playerChoice = playerChoices?.find((pc) => pc.choice_ref_id === choice.id)
+    return playerChoice?.value || null
+  }, [playerChoices, choice.id])
 
   // Parse the selected value to get schema and entity ID
   const selectedEntity = useMemo(() => {
     if (!selectedValue) return null
 
-    const [schemaName, entityId] = selectedValue.split('||')
-    if (!schemaName || !entityId) return null
+    const parsed = SalvageUnionReference.parseRef(selectedValue)
+    if (!parsed) return null
 
+    const { schemaName, id: entityId } = parsed
     const normalizedSchemaName = schemaName.toLowerCase()
 
     const model = getModel(normalizedSchemaName)
@@ -70,7 +80,7 @@ export function SheetEntityChoiceDisplay({
   }, [choice])
 
   const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
-    onUpdateChoice(choice.id, `${schemaName}||${entityId}`)
+    onUpdateChoice(choice.id, SalvageUnionReference.composeRef(schemaName, entityId))
     setIsModalOpen(false)
   }
 

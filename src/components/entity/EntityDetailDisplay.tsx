@@ -16,10 +16,13 @@ export function EntityDetailDisplay({
 }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
   const fontSize = compact ? 'xs' : 'md'
-  const id = SalvageUnionReference.findIn(
+
+  // Find entity by name (case-insensitive) to get its ID for tooltip
+  const entity = SalvageUnionReference.findIn(
     schemaName,
     (t) => t.name.toLowerCase() === String(label).toLowerCase()
-  )?.id
+  )
+  const id = entity?.id
 
   const textContent = (
     <Box display="inline-flex" gap={0}>

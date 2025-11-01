@@ -2,25 +2,29 @@ import { useState, useMemo } from 'react'
 import { Button, Flex, Grid } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
 import { RoundedBox } from '../shared/RoundedBox'
-import type { CrawlerLiveSheetState } from './types'
 import { StatDisplay } from '../StatDisplay'
 import { ScrapConversionModal } from './ScrapConversionModal'
+import { useHydratedCrawler, useUpdateCrawler } from '../../hooks/crawler'
 
 interface CrawlerResourceSteppersProps {
-  crawler: CrawlerLiveSheetState
-  updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
+  id: string
   disabled?: boolean
   flashingTLs?: number[]
 }
 
 export function CrawlerResourceSteppers({
-  crawler,
-  updateEntity,
+  id,
   disabled = false,
   flashingTLs = [],
 }: CrawlerResourceSteppersProps) {
-  const { scrap_tl_one, scrap_tl_two, scrap_tl_three, scrap_tl_four, scrap_tl_five, scrap_tl_six } =
-    crawler
+  const { crawler } = useHydratedCrawler(id)
+  const updateCrawler = useUpdateCrawler()
+  const scrap_tl_one = crawler?.scrap_tl_one ?? 0
+  const scrap_tl_two = crawler?.scrap_tl_two ?? 0
+  const scrap_tl_three = crawler?.scrap_tl_three ?? 0
+  const scrap_tl_four = crawler?.scrap_tl_four ?? 0
+  const scrap_tl_five = crawler?.scrap_tl_five ?? 0
+  const scrap_tl_six = crawler?.scrap_tl_six ?? 0
 
   const [isConversionModalOpen, setIsConversionModalOpen] = useState(false)
 
@@ -44,10 +48,6 @@ export function CrawlerResourceSteppers({
     )
   }, [scrap_tl_one, scrap_tl_two, scrap_tl_three, scrap_tl_four, scrap_tl_five, scrap_tl_six])
 
-  const handleConvert = (updates: Partial<CrawlerLiveSheetState>) => {
-    updateEntity(updates)
-  }
-
   return (
     <>
       <RoundedBox
@@ -64,7 +64,7 @@ export function CrawlerResourceSteppers({
             <NumericStepper
               label="TL1"
               value={scrap_tl_one ?? 0}
-              onChange={(value) => updateEntity({ scrap_tl_one: value })}
+              onChange={(value) => updateCrawler.mutate({ id, updates: { scrap_tl_one: value } })}
               min={0}
               disabled={disabled}
               flash={flashStates[1]}
@@ -74,7 +74,7 @@ export function CrawlerResourceSteppers({
             <NumericStepper
               label="TL2"
               value={scrap_tl_two ?? 0}
-              onChange={(value) => updateEntity({ scrap_tl_two: value })}
+              onChange={(value) => updateCrawler.mutate({ id, updates: { scrap_tl_two: value } })}
               min={0}
               disabled={disabled}
               flash={flashStates[2]}
@@ -84,7 +84,7 @@ export function CrawlerResourceSteppers({
             <NumericStepper
               label="TL3"
               value={scrap_tl_three ?? 0}
-              onChange={(value) => updateEntity({ scrap_tl_three: value })}
+              onChange={(value) => updateCrawler.mutate({ id, updates: { scrap_tl_three: value } })}
               min={0}
               disabled={disabled}
               flash={flashStates[3]}
@@ -94,7 +94,7 @@ export function CrawlerResourceSteppers({
             <NumericStepper
               label="TL4"
               value={scrap_tl_four ?? 0}
-              onChange={(value) => updateEntity({ scrap_tl_four: value })}
+              onChange={(value) => updateCrawler.mutate({ id, updates: { scrap_tl_four: value } })}
               min={0}
               disabled={disabled}
               flash={flashStates[4]}
@@ -104,7 +104,7 @@ export function CrawlerResourceSteppers({
             <NumericStepper
               label="TL5"
               value={scrap_tl_five ?? 0}
-              onChange={(value) => updateEntity({ scrap_tl_five: value })}
+              onChange={(value) => updateCrawler.mutate({ id, updates: { scrap_tl_five: value } })}
               min={0}
               disabled={disabled}
               flash={flashStates[5]}
@@ -114,7 +114,7 @@ export function CrawlerResourceSteppers({
             <NumericStepper
               label="TL6"
               value={scrap_tl_six ?? 0}
-              onChange={(value) => updateEntity({ scrap_tl_six: value })}
+              onChange={(value) => updateCrawler.mutate({ id, updates: { scrap_tl_six: value } })}
               min={0}
               disabled={disabled}
               flash={flashStates[6]}
@@ -147,7 +147,7 @@ export function CrawlerResourceSteppers({
         scrapTlFour={scrap_tl_four ?? 0}
         scrapTlFive={scrap_tl_five ?? 0}
         scrapTlSix={scrap_tl_six ?? 0}
-        onConvert={handleConvert}
+        onConvert={(updates) => updateCrawler.mutate({ id, updates })}
       />
     </>
   )
