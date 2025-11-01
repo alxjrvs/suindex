@@ -13,13 +13,13 @@ import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
 /**
  * Hydrate a single entity with reference data
  *
- * @param entity - Entity row from database
+ * @param entity - Entity row from suentities table
  * @param choices - Associated player choices (optional, defaults to empty array)
  * @returns Hydrated entity with ref data
  * @throws Error if reference data not found
  */
 export function hydrateEntity(
-  entity: Tables<'entities'>,
+  entity: Tables<'suentities'>,
   choices: Tables<'player_choices'>[] = []
 ): HydratedEntity {
   const ref = SalvageUnionReference.get(entity.schema_name as SURefSchemaName, entity.schema_ref_id)
@@ -40,13 +40,13 @@ export function hydrateEntity(
  *
  * Uses SalvageUnionReference.getMany() for efficient batch lookups.
  *
- * @param entities - Entity rows from database
+ * @param entities - Entity rows from suentities table
  * @param choicesByEntityId - Map of entity ID to player choices
  * @returns Array of hydrated entities
  * @throws Error if any reference data not found
  */
 export function hydrateEntities(
-  entities: Tables<'entities'>[],
+  entities: Tables<'suentities'>[],
   choicesByEntityId: Map<string, Tables<'player_choices'>[]> = new Map()
 ): HydratedEntity[] {
   // Build requests array for getMany

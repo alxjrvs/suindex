@@ -3,12 +3,12 @@
 -- This migration creates the foundation for the new entity storage system
 
 -- ============================================================================
--- ENTITIES TABLE
+-- SUENTITIES TABLE
 -- ============================================================================
--- Represents a game entity (ability, equipment, system, module, bay) 
+-- Represents a game entity (ability, equipment, system, module, bay)
 -- associated with a parent (pilot, mech, crawler)
 
-CREATE TABLE entities (
+CREATE TABLE suentities (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -34,10 +34,10 @@ CREATE TABLE entities (
 );
 
 -- Indexes for performance
-CREATE INDEX idx_entities_pilot_id ON entities(pilot_id);
-CREATE INDEX idx_entities_mech_id ON entities(mech_id);
-CREATE INDEX idx_entities_crawler_id ON entities(crawler_id);
-CREATE INDEX idx_entities_schema ON entities(schema_name, schema_ref_id);
+CREATE INDEX idx_suentities_pilot_id ON suentities(pilot_id);
+CREATE INDEX idx_suentities_mech_id ON suentities(mech_id);
+CREATE INDEX idx_suentities_crawler_id ON suentities(crawler_id);
+CREATE INDEX idx_suentities_schema ON suentities(schema_name, schema_ref_id);
 
 -- ============================================================================
 -- CARGO TABLE
@@ -94,7 +94,7 @@ CREATE TABLE player_choices (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
   -- Parent entity
-  entity_id UUID NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
+  entity_id UUID NOT NULL REFERENCES suentities(id) ON DELETE CASCADE,
 
   -- Reference to choice in salvageunion-reference
   choice_ref_id TEXT NOT NULL, -- ID of the choice in the entity's choices array
@@ -114,44 +114,44 @@ CREATE INDEX idx_player_choices_entity_id ON player_choices(entity_id);
 -- ============================================================================
 -- Enable RLS on all new tables
 
-ALTER TABLE entities ENABLE ROW LEVEL SECURITY;
+ALTER TABLE suentities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cargo ENABLE ROW LEVEL SECURITY;
 ALTER TABLE player_choices ENABLE ROW LEVEL SECURITY;
 
 -- ============================================================================
--- RLS POLICIES - ENTITIES
+-- RLS POLICIES - SUENTITIES
 -- ============================================================================
 
--- Users can view entities for their own pilots/mechs/crawlers
-CREATE POLICY "Users can view their own entities"
-  ON entities FOR SELECT
+-- Users can view suentities for their own pilots/mechs/crawlers
+CREATE POLICY "Users can view their own suentities"
+  ON suentities FOR SELECT
   USING (
     pilot_id IN (SELECT id FROM pilots WHERE user_id = auth.uid())
     OR mech_id IN (SELECT id FROM mechs WHERE user_id = auth.uid())
     OR crawler_id IN (SELECT id FROM crawlers WHERE user_id = auth.uid())
   );
 
--- Users can insert entities for their own pilots/mechs/crawlers
-CREATE POLICY "Users can insert their own entities"
-  ON entities FOR INSERT
+-- Users can insert suentities for their own pilots/mechs/crawlers
+CREATE POLICY "Users can insert their own suentities"
+  ON suentities FOR INSERT
   WITH CHECK (
     pilot_id IN (SELECT id FROM pilots WHERE user_id = auth.uid())
     OR mech_id IN (SELECT id FROM mechs WHERE user_id = auth.uid())
     OR crawler_id IN (SELECT id FROM crawlers WHERE user_id = auth.uid())
   );
 
--- Users can update entities for their own pilots/mechs/crawlers
-CREATE POLICY "Users can update their own entities"
-  ON entities FOR UPDATE
+-- Users can update suentities for their own pilots/mechs/crawlers
+CREATE POLICY "Users can update their own suentities"
+  ON suentities FOR UPDATE
   USING (
     pilot_id IN (SELECT id FROM pilots WHERE user_id = auth.uid())
     OR mech_id IN (SELECT id FROM mechs WHERE user_id = auth.uid())
     OR crawler_id IN (SELECT id FROM crawlers WHERE user_id = auth.uid())
   );
 
--- Users can delete entities for their own pilots/mechs/crawlers
-CREATE POLICY "Users can delete their own entities"
-  ON entities FOR DELETE
+-- Users can delete suentities for their own pilots/mechs/crawlers
+CREATE POLICY "Users can delete their own suentities"
+  ON suentities FOR DELETE
   USING (
     pilot_id IN (SELECT id FROM pilots WHERE user_id = auth.uid())
     OR mech_id IN (SELECT id FROM mechs WHERE user_id = auth.uid())
@@ -198,48 +198,48 @@ CREATE POLICY "Users can delete their own cargo"
 -- RLS POLICIES - PLAYER_CHOICES
 -- ============================================================================
 
--- Users can view choices for entities they own
+-- Users can view choices for suentities they own
 CREATE POLICY "Users can view their own player choices"
   ON player_choices FOR SELECT
   USING (
     entity_id IN (
-      SELECT id FROM entities WHERE
+      SELECT id FROM suentities WHERE
         pilot_id IN (SELECT id FROM pilots WHERE user_id = auth.uid())
         OR mech_id IN (SELECT id FROM mechs WHERE user_id = auth.uid())
         OR crawler_id IN (SELECT id FROM crawlers WHERE user_id = auth.uid())
     )
   );
 
--- Users can insert choices for entities they own
+-- Users can insert choices for suentities they own
 CREATE POLICY "Users can insert their own player choices"
   ON player_choices FOR INSERT
   WITH CHECK (
     entity_id IN (
-      SELECT id FROM entities WHERE
+      SELECT id FROM suentities WHERE
         pilot_id IN (SELECT id FROM pilots WHERE user_id = auth.uid())
         OR mech_id IN (SELECT id FROM mechs WHERE user_id = auth.uid())
         OR crawler_id IN (SELECT id FROM crawlers WHERE user_id = auth.uid())
     )
   );
 
--- Users can update choices for entities they own
+-- Users can update choices for suentities they own
 CREATE POLICY "Users can update their own player choices"
   ON player_choices FOR UPDATE
   USING (
     entity_id IN (
-      SELECT id FROM entities WHERE
+      SELECT id FROM suentities WHERE
         pilot_id IN (SELECT id FROM pilots WHERE user_id = auth.uid())
         OR mech_id IN (SELECT id FROM mechs WHERE user_id = auth.uid())
         OR crawler_id IN (SELECT id FROM crawlers WHERE user_id = auth.uid())
     )
   );
 
--- Users can delete choices for entities they own
+-- Users can delete choices for suentities they own
 CREATE POLICY "Users can delete their own player choices"
   ON player_choices FOR DELETE
   USING (
     entity_id IN (
-      SELECT id FROM entities WHERE
+      SELECT id FROM suentities WHERE
         pilot_id IN (SELECT id FROM pilots WHERE user_id = auth.uid())
         OR mech_id IN (SELECT id FROM mechs WHERE user_id = auth.uid())
         OR crawler_id IN (SELECT id FROM crawlers WHERE user_id = auth.uid())

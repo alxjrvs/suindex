@@ -14,7 +14,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { TablesInsert } from '../types/database-generated.types'
+import type { TablesInsert } from '../../types/database-generated.types'
 import {
   fetchChoicesForEntity,
   fetchChoicesForChoice,
@@ -22,7 +22,7 @@ import {
   deletePlayerChoice,
   deleteChoicesForEntity,
   deleteChoicesForChoice,
-} from '../lib/api/playerChoices'
+} from '../../lib/api/playerChoices'
 import { entitiesKeys } from './useEntities'
 
 /**
@@ -87,14 +87,14 @@ export function useNestedChoices(choiceId: string | undefined) {
  * const upsertChoice = useUpsertPlayerChoice()
  *
  * // Entity choice
- * await upsertChoice.mutateAsync({
+ * await upsertChoice.mutate({
  *   entity_id: entityId,
  *   choice_ref_id: 'weapon',
  *   value: 'systems::laser-rifle',
  * })
  *
  * // Nested choice
- * await upsertChoice.mutateAsync({
+ * await upsertChoice.mutate({
  *   player_choice_id: parentChoiceId,
  *   choice_ref_id: 'module',
  *   value: 'modules::targeting-computer',
@@ -143,7 +143,7 @@ export function useUpsertPlayerChoice() {
  * ```tsx
  * const deleteChoice = useDeletePlayerChoice()
  *
- * await deleteChoice.mutateAsync({
+ * deleteChoice.mutate({
  *   id: choiceId,
  *   entityId: entityId,  // For entity choices
  *   choiceId: parentChoiceId,  // For nested choices
@@ -191,7 +191,7 @@ export function useDeletePlayerChoice() {
  * ```tsx
  * const deleteAllChoices = useDeleteChoicesForEntity()
  *
- * await deleteAllChoices.mutateAsync({ entityId })
+ * await deleteAllChoices.mutate({ entityId })
  * ```
  */
 export function useDeleteChoicesForEntity() {
@@ -227,7 +227,7 @@ export function useDeleteChoicesForEntity() {
  * ```tsx
  * const deleteNestedChoices = useDeleteChoicesForChoice()
  *
- * await deleteNestedChoices.mutateAsync({ choiceId })
+ * await deleteNestedChoices.mutate({ choiceId })
  * ```
  */
 export function useDeleteChoicesForChoice() {

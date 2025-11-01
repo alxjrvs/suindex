@@ -16,6 +16,7 @@ import { RulesReferenceLanding } from './components/Reference/RulesReferenceLand
 import { Toaster } from './components/ui/ToasterComponent'
 import { EntityViewerModalProvider } from './providers/EntityViewerModalProvider'
 import { DiscordSignInButton } from './components/DiscordSignInButton'
+import { LOCAL_ID } from './lib/queryClient'
 
 const schemaIndexData = getSchemaCatalog()
 
@@ -47,9 +48,9 @@ function AppContent() {
                   index
                   element={<RulesReferenceLanding schemas={schemaIndexData.schemas} />}
                 />
-                <Route path="/sheets/mech" element={<MechLiveSheet />} />
-                <Route path="/sheets/pilot" element={<PilotLiveSheet />} />
-                <Route path="/sheets/crawler" element={<CrawlerLiveSheet />} />
+                <Route path="/sheets/mech" element={<MechLiveSheet id={LOCAL_ID} />} />
+                <Route path="/sheets/pilot" element={<PilotLiveSheet id={LOCAL_ID} />} />
+                <Route path="/sheets/crawler" element={<CrawlerLiveSheet id={LOCAL_ID} />} />
                 <Route
                   path="/schema/:schemaId"
                   element={<SchemaViewer schemas={schemaIndexData.schemas} />}

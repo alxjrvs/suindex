@@ -146,64 +146,6 @@ export type Database = {
         }
         Relationships: []
       }
-      entities: {
-        Row: {
-          crawler_id: string | null
-          created_at: string
-          id: string
-          mech_id: string | null
-          metadata: Json | null
-          pilot_id: string | null
-          schema_name: string
-          schema_ref_id: string
-          updated_at: string
-        }
-        Insert: {
-          crawler_id?: string | null
-          created_at?: string
-          id?: string
-          mech_id?: string | null
-          metadata?: Json | null
-          pilot_id?: string | null
-          schema_name: string
-          schema_ref_id: string
-          updated_at?: string
-        }
-        Update: {
-          crawler_id?: string | null
-          created_at?: string
-          id?: string
-          mech_id?: string | null
-          metadata?: Json | null
-          pilot_id?: string | null
-          schema_name?: string
-          schema_ref_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "entities_crawler_id_fkey"
-            columns: ["crawler_id"]
-            isOneToOne: false
-            referencedRelation: "crawlers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "entities_mech_id_fkey"
-            columns: ["mech_id"]
-            isOneToOne: false
-            referencedRelation: "mechs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "entities_pilot_id_fkey"
-            columns: ["pilot_id"]
-            isOneToOne: false
-            referencedRelation: "pilots"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       external_links: {
         Row: {
           created_at: string | null
@@ -428,7 +370,6 @@ export type Database = {
           id: string
           keepsake: string | null
           keepsake_used: boolean | null
-          legendary_ability_id: string | null
           max_ap: number | null
           max_hp: number | null
           motto: string | null
@@ -456,7 +397,6 @@ export type Database = {
           id?: string
           keepsake?: string | null
           keepsake_used?: boolean | null
-          legendary_ability_id?: string | null
           max_ap?: number | null
           max_hp?: number | null
           motto?: string | null
@@ -484,7 +424,6 @@ export type Database = {
           id?: string
           keepsake?: string | null
           keepsake_used?: boolean | null
-          legendary_ability_id?: string | null
           max_ap?: number | null
           max_hp?: number | null
           motto?: string | null
@@ -536,7 +475,7 @@ export type Database = {
             foreignKeyName: "player_choices_entity_id_fkey"
             columns: ["entity_id"]
             isOneToOne: false
-            referencedRelation: "entities"
+            referencedRelation: "suentities"
             referencedColumns: ["id"]
           },
           {
@@ -544,6 +483,64 @@ export type Database = {
             columns: ["player_choice_id"]
             isOneToOne: false
             referencedRelation: "player_choices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suentities: {
+        Row: {
+          crawler_id: string | null
+          created_at: string
+          id: string
+          mech_id: string | null
+          metadata: Json | null
+          pilot_id: string | null
+          schema_name: string
+          schema_ref_id: string
+          updated_at: string
+        }
+        Insert: {
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          pilot_id?: string | null
+          schema_name: string
+          schema_ref_id: string
+          updated_at?: string
+        }
+        Update: {
+          crawler_id?: string | null
+          created_at?: string
+          id?: string
+          mech_id?: string | null
+          metadata?: Json | null
+          pilot_id?: string | null
+          schema_name?: string
+          schema_ref_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entities_crawler_id_fkey"
+            columns: ["crawler_id"]
+            isOneToOne: false
+            referencedRelation: "crawlers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entities_mech_id_fkey"
+            columns: ["mech_id"]
+            isOneToOne: false
+            referencedRelation: "mechs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entities_pilot_id_fkey"
+            columns: ["pilot_id"]
+            isOneToOne: false
+            referencedRelation: "pilots"
             referencedColumns: ["id"]
           },
         ]

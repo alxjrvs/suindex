@@ -1,46 +1,41 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { ClassAbilitiesList } from './ClassAbilitiesList'
 import { GeneralAbilitiesList } from './GeneralAbilitiesList'
 import { PilotInventory } from './PilotInventory'
-import { EquipmentSelector } from './EquipmentSelector'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
-import { usePilotLiveSheetState } from './usePilotLiveSheetState'
 import { DeleteEntity } from '../shared/DeleteEntity'
+import { useUpdatePilot, useHydratedPilot, useDeletePilot } from '../../hooks/pilot'
 
 interface PilotLiveSheetProps {
-  id?: string
+  id: string
 }
 
-export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
-  const [isEquipmentSelectorOpen, setIsEquipmentSelectorOpen] = useState(false)
+export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
+  const navigate = useNavigate()
 
-  const allCoreClasses = SalvageUnionReference.CoreClasses.all()
+  // TanStack Query hooks
+  const { pilot, selectedClass, selectedAdvancedClass, loading, error } = useHydratedPilot(id)
 
-  const {
-    pilot,
-    selectedClass,
-    selectedAdvancedClass,
-    availableAdvancedClasses,
-    handleClassChange,
-    handleAddAbility,
-    handleRemoveAbility,
-    handleAddLegendaryAbility,
-    handleRemoveLegendaryAbility,
-    handleAddEquipment,
-    handleRemoveEquipment,
-    deleteEntity,
-    updateEntity,
-    loading,
-    error,
-    hasPendingChanges,
-  } = usePilotLiveSheetState(id)
+  const updatePilot = useUpdatePilot()
+  const deletePilot = useDeletePilot()
+
+  if (!pilot && !loading) {
+    return (
+      <LiveSheetLayout>
+        <Flex alignItems="center" justifyContent="center" h="64">
+          <Text fontSize="xl" fontFamily="mono">
+            Pilot not found
+          </Text>
+        </Flex>
+      </LiveSheetLayout>
+    )
+  }
 
   if (loading) {
     return (
@@ -70,50 +65,26 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
       </LiveSheetLayout>
     )
   }
-
   return (
     <LiveSheetLayout>
-      {id && (
+      {id && pilot && (
         <LiveSheetControlBar
           config={PILOT_CONTROL_BAR_CONFIG}
           relationId={pilot.crawler_id}
           savedRelationId={pilot.crawler_id}
-          onRelationChange={(crawlerId) => updateEntity({ crawler_id: crawlerId })}
-          hasPendingChanges={hasPendingChanges}
+          onRelationChange={(crawlerId) =>
+            updatePilot.mutate({ id, updates: { crawler_id: crawlerId } })
+          }
+          hasPendingChanges={updatePilot.isPending}
           active={pilot.active ?? false}
-          onActiveChange={(active) => updateEntity({ active })}
+          onActiveChange={(active) => updatePilot.mutate({ id, updates: { active } })}
           disabled={!selectedClass}
         />
       )}
       <Flex gap={6} w="full">
-        <PilotInfoInputs
-          callsign={pilot.callsign}
-          motto={pilot.motto ?? ''}
-          mottoUsed={pilot.motto_used ?? false}
-          keepsake={pilot.keepsake ?? ''}
-          keepsakeUsed={pilot.keepsake_used ?? false}
-          background={pilot.background ?? ''}
-          backgroundUsed={pilot.background_used ?? false}
-          appearance={pilot.appearance ?? ''}
-          classId={pilot.class_id ?? null}
-          advancedClassId={pilot.advanced_class_id ?? null}
-          allCoreClasses={allCoreClasses}
-          availableAdvancedClasses={availableAdvancedClasses}
-          disabled={!selectedClass}
-          updateEntity={updateEntity}
-          onClassChange={handleClassChange}
-          onAdvancedClassChange={(value) => updateEntity({ advanced_class_id: value })}
-        />
+        <PilotInfoInputs disabled={!selectedClass} id={id} />
 
-        <PilotResourceSteppers
-          maxHP={pilot.max_hp ?? 10}
-          currentDamage={pilot.current_damage ?? 0}
-          maxAP={pilot.max_ap ?? 5}
-          currentAP={pilot.current_ap ?? 5}
-          currentTP={pilot.current_tp ?? 0}
-          updateEntity={updateEntity}
-          disabled={!selectedClass}
-        />
+        <PilotResourceSteppers id={id} disabled={!selectedClass} />
       </Flex>
 
       <Tabs.Root defaultValue="class-abilities">
@@ -126,13 +97,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
         <Tabs.Content value="class-abilities">
           <Box mt={6}>
             <ClassAbilitiesList
-              abilities={pilot.abilities ?? []}
-              legendaryAbilityId={pilot.legendary_ability_id ?? null}
-              onAdd={handleAddAbility}
-              onRemove={handleRemoveAbility}
-              onAddLegendary={handleAddLegendaryAbility}
-              onRemoveLegendary={handleRemoveLegendaryAbility}
-              currentTP={pilot.current_tp ?? 0}
+              id={id}
               selectedClass={selectedClass}
               selectedAdvancedClass={selectedAdvancedClass}
             />
@@ -147,16 +112,11 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
 
         <Tabs.Content value="inventory">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <PilotInventory
-              equipment={pilot.equipment ?? []}
-              onAddClick={() => setIsEquipmentSelectorOpen(true)}
-              onRemove={handleRemoveEquipment}
-              disabled={!selectedClass}
-            />
+            <PilotInventory id={id} disabled={!selectedClass} />
 
             <Notes
-              notes={pilot.notes ?? ''}
-              onChange={(value) => updateEntity({ notes: value })}
+              notes={pilot?.notes ?? ''}
+              onChange={(value) => updatePilot.mutate({ id, updates: { notes: value } })}
               backgroundColor="bg.builder.pilot"
               placeholder="Add notes about your pilot..."
               disabled={!selectedClass}
@@ -166,19 +126,18 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps = {}) {
       </Tabs.Root>
 
       {/* Equipment Selector Modal */}
-      <EquipmentSelector
-        isOpen={isEquipmentSelectorOpen}
-        onClose={() => setIsEquipmentSelectorOpen(false)}
-        onSelectEquipment={handleAddEquipment}
-      />
 
       {/* Delete Button - Only show when editing existing entity */}
       {id && (
         <Box mt={6}>
           <DeleteEntity
             entityName="Pilot"
-            onConfirmDelete={deleteEntity}
-            disabled={!id || hasPendingChanges}
+            onConfirmDelete={() => {
+              deletePilot.mutate(id, {
+                onSuccess: () => navigate('/dashboard/pilots'),
+              })
+            }}
+            disabled={!id || updatePilot.isPending}
           />
         </Box>
       )}

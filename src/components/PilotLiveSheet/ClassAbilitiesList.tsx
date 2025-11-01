@@ -4,73 +4,27 @@ import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type {
   SURefAbility,
-  SURefCoreClass,
   SURefAdvancedClass,
+  SURefCoreClass,
   SURefHybridClass,
 } from 'salvageunion-reference'
 import { EntityDisplay } from '../entity/EntityDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
-
-interface AbilitiesListProps {
-  abilities?: string[] // Array of selected Ability IDs
-  legendaryAbilityId?: string | null
-  onAdd?: (id: string) => void
-  onRemove?: (id: string) => void
-  onAddLegendary?: (id: string) => void
-  onRemoveLegendary?: () => void
-  currentTP?: number
-  selectedClass?: SURefCoreClass | undefined
-  selectedAdvancedClass?: SURefAdvancedClass | SURefHybridClass | undefined
-}
+import { useManagePilotAbilities } from '../../hooks/pilot/useManagePilotAbilities'
+import { useHydratedPilot } from '../../hooks/pilot'
 
 export function ClassAbilitiesList({
-  abilities,
-  legendaryAbilityId,
-  onAdd,
-  onRemove,
-  onAddLegendary,
-  onRemoveLegendary,
-  currentTP,
+  id,
   selectedClass,
   selectedAdvancedClass,
-}: AbilitiesListProps) {
+}: {
+  id?: string | undefined
+  selectedClass: SURefCoreClass | undefined
+  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
+}) {
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
 
   // Get all available levels for a tree (any level where all previous levels are selected)
-  const getAvailableLevels = useCallback(
-    (treeName: string, treeAbilities: SURefAbility[]): Set<number> => {
-      const selectedLevelsInTree = new Set(
-        abilities
-          ?.map((id) => allAbilities.find((a) => a.id === id))
-          .filter((a) => a && a.tree === treeName)
-          .map((a) => Number(a!.level))
-      )
-
-      const availableLevels = new Set<number>()
-
-      // Check each level in the tree
-      treeAbilities.forEach((ability) => {
-        const level = Number(ability.level)
-
-        // Level is available if all previous levels are selected
-        let allPreviousSelected = true
-        for (let i = 1; i < level; i++) {
-          if (!selectedLevelsInTree.has(i)) {
-            allPreviousSelected = false
-            break
-          }
-        }
-
-        if (allPreviousSelected) {
-          availableLevels.add(level)
-        }
-      })
-
-      return availableLevels
-    },
-    [abilities, allAbilities]
-  )
-
   // Organize ALL abilities by tree (not just selected ones)
   const { allTreeAbilities } = useMemo(() => {
     if (!selectedClass && !selectedAdvancedClass) {
@@ -123,11 +77,6 @@ export function ClassAbilitiesList({
 
   const coreTreeNames = selectedClass?.coreTrees || []
 
-  const isSelected = useCallback(
-    (abilityId: string) => abilities?.includes(abilityId) ?? false,
-    [abilities]
-  )
-
   const hasAdvancedOrLegendary =
     (selectedAdvancedClass?.advancedTree && allTreeAbilities[selectedAdvancedClass.advancedTree]) ||
     (selectedAdvancedClass?.legendaryTree && allTreeAbilities[selectedAdvancedClass.legendaryTree])
@@ -143,18 +92,12 @@ export function ClassAbilitiesList({
       >
         {coreTreeNames.map((treeName) => (
           <TreeSection
+            selectedClass={selectedClass}
+            selectedAdvancedClass={selectedAdvancedClass}
             key={treeName}
             treeName={treeName}
             treeAbilities={allTreeAbilities[treeName] || []}
-            selectedClass={selectedClass}
-            isSelected={isSelected}
-            selectedAdvancedClass={selectedAdvancedClass}
-            currentTP={currentTP}
-            onAdd={onAdd}
-            onRemove={onRemove}
-            getAvailableLevels={getAvailableLevels}
-            abilities={abilities}
-            allAbilities={allAbilities}
+            id={id}
           />
         ))}
       </Grid>
@@ -166,18 +109,12 @@ export function ClassAbilitiesList({
           {selectedAdvancedClass?.advancedTree &&
             allTreeAbilities[selectedAdvancedClass.advancedTree] && (
               <TreeSection
+                selectedClass={selectedClass}
+                selectedAdvancedClass={selectedAdvancedClass}
                 key={selectedAdvancedClass.advancedTree}
                 treeName={selectedAdvancedClass.advancedTree}
                 treeAbilities={allTreeAbilities[selectedAdvancedClass.advancedTree] || []}
-                selectedClass={selectedClass}
-                selectedAdvancedClass={selectedAdvancedClass}
-                currentTP={currentTP}
-                onAdd={onAdd}
-                onRemove={onRemove}
-                isSelected={isSelected}
-                getAvailableLevels={getAvailableLevels}
-                abilities={abilities}
-                allAbilities={allAbilities}
+                id={id}
               />
             )}
 
@@ -185,19 +122,13 @@ export function ClassAbilitiesList({
           {selectedAdvancedClass?.legendaryTree &&
             allTreeAbilities[selectedAdvancedClass.legendaryTree] && (
               <TreeSection
+                selectedClass={selectedClass}
+                selectedAdvancedClass={selectedAdvancedClass}
                 key={selectedAdvancedClass.legendaryTree}
                 treeName={selectedAdvancedClass.legendaryTree}
                 treeAbilities={allTreeAbilities[selectedAdvancedClass.legendaryTree] || []}
-                selectedClass={selectedClass}
-                selectedAdvancedClass={selectedAdvancedClass}
-                currentTP={currentTP}
-                onAdd={onAddLegendary}
-                onRemove={onRemoveLegendary}
-                isSelected={(id) => legendaryAbilityId === id}
-                getAvailableLevels={getAvailableLevels}
                 hideUnchosen={true}
-                abilities={abilities}
-                allAbilities={allAbilities}
+                id={id}
               />
             )}
         </Grid>
@@ -208,33 +139,62 @@ export function ClassAbilitiesList({
 
 function TreeSection({
   treeAbilities,
-  selectedClass,
-  selectedAdvancedClass,
-  getAvailableLevels,
-  isSelected,
-  currentTP,
-  onAdd,
-  onRemove,
   treeName,
   hideUnchosen = false,
-  abilities,
-  allAbilities,
+  selectedClass,
+  selectedAdvancedClass,
+  id,
 }: {
   treeName: string
   treeAbilities: SURefAbility[]
   selectedClass: SURefCoreClass | undefined
   selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
-  currentTP?: number
-  onAdd?: (id: string) => void
-  onRemove?: (id: string) => void
-  getAvailableLevels: (treeName: string, treeAbilities: SURefAbility[]) => Set<number>
-  isSelected: (id: string) => boolean
   hideUnchosen?: boolean
-  abilities?: string[]
-  allAbilities: SURefAbility[]
+  id: string | undefined
 }) {
-  // If currentTP is undefined, we're in read-only mode
-  const isReadOnly = currentTP === undefined
+  const { pilot, abilities } = useHydratedPilot(id)
+  const { handleAddAbility: onAdd, handleRemoveAbility: onRemove } = useManagePilotAbilities(id)
+  const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
+  const currentTP = pilot?.current_tp ?? 0
+  const getAvailableLevels = useCallback(
+    (treeName: string, treeAbilities: SURefAbility[]): Set<number> => {
+      const selectedLevelsInTree = new Set(
+        abilities
+          ?.map((ab) => allAbilities.find((a) => a.id === ab.id))
+          .filter((a) => a && a.tree === treeName)
+          .map((a) => Number(a!.level))
+      )
+
+      const availableLevels = new Set<number>()
+
+      // Check each level in the tree
+      treeAbilities.forEach((ability) => {
+        const level = Number(ability.level)
+
+        // Level is available if all previous levels are selected
+        let allPreviousSelected = true
+        for (let i = 1; i < level; i++) {
+          if (!selectedLevelsInTree.has(i)) {
+            allPreviousSelected = false
+            break
+          }
+        }
+
+        if (allPreviousSelected) {
+          availableLevels.add(level)
+        }
+      })
+
+      return availableLevels
+    },
+    [abilities, allAbilities]
+  )
+
+  const isSelected = useCallback(
+    (abilityId: string) => abilities?.some((a) => a.id === abilityId) ?? false,
+    [abilities]
+  )
+  const isReadOnly = id === undefined
 
   // Check if this is a legendary tree
   const isLegendaryTree = selectedAdvancedClass?.legendaryTree === treeName
@@ -263,7 +223,7 @@ function TreeSection({
     )
 
     // Check if all advanced abilities are selected
-    return advancedTreeAbilities.every((ability) => abilities?.includes(ability.id))
+    return advancedTreeAbilities.every((ability) => abilities?.some((a) => a.id === ability.id))
   }, [isLegendaryTree, selectedAdvancedClass, allAbilities, abilities])
 
   // Check if a legendary ability is already selected

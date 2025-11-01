@@ -1,5 +1,5 @@
 /**
- * Normalized Entity API - CRUD operations for the new entities table with hydration
+ * Normalized Entity API - CRUD operations for the suentities table with hydration
  *
  * This is the new API for the normalized entity system (Phase 2 of migration).
  * All functions validate input with Zod schemas and return hydrated entities.
@@ -28,9 +28,9 @@ export async function fetchEntitiesForParent(
   // Build query based on parent type
   const column = `${parentType}_id` as const
 
-  // Fetch entities
+  // Fetch entities from suentities table
   const { data: entities, error: entitiesError } = await supabase
-    .from('entities')
+    .from('suentities')
     .select('*')
     .eq(column, parentId)
     .order('created_at', { ascending: true })
@@ -76,14 +76,14 @@ export async function fetchEntitiesForParent(
  * @throws Error if validation fails or database insert fails
  */
 export async function createNormalizedEntity(
-  data: TablesInsert<'entities'>
+  data: TablesInsert<'suentities'>
 ): Promise<HydratedEntity> {
   // Validate input
   const validated = createEntitySchema.parse(data)
 
-  // Insert entity
+  // Insert entity into suentities table
   const { data: entity, error } = await supabase
-    .from('entities')
+    .from('suentities')
     .insert(validated)
     .select()
     .single()
@@ -108,14 +108,14 @@ export async function createNormalizedEntity(
  */
 export async function updateNormalizedEntity(
   id: string,
-  updates: TablesUpdate<'entities'>
+  updates: TablesUpdate<'suentities'>
 ): Promise<HydratedEntity> {
   // Validate input
   const validated = updateEntitySchema.parse(updates)
 
-  // Update entity
+  // Update entity in suentities table
   const { data: entity, error: updateError } = await supabase
-    .from('entities')
+    .from('suentities')
     .update(validated)
     .eq('id', id)
     .select()
@@ -148,7 +148,7 @@ export async function updateNormalizedEntity(
  * @throws Error if database delete fails
  */
 export async function deleteNormalizedEntity(id: string): Promise<void> {
-  const { error } = await supabase.from('entities').delete().eq('id', id)
+  const { error } = await supabase.from('suentities').delete().eq('id', id)
 
   if (error) {
     throw new Error(`Failed to delete entity: ${error.message}`)

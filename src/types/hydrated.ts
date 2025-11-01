@@ -15,7 +15,7 @@ import type { SURefEntity } from 'salvageunion-reference'
 /**
  * Entity with hydrated reference data and associated choices
  */
-export type HydratedEntity = Tables<'entities'> & {
+export type HydratedEntity = Tables<'suentities'> & {
   /**
    * Reference data from salvageunion-reference
    * Populated via SalvageUnionReference.get(schema_name, schema_ref_id)

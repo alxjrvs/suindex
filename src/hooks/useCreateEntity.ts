@@ -95,7 +95,7 @@ export function useCreateEntity<T extends ValidTable>(
       game_members: {
         role: 'member',
       },
-      entities: {
+      suentities: {
         schema_name: 'abilities',
         schema_ref_id: '',
       },

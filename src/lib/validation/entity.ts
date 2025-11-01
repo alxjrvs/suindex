@@ -11,8 +11,8 @@ import { z } from 'zod'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import {
-  publicEntitiesInsertSchema,
-  publicEntitiesUpdateSchema,
+  publicSuentitiesInsertSchema,
+  publicSuentitiesUpdateSchema,
 } from '../../types/database-generated.zod'
 
 /**
@@ -39,7 +39,7 @@ export const entitySchemaNameSchema = z.enum(ENTITY_SCHEMA_NAMES)
  * 1. Exactly one parent (pilot_id, mech_id, or crawler_id) must be set
  * 2. schema_ref_id must exist in salvageunion-reference data
  */
-export const createEntitySchema = publicEntitiesInsertSchema
+export const createEntitySchema = publicSuentitiesInsertSchema
   .extend({
     // Override schema_name to use our stricter enum
     schema_name: entitySchemaNameSchema,
@@ -64,7 +64,7 @@ export const createEntitySchema = publicEntitiesInsertSchema
  * Entity update schema
  * Extends auto-generated schema (no additional validation needed for updates)
  */
-export const updateEntitySchema = publicEntitiesUpdateSchema
+export const updateEntitySchema = publicSuentitiesUpdateSchema
 
 /**
  * Type exports for use in API functions
