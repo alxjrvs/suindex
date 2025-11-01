@@ -230,6 +230,10 @@ export function useCreateEntity() {
 /**
  * Hook to update an entity's metadata
  *
+ * Supports both API-backed and cache-only (local) data:
+ * - API-backed: Updates in Supabase
+ * - Cache-only: Updates cache only
+ *
  * Automatically invalidates the parent's entity cache on success.
  *
  * @returns Mutation object with mutate/mutateAsync functions
@@ -248,8 +252,35 @@ export function useUpdateEntity() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: TablesUpdate<'suentities'> }) =>
-      updateNormalizedEntity(id, updates),
+    mutationFn: async ({ id, updates }: { id: string; updates: TablesUpdate<'suentities'> }) => {
+      // Cache-only mode: Update cache without API call
+      if (isLocalId(id)) {
+        // Find the entity in cache to determine parent
+        const allQueries = queryClient.getQueriesData<HydratedEntity[]>({
+          queryKey: entitiesKeys.all,
+        })
+
+        for (const [queryKey, entities] of allQueries) {
+          if (!entities) continue
+
+          const entity = entities.find((e) => e.id === id)
+          if (entity) {
+            // Update the entity in cache
+            const updatedEntities = entities.map((e) =>
+              e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
+            )
+            queryClient.setQueryData(queryKey, updatedEntities)
+
+            return { ...entity, ...updates, updated_at: new Date().toISOString() }
+          }
+        }
+
+        throw new Error(`Entity not found in cache: ${id}`)
+      }
+
+      // API-backed mode: Update in Supabase
+      return updateNormalizedEntity(id, updates)
+    },
     onSuccess: (updatedEntity) => {
       // Determine parent type and ID
       const parentType = updatedEntity.pilot_id
@@ -260,6 +291,9 @@ export function useUpdateEntity() {
       const parentId = updatedEntity.pilot_id || updatedEntity.mech_id || updatedEntity.crawler_id
 
       if (!parentId) return
+
+      // Don't invalidate for local IDs - cache is already updated
+      if (isLocalId(parentId)) return
 
       // Invalidate parent's entity cache to trigger refetch
       queryClient.invalidateQueries({

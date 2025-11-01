@@ -54,7 +54,7 @@ export async function fetchChoicesForChoice(choiceId: string): Promise<Tables<'p
 /**
  * Create or update a player choice (upsert)
  *
- * Uses unique constraint on (entity_id, choice_key) to handle upserts.
+ * Uses unique constraint on (entity_id, choice_ref_id) to handle upserts.
  *
  * @param data - Player choice data
  * @returns Created or updated player choice
@@ -70,7 +70,7 @@ export async function upsertPlayerChoice(
   const { data: choice, error } = await supabase
     .from('player_choices')
     .upsert(validated, {
-      onConflict: 'entity_id,choice_key',
+      onConflict: 'entity_id,choice_ref_id',
     })
     .select()
     .single()

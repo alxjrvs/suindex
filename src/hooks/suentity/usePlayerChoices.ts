@@ -14,7 +14,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { TablesInsert } from '../../types/database-generated.types'
+import type { Tables, TablesInsert } from '../../types/database-generated.types'
 import {
   fetchChoicesForEntity,
   fetchChoicesForChoice,
@@ -24,7 +24,7 @@ import {
   deleteChoicesForChoice,
 } from '../../lib/api/playerChoices'
 import { entitiesKeys } from './useSUEntities'
-import { isLocalId } from '../../lib/cacheHelpers'
+import { isLocalId, generateLocalId } from '../../lib/cacheHelpers'
 
 /**
  * Query key factory for player choices
@@ -56,12 +56,8 @@ export function usePlayerChoices(entityId: string | undefined) {
 
   return useQuery({
     queryKey: playerChoicesKeys.forEntity(entityId!),
-    queryFn: isLocal
-      ? // Cache-only: Return empty array, data comes from cache
-        async () => []
-      : // API-backed: Fetch from Supabase
-        () => fetchChoicesForEntity(entityId!),
-    enabled: !!entityId, // Only run query if entityId is provided
+    queryFn: () => fetchChoicesForEntity(entityId!),
+    enabled: !!entityId && !isLocal, // Only run query if entityId is provided AND not local
     // For local data, initialize with empty array
     initialData: isLocal ? [] : undefined,
   })
@@ -86,12 +82,8 @@ export function useNestedChoices(choiceId: string | undefined) {
 
   return useQuery({
     queryKey: playerChoicesKeys.forChoice(choiceId!),
-    queryFn: isLocal
-      ? // Cache-only: Return empty array, data comes from cache
-        async () => []
-      : // API-backed: Fetch from Supabase
-        () => fetchChoicesForChoice(choiceId!),
-    enabled: !!choiceId, // Only run query if choiceId is provided
+    queryFn: () => fetchChoicesForChoice(choiceId!),
+    enabled: !!choiceId && !isLocal, // Only run query if choiceId is provided AND not local
     // For local data, initialize with empty array
     initialData: isLocal ? [] : undefined,
   })
@@ -99,6 +91,10 @@ export function useNestedChoices(choiceId: string | undefined) {
 
 /**
  * Hook to upsert a player choice
+ *
+ * Supports both API-backed and cache-only (local) data:
+ * - API-backed: Upserts in Supabase
+ * - Cache-only: Upserts in cache only
  *
  * Automatically invalidates the appropriate choice cache on success.
  * Also invalidates the parent's entity cache to update the hydrated entity.
@@ -128,19 +124,66 @@ export function useUpsertPlayerChoice() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: TablesInsert<'player_choices'>) => upsertPlayerChoice(data),
+    mutationFn: async (data: TablesInsert<'player_choices'>) => {
+      const entityId = data.entity_id
+      const choiceId = (data as { player_choice_id?: string }).player_choice_id
+
+      // Cache-only mode: Update cache without API call
+      if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId))) {
+        const queryKey = entityId
+          ? playerChoicesKeys.forEntity(entityId)
+          : playerChoicesKeys.forChoice(choiceId!)
+
+        const currentChoices = queryClient.getQueryData<Tables<'player_choices'>[]>(queryKey) || []
+
+        // Find existing choice with same choice_ref_id
+        const existingIndex = currentChoices.findIndex(
+          (c) => c.choice_ref_id === data.choice_ref_id
+        )
+
+        const now = new Date().toISOString()
+        const upsertedChoice: Tables<'player_choices'> = {
+          id: existingIndex >= 0 ? currentChoices[existingIndex].id : generateLocalId(),
+          created_at: existingIndex >= 0 ? currentChoices[existingIndex].created_at : now,
+          updated_at: now,
+          entity_id: data.entity_id || null,
+          player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
+          choice_ref_id: data.choice_ref_id!,
+          value: data.value!,
+        }
+
+        // Update cache
+        const updatedChoices =
+          existingIndex >= 0
+            ? currentChoices.map((c, i) => (i === existingIndex ? upsertedChoice : c))
+            : [...currentChoices, upsertedChoice]
+
+        queryClient.setQueryData(queryKey, updatedChoices)
+
+        return upsertedChoice
+      }
+
+      // API-backed mode: Upsert in Supabase
+      return upsertPlayerChoice(data)
+    },
     onSuccess: (choice) => {
+      const entityId = choice.entity_id
+      const choiceId = (choice as { player_choice_id?: string }).player_choice_id
+
+      // Don't invalidate for local IDs - cache is already updated
+      if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId))) {
+        return
+      }
+
       // Invalidate choice cache for parent (entity or choice)
-      if (choice.entity_id) {
+      if (entityId) {
         queryClient.invalidateQueries({
-          queryKey: playerChoicesKeys.forEntity(choice.entity_id),
+          queryKey: playerChoicesKeys.forEntity(entityId),
         })
       }
-      if ((choice as { player_choice_id?: string }).player_choice_id) {
+      if (choiceId) {
         queryClient.invalidateQueries({
-          queryKey: playerChoicesKeys.forChoice(
-            (choice as { player_choice_id: string }).player_choice_id
-          ),
+          queryKey: playerChoicesKeys.forChoice(choiceId),
         })
       }
 
@@ -155,6 +198,10 @@ export function useUpsertPlayerChoice() {
 
 /**
  * Hook to delete a player choice
+ *
+ * Supports both API-backed and cache-only (local) data:
+ * - API-backed: Deletes from Supabase
+ * - Cache-only: Removes from cache only
  *
  * Automatically invalidates the appropriate choice cache on success.
  * Also invalidates the parent's entity cache to update the hydrated entity.
@@ -177,9 +224,47 @@ export function useDeletePlayerChoice() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id }: { id: string; entityId?: string; choiceId?: string }) =>
-      deletePlayerChoice(id),
+    mutationFn: async ({
+      id,
+      entityId,
+      choiceId,
+    }: {
+      id: string
+      entityId?: string
+      choiceId?: string
+    }) => {
+      // Cache-only mode: Remove from cache
+      if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId)) || isLocalId(id)) {
+        const queryKey = entityId
+          ? playerChoicesKeys.forEntity(entityId)
+          : choiceId
+            ? playerChoicesKeys.forChoice(choiceId)
+            : null
+
+        if (queryKey) {
+          const currentChoices = queryClient.getQueryData<Tables<'player_choices'>[]>(queryKey)
+          if (currentChoices) {
+            const updatedChoices = currentChoices.filter((c) => c.id !== id)
+            queryClient.setQueryData(queryKey, updatedChoices)
+          }
+        }
+
+        return
+      }
+
+      // API-backed mode: Delete from Supabase
+      return deletePlayerChoice(id)
+    },
     onSuccess: (_, variables) => {
+      // Don't invalidate for local IDs - cache is already updated
+      if (
+        (variables.entityId && isLocalId(variables.entityId)) ||
+        (variables.choiceId && isLocalId(variables.choiceId)) ||
+        isLocalId(variables.id)
+      ) {
+        return
+      }
+
       // Invalidate choice cache for parent (entity or choice)
       if (variables.entityId) {
         queryClient.invalidateQueries({

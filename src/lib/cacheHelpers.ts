@@ -12,7 +12,7 @@
 import type { QueryClient } from '@tanstack/react-query'
 
 export const LOCAL_ID = 'local' as const
-export const isLocalId = (id: string | undefined) => id === LOCAL_ID
+export const isLocalId = (id: string | undefined) => id?.startsWith('local') ?? false
 
 /**
  * Generate a unique ID for cache-only entities
