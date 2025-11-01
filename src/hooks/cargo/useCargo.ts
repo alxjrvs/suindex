@@ -171,12 +171,15 @@ export function useCreateCargo() {
         )
       }
     },
-    // Refetch on success
+    // Refetch on success (API-backed only)
     onSuccess: (newCargo) => {
       const parentType = newCargo.mech_id ? 'mech' : 'crawler'
       const parentId = newCargo.mech_id || newCargo.crawler_id
 
       if (!parentId) return
+
+      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
+      if (isLocalId(parentId)) return
 
       // Invalidate parent's cargo cache to trigger refetch
       queryClient.invalidateQueries({
@@ -188,6 +191,10 @@ export function useCreateCargo() {
 
 /**
  * Hook to update a cargo item
+ *
+ * Supports both API-backed and cache-only (local) data:
+ * - API-backed: Updates in Supabase
+ * - Cache-only: Updates cache only
  *
  * Automatically invalidates the parent's cargo cache on success.
  *
@@ -207,14 +214,54 @@ export function useUpdateCargo() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: TablesUpdate<'cargo'> }) =>
-      updateCargo(id, updates),
+    mutationFn: async ({ id, updates }: { id: string; updates: TablesUpdate<'cargo'> }) => {
+      // Find the cargo in cache to check if it or its parent is local
+      const allQueries = queryClient.getQueriesData<HydratedCargo[]>({
+        queryKey: cargoKeys.all,
+      })
+
+      let cargo: HydratedCargo | undefined
+      let queryKey: unknown[] | undefined
+
+      for (const [key, cargoItems] of allQueries) {
+        if (!cargoItems) continue
+        const found = cargoItems.find((c) => c.id === id)
+        if (found) {
+          cargo = found
+          queryKey = key as unknown[]
+          break
+        }
+      }
+
+      // Cache-only mode: Update cache without API call if cargo ID or parent ID is local
+      if (cargo && queryKey) {
+        const parentId = cargo.mech_id || cargo.crawler_id
+        if (isLocalId(id) || (parentId && isLocalId(parentId))) {
+          // Update the cargo in cache
+          const cargoItems = queryClient.getQueryData<HydratedCargo[]>(queryKey)
+          if (cargoItems) {
+            const updatedCargo = cargoItems.map((c) =>
+              c.id === id ? { ...c, ...updates, updated_at: new Date().toISOString() } : c
+            )
+            queryClient.setQueryData(queryKey, updatedCargo)
+          }
+
+          return { ...cargo, ...updates, updated_at: new Date().toISOString() }
+        }
+      }
+
+      // API-backed mode: Update in Supabase
+      return updateCargo(id, updates)
+    },
     onSuccess: (updatedCargo) => {
       // Determine parent type and ID
       const parentType = updatedCargo.mech_id ? 'mech' : 'crawler'
       const parentId = updatedCargo.mech_id || updatedCargo.crawler_id
 
       if (!parentId) return
+
+      // Don't invalidate for local IDs - cache is already updated
+      if (isLocalId(parentId)) return
 
       // Invalidate parent's cargo cache to trigger refetch
       queryClient.invalidateQueries({
@@ -226,6 +273,10 @@ export function useUpdateCargo() {
 
 /**
  * Hook to delete a cargo item
+ *
+ * Supports both API-backed and cache-only (local) data:
+ * - API-backed: Deletes from Supabase
+ * - Cache-only: Removes from cache only
  *
  * Automatically invalidates the parent's cargo cache on success.
  *
@@ -246,8 +297,35 @@ export function useDeleteCargo() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id }: { id: string; parentType: string; parentId: string }) => deleteCargo(id),
+    mutationFn: async ({
+      id,
+      parentType,
+      parentId,
+    }: {
+      id: string
+      parentType: string
+      parentId: string
+    }) => {
+      // Cache-only mode: Remove from cache
+      if (isLocalId(parentId) || isLocalId(id)) {
+        const queryKey = cargoKeys.forParent(parentType as 'mech' | 'crawler', parentId)
+        const currentCargo = queryClient.getQueryData<HydratedCargo[]>(queryKey)
+
+        if (currentCargo) {
+          const updatedCargo = currentCargo.filter((c) => c.id !== id)
+          queryClient.setQueryData(queryKey, updatedCargo)
+        }
+
+        return
+      }
+
+      // API-backed mode: Delete from Supabase
+      return deleteCargo(id)
+    },
     onSuccess: (_, variables) => {
+      // Don't invalidate for local IDs - cache is already updated
+      if (isLocalId(variables.parentId) || isLocalId(variables.id)) return
+
       // Invalidate parent's cargo cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: cargoKeys.forParent(

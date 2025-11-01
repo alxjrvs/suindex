@@ -87,41 +87,12 @@ export function hydrateEntities(
 }
 
 /**
- * Extract position from cargo metadata
- *
- * @param metadata - JSONB metadata from database
- * @returns Position object or undefined
- */
-function extractPosition(metadata: unknown): { row: number; col: number } | undefined {
-  if (!metadata || typeof metadata !== 'object') {
-    return undefined
-  }
-
-  const meta = metadata as Record<string, unknown>
-  if (
-    typeof meta.position === 'object' &&
-    meta.position !== null &&
-    'row' in meta.position &&
-    'col' in meta.position &&
-    typeof meta.position.row === 'number' &&
-    typeof meta.position.col === 'number'
-  ) {
-    return { row: meta.position.row, col: meta.position.col }
-  }
-
-  return undefined
-}
-
-/**
  * Hydrate a single cargo item with optional reference data
  *
  * @param cargo - Cargo row from database
- * @returns Hydrated cargo with optional ref data and position
+ * @returns Hydrated cargo with optional ref data (position is in metadata)
  */
 export function hydrateCargo(cargo: Tables<'cargo'>): HydratedCargo {
-  // Extract position from metadata
-  const position = extractPosition(cargo.metadata)
-
   // If cargo has schema reference, hydrate it
   if (cargo.schema_name && cargo.schema_ref_id) {
     const ref = SalvageUnionReference.get(cargo.schema_name as SURefSchemaName, cargo.schema_ref_id)
@@ -133,7 +104,6 @@ export function hydrateCargo(cargo: Tables<'cargo'>): HydratedCargo {
     return {
       ...cargo,
       ref,
-      position,
     }
   }
 
@@ -141,7 +111,6 @@ export function hydrateCargo(cargo: Tables<'cargo'>): HydratedCargo {
   return {
     ...cargo,
     ref: undefined,
-    position,
   }
 }
 
@@ -186,7 +155,6 @@ export function hydrateCargoItems(cargoItems: Tables<'cargo'>[]): HydratedCargo[
     return {
       ...cargo,
       ref,
-      position: extractPosition(cargo.metadata),
     }
   })
 
@@ -194,7 +162,6 @@ export function hydrateCargoItems(cargoItems: Tables<'cargo'>[]): HydratedCargo[
   const hydratedCustom: HydratedCargo[] = custom.map((cargo) => ({
     ...cargo,
     ref: undefined,
-    position: extractPosition(cargo.metadata),
   }))
 
   // Combine and return in original order

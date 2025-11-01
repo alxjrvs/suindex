@@ -35,6 +35,8 @@ export type HydratedEntity = Tables<'suentities'> & {
  * Cargo can be:
  * 1. Schema-based (has schema_name/schema_ref_id) - ref is populated
  * 2. Custom (no schema reference) - ref is undefined
+ *
+ * Position is stored in metadata.position, not as a separate field
  */
 export type HydratedCargo = Tables<'cargo'> & {
   /**
@@ -43,12 +45,6 @@ export type HydratedCargo = Tables<'cargo'> & {
    * undefined for custom cargo items
    */
   ref?: SURefEntity
-
-  /**
-   * Position in cargo grid (extracted from metadata)
-   * Used to preserve visual placement across renders
-   */
-  position?: { row: number; col: number }
 }
 
 /**

@@ -8,7 +8,7 @@ import { Text } from '../base/Text'
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
 import { rollTable } from '@randsum/salvageunion'
-import type { SURefCrawler } from 'salvageunion-reference'
+import type { SURefCrawler, SURefCrawlerBay } from 'salvageunion-reference'
 
 export function NPCCard({
   position,
@@ -24,7 +24,7 @@ export function NPCCard({
 }: {
   choices: Tables<'player_choices'>[]
   npc: CrawlerNPC
-  referenceBay: SURefCrawler | undefined
+  referenceBay: SURefCrawler | SURefCrawlerBay | undefined
   onUpdateBay: (updates: Partial<{ npc: CrawlerNPC }>) => void
   onUpdateChoice: (id: string, value: string) => void
   position: string
@@ -39,6 +39,21 @@ export function NPCCard({
   const onUpdateDamage = (value: number) => onUpdateBay({ npc: { ...npc!, damage: value } })
   const onUpdateName = (value: string) => onUpdateBay({ npc: { ...npc!, name: value } })
   const onUpdateNotes = (value: string) => onUpdateBay({ npc: { ...npc!, notes: value } })
+
+  // Get choice definitions from reference data
+  // Crawler types have npc.choices, crawler bays have choices at top level
+  const choiceDefinitions = useMemo(() => {
+    if (!referenceBay) return []
+    // Check if it's a crawler bay (has choices at top level)
+    if ('choices' in referenceBay && referenceBay.choices) {
+      return referenceBay.choices
+    }
+    // Check if it's a crawler type (has npc.choices)
+    if ('npc' in referenceBay && referenceBay.npc && 'choices' in referenceBay.npc) {
+      return referenceBay.npc.choices || []
+    }
+    return []
+  }, [referenceBay])
 
   // Convert choices array to lookup map
   const choicesMap = useMemo(() => {
@@ -136,7 +151,7 @@ export function NPCCard({
           disabled={disabled}
         />
       </Box>
-      {referenceBay?.npc.choices?.map((choice) => (
+      {choiceDefinitions.map((choice) => (
         <SheetInput
           key={choice.id}
           label={choice.name}

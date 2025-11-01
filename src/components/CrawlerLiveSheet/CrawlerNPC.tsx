@@ -14,12 +14,20 @@ export function CrawlerNPC({ id, disabled = false }: { id: string; disabled?: bo
 
   const crawlerTypeRef = selectedCrawlerType?.ref as SURefCrawler | undefined
 
+  // Default NPC if none exists
+  const npc: CrawlerNPCType = (crawler?.npc as unknown as CrawlerNPCType) || {
+    name: '',
+    notes: '',
+    hitPoints: null,
+    damage: 0,
+  }
+
   const handleUpdateNPC = useCallback(
     (updates: Partial<{ npc: CrawlerNPCType }>) => {
-      if (!crawler?.npc || !updates.npc) return
+      if (!updates.npc) return
       updateCrawler.mutate({ id, updates: { npc: updates.npc as unknown as Json } })
     },
-    [id, crawler?.npc, updateCrawler]
+    [id, updateCrawler]
   )
 
   return (
@@ -31,19 +39,17 @@ export function CrawlerNPC({ id, disabled = false }: { id: string; disabled?: bo
       maxW="50%"
       flex="1"
     >
-      {crawler?.npc && (
-        <NPCCard
-          npc={crawler.npc as unknown as CrawlerNPCType}
-          choices={selectedCrawlerType?.choices || []}
-          description={crawlerTypeRef?.npc.description || ''}
-          maxHP={crawlerTypeRef?.npc.hitPoints || 0}
-          referenceBay={crawlerTypeRef}
-          onUpdateBay={handleUpdateNPC}
-          onUpdateChoice={handleUpdateChoice}
-          position={crawlerTypeRef?.npc.position || 'NPC'}
-          disabled={!crawlerTypeRef}
-        />
-      )}
+      <NPCCard
+        npc={npc}
+        choices={selectedCrawlerType?.choices || []}
+        description={crawlerTypeRef?.npc.description || ''}
+        maxHP={crawlerTypeRef?.npc.hitPoints || 0}
+        referenceBay={crawlerTypeRef}
+        onUpdateBay={handleUpdateNPC}
+        onUpdateChoice={handleUpdateChoice}
+        position={crawlerTypeRef?.npc.position || 'NPC'}
+        disabled={!crawlerTypeRef}
+      />
     </RoundedBox>
   )
 }

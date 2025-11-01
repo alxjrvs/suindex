@@ -7,7 +7,7 @@ import { techLevelColors, suColors } from '../../theme'
 import { EntityDisplayTooltip } from '../entity/EntityDisplayTooltip'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import type { HydratedCargo } from '../../types/hydrated'
-import { updateCargoPosition } from '../../lib/api/cargo'
+import { useUpdateCargo } from '../../hooks/cargo/useCargo'
 
 interface DynamicBayProps {
   items: HydratedCargo[]
@@ -34,6 +34,8 @@ export function DynamicBay({
   disabled = false,
   singleCellMode = false,
 }: DynamicBayProps) {
+  const updateCargo = useUpdateCargo()
+
   // Determine background color for a cargo item based on its hydrated ref
   const getCargoItemBgColor = (item: HydratedCargo): string => {
     if (!item.ref) return 'bg.input' // Default color for items without ref
@@ -61,11 +63,15 @@ export function DynamicBay({
 
   const { rows, cols, packedGrid, itemsMap, newPositions } = useMemo(() => {
     // Convert HydratedCargo to format expected by packCargoGrid
-    const packableItems = items.map((item) => ({
-      id: item.id,
-      amount: singleCellMode ? 1 : item.amount || 1,
-      position: item.position, // Use position from database
-    }))
+    const packableItems = items.map((item) => {
+      // Extract position from metadata
+      const metadata = item.metadata as { position?: { row: number; col: number } } | null
+      return {
+        id: item.id,
+        amount: singleCellMode ? 1 : item.amount || 1,
+        position: metadata?.position, // Use position from metadata
+      }
+    })
 
     const previousGrid = previousGrids.get(instanceKey)
     const packed = packCargoGrid(packableItems, maxCapacity, previousGrid)
@@ -95,33 +101,30 @@ export function DynamicBay({
     }
   }, [items, maxCapacity, instanceKey, singleCellMode])
 
-  // Save position changes to database
+  // Save position changes to database (or cache for local items)
   useEffect(() => {
     // Only save positions if we have items and positions have changed
     if (items.length === 0 || disabled) return
 
-    const positionUpdates: Promise<unknown>[] = []
-
     items.forEach((item) => {
       const newPosition = newPositions.get(item.id)
-      const oldPosition = item.position
+      // Extract old position from metadata
+      const metadata = item.metadata as { position?: { row: number; col: number } } | null
+      const oldPosition = metadata?.position
 
       // Check if position changed
       if (
         newPosition &&
         (!oldPosition || newPosition.row !== oldPosition.row || newPosition.col !== oldPosition.col)
       ) {
-        positionUpdates.push(updateCargoPosition(item.id, newPosition))
+        // Use the hook which handles both local and API-backed cargo
+        updateCargo.mutate({
+          id: item.id,
+          updates: { metadata: { position: newPosition } },
+        })
       }
     })
-
-    // Execute all updates
-    if (positionUpdates.length > 0) {
-      Promise.all(positionUpdates).catch((error) => {
-        console.error('Failed to update cargo positions:', error)
-      })
-    }
-  }, [items, newPositions, disabled])
+  }, [items, newPositions, disabled, updateCargo])
 
   // Helper to check if two cells belong to the same item
   const isSameItem = (index1: number, index2: number): boolean => {
