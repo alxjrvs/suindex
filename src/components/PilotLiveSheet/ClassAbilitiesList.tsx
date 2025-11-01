@@ -153,7 +153,6 @@ function TreeSection({
   id: string | undefined
 }) {
   const { pilot, abilities } = useHydratedPilot(id)
-  console.log('abilities', abilities)
   const { handleAddAbility, handleRemoveAbility } = useManagePilotAbilities(id)
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
   const currentTP = pilot?.current_tp ?? 0

@@ -171,14 +171,12 @@ export function useCrawler(id: string | undefined) {
  * // API-backed crawler
  * await createCrawler.mutate({
  *   name: 'The Wanderer',
- *   crawler_type_id: 'hauler',
  * })
  *
  * // Cache-only crawler
  * await createCrawler.mutate({
  *   id: LOCAL_ID,
  *   name: 'The Wanderer',
- *   crawler_type_id: 'hauler',
  * })
  * ```
  */

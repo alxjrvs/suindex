@@ -269,6 +269,58 @@ export function useUpdateCargo() {
       // API-backed mode: Update in Supabase
       return updateCargo(id, updates)
     },
+    // Optimistic update for API-backed mode
+    onMutate: async ({ id, updates }) => {
+      // Find the cargo in cache
+      const allQueries = queryClient.getQueriesData<HydratedCargo[]>({
+        queryKey: cargoKeys.all,
+      })
+
+      let cargo: HydratedCargo | undefined
+      let queryKey: unknown[] | undefined
+      let parentType: 'mech' | 'crawler' | undefined
+      let parentId: string | undefined
+
+      for (const [key, cargoItems] of allQueries) {
+        if (!cargoItems) continue
+        const found = cargoItems.find((c) => c.id === id)
+        if (found) {
+          cargo = found
+          queryKey = key as unknown[]
+          parentType = found.mech_id ? 'mech' : 'crawler'
+          parentId = found.mech_id || found.crawler_id || undefined
+          break
+        }
+      }
+
+      // Skip optimistic update for local IDs
+      if (!cargo || !queryKey || !parentType || !parentId || isLocalId(id) || isLocalId(parentId)) {
+        return
+      }
+
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: cargoKeys.forParent(parentType, parentId) })
+
+      // Snapshot previous value
+      const previousCargo = queryClient.getQueryData<HydratedCargo[]>(queryKey)
+
+      // Optimistically update cache
+      if (previousCargo) {
+        const updatedCargo = previousCargo.map((c) =>
+          c.id === id ? { ...c, ...updates, updated_at: new Date().toISOString() } : c
+        )
+        queryClient.setQueryData(queryKey, updatedCargo)
+      }
+
+      return { previousCargo, queryKey, parentType, parentId }
+    },
+    // Rollback on error
+    onError: (_err, _variables, context) => {
+      if (context?.previousCargo && context.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousCargo)
+      }
+    },
+    // Refetch on success (API-backed only)
     onSuccess: (updatedCargo) => {
       // Determine parent type and ID
       const parentType = updatedCargo.mech_id ? 'mech' : 'crawler'

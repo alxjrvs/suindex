@@ -167,6 +167,61 @@ export function useUpsertPlayerChoice() {
       // API-backed mode: Upsert in Supabase
       return upsertPlayerChoice(data)
     },
+    // Optimistic update for API-backed mode
+    onMutate: async (data) => {
+      const entityId = data.entity_id
+      const choiceId = (data as { player_choice_id?: string }).player_choice_id
+
+      // Skip optimistic update for local IDs
+      if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId))) {
+        return
+      }
+
+      const queryKey = entityId
+        ? playerChoicesKeys.forEntity(entityId)
+        : choiceId
+          ? playerChoicesKeys.forChoice(choiceId)
+          : null
+
+      if (!queryKey) return
+
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey })
+
+      // Snapshot previous value
+      const previousChoices = queryClient.getQueryData<Tables<'player_choices'>[]>(queryKey) || []
+
+      // Find existing choice with same choice_ref_id
+      const existingIndex = previousChoices.findIndex((c) => c.choice_ref_id === data.choice_ref_id)
+
+      const now = new Date().toISOString()
+      const optimisticChoice: Tables<'player_choices'> = {
+        id: existingIndex >= 0 ? previousChoices[existingIndex].id : generateLocalId(),
+        created_at: existingIndex >= 0 ? previousChoices[existingIndex].created_at : now,
+        updated_at: now,
+        entity_id: data.entity_id || null,
+        player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
+        choice_ref_id: data.choice_ref_id!,
+        value: data.value!,
+      }
+
+      // Optimistically update cache
+      const updatedChoices =
+        existingIndex >= 0
+          ? previousChoices.map((c, i) => (i === existingIndex ? optimisticChoice : c))
+          : [...previousChoices, optimisticChoice]
+
+      queryClient.setQueryData(queryKey, updatedChoices)
+
+      return { previousChoices, queryKey, entityId, choiceId }
+    },
+    // Rollback on error
+    onError: (_err, _data, context) => {
+      if (context?.previousChoices && context.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousChoices)
+      }
+    },
+    // Refetch on success (API-backed only)
     onSuccess: (choice) => {
       const entityId = choice.entity_id
       const choiceId = (choice as { player_choice_id?: string }).player_choice_id

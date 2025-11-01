@@ -49,7 +49,7 @@ export interface HydratedMech {
  *
  * return (
  *   <div>
- *     <h1>{mech?.chassis_id}</h1>
+ *     <h1>{selectedChassis?.ref.name}</h1>
  *     <SystemsList systems={systems} />
  *     <ModulesList modules={modules} />
  *     <CargoList cargo={cargo} />

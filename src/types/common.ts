@@ -6,15 +6,6 @@ export interface DataValue {
   type?: string
 }
 
-export interface CargoItem {
-  id: string
-  amount: number
-  description: string
-  ref?: string
-  color: string
-  position?: { row: number; col: number } // Grid position where item should be placed
-}
-
 export interface CrawlerNPC {
   name: string
   notes: string

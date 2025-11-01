@@ -102,14 +102,14 @@ export function useMech(id: string | undefined) {
  * // API-backed mech
  * await createMech.mutate({
  *   pilot_id: 'uuid-from-db',
- *   chassis_id: 'mule',
+ *   name: 'Iron Giant',
  * })
  *
  * // Cache-only mech
  * await createMech.mutate({
  *   id: LOCAL_ID,
  *   pilot_id: null,
- *   chassis_id: 'mule',
+ *   name: 'Iron Giant',
  * })
  * ```
  */

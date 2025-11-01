@@ -27,7 +27,7 @@ export function useManageMechSystemsAndModules(id: string | undefined) {
     async (entityIdOrSchemaRefId: string) => {
       if (!id) return
 
-      // Support both entity ID and schema_ref_id for backward compatibility
+      // Support both entity ID and schema_ref_id (MechEntityList passes schema_ref_id from salvageunion-reference)
       const entity =
         systems.find((e) => e.id === entityIdOrSchemaRefId) ||
         systems.find((e) => e.schema_ref_id === entityIdOrSchemaRefId)
@@ -59,7 +59,7 @@ export function useManageMechSystemsAndModules(id: string | undefined) {
     async (entityIdOrSchemaRefId: string) => {
       if (!id) return
 
-      // Support both entity ID and schema_ref_id for backward compatibility
+      // Support both entity ID and schema_ref_id (MechEntityList passes schema_ref_id from salvageunion-reference)
       const entity =
         modules.find((e) => e.id === entityIdOrSchemaRefId) ||
         modules.find((e) => e.schema_ref_id === entityIdOrSchemaRefId)

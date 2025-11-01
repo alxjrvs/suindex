@@ -281,6 +281,56 @@ export function useUpdateEntity() {
       // API-backed mode: Update in Supabase
       return updateNormalizedEntity(id, updates)
     },
+    // Optimistic update for API-backed mode
+    onMutate: async ({ id, updates }) => {
+      if (isLocalId(id)) return
+
+      // Find the entity in cache to determine parent
+      const allQueries = queryClient.getQueriesData<HydratedEntity[]>({
+        queryKey: entitiesKeys.all,
+      })
+
+      let parentType: 'pilot' | 'mech' | 'crawler' | undefined
+      let parentId: string | undefined
+      let queryKey: unknown[] | undefined
+
+      for (const [key, entities] of allQueries) {
+        if (!entities) continue
+
+        const entity = entities.find((e) => e.id === id)
+        if (entity) {
+          parentType = entity.pilot_id ? 'pilot' : entity.mech_id ? 'mech' : 'crawler'
+          parentId = entity.pilot_id || entity.mech_id || entity.crawler_id || undefined
+          queryKey = key as unknown[]
+          break
+        }
+      }
+
+      if (!parentType || !parentId || !queryKey) return
+
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: entitiesKeys.forParent(parentType, parentId) })
+
+      // Snapshot previous value
+      const previousEntities = queryClient.getQueryData<HydratedEntity[]>(queryKey)
+
+      // Optimistically update cache
+      if (previousEntities) {
+        const updatedEntities = previousEntities.map((e) =>
+          e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
+        )
+        queryClient.setQueryData(queryKey, updatedEntities)
+      }
+
+      return { previousEntities, queryKey, parentType, parentId }
+    },
+    // Rollback on error
+    onError: (_err, _variables, context) => {
+      if (context?.previousEntities && context.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousEntities)
+      }
+    },
+    // Refetch on success (API-backed only)
     onSuccess: (updatedEntity) => {
       // Determine parent type and ID
       const parentType = updatedEntity.pilot_id

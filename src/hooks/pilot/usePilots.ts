@@ -107,15 +107,13 @@ export function usePilot(id: string | undefined) {
  *
  * // API-backed pilot
  * await createPilot.mutate({
- *   name: 'Alex',
- *   class_id: 'hauler',
+ *   callsign: 'Alex',
  * })
  *
  * // Cache-only pilot
  * await createPilot.mutate({
  *   id: LOCAL_ID,
- *   name: 'Alex',
- *   class_id: 'hauler',
+ *   callsign: 'Alex',
  * })
  * ```
  */
