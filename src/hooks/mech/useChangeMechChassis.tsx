@@ -2,13 +2,13 @@ import { useCallback } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { useHydratedMech } from './useHydratedMech'
 import { useUpdateMech } from './useMechs'
-import { useDeleteEntity } from '../entity/useEntities'
+import { useDeleteSUEntity } from '../suentity/useSUEntities'
 import { useDeleteCargo } from '../cargo/useCargo'
 
 export function useChangeMechChassis(id: string | undefined) {
   const { mech, systems, modules, cargo } = useHydratedMech(id)
   const updateMech = useUpdateMech()
-  const deleteEntity = useDeleteEntity()
+  const deleteEntity = useDeleteSUEntity()
   const deleteCargo = useDeleteCargo()
 
   // Handler functions

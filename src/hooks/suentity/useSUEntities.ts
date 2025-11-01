@@ -89,7 +89,7 @@ export function useEntities(
  *
  * @example
  * ```tsx
- * const createEntity = useCreateEntity()
+ * const createEntity = useCreateSUEntity()
  *
  * // API-backed entity
  * await createEntity.mutate({
@@ -106,7 +106,7 @@ export function useEntities(
  * })
  * ```
  */
-export function useCreateEntity() {
+export function useCreateSUEntity() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -236,7 +236,7 @@ export function useCreateEntity() {
  *
  * @example
  * ```tsx
- * const updateEntity = useUpdateEntity()
+ * const updateEntity = useUpdateSUEntity()
  *
  * await updateEntity.mutate({
  *   id: entityId,
@@ -244,7 +244,7 @@ export function useCreateEntity() {
  * })
  * ```
  */
-export function useUpdateEntity() {
+export function useUpdateSUEntity() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -279,7 +279,7 @@ export function useUpdateEntity() {
  *
  * @example
  * ```tsx
- * const deleteEntity = useDeleteEntity()
+ * const deleteEntity = useDeleteSUEntity()
  *
  * await deleteEntity.mutate({
  *   id: entityId,
@@ -288,7 +288,7 @@ export function useUpdateEntity() {
  * })
  * ```
  */
-export function useDeleteEntity() {
+export function useDeleteSUEntity() {
   const queryClient = useQueryClient()
 
   return useMutation({

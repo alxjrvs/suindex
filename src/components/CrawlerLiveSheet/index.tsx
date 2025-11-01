@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -13,17 +13,15 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { CrawlerControlBar } from './CrawlerControlBar'
 import { CrawlerNPC } from './CrawlerNPC'
 import { DeleteEntity } from '../shared/DeleteEntity'
-import { useUpdateCrawler, useHydratedCrawler } from '../../hooks/crawler'
+import { useUpdateCrawler, useHydratedCrawler, useDeleteCrawler } from '../../hooks/crawler'
 import { useCreateCargo, useDeleteCargo } from '../../hooks/cargo'
-import { deleteEntity as deleteEntityAPI } from '../../lib/api'
 import type { CrawlerLiveSheetState, CrawlerBay } from './types'
-import type { Json } from '../../types/database-generated.types'
 
 interface CrawlerLiveSheetProps {
-  id?: string
+  id: string
 }
 
-export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
+export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   const navigate = useNavigate()
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
   const [flashingScrapTLs, setFlashingScrapTLs] = useState<number[]>([])
@@ -31,58 +29,22 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
   const hasInitializedBaysRef = useRef(false)
 
   // TanStack Query hooks
-  const { crawler, cargo: cargoItems, loading, error } = useHydratedCrawler(id)
+  const {
+    crawler,
+    cargo: cargoItems,
+    loading,
+    error,
+    selectedCrawlerType,
+    totalCargo,
+    isLocal,
+  } = useHydratedCrawler(id)
+  const deleteCrawler = useDeleteCrawler()
   const updateCrawler = useUpdateCrawler()
   const createCargo = useCreateCargo()
   const deleteCargo = useDeleteCargo()
 
-  // Computed values
-  const allCrawlers = SalvageUnionReference.Crawlers.all()
-  const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
   const allBays = SalvageUnionReference.CrawlerBays.all()
 
-  const selectedCrawlerType = useMemo(
-    () => allCrawlers.find((c) => c.id === crawler?.crawler_type_id),
-    [crawler?.crawler_type_id, allCrawlers]
-  )
-
-  const totalCargo = useMemo(
-    () => cargoItems.reduce((sum, item) => sum + (item.amount ?? 0), 0),
-    [cargoItems]
-  )
-
-  const upkeep = useMemo(() => {
-    const techLevel = crawler?.tech_level ?? 1
-    return `5 TL${techLevel}`
-  }, [crawler?.tech_level])
-
-  const maxSP = useMemo(() => {
-    if (!selectedCrawlerType) return 0
-    const techLevel = crawler?.tech_level ?? 1
-    const techLevelData = allTechLevels.find((tl) => tl.techLevel === techLevel)
-    return techLevelData?.structurePoints ?? 0
-  }, [selectedCrawlerType, crawler?.tech_level, allTechLevels])
-
-  // Update entity wrapper - cast to CrawlerLiveSheetState for compatibility with child components
-  const updateEntity = useCallback(
-    (updates: Partial<CrawlerLiveSheetState>) => {
-      if (!id || !crawler) return
-      // Filter out the cargo field and cast bays/npc to Json
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { cargo, bays, npc, ...dbUpdates } = updates
-      updateCrawler.mutate({
-        id,
-        updates: {
-          ...dbUpdates,
-          ...(bays !== undefined ? { bays: bays as unknown as Json } : {}),
-          ...(npc !== undefined ? { npc: npc as unknown as Json } : {}),
-        },
-      })
-    },
-    [id, crawler, updateCrawler]
-  )
-
-  // Initialize all bays on mount (only once)
   useEffect(() => {
     const currentBays = (crawler?.bays as CrawlerBay[] | null) ?? []
     if (
@@ -103,47 +65,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           damage: 0,
         },
       }))
-      updateEntity({ bays: initialBays })
+      updateCrawler.mutate({ id, updates: { bays: JSON.stringify(initialBays) } })
     }
-  }, [allBays, crawler?.bays, updateEntity, loading])
-
-  const handleCrawlerTypeChange = useCallback(
-    async (crawlerTypeId: string | null) => {
-      if (!id || !crawler) return
-
-      // If null or empty, just update to null
-      if (!crawlerTypeId) {
-        updateEntity({ crawler_type_id: null })
-        return
-      }
-
-      // If there's already a crawler type selected and user is changing it, confirm
-      if (crawler.crawler_type_id && crawler.crawler_type_id !== crawlerTypeId) {
-        const confirmed = window.confirm(
-          'Changing the crawler type will reset tech level and scrap. Continue?'
-        )
-
-        if (confirmed) {
-          updateEntity({
-            crawler_type_id: crawlerTypeId,
-            tech_level: 1,
-            scrap_tl_one: 0,
-            scrap_tl_two: 0,
-            scrap_tl_three: 0,
-            scrap_tl_four: 0,
-            scrap_tl_five: 0,
-            scrap_tl_six: 0,
-          })
-        }
-      } else {
-        // First time selection
-        updateEntity({
-          crawler_type_id: crawlerTypeId,
-        })
-      }
-    },
-    [id, crawler, updateEntity]
-  )
+  }, [allBays, crawler?.bays, id, loading, updateCrawler])
 
   const handleUpdateBay = useCallback(
     (bayId: string, updates: Partial<CrawlerBay>) => {
@@ -154,9 +78,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         bay.id === bayId ? { ...bay, ...updates } : bay
       )
 
-      updateEntity({ bays: updatedBays })
+      updateCrawler.mutate({ id, updates: { bays: JSON.stringify(updatedBays) } })
     },
-    [crawler, updateEntity]
+    [crawler, updateCrawler, id]
   )
 
   const handleAddCargo = useCallback(
@@ -207,42 +131,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     },
     [id, cargoItems, deleteCargo]
   )
-
-  const handleUpdateChoice = useCallback(
-    (choiceId: string, value: string | undefined) => {
-      const currentChoices = (crawler?.choices as Record<string, string>) ?? {}
-
-      if (value === undefined) {
-        // Remove the choice by creating a new object without it
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [choiceId]: _, ...remainingChoices } = currentChoices
-        updateEntity({
-          choices: remainingChoices,
-        })
-      } else {
-        // Add or update the choice
-        updateEntity({
-          choices: {
-            ...currentChoices,
-            [choiceId]: value,
-          },
-        })
-      }
-    },
-    [crawler, updateEntity]
-  )
-
-  const handleDeleteEntity = useCallback(async () => {
-    if (!id) return
-
-    try {
-      await deleteEntityAPI('crawlers', id)
-      navigate('/dashboard/crawlers')
-    } catch (error) {
-      console.error('Error deleting crawler:', error)
-      throw error
-    }
-  }, [id, navigate])
 
   // Clear flashing TLs after animation completes
   useEffect(() => {
@@ -308,37 +196,27 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
   return (
     <LiveSheetLayout>
-      {id && crawler && (
+      {!isLocal && (
         <CrawlerControlBar
-          gameId={crawler.game_id}
-          savedGameId={crawler.game_id}
-          onGameChange={(gameId) => updateEntity({ game_id: gameId })}
+          gameId={crawler?.game_id}
+          savedGameId={crawler?.game_id}
+          onGameChange={(gameId) => updateCrawler.mutate({ id, updates: { game_id: gameId } })}
           hasPendingChanges={updateCrawler.isPending}
-          active={crawler.active ?? false}
-          onActiveChange={(active) => updateEntity({ active })}
+          active={crawler?.active ?? false}
+          onActiveChange={(active) => updateCrawler.mutate({ id, updates: { active } })}
           disabled={!selectedCrawlerType}
         />
       )}
       {/* Header Section */}
       <Flex gap={6} w="full" alignItems="stretch">
         <CrawlerHeaderInputs
-          maxSP={maxSP}
-          currentSP={maxSP - (crawler?.current_damage ?? 0)}
-          name={crawler?.name ?? ''}
-          crawlerTypeId={crawler?.crawler_type_id ?? null}
-          description={crawler?.description ?? ''}
-          allCrawlers={allCrawlers}
-          updateEntity={updateEntity}
-          crawler={crawler! as unknown as CrawlerLiveSheetState}
-          upkeep={upkeep}
-          onCrawlerTypeChange={handleCrawlerTypeChange}
           disabled={!selectedCrawlerType}
           onScrapFlash={setFlashingScrapTLs}
+          id={id}
         />
 
         <CrawlerResourceSteppers
-          crawler={crawler! as unknown as CrawlerLiveSheetState}
-          updateEntity={updateEntity}
+          id={id}
           disabled={!selectedCrawlerType}
           flashingTLs={flashingScrapTLs}
         />
@@ -353,15 +231,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
 
         <Tabs.Content value="abilities">
           <Flex gap={6} w="full" mt={6}>
-            <CrawlerAbilities
-              upkeep={upkeep}
-              updateEntity={updateEntity}
-              onUpdateChoice={(choiceId, value) => handleUpdateChoice(choiceId, value)}
-              maxUpgrade={maxUpgrade}
-              crawlerRef={selectedCrawlerType}
-              crawler={crawler! as unknown as CrawlerLiveSheetState}
-              disabled={!selectedCrawlerType}
-            />
+            <CrawlerAbilities id={id} disabled={!selectedCrawlerType} />
             <CrawlerNPC
               crawler={crawler! as unknown as CrawlerLiveSheetState}
               onUpdate={updateEntity}
@@ -409,7 +279,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
               <Box pb="5">
                 <Notes
                   notes={crawler?.notes ?? ''}
-                  onChange={(value) => updateEntity({ notes: value })}
+                  onChange={(value) => updateCrawler.mutate({ id, updates: { notes: value } })}
                   backgroundColor="bg.builder.crawler"
                   placeholder="Add notes about your crawler..."
                   disabled={!selectedCrawlerType}
@@ -448,7 +318,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         onClick={() => {
           const currentTL = crawler?.tech_level || 1
           if (currentTL > 1) {
-            updateEntity({ tech_level: currentTL - 1 })
+            updateCrawler.mutate({ id, updates: { tech_level: currentTL - 1 } })
           }
         }}
         disabled={!selectedCrawlerType || (crawler?.tech_level || 1) <= 1}
@@ -456,10 +326,16 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
         DOWNGRADE TECH LEVEL
       </Button>
 
-      {id && (
+      {!isLocal && (
         <DeleteEntity
           entityName="Crawler"
-          onConfirmDelete={handleDeleteEntity}
+          onConfirmDelete={() =>
+            deleteCrawler.mutate(id, {
+              onSuccess: () => {
+                navigate('/dashboard/crawlers')
+              },
+            })
+          }
           disabled={!id || updateCrawler.isPending}
         />
       )}

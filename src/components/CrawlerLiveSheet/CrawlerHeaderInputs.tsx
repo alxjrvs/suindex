@@ -2,54 +2,40 @@ import { Flex, Grid, VStack } from '@chakra-ui/react'
 import { SheetInput } from '../shared/SheetInput'
 import { SheetSelect } from '../shared/SheetSelect'
 import { SheetTextarea } from '../shared/SheetTextarea'
-import type { SURefCrawler } from 'salvageunion-reference'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
-import type { CrawlerLiveSheetState } from './types'
 import NumericStepper from '../NumericStepper'
 import { StatDisplay } from '../StatDisplay'
 import UpkeepStepper from '../UpkeepStepper'
 import { useMemo, useState, useEffect } from 'react'
 import { MAX_UPGRADE } from '../../constants/gameRules'
+import { useHydratedCrawler, useUpdateCrawler } from '../../hooks/crawler'
+import { useOnCrawlerTypeChange } from '../../hooks/crawler/useOnCrawlerTypeChange'
 
 interface CrawlerHeaderInputsProps {
-  name: string
-  crawlerTypeId: string | null
-  description: string
-  allCrawlers: SURefCrawler[]
-  updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
-  onCrawlerTypeChange: (value: string | null) => void
   disabled?: boolean
-  maxSP: number
-  currentSP: number
-  crawler: CrawlerLiveSheetState
-  upkeep: string
-  onScrapFlash?: (techLevels: number[]) => void
-  onTechLevelUpgradeFlash?: () => void
+  onScrapFlash: (techLevels: number[]) => void
+  id: string
 }
 
 export function CrawlerHeaderInputs({
-  name,
-  upkeep,
-  crawlerTypeId,
-  description,
-  allCrawlers,
-  updateEntity,
-  maxSP,
-  currentSP,
-  crawler,
-  onCrawlerTypeChange,
   disabled = false,
+  id,
   onScrapFlash,
-  onTechLevelUpgradeFlash,
 }: CrawlerHeaderInputsProps) {
-  const currentUpgrade = crawler.upgrade ?? 0
-  const currentTechLevel = crawler.tech_level || 1
+  const allCrawlers = useMemo(() => SalvageUnionReference.Crawlers.all(), [])
+
+  const { crawler, upkeep, maxSP } = useHydratedCrawler(id)
+  const currentUpgrade = crawler?.upgrade ?? 0
+  const currentTechLevel = crawler?.tech_level || 1
   const isMaxUpgrade = currentUpgrade === MAX_UPGRADE
   const isTechLevel6 = currentTechLevel === 6
+  const currentSP = maxSP - (crawler?.current_damage ?? 0)
   const [flashUpkeep, setFlashUpkeep] = useState(false)
   const [flashTL, setFlashTL] = useState(false)
   const [flashUpgradeDisplay, setFlashUpgradeDisplay] = useState(false)
   const [flashSP, setFlashSP] = useState(false)
+  const updateCrawler = useUpdateCrawler()
 
   const handleUpgradeToNextTechLevel = () => {
     if (isMaxUpgrade && currentTechLevel < 6) {
@@ -59,14 +45,12 @@ export function CrawlerHeaderInputs({
       setFlashUpgradeDisplay(true)
       setFlashSP(true)
 
-      // Notify parent to flash header stats
-      if (onTechLevelUpgradeFlash) {
-        onTechLevelUpgradeFlash()
-      }
-
-      updateEntity({
-        tech_level: currentTechLevel + 1,
-        upgrade: 0,
+      updateCrawler.mutate({
+        id,
+        updates: {
+          tech_level: currentTechLevel + 1,
+          upgrade: 0,
+        },
       })
     }
   }
@@ -74,43 +58,40 @@ export function CrawlerHeaderInputs({
   // Build scrapByTL object
   const scrapByTL = useMemo(
     () => ({
-      1: crawler.scrap_tl_one ?? 0,
-      2: crawler.scrap_tl_two ?? 0,
-      3: crawler.scrap_tl_three ?? 0,
-      4: crawler.scrap_tl_four ?? 0,
-      5: crawler.scrap_tl_five ?? 0,
-      6: crawler.scrap_tl_six ?? 0,
+      1: crawler?.scrap_tl_one ?? 0,
+      2: crawler?.scrap_tl_two ?? 0,
+      3: crawler?.scrap_tl_three ?? 0,
+      4: crawler?.scrap_tl_four ?? 0,
+      5: crawler?.scrap_tl_five ?? 0,
+      6: crawler?.scrap_tl_six ?? 0,
     }),
     [
-      crawler.scrap_tl_one,
-      crawler.scrap_tl_two,
-      crawler.scrap_tl_three,
-      crawler.scrap_tl_four,
-      crawler.scrap_tl_five,
-      crawler.scrap_tl_six,
+      crawler?.scrap_tl_one,
+      crawler?.scrap_tl_two,
+      crawler?.scrap_tl_three,
+      crawler?.scrap_tl_four,
+      crawler?.scrap_tl_five,
+      crawler?.scrap_tl_six,
     ]
   )
 
   const handleUpgradeChange = (
     newValue: number,
-    scrapUpdates?: Record<string, number>,
+    scrapUpdates: Record<string, number> = {},
     affectedTLs?: number[]
   ) => {
-    const updates: Partial<CrawlerLiveSheetState> = { upgrade: newValue }
-
     // If scrap updates are provided, merge them
     if (scrapUpdates) {
-      Object.assign(updates, scrapUpdates)
-
-      // Trigger flash animations
       setFlashUpkeep(true)
       if (affectedTLs && onScrapFlash) {
         onScrapFlash(affectedTLs)
       }
     }
 
-    updateEntity(updates)
+    updateCrawler.mutate({ id, updates: { upgrade: newValue, ...scrapUpdates } })
   }
+
+  const onCrawlerTypeChange = useOnCrawlerTypeChange(id)
 
   // Reset flash states
   useEffect(() => {
@@ -143,7 +124,7 @@ export function CrawlerHeaderInputs({
 
   return (
     <RoundedBox
-      title={crawler.name ?? 'Crawler'}
+      title={crawler?.name ?? 'Crawler'}
       bg="bg.builder.crawler"
       flex="1"
       disabled={disabled}
@@ -185,7 +166,9 @@ export function CrawlerHeaderInputs({
           <NumericStepper
             label="SP"
             value={currentSP}
-            onChange={(newSP) => updateEntity({ current_damage: maxSP - newSP })}
+            onChange={(newSP) =>
+              updateCrawler.mutate({ id, updates: { current_damage: maxSP - newSP } })
+            }
             max={maxSP}
             min={0}
             disabled={disabled}
@@ -198,13 +181,17 @@ export function CrawlerHeaderInputs({
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full">
           <SheetInput
             label="Name"
-            value={name}
-            onChange={(value) => updateEntity({ name: value })}
+            value={crawler?.name ?? ''}
+            onChange={(value) => updateCrawler.mutate({ id, updates: { name: value } })}
             placeholder="Enter crawler name..."
             disabled={disabled}
           />
 
-          <SheetSelect label="Type" value={crawlerTypeId} onChange={onCrawlerTypeChange}>
+          <SheetSelect
+            label="Type"
+            value={crawler?.crawler_type_id ?? ''}
+            onChange={onCrawlerTypeChange}
+          >
             <option value="">Select crawler type...</option>
             {allCrawlers.map((crawler) => (
               <option key={crawler.id} value={crawler.id}>
@@ -217,8 +204,8 @@ export function CrawlerHeaderInputs({
         <Flex flex="1" direction="column" minH="0" w="full">
           <SheetTextarea
             label="Description"
-            value={description}
-            onChange={(value) => updateEntity({ description: value })}
+            value={crawler?.description ?? ''}
+            onChange={(value) => updateCrawler.mutate({ id, updates: { description: value } })}
             placeholder="Enter crawler description..."
             disabled={disabled}
             height="full"

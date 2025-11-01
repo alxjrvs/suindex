@@ -6,13 +6,13 @@ import type { ValidTable, CrawlerNPC } from '../types/common'
 import { getUser, createEntity as createEntityAPI } from '../lib/api'
 import type { CrawlerBay } from '../components/CrawlerLiveSheet/types'
 
-interface UseCreateEntityConfig<T extends ValidTable> {
+interface useCreateSUEntityConfig<T extends ValidTable> {
   table: T
   navigationPath: (id: string) => string
   placeholderData?: Partial<TablesInsert<T>>
 }
 
-interface UseCreateEntityResult {
+interface useCreateSUEntityResult {
   createEntity: () => Promise<void>
   isLoading: boolean
   error: string | null
@@ -25,9 +25,9 @@ interface UseCreateEntityResult {
  * @param config Configuration object with table name, navigation path, and optional placeholder data
  * @returns Object with createEntity function, isLoading state, and error state
  */
-export function useCreateEntity<T extends ValidTable>(
-  config: UseCreateEntityConfig<T>
-): UseCreateEntityResult {
+export function useCreateSUEntity<T extends ValidTable>(
+  config: useCreateSUEntityConfig<T>
+): useCreateSUEntityResult {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

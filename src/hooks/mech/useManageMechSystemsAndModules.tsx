@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { useCreateEntity, useDeleteEntity } from '../entity'
+import { useCreateSUEntity, useDeleteSUEntity } from '../suentity'
 import { useHydratedMech } from './useHydratedMech'
 
 export function useManageMechSystemsAndModules(id: string | undefined) {
   const { systems, modules } = useHydratedMech(id)
-  const createEntity = useCreateEntity()
-  const deleteEntity = useDeleteEntity()
+  const createEntity = useCreateSUEntity()
+  const deleteEntity = useDeleteSUEntity()
   const handleAddSystem = useCallback(
     (systemId: string) => {
       if (!id) return

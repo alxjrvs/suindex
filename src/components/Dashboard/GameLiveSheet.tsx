@@ -26,7 +26,7 @@ import {
 } from '../../utils/referenceDataHelpers'
 import { ActiveToggle } from '../shared/ActiveToggle'
 import { RoundedBox } from '../shared/RoundedBox'
-import { useCreateEntity } from '../../hooks/useCreateEntity'
+import { useCreateSUEntity } from '../../hooks/useCreateSUEntity'
 
 type GameInviteRow = GameInvite
 type ExternalLinkRow = ExternalLink
@@ -71,7 +71,7 @@ export function GameLiveSheet() {
   const [deleteError, setDeleteError] = useState<string | null>(null)
 
   // Crawler creation
-  const { createEntity: createCrawler, isLoading: isCreatingCrawler } = useCreateEntity({
+  const { createEntity: createCrawler, isLoading: isCreatingCrawler } = useCreateSUEntity({
     table: 'crawlers',
     navigationPath: (id) => `/dashboard/crawlers/${id}`,
     placeholderData: gameId ? { game_id: gameId, active: true } : undefined,

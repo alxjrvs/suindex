@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 import { useHydratedMech } from './useHydratedMech'
-import { useCreateEntity, useDeleteEntity } from '../entity'
+import { useCreateSUEntity, useDeleteSUEntity } from '../suentity'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { useUpdateMech } from './useMechs'
 
 export function useChangeMechChassisPattern(id: string | undefined) {
   const { selectedChassis, systems, modules } = useHydratedMech(id)
-  const createEntity = useCreateEntity()
-  const deleteEntity = useDeleteEntity()
+  const createEntity = useCreateSUEntity()
+  const deleteEntity = useDeleteSUEntity()
   const updateMech = useUpdateMech()
   return useCallback(
     async (patternName: string) => {

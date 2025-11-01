@@ -11,7 +11,7 @@
 
 import { useMemo } from 'react'
 import { useMech } from './useMechs'
-import { useEntities } from '../entity/useEntities'
+import { useEntities } from '../suentity/useSUEntities'
 import { useCargo } from '../cargo/useCargo'
 import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'

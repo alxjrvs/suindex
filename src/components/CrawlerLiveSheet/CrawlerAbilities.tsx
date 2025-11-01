@@ -1,24 +1,13 @@
 import { type SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
-import type { CrawlerLiveSheetState } from './types'
 import { VStack } from '@chakra-ui/react'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
+import { useHydratedCrawler } from '../../hooks/crawler'
 
-export function CrawlerAbilities({
-  crawlerRef,
-  onUpdateChoice,
-  crawler,
-  disabled = false,
-}: {
-  upkeep: string
-  updateEntity: (updates: Partial<CrawlerLiveSheetState>) => void
-  crawlerRef: SURefCrawler | undefined
-  onUpdateChoice: (choiceId: string, value: string | undefined) => void
-  crawler: CrawlerLiveSheetState
-  maxUpgrade: number
-  disabled?: boolean
-}) {
+export function CrawlerAbilities({ id, disabled = false }: { id: string; disabled?: boolean }) {
+  const { crawler, selectedCrawlerType } = useHydratedCrawler(id)
+
   return (
     <RoundedBox
       bg="bg.builder.crawler"
@@ -30,7 +19,7 @@ export function CrawlerAbilities({
       flex="1"
     >
       {(
-        crawlerRef?.actions || [
+        selectedCrawlerType?.actions || [
           {
             name: '',
             description: 'No crawler type selected.',
@@ -42,6 +31,7 @@ export function CrawlerAbilities({
           disabled={disabled}
           key={idx}
           ability={ability}
+          id={id}
           choices={crawler.choices}
         />
       ))}

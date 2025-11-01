@@ -23,7 +23,7 @@ import {
   deleteChoicesForEntity,
   deleteChoicesForChoice,
 } from '../../lib/api/playerChoices'
-import { entitiesKeys } from './useEntities'
+import { entitiesKeys } from './useSUEntities'
 
 /**
  * Query key factory for player choices

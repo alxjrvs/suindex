@@ -2,14 +2,14 @@ import { useCallback } from 'react'
 import { SalvageUnionReference, type SURefAbility } from 'salvageunion-reference'
 import { getAbilityCost } from '../../components/PilotLiveSheet/utils/getAbilityCost'
 import { useHydratedPilot } from './useHydratedPilot'
-import { useCreateEntity, useDeleteEntity } from '../entity'
+import { useCreateSUEntity, useDeleteSUEntity } from '../suentity'
 import { useUpdatePilot } from './usePilots'
 
 export function useManagePilotAbilities(id: string | undefined) {
   const { pilot, abilities, selectedClass, selectedAdvancedClass } = useHydratedPilot(id)
-  const createEntity = useCreateEntity()
+  const createEntity = useCreateSUEntity()
   const updatePilot = useUpdatePilot()
-  const deleteEntity = useDeleteEntity()
+  const deleteEntity = useDeleteSUEntity()
 
   const handleAddAbility = useCallback(
     async (abilityId: string) => {
