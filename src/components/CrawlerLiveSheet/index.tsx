@@ -331,7 +331,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
           updateEntity={updateEntity}
           crawler={crawler! as unknown as CrawlerLiveSheetState}
           upkeep={upkeep}
-          maxUpgrade={maxUpgrade}
           onCrawlerTypeChange={handleCrawlerTypeChange}
           disabled={!selectedCrawlerType}
           onScrapFlash={setFlashingScrapTLs}

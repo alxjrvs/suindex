@@ -9,6 +9,7 @@ import NumericStepper from '../NumericStepper'
 import { StatDisplay } from '../StatDisplay'
 import UpkeepStepper from '../UpkeepStepper'
 import { useMemo, useState, useEffect } from 'react'
+import { MAX_UPGRADE } from '../../constants/gameRules'
 
 interface CrawlerHeaderInputsProps {
   name: string
@@ -22,7 +23,6 @@ interface CrawlerHeaderInputsProps {
   currentSP: number
   crawler: CrawlerLiveSheetState
   upkeep: string
-  maxUpgrade: number
   onScrapFlash?: (techLevels: number[]) => void
   onTechLevelUpgradeFlash?: () => void
 }
@@ -30,7 +30,6 @@ interface CrawlerHeaderInputsProps {
 export function CrawlerHeaderInputs({
   name,
   upkeep,
-  maxUpgrade,
   crawlerTypeId,
   description,
   allCrawlers,
@@ -45,7 +44,7 @@ export function CrawlerHeaderInputs({
 }: CrawlerHeaderInputsProps) {
   const currentUpgrade = crawler.upgrade ?? 0
   const currentTechLevel = crawler.tech_level || 1
-  const isMaxUpgrade = currentUpgrade === maxUpgrade
+  const isMaxUpgrade = currentUpgrade === MAX_UPGRADE
   const isTechLevel6 = currentTechLevel === 6
   const [flashUpkeep, setFlashUpkeep] = useState(false)
   const [flashTL, setFlashTL] = useState(false)
@@ -178,7 +177,6 @@ export function CrawlerHeaderInputs({
             label="UPGRADE"
             value={currentUpgrade}
             onChange={handleUpgradeChange}
-            max={isTechLevel6 ? undefined : maxUpgrade}
             disabled={disabled}
             techLevel={currentTechLevel}
             scrapByTL={scrapByTL}
