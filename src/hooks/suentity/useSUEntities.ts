@@ -51,13 +51,13 @@ export const entitiesKeys = {
  * @example
  * ```tsx
  * // API-backed entities
- * const { data: entities } = useSUEntitiesFor('pilot', pilotId)
+ * const { data: entities } = useEntitiesFor('pilot', pilotId)
  *
  * // Cache-only entities (no API calls, cleared on refresh)
- * const { data: localEntities } = useSUEntitiesFor('pilot', LOCAL_ID)
+ * const { data: localEntities } = useEntitiesFor('pilot', LOCAL_ID)
  * ```
  */
-export function useSUEntitiesFor(
+export function useEntitiesFor(
   parentType: 'pilot' | 'mech' | 'crawler',
   parentId: string | undefined
 ) {

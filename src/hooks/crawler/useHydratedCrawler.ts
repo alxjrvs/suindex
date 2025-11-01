@@ -1,7 +1,7 @@
 /**
  * Hook to fetch a crawler with hydrated cargo, crawler type, and bays
  *
- * Combines useCrawler, useCargo, and useSUEntitiesFor to provide a single hook that returns:
+ * Combines useCrawler, useCargo, and useEntitiesFor to provide a single hook that returns:
  * - The crawler data
  * - Hydrated cargo (with optional reference data)
  * - Selected crawler type (hydrated entity with reference data and choices)
@@ -11,7 +11,7 @@
 
 import { useCrawler } from './useCrawlers'
 import { useCargo } from '../cargo/useCargo'
-import { useSUEntitiesFor } from '../suentity/useSUEntities'
+import { useEntitiesFor } from '../suentity/useSUEntities'
 import type { HydratedCargo, HydratedEntity, HydratedBay } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
 import { isLocalId } from '../../lib/cacheHelpers'
@@ -65,7 +65,7 @@ export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
     data: entities = [],
     isLoading: entitiesLoading,
     error: entitiesError,
-  } = useSUEntitiesFor('crawler', id)
+  } = useEntitiesFor('crawler', id)
 
   const isLocal = isLocalId(id)
 

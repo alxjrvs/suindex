@@ -96,7 +96,7 @@ export function BayCard({ bay, disabled = false }: BayCardProps) {
             left={0}
             right={0}
             transform="translateY(-50%)"
-            zIndex={10}
+            zIndex={1}
             px={2}
             filter="drop-shadow(0 0 4px rgba(0, 0, 0, 0.8))"
           >

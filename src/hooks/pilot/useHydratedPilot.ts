@@ -1,7 +1,7 @@
 /**
  * Hook to fetch a pilot with hydrated abilities, equipment, and classes
  *
- * Combines usePilot and useSUEntitiesFor to provide a single hook that returns:
+ * Combines usePilot and useEntitiesFor to provide a single hook that returns:
  * - The pilot data
  * - Hydrated abilities (with reference data and choices)
  * - Hydrated equipment (with reference data and choices)
@@ -12,7 +12,7 @@
 
 import { useMemo } from 'react'
 import { usePilot } from './usePilots'
-import { useSUEntitiesFor } from '../suentity/useSUEntities'
+import { useEntitiesFor } from '../suentity/useSUEntities'
 import type { HydratedEntity } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
 import { isLocalId } from '../../lib/cacheHelpers'
@@ -62,7 +62,7 @@ export function useHydratedPilot(id: string | undefined): HydratedPilot {
     data: entities = [],
     isLoading: entitiesLoading,
     error: entitiesError,
-  } = useSUEntitiesFor('pilot', id)
+  } = useEntitiesFor('pilot', id)
 
   // Derive typed lists from hydrated entities
   const abilities = useMemo(() => entities.filter((e) => e.schema_name === 'abilities'), [entities])

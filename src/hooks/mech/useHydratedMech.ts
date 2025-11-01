@@ -1,7 +1,7 @@
 /**
  * Hook to fetch a mech with hydrated systems, modules, cargo, and chassis
  *
- * Combines useMech, useSUEntitiesFor, and useCargo to provide a single hook that returns:
+ * Combines useMech, useEntitiesFor, and useCargo to provide a single hook that returns:
  * - The mech data
  * - Hydrated systems (with reference data and choices)
  * - Hydrated modules (with reference data and choices)
@@ -12,7 +12,7 @@
 
 import { useMemo } from 'react'
 import { useMech } from './useMechs'
-import { useSUEntitiesFor } from '../suentity/useSUEntities'
+import { useEntitiesFor } from '../suentity/useSUEntities'
 import { useCargo } from '../cargo/useCargo'
 import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
@@ -66,7 +66,7 @@ export function useHydratedMech(id: string | undefined): HydratedMech {
     data: entities = [],
     isLoading: entitiesLoading,
     error: entitiesError,
-  } = useSUEntitiesFor('mech', id)
+  } = useEntitiesFor('mech', id)
 
   // Fetch cargo
   const { data: cargo = [], isLoading: cargoLoading, error: cargoError } = useCargo('mech', id)

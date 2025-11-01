@@ -24,6 +24,7 @@ import {
   deleteChoicesForChoice,
 } from '../../lib/api/playerChoices'
 import { entitiesKeys } from './useSUEntities'
+import { isLocalId } from '../../lib/cacheHelpers'
 
 /**
  * Query key factory for player choices
@@ -38,6 +39,9 @@ export const playerChoicesKeys = {
 /**
  * Hook to fetch player choices for an entity
  *
+ * For local entities (with local IDs), returns empty array and relies on cache.
+ * For API-backed entities, fetches from Supabase.
+ *
  * @param entityId - ID of entity
  * @returns Query result with player choices
  *
@@ -48,15 +52,26 @@ export const playerChoicesKeys = {
  * ```
  */
 export function usePlayerChoices(entityId: string | undefined) {
+  const isLocal = entityId ? isLocalId(entityId) : false
+
   return useQuery({
     queryKey: playerChoicesKeys.forEntity(entityId!),
-    queryFn: () => fetchChoicesForEntity(entityId!),
+    queryFn: isLocal
+      ? // Cache-only: Return empty array, data comes from cache
+        async () => []
+      : // API-backed: Fetch from Supabase
+        () => fetchChoicesForEntity(entityId!),
     enabled: !!entityId, // Only run query if entityId is provided
+    // For local data, initialize with empty array
+    initialData: isLocal ? [] : undefined,
   })
 }
 
 /**
  * Hook to fetch nested choices for a player choice
+ *
+ * For local choices (with local IDs), returns empty array and relies on cache.
+ * For API-backed choices, fetches from Supabase.
  *
  * @param choiceId - ID of parent choice
  * @returns Query result with nested player choices
@@ -67,10 +82,18 @@ export function usePlayerChoices(entityId: string | undefined) {
  * ```
  */
 export function useNestedChoices(choiceId: string | undefined) {
+  const isLocal = choiceId ? isLocalId(choiceId) : false
+
   return useQuery({
     queryKey: playerChoicesKeys.forChoice(choiceId!),
-    queryFn: () => fetchChoicesForChoice(choiceId!),
+    queryFn: isLocal
+      ? // Cache-only: Return empty array, data comes from cache
+        async () => []
+      : // API-backed: Fetch from Supabase
+        () => fetchChoicesForChoice(choiceId!),
     enabled: !!choiceId, // Only run query if choiceId is provided
+    // For local data, initialize with empty array
+    initialData: isLocal ? [] : undefined,
   })
 }
 
