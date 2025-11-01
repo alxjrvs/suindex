@@ -88,7 +88,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
         <PilotResourceSteppers id={id} disabled={!selectedClass} />
       </Flex>
 
-      <Tabs.Root defaultValue="class-abilities">
+      <Tabs.Root defaultValue="general-abilities">
         <Tabs.List>
           <Tabs.Trigger value="class-abilities">Class Abilities</Tabs.Trigger>
           <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>

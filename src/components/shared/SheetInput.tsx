@@ -1,7 +1,8 @@
 import { Flex, Group, IconButton, Input } from '@chakra-ui/react'
 import { Checkbox as ChakraCheckbox } from '@chakra-ui/react'
 import { Text } from '../base/Text'
-import type { ReactNode } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
+import { DEBOUNCE_TIMINGS } from '../../constants/gameRules'
 
 interface SheetInputProps {
   label?: string
@@ -47,8 +48,27 @@ export function SheetInput({
   const hasDiceRoll = onDiceRoll !== undefined
   const hasSuffix = suffixText !== undefined
 
+  // Local state for immediate UI updates
+  const [localValue, setLocalValue] = useState(value)
+
+  // Sync local value when prop value changes (e.g., from external updates)
+  useEffect(() => {
+    setLocalValue(value)
+  }, [value])
+
+  // Debounce the onChange callback
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localValue !== value) {
+        onChange(localValue)
+      }
+    }, DEBOUNCE_TIMINGS.autoSave)
+
+    return () => clearTimeout(timer)
+  }, [localValue, value, onChange])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value)
+    setLocalValue(e.target.value)
   }
 
   return (
@@ -96,7 +116,7 @@ export function SheetInput({
       <Group attached w="full">
         <Input
           type="text"
-          value={value}
+          value={localValue}
           onChange={handleChange}
           onFocus={onFocus}
           onBlur={onBlur}
