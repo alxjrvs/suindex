@@ -1,42 +1,58 @@
 import { RoundedBox } from '../shared/RoundedBox'
 import { DynamicBay } from '../shared/DynamicBay'
-import type { HydratedCargo } from '../../types/hydrated'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
+import { CargoModal } from '../shared/CargoModal'
+import { useManageCrawlerCargo } from '../../hooks/crawler/useManageCrawlerCargo'
+import { useHydratedCrawler } from '../../hooks/crawler'
 
 interface CargoBayProps {
-  cargo: HydratedCargo[]
-  onAddCargo: (position: { row: number; col: number }) => void
-  onRemoveCargo: (id: string) => void
-  damaged?: boolean
+  id: string
   disabled?: boolean
 }
 
-export function StorageCargoBay({
-  cargo,
-  onAddCargo,
-  onRemoveCargo,
-  damaged = false,
-  disabled = false,
-}: CargoBayProps) {
+export function StorageCargoBay({ disabled = false, id }: CargoBayProps) {
   const titleRotation = useMemo(() => getTiltRotation(), [])
+  const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
+  const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
+  const { storageBay, cargo, totalCargo } = useHydratedCrawler(id)
+  const { handleAddCargo, handleRemoveCargo } = useManageCrawlerCargo(id)
+  const damaged = storageBay?.metadata?.damaged ?? false
 
   return (
-    <RoundedBox
-      bg={damaged ? 'su.grey' : 'bg.builder.crawler'}
-      w="full"
-      justifyContent="flex-start"
-      titleRotation={damaged ? titleRotation : 0}
-      disabled={disabled}
-    >
-      <DynamicBay
-        items={cargo}
-        maxCapacity={25}
-        onRemove={onRemoveCargo}
-        onAddClick={onAddCargo}
+    <>
+      <RoundedBox
+        bg={damaged ? 'su.grey' : 'bg.builder.crawler'}
+        w="full"
+        justifyContent="flex-start"
+        titleRotation={damaged ? titleRotation : 0}
         disabled={disabled}
-        singleCellMode
+      >
+        <DynamicBay
+          items={cargo}
+          maxCapacity={25}
+          onRemove={handleRemoveCargo}
+          onAddClick={(position) => {
+            setCargoPosition(position)
+            setIsCargoModalOpen(true)
+          }}
+          disabled={disabled}
+          singleCellMode
+        />
+      </RoundedBox>
+
+      <CargoModal
+        isOpen={isCargoModalOpen}
+        onClose={() => {
+          setIsCargoModalOpen(false)
+          setCargoPosition(null)
+        }}
+        onAdd={handleAddCargo}
+        maxCargo={54}
+        currentCargo={totalCargo}
+        backgroundColor="bg.builder.crawler"
+        position={cargoPosition}
       />
-    </RoundedBox>
+    </>
   )
 }

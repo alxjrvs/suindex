@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -7,14 +7,12 @@ import { CrawlerAbilities } from './CrawlerAbilities'
 import { CrawlerResourceSteppers } from './CrawlerResourceSteppers'
 import { BayCard } from './BayCard'
 import { StorageCargoBay } from './StorageCargoBay'
-import { CargoModal } from '../shared/CargoModal'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { CrawlerControlBar } from './CrawlerControlBar'
 import { CrawlerNPC } from './CrawlerNPC'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { useUpdateCrawler, useHydratedCrawler, useDeleteCrawler } from '../../hooks/crawler'
-import { useCreateCargo, useDeleteCargo } from '../../hooks/cargo'
 import { useCreateEntity } from '../../hooks/suentity'
 
 interface CrawlerLiveSheetProps {
@@ -23,25 +21,12 @@ interface CrawlerLiveSheetProps {
 
 export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   const navigate = useNavigate()
-  const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
   const [flashingScrapTLs, setFlashingScrapTLs] = useState<number[]>([])
-  const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
 
   // TanStack Query hooks
-  const {
-    crawler,
-    cargo: cargoItems,
-    loading,
-    error,
-    selectedCrawlerType,
-    totalCargo,
-    isLocal,
-    bays,
-  } = useHydratedCrawler(id)
+  const { crawler, loading, error, selectedCrawlerType, isLocal, bays } = useHydratedCrawler(id)
   const deleteCrawler = useDeleteCrawler()
   const updateCrawler = useUpdateCrawler()
-  const createCargo = useCreateCargo()
-  const deleteCargo = useDeleteCargo()
   const createEntity = useCreateEntity()
   const allBays = useMemo(() => SalvageUnionReference.CrawlerBays.all(), [])
 
@@ -56,55 +41,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
       })
     }
   }, [bays.length, allBays, createEntity, id, crawler])
-
-  const handleAddCargo = useCallback(
-    async (
-      amount: number,
-      name: string,
-      _color: string, // Ignored - color is determined by ref data at render time
-      ref?: string, // Reference string in format "schema::id"
-      position?: { row: number; col: number } // Position in cargo grid
-    ) => {
-      if (!id) return
-
-      // Parse reference string if provided
-      let schemaName: string | null = null
-      let schemaRefId: string | null = null
-      if (ref) {
-        const parsed = SalvageUnionReference.parseRef(ref)
-        if (parsed) {
-          schemaName = parsed.schemaName
-          schemaRefId = parsed.id
-        }
-      }
-
-      createCargo.mutate({
-        crawler_id: id,
-        name,
-        amount,
-        schema_name: schemaName,
-        schema_ref_id: schemaRefId,
-        metadata: position ? { position } : null,
-      })
-    },
-    [id, createCargo]
-  )
-
-  const handleRemoveCargo = useCallback(
-    async (cargoId: string) => {
-      if (!id) return
-
-      const cargo = cargoItems.find((c) => c.id === cargoId)
-      if (!cargo) return
-
-      const cargoName = cargo.name || 'this cargo'
-
-      if (window.confirm(`Are you sure you want to remove ${cargoName}?`)) {
-        deleteCargo.mutate({ id: cargoId, parentType: 'crawler', parentId: id })
-      }
-    },
-    [id, cargoItems, deleteCargo]
-  )
 
   // Clear flashing TLs after animation completes
   useEffect(() => {
@@ -234,17 +170,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
               </Box>
             </Grid>
 
-            {/* Storage Cargo Bay - Full Width */}
-            <StorageCargoBay
-              cargo={cargoItems}
-              onAddCargo={(position) => {
-                setCargoPosition(position)
-                setIsCargoModalOpen(true)
-              }}
-              onRemoveCargo={handleRemoveCargo}
-              damaged={storageBay?.metadata?.damaged ?? false}
-              disabled={!selectedCrawlerType}
-            />
+            <StorageCargoBay id={id} disabled={!selectedCrawlerType} />
           </VStack>
         </Tabs.Content>
       </Tabs.Root>
@@ -285,20 +211,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           disabled={!id || updateCrawler.isPending}
         />
       )}
-
-      {/* Cargo Modal */}
-      <CargoModal
-        isOpen={isCargoModalOpen}
-        onClose={() => {
-          setIsCargoModalOpen(false)
-          setCargoPosition(null)
-        }}
-        onAdd={handleAddCargo}
-        maxCargo={54}
-        currentCargo={totalCargo}
-        backgroundColor="bg.builder.crawler"
-        position={cargoPosition}
-      />
     </LiveSheetLayout>
   )
 }

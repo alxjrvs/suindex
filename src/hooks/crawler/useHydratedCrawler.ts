@@ -22,6 +22,7 @@ export interface HydratedCrawler {
   crawler: Tables<'crawlers'> | undefined
   cargo: HydratedCargo[]
   bays: HydratedBay[]
+  storageBay: HydratedBay | undefined
   selectedCrawlerType: HydratedEntity | undefined
   loading: boolean
   isLocal: boolean
@@ -105,7 +106,10 @@ export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
     (cargoError ? String(cargoError) : null) ||
     (entitiesError ? String(entitiesError) : null)
 
+  const storageBay = useMemo(() => bays.find((b) => b.ref.name === 'Storage Bay'), [bays])
+
   return {
+    storageBay,
     maxSP,
     upkeep,
     totalCargo,
