@@ -281,7 +281,6 @@ export type Database = {
           active: boolean
           appearance: string | null
           cargo: Json | null
-          chassis_ability: string | null
           chassis_id: string | null
           choices: Json | null
           created_at: string | null
@@ -302,7 +301,6 @@ export type Database = {
           active?: boolean
           appearance?: string | null
           cargo?: Json | null
-          chassis_ability?: string | null
           chassis_id?: string | null
           choices?: Json | null
           created_at?: string | null
@@ -323,7 +321,6 @@ export type Database = {
           active?: boolean
           appearance?: string | null
           cargo?: Json | null
-          chassis_ability?: string | null
           chassis_id?: string | null
           choices?: Json | null
           created_at?: string | null

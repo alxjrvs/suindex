@@ -1,37 +1,26 @@
+import { useHydratedMech } from '../../hooks/mech'
+import { useManageMechSystemsAndModules } from '../../hooks/mech/useManageMechSystemsAndModules'
 import { MechEntityList } from './MechEntityList'
 
 interface ModulesListProps {
-  /** Array of Module IDs */
-  modules: string[]
-  /** Number of used module slots */
-  usedModuleSlots: number
-  /** Total available module slots */
-  totalModuleSlots: number
-  /** Callback when a module is removed */
-  onRemoveModule: (id: string) => void
-  /** Callback when a module is added */
-  onAddModule: (id: string) => void
+  id: string
   /** Whether the component is disabled */
   disabled?: boolean
 }
 
-export function ModulesList({
-  modules,
-  usedModuleSlots,
-  totalModuleSlots,
-  onRemoveModule,
-  onAddModule,
-  disabled = false,
-}: ModulesListProps) {
+export function ModulesList({ id, disabled = false }: ModulesListProps) {
+  const { modules, selectedChassis, usedModuleSlots } = useHydratedMech(id)
+  const totalModuleSlots = selectedChassis?.stats.moduleSlots ?? 0
+  const { handleRemoveModule, handleAddModule } = useManageMechSystemsAndModules(id)
   return (
     <MechEntityList
       title="Modules"
       schemaName="modules"
-      entityIds={modules}
+      entityIds={modules.map((m) => m.ref.id)}
       usedSlots={usedModuleSlots}
       totalSlots={totalModuleSlots}
-      onRemove={onRemoveModule}
-      onAdd={onAddModule}
+      onRemove={handleRemoveModule}
+      onAdd={handleAddModule}
       disabled={disabled}
     />
   )

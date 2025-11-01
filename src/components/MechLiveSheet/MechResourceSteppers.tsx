@@ -1,27 +1,21 @@
 import { VStack } from '@chakra-ui/react'
 import NumericStepper from '../NumericStepper'
-import type { SURefChassis } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
-import type { MechLiveSheetState } from './types'
+import { useHydratedMech, useUpdateMech } from '../../hooks/mech'
 
 interface MechResourceSteppersProps {
-  stats: SURefChassis['stats'] | undefined
-  currentDamage: number
-  currentEP: number
-  currentHeat: number
-  updateEntity: (updates: Partial<MechLiveSheetState>) => void
+  id: string
   disabled?: boolean
 }
 
-export function MechResourceSteppers({
-  stats,
-  currentDamage,
-  currentEP,
-  currentHeat,
-  updateEntity,
-  disabled = false,
-}: MechResourceSteppersProps) {
+export function MechResourceSteppers({ id, disabled = false }: MechResourceSteppersProps) {
+  const { mech, selectedChassis } = useHydratedMech(id)
+  const updateMech = useUpdateMech()
+  const stats = selectedChassis?.stats
   const maxSP = stats?.structurePts || 0
+  const currentDamage = mech?.current_damage ?? 0
+  const currentEP = mech?.current_ep ?? 0
+  const currentHeat = mech?.current_heat ?? 0
   const currentSP = maxSP - currentDamage
 
   return (
@@ -30,7 +24,9 @@ export function MechResourceSteppers({
         <NumericStepper
           label="SP"
           value={currentSP}
-          onChange={(newSP) => updateEntity({ current_damage: maxSP - newSP })}
+          onChange={(newSP) =>
+            updateMech.mutate({ id, updates: { current_damage: maxSP - newSP } })
+          }
           max={maxSP}
           min={0}
           disabled={disabled}
@@ -38,14 +34,14 @@ export function MechResourceSteppers({
         <NumericStepper
           label="EP"
           value={currentEP}
-          onChange={(value) => updateEntity({ current_ep: value })}
+          onChange={(newEP) => updateMech.mutate({ id, updates: { current_ep: newEP } })}
           max={stats?.energyPts || 0}
           disabled={disabled}
         />
         <NumericStepper
           label="HEAT"
           value={currentHeat}
-          onChange={(value) => updateEntity({ current_heat: value })}
+          onChange={(newHeat) => updateMech.mutate({ id, updates: { current_heat: newHeat } })}
           max={stats?.heatCap || 0}
           disabled={disabled}
         />

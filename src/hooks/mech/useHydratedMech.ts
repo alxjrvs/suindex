@@ -15,14 +15,27 @@ import { useEntities } from '../entity/useEntities'
 import { useCargo } from '../cargo/useCargo'
 import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
+import {
+  type SURefSystem,
+  type SURefModule,
+  SalvageUnionReference,
+  type SURefChassis,
+} from 'salvageunion-reference'
+import { isLocalId } from '../../lib/cacheHelpers'
 
 export interface HydratedMech {
   mech: Tables<'mechs'> | undefined
+  selectedChassis: SURefChassis | undefined
+  usedSystemSlots: number
+  usedModuleSlots: number
+  totalSalvageValue: number
+  totalCargo: number
   systems: HydratedEntity[]
   modules: HydratedEntity[]
   cargo: HydratedCargo[]
   loading: boolean
   error: string | null
+  isLocal: boolean
 }
 
 /**
@@ -74,7 +87,59 @@ export function useHydratedMech(id: string | undefined): HydratedMech {
     (entitiesError ? String(entitiesError) : null) ||
     (cargoError ? String(cargoError) : null)
 
+  const allChassis = SalvageUnionReference.Chassis.all()
+
+  const selectedChassis = useMemo(
+    () => allChassis.find((c) => c.id === mech?.chassis_id),
+    [mech?.chassis_id, allChassis]
+  )
+
+  const usedSystemSlots = useMemo(
+    () =>
+      systems.reduce((sum, entity) => {
+        const system = entity.ref as SURefSystem
+        return sum + (system.slotsRequired ?? 0)
+      }, 0),
+    [systems]
+  )
+
+  const usedModuleSlots = useMemo(
+    () =>
+      modules.reduce((sum, entity) => {
+        const module = entity.ref as SURefModule
+        return sum + (module.slotsRequired ?? 0)
+      }, 0),
+    [modules]
+  )
+
+  const totalSalvageValue = useMemo(() => {
+    const systemValue = systems.reduce((sum, entity) => {
+      const system = entity.ref as SURefSystem
+      return sum + system.salvageValue * system.techLevel
+    }, 0)
+
+    const moduleValue = modules.reduce((sum, entity) => {
+      const module = entity.ref as SURefModule
+      return sum + module.salvageValue * module.techLevel
+    }, 0)
+
+    const chassisValue = selectedChassis?.stats?.salvageValue || 0
+
+    return systemValue + moduleValue + chassisValue
+  }, [systems, modules, selectedChassis])
+
+  const totalCargo = useMemo(
+    () => cargo.reduce((sum, item) => sum + (item.amount ?? 0), 0),
+    [cargo]
+  )
+
   return {
+    isLocal: isLocalId(id),
+    selectedChassis,
+    usedSystemSlots,
+    usedModuleSlots,
+    totalSalvageValue,
+    totalCargo,
     mech,
     systems,
     modules,

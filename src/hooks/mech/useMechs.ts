@@ -117,7 +117,6 @@ export function useCreateMech() {
           pattern: data.pattern || null,
           quirk: data.quirk || null,
           appearance: data.appearance || null,
-          chassis_ability: data.chassis_ability || null,
           current_damage: data.current_damage || 0,
           current_ep: data.current_ep || 0,
           current_heat: data.current_heat || 0,

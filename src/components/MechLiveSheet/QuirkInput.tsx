@@ -1,27 +1,23 @@
 import { rollTable } from '@randsum/salvageunion'
 import { SheetInput } from '../shared/SheetInput'
-import type { MechLiveSheetState } from './types'
+import { useHydratedMech, useUpdateMech } from '../../hooks/mech'
 
-export function QuirkInput({
-  quirk,
-  disabled,
-  updateEntity,
-}: {
-  quirk: string
-  disabled: boolean
-  updateEntity: (updates: Partial<MechLiveSheetState>) => void
-}) {
+export function QuirkInput({ disabled, id }: { disabled: boolean; id: string }) {
+  const { mech } = useHydratedMech(id)
+  const quirk = mech?.quirk ?? ''
+  const updateMech = useUpdateMech()
+
   const handleRollQuirk = () => {
     const result = rollTable('Quirks')
     const quirkText = result.result.description || result.result.label
-    updateEntity({ quirk: quirkText })
+    updateMech.mutate({ id, updates: { quirk: quirkText } })
   }
 
   return (
     <SheetInput
       label="Quirk"
       value={quirk}
-      onChange={(value) => updateEntity({ quirk: value })}
+      onChange={(value) => updateMech.mutate({ id, updates: { quirk: value } })}
       placeholder="Enter quirk..."
       disabled={disabled}
       onDiceRoll={handleRollQuirk}
