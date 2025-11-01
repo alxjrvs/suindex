@@ -2,13 +2,14 @@ import { useCallback } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { useHydratedMech } from './useHydratedMech'
 import { useUpdateMech } from './useMechs'
-import { useDeleteSUEntity } from '../suentity/useSUEntities'
+import { useDeleteSUEntity, useCreateSUEntity } from '../suentity/useSUEntities'
 import { useDeleteCargo } from '../cargo/useCargo'
 
 export function useChangeMechChassis(id: string | undefined) {
-  const { mech, systems, modules, cargo } = useHydratedMech(id)
+  const { mech, systems, modules, cargo, selectedChassis } = useHydratedMech(id)
   const updateMech = useUpdateMech()
   const deleteEntity = useDeleteSUEntity()
+  const createEntity = useCreateSUEntity()
   const deleteCargo = useDeleteCargo()
 
   // Handler functions
@@ -16,15 +17,20 @@ export function useChangeMechChassis(id: string | undefined) {
     async (chassisId: string | null) => {
       if (!id || !mech) return
 
-      // If null or empty, just update to null
+      // If null or empty, delete the existing chassis entity
       if (!chassisId) {
-        updateMech.mutate({ id, updates: { chassis_id: null } })
+        if (selectedChassis) {
+          deleteEntity.mutate({ id: selectedChassis.id, parentType: 'mech', parentId: id })
+        }
         return
       }
 
-      if (mech.chassis_id && mech.chassis_id !== chassisId) {
+      const isChangingChassis = selectedChassis && selectedChassis.schema_ref_id !== chassisId
+
+      if (isChangingChassis) {
         const newChassis = SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
 
+        // Delete all systems, modules, and cargo when changing chassis
         systems.forEach((system) => {
           deleteEntity.mutate({ id: system.id, parentType: 'mech', parentId: id })
         })
@@ -37,11 +43,20 @@ export function useChangeMechChassis(id: string | undefined) {
           deleteCargo.mutate({ id: cargo.id, parentType: 'mech', parentId: id })
         })
 
-        // Reset to initial state but keep the new chassis_id and set initial stats
+        // Delete old chassis entity
+        deleteEntity.mutate({ id: selectedChassis.id, parentType: 'mech', parentId: id })
+
+        // Create new chassis entity
+        createEntity.mutate({
+          mech_id: id,
+          schema_name: 'chassis',
+          schema_ref_id: chassisId,
+        })
+
+        // Reset to initial state and set initial stats
         updateMech.mutate({
           id,
           updates: {
-            chassis_id: chassisId,
             pattern: null,
             quirk: null,
             appearance: null,
@@ -51,15 +66,32 @@ export function useChangeMechChassis(id: string | undefined) {
             notes: null,
           },
         })
-      } else {
-        // First time selection - set chassis and initialize EP
+      } else if (!selectedChassis) {
+        // First time selection - create chassis entity and initialize EP
         const newChassis = SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
+        createEntity.mutate({
+          mech_id: id,
+          schema_name: 'chassis',
+          schema_ref_id: chassisId,
+        })
+
         updateMech.mutate({
           id,
-          updates: { chassis_id: chassisId, current_ep: newChassis?.stats.energyPts || 0 },
+          updates: { current_ep: newChassis?.stats.energyPts || 0 },
         })
       }
     },
-    [id, mech, updateMech, systems, modules, cargo, deleteEntity, deleteCargo]
+    [
+      id,
+      mech,
+      updateMech,
+      systems,
+      modules,
+      cargo,
+      selectedChassis,
+      deleteEntity,
+      createEntity,
+      deleteCargo,
+    ]
   )
 }

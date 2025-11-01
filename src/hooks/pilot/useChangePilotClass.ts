@@ -1,26 +1,28 @@
 import { useCallback } from 'react'
-import { useDeleteSUEntity } from '../suentity'
-import { useUpdatePilot } from './usePilots'
+import { useDeleteSUEntity, useCreateSUEntity } from '../suentity'
 import { useHydratedPilot } from './useHydratedPilot'
 
 export function useChangePilotClass(id: string | undefined) {
-  const { pilot, abilities, equipment } = useHydratedPilot(id)
-  const updatePilot = useUpdatePilot()
+  const { pilot, abilities, equipment, selectedClass, selectedAdvancedClass } = useHydratedPilot(id)
   const deleteEntity = useDeleteSUEntity()
+  const createEntity = useCreateSUEntity()
 
   return useCallback(
     async (classId: string | null) => {
       if (!id || !pilot) return
 
-      // If null or empty, just update to null
+      // If null or empty, delete the existing class entity
       if (!classId) {
-        updatePilot.mutate({ id, updates: { class_id: null } })
+        if (selectedClass) {
+          deleteEntity.mutate({ id: selectedClass.id, parentType: 'pilot', parentId: id })
+        }
         return
       }
 
-      const isChangingClassId = pilot.class_id && pilot.class_id !== classId
+      const isChangingClass = selectedClass && selectedClass.schema_ref_id !== classId
 
-      if (isChangingClassId) {
+      if (isChangingClass) {
+        // Delete all abilities and equipment when changing class
         abilities.forEach((ability) => {
           deleteEntity.mutate({ id: ability.id, parentType: 'pilot', parentId: id })
         })
@@ -29,22 +31,38 @@ export function useChangePilotClass(id: string | undefined) {
           deleteEntity.mutate({ id: equip.id, parentType: 'pilot', parentId: id })
         })
 
-        updatePilot.mutate({
-          id,
-          updates: {
-            class_id: classId,
-            advanced_class_id: null,
-          },
+        // Delete advanced class if it exists
+        if (selectedAdvancedClass) {
+          deleteEntity.mutate({ id: selectedAdvancedClass.id, parentType: 'pilot', parentId: id })
+        }
+
+        // Delete old class entity
+        deleteEntity.mutate({ id: selectedClass.id, parentType: 'pilot', parentId: id })
+
+        // Create new class entity
+        createEntity.mutate({
+          pilot_id: id,
+          schema_name: 'classes.core',
+          schema_ref_id: classId,
         })
-      } else {
-        updatePilot.mutate({
-          id,
-          updates: {
-            class_id: classId,
-          },
+      } else if (!selectedClass) {
+        // First time selection - create class entity
+        createEntity.mutate({
+          pilot_id: id,
+          schema_name: 'classes.core',
+          schema_ref_id: classId,
         })
       }
     },
-    [id, abilities, equipment, deleteEntity, updatePilot, pilot]
+    [
+      id,
+      abilities,
+      equipment,
+      selectedClass,
+      selectedAdvancedClass,
+      deleteEntity,
+      createEntity,
+      pilot,
+    ]
   )
 }

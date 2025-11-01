@@ -1,24 +1,28 @@
 /**
- * Hook to fetch a crawler with hydrated cargo
+ * Hook to fetch a crawler with hydrated cargo, crawler type, and bays
  *
- * Combines useCrawler and useCargo to provide a single hook that returns:
+ * Combines useCrawler, useCargo, and useSUEntitiesFor to provide a single hook that returns:
  * - The crawler data
  * - Hydrated cargo (with optional reference data)
+ * - Selected crawler type (hydrated entity with reference data and choices)
+ * - Hydrated bays (with reference data, choices, and metadata)
  * - Combined loading and error states
  */
 
 import { useCrawler } from './useCrawlers'
 import { useCargo } from '../cargo/useCargo'
-import type { HydratedCargo } from '../../types/hydrated'
+import { useSUEntitiesFor } from '../suentity/useSUEntities'
+import type { HydratedCargo, HydratedEntity, HydratedBay } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
 import { isLocalId } from '../../lib/cacheHelpers'
 import { useMemo } from 'react'
-import { SalvageUnionReference, type SURefCrawler } from 'salvageunion-reference'
+import { SalvageUnionReference } from 'salvageunion-reference'
 
 export interface HydratedCrawler {
   crawler: Tables<'crawlers'> | undefined
   cargo: HydratedCargo[]
-  selectedCrawlerType: SURefCrawler | undefined
+  bays: HydratedBay[]
+  selectedCrawlerType: HydratedEntity | undefined
   loading: boolean
   isLocal: boolean
   maxSP: number
@@ -54,14 +58,22 @@ export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
 
   // Fetch cargo
   const { data: cargo = [], isLoading: cargoLoading, error: cargoError } = useCargo('crawler', id)
+
+  // Fetch normalized entities (crawler type, bays)
+  const {
+    data: entities = [],
+    isLoading: entitiesLoading,
+    error: entitiesError,
+  } = useSUEntitiesFor('crawler', id)
+
   const isLocal = isLocalId(id)
 
-  const allCrawlers = SalvageUnionReference.Crawlers.all()
   const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
 
+  // Get selected crawler type from entities (schema_name='crawlers')
   const selectedCrawlerType = useMemo(
-    () => allCrawlers.find((c) => c.id === crawler?.crawler_type_id),
-    [crawler?.crawler_type_id, allCrawlers]
+    () => entities.find((e) => e.schema_name === 'crawlers'),
+    [entities]
   )
 
   const totalCargo = useMemo(
@@ -75,15 +87,17 @@ export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
   }, [crawler?.tech_level])
 
   const maxSP = useMemo(() => {
-    if (!selectedCrawlerType) return 0
+    if (!selectedCrawlerType?.ref) return 0
     const techLevel = crawler?.tech_level ?? 1
     const techLevelData = allTechLevels.find((tl) => tl.techLevel === techLevel)
     return techLevelData?.structurePoints ?? 0
-  }, [selectedCrawlerType, crawler?.tech_level, allTechLevels])
+  }, [selectedCrawlerType?.ref, crawler?.tech_level, allTechLevels])
 
-  const loading = crawlerLoading || cargoLoading
+  const loading = crawlerLoading || cargoLoading || entitiesLoading
   const error =
-    (crawlerError ? String(crawlerError) : null) || (cargoError ? String(cargoError) : null)
+    (crawlerError ? String(crawlerError) : null) ||
+    (cargoError ? String(cargoError) : null) ||
+    (entitiesError ? String(entitiesError) : null)
 
   return {
     maxSP,
@@ -93,6 +107,7 @@ export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
     isLocal,
     crawler,
     cargo,
+    bays: [], // TODO: Implement in Phase 3
     loading,
     error,
   }

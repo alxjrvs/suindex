@@ -71,10 +71,6 @@ export type Database = {
       crawlers: {
         Row: {
           active: boolean
-          bays: Json | null
-          cargo: Json | null
-          choices: Json | null
-          crawler_type_id: string | null
           created_at: string | null
           current_damage: number | null
           description: string | null
@@ -96,10 +92,6 @@ export type Database = {
         }
         Insert: {
           active?: boolean
-          bays?: Json | null
-          cargo?: Json | null
-          choices?: Json | null
-          crawler_type_id?: string | null
           created_at?: string | null
           current_damage?: number | null
           description?: string | null
@@ -121,10 +113,6 @@ export type Database = {
         }
         Update: {
           active?: boolean
-          bays?: Json | null
-          cargo?: Json | null
-          choices?: Json | null
-          crawler_type_id?: string | null
           created_at?: string | null
           current_damage?: number | null
           description?: string | null
@@ -280,9 +268,6 @@ export type Database = {
         Row: {
           active: boolean
           appearance: string | null
-          cargo: Json | null
-          chassis_id: string | null
-          choices: Json | null
           created_at: string | null
           current_damage: number | null
           current_ep: number | null
@@ -300,9 +285,6 @@ export type Database = {
         Insert: {
           active?: boolean
           appearance?: string | null
-          cargo?: Json | null
-          chassis_id?: string | null
-          choices?: Json | null
           created_at?: string | null
           current_damage?: number | null
           current_ep?: number | null
@@ -320,9 +302,6 @@ export type Database = {
         Update: {
           active?: boolean
           appearance?: string | null
-          cargo?: Json | null
-          chassis_id?: string | null
-          choices?: Json | null
           created_at?: string | null
           current_damage?: number | null
           current_ep?: number | null
@@ -351,13 +330,10 @@ export type Database = {
         Row: {
           abilities: string[] | null
           active: boolean
-          advanced_class_id: string | null
           appearance: string | null
           background: string | null
           background_used: boolean | null
           callsign: string
-          choices: Json | null
-          class_id: string | null
           crawler_id: string | null
           created_at: string | null
           current_ap: number | null
@@ -378,13 +354,10 @@ export type Database = {
         Insert: {
           abilities?: string[] | null
           active?: boolean
-          advanced_class_id?: string | null
           appearance?: string | null
           background?: string | null
           background_used?: boolean | null
           callsign: string
-          choices?: Json | null
-          class_id?: string | null
           crawler_id?: string | null
           created_at?: string | null
           current_ap?: number | null
@@ -405,13 +378,10 @@ export type Database = {
         Update: {
           abilities?: string[] | null
           active?: boolean
-          advanced_class_id?: string | null
           appearance?: string | null
           background?: string | null
           background_used?: boolean | null
           callsign?: string
-          choices?: Json | null
-          class_id?: string | null
           crawler_id?: string | null
           created_at?: string | null
           current_ap?: number | null

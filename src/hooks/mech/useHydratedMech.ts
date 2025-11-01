@@ -1,31 +1,27 @@
 /**
- * Hook to fetch a mech with hydrated systems, modules, and cargo
+ * Hook to fetch a mech with hydrated systems, modules, cargo, and chassis
  *
- * Combines useMech, useEntities, and useCargo to provide a single hook that returns:
+ * Combines useMech, useSUEntitiesFor, and useCargo to provide a single hook that returns:
  * - The mech data
  * - Hydrated systems (with reference data and choices)
  * - Hydrated modules (with reference data and choices)
  * - Hydrated cargo (with optional reference data)
+ * - Selected chassis (hydrated entity with reference data and choices)
  * - Combined loading and error states
  */
 
 import { useMemo } from 'react'
 import { useMech } from './useMechs'
-import { useEntities } from '../suentity/useSUEntities'
+import { useSUEntitiesFor } from '../suentity/useSUEntities'
 import { useCargo } from '../cargo/useCargo'
 import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
-import {
-  type SURefSystem,
-  type SURefModule,
-  SalvageUnionReference,
-  type SURefChassis,
-} from 'salvageunion-reference'
+import { type SURefSystem, type SURefModule, type SURefChassis } from 'salvageunion-reference'
 import { isLocalId } from '../../lib/cacheHelpers'
 
 export interface HydratedMech {
   mech: Tables<'mechs'> | undefined
-  selectedChassis: SURefChassis | undefined
+  selectedChassis: HydratedEntity | undefined
   usedSystemSlots: number
   usedModuleSlots: number
   totalSalvageValue: number
@@ -70,7 +66,7 @@ export function useHydratedMech(id: string | undefined): HydratedMech {
     data: entities = [],
     isLoading: entitiesLoading,
     error: entitiesError,
-  } = useEntities('mech', id)
+  } = useSUEntitiesFor('mech', id)
 
   // Fetch cargo
   const { data: cargo = [], isLoading: cargoLoading, error: cargoError } = useCargo('mech', id)
@@ -80,19 +76,18 @@ export function useHydratedMech(id: string | undefined): HydratedMech {
 
   const modules = useMemo(() => entities.filter((e) => e.schema_name === 'modules'), [entities])
 
+  // Get selected chassis from entities (schema_name='chassis')
+  const selectedChassis = useMemo(
+    () => entities.find((e) => e.schema_name === 'chassis'),
+    [entities]
+  )
+
   // Combined loading/error states
   const loading = mechLoading || entitiesLoading || cargoLoading
   const error =
     (mechError ? String(mechError) : null) ||
     (entitiesError ? String(entitiesError) : null) ||
     (cargoError ? String(cargoError) : null)
-
-  const allChassis = SalvageUnionReference.Chassis.all()
-
-  const selectedChassis = useMemo(
-    () => allChassis.find((c) => c.id === mech?.chassis_id),
-    [mech?.chassis_id, allChassis]
-  )
 
   const usedSystemSlots = useMemo(
     () =>
@@ -123,7 +118,9 @@ export function useHydratedMech(id: string | undefined): HydratedMech {
       return sum + module.salvageValue * module.techLevel
     }, 0)
 
-    const chassisValue = selectedChassis?.stats?.salvageValue || 0
+    const chassisValue = selectedChassis?.ref
+      ? (selectedChassis.ref as SURefChassis).stats?.salvageValue || 0
+      : 0
 
     return systemValue + moduleValue + chassisValue
   }, [systems, modules, selectedChassis])

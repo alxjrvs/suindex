@@ -50,3 +50,24 @@ export type HydratedCargo = Tables<'cargo'> & {
    */
   position?: { row: number; col: number }
 }
+
+/**
+ * Bay with hydrated reference data and typed metadata
+ *
+ * Bays are stored as suentities with schema_name='crawler-bays'
+ * Metadata contains instance-specific state (damaged, NPC data)
+ */
+export type HydratedBay = HydratedEntity & {
+  /**
+   * Typed metadata for bay instance state
+   */
+  metadata: {
+    damaged: boolean
+    npc: {
+      name: string
+      notes: string
+      hitPoints: number | null
+      damage: number
+    }
+  } | null
+}

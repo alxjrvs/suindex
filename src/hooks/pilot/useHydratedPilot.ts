@@ -1,20 +1,18 @@
 /**
- * Hook to fetch a pilot with hydrated abilities and equipment
+ * Hook to fetch a pilot with hydrated abilities, equipment, and classes
  *
- * Combines usePilot and useEntities to provide a single hook that returns:
+ * Combines usePilot and useSUEntitiesFor to provide a single hook that returns:
  * - The pilot data
  * - Hydrated abilities (with reference data and choices)
  * - Hydrated equipment (with reference data and choices)
- * - Selected class (core class reference data)
- * - Selected advanced class (advanced or hybrid class reference data)
+ * - Selected class (hydrated entity with reference data and choices)
+ * - Selected advanced class (hydrated entity with reference data and choices)
  * - Combined loading and error states
  */
 
 import { useMemo } from 'react'
-import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefCoreClass, SURefAdvancedClass, SURefHybridClass } from 'salvageunion-reference'
 import { usePilot } from './usePilots'
-import { useEntities } from '../suentity/useSUEntities'
+import { useSUEntitiesFor } from '../suentity/useSUEntities'
 import type { HydratedEntity } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
 import { isLocalId } from '../../lib/cacheHelpers'
@@ -23,8 +21,8 @@ export interface HydratedPilot {
   pilot: Tables<'pilots'> | undefined
   abilities: HydratedEntity[]
   equipment: HydratedEntity[]
-  selectedClass: SURefCoreClass | undefined
-  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
+  selectedClass: HydratedEntity | undefined
+  selectedAdvancedClass: HydratedEntity | undefined
   isLocal: boolean
   loading: boolean
   error: string | null
@@ -46,8 +44,8 @@ export interface HydratedPilot {
  * return (
  *   <div>
  *     <h1>{pilot?.callsign}</h1>
- *     <p>Class: {selectedClass?.name}</p>
- *     <p>Advanced: {selectedAdvancedClass?.name}</p>
+ *     <p>Class: {selectedClass?.ref.name}</p>
+ *     <p>Advanced: {selectedAdvancedClass?.ref.name}</p>
  *     <AbilitiesList abilities={abilities} />
  *     <EquipmentList equipment={equipment} />
  *   </div>
@@ -64,33 +62,27 @@ export function useHydratedPilot(id: string | undefined): HydratedPilot {
     data: entities = [],
     isLoading: entitiesLoading,
     error: entitiesError,
-  } = useEntities('pilot', id)
+  } = useSUEntitiesFor('pilot', id)
 
   // Derive typed lists from hydrated entities
   const abilities = useMemo(() => entities.filter((e) => e.schema_name === 'abilities'), [entities])
 
   const equipment = useMemo(() => entities.filter((e) => e.schema_name === 'equipment'), [entities])
 
-  // Get selected class using SalvageUnionReference.get()
-  const selectedClass = useMemo(() => {
-    if (!pilot?.class_id) return undefined
-    return SalvageUnionReference.get('classes.core', pilot.class_id) as SURefCoreClass | undefined
-  }, [pilot])
+  // Get selected class from entities (schema_name='classes.core')
+  const selectedClass = useMemo(
+    () => entities.find((e) => e.schema_name === 'classes.core'),
+    [entities]
+  )
 
-  // Get selected advanced class (can be either advanced or hybrid)
-  const selectedAdvancedClass = useMemo(() => {
-    if (!pilot?.advanced_class_id) return undefined
-
-    // Try advanced classes first
-    const advancedClass = SalvageUnionReference.get('classes.advanced', pilot.advanced_class_id)
-    if (advancedClass) return advancedClass as SURefAdvancedClass
-
-    // Try hybrid classes
-    const hybridClass = SalvageUnionReference.get('classes.hybrid', pilot.advanced_class_id)
-    if (hybridClass) return hybridClass as SURefHybridClass
-
-    return undefined
-  }, [pilot])
+  // Get selected advanced class from entities (schema_name='classes.advanced' or 'classes.hybrid')
+  const selectedAdvancedClass = useMemo(
+    () =>
+      entities.find(
+        (e) => e.schema_name === 'classes.advanced' || e.schema_name === 'classes.hybrid'
+      ),
+    [entities]
+  )
 
   // Combined loading/error states
   const loading = pilotLoading || entitiesLoading

@@ -49,7 +49,7 @@ export function MyComponent({ data, onUpdate }: MyComponentProps) {
   - `src/hooks/pilot/` - Pilot hooks (usePilot, useUpdatePilot, useHydratedPilot)
   - `src/hooks/mech/` - Mech hooks (useMech, useUpdateMech, useHydratedMech)
   - `src/hooks/crawler/` - Crawler hooks (useCrawler, useUpdateCrawler, useHydratedCrawler)
-  - `src/hooks/entity/` - Entity hooks (useEntities, usePlayerChoices)
+  - `src/hooks/entity/` - Entity hooks (useSUEntitiesFor, usePlayerChoices)
   - `src/hooks/cargo/` - Cargo hooks (useCargo, useCreateCargo, useDeleteCargo)
 - **Auto-save**: Debounced updates to Supabase (1000ms delay)
 
