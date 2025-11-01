@@ -2,15 +2,15 @@ import { useNavigate } from 'react-router'
 import { GameGridCard } from './GameGridCard'
 import { GridLayout } from './GridLayout'
 import { useGamesWithRelationships } from '../../hooks/useGameWithRelationships'
-import { useCreateSUEntity } from '../../hooks/useCreateSUEntity'
+import { useCreateEntity } from '../../hooks/useCreateEntity'
 
 export function GamesGrid() {
   const navigate = useNavigate()
   const { games, loading, error, reload } = useGamesWithRelationships()
 
-  const { createEntity: createGame, isLoading: isCreating } = useCreateSUEntity({
+  const { createEntity: createGame, isLoading: isCreating } = useCreateEntity({
     table: 'games',
-    navigationPath: (id) => `/dashboard/games/${id}`,
+    navigationPath: (id: string) => `/dashboard/games/${id}`,
   })
 
   const handleCreateGame = async () => {

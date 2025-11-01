@@ -6,3 +6,5 @@
 
 export * from './useSUEntities'
 export * from './usePlayerChoices'
+export * from './useManageEntityChoices'
+export * from './useSingletonEntities'

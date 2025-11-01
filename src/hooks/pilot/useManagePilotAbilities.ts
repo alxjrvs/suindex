@@ -1,15 +1,21 @@
 import { useCallback } from 'react'
-import { SalvageUnionReference, type SURefAbility } from 'salvageunion-reference'
+import {
+  SalvageUnionReference,
+  type SURefAbility,
+  type SURefCoreClass,
+  type SURefAdvancedClass,
+  type SURefHybridClass,
+} from 'salvageunion-reference'
 import { getAbilityCost } from '../../components/PilotLiveSheet/utils/getAbilityCost'
 import { useHydratedPilot } from './useHydratedPilot'
-import { useCreateSUEntity, useDeleteSUEntity } from '../suentity'
+import { useCreateEntity, useDeleteEntity } from '../suentity'
 import { useUpdatePilot } from './usePilots'
 
 export function useManagePilotAbilities(id: string | undefined) {
   const { pilot, abilities, selectedClass, selectedAdvancedClass } = useHydratedPilot(id)
-  const createEntity = useCreateSUEntity()
+  const createEntity = useCreateEntity()
   const updatePilot = useUpdatePilot()
-  const deleteEntity = useDeleteSUEntity()
+  const deleteEntity = useDeleteEntity()
 
   const handleAddAbility = useCallback(
     async (abilityId: string) => {
@@ -19,7 +25,11 @@ export function useManagePilotAbilities(id: string | undefined) {
       if (!ability) return
 
       // Calculate cost
-      const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
+      const cost = getAbilityCost(
+        ability,
+        selectedClass?.ref as SURefCoreClass | undefined,
+        selectedAdvancedClass?.ref as SURefAdvancedClass | SURefHybridClass | undefined
+      )
 
       // Check if pilot has enough TP
       if ((pilot?.current_tp ?? 0) < cost) {

@@ -76,6 +76,12 @@ export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
     [entities]
   )
 
+  // Get bays from entities (schema_name='crawler-bays')
+  const bays = useMemo(
+    () => entities.filter((e) => e.schema_name === 'crawler-bays') as HydratedBay[],
+    [entities]
+  )
+
   const totalCargo = useMemo(
     () => cargo.reduce((sum, item) => sum + (item.amount ?? 0), 0),
     [cargo]
@@ -107,7 +113,7 @@ export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
     isLocal,
     crawler,
     cargo,
-    bays: [], // TODO: Implement in Phase 3
+    bays,
     loading,
     error,
   }

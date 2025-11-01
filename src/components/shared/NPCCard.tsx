@@ -2,11 +2,11 @@ import { Box, Flex, VStack } from '@chakra-ui/react'
 import { SheetInput } from './SheetInput'
 import { SheetTextarea } from './SheetTextarea'
 import type { CrawlerNPC } from '../../types/common'
+import type { Tables } from '../../types/database-generated.types'
 import NumericStepper from '../NumericStepper'
 import { Text } from '../base/Text'
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
-import type { CrawlerBay, CrawlerLiveSheetState } from '../CrawlerLiveSheet/types'
 import { rollTable } from '@randsum/salvageunion'
 import type { SURefCrawler } from 'salvageunion-reference'
 
@@ -22,16 +22,15 @@ export function NPCCard({
   onUpdateChoice,
   onUpdateBay,
 }: {
-  choices: CrawlerLiveSheetState['choices']
+  choices: Tables<'player_choices'>[]
   npc: CrawlerNPC
   referenceBay: SURefCrawler | undefined
-  onUpdateBay: (updates: Partial<CrawlerBay>) => void
+  onUpdateBay: (updates: Partial<{ npc: CrawlerNPC }>) => void
   onUpdateChoice: (id: string, value: string) => void
   position: string
   description: string
   maxHP: number
   tilted?: boolean
-
   disabled?: boolean
 }) {
   const textRef = useRef<HTMLParagraphElement>(null)
@@ -40,6 +39,17 @@ export function NPCCard({
   const onUpdateDamage = (value: number) => onUpdateBay({ npc: { ...npc!, damage: value } })
   const onUpdateName = (value: string) => onUpdateBay({ npc: { ...npc!, name: value } })
   const onUpdateNotes = (value: string) => onUpdateBay({ npc: { ...npc!, notes: value } })
+
+  // Convert choices array to lookup map
+  const choicesMap = useMemo(() => {
+    return choices.reduce(
+      (acc, choice) => {
+        acc[choice.choice_ref_id] = choice.value
+        return acc
+      },
+      {} as Record<string, string>
+    )
+  }, [choices])
 
   useEffect(() => {
     const adjustFontSize = () => {
@@ -137,7 +147,7 @@ export function NPCCard({
             } = rollTable(choice.name)
             onUpdateChoice(choice.id, label)
           }}
-          value={(choices as Record<string, string> | null)?.[choice.id] || ''}
+          value={choicesMap[choice.id] || ''}
           onChange={(value) => onUpdateChoice(choice.id, value)}
           disabled={disabled}
         />

@@ -57,7 +57,7 @@ export type HydratedCargo = Tables<'cargo'> & {
  * Bays are stored as suentities with schema_name='crawler-bays'
  * Metadata contains instance-specific state (damaged, NPC data)
  */
-export type HydratedBay = HydratedEntity & {
+export type HydratedBay = Omit<HydratedEntity, 'metadata'> & {
   /**
    * Typed metadata for bay instance state
    */

@@ -5,17 +5,25 @@ import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
 import { getModel } from '../../utils/modelMap'
 import { EntityDisplay } from '../entity/EntityDisplay'
 import { EntitySelectionModal } from '../entity/EntitySelectionModal'
+import { usePlayerChoices } from '../../hooks/suentity'
 
 export function SheetEntityChoiceDisplay({
   choice,
   onUpdateChoice,
-  selectedValue,
+  entityId,
 }: {
   choice: SURefMetaChoice
   onUpdateChoice: (choiceId: string, value: string | undefined) => void
-  selectedValue: string | null
+  entityId: string | undefined
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { data: playerChoices } = usePlayerChoices(entityId)
+
+  // Get the selected value from player choices
+  const selectedValue = useMemo(() => {
+    const playerChoice = playerChoices?.find((pc) => pc.choice_ref_id === choice.id)
+    return playerChoice?.value || null
+  }, [playerChoices, choice.id])
 
   // Parse the selected value to get schema and entity ID
   const selectedEntity = useMemo(() => {

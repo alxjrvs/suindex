@@ -1,8 +1,20 @@
 import { PilotGridCard } from './PilotGridCard'
 import { EntityGrid } from './EntityGrid'
-import { getClassNameById } from '../../utils/referenceDataHelpers'
+import { usePilotClasses } from '../../hooks/suentity'
+import { useEntityGrid } from '../../hooks/useEntityGrid'
+import type { Tables } from '../../types/database-generated.types'
 
 export function PilotsGrid() {
+  // Fetch pilots to get IDs for singleton query
+  const { items: pilots } = useEntityGrid<Tables<'pilots'>>({
+    table: 'pilots',
+    orderBy: 'created_at',
+    orderAscending: false,
+  })
+
+  const pilotIds = pilots.map((p) => p.id)
+  const { data: pilotClassData } = usePilotClasses(pilotIds)
+
   return (
     <EntityGrid<'pilots'>
       table="pilots"
@@ -12,7 +24,8 @@ export function PilotsGrid() {
       createButtonColor="su.white"
       emptyStateMessage="No pilots yet"
       renderCard={(pilot, onClick) => {
-        const className = pilot.class_id ? getClassNameById(pilot.class_id) : null
+        const classData = pilotClassData?.classes.get(pilot.id)
+        const className = classData?.name || null
         const currentHP = pilot.current_damage ?? 0
         const maxHP = pilot.max_hp ?? 10
         const currentAP = pilot.current_ap ?? 0

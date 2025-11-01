@@ -17,7 +17,7 @@ export function ChassisInputs({ id }: ChassisInputsProps) {
   const onChassisChange = useChangeMechChassis(id)
   const onPatternChange = useChangeMechChassisPattern(id)
   const allChassis = SalvageUnionReference.Chassis.all()
-  const chassisId = mech?.chassis_id ?? null
+  const chassisId = selectedChassis?.schema_ref_id ?? null
   const pattern = mech?.pattern ?? ''
 
   return (

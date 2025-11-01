@@ -1,12 +1,14 @@
-import { type SURefCrawler } from 'salvageunion-reference'
+import type { SURefCrawler } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import { VStack } from '@chakra-ui/react'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 import { useHydratedCrawler } from '../../hooks/crawler'
+import { useManageEntityChoices } from '../../hooks/suentity'
 
 export function CrawlerAbilities({ id, disabled = false }: { id: string; disabled?: boolean }) {
-  const { crawler, selectedCrawlerType } = useHydratedCrawler(id)
+  const { selectedCrawlerType } = useHydratedCrawler(id)
+  const crawlerTypeRef = selectedCrawlerType?.ref as SURefCrawler | undefined
 
   return (
     <RoundedBox
@@ -19,7 +21,7 @@ export function CrawlerAbilities({ id, disabled = false }: { id: string; disable
       flex="1"
     >
       {(
-        selectedCrawlerType?.actions || [
+        crawlerTypeRef?.actions || [
           {
             name: '',
             description: 'No crawler type selected.',
@@ -27,12 +29,10 @@ export function CrawlerAbilities({ id, disabled = false }: { id: string; disable
         ]
       ).map((ability, idx) => (
         <CrawlerAbility
-          onUpdateChoice={onUpdateChoice}
           disabled={disabled}
           key={idx}
           ability={ability}
-          id={id}
-          choices={crawler.choices}
+          crawlerTypeEntityId={selectedCrawlerType?.id}
         />
       ))}
     </RoundedBox>
@@ -41,15 +41,14 @@ export function CrawlerAbilities({ id, disabled = false }: { id: string; disable
 
 function CrawlerAbility({
   ability,
-  onUpdateChoice,
   disabled = false,
-  choices,
+  crawlerTypeEntityId,
 }: {
   ability: SURefCrawler['actions'][0]
   disabled?: boolean
-  onUpdateChoice: (choiceId: string, value: string | undefined) => void
-  choices: Record<string, string> | null
+  crawlerTypeEntityId: string | undefined
 }) {
+  const handleUpdateChoice = useManageEntityChoices(crawlerTypeEntityId)
   const wrappedChoice = 'choices' in ability ? (ability.choices ?? []) : []
 
   return (
@@ -57,10 +56,10 @@ function CrawlerAbility({
       <SheetDisplay disabled={disabled} label={ability.name} value={ability.description} />
       {wrappedChoice.map((choice, idx) => (
         <SheetEntityChoiceDisplay
-          onUpdateChoice={onUpdateChoice}
+          onUpdateChoice={handleUpdateChoice}
           key={idx}
           choice={choice}
-          selectedValue={choices?.[choice.id] || null}
+          entityId={crawlerTypeEntityId}
         />
       ))}
     </VStack>

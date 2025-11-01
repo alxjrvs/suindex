@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
@@ -15,7 +15,7 @@ import { CrawlerNPC } from './CrawlerNPC'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { useUpdateCrawler, useHydratedCrawler, useDeleteCrawler } from '../../hooks/crawler'
 import { useCreateCargo, useDeleteCargo } from '../../hooks/cargo'
-import type { CrawlerLiveSheetState, CrawlerBay } from './types'
+import { useCreateEntity } from '../../hooks/suentity'
 
 interface CrawlerLiveSheetProps {
   id: string
@@ -26,7 +26,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
   const [flashingScrapTLs, setFlashingScrapTLs] = useState<number[]>([])
   const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
-  const hasInitializedBaysRef = useRef(false)
 
   // TanStack Query hooks
   const {
@@ -37,51 +36,26 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
     selectedCrawlerType,
     totalCargo,
     isLocal,
+    bays,
   } = useHydratedCrawler(id)
   const deleteCrawler = useDeleteCrawler()
   const updateCrawler = useUpdateCrawler()
   const createCargo = useCreateCargo()
   const deleteCargo = useDeleteCargo()
-
-  const allBays = SalvageUnionReference.CrawlerBays.all()
+  const createEntity = useCreateEntity()
+  const allBays = useMemo(() => SalvageUnionReference.CrawlerBays.all(), [])
 
   useEffect(() => {
-    const currentBays = (crawler?.bays as CrawlerBay[] | null) ?? []
-    if (
-      !hasInitializedBaysRef.current &&
-      allBays.length > 0 &&
-      currentBays.length === 0 &&
-      !loading
-    ) {
-      hasInitializedBaysRef.current = true
-      const initialBays: CrawlerBay[] = allBays.map((bay) => ({
-        id: `${bay.id}-${Date.now()}-${Math.random()}`,
-        bayId: bay.id,
-        damaged: false,
-        npc: {
-          name: '',
-          notes: '',
-          hitPoints: bay.npc.hitPoints,
-          damage: 0,
-        },
-      }))
-      updateCrawler.mutate({ id, updates: { bays: JSON.stringify(initialBays) } })
+    if (bays.length === 0 && id && crawler) {
+      allBays.forEach((bay) => {
+        createEntity.mutate({
+          crawler_id: id,
+          schema_name: 'crawler-bays',
+          schema_ref_id: bay.id,
+        })
+      })
     }
-  }, [allBays, crawler?.bays, id, loading, updateCrawler])
-
-  const handleUpdateBay = useCallback(
-    (bayId: string, updates: Partial<CrawlerBay>) => {
-      if (!crawler) return
-
-      const currentBays = (crawler.bays as CrawlerBay[] | null) ?? []
-      const updatedBays = currentBays.map((bay) =>
-        bay.id === bayId ? { ...bay, ...updates } : bay
-      )
-
-      updateCrawler.mutate({ id, updates: { bays: JSON.stringify(updatedBays) } })
-    },
-    [crawler, updateCrawler, id]
-  )
+  }, [bays.length, allBays, createEntity, id, crawler])
 
   const handleAddCargo = useCallback(
     async (
@@ -184,15 +158,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   }
 
   // Separate storage bay from other bays
-  const currentBays = (crawler?.bays as CrawlerBay[] | null) ?? []
-  const storageBay = currentBays.find((bay) => {
-    const referenceBay = allBays.find((b) => b.id === bay.bayId)
-    return referenceBay?.name === 'Storage Bay'
-  })
-  const regularBays = currentBays.filter((bay) => {
-    const referenceBay = allBays.find((b) => b.id === bay.bayId)
-    return referenceBay?.name !== 'Storage Bay'
-  })
+  const storageBay = bays.find((bay) => bay.ref.name === 'Storage Bay')
+  const regularBays = bays.filter((bay) => bay.ref.name !== 'Storage Bay')
 
   return (
     <LiveSheetLayout>
@@ -232,13 +199,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
         <Tabs.Content value="abilities">
           <Flex gap={6} w="full" mt={6}>
             <CrawlerAbilities id={id} disabled={!selectedCrawlerType} />
-            <CrawlerNPC
-              crawler={crawler! as unknown as CrawlerLiveSheetState}
-              onUpdate={updateEntity}
-              onUpdateChoice={(choiceId, value) => handleUpdateChoice(choiceId, value)}
-              crawlerRef={selectedCrawlerType}
-              disabled={!selectedCrawlerType}
-            />
+            <CrawlerNPC id={id} disabled={!selectedCrawlerType} />
           </Flex>
         </Tabs.Content>
 
@@ -247,14 +208,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           {regularBays.length > 0 && (
             <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
               {regularBays.map((bay) => (
-                <BayCard
-                  crawler={crawler! as unknown as CrawlerLiveSheetState}
-                  key={bay.id}
-                  bay={bay}
-                  onUpdateChoice={(id, value) => handleUpdateChoice(id, value)}
-                  onUpdateBay={(updates) => handleUpdateBay(bay.id, updates)}
-                  disabled={!selectedCrawlerType}
-                />
+                <BayCard key={bay.id} bay={bay} disabled={!selectedCrawlerType} />
               ))}
             </Grid>
           )}
@@ -265,15 +219,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
             {/* Storage Bay and Notes Row */}
             <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
               {/* Storage Bay */}
-              {storageBay && (
-                <BayCard
-                  crawler={crawler! as unknown as CrawlerLiveSheetState}
-                  bay={storageBay}
-                  onUpdateChoice={(id, value) => handleUpdateChoice(id, value)}
-                  onUpdateBay={(updates) => handleUpdateBay(storageBay.id, updates)}
-                  disabled={!selectedCrawlerType}
-                />
-              )}
+              {storageBay && <BayCard bay={storageBay} disabled={!selectedCrawlerType} />}
 
               {/* Notes */}
               <Box pb="5">
@@ -296,7 +242,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
                 setIsCargoModalOpen(true)
               }}
               onRemoveCargo={handleRemoveCargo}
-              damaged={storageBay?.damaged}
+              damaged={storageBay?.metadata?.damaged ?? false}
               disabled={!selectedCrawlerType}
             />
           </VStack>

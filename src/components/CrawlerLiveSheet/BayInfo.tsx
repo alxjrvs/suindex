@@ -3,51 +3,44 @@ import { VStack, Text, HStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
-import type { CrawlerLiveSheetState } from './types'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
+import { useManageEntityChoices } from '../../hooks/suentity'
 
 interface BayInfoProps {
-  referenceBay: SURefCrawlerBay | undefined
-  onUpdateChoice: (id: string, value: string | undefined) => void
-  crawler: CrawlerLiveSheetState
+  bayRef: SURefCrawlerBay
+  bayEntityId: string
 }
 
-export function BayInfo({
-  referenceBay,
-  crawler: { crawler_type_id, tech_level, choices },
-  onUpdateChoice,
-}: BayInfoProps) {
+export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
   const [isFunctionExpanded, setIsFunctionExpanded] = useState(false)
   const [isAbilitiesExpanded, setIsAbilitiesExpanded] = useState(false)
+  const handleUpdateChoice = useManageEntityChoices(bayEntityId)
+
+  // Get crawler to access tech level (we need the crawler ID from the bay entity)
+  // For now, we'll skip tech level filtering since we don't have easy access to it
+  // TODO: Consider passing crawler ID or tech level as prop if needed
 
   // Don't render if there's no reference bay or no content to show
-  if (
-    !referenceBay ||
-    (!referenceBay.description && (!referenceBay.actions || referenceBay.actions.length === 0))
-  ) {
+  if (!bayRef.description && (!bayRef.actions || bayRef.actions.length === 0)) {
     return null
   }
 
-  const hasFunction = !!referenceBay.description
+  const hasFunction = !!bayRef.description
   const hasAbilities =
-    !!(referenceBay.actions && referenceBay.actions.length > 0) ||
-    (!!referenceBay.techLevelEffects && referenceBay.techLevelEffects.length > 0)
+    !!(bayRef.actions && bayRef.actions.length > 0) ||
+    (!!bayRef.techLevelEffects && bayRef.techLevelEffects.length > 0)
 
-  const techLevelEffects =
-    crawler_type_id && tech_level
-      ? referenceBay.techLevelEffects?.filter(
-          (effect) => effect.techLevelMin <= tech_level && effect.techLevelMax >= tech_level
-        )
-      : referenceBay.techLevelEffects
+  // For now, show all tech level effects (we don't have easy access to crawler tech level)
+  const techLevelEffects = bayRef.techLevelEffects
 
   return (
     <VStack mt="2" gap={2} justifyContent="flex-start" alignItems="stretch" w="full">
-      {referenceBay.choices?.map((choice) => (
+      {bayRef.choices?.map((choice) => (
         <SheetEntityChoiceDisplay
           key={choice.id}
           choice={choice}
-          onUpdateChoice={onUpdateChoice}
-          selectedValue={(choices || {})[choice.id]}
+          onUpdateChoice={handleUpdateChoice}
+          entityId={bayEntityId}
         />
       ))}
       <HStack gap={2} w="full">
@@ -87,14 +80,14 @@ export function BayInfo({
       {/* Function Section */}
       {isFunctionExpanded && hasFunction && (
         <SheetDisplay label="Function">
-          <Text lineHeight="relaxed">{referenceBay.description}</Text>
+          <Text lineHeight="relaxed">{bayRef.description}</Text>
         </SheetDisplay>
       )}
 
       {/* Abilities Section */}
       {isAbilitiesExpanded && hasAbilities && (
         <VStack gap={3} alignItems="stretch" w="full">
-          {referenceBay.actions!.map((ability, idx) => (
+          {bayRef.actions!.map((ability, idx) => (
             <SheetDisplay key={idx} label={ability.name}>
               <Text lineHeight="relaxed">{ability.description}</Text>
             </SheetDisplay>

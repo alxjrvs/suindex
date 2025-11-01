@@ -1,15 +1,10 @@
-import { useEffect, useState } from 'react'
 import { Flex, Text, VStack } from '@chakra-ui/react'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetSelect } from '../shared/SheetSelect'
 import { LinkButton } from '../shared/LinkButton'
 import { useEntityRelationships } from '../../hooks/useEntityRelationships'
-import { fetchEntity } from '../../lib/api'
-import { getClassNameById } from '../../utils/referenceDataHelpers'
-import type { Tables } from '../../types/database-generated.types'
+import { useHydratedPilot } from '../../hooks/pilot'
 import { DiscordSignInButton } from '../DiscordSignInButton'
-
-type PilotRow = Tables<'pilots'>
 
 interface PilotInfoProps {
   mechId?: string
@@ -19,8 +14,7 @@ interface PilotInfoProps {
 }
 
 export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: PilotInfoProps) {
-  const [pilot, setPilot] = useState<PilotRow | null>(null)
-  const [loadingPilot, setLoadingPilot] = useState(false)
+  const { pilot, selectedClass, selectedAdvancedClass } = useHydratedPilot(pilotId ?? '')
 
   // Fetch available pilots for the selector
   const { items: allPilots, loading: loadingPilots } = useEntityRelationships<{
@@ -35,29 +29,6 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
 
   // Filter out pilots that already have a mech assigned (except the currently assigned pilot)
   const pilots = allPilots.filter((p) => !p.mech_id || p.id === pilotId)
-
-  // Fetch pilot details when pilotId changes
-  useEffect(() => {
-    if (!pilotId) {
-      setPilot(null)
-      return
-    }
-
-    const loadPilot = async () => {
-      try {
-        setLoadingPilot(true)
-        const data = await fetchEntity<PilotRow>('pilots', pilotId)
-        setPilot(data)
-      } catch (err) {
-        console.error('Error loading pilot:', err)
-        setPilot(null)
-      } finally {
-        setLoadingPilot(false)
-      }
-    }
-
-    loadPilot()
-  }, [pilotId])
 
   // State 1: No mech ID (draft mode) - show disabled message
   if (!mechId) {
@@ -92,18 +63,6 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   }
 
   // State 3: Mech ID and pilot ID - show pilot info
-  if (loadingPilot) {
-    return (
-      <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
-        <Flex justify="center" align="center" h="full" py={4}>
-          <Text fontSize="sm" color="gray.500" fontFamily="mono">
-            Loading...
-          </Text>
-        </Flex>
-      </RoundedBox>
-    )
-  }
-
   if (!pilot) {
     return (
       <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
@@ -116,10 +75,8 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     )
   }
 
-  // Determine class name: advanced_class_id takes priority over class_id
-  const className = pilot.advanced_class_id
-    ? getClassNameById(pilot.advanced_class_id)
-    : getClassNameById(pilot.class_id)
+  // Determine class name: selectedAdvancedClass takes priority over selectedClass
+  const className = selectedAdvancedClass?.ref.name ?? selectedClass?.ref.name ?? 'No Class'
 
   return (
     <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">

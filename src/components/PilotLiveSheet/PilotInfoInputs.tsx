@@ -6,6 +6,7 @@ import { RoundedBox } from '../shared/RoundedBox'
 import { rollTable } from '@randsum/salvageunion'
 import { SalvageUnionReference, type SURefAbility } from 'salvageunion-reference'
 import { useChangePilotClass } from '../../hooks/pilot/useChangePilotClass'
+import { useChangePilotAdvancedClass } from '../../hooks/pilot/useChangePilotAdvancedClass'
 import { useHydratedPilot, useUpdatePilot } from '../../hooks/pilot'
 
 interface PilotInfoInputsProps {
@@ -14,8 +15,9 @@ interface PilotInfoInputsProps {
 }
 
 export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) {
-  const { pilot, abilities, selectedClass } = useHydratedPilot(id)
+  const { pilot, abilities, selectedClass, selectedAdvancedClass } = useHydratedPilot(id)
   const onClassChange = useChangePilotClass(id)
+  const onAdvancedClassChange = useChangePilotAdvancedClass(id)
   const updatePilot = useUpdatePilot()
   const motto = pilot?.motto ?? ''
   const mottoUsed = pilot?.motto_used ?? false
@@ -25,8 +27,8 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
   const backgroundUsed = pilot?.background_used ?? false
   const appearance = pilot?.appearance ?? ''
   const callsign = pilot?.callsign ?? ''
-  const classId = pilot?.class_id ?? null
-  const advancedClassId = pilot?.advanced_class_id ?? null
+  const classId = selectedClass?.schema_ref_id ?? null
+  const advancedClassId = selectedAdvancedClass?.schema_ref_id ?? null
   const allAdvancedClasses = useMemo(() => SalvageUnionReference.AdvancedClasses.all(), [])
   const allHybridClasses = useMemo(() => SalvageUnionReference.HybridClasses.all(), [])
   const allCoreClasses = useMemo(() => SalvageUnionReference.CoreClasses.all(), [])
@@ -40,7 +42,11 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
       return []
     }
 
-    if (selectedClass?.advanceable === false) {
+    if (
+      selectedClass?.ref &&
+      'advanceable' in selectedClass.ref &&
+      selectedClass.ref.advanceable === false
+    ) {
       return []
     }
 
@@ -139,9 +145,7 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
             <SheetSelect
               label="Advanced"
               value={advancedClassId}
-              onChange={(value) =>
-                updatePilot.mutate({ id, updates: { advanced_class_id: value } })
-              }
+              onChange={onAdvancedClassChange}
               disabled={disabled || availableAdvancedClasses.length === 0}
               placeholder="Select..."
             >

@@ -1,57 +1,95 @@
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import { Box, VStack } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
-import type { CrawlerBay, CrawlerLiveSheetState } from './types'
+import type { SURefCrawlerBay } from 'salvageunion-reference'
+import type { HydratedBay } from '../../types/hydrated'
 import { RoundedBox } from '../shared/RoundedBox'
 import { NPCCard } from '../shared/NPCCard'
 import { BayInfo } from './BayInfo'
 import { StatDisplay } from '../StatDisplay'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import { getTiltRotation } from '../../utils/tiltUtils'
+import { useUpdateEntity, useManageEntityChoices } from '../../hooks/suentity'
 
 interface BayCardProps {
-  bay: CrawlerBay
-  crawler: CrawlerLiveSheetState
-  onUpdateChoice: (id: string, value: string | undefined) => void
-  onUpdateBay: (updates: Partial<CrawlerBay>) => void
+  bay: HydratedBay
   disabled?: boolean
 }
 
-export function BayCard({
-  bay,
-  onUpdateChoice,
-  onUpdateBay,
-  disabled = false,
-  crawler,
-}: BayCardProps) {
-  const referenceBay = useMemo(() => {
-    const allBays = SalvageUnionReference.CrawlerBays.all()
-    return allBays.find((b) => b.id === bay.bayId)
-  }, [bay.bayId])
+export function BayCard({ bay, disabled = false }: BayCardProps) {
+  const updateEntity = useUpdateEntity()
+  const handleUpdateChoice = useManageEntityChoices(bay.id)
+
+  const bayRef = bay.ref as SURefCrawlerBay
+
+  // Memoize metadata to avoid recreating on every render
+  const metadata = useMemo(() => {
+    return (
+      bay.metadata || {
+        damaged: false,
+        npc: { name: '', notes: '', hitPoints: null, damage: 0 },
+      }
+    )
+  }, [bay.metadata])
 
   const titleRotation = useMemo(() => getTiltRotation(), [])
   const bayInfoRotation = useMemo(() => getTiltRotation(), [])
 
+  const handleToggleDamaged = useCallback(() => {
+    const currentMetadata = bay.metadata || {
+      damaged: false,
+      npc: { name: '', notes: '', hitPoints: null, damage: 0 },
+    }
+    updateEntity.mutate({
+      id: bay.id,
+      updates: {
+        metadata: {
+          ...currentMetadata,
+          damaged: !currentMetadata.damaged,
+        },
+      },
+    })
+  }, [bay.id, bay.metadata, updateEntity])
+
+  const handleUpdateNPC = useCallback(
+    (updates: Partial<{ npc: typeof metadata.npc }>) => {
+      if (!updates.npc) return
+      const currentMetadata = metadata || {
+        damaged: false,
+        npc: { name: '', notes: '', hitPoints: null, damage: 0 },
+      }
+      updateEntity.mutate({
+        id: bay.id,
+        updates: {
+          metadata: {
+            ...currentMetadata,
+            npc: updates.npc,
+          },
+        },
+      })
+    },
+    [bay.id, updateEntity, metadata]
+  )
+
   return (
     <RoundedBox
-      bg={bay.damaged ? 'su.grey' : 'su.crawlerPink'}
+      bg={metadata.damaged ? 'su.grey' : 'su.crawlerPink'}
       justifyContent="flex-start"
-      title={referenceBay?.name || 'Unknown Bay'}
-      titleRotation={bay.damaged ? titleRotation : 0}
+      title={bayRef.name}
+      titleRotation={metadata.damaged ? titleRotation : 0}
       disabled={disabled}
       rightContent={
         <StatDisplay
-          label={bay.damaged ? 'Repair' : 'Damage'}
-          value={bay.damaged ? '+' : '-'}
-          onClick={() => onUpdateBay({ damaged: !bay.damaged })}
-          bg={bay.damaged ? 'su.orange' : 'su.brick'}
+          label={metadata.damaged ? 'Repair' : 'Damage'}
+          value={metadata.damaged ? '+' : '-'}
+          onClick={handleToggleDamaged}
+          bg={metadata.damaged ? 'su.orange' : 'su.brick'}
           valueColor="su.white"
           disabled={disabled}
         />
       }
     >
       <Box position="relative" w="full">
-        {bay.damaged && referenceBay?.damagedEffect && (
+        {metadata.damaged && bayRef.damagedEffect && (
           <Box
             position="absolute"
             top="50%"
@@ -62,36 +100,32 @@ export function BayCard({
             px={2}
             filter="drop-shadow(0 0 4px rgba(0, 0, 0, 0.8))"
           >
-            <SheetDisplay label="Damaged Effect" value={referenceBay.damagedEffect} />
+            <SheetDisplay label="Damaged Effect" value={bayRef.damagedEffect} />
           </Box>
         )}
 
         <VStack gap={2} alignItems="stretch" w="full">
-          <Box opacity={bay.damaged ? 0.5 : 1} transition="opacity 0.3s ease">
+          <Box opacity={metadata.damaged ? 0.5 : 1} transition="opacity 0.3s ease">
             <NPCCard
-              npc={bay.npc}
-              choices={crawler.choices}
-              referenceBay={referenceBay!}
-              description={referenceBay?.npc.description || ''}
-              maxHP={referenceBay?.npc.hitPoints || 0}
-              onUpdateChoice={onUpdateChoice}
-              onUpdateBay={onUpdateBay}
-              position={referenceBay?.npc.position || 'NPC'}
-              tilted={bay.damaged}
+              npc={metadata.npc}
+              choices={bay.choices}
+              referenceBay={bayRef}
+              description={bayRef.npc.description || ''}
+              maxHP={bayRef.npc.hitPoints || 0}
+              onUpdateChoice={handleUpdateChoice}
+              onUpdateBay={handleUpdateNPC}
+              position={bayRef.npc.position || 'NPC'}
+              tilted={metadata.damaged}
               disabled={disabled}
             />
           </Box>
 
           <Box
-            transform={bay.damaged ? `rotate(${bayInfoRotation}deg)` : undefined}
+            transform={metadata.damaged ? `rotate(${bayInfoRotation}deg)` : undefined}
             transition="transform 0.3s ease"
-            opacity={bay.damaged ? 0.5 : 1}
+            opacity={metadata.damaged ? 0.5 : 1}
           >
-            <BayInfo
-              referenceBay={referenceBay}
-              crawler={crawler}
-              onUpdateChoice={onUpdateChoice}
-            />
+            <BayInfo bayRef={bayRef} bayEntityId={bay.id} />
           </Box>
         </VStack>
       </Box>

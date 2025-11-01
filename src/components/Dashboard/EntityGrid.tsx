@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 import type { Tables } from '../../types/database-generated.types'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
-import { useCreateSUEntity } from '../../hooks/useCreateSUEntity'
+import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { GridLayout } from './GridLayout'
 import type { ValidTable } from '../../types/common'
 import type { ReactNode } from 'react'
@@ -45,9 +45,9 @@ export function EntityGrid<T extends ValidTable>({
     orderAscending: false,
   })
 
-  const { createEntity, isLoading: isCreating } = useCreateSUEntity({
+  const { createEntity, isLoading: isCreating } = useCreateEntity({
     table,
-    navigationPath: (id) => `/dashboard/${table}/${id}`,
+    navigationPath: (id: string) => `/dashboard/${table}/${id}`,
   })
 
   const handleCreate = async () => {

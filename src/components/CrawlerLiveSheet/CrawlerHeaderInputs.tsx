@@ -25,7 +25,7 @@ export function CrawlerHeaderInputs({
 }: CrawlerHeaderInputsProps) {
   const allCrawlers = useMemo(() => SalvageUnionReference.Crawlers.all(), [])
 
-  const { crawler, upkeep, maxSP } = useHydratedCrawler(id)
+  const { crawler, upkeep, maxSP, selectedCrawlerType } = useHydratedCrawler(id)
   const currentUpgrade = crawler?.upgrade ?? 0
   const currentTechLevel = crawler?.tech_level || 1
   const isMaxUpgrade = currentUpgrade === MAX_UPGRADE
@@ -189,7 +189,7 @@ export function CrawlerHeaderInputs({
 
           <SheetSelect
             label="Type"
-            value={crawler?.crawler_type_id ?? ''}
+            value={selectedCrawlerType?.schema_ref_id ?? ''}
             onChange={onCrawlerTypeChange}
           >
             <option value="">Select crawler type...</option>

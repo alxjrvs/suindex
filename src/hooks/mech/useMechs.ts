@@ -33,14 +33,12 @@ export const mechsKeys = {
 
 const defaultMech: Mech = {
   id: LOCAL_ID,
-  cargo: [],
   systems: [],
   modules: [],
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
   user_id: 'local',
   pilot_id: null,
-  chassis_id: null,
   pattern: null,
   quirk: null,
   appearance: null,
@@ -48,7 +46,6 @@ const defaultMech: Mech = {
   current_ep: 0,
   current_heat: 0,
   notes: null,
-  choices: null,
   active: false,
 }
 
@@ -127,14 +124,12 @@ export function useCreateMech() {
       if (mechId && isLocalId(mechId)) {
         const localMech: Mech = {
           id: mechId,
-          cargo: [],
           systems: [],
           modules: [],
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           user_id: 'local',
           pilot_id: data.pilot_id || null,
-          chassis_id: data.chassis_id || null,
           pattern: data.pattern || null,
           quirk: data.quirk || null,
           appearance: data.appearance || null,
@@ -142,7 +137,6 @@ export function useCreateMech() {
           current_ep: data.current_ep || 0,
           current_heat: data.current_heat || 0,
           notes: data.notes || null,
-          choices: data.choices || null,
           active: data.active ?? false,
         }
 

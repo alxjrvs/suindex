@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
-import { useDeleteSUEntity, useCreateSUEntity } from '../suentity'
+import { useDeleteEntity, useCreateEntity } from '../suentity'
 import { useHydratedPilot } from './useHydratedPilot'
 
 export function useChangePilotClass(id: string | undefined) {
   const { pilot, abilities, equipment, selectedClass, selectedAdvancedClass } = useHydratedPilot(id)
-  const deleteEntity = useDeleteSUEntity()
-  const createEntity = useCreateSUEntity()
+  const deleteEntity = useDeleteEntity()
+  const createEntity = useCreateEntity()
 
   return useCallback(
     async (classId: string | null) => {

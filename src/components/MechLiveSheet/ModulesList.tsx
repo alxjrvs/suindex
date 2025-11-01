@@ -1,3 +1,4 @@
+import type { SURefChassis } from 'salvageunion-reference'
 import { useHydratedMech } from '../../hooks/mech'
 import { useManageMechSystemsAndModules } from '../../hooks/mech/useManageMechSystemsAndModules'
 import { MechEntityList } from './MechEntityList'
@@ -10,7 +11,8 @@ interface ModulesListProps {
 
 export function ModulesList({ id, disabled = false }: ModulesListProps) {
   const { modules, selectedChassis, usedModuleSlots } = useHydratedMech(id)
-  const totalModuleSlots = selectedChassis?.stats.moduleSlots ?? 0
+  const chassisRef = selectedChassis?.ref as SURefChassis | undefined
+  const totalModuleSlots = chassisRef?.stats.moduleSlots ?? 0
   const { handleRemoveModule, handleAddModule } = useManageMechSystemsAndModules(id)
   return (
     <MechEntityList

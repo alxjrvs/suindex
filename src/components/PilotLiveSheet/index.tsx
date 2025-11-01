@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
+import type { SURefCoreClass, SURefAdvancedClass, SURefHybridClass } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { ClassAbilitiesList } from './ClassAbilitiesList'
@@ -101,8 +102,10 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           <Box mt={6}>
             <ClassAbilitiesList
               id={id}
-              selectedClass={selectedClass}
-              selectedAdvancedClass={selectedAdvancedClass}
+              selectedClass={selectedClass?.ref as SURefCoreClass | undefined}
+              selectedAdvancedClass={
+                selectedAdvancedClass?.ref as SURefAdvancedClass | SURefHybridClass | undefined
+              }
             />
           </Box>
         </Tabs.Content>

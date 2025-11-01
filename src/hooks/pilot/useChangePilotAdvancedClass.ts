@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
-import { useDeleteSUEntity, useCreateSUEntity } from '../suentity'
+import { useDeleteEntity, useCreateEntity } from '../suentity'
 import { useHydratedPilot } from './useHydratedPilot'
 import { SalvageUnionReference } from 'salvageunion-reference'
 
 export function useChangePilotAdvancedClass(id: string | undefined) {
   const { pilot, selectedAdvancedClass } = useHydratedPilot(id)
-  const deleteEntity = useDeleteSUEntity()
-  const createEntity = useCreateSUEntity()
+  const deleteEntity = useDeleteEntity()
+  const createEntity = useCreateEntity()
 
   return useCallback(
     async (advancedClassId: string | null) => {
@@ -63,4 +63,3 @@ export function useChangePilotAdvancedClass(id: string | undefined) {
     [id, selectedAdvancedClass, deleteEntity, createEntity, pilot]
   )
 }
-

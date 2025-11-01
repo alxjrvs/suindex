@@ -1,4 +1,5 @@
 import { VStack } from '@chakra-ui/react'
+import type { SURefChassis } from 'salvageunion-reference'
 import NumericStepper from '../NumericStepper'
 import { RoundedBox } from '../shared/RoundedBox'
 import { useHydratedMech, useUpdateMech } from '../../hooks/mech'
@@ -11,7 +12,8 @@ interface MechResourceSteppersProps {
 export function MechResourceSteppers({ id, disabled = false }: MechResourceSteppersProps) {
   const { mech, selectedChassis } = useHydratedMech(id)
   const updateMech = useUpdateMech()
-  const stats = selectedChassis?.stats
+  const chassisRef = selectedChassis?.ref as SURefChassis | undefined
+  const stats = chassisRef?.stats
   const maxSP = stats?.structurePts || 0
   const currentDamage = mech?.current_damage ?? 0
   const currentEP = mech?.current_ep ?? 0

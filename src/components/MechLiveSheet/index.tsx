@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
+import type { SURefChassis } from 'salvageunion-reference'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
 import { SystemsList } from './SystemsList'
@@ -19,7 +20,8 @@ export default function MechLiveSheet({ id }: { id: string }) {
   const navigate = useNavigate()
 
   const { mech, isLocal, loading, error, selectedChassis, totalSalvageValue } = useHydratedMech(id)
-  const stats = selectedChassis?.stats
+  const chassisRef = selectedChassis?.ref as SURefChassis | undefined
+  const stats = chassisRef?.stats
   const updateMech = useUpdateMech()
   const deleteMech = useDeleteMech()
 
@@ -65,9 +67,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
   }
 
   const title =
-    selectedChassis?.name && mech?.pattern
-      ? `${selectedChassis.name} "${mech.pattern}"`
-      : 'Mech Chassis'
+    chassisRef?.name && mech?.pattern ? `${chassisRef.name} "${mech.pattern}"` : 'Mech Chassis'
 
   return (
     <LiveSheetLayout>
@@ -148,7 +148,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
             <ChassisAbilities
               totalSalvageValue={totalSalvageValue}
               stats={stats}
-              chassis={selectedChassis}
+              chassis={chassisRef}
               disabled={!selectedChassis}
             />
           </Box>

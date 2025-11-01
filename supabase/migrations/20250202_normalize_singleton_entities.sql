@@ -7,7 +7,7 @@
 -- PART 1: MIGRATE PILOT CLASS_ID TO SUENTITIES
 -- ============================================================================
 
--- Create suentity for each pilot with a class_id
+-- Create Entity for each pilot with a class_id
 INSERT INTO suentities (pilot_id, schema_name, schema_ref_id, created_at, updated_at)
 SELECT 
   id as pilot_id,
@@ -43,7 +43,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Create suentity for each pilot with an advanced_class_id
+-- Create Entity for each pilot with an advanced_class_id
 INSERT INTO suentities (pilot_id, schema_name, schema_ref_id, created_at, updated_at)
 SELECT 
   id as pilot_id,
@@ -61,7 +61,7 @@ DROP FUNCTION get_class_schema_name(TEXT);
 -- PART 3: MIGRATE MECH CHASSIS_ID TO SUENTITIES
 -- ============================================================================
 
--- Create suentity for each mech with a chassis_id
+-- Create Entity for each mech with a chassis_id
 INSERT INTO suentities (mech_id, schema_name, schema_ref_id, created_at, updated_at)
 SELECT 
   id as mech_id,
@@ -76,7 +76,7 @@ WHERE chassis_id IS NOT NULL;
 -- PART 4: MIGRATE CRAWLER CRAWLER_TYPE_ID TO SUENTITIES
 -- ============================================================================
 
--- Create suentity for each crawler with a crawler_type_id
+-- Create Entity for each crawler with a crawler_type_id
 INSERT INTO suentities (crawler_id, schema_name, schema_ref_id, created_at, updated_at)
 SELECT 
   id as crawler_id,
@@ -93,7 +93,7 @@ WHERE crawler_type_id IS NOT NULL;
 
 -- Bays are stored as JSON array on crawlers
 -- Each bay has: { id, bayId, damaged, npc: { name, notes, hitPoints, damage } }
--- We need to convert each bay to a suentity with metadata
+-- We need to convert each bay to a Entity with metadata
 
 -- Create suentities for each bay in each crawler
 INSERT INTO suentities (crawler_id, schema_name, schema_ref_id, metadata, created_at, updated_at)

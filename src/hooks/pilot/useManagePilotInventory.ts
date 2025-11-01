@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { useCreateSUEntity, useDeleteSUEntity } from '../suentity'
 import { useHydratedPilot } from './useHydratedPilot'
+import { useCreateEntity, useDeleteEntity } from '../suentity'
 
 export function useManagePilotInventory(id: string | undefined) {
   const { equipment } = useHydratedPilot(id)
-  const deleteEntity = useDeleteSUEntity()
-  const createEntity = useCreateSUEntity()
+  const deleteEntity = useDeleteEntity()
+  const createEntity = useCreateEntity()
   const handleAddEquipment = useCallback(
     async (equipmentId: string) => {
       if (!id) return
