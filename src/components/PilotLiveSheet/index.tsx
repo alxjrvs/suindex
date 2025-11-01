@@ -20,7 +20,8 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const navigate = useNavigate()
 
   // TanStack Query hooks
-  const { pilot, selectedClass, selectedAdvancedClass, loading, error } = useHydratedPilot(id)
+  const { pilot, isLocal, selectedClass, selectedAdvancedClass, loading, error } =
+    useHydratedPilot(id)
 
   const updatePilot = useUpdatePilot()
   const deletePilot = useDeletePilot()
@@ -67,16 +68,16 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   }
   return (
     <LiveSheetLayout>
-      {id && pilot && (
+      {!isLocal && (
         <LiveSheetControlBar
           config={PILOT_CONTROL_BAR_CONFIG}
-          relationId={pilot.crawler_id}
-          savedRelationId={pilot.crawler_id}
+          relationId={pilot?.crawler_id}
+          savedRelationId={pilot?.crawler_id}
           onRelationChange={(crawlerId) =>
             updatePilot.mutate({ id, updates: { crawler_id: crawlerId } })
           }
           hasPendingChanges={updatePilot.isPending}
-          active={pilot.active ?? false}
+          active={pilot?.active ?? false}
           onActiveChange={(active) => updatePilot.mutate({ id, updates: { active } })}
           disabled={!selectedClass}
         />
@@ -125,10 +126,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
         </Tabs.Content>
       </Tabs.Root>
 
-      {/* Equipment Selector Modal */}
-
-      {/* Delete Button - Only show when editing existing entity */}
-      {id && (
+      {!isLocal && (
         <Box mt={6}>
           <DeleteEntity
             entityName="Pilot"

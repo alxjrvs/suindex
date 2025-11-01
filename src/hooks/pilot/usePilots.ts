@@ -31,6 +31,34 @@ export const pilotsKeys = {
   byId: (id: string) => [...pilotsKeys.all, id] as const,
 }
 
+const defaultPilot: Pilot = {
+  id: LOCAL_ID,
+  callsign: 'Unknown Name',
+  max_hp: 10,
+  max_ap: 5,
+  current_damage: 0,
+  current_ap: 0,
+  abilities: [],
+  equipment: [],
+  active: false,
+  user_id: 'local',
+  advanced_class_id: null,
+  appearance: null,
+  background: null,
+  background_used: null,
+  class_id: null,
+  crawler_id: null,
+  created_at: new Date().toISOString(),
+  current_tp: 0,
+  notes: null,
+  choices: null,
+  keepsake: null,
+  keepsake_used: null,
+  motto: null,
+  motto_used: null,
+  updated_at: new Date().toISOString(),
+}
+
 /**
  * Hook to fetch a single pilot by ID
  *
@@ -57,12 +85,11 @@ export function usePilot(id: string | undefined) {
     queryKey: pilotsKeys.byId(id!),
     queryFn: isLocal
       ? // Cache-only: Return undefined, data comes from cache
-        async () => undefined as Pilot | undefined
+        async () => defaultPilot
       : // API-backed: Fetch from Supabase
         () => fetchEntity<Pilot>('pilots', id!),
     enabled: !!id, // Only run query if id is provided
-    // For local data, initialize with undefined
-    initialData: isLocal ? undefined : undefined,
+    initialData: isLocal ? defaultPilot : undefined,
   })
 }
 
@@ -142,6 +169,9 @@ export function useCreatePilot() {
       return createEntity<Pilot>('pilots', data as Pilot)
     },
     onSuccess: (newPilot) => {
+      // Don't invalidate for local IDs - cache is already set and there's no API to refetch from
+      if (isLocalId(newPilot.id)) return
+
       // Invalidate pilot cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: pilotsKeys.byId(newPilot.id),
@@ -195,14 +225,13 @@ export function useUpdatePilot() {
       // Fetch updated entity
       return fetchEntity<Pilot>('pilots', id)
     },
-    // Optimistic update for API-backed mode
+    // Optimistic update for API-backed mode only
     onMutate: async ({ id, updates }) => {
+      // Skip optimistic updates for local IDs - they're handled in mutationFn
       if (isLocalId(id)) return
 
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: pilotsKeys.byId(id) })
 
-      // Snapshot previous value
       const previousPilot = queryClient.getQueryData<Pilot>(pilotsKeys.byId(id))
 
       // Optimistically update cache
@@ -216,14 +245,17 @@ export function useUpdatePilot() {
 
       return { previousPilot, id }
     },
-    // Rollback on error
+    // Rollback on error (API-backed only)
     onError: (_err, _variables, context) => {
       if (context?.previousPilot) {
         queryClient.setQueryData(pilotsKeys.byId(context.id), context.previousPilot)
       }
     },
-    // Refetch on success
+    // Refetch on success (API-backed only)
     onSuccess: (_updatedPilot, variables) => {
+      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
+      if (isLocalId(variables.id)) return
+
       queryClient.invalidateQueries({
         queryKey: pilotsKeys.byId(variables.id),
       })
@@ -260,6 +292,9 @@ export function useDeletePilot() {
       await deleteEntity('pilots', id)
     },
     onSuccess: (_, id) => {
+      // Don't invalidate for local IDs - cache is already removed
+      if (isLocalId(id)) return
+
       // Invalidate pilot cache
       queryClient.invalidateQueries({
         queryKey: pilotsKeys.byId(id),

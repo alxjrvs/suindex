@@ -153,7 +153,8 @@ function TreeSection({
   id: string | undefined
 }) {
   const { pilot, abilities } = useHydratedPilot(id)
-  const { handleAddAbility: onAdd, handleRemoveAbility: onRemove } = useManagePilotAbilities(id)
+  console.log('abilities', abilities)
+  const { handleAddAbility, handleRemoveAbility } = useManagePilotAbilities(id)
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
   const currentTP = pilot?.current_tp ?? 0
   const getAvailableLevels = useCallback(
@@ -191,7 +192,7 @@ function TreeSection({
   )
 
   const isSelected = useCallback(
-    (abilityId: string) => abilities?.some((a) => a.id === abilityId) ?? false,
+    (abilityId: string) => abilities?.some((a) => a.ref.id === abilityId) ?? false,
     [abilities]
   )
   const isReadOnly = id === undefined
@@ -273,7 +274,7 @@ function TreeSection({
 
           // Determine button config based on state
           let buttonConfig = undefined
-          if (alreadySelected && onRemove) {
+          if (alreadySelected && handleRemoveAbility) {
             // Show remove button
             buttonConfig = {
               bg: 'su.brick',
@@ -286,20 +287,15 @@ function TreeSection({
                 cursor: 'not-allowed',
                 _hover: { bg: 'su.brick' },
               },
-              disabled: !canAfford,
+              disabled: currentTP < 1,
               onClick: (e: React.MouseEvent) => {
                 e.stopPropagation()
-                if (!canAfford) return
-                const confirmed = window.confirm(
-                  `Are you sure you want to remove "${ability.name}"?`
-                )
-                if (confirmed) {
-                  onRemove(ability.id)
-                }
+                if (currentTP < 1) return
+                handleRemoveAbility(ability.id)
               },
               children: 'Remove Ability',
             }
-          } else if (showSelectButton && onAdd) {
+          } else if (showSelectButton && handleAddAbility) {
             // Show select button
             buttonConfig = {
               bg: 'su.orange',
@@ -312,7 +308,7 @@ function TreeSection({
                 _hover: { bg: 'su.orange' },
               },
               disabled: !canSelect,
-              onClick: () => onAdd(ability.id),
+              onClick: () => handleAddAbility(ability.id),
               children: `Add to Pilot (${cost} TP)`,
             }
           }

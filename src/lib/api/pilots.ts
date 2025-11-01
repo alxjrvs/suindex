@@ -24,7 +24,7 @@ export async function createPilot(userId: string): Promise<PilotRow> {
   const pilotData: TablesInsert<'pilots'> = {
     callsign: 'Unknown Name',
     max_hp: 10,
-    max_ap: 3,
+    max_ap: 5,
     current_damage: 0,
     current_ap: 0,
     user_id: userId,

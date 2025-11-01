@@ -26,7 +26,7 @@ export function PilotInventory({ id, disabled = false }: PilotInventoryProps) {
   const equipmentItems = useMemo(() => {
     return equipment
       .map((equipment, index) => {
-        const item = allEquipment.find((e) => e.id === equipment.id)
+        const item = allEquipment.find((e) => e.id === equipment.ref.id)
         return item ? { id: equipment.id, equipment: item, index } : null
       })
       .filter(
@@ -56,7 +56,7 @@ export function PilotInventory({ id, disabled = false }: PilotInventoryProps) {
           </Flex>
         }
       >
-        <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={3}>
+        <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={3} alignItems="stretch">
           {equipmentItems.map((item) => (
             <EntityDisplay
               key={`${item.id}-${item.index}`}

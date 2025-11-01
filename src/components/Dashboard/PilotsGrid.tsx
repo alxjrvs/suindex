@@ -16,7 +16,7 @@ export function PilotsGrid() {
         const currentHP = pilot.current_damage ?? 0
         const maxHP = pilot.max_hp ?? 10
         const currentAP = pilot.current_ap ?? 0
-        const maxAP = pilot.max_ap ?? 3
+        const maxAP = pilot.max_ap ?? 5
 
         return (
           <PilotGridCard

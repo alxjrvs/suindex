@@ -27,19 +27,28 @@ export function useManagePilotAbilities(id: string | undefined) {
         return
       }
 
-      createEntity.mutate({
-        pilot_id: id,
-        schema_name: 'abilities',
-        schema_ref_id: abilityId,
-      })
+      createEntity.mutate(
+        {
+          pilot_id: id,
+          schema_name: 'abilities',
+          schema_ref_id: abilityId,
+        },
+        {
+          onSuccess: () => {
+            updatePilot.mutate({
+              id,
+              updates: {
+                current_tp: (pilot?.current_tp ?? 0) - cost,
+              },
+            })
+          },
+          onError: (err) => {
+            console.error('Failed to add ability:', err)
+          },
+        }
+      )
 
       // Deduct TP
-      updatePilot.mutate({
-        id,
-        updates: {
-          current_tp: (pilot?.current_tp ?? 0) - cost,
-        },
-      })
     },
     [id, pilot, selectedClass, selectedAdvancedClass, createEntity, updatePilot]
   )
@@ -48,28 +57,32 @@ export function useManagePilotAbilities(id: string | undefined) {
     (entityId: string) => {
       if (!id) return
 
-      const entity = abilities.find((e) => e.id === entityId)
+      const entity = abilities.find((e) => e.ref.id === entityId)
       if (!entity) return
 
       const ability = entity.ref as SURefAbility
       const abilityName = ability.name || 'this ability'
 
-      if (window.confirm(`Are you sure you want to remove "${abilityName}"?`)) {
-        // Calculate refund
-        const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
-
-        deleteEntity.mutate({ id: entity.id, parentType: 'pilot', parentId: id })
-
-        // Refund TP
-        updatePilot.mutate({
-          id,
-          updates: {
-            current_tp: (pilot?.current_tp ?? 0) + cost,
-          },
-        })
+      if (window.confirm(`Are you sure you want to remove "${abilityName}"? It will cost 1 TP.`)) {
+        deleteEntity.mutate(
+          { id: entity.id, parentType: 'pilot', parentId: id },
+          {
+            onSuccess: () => {
+              updatePilot.mutate({
+                id,
+                updates: {
+                  current_tp: (pilot?.current_tp ?? 0) - 1,
+                },
+              })
+            },
+            onError: (err) => {
+              console.error('Failed to remove ability:', err)
+            },
+          }
+        )
       }
     },
-    [id, pilot, selectedClass, selectedAdvancedClass, abilities, deleteEntity, updatePilot]
+    [id, pilot, abilities, deleteEntity, updatePilot]
   )
 
   return { handleAddAbility, handleRemoveAbility }

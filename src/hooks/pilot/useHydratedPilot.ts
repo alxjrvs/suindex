@@ -17,6 +17,7 @@ import { usePilot } from './usePilots'
 import { useEntities } from '../entity/useEntities'
 import type { HydratedEntity } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
+import { isLocalId } from '../../lib/queryClient'
 
 export interface HydratedPilot {
   pilot: Tables<'pilots'> | undefined
@@ -24,6 +25,7 @@ export interface HydratedPilot {
   equipment: HydratedEntity[]
   selectedClass: SURefCoreClass | undefined
   selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
+  isLocal: boolean
   loading: boolean
   error: string | null
 }
@@ -55,6 +57,7 @@ export interface HydratedPilot {
 export function useHydratedPilot(id: string | undefined): HydratedPilot {
   // Fetch pilot data
   const { data: pilot, isLoading: pilotLoading, error: pilotError } = usePilot(id)
+  const isLocal = isLocalId(id)
 
   // Fetch normalized entities (abilities, equipment)
   const {
@@ -95,6 +98,7 @@ export function useHydratedPilot(id: string | undefined): HydratedPilot {
     (pilotError ? String(pilotError) : null) || (entitiesError ? String(entitiesError) : null)
 
   return {
+    isLocal,
     pilot,
     abilities,
     equipment,

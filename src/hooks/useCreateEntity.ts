@@ -65,7 +65,7 @@ export function useCreateEntity<T extends ValidTable>(
       pilots: {
         callsign: 'Unknown Name',
         max_hp: 10,
-        max_ap: 3,
+        max_ap: 5,
         current_damage: 0,
         current_ap: 0,
       },

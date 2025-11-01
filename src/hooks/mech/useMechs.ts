@@ -136,6 +136,9 @@ export function useCreateMech() {
       return createEntity<Mech>('mechs', data as Mech)
     },
     onSuccess: (newMech) => {
+      // Don't invalidate for local IDs - cache is already set and there's no API to refetch from
+      if (isLocalId(newMech.id)) return
+
       // Invalidate mech cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: mechsKeys.byId(newMech.id),
@@ -216,8 +219,11 @@ export function useUpdateMech() {
         queryClient.setQueryData(mechsKeys.byId(context.id), context.previousMech)
       }
     },
-    // Refetch on success
+    // Refetch on success (API-backed only)
     onSuccess: (_updatedMech, variables) => {
+      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
+      if (isLocalId(variables.id)) return
+
       queryClient.invalidateQueries({
         queryKey: mechsKeys.byId(variables.id),
       })
@@ -254,6 +260,9 @@ export function useDeleteMech() {
       await deleteEntity('mechs', id)
     },
     onSuccess: (_, id) => {
+      // Don't invalidate for local IDs - cache is already removed
+      if (isLocalId(id)) return
+
       // Invalidate mech cache
       queryClient.invalidateQueries({
         queryKey: mechsKeys.byId(id),

@@ -140,6 +140,9 @@ export function useCreateCrawler() {
       return createEntity<Crawler>('crawlers', data as Crawler)
     },
     onSuccess: (newCrawler) => {
+      // Don't invalidate for local IDs - cache is already set and there's no API to refetch from
+      if (isLocalId(newCrawler.id)) return
+
       // Invalidate crawler cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: crawlersKeys.byId(newCrawler.id),
@@ -220,8 +223,11 @@ export function useUpdateCrawler() {
         queryClient.setQueryData(crawlersKeys.byId(context.id), context.previousCrawler)
       }
     },
-    // Refetch on success
+    // Refetch on success (API-backed only)
     onSuccess: (_updatedCrawler, variables) => {
+      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
+      if (isLocalId(variables.id)) return
+
       queryClient.invalidateQueries({
         queryKey: crawlersKeys.byId(variables.id),
       })
@@ -258,6 +264,9 @@ export function useDeleteCrawler() {
       await deleteEntity('crawlers', id)
     },
     onSuccess: (_, id) => {
+      // Don't invalidate for local IDs - cache is already removed
+      if (isLocalId(id)) return
+
       // Invalidate crawler cache
       queryClient.invalidateQueries({
         queryKey: crawlersKeys.byId(id),

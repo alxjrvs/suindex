@@ -209,12 +209,15 @@ export function useCreateEntity() {
         )
       }
     },
-    // Refetch on success
+    // Refetch on success (API-backed only)
     onSuccess: (newEntity) => {
       const parentType = newEntity.pilot_id ? 'pilot' : newEntity.mech_id ? 'mech' : 'crawler'
       const parentId = newEntity.pilot_id || newEntity.mech_id || newEntity.crawler_id
 
       if (!parentId) return
+
+      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
+      if (isLocalId(parentId)) return
 
       // Invalidate parent's entity cache to trigger refetch
       queryClient.invalidateQueries({
@@ -289,9 +292,38 @@ export function useDeleteEntity() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id }: { id: string; parentType: string; parentId: string }) =>
-      deleteNormalizedEntity(id),
+    mutationFn: async ({
+      id,
+      parentType,
+      parentId,
+    }: {
+      id: string
+      parentType: string
+      parentId: string
+    }) => {
+      // Cache-only mode: Remove from cache
+      if (isLocalId(parentId)) {
+        const queryKey = entitiesKeys.forParent(
+          parentType as 'pilot' | 'mech' | 'crawler',
+          parentId
+        )
+        const currentEntities = queryClient.getQueryData<HydratedEntity[]>(queryKey)
+
+        if (currentEntities) {
+          const updatedEntities = currentEntities.filter((entity) => entity.id !== id)
+          queryClient.setQueryData(queryKey, updatedEntities)
+        }
+
+        return
+      }
+
+      // API-backed mode: Delete from Supabase
+      await deleteNormalizedEntity(id)
+    },
     onSuccess: (_, variables) => {
+      // Don't invalidate for local IDs - cache is already updated
+      if (isLocalId(variables.parentId)) return
+
       // Invalidate parent's entity cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: entitiesKeys.forParent(
