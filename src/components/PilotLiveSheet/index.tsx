@@ -90,7 +90,9 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
 
       <Tabs.Root defaultValue="general-abilities">
         <Tabs.List>
-          <Tabs.Trigger value="class-abilities">Class Abilities</Tabs.Trigger>
+          <Tabs.Trigger value="class-abilities" disabled={!selectedClass}>
+            Class Abilities
+          </Tabs.Trigger>
           <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
           <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
         </Tabs.List>
