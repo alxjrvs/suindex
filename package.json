@@ -33,6 +33,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.5",
+    "react-virtuoso": "^4.14.1",
     "salvageunion-reference": "^1.50.0",
     "type-fest": "^5.1.0",
     "zod": "^4.1.12"

@@ -17,6 +17,8 @@ import type { TablesInsert, TablesUpdate } from '../../types/database-generated.
 import { fetchCargoForParent, createCargo, updateCargo, deleteCargo } from '../../lib/api/cargo'
 import { LOCAL_ID, isLocalId, generateLocalId, addToCache } from '../../lib/cacheHelpers'
 import type { HydratedCargo } from '../../types/hydrated'
+import { SalvageUnionReference } from 'salvageunion-reference'
+import type { SURefSchemaName } from 'salvageunion-reference'
 
 export { LOCAL_ID }
 
@@ -107,6 +109,12 @@ export function useCreateCargo() {
 
       // Cache-only mode: Add to cache without API call
       if (isLocalId(parentId)) {
+        // Hydrate reference data if schema-based
+        let ref = undefined
+        if (data.schema_name && data.schema_ref_id) {
+          ref = SalvageUnionReference.get(data.schema_name as SURefSchemaName, data.schema_ref_id)
+        }
+
         const localCargo: HydratedCargo = {
           id: generateLocalId(),
           created_at: new Date().toISOString(),
@@ -118,6 +126,7 @@ export function useCreateCargo() {
           schema_name: data.schema_name || null,
           schema_ref_id: data.schema_ref_id || null,
           metadata: data.metadata || null,
+          ref,
         }
 
         // Add to cache
@@ -143,6 +152,12 @@ export function useCreateCargo() {
       // Snapshot previous value
       const previousCargo = queryClient.getQueryData(cargoKeys.forParent(parentType, parentId))
 
+      // Hydrate reference data if schema-based
+      let ref = undefined
+      if (data.schema_name && data.schema_ref_id) {
+        ref = SalvageUnionReference.get(data.schema_name as SURefSchemaName, data.schema_ref_id)
+      }
+
       // Optimistically update cache
       const optimisticCargo: HydratedCargo = {
         id: generateLocalId(), // Temporary ID
@@ -155,6 +170,7 @@ export function useCreateCargo() {
         schema_name: data.schema_name || null,
         schema_ref_id: data.schema_ref_id || null,
         metadata: data.metadata || null,
+        ref,
       }
 
       const queryKey = [...cargoKeys.forParent(parentType, parentId)]

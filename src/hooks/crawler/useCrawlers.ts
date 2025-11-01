@@ -12,13 +12,80 @@
  * persist to the database.
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query'
 import type { TablesInsert, TablesUpdate } from '../../types/database-generated.types'
 import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../../lib/api'
 import type { Tables } from '../../types/database-generated.types'
-import { isLocalId, LOCAL_ID } from '../../lib/cacheHelpers'
+import { isLocalId, LOCAL_ID, generateLocalId } from '../../lib/cacheHelpers'
+import { SalvageUnionReference } from 'salvageunion-reference'
+import { createNormalizedEntity } from '../../lib/api/normalizedEntities'
+import { entitiesKeys } from '../suentity/useSUEntities'
+import type { HydratedEntity } from '../../types/hydrated'
 
 type Crawler = Tables<'crawlers'>
+
+/**
+ * Create bay entities for a crawler
+ * Creates one entity for each crawler bay type from salvageunion-reference
+ *
+ * @param crawlerId - ID of the crawler
+ * @param queryClient - TanStack Query client for cache updates
+ */
+async function createCrawlerBays(crawlerId: string, queryClient: QueryClient): Promise<void> {
+  const allBays = SalvageUnionReference.CrawlerBays.all()
+  const isLocal = isLocalId(crawlerId)
+
+  if (isLocal) {
+    // Cache-only mode: Add bay entities to cache
+    const bayEntities: HydratedEntity[] = allBays.map((bay) => {
+      const now = new Date().toISOString()
+      return {
+        id: generateLocalId(),
+        created_at: now,
+        updated_at: now,
+        pilot_id: null,
+        mech_id: null,
+        crawler_id: crawlerId,
+        schema_name: 'crawler-bays',
+        schema_ref_id: bay.id,
+        metadata: {
+          damaged: false,
+          npc: {
+            name: '',
+            notes: '',
+            hitPoints: bay.npc.hitPoints,
+            damage: 0,
+          },
+        },
+        ref: bay,
+        choices: [],
+      }
+    })
+
+    // Set bay entities in cache
+    queryClient.setQueryData(entitiesKeys.forParent('crawler', crawlerId), bayEntities)
+  } else {
+    // API-backed mode: Create bay entities in Supabase
+    await Promise.all(
+      allBays.map((bay) =>
+        createNormalizedEntity({
+          crawler_id: crawlerId,
+          schema_name: 'crawler-bays',
+          schema_ref_id: bay.id,
+          metadata: {
+            damaged: false,
+            npc: {
+              name: '',
+              notes: '',
+              hitPoints: bay.npc.hitPoints,
+              damage: 0,
+            },
+          },
+        })
+      )
+    )
+  }
+}
 
 /**
  * Query key factory for crawlers
@@ -155,7 +222,10 @@ export function useCreateCrawler() {
       // API-backed mode: Create in Supabase
       return createEntity<Crawler>('crawlers', data as Crawler)
     },
-    onSuccess: (newCrawler) => {
+    onSuccess: async (newCrawler) => {
+      // Create bay entities for the new crawler
+      await createCrawlerBays(newCrawler.id, queryClient)
+
       // Don't invalidate for local IDs - cache is already set and there's no API to refetch from
       if (isLocalId(newCrawler.id)) return
 

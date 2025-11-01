@@ -3,7 +3,7 @@ import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
 import { useMemo, useEffect } from 'react'
 import { packCargoGrid } from '../../utils/cargoGridPacking'
-import { techLevelColors, suColors } from '../../theme'
+import { techLevelColors } from '../../theme'
 import { EntityDisplayTooltip } from '../entity/EntityDisplayTooltip'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import type { HydratedCargo } from '../../types/hydrated'
@@ -50,9 +50,9 @@ export function DynamicBay({
       }
     }
 
-    // Chassis uses mech green
+    // Chassis uses dark mech green
     if (schemaName === 'chassis') {
-      return 'su.green'
+      return 'su.darkGreen'
     }
 
     return 'bg.input' // Default for other schemas
@@ -230,9 +230,6 @@ export function DynamicBay({
         // Use hydrated ref for color
         const itemBgColor = getCargoItemBgColor(cargoItem)
 
-        // Check if this is a chassis item
-        const isChassis = cargoItem.schema_name === 'chassis'
-
         // Get schema name and entity ID for tooltip
         const schemaName = cargoItem.schema_name
         const entityId = cargoItem.schema_ref_id
@@ -241,7 +238,7 @@ export function DynamicBay({
           <Box
             key={`item-${index}`}
             position="relative"
-            bg={isChassis ? 'transparent' : itemBgColor}
+            bg={itemBgColor}
             borderTopWidth={showTopBorder ? '3px' : '0'}
             borderBottomWidth={showBottomBorder ? '3px' : '0'}
             borderLeftWidth={showLeftBorder ? '3px' : '0'}
@@ -258,24 +255,6 @@ export function DynamicBay({
             minH="60px"
             cursor={cargoItem.ref ? 'pointer' : 'default'}
             _hover={cargoItem.ref ? { opacity: 0.8 } : undefined}
-            _before={
-              isChassis
-                ? {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundImage: `repeating-linear-gradient(45deg, ${suColors.green}, ${suColors.green} 8px, ${suColors.darkGreen} 8px, ${suColors.darkGreen} 16px)`,
-                    pointerEvents: 'none',
-                    borderTopLeftRadius: topLeftRounded ? 'lg' : '0',
-                    borderTopRightRadius: topRightRounded ? 'lg' : '0',
-                    borderBottomLeftRadius: bottomLeftRounded ? 'lg' : '0',
-                    borderBottomRightRadius: bottomRightRounded ? 'lg' : '0',
-                  }
-                : undefined
-            }
           >
             {cell.isTopRight && (
               <Button

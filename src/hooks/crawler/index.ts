@@ -6,3 +6,4 @@
 
 export * from './useCrawlers'
 export * from './useHydratedCrawler'
+export * from './useInitializeCrawlerBays'

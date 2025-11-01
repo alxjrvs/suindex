@@ -87,6 +87,7 @@ export function CargoModal({
 
       // Compose reference string for database storage
       const ref = SalvageUnionReference.composeRef(schemaName, entityId)
+
       onAdd(
         salvageValue,
         entityName,

@@ -6,6 +6,7 @@ import {
   type SURefEntity,
   type SURefSchemaName,
 } from 'salvageunion-reference'
+import { Virtuoso } from 'react-virtuoso'
 import Modal from '../Modal'
 import { EntityDisplay } from './EntityDisplay'
 import { TECH_LEVELS } from '../../constants/gameRules'
@@ -71,6 +72,20 @@ export function EntitySelectionModal({
     return null
   }
 
+  // Pre-compute disabled status for all entities (memoized separately to avoid re-sorting)
+  const disabledEntities = useMemo(() => {
+    if (!shouldDisableEntity) return new Set<string>()
+
+    const disabled = new Set<string>()
+    allEntities.forEach(({ entity, schemaName }) => {
+      const entityId = 'id' in entity ? (entity.id as string) : ''
+      if (shouldDisableEntity(entity)) {
+        disabled.add(`${schemaName}-${entityId}`)
+      }
+    })
+    return disabled
+  }, [allEntities, shouldDisableEntity])
+
   // Filter entities based on search term, tech level, and schema
   const filteredEntities = useMemo(() => {
     return allEntities
@@ -98,9 +113,11 @@ export function EntitySelectionModal({
         return matchesSearch && matchesTechLevel && matchesSchema
       })
       .sort((a, b) => {
-        // First, sort disabled entities to the end
-        const aDisabled = shouldDisableEntity ? shouldDisableEntity(a.entity) : false
-        const bDisabled = shouldDisableEntity ? shouldDisableEntity(b.entity) : false
+        // First, sort disabled entities to the end (use pre-computed set)
+        const aId = 'id' in a.entity ? (a.entity.id as string) : ''
+        const bId = 'id' in b.entity ? (b.entity.id as string) : ''
+        const aDisabled = disabledEntities.has(`${a.schemaName}-${aId}`)
+        const bDisabled = disabledEntities.has(`${b.schemaName}-${bId}`)
 
         if (aDisabled !== bDisabled) {
           return aDisabled ? 1 : -1
@@ -118,7 +135,7 @@ export function EntitySelectionModal({
         const bName = 'name' in b.entity ? (b.entity.name as string) : ''
         return aName.localeCompare(bName)
       })
-  }, [allEntities, searchTerm, techLevelFilter, schemaFilter, shouldDisableEntity])
+  }, [allEntities, searchTerm, techLevelFilter, schemaFilter, disabledEntities])
 
   const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
     onSelect(entityId, schemaName)
@@ -241,57 +258,50 @@ export function EntitySelectionModal({
           </Flex>
         </VStack>
 
-        {/* Scrollable Entity List - Two Column Bento Layout */}
-        <Box
-          overflowY="auto"
-          flex="1"
-          minH={0}
-          p={4}
-          scrollbar="hidden"
-          css={{
-            columns: '1',
-            '@media (min-width: 768px)': { columns: '2' },
-            gap: '0.5rem',
-          }}
-        >
+        {/* Scrollable Entity List - Virtualized */}
+        <Box flex="1" minH={0}>
           {filteredEntities.length === 0 ? (
             <Text textAlign="center" color="su.black" py={8}>
               No items found matching your criteria.
             </Text>
           ) : (
-            filteredEntities.map(({ entity, schemaName }) => {
-              const entityId = 'id' in entity ? (entity.id as string) : ''
-              const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
-              const buttonText = `${selectButtonTextPrefix} ${entityName}`
-              const isDisabled = shouldDisableEntity ? shouldDisableEntity(entity) : false
+            <Virtuoso
+              style={{ height: '100%' }}
+              data={filteredEntities}
+              itemContent={(_index, { entity, schemaName }) => {
+                const entityId = 'id' in entity ? (entity.id as string) : ''
+                const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
+                const buttonText = `${selectButtonTextPrefix} ${entityName}`
+                const isDisabled = shouldDisableEntity ? shouldDisableEntity(entity) : false
 
-              return (
-                <Box key={`${schemaName}-${entityId}`} css={{ breakInside: 'avoid' }} mb={2}>
-                  <EntityDisplay
-                    schemaName={schemaName}
-                    compact
-                    data={entity}
-                    defaultExpanded={!isDisabled}
-                    collapsible={isDisabled}
-                    disabled={isDisabled}
-                    buttonConfig={{
-                      bg: 'su.orange',
-                      color: 'su.white',
-                      fontWeight: 'bold',
-                      _hover: { bg: 'su.black' },
-                      _disabled: {
-                        opacity: 0.5,
-                        cursor: 'not-allowed',
-                        _hover: { bg: 'su.orange' },
-                      },
-                      disabled: isDisabled,
-                      onClick: () => handleSelect(entityId, schemaName),
-                      children: buttonText,
-                    }}
-                  />
-                </Box>
-              )
-            })
+                return (
+                  <Box px={4} pb={2}>
+                    <EntityDisplay
+                      schemaName={schemaName}
+                      compact
+                      data={entity}
+                      defaultExpanded={true}
+                      collapsible={false}
+                      disabled={isDisabled}
+                      buttonConfig={{
+                        bg: 'su.orange',
+                        color: 'su.white',
+                        fontWeight: 'bold',
+                        _hover: { bg: 'su.black' },
+                        _disabled: {
+                          opacity: 0.5,
+                          cursor: 'not-allowed',
+                          _hover: { bg: 'su.orange' },
+                        },
+                        disabled: isDisabled,
+                        onClick: () => handleSelect(entityId, schemaName),
+                        children: buttonText,
+                      }}
+                    />
+                  </Box>
+                )
+              }}
+            />
           )}
         </Box>
       </VStack>

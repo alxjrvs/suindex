@@ -15,6 +15,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { Tables, TablesInsert } from '../../types/database-generated.types'
+import type { HydratedEntity } from '../../types/hydrated'
 import {
   fetchChoicesForEntity,
   fetchChoicesForChoice,
@@ -170,8 +171,36 @@ export function useUpsertPlayerChoice() {
       const entityId = choice.entity_id
       const choiceId = (choice as { player_choice_id?: string }).player_choice_id
 
-      // Don't invalidate for local IDs - cache is already updated
+      // For local IDs, update the entity cache with the new choice
       if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId))) {
+        // Update all entity caches to include the new choice
+        queryClient.setQueriesData<HydratedEntity[]>(
+          { queryKey: entitiesKeys.all },
+          (oldEntities) => {
+            if (!oldEntities) return oldEntities
+
+            return oldEntities.map((entity) => {
+              // If this entity matches the choice's entity_id, add the choice
+              if (entity.id === entityId) {
+                // Check if choice already exists (update case)
+                const existingIndex = entity.choices.findIndex(
+                  (c) => c.choice_ref_id === choice.choice_ref_id
+                )
+
+                const updatedChoices =
+                  existingIndex >= 0
+                    ? entity.choices.map((c, i) => (i === existingIndex ? choice : c))
+                    : [...entity.choices, choice]
+
+                return {
+                  ...entity,
+                  choices: updatedChoices,
+                }
+              }
+              return entity
+            })
+          }
+        )
         return
       }
 
@@ -256,12 +285,30 @@ export function useDeletePlayerChoice() {
       return deletePlayerChoice(id)
     },
     onSuccess: (_, variables) => {
-      // Don't invalidate for local IDs - cache is already updated
+      // For local IDs, update the entity cache to remove the choice
       if (
         (variables.entityId && isLocalId(variables.entityId)) ||
         (variables.choiceId && isLocalId(variables.choiceId)) ||
         isLocalId(variables.id)
       ) {
+        // Update all entity caches to remove the choice
+        queryClient.setQueriesData<HydratedEntity[]>(
+          { queryKey: entitiesKeys.all },
+          (oldEntities) => {
+            if (!oldEntities) return oldEntities
+
+            return oldEntities.map((entity) => {
+              // If this entity matches the choice's entity_id, remove the choice
+              if (entity.id === variables.entityId) {
+                return {
+                  ...entity,
+                  choices: entity.choices.filter((c) => c.id !== variables.id),
+                }
+              }
+              return entity
+            })
+          }
+        )
         return
       }
 

@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
 import { CrawlerResourceSteppers } from './CrawlerResourceSteppers'
@@ -13,7 +12,7 @@ import { CrawlerControlBar } from './CrawlerControlBar'
 import { CrawlerNPC } from './CrawlerNPC'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { useUpdateCrawler, useHydratedCrawler, useDeleteCrawler } from '../../hooks/crawler'
-import { useCreateEntity } from '../../hooks/suentity'
+import { useInitializeCrawlerBays } from '../../hooks/crawler/useInitializeCrawlerBays'
 
 interface CrawlerLiveSheetProps {
   id: string
@@ -27,20 +26,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   const { crawler, loading, error, selectedCrawlerType, isLocal, bays } = useHydratedCrawler(id)
   const deleteCrawler = useDeleteCrawler()
   const updateCrawler = useUpdateCrawler()
-  const createEntity = useCreateEntity()
-  const allBays = useMemo(() => SalvageUnionReference.CrawlerBays.all(), [])
 
-  useEffect(() => {
-    if (bays.length === 0 && id && crawler) {
-      allBays.forEach((bay) => {
-        createEntity.mutate({
-          crawler_id: id,
-          schema_name: 'crawler-bays',
-          schema_ref_id: bay.id,
-        })
-      })
-    }
-  }, [bays.length, allBays, createEntity, id, crawler])
+  // Initialize bays for local (playground) crawlers
+  useInitializeCrawlerBays(id, bays.length > 0)
 
   // Clear flashing TLs after animation completes
   useEffect(() => {

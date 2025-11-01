@@ -23,11 +23,99 @@ const SCHEMAS_WITH_IMAGES: ReadonlySet<SURefSchemaName | 'actions'> = new Set([
   'vehicles',
 ])
 
+/**
+ * Complete list of image filenames available in /lp/ directory
+ * Used for validation or preloading if needed
+ */
+const IMAGE_NAMES: ReadonlySet<string> = new Set([
+  // Bio-Titans
+  'chrysalis',
+  'electrophorus',
+  'phantom',
+  'scylla',
+  'typhon',
+  'tyrant',
+
+  // Chassis
+  'aegis',
+  'atlas',
+  'brawler',
+  'carrier',
+  'colossus',
+  'consul',
+  'drop bear',
+  'eidolon',
+  'forge',
+  'gopher',
+  'hussar',
+  'iron wyrm',
+  'jackhammer',
+  'kraken',
+  'leviathan',
+  'little sestra',
+  'magpie',
+  'mantis',
+  'mazona',
+  'mirrorball',
+  'mule',
+  'neura-phage',
+  'photon',
+  'scrapper',
+  'shaitan',
+  'solo',
+  'spectrum',
+  'terra',
+  'thresher',
+  'vorpal',
+
+  // Classes (Core)
+  'engineer',
+  'hacker',
+  'hauler',
+  'salvager',
+  'scout',
+  'soldier',
+
+  // Classes (Hybrid)
+  'cyborg',
+  'fabricator',
+  'ranger',
+  'smuggler',
+  'union rep',
+
+  // Creatures
+  'artl',
+  'chimerapede',
+  'molebear',
+
+  // Drones
+  'survey drone',
+  'walker drone',
+
+  // Meld
+  'meld behemoth',
+  'meld nanoid',
+  'meld splitter',
+
+  // NPCs
+  'wastelander',
+
+  // Squads
+  'elite beam squad',
+
+  // Vehicles
+  'armoured box wheel',
+])
+
 export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps) {
   const [showImage, setShowImage] = useState(true)
 
   // Early return if this schema doesn't have images
   if (!SCHEMAS_WITH_IMAGES.has(schemaName)) {
+    return null
+  }
+
+  if (!IMAGE_NAMES.has(data.name.toLowerCase())) {
     return null
   }
 
