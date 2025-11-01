@@ -31,6 +31,27 @@ export const mechsKeys = {
   byId: (id: string) => [...mechsKeys.all, id] as const,
 }
 
+const defaultMech: Mech = {
+  id: LOCAL_ID,
+  cargo: [],
+  systems: [],
+  modules: [],
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+  user_id: 'local',
+  pilot_id: null,
+  chassis_id: null,
+  pattern: null,
+  quirk: null,
+  appearance: null,
+  current_damage: 0,
+  current_ep: 0,
+  current_heat: 0,
+  notes: null,
+  choices: null,
+  active: false,
+}
+
 /**
  * Hook to fetch a single mech by ID
  *
@@ -57,12 +78,12 @@ export function useMech(id: string | undefined) {
     queryKey: mechsKeys.byId(id!),
     queryFn: isLocal
       ? // Cache-only: Return undefined, data comes from cache
-        async () => undefined as Mech | undefined
+        async () => defaultMech
       : // API-backed: Fetch from Supabase
         () => fetchEntity<Mech>('mechs', id!),
     enabled: !!id, // Only run query if id is provided
     // For local data, initialize with undefined
-    initialData: isLocal ? undefined : undefined,
+    initialData: isLocal ? defaultMech : undefined,
   })
 }
 

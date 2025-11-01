@@ -71,14 +71,14 @@ export default function MechLiveSheet({ id }: { id: string }) {
 
   return (
     <LiveSheetLayout>
-      {id && mech && (
+      {!isLocal && (
         <LiveSheetControlBar
           config={MECH_CONTROL_BAR_CONFIG}
-          relationId={mech.pilot_id}
-          savedRelationId={mech.pilot_id}
+          relationId={mech?.pilot_id}
+          savedRelationId={mech?.pilot_id}
           onRelationChange={(pilotId) => updateMech.mutate({ id, updates: { pilot_id: pilotId } })}
           hasPendingChanges={updateMech.isPending}
-          active={mech.active ?? false}
+          active={mech?.active ?? false}
           onActiveChange={(active) => updateMech.mutate({ id, updates: { active } })}
           disabled={!selectedChassis}
         />
@@ -177,7 +177,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
         </Tabs.Content>
       </Tabs.Root>
 
-      {isLocal && (
+      {!isLocal && (
         <DeleteEntity
           entityName="Mech"
           onConfirmDelete={() =>

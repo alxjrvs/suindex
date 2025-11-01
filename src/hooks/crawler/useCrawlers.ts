@@ -15,10 +15,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { TablesInsert, TablesUpdate } from '../../types/database-generated.types'
 import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../../lib/api'
-import { LOCAL_ID, isLocalId } from '../../lib/cacheHelpers'
 import type { Tables } from '../../types/database-generated.types'
-
-export { LOCAL_ID }
+import { isLocalId, LOCAL_ID } from '../../lib/cacheHelpers'
 
 type Crawler = Tables<'crawlers'>
 
@@ -29,6 +27,32 @@ type Crawler = Tables<'crawlers'>
 export const crawlersKeys = {
   all: ['crawlers'] as const,
   byId: (id: string) => [...crawlersKeys.all, id] as const,
+}
+
+const defaultCrawler: Crawler = {
+  id: LOCAL_ID,
+  name: 'Unknown Name',
+  current_damage: 0,
+  tech_level: 1,
+  upgrade: 0,
+  active: false,
+  user_id: 'local',
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+  bays: null,
+  cargo: null,
+  choices: null,
+  crawler_type_id: null,
+  description: null,
+  game_id: null,
+  notes: null,
+  npc: null,
+  scrap_tl_one: 0,
+  scrap_tl_two: 0,
+  scrap_tl_three: 0,
+  scrap_tl_four: 0,
+  scrap_tl_five: 0,
+  scrap_tl_six: 0,
 }
 
 /**
@@ -57,12 +81,12 @@ export function useCrawler(id: string | undefined) {
     queryKey: crawlersKeys.byId(id!),
     queryFn: isLocal
       ? // Cache-only: Return undefined, data comes from cache
-        async () => undefined as Crawler | undefined
+        async () => defaultCrawler
       : // API-backed: Fetch from Supabase
         () => fetchEntity<Crawler>('crawlers', id!),
     enabled: !!id, // Only run query if id is provided
     // For local data, initialize with undefined
-    initialData: isLocal ? undefined : undefined,
+    initialData: isLocal ? defaultCrawler : undefined,
   })
 }
 

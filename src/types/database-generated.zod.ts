@@ -4,8 +4,8 @@
  * ==========================================
  */
 
-import { z } from "zod";
-import { type Json } from "./database-generated.types";
+import { z } from 'zod'
+import { type Json } from './database-generated.types'
 
 export const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>
   z
@@ -16,8 +16,8 @@ export const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>
       z.record(z.string(), z.union([jsonSchema, z.undefined()])),
       z.array(jsonSchema),
     ])
-    .nullable(),
-);
+    .nullable()
+)
 
 export const publicCargoRowSchema = z.object({
   amount: z.number().nullable(),
@@ -30,7 +30,7 @@ export const publicCargoRowSchema = z.object({
   schema_name: z.string().nullable(),
   schema_ref_id: z.string().nullable(),
   updated_at: z.string(),
-});
+})
 
 export const publicCargoInsertSchema = z.object({
   amount: z.number().optional().nullable(),
@@ -43,7 +43,7 @@ export const publicCargoInsertSchema = z.object({
   schema_name: z.string().optional().nullable(),
   schema_ref_id: z.string().optional().nullable(),
   updated_at: z.string().optional(),
-});
+})
 
 export const publicCargoUpdateSchema = z.object({
   amount: z.number().optional().nullable(),
@@ -56,24 +56,24 @@ export const publicCargoUpdateSchema = z.object({
   schema_name: z.string().optional().nullable(),
   schema_ref_id: z.string().optional().nullable(),
   updated_at: z.string().optional(),
-});
+})
 
 export const publicCargoRelationshipsSchema = z.tuple([
   z.object({
-    foreignKeyName: z.literal("cargo_crawler_id_fkey"),
-    columns: z.tuple([z.literal("crawler_id")]),
+    foreignKeyName: z.literal('cargo_crawler_id_fkey'),
+    columns: z.tuple([z.literal('crawler_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("crawlers"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('crawlers'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
   z.object({
-    foreignKeyName: z.literal("cargo_mech_id_fkey"),
-    columns: z.tuple([z.literal("mech_id")]),
+    foreignKeyName: z.literal('cargo_mech_id_fkey'),
+    columns: z.tuple([z.literal('mech_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("mechs"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('mechs'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
-]);
+])
 
 export const publicCrawlersRowSchema = z.object({
   active: z.boolean(),
@@ -99,7 +99,7 @@ export const publicCrawlersRowSchema = z.object({
   updated_at: z.string().nullable(),
   upgrade: z.number().nullable(),
   user_id: z.string(),
-});
+})
 
 export const publicCrawlersInsertSchema = z.object({
   active: z.boolean().optional(),
@@ -125,7 +125,7 @@ export const publicCrawlersInsertSchema = z.object({
   updated_at: z.string().optional().nullable(),
   upgrade: z.number().optional().nullable(),
   user_id: z.string(),
-});
+})
 
 export const publicCrawlersUpdateSchema = z.object({
   active: z.boolean().optional(),
@@ -151,7 +151,7 @@ export const publicCrawlersUpdateSchema = z.object({
   updated_at: z.string().optional().nullable(),
   upgrade: z.number().optional().nullable(),
   user_id: z.string().optional(),
-});
+})
 
 export const publicExternalLinksRowSchema = z.object({
   created_at: z.string().nullable(),
@@ -160,7 +160,7 @@ export const publicExternalLinksRowSchema = z.object({
   name: z.string(),
   updated_at: z.string().nullable(),
   url: z.string(),
-});
+})
 
 export const publicExternalLinksInsertSchema = z.object({
   created_at: z.string().optional().nullable(),
@@ -169,7 +169,7 @@ export const publicExternalLinksInsertSchema = z.object({
   name: z.string(),
   updated_at: z.string().optional().nullable(),
   url: z.string(),
-});
+})
 
 export const publicExternalLinksUpdateSchema = z.object({
   created_at: z.string().optional().nullable(),
@@ -178,7 +178,7 @@ export const publicExternalLinksUpdateSchema = z.object({
   name: z.string().optional(),
   updated_at: z.string().optional().nullable(),
   url: z.string().optional(),
-});
+})
 
 export const publicGameInvitesRowSchema = z.object({
   code: z.string(),
@@ -189,7 +189,7 @@ export const publicGameInvitesRowSchema = z.object({
   id: z.string(),
   max_uses: z.number().nullable(),
   uses: z.number().nullable(),
-});
+})
 
 export const publicGameInvitesInsertSchema = z.object({
   code: z.string(),
@@ -200,7 +200,7 @@ export const publicGameInvitesInsertSchema = z.object({
   id: z.string().optional(),
   max_uses: z.number().optional().nullable(),
   uses: z.number().optional().nullable(),
-});
+})
 
 export const publicGameInvitesUpdateSchema = z.object({
   code: z.string().optional(),
@@ -211,17 +211,17 @@ export const publicGameInvitesUpdateSchema = z.object({
   id: z.string().optional(),
   max_uses: z.number().optional().nullable(),
   uses: z.number().optional().nullable(),
-});
+})
 
 export const publicGameInvitesRelationshipsSchema = z.tuple([
   z.object({
-    foreignKeyName: z.literal("game_invites_game_id_fkey"),
-    columns: z.tuple([z.literal("game_id")]),
+    foreignKeyName: z.literal('game_invites_game_id_fkey'),
+    columns: z.tuple([z.literal('game_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("games"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('games'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
-]);
+])
 
 export const publicGameMembersRowSchema = z.object({
   game_id: z.string(),
@@ -229,7 +229,7 @@ export const publicGameMembersRowSchema = z.object({
   joined_at: z.string().nullable(),
   role: z.string(),
   user_id: z.string(),
-});
+})
 
 export const publicGameMembersInsertSchema = z.object({
   game_id: z.string(),
@@ -237,7 +237,7 @@ export const publicGameMembersInsertSchema = z.object({
   joined_at: z.string().optional().nullable(),
   role: z.string(),
   user_id: z.string(),
-});
+})
 
 export const publicGameMembersUpdateSchema = z.object({
   game_id: z.string().optional(),
@@ -245,17 +245,17 @@ export const publicGameMembersUpdateSchema = z.object({
   joined_at: z.string().optional().nullable(),
   role: z.string().optional(),
   user_id: z.string().optional(),
-});
+})
 
 export const publicGameMembersRelationshipsSchema = z.tuple([
   z.object({
-    foreignKeyName: z.literal("game_members_game_id_fkey"),
-    columns: z.tuple([z.literal("game_id")]),
+    foreignKeyName: z.literal('game_members_game_id_fkey'),
+    columns: z.tuple([z.literal('game_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("games"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('games'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
-]);
+])
 
 export const publicGamesRowSchema = z.object({
   active: z.boolean(),
@@ -265,7 +265,7 @@ export const publicGamesRowSchema = z.object({
   id: z.string(),
   name: z.string(),
   updated_at: z.string().nullable(),
-});
+})
 
 export const publicGamesInsertSchema = z.object({
   active: z.boolean().optional(),
@@ -275,7 +275,7 @@ export const publicGamesInsertSchema = z.object({
   id: z.string().optional(),
   name: z.string(),
   updated_at: z.string().optional().nullable(),
-});
+})
 
 export const publicGamesUpdateSchema = z.object({
   active: z.boolean().optional(),
@@ -285,7 +285,7 @@ export const publicGamesUpdateSchema = z.object({
   id: z.string().optional(),
   name: z.string().optional(),
   updated_at: z.string().optional().nullable(),
-});
+})
 
 export const publicMechsRowSchema = z.object({
   active: z.boolean(),
@@ -306,7 +306,7 @@ export const publicMechsRowSchema = z.object({
   systems: z.array(z.string()).nullable(),
   updated_at: z.string().nullable(),
   user_id: z.string(),
-});
+})
 
 export const publicMechsInsertSchema = z.object({
   active: z.boolean().optional(),
@@ -327,7 +327,7 @@ export const publicMechsInsertSchema = z.object({
   systems: z.array(z.string()).optional().nullable(),
   updated_at: z.string().optional().nullable(),
   user_id: z.string(),
-});
+})
 
 export const publicMechsUpdateSchema = z.object({
   active: z.boolean().optional(),
@@ -348,17 +348,17 @@ export const publicMechsUpdateSchema = z.object({
   systems: z.array(z.string()).optional().nullable(),
   updated_at: z.string().optional().nullable(),
   user_id: z.string().optional(),
-});
+})
 
 export const publicMechsRelationshipsSchema = z.tuple([
   z.object({
-    foreignKeyName: z.literal("mechs_pilot_id_fkey"),
-    columns: z.tuple([z.literal("pilot_id")]),
+    foreignKeyName: z.literal('mechs_pilot_id_fkey'),
+    columns: z.tuple([z.literal('pilot_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("pilots"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('pilots'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
-]);
+])
 
 export const publicPilotsRowSchema = z.object({
   abilities: z.array(z.string()).nullable(),
@@ -386,7 +386,7 @@ export const publicPilotsRowSchema = z.object({
   notes: z.string().nullable(),
   updated_at: z.string().nullable(),
   user_id: z.string(),
-});
+})
 
 export const publicPilotsInsertSchema = z.object({
   abilities: z.array(z.string()).optional().nullable(),
@@ -414,7 +414,7 @@ export const publicPilotsInsertSchema = z.object({
   notes: z.string().optional().nullable(),
   updated_at: z.string().optional().nullable(),
   user_id: z.string(),
-});
+})
 
 export const publicPilotsUpdateSchema = z.object({
   abilities: z.array(z.string()).optional().nullable(),
@@ -442,17 +442,17 @@ export const publicPilotsUpdateSchema = z.object({
   notes: z.string().optional().nullable(),
   updated_at: z.string().optional().nullable(),
   user_id: z.string().optional(),
-});
+})
 
 export const publicPilotsRelationshipsSchema = z.tuple([
   z.object({
-    foreignKeyName: z.literal("pilots_crawler_id_fkey"),
-    columns: z.tuple([z.literal("crawler_id")]),
+    foreignKeyName: z.literal('pilots_crawler_id_fkey'),
+    columns: z.tuple([z.literal('crawler_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("crawlers"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('crawlers'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
-]);
+])
 
 export const publicPlayerChoicesRowSchema = z.object({
   choice_ref_id: z.string(),
@@ -462,7 +462,7 @@ export const publicPlayerChoicesRowSchema = z.object({
   player_choice_id: z.string().nullable(),
   updated_at: z.string(),
   value: z.string(),
-});
+})
 
 export const publicPlayerChoicesInsertSchema = z.object({
   choice_ref_id: z.string(),
@@ -472,7 +472,7 @@ export const publicPlayerChoicesInsertSchema = z.object({
   player_choice_id: z.string().optional().nullable(),
   updated_at: z.string().optional(),
   value: z.string(),
-});
+})
 
 export const publicPlayerChoicesUpdateSchema = z.object({
   choice_ref_id: z.string().optional(),
@@ -482,24 +482,24 @@ export const publicPlayerChoicesUpdateSchema = z.object({
   player_choice_id: z.string().optional().nullable(),
   updated_at: z.string().optional(),
   value: z.string().optional(),
-});
+})
 
 export const publicPlayerChoicesRelationshipsSchema = z.tuple([
   z.object({
-    foreignKeyName: z.literal("player_choices_entity_id_fkey"),
-    columns: z.tuple([z.literal("entity_id")]),
+    foreignKeyName: z.literal('player_choices_entity_id_fkey'),
+    columns: z.tuple([z.literal('entity_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("suentities"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('suentities'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
   z.object({
-    foreignKeyName: z.literal("player_choices_player_choice_id_fkey"),
-    columns: z.tuple([z.literal("player_choice_id")]),
+    foreignKeyName: z.literal('player_choices_player_choice_id_fkey'),
+    columns: z.tuple([z.literal('player_choice_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("player_choices"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('player_choices'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
-]);
+])
 
 export const publicSuentitiesRowSchema = z.object({
   crawler_id: z.string().nullable(),
@@ -511,7 +511,7 @@ export const publicSuentitiesRowSchema = z.object({
   schema_name: z.string(),
   schema_ref_id: z.string(),
   updated_at: z.string(),
-});
+})
 
 export const publicSuentitiesInsertSchema = z.object({
   crawler_id: z.string().optional().nullable(),
@@ -523,7 +523,7 @@ export const publicSuentitiesInsertSchema = z.object({
   schema_name: z.string(),
   schema_ref_id: z.string(),
   updated_at: z.string().optional(),
-});
+})
 
 export const publicSuentitiesUpdateSchema = z.object({
   crawler_id: z.string().optional().nullable(),
@@ -535,37 +535,37 @@ export const publicSuentitiesUpdateSchema = z.object({
   schema_name: z.string().optional(),
   schema_ref_id: z.string().optional(),
   updated_at: z.string().optional(),
-});
+})
 
 export const publicSuentitiesRelationshipsSchema = z.tuple([
   z.object({
-    foreignKeyName: z.literal("entities_crawler_id_fkey"),
-    columns: z.tuple([z.literal("crawler_id")]),
+    foreignKeyName: z.literal('entities_crawler_id_fkey'),
+    columns: z.tuple([z.literal('crawler_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("crawlers"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('crawlers'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
   z.object({
-    foreignKeyName: z.literal("entities_mech_id_fkey"),
-    columns: z.tuple([z.literal("mech_id")]),
+    foreignKeyName: z.literal('entities_mech_id_fkey'),
+    columns: z.tuple([z.literal('mech_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("mechs"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('mechs'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
   z.object({
-    foreignKeyName: z.literal("entities_pilot_id_fkey"),
-    columns: z.tuple([z.literal("pilot_id")]),
+    foreignKeyName: z.literal('entities_pilot_id_fkey'),
+    columns: z.tuple([z.literal('pilot_id')]),
     isOneToOne: z.literal(false),
-    referencedRelation: z.literal("pilots"),
-    referencedColumns: z.tuple([z.literal("id")]),
+    referencedRelation: z.literal('pilots'),
+    referencedColumns: z.tuple([z.literal('id')]),
   }),
-]);
+])
 
 export const publicCreateGameInviteArgsSchema = z.object({
   p_expires_at: z.string().optional(),
   p_game_id: z.string(),
   p_max_uses: z.number().optional(),
-});
+})
 
 export const publicCreateGameInviteReturnsSchema = z.object({
   code: z.string(),
@@ -576,21 +576,21 @@ export const publicCreateGameInviteReturnsSchema = z.object({
   id: z.string(),
   max_uses: z.number().nullable(),
   uses: z.number().nullable(),
-});
+})
 
 export const publicExpireInviteArgsSchema = z.object({
   p_invite_id: z.string(),
-});
+})
 
-export const publicExpireInviteReturnsSchema = z.undefined();
+export const publicExpireInviteReturnsSchema = z.undefined()
 
-export const publicGenerateInviteCodeArgsSchema = z.never();
+export const publicGenerateInviteCodeArgsSchema = z.never()
 
-export const publicGenerateInviteCodeReturnsSchema = z.string();
+export const publicGenerateInviteCodeReturnsSchema = z.string()
 
 export const publicGetGameMembersArgsSchema = z.object({
   p_game_id: z.string(),
-});
+})
 
 export const publicGetGameMembersReturnsSchema = z.array(
   z.object({
@@ -599,42 +599,42 @@ export const publicGetGameMembersReturnsSchema = z.array(
     user_email: z.string(),
     user_id: z.string(),
     user_name: z.string(),
-  }),
-);
+  })
+)
 
 export const publicIsGameMediatorArgsSchema = z.object({
   game_uuid: z.string(),
   user_uuid: z.string(),
-});
+})
 
-export const publicIsGameMediatorReturnsSchema = z.boolean();
+export const publicIsGameMediatorReturnsSchema = z.boolean()
 
 export const publicIsGameMemberArgsSchema = z.object({
   game_uuid: z.string(),
   user_uuid: z.string(),
-});
+})
 
-export const publicIsGameMemberReturnsSchema = z.boolean();
+export const publicIsGameMemberReturnsSchema = z.boolean()
 
 export const publicRedeemInviteCodeArgsSchema = z.object({
   invite_code: z.string(),
-});
+})
 
-export const publicRedeemInviteCodeReturnsSchema = z.string();
+export const publicRedeemInviteCodeReturnsSchema = z.string()
 
-export const publicTestAuthUidArgsSchema = z.never();
+export const publicTestAuthUidArgsSchema = z.never()
 
 export const publicTestAuthUidReturnsSchema = z.array(
   z.object({
     jwt_role: z.string(),
     jwt_sub: z.string(),
     uid: z.string(),
-  }),
-);
+  })
+)
 
 export const publicUserOwnsChoiceArgsSchema = z.object({
   choice_id: z.string(),
   user_id: z.string(),
-});
+})
 
-export const publicUserOwnsChoiceReturnsSchema = z.boolean();
+export const publicUserOwnsChoiceReturnsSchema = z.boolean()

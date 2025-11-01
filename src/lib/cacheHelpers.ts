@@ -10,9 +10,9 @@
  */
 
 import type { QueryClient } from '@tanstack/react-query'
-import { LOCAL_ID, isLocalId } from './queryClient'
 
-export { LOCAL_ID, isLocalId }
+export const LOCAL_ID = 'local' as const
+export const isLocalId = (id: string | undefined) => id === LOCAL_ID
 
 /**
  * Generate a unique ID for cache-only entities

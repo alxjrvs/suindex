@@ -19,8 +19,6 @@ import { deleteEntity as deleteEntityAPI } from '../../lib/api'
 import type { CrawlerLiveSheetState, CrawlerBay } from './types'
 import type { Json } from '../../types/database-generated.types'
 
-const MAX_UPGRADE = 25
-
 interface CrawlerLiveSheetProps {
   id?: string
 }
@@ -64,8 +62,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps = {}) {
     const techLevelData = allTechLevels.find((tl) => tl.techLevel === techLevel)
     return techLevelData?.structurePoints ?? 0
   }, [selectedCrawlerType, crawler?.tech_level, allTechLevels])
-
-  const maxUpgrade = MAX_UPGRADE
 
   // Update entity wrapper - cast to CrawlerLiveSheetState for compatibility with child components
   const updateEntity = useCallback(

@@ -17,7 +17,7 @@ import { usePilot } from './usePilots'
 import { useEntities } from '../entity/useEntities'
 import type { HydratedEntity } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
-import { isLocalId } from '../../lib/queryClient'
+import { isLocalId } from '../../lib/cacheHelpers'
 
 export interface HydratedPilot {
   pilot: Tables<'pilots'> | undefined

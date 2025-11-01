@@ -16,7 +16,7 @@ import { RulesReferenceLanding } from './components/Reference/RulesReferenceLand
 import { Toaster } from './components/ui/ToasterComponent'
 import { EntityViewerModalProvider } from './providers/EntityViewerModalProvider'
 import { DiscordSignInButton } from './components/DiscordSignInButton'
-import { LOCAL_ID } from './lib/queryClient'
+import { LOCAL_ID } from './lib/cacheHelpers'
 
 const schemaIndexData = getSchemaCatalog()
 

@@ -138,3 +138,7 @@ export const CORE_ABILITY_COST = 1
  * Default Ability Cost (fallback)
  */
 export const DEFAULT_ABILITY_COST = 1
+
+export const UPKEEP_STEP = 5
+
+export const MAX_UPGRADE = 25

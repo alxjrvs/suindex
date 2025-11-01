@@ -148,7 +148,6 @@ export function EntityDisplay({
       borderWidth="2px"
       bg={'su.lightBlue'}
       w="full"
-      h="full"
       headerBg={backgroundColor}
       headerOpacity={headerOpacity}
       absoluteElements={
