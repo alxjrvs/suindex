@@ -1,5 +1,6 @@
 import { VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
+import { getStructurePoints, getEnergyPoints, getHeatCapacity } from 'salvageunion-reference'
 import NumericStepper from '../NumericStepper'
 import { RoundedBox } from '../shared/RoundedBox'
 import { useHydratedMech, useUpdateMech } from '../../hooks/mech'
@@ -13,8 +14,7 @@ export function MechResourceSteppers({ id, disabled = false }: MechResourceStepp
   const { mech, selectedChassis } = useHydratedMech(id)
   const updateMech = useUpdateMech()
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
-  const stats = chassisRef?.stats
-  const maxSP = stats?.structurePts || 0
+  const maxSP = chassisRef ? (getStructurePoints(chassisRef) ?? 0) : 0
   const currentDamage = mech?.current_damage ?? 0
   const currentEP = mech?.current_ep ?? 0
   const currentHeat = mech?.current_heat ?? 0
@@ -37,14 +37,14 @@ export function MechResourceSteppers({ id, disabled = false }: MechResourceStepp
           label="EP"
           value={currentEP}
           onChange={(newEP) => updateMech.mutate({ id, updates: { current_ep: newEP } })}
-          max={stats?.energyPts || 0}
+          max={chassisRef ? (getEnergyPoints(chassisRef) ?? 0) : 0}
           disabled={disabled}
         />
         <NumericStepper
           label="HEAT"
           value={currentHeat}
           onChange={(newHeat) => updateMech.mutate({ id, updates: { current_heat: newHeat } })}
-          max={stats?.heatCap || 0}
+          max={chassisRef ? (getHeatCapacity(chassisRef) ?? 0) : 0}
           disabled={disabled}
         />
       </VStack>

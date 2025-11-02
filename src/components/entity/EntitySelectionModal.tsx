@@ -3,6 +3,7 @@ import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import {
   SalvageUnionReference,
+  getTechLevel,
   type SURefEntity,
   type SURefSchemaName,
 } from 'salvageunion-reference'
@@ -54,22 +55,9 @@ export function EntitySelectionModal({
     return entities
   }, [schemaNames])
 
-  // Helper function to get tech level from entity (handles both direct and nested techLevel)
+  // Helper function to get tech level from entity (uses package utility)
   const getEntityTechLevel = (entity: SURefEntity): number | null => {
-    // Check for direct techLevel (systems, modules)
-    if ('techLevel' in entity && typeof entity.techLevel === 'number') {
-      return entity.techLevel
-    }
-
-    // Check for nested techLevel in stats (chassis)
-    if ('stats' in entity && typeof entity.stats === 'object' && entity.stats) {
-      const stats = entity.stats as { techLevel?: number }
-      if ('techLevel' in stats && typeof stats.techLevel === 'number') {
-        return stats.techLevel
-      }
-    }
-
-    return null
+    return getTechLevel(entity) ?? null
   }
 
   // Pre-compute disabled status for all entities (memoized separately to avoid re-sorting)

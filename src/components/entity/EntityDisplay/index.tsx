@@ -7,17 +7,17 @@ import type {
   SURefMetaEntity,
   SURefSchemaName,
 } from 'salvageunion-reference'
+import { getTechLevel, hasActions, getPageReference } from 'salvageunion-reference'
 import { techLevelColors } from '../../../theme'
 import { PageReferenceDisplay } from '../../shared/PageReferenceDisplay'
 import { RollTable } from '../../shared/RollTable'
 import { RoundedBox } from '../../shared/RoundedBox'
 import { SheetDisplay } from '../../shared/SheetDisplay'
-import { calculateBackgroundColor, extractName, extractTechLevel } from '../entityDisplayHelpers'
+import { calculateBackgroundColor, extractName } from '../entityDisplayHelpers'
 import { EntityAbsoluteContent } from './EntityAbsoluteContent'
 import { EntitySubTitleElement } from './EntitySubTitleContent'
 import { EntityLeftContent } from './EntityLeftContent'
-import { EntityRightContent } from './EntityRightContent'
-import { EntitySidebar } from './EntitySidebar'
+import { EntityRightHeaderContent } from './EntityRightHeaderContent'
 import { EntityChassisPatterns } from './EntityChassisPatterns'
 import { EntityTechLevelEffects } from './EntityTechLevelEffects'
 import { EntityOptions } from './EntityOptions'
@@ -93,7 +93,7 @@ export const EntityDisplay = memo(function EntityDisplay({
   if (!data) return null
 
   const title = extractName(data, schemaName)
-  const techLevel = extractTechLevel(data)
+  const techLevel = getTechLevel(data)
 
   const backgroundColor = calculateBackgroundColor(
     schemaName,
@@ -107,19 +107,24 @@ export const EntityDisplay = memo(function EntityDisplay({
 
   // Check if there's any content to render
   const hasContent =
-    ('actions' in data && data.actions && data.actions.length > 0) ||
+    hasActions(data) ||
     ('notes' in data && !!data.notes) ||
     ('description' in data && !!data.description && schemaName !== 'abilities') ||
     ('effect' in data && !!data.effect) ||
-    ('options' in data && data.options && data.options.length > 0) ||
+    ('options' in data && data.options && Array.isArray(data.options) && data.options.length > 0) ||
     ('table' in data && !!data.table) ||
-    ('techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0) ||
-    ('patterns' in data && data.patterns && data.patterns.length > 0) ||
+    ('techLevelEffects' in data &&
+      data.techLevelEffects &&
+      Array.isArray(data.techLevelEffects) &&
+      data.techLevelEffects.length > 0) ||
+    ('patterns' in data &&
+      data.patterns &&
+      Array.isArray(data.patterns) &&
+      data.patterns.length > 0) ||
     ('choices' in data && data.choices && data.choices.length > 0) ||
-    (compact && 'stats' in data && !!data.stats) ||
     !!children ||
     !!buttonConfig ||
-    ('page' in data && data.page)
+    getPageReference(data) !== undefined
 
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
 
@@ -163,7 +168,7 @@ export const EntityDisplay = memo(function EntityDisplay({
         <EntitySubTitleElement schemaName={schemaName} data={data} compact={compact} />
       }
       rightContent={
-        <EntityRightContent
+        <EntityRightHeaderContent
           schemaName={schemaName}
           data={data}
           compact={compact}
@@ -180,12 +185,6 @@ export const EntityDisplay = memo(function EntityDisplay({
     >
       {(!collapsible || isExpanded) && hasContent && (
         <Flex bg={backgroundColor} w="full" borderBottomRadius="md" overflow="hidden">
-          <EntitySidebar
-            data={data}
-            schemaName={schemaName}
-            compact={compact}
-            contentOpacity={contentOpacity}
-          />
           <VStack
             flex="1"
             bg={schemaName === 'actions' ? 'su.blue' : 'su.lightBlue'}

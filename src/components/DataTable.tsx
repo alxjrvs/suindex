@@ -6,6 +6,7 @@ import type { SchemaInfo } from '../types/schema'
 import { useDataTableFilters } from '../hooks/useDataTableFilters'
 import { useSchemaId } from '../hooks/useSchemaParams'
 import type { SURefEntity } from 'salvageunion-reference'
+import { getTechLevel } from 'salvageunion-reference'
 
 interface DataTableProps {
   data: SURefEntity[]
@@ -90,7 +91,8 @@ export default function DataTable({ data, schema }: DataTableProps) {
       }
 
       if (filterState.techLevelFilters.size > 0 && !filterState.techLevelFilters.has('all')) {
-        const itemTechLevel = 'techLevel' in item && item.techLevel?.toString()
+        const techLevel = getTechLevel(item)
+        const itemTechLevel = techLevel?.toString()
         if (!itemTechLevel || !filterState.techLevelFilters.has(itemTechLevel)) {
           return false
         }
@@ -220,12 +222,12 @@ export default function DataTable({ data, schema }: DataTableProps) {
     // Add flattened stats fields for chassis (in a specific order)
     const statsFields = allFields.filter((f) => f.startsWith('stats.'))
     const statsOrder = [
-      'stats.structurePts',
-      'stats.energyPts',
-      'stats.heatCap',
+      'stats.structurePoints',
+      'stats.energyPoints',
+      'stats.heatCapacity',
       'stats.systemSlots',
       'stats.moduleSlots',
-      'stats.cargoCap',
+      'stats.cargoCapacity',
       'stats.salvageValue',
     ]
     statsOrder.forEach((f) => {

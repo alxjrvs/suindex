@@ -16,7 +16,7 @@ import { useEntitiesFor } from '../suentity/useSUEntities'
 import { useCargo } from '../cargo/useCargo'
 import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
-import { type SURefSystem, type SURefModule, type SURefChassis } from 'salvageunion-reference'
+import { getSlotsRequired, getSalvageValue, getTechLevel } from 'salvageunion-reference'
 import { isLocalId } from '../../lib/cacheHelpers'
 
 export interface HydratedMech {
@@ -92,8 +92,8 @@ export function useHydratedMech(id: string | undefined): HydratedMech {
   const usedSystemSlots = useMemo(
     () =>
       systems.reduce((sum, entity) => {
-        const system = entity.ref as SURefSystem
-        return sum + (system.slotsRequired ?? 0)
+        const slotsRequired = getSlotsRequired(entity.ref)
+        return sum + (slotsRequired ?? 0)
       }, 0),
     [systems]
   )
@@ -101,26 +101,26 @@ export function useHydratedMech(id: string | undefined): HydratedMech {
   const usedModuleSlots = useMemo(
     () =>
       modules.reduce((sum, entity) => {
-        const module = entity.ref as SURefModule
-        return sum + (module.slotsRequired ?? 0)
+        const slotsRequired = getSlotsRequired(entity.ref)
+        return sum + (slotsRequired ?? 0)
       }, 0),
     [modules]
   )
 
   const totalSalvageValue = useMemo(() => {
     const systemValue = systems.reduce((sum, entity) => {
-      const system = entity.ref as SURefSystem
-      return sum + system.salvageValue * system.techLevel
+      const salvageValue = getSalvageValue(entity.ref) ?? 0
+      const techLevel = getTechLevel(entity.ref) ?? 1
+      return sum + salvageValue * techLevel
     }, 0)
 
     const moduleValue = modules.reduce((sum, entity) => {
-      const module = entity.ref as SURefModule
-      return sum + module.salvageValue * module.techLevel
+      const salvageValue = getSalvageValue(entity.ref) ?? 0
+      const techLevel = getTechLevel(entity.ref) ?? 1
+      return sum + salvageValue * techLevel
     }, 0)
 
-    const chassisValue = selectedChassis?.ref
-      ? (selectedChassis.ref as SURefChassis).stats?.salvageValue || 0
-      : 0
+    const chassisValue = selectedChassis?.ref ? (getSalvageValue(selectedChassis.ref) ?? 0) : 0
 
     return systemValue + moduleValue + chassisValue
   }, [systems, modules, selectedChassis])

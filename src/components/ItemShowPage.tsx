@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Footer from './Footer'
 import type { SchemaInfo } from '../types/schema'
 import { getDisplayComponent } from './componentRegistry'
@@ -14,6 +15,10 @@ interface ItemShowPageProps {
 export default function ItemShowPage({ schemas }: ItemShowPageProps) {
   const { schemaId, itemId } = useSchemaParams()
   const { data, loading, error } = useSchemaData(schemaId)
+  const [searchParams] = useSearchParams()
+
+  // Read compact query parameter, default to false for full display
+  const compact = searchParams.get('compact') === 'true'
 
   const currentSchema = schemas.find((s) => s.id === schemaId)
   const item = data.find((d) => d.id === itemId)
@@ -99,7 +104,7 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
           </Flex>
         }
       >
-        <DisplayComponent data={item} />
+        <DisplayComponent data={item} compact={compact} />
       </Suspense>
     )
   }
@@ -107,7 +112,7 @@ export default function ItemShowPage({ schemas }: ItemShowPageProps) {
   const specializedContent = renderSpecializedContent()
 
   return (
-    <Flex h="full" flexDirection="column" bg="su.white">
+    <Flex minH="100vh" flexDirection="column" bg="su.white">
       <Box flex="1" overflowY="auto" p={6}>
         <Box maxW="6xl" mx="auto">
           {specializedContent ? (

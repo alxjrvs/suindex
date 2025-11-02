@@ -1,12 +1,8 @@
-import { Box, VStack } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
 import type { SURefMetaChoice } from 'salvageunion-reference'
-import { lazy, Suspense } from 'react'
 import type { ButtonProps } from '@chakra-ui/react'
 import { getModel } from '../../../utils/modelMap'
-
-const EntityDisplay = lazy(() =>
-  import('./index').then((module) => ({ default: module.EntityDisplay }))
-)
+import { EntityDisplay } from './index'
 
 export interface EntityListDisplayProps {
   choice: SURefMetaChoice
@@ -92,17 +88,16 @@ export function EntityListDisplay({
         }
 
         return (
-          <Suspense key={idx} fallback={<Box>Loading...</Box>}>
-            <EntityDisplay
-              hideActions
-              data={entity}
-              schemaName="actions"
-              compact
-              collapsible
-              defaultExpanded={false}
-              buttonConfig={buttonConfig}
-            />
-          </Suspense>
+          <EntityDisplay
+            key={idx}
+            hideActions
+            data={entity}
+            schemaName="actions"
+            compact
+            collapsible
+            defaultExpanded={false}
+            buttonConfig={buttonConfig}
+          />
         )
       })}
     </VStack>

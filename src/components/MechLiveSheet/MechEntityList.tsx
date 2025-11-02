@@ -65,7 +65,7 @@ export function MechEntityList({
     setIsModalOpen(false)
   }
 
-  const label = schemaName === 'systems' ? 'Sys.' : 'Mod.'
+  const label = schemaName === 'systems' ? 'Sys' : 'Mod'
 
   return (
     <>

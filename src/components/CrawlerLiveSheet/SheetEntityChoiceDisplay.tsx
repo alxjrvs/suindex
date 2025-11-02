@@ -2,7 +2,6 @@ import { Button } from '@chakra-ui/react'
 import { useState, useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
-import { getModel } from '../../utils/modelMap'
 import { EntityDisplay } from '../entity/EntityDisplay'
 import { EntitySelectionModal } from '../entity/EntitySelectionModal'
 import { usePlayerChoices } from '../../hooks/suentity'
@@ -29,19 +28,14 @@ export function SheetEntityChoiceDisplay({
   const selectedEntity = useMemo(() => {
     if (!selectedValue) return null
 
+    const entity = SalvageUnionReference.getByRef(selectedValue)
+    if (!entity) return null
+
+    // Extract schema name from the reference string
     const parsed = SalvageUnionReference.parseRef(selectedValue)
     if (!parsed) return null
 
-    const { schemaName, id: entityId } = parsed
-    const normalizedSchemaName = schemaName.toLowerCase()
-
-    const model = getModel(normalizedSchemaName)
-    if (!model) return null
-
-    const entity = model.find((e) => e.id === entityId)
-    if (!entity) return null
-
-    return { entity, schemaName: normalizedSchemaName }
+    return { entity, schemaName: parsed.schemaName.toLowerCase() }
   }, [selectedValue])
 
   // Convert schema to schema names for the modal

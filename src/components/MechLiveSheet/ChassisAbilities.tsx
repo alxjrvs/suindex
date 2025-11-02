@@ -6,7 +6,6 @@ import { EntityDisplay } from '../entity/EntityDisplay'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
-  stats: SURefChassis['stats'] | undefined
   totalSalvageValue: number
   disabled?: boolean
 }
