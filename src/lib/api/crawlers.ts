@@ -1,10 +1,12 @@
 import { supabase } from '../supabase'
 import type { Tables, TablesInsert } from '../../types/database-generated.types'
+import { assertCanViewCrawler } from '../permissions'
 
 export type CrawlerRow = Tables<'crawlers'>
 
 /**
  * Fetch crawler for a specific game
+ * Checks permissions before returning
  */
 export async function fetchGameCrawler(gameId: string): Promise<CrawlerRow | null> {
   const { data, error } = await supabase
@@ -14,7 +16,12 @@ export async function fetchGameCrawler(gameId: string): Promise<CrawlerRow | nul
     .maybeSingle()
 
   if (error) throw error
-  return (data || null) as CrawlerRow | null
+  if (!data) return null
+
+  const crawler = data as CrawlerRow
+  await assertCanViewCrawler(crawler)
+
+  return crawler
 }
 
 /**

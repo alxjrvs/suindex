@@ -11,8 +11,11 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { CrawlerControlBar } from './CrawlerControlBar'
 import { CrawlerNPC } from './CrawlerNPC'
 import { DeleteEntity } from '../shared/DeleteEntity'
+import { PermissionError } from '../shared/PermissionError'
 import { useUpdateCrawler, useHydratedCrawler, useDeleteCrawler } from '../../hooks/crawler'
 import { useInitializeCrawlerBays } from '../../hooks/crawler/useInitializeCrawlerBays'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { isOwner } from '../../lib/permissions'
 
 interface CrawlerLiveSheetProps {
   id: string
@@ -29,6 +32,12 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
   // Initialize bays for local (playground) crawlers
   useInitializeCrawlerBays(id, bays.length > 0)
+
+  // Get current user for ownership check
+  const { userId } = useCurrentUser()
+
+  // Determine if the sheet is editable (user owns the crawler or it's local)
+  const isEditable = isLocal || (crawler ? isOwner(crawler.user_id, userId) : false)
 
   // Clear flashing TLs after animation completes
   useEffect(() => {
@@ -65,6 +74,11 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   }
 
   if (error) {
+    // Check if it's a permission error
+    if (error.includes('permission') || error.includes('private') || error.includes('access')) {
+      return <PermissionError message={error} />
+    }
+
     return (
       <LiveSheetLayout>
         <Flex alignItems="center" justifyContent="center" h="64">
@@ -95,20 +109,24 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           hasPendingChanges={updateCrawler.isPending}
           active={crawler?.active ?? false}
           onActiveChange={(active) => updateCrawler.mutate({ id, updates: { active } })}
-          disabled={!selectedCrawlerType}
+          isPrivate={crawler?.private ?? true}
+          onPrivateChange={(isPrivate) =>
+            updateCrawler.mutate({ id, updates: { private: isPrivate } })
+          }
+          disabled={!isEditable}
         />
       )}
       {/* Header Section */}
       <Flex gap={6} w="full" alignItems="stretch">
         <CrawlerHeaderInputs
-          disabled={!selectedCrawlerType}
+          disabled={!selectedCrawlerType || !isEditable}
           onScrapFlash={setFlashingScrapTLs}
           id={id}
         />
 
         <CrawlerResourceSteppers
           id={id}
-          disabled={!selectedCrawlerType}
+          disabled={!selectedCrawlerType || !isEditable}
           flashingTLs={flashingScrapTLs}
         />
       </Flex>
@@ -122,8 +140,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
         <Tabs.Content value="abilities">
           <Flex gap={6} w="full" mt={6}>
-            <CrawlerAbilities id={id} disabled={!selectedCrawlerType} />
-            <CrawlerNPC id={id} disabled={!selectedCrawlerType} />
+            <CrawlerAbilities id={id} disabled={!selectedCrawlerType || !isEditable} />
+            <CrawlerNPC id={id} disabled={!selectedCrawlerType || !isEditable} />
           </Flex>
         </Tabs.Content>
 
@@ -132,7 +150,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           {regularBays.length > 0 && (
             <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
               {regularBays.map((bay) => (
-                <BayCard key={bay.id} bay={bay} disabled={!selectedCrawlerType} />
+                <BayCard key={bay.id} bay={bay} disabled={!selectedCrawlerType || !isEditable} />
               ))}
             </Grid>
           )}
@@ -143,7 +161,9 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
             {/* Storage Bay and Notes Row */}
             <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
               {/* Storage Bay */}
-              {storageBay && <BayCard bay={storageBay} disabled={!selectedCrawlerType} />}
+              {storageBay && (
+                <BayCard bay={storageBay} disabled={!selectedCrawlerType || !isEditable} />
+              )}
 
               {/* Notes */}
               <Box pb="5">
@@ -152,13 +172,13 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
                   onChange={(value) => updateCrawler.mutate({ id, updates: { notes: value } })}
                   backgroundColor="bg.builder.crawler"
                   placeholder="Add notes about your crawler..."
-                  disabled={!selectedCrawlerType}
+                  disabled={!selectedCrawlerType || !isEditable}
                   minH="300px"
                 />
               </Box>
             </Grid>
 
-            <StorageCargoBay id={id} disabled={!selectedCrawlerType} />
+            <StorageCargoBay id={id} disabled={!selectedCrawlerType || !isEditable} />
           </VStack>
         </Tabs.Content>
       </Tabs.Root>
@@ -181,7 +201,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
             updateCrawler.mutate({ id, updates: { tech_level: currentTL - 1 } })
           }
         }}
-        disabled={!selectedCrawlerType || (crawler?.tech_level || 1) <= 1}
+        disabled={!selectedCrawlerType || !isEditable || (crawler?.tech_level || 1) <= 1}
       >
         DOWNGRADE TECH LEVEL
       </Button>
@@ -196,7 +216,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
               },
             })
           }
-          disabled={!id || updateCrawler.isPending}
+          disabled={!isEditable || !id || updateCrawler.isPending}
         />
       )}
     </LiveSheetLayout>

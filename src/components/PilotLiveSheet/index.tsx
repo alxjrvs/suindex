@@ -11,7 +11,10 @@ import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
 import { DeleteEntity } from '../shared/DeleteEntity'
+import { PermissionError } from '../shared/PermissionError'
 import { useUpdatePilot, useHydratedPilot, useDeletePilot } from '../../hooks/pilot'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { isOwner } from '../../lib/permissions'
 
 interface PilotLiveSheetProps {
   id: string
@@ -26,6 +29,12 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
 
   const updatePilot = useUpdatePilot()
   const deletePilot = useDeletePilot()
+
+  // Get current user for ownership check
+  const { userId } = useCurrentUser()
+
+  // Determine if the sheet is editable (user owns the pilot or it's local)
+  const isEditable = isLocal || (pilot ? isOwner(pilot.user_id, userId) : false)
 
   if (!pilot && !loading) {
     return (
@@ -52,6 +61,11 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   }
 
   if (error) {
+    // Check if it's a permission error
+    if (error.includes('permission') || error.includes('private') || error.includes('access')) {
+      return <PermissionError message={error} />
+    }
+
     return (
       <LiveSheetLayout>
         <Flex alignItems="center" justifyContent="center" h="64">
@@ -80,13 +94,17 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           hasPendingChanges={updatePilot.isPending}
           active={pilot?.active ?? false}
           onActiveChange={(active) => updatePilot.mutate({ id, updates: { active } })}
-          disabled={!selectedClass}
+          isPrivate={pilot?.private ?? true}
+          onPrivateChange={(isPrivate) =>
+            updatePilot.mutate({ id, updates: { private: isPrivate } })
+          }
+          disabled={!isEditable}
         />
       )}
       <Flex gap={6} w="full">
-        <PilotInfoInputs disabled={!selectedClass} id={id} />
+        <PilotInfoInputs disabled={!selectedClass || !isEditable} id={id} />
 
-        <PilotResourceSteppers id={id} disabled={!selectedClass} />
+        <PilotResourceSteppers id={id} disabled={!selectedClass || !isEditable} />
       </Flex>
 
       <Tabs.Root defaultValue="general-abilities">
@@ -118,14 +136,14 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
 
         <Tabs.Content value="inventory">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <PilotInventory id={id} disabled={!selectedClass} />
+            <PilotInventory id={id} disabled={!selectedClass || !isEditable} />
 
             <Notes
               notes={pilot?.notes ?? ''}
               onChange={(value) => updatePilot.mutate({ id, updates: { notes: value } })}
               backgroundColor="bg.builder.pilot"
               placeholder="Add notes about your pilot..."
-              disabled={!selectedClass}
+              disabled={!selectedClass || !isEditable}
             />
           </Grid>
         </Tabs.Content>
@@ -140,7 +158,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
                 onSuccess: () => navigate('/dashboard/pilots'),
               })
             }}
-            disabled={!id || updatePilot.isPending}
+            disabled={!isEditable || !id || updatePilot.isPending}
           />
         </Box>
       )}

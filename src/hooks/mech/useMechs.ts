@@ -47,6 +47,7 @@ const defaultMech: Mech = {
   current_heat: 0,
   notes: null,
   active: false,
+  private: true,
 }
 
 /**
@@ -138,6 +139,7 @@ export function useCreateMech() {
           current_heat: data.current_heat || 0,
           notes: data.notes || null,
           active: data.active ?? false,
+          private: data.private ?? true,
         }
 
         // Set in cache

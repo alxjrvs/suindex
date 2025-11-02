@@ -19,9 +19,12 @@ import { RoundedBox } from '../shared/RoundedBox'
 import { ChassisInputs } from './ChassisInputs'
 import { StatDisplay } from '../StatDisplay'
 import { DeleteEntity } from '../shared/DeleteEntity'
+import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { useUpdateMech, useHydratedMech, useDeleteMech } from '../../hooks/mech'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { isOwner } from '../../lib/permissions'
 
 export default function MechLiveSheet({ id }: { id: string }) {
   const navigate = useNavigate()
@@ -30,6 +33,12 @@ export default function MechLiveSheet({ id }: { id: string }) {
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
   const updateMech = useUpdateMech()
   const deleteMech = useDeleteMech()
+
+  // Get current user for ownership check
+  const { userId } = useCurrentUser()
+
+  // Determine if the sheet is editable (user owns the mech or it's local)
+  const isEditable = isLocal || (mech ? isOwner(mech.user_id, userId) : false)
 
   if (!mech && !loading) {
     return (
@@ -56,6 +65,11 @@ export default function MechLiveSheet({ id }: { id: string }) {
   }
 
   if (error) {
+    // Check if it's a permission error
+    if (error.includes('permission') || error.includes('private') || error.includes('access')) {
+      return <PermissionError message={error} />
+    }
+
     return (
       <LiveSheetLayout>
         <Flex alignItems="center" justifyContent="center" h="64">
@@ -86,7 +100,11 @@ export default function MechLiveSheet({ id }: { id: string }) {
           hasPendingChanges={updateMech.isPending}
           active={mech?.active ?? false}
           onActiveChange={(active) => updateMech.mutate({ id, updates: { active } })}
-          disabled={!selectedChassis}
+          isPrivate={mech?.private ?? true}
+          onPrivateChange={(isPrivate) =>
+            updateMech.mutate({ id, updates: { private: isPrivate } })
+          }
+          disabled={!isEditable}
         />
       )}
       <Flex gap={6}>
@@ -139,7 +157,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
           </RoundedBox>
         </VStack>
 
-        <MechResourceSteppers id={id} disabled={!selectedChassis} />
+        <MechResourceSteppers id={id} disabled={!selectedChassis || !isEditable} />
       </Flex>
 
       <Tabs.Root defaultValue="abilities">
@@ -161,20 +179,20 @@ export default function MechLiveSheet({ id }: { id: string }) {
 
         <Tabs.Content value="systems-modules">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <SystemsList id={id} disabled={!selectedChassis} />
+            <SystemsList id={id} disabled={!selectedChassis || !isEditable} />
 
-            <ModulesList id={id} disabled={!selectedChassis} />
+            <ModulesList id={id} disabled={!selectedChassis || !isEditable} />
           </Grid>
         </Tabs.Content>
 
         <Tabs.Content value="storage">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <CargoList id={id} disabled={!selectedChassis} />
+            <CargoList id={id} disabled={!selectedChassis || !isEditable} />
 
             <Notes
               notes={mech?.notes ?? ''}
               onChange={(value) => updateMech.mutate({ id, updates: { notes: value } })}
-              disabled={!selectedChassis}
+              disabled={!selectedChassis || !isEditable}
               backgroundColor="bg.builder.mech"
               placeholder="Add notes about your mech..."
             />
@@ -192,7 +210,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
               },
             })
           }
-          disabled={!id || updateMech.isPending}
+          disabled={!isEditable || !id || updateMech.isPending}
         />
       )}
     </LiveSheetLayout>

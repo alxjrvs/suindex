@@ -1,10 +1,12 @@
 import { supabase } from '../supabase'
 import type { Tables, TablesInsert } from '../../types/database-generated.types'
+import { assertCanViewMech } from '../permissions'
 
 export type MechRow = Tables<'mechs'>
 
 /**
  * Fetch mechs for multiple pilots
+ * Checks permissions for each mech before returning
  */
 export async function fetchPilotsMechs(pilotIds: string[]): Promise<MechRow[]> {
   if (pilotIds.length === 0) return []
@@ -12,7 +14,15 @@ export async function fetchPilotsMechs(pilotIds: string[]): Promise<MechRow[]> {
   const { data, error } = await supabase.from('mechs').select('*').in('pilot_id', pilotIds)
 
   if (error) throw error
-  return (data || []) as MechRow[]
+
+  const mechs = (data || []) as MechRow[]
+
+  // Check permissions for each mech
+  for (const mech of mechs) {
+    await assertCanViewMech(mech)
+  }
+
+  return mechs
 }
 
 /**

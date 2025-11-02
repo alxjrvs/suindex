@@ -20,9 +20,14 @@ import { ExternalLinkModal } from './ExternalLinkModal'
 import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
 import { getStructurePointsForTechLevel } from '../../utils/referenceDataHelpers'
 import { ActiveToggle } from '../shared/ActiveToggle'
+import { PrivateToggle } from '../shared/PrivateToggle'
+import { PermissionError } from '../shared/PermissionError'
 import { RoundedBox } from '../shared/RoundedBox'
+import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { useCrawlerTypes, usePilotClasses, useMechChassis } from '../../hooks/suentity'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { isOwner } from '../../lib/permissions'
 
 type GameInviteRow = GameInvite
 type ExternalLinkRow = ExternalLink
@@ -39,11 +44,19 @@ export function GameLiveSheet() {
     reload: reloadGame,
   } = useGameWithRelationships(gameId)
 
+  // Get current user for ownership check
+  const { userId } = useCurrentUser()
+
   // Determine if current user is a mediator
   const isMediator = useMemo(() => {
     if (!gameWithRelationships) return false
     return gameWithRelationships.members.some((m) => m.role === 'mediator')
   }, [gameWithRelationships])
+
+  // Determine if the game is editable (user owns the game or is mediator)
+  const isEditable = gameWithRelationships
+    ? isOwner(gameWithRelationships.created_by, userId) || isMediator
+    : false
 
   // Fetch singleton entities for efficient display
   const crawlerIds = useMemo(
@@ -268,6 +281,14 @@ export function GameLiveSheet() {
   }
 
   if (error || !gameWithRelationships) {
+    // Check if it's a permission error
+    if (
+      error &&
+      (error.includes('permission') || error.includes('private') || error.includes('access'))
+    ) {
+      return <PermissionError message={error} />
+    }
+
     return (
       <Box p={8}>
         <VStack align="center" justify="center" minH="60vh" gap={4}>
@@ -306,13 +327,12 @@ export function GameLiveSheet() {
   const inactiveMechs = allMechs.filter((m) => !m.active)
 
   return (
-    <Box p={4} maxW="6xl" mx="auto">
+    <LiveSheetLayout>
       {/* Back Button */}
       <Button
         onClick={() => navigate('/dashboard')}
         variant="plain"
         color="su.brick"
-        mb={4}
         _hover={{ textDecoration: 'underline' }}
       >
         ← Back to Dashboard
@@ -323,7 +343,7 @@ export function GameLiveSheet() {
         bg="su.gameBlue"
         title={isEditingGame ? undefined : gameWithRelationships.name}
         rightContent={
-          isMediator && !isEditingGame ? (
+          isEditable && !isEditingGame ? (
             <HStack gap={2}>
               <ActiveToggle
                 active={gameWithRelationships.active ?? false}
@@ -334,6 +354,18 @@ export function GameLiveSheet() {
                     reloadGame()
                   } catch (err) {
                     console.error('Error updating game active status:', err)
+                  }
+                }}
+              />
+              <PrivateToggle
+                isPrivate={gameWithRelationships.private ?? true}
+                onChange={async (isPrivate) => {
+                  if (!gameId) return
+                  try {
+                    await updateGame(gameId, { private: isPrivate })
+                    reloadGame()
+                  } catch (err) {
+                    console.error('Error updating game private status:', err)
                   }
                 }}
               />
@@ -487,7 +519,7 @@ export function GameLiveSheet() {
                 py={2}
                 px={4}
                 _hover={{ opacity: 0.9 }}
-                disabled={isCreatingCrawler}
+                disabled={!isEditable || isCreatingCrawler}
               >
                 {isCreatingCrawler ? 'Creating...' : '+ Create Crawler'}
               </Button>
@@ -886,7 +918,7 @@ export function GameLiveSheet() {
               )}
               <Button
                 onClick={handleDeleteGame}
-                disabled={deleteLoading}
+                disabled={!isEditable || deleteLoading}
                 w="full"
                 bg="su.white"
                 color="red.600"
@@ -913,6 +945,6 @@ export function GameLiveSheet() {
         onClose={() => setIsLinkModalOpen(false)}
         onAdd={handleCreateExternalLink}
       />
-    </Box>
+    </LiveSheetLayout>
   )
 }
