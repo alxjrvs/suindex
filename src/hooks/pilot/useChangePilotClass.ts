@@ -8,7 +8,7 @@ export function useChangePilotClass(id: string | undefined) {
   const createEntity = useCreateEntity()
 
   return useCallback(
-    async (classId: string | null) => {
+    (classId: string | null) => {
       if (!id || !pilot) return
 
       // If null or empty, delete the existing class entity
