@@ -40,18 +40,19 @@ export default defineConfig({
         },
       },
       onwarn(warning, warn) {
-        // Ignore sourcemap warnings for salvageunion-reference package
-        // The package includes sourcemaps but not the source files
+        // Ignore sourcemap warnings for third-party packages
+        // These packages include sourcemaps but not the source files
         if (
           warning.code === 'SOURCEMAP_ERROR' &&
-          warning.message.includes('salvageunion-reference')
+          (warning.message.includes('salvageunion-reference') ||
+            warning.message.includes('@chakra-ui'))
         ) {
           return
         }
         warn(warning)
       },
     },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1500, // Increased for data-heavy reference app
     minify: 'terser',
     sourcemap: 'hidden',
     cssCodeSplit: true,

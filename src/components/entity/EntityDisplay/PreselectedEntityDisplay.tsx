@@ -1,11 +1,6 @@
-import { Box } from '@chakra-ui/react'
 import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
-import { lazy, Suspense } from 'react'
 import { getModel } from '../../../utils/modelMap'
-
-const EntityDisplay = lazy(() =>
-  import('./index').then((module) => ({ default: module.EntityDisplay }))
-)
+import { EntityDisplay } from './index'
 
 export interface PreselectedEntityDisplayProps {
   choice: SURefMetaChoice
@@ -28,14 +23,12 @@ export function PreselectedEntityDisplay({
   if (!entity) return null
 
   return (
-    <Suspense fallback={<Box>Loading...</Box>}>
-      <EntityDisplay
-        hideActions
-        data={entity}
-        schemaName={schema as SURefSchemaName}
-        compact={compact}
-        collapsible={false}
-      />
-    </Suspense>
+    <EntityDisplay
+      hideActions
+      data={entity}
+      schemaName={schema as SURefSchemaName}
+      compact={compact}
+      collapsible={false}
+    />
   )
 }
