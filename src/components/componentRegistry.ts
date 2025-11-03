@@ -26,7 +26,8 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   classes: createEntityDisplay('classes.core'), // Fallback for generic 'classes'
   'classes.core': createEntityDisplay('classes.core'),
   'classes.advanced': createEntityDisplay('classes.advanced'),
-  'classes.hybrid': createEntityDisplay('classes.hybrid'),
+  // Note: 'classes.hybrid' is now merged into 'classes.advanced' in salvageunion-reference v1.54.0
+  'classes.hybrid': createEntityDisplay('classes.advanced'), // Backward compatibility
   'crawler-bays': createEntityDisplay('crawler-bays'),
 
   // Complex components that still need custom wrappers

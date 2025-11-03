@@ -1,4 +1,4 @@
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefMetaSchemaName } from 'salvageunion-reference'
 
 /**
  * Configuration for simple entity display wrappers.
@@ -13,7 +13,7 @@ interface EntityDisplayConfig {
  * Entity display configurations for simple wrapper components.
  * EntityDisplay now handles most complex logic internally (abilities, classes, etc.)
  */
-export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefSchemaName, EntityDisplayConfig>> = {
+export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefMetaSchemaName, EntityDisplayConfig>> = {
   npcs: {
     actionHeaderBgColor: 'su.green',
   },
@@ -50,9 +50,6 @@ export const ENTITY_DISPLAY_CONFIGS: Partial<Record<SURefSchemaName, EntityDispl
     headerColor: 'su.orange',
   },
   'classes.advanced': {
-    headerColor: 'su.pink',
-  },
-  'classes.hybrid': {
     headerColor: 'su.pink',
   },
   'crawler-bays': {

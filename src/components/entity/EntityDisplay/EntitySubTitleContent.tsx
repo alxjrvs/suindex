@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import type { SURefMetaEntity, SURefSchemaName, SURefMetaTrait } from 'salvageunion-reference'
+import type { SURefMetaEntity, SURefMetaTrait, SURefMetaSchemaName } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import type { DataValue } from '../../../types/common'
 import { ActivationCostBox } from '../../shared/ActivationCostBox'
@@ -23,10 +23,7 @@ export function EntitySubTitleElement({ data, schemaName, compact }: EntityDispl
 /**
  * Extract details for header (activation cost, range, damage, traits)
  */
-function extractDetails(
-  data: SURefMetaEntity,
-  schemaName?: SURefSchemaName | 'actions'
-): DataValue[] {
+function extractDetails(data: SURefMetaEntity, schemaName?: SURefMetaSchemaName): DataValue[] {
   const details: DataValue[] = []
   const variableCost = 'activationCurrency' in data && schemaName === 'abilities'
   const activationCurrency = getActivationCurrency(schemaName, variableCost)

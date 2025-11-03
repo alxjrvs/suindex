@@ -2,12 +2,7 @@ import { useMemo, useCallback } from 'react'
 import { Box, Grid, Stack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type {
-  SURefAbility,
-  SURefAdvancedClass,
-  SURefCoreClass,
-  SURefHybridClass,
-} from 'salvageunion-reference'
+import type { SURefAbility, SURefAdvancedClass, SURefCoreClass } from 'salvageunion-reference'
 import { EntityDisplay } from '../entity/EntityDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
 import { useManagePilotAbilities } from '../../hooks/pilot/useManagePilotAbilities'
@@ -20,7 +15,7 @@ export function ClassAbilitiesList({
 }: {
   id?: string | undefined
   selectedClass: SURefCoreClass | undefined
-  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
+  selectedAdvancedClass: SURefAdvancedClass | undefined
 }) {
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
 
@@ -148,7 +143,7 @@ function TreeSection({
   treeName: string
   treeAbilities: SURefAbility[]
   selectedClass: SURefCoreClass | undefined
-  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
+  selectedAdvancedClass: SURefAdvancedClass | undefined
   hideUnchosen?: boolean
   id: string | undefined
 }) {

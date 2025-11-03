@@ -1,11 +1,11 @@
 import { Box, VStack } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
-import type { SURefMetaChoice, SURefMetaEntity, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefMetaChoice, SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
 import { EntityChoice } from './EntityChoice'
 
 export interface EntityChoicesProps {
   data: SURefMetaEntity
-  schemaName: SURefSchemaName | 'actions'
+  schemaName: SURefMetaSchemaName
   compact: boolean
   /** User choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
   userChoices?: Record<string, string> | null

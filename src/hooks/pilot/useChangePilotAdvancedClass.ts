@@ -24,12 +24,11 @@ export function useChangePilotAdvancedClass(id: string | undefined) {
         return
       }
 
-      // Determine schema name (advanced or hybrid)
+      // All advanced and hybrid classes are now in 'classes.advanced' schema
       const advancedClass = SalvageUnionReference.get('classes.advanced', advancedClassId)
-      const hybridClass = SalvageUnionReference.get('classes.hybrid', advancedClassId)
-      const schemaName = advancedClass ? 'classes.advanced' : 'classes.hybrid'
+      const schemaName = 'classes.advanced'
 
-      if (!advancedClass && !hybridClass) {
+      if (!advancedClass) {
         console.error(`Advanced class not found: ${advancedClassId}`)
         return
       }

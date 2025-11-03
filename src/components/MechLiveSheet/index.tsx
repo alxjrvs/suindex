@@ -85,9 +85,8 @@ export default function MechLiveSheet({ id }: { id: string }) {
     }
 
     if (pilot.advanced_class_id) {
-      const advancedClass =
-        SalvageUnionReference.get('classes.advanced', pilot.advanced_class_id) ||
-        SalvageUnionReference.get('classes.hybrid', pilot.advanced_class_id)
+      // All advanced and hybrid classes are now in 'classes.advanced' schema
+      const advancedClass = SalvageUnionReference.get('classes.advanced', pilot.advanced_class_id)
       if (advancedClass) {
         parts.push(`/ ${advancedClass.name}`)
       }
