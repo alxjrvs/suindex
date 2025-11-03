@@ -46,6 +46,7 @@ async function createCrawlerBays(crawlerId: string, queryClient: QueryClient): P
         pilot_id: null,
         mech_id: null,
         crawler_id: crawlerId,
+        parent_entity_id: null,
         schema_name: 'crawler-bays',
         schema_ref_id: bay.id,
         metadata: {

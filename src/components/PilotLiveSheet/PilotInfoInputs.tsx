@@ -88,14 +88,14 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
     const {
       result: { label },
     } = rollTable('Keepsake')
-    await updatePilot.mutate({ id, updates: { keepsake: label } })
+    updatePilot.mutate({ id, updates: { keepsake: label } })
   }
 
   const handleAppearanceRoll = async () => {
     const {
       result: { label },
     } = rollTable('Pilot Appearance')
-    await updatePilot.mutate({ id, updates: { appearance: label } })
+    updatePilot.mutate({ id, updates: { appearance: label } })
   }
 
   return (
@@ -108,7 +108,6 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
       disabled={disabled}
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
-        {/* Callsign */}
         <SheetInput
           label="Callsign"
           value={callsign ?? ''}
