@@ -1,7 +1,11 @@
 import { useNavigate } from 'react-router'
-import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Tabs, Text, VStack, HStack } from '@chakra-ui/react'
 import { useIsMutating } from '@tanstack/react-query'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefChassis } from 'salvageunion-reference'
+import { PilotSmallDisplay } from '../Dashboard/PilotSmallDisplay'
+import { AddStatButton } from '../shared/AddStatButton'
+import { SheetSelect } from '../shared/SheetSelect'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
 import { SystemsList } from './SystemsList'
@@ -12,10 +16,11 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
-import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { useUpdateMech, useHydratedMech, useDeleteMech } from '../../hooks/mech'
+import { useCreatePilot } from '../../hooks/pilot'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { useImageUpload } from '../../hooks/useImageUpload'
+import { useEntityRelationships } from '../../hooks/useEntityRelationships'
 import { isOwner } from '../../lib/permissions'
 import { MainMechDisplay } from './MainMechDisplay'
 import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
@@ -45,6 +50,68 @@ export default function MechLiveSheet({ id }: { id: string }) {
     getCurrentImageUrl: () => mech?.image_url ?? null,
     queryKey: ['mechs', id],
   })
+
+  // Create pilot hook
+  const createPilot = useCreatePilot()
+
+  // Fetch available pilots for the dropdown
+  const { items: allPilots } = useEntityRelationships<{
+    id: string
+    callsign: string
+    class_id: string | null
+    advanced_class_id: string | null
+  }>({
+    table: 'pilots',
+    selectFields: 'id, callsign, class_id, advanced_class_id',
+    orderBy: 'callsign',
+  })
+
+  // Filter out the current pilot from the dropdown
+  const availablePilots = allPilots.filter((p) => p.id !== mech?.pilot_id)
+
+  // Format pilot name with class information
+  const formatPilotName = (pilot: {
+    callsign: string
+    class_id: string | null
+    advanced_class_id: string | null
+  }) => {
+    const parts = [pilot.callsign]
+
+    if (pilot.class_id) {
+      const coreClass = SalvageUnionReference.get('classes.core', pilot.class_id)
+      if (coreClass) {
+        parts.push(coreClass.name)
+      }
+    }
+
+    if (pilot.advanced_class_id) {
+      const advancedClass =
+        SalvageUnionReference.get('classes.advanced', pilot.advanced_class_id) ||
+        SalvageUnionReference.get('classes.hybrid', pilot.advanced_class_id)
+      if (advancedClass) {
+        parts.push(`/ ${advancedClass.name}`)
+      }
+    }
+
+    return parts.join(' - ')
+  }
+
+  // Handle creating a new pilot with this mech pre-assigned
+  const handleCreatePilot = async () => {
+    if (!userId) return
+
+    const newPilot = await createPilot.mutateAsync({
+      callsign: 'New Pilot',
+      max_hp: 10,
+      max_ap: 5,
+      current_damage: 0,
+      current_ap: 0,
+      user_id: userId,
+    })
+    // Assign this mech to the new pilot
+    updateMech.mutate({ id, updates: { pilot_id: newPilot.id } })
+    navigate(`/dashboard/pilots/${newPilot.id}`)
+  }
 
   if (!mech && !loading) {
     return (
@@ -96,10 +163,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
     <LiveSheetLayout>
       {!isLocal && (
         <LiveSheetControlBar
-          config={MECH_CONTROL_BAR_CONFIG}
-          relationId={mech?.pilot_id}
-          savedRelationId={mech?.pilot_id}
-          onRelationChange={(pilotId) => updateMech.mutate({ id, updates: { pilot_id: pilotId } })}
+          bg="su.green"
           hasPendingChanges={hasPendingChanges}
           active={mech?.active ?? false}
           onActiveChange={(active) => updateMech.mutate({ id, updates: { active } })}
@@ -112,7 +176,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
       )}
       <Flex gap={2}>
         <LiveSheetAssetDisplay
-          bg="su.green"
+          bg={!selectedChassis ? 'su.grey' : 'su.green'}
           url={chassisRef?.asset_url}
           userImageUrl={mech?.image_url ?? undefined}
           alt={chassisRef?.name}
@@ -130,6 +194,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
           <Tabs.Trigger value="abilities">Abilities</Tabs.Trigger>
           <Tabs.Trigger value="systems-modules">Systems & Modules</Tabs.Trigger>
           <Tabs.Trigger value="storage">Storage</Tabs.Trigger>
+          <Tabs.Trigger value="pilot">Pilot</Tabs.Trigger>
         </Tabs.List>
 
         <Tabs.Content value="abilities">
@@ -162,6 +227,69 @@ export default function MechLiveSheet({ id }: { id: string }) {
               placeholder="Add notes about your mech..."
             />
           </Grid>
+        </Tabs.Content>
+
+        <Tabs.Content value="pilot">
+          <VStack gap={6} align="stretch" mt={6}>
+            {mech?.pilot_id ? (
+              <>
+                {/* Pilot Selector */}
+                {!isLocal && isEditable && availablePilots.length > 0 && (
+                  <Box>
+                    <SheetSelect
+                      label="Change Pilot"
+                      value={null}
+                      options={availablePilots.map((p) => ({ id: p.id, name: formatPilotName(p) }))}
+                      onChange={(pilotId) => {
+                        if (pilotId) {
+                          updateMech.mutate({ id, updates: { pilot_id: pilotId } })
+                        }
+                      }}
+                      placeholder="Select a different pilot..."
+                    />
+                  </Box>
+                )}
+                <PilotSmallDisplay id={mech.pilot_id} />
+              </>
+            ) : (
+              <Box bg="su.lightBlue" p={8} borderRadius="md" borderWidth="2px" borderColor="black">
+                <VStack gap={4}>
+                  <Text textAlign="center" color="su.brick" fontWeight="bold">
+                    No pilot assigned to this mech
+                  </Text>
+                  {!isLocal && isEditable && (
+                    <HStack gap={4} justify="center">
+                      <AddStatButton
+                        label="Create"
+                        bottomLabel="Pilot"
+                        onClick={handleCreatePilot}
+                        disabled={createPilot.isPending}
+                        ariaLabel="Create new pilot for this mech"
+                      />
+                      {availablePilots.length > 0 && (
+                        <Box w="300px">
+                          <SheetSelect
+                            label="Or Assign Existing"
+                            value={null}
+                            options={availablePilots.map((p) => ({
+                              id: p.id,
+                              name: formatPilotName(p),
+                            }))}
+                            onChange={(pilotId) => {
+                              if (pilotId) {
+                                updateMech.mutate({ id, updates: { pilot_id: pilotId } })
+                              }
+                            }}
+                            placeholder="Select pilot..."
+                          />
+                        </Box>
+                      )}
+                    </HStack>
+                  )}
+                </VStack>
+              </Box>
+            )}
+          </VStack>
         </Tabs.Content>
       </Tabs.Root>
 

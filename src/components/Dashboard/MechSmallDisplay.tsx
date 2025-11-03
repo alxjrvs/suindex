@@ -114,7 +114,7 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
       bgColor="su.green"
       detailLabel="Player"
       detailValue={ownerName}
-      leftHeader={mech.pattern || chassisName}
+      leftHeader={`"${mech.pattern ?? chassisName}"`}
       rightHeader={chassisName.toUpperCase()}
       detailContent={crawlerName || pilotData?.callsign ? detailContent : undefined}
       isInactive={mech.active === false}

@@ -47,7 +47,7 @@ export function EntityDisplayTooltip({
   return (
     <HoverCard.Root openDelay={openDelay} closeDelay={closeDelay}>
       <HoverCard.Trigger asChild>
-        <span style={{ cursor: 'help' }}>{children}</span>
+        <span style={{ margin: 0, lineHeight: 1, cursor: 'help' }}>{children}</span>
       </HoverCard.Trigger>
       <Portal>
         <HoverCard.Positioner>

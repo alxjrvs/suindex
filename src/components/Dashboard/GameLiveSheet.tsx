@@ -3,9 +3,10 @@ import { useParams, useNavigate } from 'react-router'
 import { Box, Flex, VStack, HStack, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 
 import { ExternalLinkModal } from './ExternalLinkModal'
+import { GameInfo } from './GameInfo'
+import { PilotMechCell } from './PilotMechCell'
 import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
 import { ActiveToggle } from '../shared/ActiveToggle'
 import { PrivateToggle } from '../shared/PrivateToggle'
@@ -29,63 +30,15 @@ import {
 import type { GameInvite } from '../../lib/api/games'
 import { ValueDisplay } from '../shared/ValueDisplay'
 import { CrawlerSmallDisplay } from './CrawlerSmallDisplay'
-import { PilotSmallDisplay } from './PilotSmallDisplay'
-import { MechSmallDisplay } from './MechSmallDisplay'
-import { useHydratedMech } from '../../hooks/mech'
-import { supabase } from '../../lib/supabase'
-import { SheetInput } from '../shared/SheetInput'
-import { SheetTextarea } from '../shared/SheetTextarea'
 
 type GameInviteRow = GameInvite
-
-// Helper component to render pilot-mech pair with label
-function PilotMechCell({ pilotId, mechId }: { pilotId: string; mechId: string | null }) {
-  const { mech, selectedChassis } = useHydratedMech(mechId || '')
-  const { data: pilot } = useQuery({
-    queryKey: ['pilot-callsign', pilotId],
-    queryFn: async () => {
-      const { data } = await supabase.from('pilots').select('callsign').eq('id', pilotId).single()
-      return data
-    },
-    enabled: !!pilotId,
-  })
-
-  const mechName = mech?.pattern || selectedChassis?.ref.name
-  const label = `${pilot?.callsign || ''}${mechName ? ` & ${mechName}` : ''}`
-
-  return (
-    <VStack gap={0} align="stretch">
-      <PilotSmallDisplay label={label} id={pilotId} />
-      {mechId ? (
-        <MechSmallDisplay reverse id={mechId} />
-      ) : (
-        <Box bg="su.lightBlue" p={4} borderRadius="md" borderWidth="2px" borderColor="black">
-          <Text
-            fontSize="sm"
-            color="su.brick"
-            fontWeight="bold"
-            textAlign="center"
-            textTransform="uppercase"
-          >
-            No Mech
-          </Text>
-        </Box>
-      )}
-    </VStack>
-  )
-}
 
 export function GameLiveSheet() {
   const { gameId } = useParams<{ gameId: string }>()
   const navigate = useNavigate()
 
   // Load game with all relationships using the hook
-  const {
-    game: gameWithRelationships,
-    loading,
-    error,
-    reload: reloadGame,
-  } = useGameWithRelationships(gameId)
+  const { game: gameWithRelationships, loading, error } = useGameWithRelationships(gameId)
 
   // Get current user for ownership check
   const { userId } = useCurrentUser()
@@ -245,25 +198,23 @@ export function GameLiveSheet() {
           <HStack gap={4}>
             <ActiveToggle
               active={gameWithRelationships.active ?? false}
-              onChange={async (active) => {
+              onChange={(active) => {
                 if (!gameId) return
-                await updateGameMutation.mutateAsync({
+                updateGameMutation.mutate({
                   id: gameId,
                   updates: { active },
                 })
-                reloadGame()
               }}
               disabled={!isEditable}
             />
             <PrivateToggle
               isPrivate={gameWithRelationships.private ?? true}
-              onChange={async (isPrivate) => {
+              onChange={(isPrivate) => {
                 if (!gameId) return
-                await updateGameMutation.mutateAsync({
+                updateGameMutation.mutate({
                   id: gameId,
                   updates: { private: isPrivate },
                 })
-                reloadGame()
               }}
               disabled={!isEditable}
             />
@@ -275,37 +226,26 @@ export function GameLiveSheet() {
       <Flex gap={4} direction={{ base: 'column', lg: 'row' }} align="stretch">
         {/* Left Column: Main Content */}
         <VStack flex="1" gap={4} align="stretch">
-          {/* Crawler Container */}
-          <RoundedBox bg="su.gameBlue" title={gameWithRelationships.name}>
-            <VStack gap={4} align="stretch" p={4} w="full">
-              <SheetInput
-                label="Name"
-                value={gameWithRelationships.name}
-                onChange={(value) => {
-                  if (!gameId) return
-                  updateGameMutation.mutate({
-                    id: gameId,
-                    updates: { name: value },
-                  })
-                }}
-                placeholder="Enter game name..."
-                disabled={!isEditable}
-              />
-              <SheetTextarea
-                label="Description"
-                value={gameWithRelationships.description ?? ''}
-                onChange={(value) => {
-                  if (!gameId) return
-                  updateGameMutation.mutate({
-                    id: gameId,
-                    updates: { description: value },
-                  })
-                }}
-                placeholder="Enter game description..."
-                disabled={!isEditable}
-              />
-            </VStack>
-          </RoundedBox>
+          {/* Game Info */}
+          <GameInfo
+            name={gameWithRelationships.name}
+            description={gameWithRelationships.description}
+            onNameChange={(value) => {
+              if (!gameId) return
+              updateGameMutation.mutate({
+                id: gameId,
+                updates: { name: value },
+              })
+            }}
+            onDescriptionChange={(value) => {
+              if (!gameId) return
+              updateGameMutation.mutate({
+                id: gameId,
+                updates: { description: value },
+              })
+            }}
+            disabled={!isEditable}
+          />
           {crawler ? (
             <CrawlerSmallDisplay id={crawler.id} />
           ) : (
@@ -374,40 +314,6 @@ export function GameLiveSheet() {
 
         {/* Right Column: Sidebar */}
         <VStack w={{ base: 'full', lg: '400px' }} gap={4} align="stretch" flexShrink={0}>
-          {/* Game Name and Description */}
-          <RoundedBox bg="su.gameBlue" title={gameWithRelationships.name}>
-            <VStack gap={4} align="stretch" p={4}>
-              <SheetInput
-                label="Name"
-                value={gameWithRelationships.name}
-                onChange={async (value) => {
-                  if (!gameId) return
-                  await updateGameMutation.mutateAsync({
-                    id: gameId,
-                    updates: { name: value },
-                  })
-                  reloadGame()
-                }}
-                placeholder="Enter game name..."
-                disabled={!isEditable}
-              />
-              <SheetTextarea
-                label="Description"
-                value={gameWithRelationships.description ?? ''}
-                onChange={async (value) => {
-                  if (!gameId) return
-                  await updateGameMutation.mutateAsync({
-                    id: gameId,
-                    updates: { description: value },
-                  })
-                  reloadGame()
-                }}
-                placeholder="Enter game description..."
-                disabled={!isEditable}
-              />
-            </VStack>
-          </RoundedBox>
-
           <RoundedBox bg="su.gameBlue" title="Members">
             <VStack gap={2} align="stretch" w="full">
               {gameWithRelationships.members.map((member) => (

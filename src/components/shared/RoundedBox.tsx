@@ -157,7 +157,7 @@ export function RoundedBox({
               <Flex
                 direction="column"
                 gap={compact ? 0.5 : 1}
-                justifyContent="space-between"
+                justifyContent="center"
                 h="full"
                 overflow="visible"
                 minW="0"
@@ -183,7 +183,7 @@ export function RoundedBox({
                 {subTitleContent && (
                   <Flex
                     overflow="visible"
-                    gap="1"
+                    gap={compact ? 0.5 : 1}
                     flexWrap="wrap"
                     alignItems="center"
                     zIndex={10}

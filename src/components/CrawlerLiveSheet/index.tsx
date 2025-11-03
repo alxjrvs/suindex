@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
-import { useIsMutating } from '@tanstack/react-query'
+import { useIsMutating, useQuery } from '@tanstack/react-query'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
 import { CrawlerResourceSteppers } from './CrawlerResourceSteppers'
@@ -12,10 +12,12 @@ import { CrawlerControlBar } from './CrawlerControlBar'
 import { CrawlerNPC } from './CrawlerNPC'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { PermissionError } from '../shared/PermissionError'
+import { PilotMechCell } from '../Dashboard/PilotMechCell'
 import { useUpdateCrawler, useHydratedCrawler, useDeleteCrawler } from '../../hooks/crawler'
 import { useInitializeCrawlerBays } from '../../hooks/crawler/useInitializeCrawlerBays'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isOwner } from '../../lib/permissions'
+import { fetchCrawlerPilots, fetchPilotsMechs } from '../../lib/api'
 
 interface CrawlerLiveSheetProps {
   id: string
@@ -31,6 +33,24 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
   // Initialize bays for local (playground) crawlers
   useInitializeCrawlerBays(id, bays.length > 0)
+
+  // Fetch pilots and their mechs for this crawler
+  const { data: pilotsWithMechs = [] } = useQuery({
+    queryKey: ['crawler-pilots-mechs', id],
+    queryFn: async () => {
+      const pilots = await fetchCrawlerPilots(id)
+      if (pilots.length === 0) return []
+
+      const pilotIds = pilots.map((p) => p.id)
+      const mechs = await fetchPilotsMechs(pilotIds)
+
+      return pilots.map((pilot) => ({
+        pilot,
+        mech: mechs.find((m) => m.pilot_id === pilot.id) || null,
+      }))
+    },
+    enabled: !!id && !isLocal,
+  })
 
   // Track all mutations for this crawler (for syncing indicator)
   const mutatingCount = useIsMutating()
@@ -96,9 +116,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
     <LiveSheetLayout>
       {!isLocal && (
         <CrawlerControlBar
-          gameId={crawler?.game_id}
-          savedGameId={crawler?.game_id}
-          onGameChange={(gameId) => updateCrawler.mutate({ id, updates: { game_id: gameId } })}
           hasPendingChanges={hasPendingChanges}
           active={crawler?.active ?? false}
           onActiveChange={(active) => updateCrawler.mutate({ id, updates: { active } })}
@@ -125,6 +142,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           <Tabs.Trigger value="abilities">Abilities</Tabs.Trigger>
           <Tabs.Trigger value="bays">Bays</Tabs.Trigger>
           <Tabs.Trigger value="storage">Storage Bay</Tabs.Trigger>
+          <Tabs.Trigger value="pilots">Pilots & Mechs</Tabs.Trigger>
         </Tabs.List>
 
         <Tabs.Content value="abilities">
@@ -168,6 +186,24 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
             </Grid>
 
             <StorageCargoBay id={id} disabled={!selectedCrawlerType || !isEditable} />
+          </VStack>
+        </Tabs.Content>
+
+        <Tabs.Content value="pilots">
+          <VStack gap={4} align="stretch" mt={6}>
+            {pilotsWithMechs.length === 0 ? (
+              <Box bg="su.lightBlue" p={8} borderRadius="md" borderWidth="2px" borderColor="black">
+                <Text textAlign="center" color="su.brick" fontWeight="bold">
+                  No pilots assigned to this crawler
+                </Text>
+              </Box>
+            ) : (
+              <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+                {pilotsWithMechs.map(({ pilot, mech }) => (
+                  <PilotMechCell key={pilot.id} pilotId={pilot.id} mechId={mech?.id ?? null} />
+                ))}
+              </Grid>
+            )}
           </VStack>
         </Tabs.Content>
       </Tabs.Root>
