@@ -46,7 +46,7 @@ export function ControlBarContainer({
       bg={backgroundColor}
       px={6}
       py={3}
-      leftContent={leftContent ? <HStack gap={4}>{leftContent}</HStack> : undefined}
+      leftContent={leftContent}
       rightContent={
         <HStack gap={3}>
           {centerContent}

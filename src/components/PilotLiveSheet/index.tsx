@@ -50,11 +50,11 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const selectedClassRef = selectedClass?.ref as SURefCoreClass | undefined
 
   // Image upload hook - only enabled for non-local sheets
-  const { handleUpload, isUploading } = useImageUpload({
+  const { handleUpload, handleRemove, isUploading, isRemoving } = useImageUpload({
     entityType: 'pilots',
     entityId: id,
     getCurrentImageUrl: () => pilot?.image_url ?? null,
-    queryKey: ['pilot', id],
+    queryKey: ['pilots', id],
   })
 
   // Create hooks
@@ -220,7 +220,9 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           userImageUrl={(pilot as { image_url?: string })?.image_url}
           alt={selectedClassRef?.name}
           onUpload={!isLocal && isEditable ? handleUpload : undefined}
+          onRemove={!isLocal && isEditable ? handleRemove : undefined}
           isUploading={isUploading}
+          isRemoving={isRemoving}
         />
 
         <PilotInfoInputs disabled={!selectedClass || !isEditable} id={id} />

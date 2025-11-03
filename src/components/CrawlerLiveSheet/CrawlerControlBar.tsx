@@ -24,7 +24,7 @@ export function CrawlerControlBar({
     <ControlBarContainer
       backgroundColor="su.pink"
       hasPendingChanges={hasPendingChanges}
-      centerContent={
+      leftContent={
         <HStack gap={4}>
           {active !== undefined && onActiveChange && (
             <ActiveToggle active={active} onChange={onActiveChange} disabled={disabled} />

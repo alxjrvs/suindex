@@ -188,6 +188,7 @@ export function DynamicBay({
               display="flex"
               alignItems="center"
               justifyContent="center"
+              h="100%"
               cursor={onAddClick && !disabled ? 'pointer' : 'default'}
               onClick={onAddClick && !disabled ? () => onAddClick({ row, col }) : undefined}
               _hover={
@@ -252,7 +253,7 @@ export function DynamicBay({
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
-            minH="60px"
+            h="100%"
             cursor={cargoItem.ref ? 'pointer' : 'default'}
             _hover={cargoItem.ref ? { opacity: 0.8 } : undefined}
           >

@@ -40,8 +40,8 @@ export function ActivationCostBox({
       <Box
         w={0}
         h={0}
-        borderTop={compact ? '0.5em solid transparent' : '7px solid transparent'}
-        borderBottom={compact ? '0.5em solid transparent' : '7px solid transparent'}
+        borderTop={compact ? '0.4em solid transparent' : '7px solid transparent'}
+        borderBottom={compact ? '0.4em solid transparent' : '7px solid transparent'}
         borderLeft={compact ? '6px solid' : '7px solid'}
         borderLeftColor="su.black"
         ml={0}

@@ -61,26 +61,10 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     enabled: !!pilotData?.crawler_id,
   })
 
-  // Fetch owner's Discord username
-  const { data: ownerData } = useQuery({
-    queryKey: ['user-metadata', mech?.user_id],
-    queryFn: async () => {
-      if (!mech?.user_id) return null
-
-      const { data, error } = await supabase.auth.admin.getUserById(mech.user_id)
-      if (error) {
-        console.error('Error fetching user metadata:', error)
-        return null
-      }
-      return data.user
-    },
-    enabled: !!mech?.user_id,
-  })
-
   const isOwner = currentUserId === mech?.user_id
-  const ownerName = isOwner
-    ? 'You'
-    : ownerData?.user_metadata?.full_name || ownerData?.email || mech?.user_id
+  // For now, just show "Owner" for non-owned mechs
+  // TODO: Add a public users table or profile system to show owner names
+  const ownerName = isOwner ? 'You' : 'Owner'
 
   const onClick = () => navigate(`/dashboard/mechs/${id}`)
 

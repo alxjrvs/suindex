@@ -39,7 +39,7 @@ export function LiveSheetControlBar({
     <ControlBarContainer
       backgroundColor={bg}
       hasPendingChanges={hasPendingChanges}
-      centerContent={
+      leftContent={
         <HStack gap={4}>
           {active !== undefined && onActiveChange && (
             <ActiveToggle active={active} onChange={onActiveChange} disabled={disabled} />

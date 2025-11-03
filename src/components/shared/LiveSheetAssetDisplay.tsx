@@ -50,7 +50,7 @@ export function LiveSheetAssetDisplay({
   const hasUserImage = !!userImageUrl
 
   return (
-    <RoundedBox flexShrink={0} bg={bg} maxW="440px">
+    <RoundedBox flexShrink={0} bg={bg} minW="300px" maxW="440px">
       <Box
         position="relative"
         onMouseEnter={() => setIsHovered(true)}
@@ -66,7 +66,7 @@ export function LiveSheetAssetDisplay({
           overflow="hidden"
         >
           {displayUrl ? (
-            <Image src={displayUrl} alt={alt} w="full" h="full" objectFit="cover" />
+            <Image src={displayUrl} alt={alt} w="full" h="full" objectFit="cover" minW="200px" />
           ) : (
             <Box
               minW="212px"

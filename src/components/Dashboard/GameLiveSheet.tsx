@@ -194,7 +194,7 @@ export function GameLiveSheet() {
       <ControlBarContainer
         backgroundColor="su.gameBlue"
         hasPendingChanges={updateGameMutation.isPending}
-        centerContent={
+        leftContent={
           <HStack gap={4}>
             <ActiveToggle
               active={gameWithRelationships.active ?? false}
