@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
+import { useIsMutating } from '@tanstack/react-query'
 import type { SURefChassis } from 'salvageunion-reference'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
@@ -26,6 +27,10 @@ export default function MechLiveSheet({ id }: { id: string }) {
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
   const updateMech = useUpdateMech()
   const deleteMech = useDeleteMech()
+
+  // Track all mutations for this mech (for syncing indicator)
+  const mutatingCount = useIsMutating()
+  const hasPendingChanges = mutatingCount > 0
 
   // Get current user for ownership check
   const { userId } = useCurrentUser()
@@ -95,7 +100,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
           relationId={mech?.pilot_id}
           savedRelationId={mech?.pilot_id}
           onRelationChange={(pilotId) => updateMech.mutate({ id, updates: { pilot_id: pilotId } })}
-          hasPendingChanges={updateMech.isPending}
+          hasPendingChanges={hasPendingChanges}
           active={mech?.active ?? false}
           onActiveChange={(active) => updateMech.mutate({ id, updates: { active } })}
           isPrivate={mech?.private ?? true}

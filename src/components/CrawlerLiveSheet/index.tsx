@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
+import { useIsMutating } from '@tanstack/react-query'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
 import { CrawlerResourceSteppers } from './CrawlerResourceSteppers'
@@ -30,6 +31,10 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
   // Initialize bays for local (playground) crawlers
   useInitializeCrawlerBays(id, bays.length > 0)
+
+  // Track all mutations for this crawler (for syncing indicator)
+  const mutatingCount = useIsMutating()
+  const hasPendingChanges = mutatingCount > 0
 
   // Get current user for ownership check
   const { userId } = useCurrentUser()
@@ -94,7 +99,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           gameId={crawler?.game_id}
           savedGameId={crawler?.game_id}
           onGameChange={(gameId) => updateCrawler.mutate({ id, updates: { game_id: gameId } })}
-          hasPendingChanges={updateCrawler.isPending}
+          hasPendingChanges={hasPendingChanges}
           active={crawler?.active ?? false}
           onActiveChange={(active) => updateCrawler.mutate({ id, updates: { active } })}
           isPrivate={crawler?.private ?? true}

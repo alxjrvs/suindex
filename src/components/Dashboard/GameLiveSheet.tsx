@@ -12,6 +12,7 @@ import { PrivateToggle } from '../shared/PrivateToggle'
 import { PermissionError } from '../shared/PermissionError'
 import { RoundedBox } from '../shared/RoundedBox'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
+import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isOwner } from '../../lib/permissions'
@@ -32,6 +33,8 @@ import { PilotSmallDisplay } from './PilotSmallDisplay'
 import { MechSmallDisplay } from './MechSmallDisplay'
 import { useHydratedMech } from '../../hooks/mech'
 import { supabase } from '../../lib/supabase'
+import { SheetInput } from '../shared/SheetInput'
+import { SheetTextarea } from '../shared/SheetTextarea'
 
 type GameInviteRow = GameInvite
 
@@ -235,37 +238,37 @@ export function GameLiveSheet() {
 
   return (
     <LiveSheetLayout>
-      <RoundedBox
-        bg="su.gameBlue"
-        rightContent={
-          isEditable ? (
-            <HStack gap={2}>
-              <ActiveToggle
-                active={gameWithRelationships.active ?? false}
-                onChange={async (active) => {
-                  if (!gameId) return
-                  await updateGameMutation.mutateAsync({
-                    id: gameId,
-                    updates: { active },
-                  })
-                  reloadGame()
-                }}
-              />
-              <PrivateToggle
-                isPrivate={gameWithRelationships.private ?? true}
-                onChange={async (isPrivate) => {
-                  if (!gameId) return
-                  await updateGameMutation.mutateAsync({
-                    id: gameId,
-                    updates: { private: isPrivate },
-                  })
-                  reloadGame()
-                }}
-              />
-            </HStack>
-          ) : undefined
+      <ControlBarContainer
+        backgroundColor="su.gameBlue"
+        hasPendingChanges={updateGameMutation.isPending}
+        centerContent={
+          <HStack gap={4}>
+            <ActiveToggle
+              active={gameWithRelationships.active ?? false}
+              onChange={async (active) => {
+                if (!gameId) return
+                await updateGameMutation.mutateAsync({
+                  id: gameId,
+                  updates: { active },
+                })
+                reloadGame()
+              }}
+              disabled={!isEditable}
+            />
+            <PrivateToggle
+              isPrivate={gameWithRelationships.private ?? true}
+              onChange={async (isPrivate) => {
+                if (!gameId) return
+                await updateGameMutation.mutateAsync({
+                  id: gameId,
+                  updates: { private: isPrivate },
+                })
+                reloadGame()
+              }}
+              disabled={!isEditable}
+            />
+          </HStack>
         }
-        mb={0}
       />
 
       {/* Two-column layout: Main content on left, sidebar on right */}
@@ -273,6 +276,36 @@ export function GameLiveSheet() {
         {/* Left Column: Main Content */}
         <VStack flex="1" gap={4} align="stretch">
           {/* Crawler Container */}
+          <RoundedBox bg="su.gameBlue" title={gameWithRelationships.name}>
+            <VStack gap={4} align="stretch" p={4} w="full">
+              <SheetInput
+                label="Name"
+                value={gameWithRelationships.name}
+                onChange={(value) => {
+                  if (!gameId) return
+                  updateGameMutation.mutate({
+                    id: gameId,
+                    updates: { name: value },
+                  })
+                }}
+                placeholder="Enter game name..."
+                disabled={!isEditable}
+              />
+              <SheetTextarea
+                label="Description"
+                value={gameWithRelationships.description ?? ''}
+                onChange={(value) => {
+                  if (!gameId) return
+                  updateGameMutation.mutate({
+                    id: gameId,
+                    updates: { description: value },
+                  })
+                }}
+                placeholder="Enter game description..."
+                disabled={!isEditable}
+              />
+            </VStack>
+          </RoundedBox>
           {crawler ? (
             <CrawlerSmallDisplay id={crawler.id} />
           ) : (
@@ -341,6 +374,40 @@ export function GameLiveSheet() {
 
         {/* Right Column: Sidebar */}
         <VStack w={{ base: 'full', lg: '400px' }} gap={4} align="stretch" flexShrink={0}>
+          {/* Game Name and Description */}
+          <RoundedBox bg="su.gameBlue" title={gameWithRelationships.name}>
+            <VStack gap={4} align="stretch" p={4}>
+              <SheetInput
+                label="Name"
+                value={gameWithRelationships.name}
+                onChange={async (value) => {
+                  if (!gameId) return
+                  await updateGameMutation.mutateAsync({
+                    id: gameId,
+                    updates: { name: value },
+                  })
+                  reloadGame()
+                }}
+                placeholder="Enter game name..."
+                disabled={!isEditable}
+              />
+              <SheetTextarea
+                label="Description"
+                value={gameWithRelationships.description ?? ''}
+                onChange={async (value) => {
+                  if (!gameId) return
+                  await updateGameMutation.mutateAsync({
+                    id: gameId,
+                    updates: { description: value },
+                  })
+                  reloadGame()
+                }}
+                placeholder="Enter game description..."
+                disabled={!isEditable}
+              />
+            </VStack>
+          </RoundedBox>
+
           <RoundedBox bg="su.gameBlue" title="Members">
             <VStack gap={2} align="stretch" w="full">
               {gameWithRelationships.members.map((member) => (

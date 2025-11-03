@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
+import { useIsMutating } from '@tanstack/react-query'
 import type { SURefCoreClass, SURefAdvancedClass, SURefHybridClass } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -32,6 +33,10 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const updatePilot = useUpdatePilot()
   const deletePilot = useDeletePilot()
 
+  // Track all mutations for this pilot (for syncing indicator)
+  const mutatingCount = useIsMutating()
+  const hasPendingChanges = mutatingCount > 0
+
   // Get current user for ownership check
   const { userId } = useCurrentUser()
 
@@ -41,11 +46,11 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const selectedClassRef = selectedClass?.ref as SURefCoreClass | undefined
 
   // Image upload hook - only enabled for non-local sheets
-  const { handleUpload, handleRemove, isUploading, isRemoving } = useImageUpload({
+  const { handleUpload, isUploading } = useImageUpload({
     entityType: 'pilots',
     entityId: id,
-    getCurrentImageUrl: () => pilot?.image_url ?? null,
-    queryKey: ['pilots', id],
+    currentImageUrl: pilot?.image_url,
+    queryKey: ['pilot', id],
   })
 
   if (!pilot && !loading) {
@@ -103,7 +108,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           onRelationChange={(crawlerId) =>
             updatePilot.mutate({ id, updates: { crawler_id: crawlerId } })
           }
-          hasPendingChanges={updatePilot.isPending}
+          hasPendingChanges={hasPendingChanges}
           active={pilot?.active ?? false}
           onActiveChange={(active) => updatePilot.mutate({ id, updates: { active } })}
           isPrivate={pilot?.private ?? true}
@@ -117,12 +122,10 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
         <LiveSheetAssetDisplay
           bg="su.orange"
           url={selectedClassRef?.asset_url}
-          userImageUrl={pilot?.image_url ?? undefined}
+          userImageUrl={(pilot as { image_url?: string })?.image_url}
           alt={selectedClassRef?.name}
           onUpload={!isLocal && isEditable ? handleUpload : undefined}
-          onRemove={!isLocal && isEditable ? handleRemove : undefined}
           isUploading={isUploading}
-          isRemoving={isRemoving}
         />
 
         <PilotInfoInputs disabled={!selectedClass || !isEditable} id={id} />

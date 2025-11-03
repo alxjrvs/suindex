@@ -51,7 +51,7 @@ export function MyComponent({ data, onUpdate }: MyComponentProps) {
   - `src/hooks/crawler/` - Crawler hooks (useCrawler, useUpdateCrawler, useHydratedCrawler)
   - `src/hooks/entity/` - Entity hooks (useEntitiesFor, usePlayerChoices)
   - `src/hooks/cargo/` - Cargo hooks (useCargo, useCreateCargo, useDeleteCargo)
-- **Auto-save**: Debounced updates to Supabase (1000ms delay)
+- **Auto-save**: Debounced updates to Supabase (300ms delay)
 
 ## Component Organization
 

@@ -45,7 +45,7 @@ export const PILOT_DEFAULTS = {
 } as const
 
 export const DEBOUNCE_TIMINGS = {
-  autoSave: 1000,
+  autoSave: 300,
   search: 300,
 } as const
 ```

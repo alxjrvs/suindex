@@ -4,7 +4,7 @@ import { RoundedBox } from './RoundedBox'
 
 interface ControlBarContainerProps {
   backgroundColor: string
-  leftContent: ReactNode
+  leftContent?: ReactNode
   rightContent?: ReactNode
   hasPendingChanges?: boolean
   centerContent?: ReactNode
@@ -46,7 +46,7 @@ export function ControlBarContainer({
       bg={backgroundColor}
       px={6}
       py={3}
-      leftContent={<HStack gap={4}>{leftContent}</HStack>}
+      leftContent={leftContent ? <HStack gap={4}>{leftContent}</HStack> : undefined}
       rightContent={
         <HStack gap={3}>
           {centerContent}
