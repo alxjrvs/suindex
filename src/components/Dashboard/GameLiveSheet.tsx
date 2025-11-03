@@ -3,15 +3,17 @@ import { useParams, useNavigate } from 'react-router'
 import { Box, Flex, VStack, HStack, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
 
 import { ExternalLinkModal } from './ExternalLinkModal'
+import { GameInfo } from './GameInfo'
+import { PilotMechCell } from './PilotMechCell'
 import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
 import { ActiveToggle } from '../shared/ActiveToggle'
 import { PrivateToggle } from '../shared/PrivateToggle'
 import { PermissionError } from '../shared/PermissionError'
 import { RoundedBox } from '../shared/RoundedBox'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
+import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isOwner } from '../../lib/permissions'
@@ -28,61 +30,15 @@ import {
 import type { GameInvite } from '../../lib/api/games'
 import { ValueDisplay } from '../shared/ValueDisplay'
 import { CrawlerSmallDisplay } from './CrawlerSmallDisplay'
-import { PilotSmallDisplay } from './PilotSmallDisplay'
-import { MechSmallDisplay } from './MechSmallDisplay'
-import { useHydratedMech } from '../../hooks/mech'
-import { supabase } from '../../lib/supabase'
 
 type GameInviteRow = GameInvite
-
-// Helper component to render pilot-mech pair with label
-function PilotMechCell({ pilotId, mechId }: { pilotId: string; mechId: string | null }) {
-  const { mech, selectedChassis } = useHydratedMech(mechId || '')
-  const { data: pilot } = useQuery({
-    queryKey: ['pilot-callsign', pilotId],
-    queryFn: async () => {
-      const { data } = await supabase.from('pilots').select('callsign').eq('id', pilotId).single()
-      return data
-    },
-    enabled: !!pilotId,
-  })
-
-  const mechName = mech?.pattern || selectedChassis?.ref.name
-  const label = `${pilot?.callsign || ''}${mechName ? ` & ${mechName}` : ''}`
-
-  return (
-    <VStack gap={0} align="stretch">
-      <PilotSmallDisplay label={label} id={pilotId} />
-      {mechId ? (
-        <MechSmallDisplay reverse id={mechId} />
-      ) : (
-        <Box bg="su.lightBlue" p={4} borderRadius="md" borderWidth="2px" borderColor="black">
-          <Text
-            fontSize="sm"
-            color="su.brick"
-            fontWeight="bold"
-            textAlign="center"
-            textTransform="uppercase"
-          >
-            No Mech
-          </Text>
-        </Box>
-      )}
-    </VStack>
-  )
-}
 
 export function GameLiveSheet() {
   const { gameId } = useParams<{ gameId: string }>()
   const navigate = useNavigate()
 
   // Load game with all relationships using the hook
-  const {
-    game: gameWithRelationships,
-    loading,
-    error,
-    reload: reloadGame,
-  } = useGameWithRelationships(gameId)
+  const { game: gameWithRelationships, loading, error } = useGameWithRelationships(gameId)
 
   // Get current user for ownership check
   const { userId } = useCurrentUser()
@@ -235,44 +191,61 @@ export function GameLiveSheet() {
 
   return (
     <LiveSheetLayout>
-      <RoundedBox
-        bg="su.gameBlue"
-        rightContent={
-          isEditable ? (
-            <HStack gap={2}>
-              <ActiveToggle
-                active={gameWithRelationships.active ?? false}
-                onChange={async (active) => {
-                  if (!gameId) return
-                  await updateGameMutation.mutateAsync({
-                    id: gameId,
-                    updates: { active },
-                  })
-                  reloadGame()
-                }}
-              />
-              <PrivateToggle
-                isPrivate={gameWithRelationships.private ?? true}
-                onChange={async (isPrivate) => {
-                  if (!gameId) return
-                  await updateGameMutation.mutateAsync({
-                    id: gameId,
-                    updates: { private: isPrivate },
-                  })
-                  reloadGame()
-                }}
-              />
-            </HStack>
-          ) : undefined
+      <ControlBarContainer
+        backgroundColor="su.gameBlue"
+        hasPendingChanges={updateGameMutation.isPending}
+        leftContent={
+          <HStack gap={4}>
+            <ActiveToggle
+              active={gameWithRelationships.active ?? false}
+              onChange={(active) => {
+                if (!gameId) return
+                updateGameMutation.mutate({
+                  id: gameId,
+                  updates: { active },
+                })
+              }}
+              disabled={!isEditable}
+            />
+            <PrivateToggle
+              isPrivate={gameWithRelationships.private ?? true}
+              onChange={(isPrivate) => {
+                if (!gameId) return
+                updateGameMutation.mutate({
+                  id: gameId,
+                  updates: { private: isPrivate },
+                })
+              }}
+              disabled={!isEditable}
+            />
+          </HStack>
         }
-        mb={0}
       />
 
       {/* Two-column layout: Main content on left, sidebar on right */}
       <Flex gap={4} direction={{ base: 'column', lg: 'row' }} align="stretch">
         {/* Left Column: Main Content */}
         <VStack flex="1" gap={4} align="stretch">
-          {/* Crawler Container */}
+          {/* Game Info */}
+          <GameInfo
+            name={gameWithRelationships.name}
+            description={gameWithRelationships.description}
+            onNameChange={(value) => {
+              if (!gameId) return
+              updateGameMutation.mutate({
+                id: gameId,
+                updates: { name: value },
+              })
+            }}
+            onDescriptionChange={(value) => {
+              if (!gameId) return
+              updateGameMutation.mutate({
+                id: gameId,
+                updates: { description: value },
+              })
+            }}
+            disabled={!isEditable}
+          />
           {crawler ? (
             <CrawlerSmallDisplay id={crawler.id} />
           ) : (

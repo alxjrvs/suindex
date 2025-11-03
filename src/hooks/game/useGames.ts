@@ -93,12 +93,9 @@ export function useUpdateGame() {
         queryClient.setQueryData(gamesKeys.byId(id), context.previousGame)
       }
     },
-    onSuccess: (_data, { id }) => {
-      // Invalidate to refetch fresh data
-      queryClient.invalidateQueries({
-        queryKey: gamesKeys.byId(id),
-      })
-    },
+    // Don't invalidate immediately - let background refetch handle it
+    // This prevents the refetch from overwriting our optimistic update
+    // before the database has fully committed the change
   })
 }
 

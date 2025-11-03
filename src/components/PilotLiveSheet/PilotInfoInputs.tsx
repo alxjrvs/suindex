@@ -31,7 +31,6 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
   const classId = selectedClass?.schema_ref_id ?? null
   const advancedClassId = selectedAdvancedClass?.schema_ref_id ?? null
   const allAdvancedClasses = useMemo(() => SalvageUnionReference.AdvancedClasses.all(), [])
-  const allHybridClasses = useMemo(() => SalvageUnionReference.HybridClasses.all(), [])
   const allCoreClasses = useMemo(() => SalvageUnionReference.CoreClasses.all(), [])
   const sortedCoreClasses = useMemo(() => {
     return [...allCoreClasses].sort((a, b) => a.name.localeCompare(b.name))
@@ -59,22 +58,15 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
     })
 
-    // Map advanced classes to AdvancedClassOption
+    // Map all advanced classes (both Advanced and Hybrid types)
     const available = allAdvancedClasses.map((advClass) => ({
       id: advClass.id,
       name: advClass.name,
-      isAdvancedVersion: true,
+      isAdvancedVersion: advClass.type === 'Advanced',
     }))
 
-    // Map hybrid classes to AdvancedClassOption
-    const availableHybrid = allHybridClasses.map((hybridClass) => ({
-      id: hybridClass.id,
-      name: hybridClass.name,
-      isAdvancedVersion: false,
-    }))
-
-    return [...available, ...availableHybrid]
-  }, [abilities, selectedClass, allAdvancedClasses, allHybridClasses])
+    return available
+  }, [abilities, selectedClass, allAdvancedClasses])
 
   const handleMottoRoll = async () => {
     const {
@@ -88,14 +80,14 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
     const {
       result: { label },
     } = rollTable('Keepsake')
-    await updatePilot.mutate({ id, updates: { keepsake: label } })
+    updatePilot.mutate({ id, updates: { keepsake: label } })
   }
 
   const handleAppearanceRoll = async () => {
     const {
       result: { label },
     } = rollTable('Pilot Appearance')
-    await updatePilot.mutate({ id, updates: { appearance: label } })
+    updatePilot.mutate({ id, updates: { appearance: label } })
   }
 
   return (
@@ -108,7 +100,6 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
       disabled={disabled}
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
-        {/* Callsign */}
         <SheetInput
           label="Callsign"
           value={callsign ?? ''}

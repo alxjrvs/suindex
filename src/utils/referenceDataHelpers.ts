@@ -3,7 +3,6 @@ import type {
   SURefAbility,
   SURefCoreClass,
   SURefAdvancedClass,
-  SURefHybridClass,
   SURefChassis,
   SURefCrawler,
   SURefCrawlerBay,
@@ -89,31 +88,33 @@ export function getCoreClasses(): SURefCoreClass[] {
 /**
  * Fetch and validate hybrid classes from reference data
  * @throws Error if no hybrid classes found
- * @returns Array of hybrid classes
+ * @returns Array of hybrid classes (now part of advanced classes with type='Hybrid')
  */
-export function getHybridClasses(): SURefHybridClass[] {
-  const allHybridClasses = SalvageUnionReference.findAllIn('classes.hybrid', () => true)
+export function getHybridClasses(): SURefAdvancedClass[] {
+  const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
+  const hybridClasses = allAdvancedClasses.filter((c) => c.type === 'Hybrid')
 
-  if (allHybridClasses.length === 0) {
+  if (hybridClasses.length === 0) {
     throw new Error('No hybrid classes found in salvageunion-reference')
   }
 
-  return allHybridClasses
+  return hybridClasses
 }
 
 /**
  * Fetch and validate advanced classes from reference data
  * @throws Error if no advanced classes found
- * @returns Array of advanced classes
+ * @returns Array of advanced classes (type='Advanced')
  */
 export function getAdvancedClasses(): SURefAdvancedClass[] {
-  const allAdvancedClasses = SalvageUnionReference.findAllIn('classes.advanced', () => true)
+  const allAdvancedClasses = SalvageUnionReference.AdvancedClasses.all()
+  const advancedOnly = allAdvancedClasses.filter((c) => c.type === 'Advanced')
 
-  if (allAdvancedClasses.length === 0) {
+  if (advancedOnly.length === 0) {
     throw new Error('No advanced classes found in salvageunion-reference')
   }
 
-  return allAdvancedClasses
+  return advancedOnly
 }
 
 /**
@@ -136,10 +137,13 @@ export function findCoreClass(className: string): SURefCoreClass {
  * Find a specific hybrid class by name
  * @param className - Name of the class to find
  * @throws Error if class not found
- * @returns The hybrid class object
+ * @returns The hybrid class object (now part of advanced classes with type='Hybrid')
  */
-export function findHybridClass(className: string): SURefHybridClass {
-  const foundClass = SalvageUnionReference.findIn('classes.hybrid', (c) => c.name === className)
+export function findHybridClass(className: string): SURefAdvancedClass {
+  const foundClass = SalvageUnionReference.findIn(
+    'classes.advanced',
+    (c) => c.name === className && c.type === 'Hybrid'
+  )
 
   if (!foundClass) {
     throw new Error(`${className} hybrid class not found in salvageunion-reference`)
@@ -152,10 +156,13 @@ export function findHybridClass(className: string): SURefHybridClass {
  * Find a specific advanced class by name
  * @param className - Name of the class to find
  * @throws Error if class not found
- * @returns The advanced class object
+ * @returns The advanced class object (type='Advanced')
  */
 export function findAdvancedClass(className: string): SURefAdvancedClass {
-  const foundClass = SalvageUnionReference.findIn('classes.advanced', (c) => c.name === className)
+  const foundClass = SalvageUnionReference.findIn(
+    'classes.advanced',
+    (c) => c.name === className && c.type === 'Advanced'
+  )
 
   if (!foundClass) {
     throw new Error(`${className} advanced class not found in salvageunion-reference`)
@@ -170,13 +177,10 @@ export function findAdvancedClass(className: string): SURefAdvancedClass {
  * @throws Error if class not found
  * @returns The class object
  */
-export function findClass(
-  className: string
-): SURefCoreClass | SURefAdvancedClass | SURefHybridClass {
+export function findClass(className: string): SURefCoreClass | SURefAdvancedClass {
   const foundClass =
     SalvageUnionReference.findIn('classes.core', (c) => c.name === className) ||
-    SalvageUnionReference.findIn('classes.advanced', (c) => c.name === className) ||
-    SalvageUnionReference.findIn('classes.hybrid', (c) => c.name === className)
+    SalvageUnionReference.findIn('classes.advanced', (c) => c.name === className)
 
   if (!foundClass) {
     throw new Error(`${className} class not found in salvageunion-reference`)

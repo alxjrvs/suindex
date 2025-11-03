@@ -11,12 +11,15 @@ import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
 import { ChassisInputs } from './ChassisInputs'
 import { useHydratedMech } from '../../hooks/mech'
+import { Text } from '../base/Text'
 
 export function MainMechDisplay({ id }: { id: string }) {
   const { mech, selectedChassis } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
   const title =
-    chassisRef?.name && mech?.pattern ? `${chassisRef.name} "${mech.pattern}"` : 'Mech Chassis'
+    chassisRef?.name && mech?.pattern ? `"${mech.pattern}"` : chassisRef?.name || 'Mech Chassis'
+
+  const subtitle = mech?.pattern ? `${chassisRef?.name} Chassis` : ''
 
   return (
     <VStack flex="1" gap={2} alignItems="stretch">
@@ -59,6 +62,7 @@ export function MainMechDisplay({ id }: { id: string }) {
           </Flex>
         }
         title={title}
+        subTitleContent={<Text variant="pseudoheader">{subtitle}</Text>}
         bg="su.green"
         w="full"
         h="full"

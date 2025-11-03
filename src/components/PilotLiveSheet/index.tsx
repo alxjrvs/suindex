@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
-import type { SURefCoreClass, SURefAdvancedClass, SURefHybridClass } from 'salvageunion-reference'
+import type { SURefCoreClass, SURefAdvancedClass } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { ClassAbilitiesList } from './ClassAbilitiesList'
 import { GeneralAbilitiesList } from './GeneralAbilitiesList'
 import { PilotInventory } from './PilotInventory'
+import { CrawlerTab } from './CrawlerTab'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
-import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { PermissionError } from '../shared/PermissionError'
@@ -41,7 +41,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const selectedClassRef = selectedClass?.ref as SURefCoreClass | undefined
 
   // Image upload hook - only enabled for non-local sheets
-  const { handleUpload, handleRemove, isUploading, isRemoving } = useImageUpload({
+  const { handleUpload, isUploading } = useImageUpload({
     entityType: 'pilots',
     entityId: id,
     getCurrentImageUrl: () => pilot?.image_url ?? null,
@@ -97,12 +97,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
     <LiveSheetLayout>
       {!isLocal && (
         <LiveSheetControlBar
-          config={PILOT_CONTROL_BAR_CONFIG}
-          relationId={pilot?.crawler_id}
-          savedRelationId={pilot?.crawler_id}
-          onRelationChange={(crawlerId) =>
-            updatePilot.mutate({ id, updates: { crawler_id: crawlerId } })
-          }
+          bg="su.orange"
           hasPendingChanges={updatePilot.isPending}
           active={pilot?.active ?? false}
           onActiveChange={(active) => updatePilot.mutate({ id, updates: { active } })}
@@ -117,12 +112,10 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
         <LiveSheetAssetDisplay
           bg="su.orange"
           url={selectedClassRef?.asset_url}
-          userImageUrl={pilot?.image_url ?? undefined}
+          userImageUrl={(pilot as { image_url?: string })?.image_url}
           alt={selectedClassRef?.name}
           onUpload={!isLocal && isEditable ? handleUpload : undefined}
-          onRemove={!isLocal && isEditable ? handleRemove : undefined}
           isUploading={isUploading}
-          isRemoving={isRemoving}
         />
 
         <PilotInfoInputs disabled={!selectedClass || !isEditable} id={id} />
@@ -137,6 +130,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           </Tabs.Trigger>
           <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
           <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
+          <Tabs.Trigger value="crawler">Crawler</Tabs.Trigger>
         </Tabs.List>
 
         <Tabs.Content value="class-abilities">
@@ -144,9 +138,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
             <ClassAbilitiesList
               id={id}
               selectedClass={selectedClass?.ref as SURefCoreClass | undefined}
-              selectedAdvancedClass={
-                selectedAdvancedClass?.ref as SURefAdvancedClass | SURefHybridClass | undefined
-              }
+              selectedAdvancedClass={selectedAdvancedClass?.ref as SURefAdvancedClass | undefined}
             />
           </Box>
         </Tabs.Content>
@@ -169,6 +161,10 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
               disabled={!selectedClass || !isEditable}
             />
           </Grid>
+        </Tabs.Content>
+
+        <Tabs.Content value="crawler">
+          <CrawlerTab pilot={pilot} pilotId={id} isLocal={isLocal} isEditable={isEditable} />
         </Tabs.Content>
       </Tabs.Root>
 

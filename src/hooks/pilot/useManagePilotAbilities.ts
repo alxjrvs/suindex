@@ -4,7 +4,6 @@ import {
   type SURefAbility,
   type SURefCoreClass,
   type SURefAdvancedClass,
-  type SURefHybridClass,
 } from 'salvageunion-reference'
 import { getAbilityCost } from '../../components/PilotLiveSheet/utils/getAbilityCost'
 import { useHydratedPilot } from './useHydratedPilot'
@@ -28,7 +27,7 @@ export function useManagePilotAbilities(id: string | undefined) {
       const cost = getAbilityCost(
         ability,
         selectedClass?.ref as SURefCoreClass | undefined,
-        selectedAdvancedClass?.ref as SURefAdvancedClass | SURefHybridClass | undefined
+        selectedAdvancedClass?.ref as SURefAdvancedClass | undefined
       )
 
       // Check if pilot has enough TP

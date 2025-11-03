@@ -5,8 +5,6 @@ import { findCrawlerTechLevel } from '../../utils/referenceDataHelpers'
 import { ValueDisplay } from '../shared/ValueDisplay'
 import { useNavigate } from 'react-router-dom'
 import { useHydratedCrawler } from '../../hooks/crawler'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 
 interface CrawlerSmallDisplayProps {
@@ -21,26 +19,11 @@ export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
   const techLevel = crawler?.tech_level ?? 1
   const name = crawler?.name
 
-  // Fetch owner's Discord username from auth.users
-  const { data: ownerData } = useQuery({
-    queryKey: ['user-metadata', crawler?.user_id],
-    queryFn: async () => {
-      if (!crawler?.user_id) return null
-
-      const { data, error } = await supabase.auth.admin.getUserById(crawler.user_id)
-      if (error) {
-        console.error('Error fetching user metadata:', error)
-        return null
-      }
-      return data.user
-    },
-    enabled: !!crawler?.user_id,
-  })
+  // For now, just show "Owner" for non-owned crawlers
+  // TODO: Add a public users table or profile system to show owner names
 
   const isOwner = currentUserId === crawler?.user_id
-  const ownerName = isOwner
-    ? 'You'
-    : ownerData?.user_metadata?.full_name || ownerData?.email || crawler?.user_id
+  const ownerName = isOwner ? 'You' : 'Owner'
 
   const techLevelData = techLevel ? findCrawlerTechLevel(techLevel) : null
   const populationMax = techLevelData?.populationMax ?? 0

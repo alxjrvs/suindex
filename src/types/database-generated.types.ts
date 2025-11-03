@@ -479,6 +479,7 @@ export type Database = {
           id: string
           mech_id: string | null
           metadata: Json | null
+          parent_entity_id: string | null
           pilot_id: string | null
           schema_name: string
           schema_ref_id: string
@@ -490,6 +491,7 @@ export type Database = {
           id?: string
           mech_id?: string | null
           metadata?: Json | null
+          parent_entity_id?: string | null
           pilot_id?: string | null
           schema_name: string
           schema_ref_id: string
@@ -501,6 +503,7 @@ export type Database = {
           id?: string
           mech_id?: string | null
           metadata?: Json | null
+          parent_entity_id?: string | null
           pilot_id?: string | null
           schema_name?: string
           schema_ref_id?: string
@@ -526,6 +529,13 @@ export type Database = {
             columns: ["pilot_id"]
             isOneToOne: false
             referencedRelation: "pilots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "suentities_parent_entity_id_fkey"
+            columns: ["parent_entity_id"]
+            isOneToOne: false
+            referencedRelation: "suentities"
             referencedColumns: ["id"]
           },
         ]

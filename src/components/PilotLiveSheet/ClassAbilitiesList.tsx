@@ -2,12 +2,7 @@ import { useMemo, useCallback } from 'react'
 import { Box, Grid, Stack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type {
-  SURefAbility,
-  SURefAdvancedClass,
-  SURefCoreClass,
-  SURefHybridClass,
-} from 'salvageunion-reference'
+import type { SURefAbility, SURefAdvancedClass, SURefCoreClass } from 'salvageunion-reference'
 import { EntityDisplay } from '../entity/EntityDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
 import { useManagePilotAbilities } from '../../hooks/pilot/useManagePilotAbilities'
@@ -20,7 +15,7 @@ export function ClassAbilitiesList({
 }: {
   id?: string | undefined
   selectedClass: SURefCoreClass | undefined
-  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
+  selectedAdvancedClass: SURefAdvancedClass | undefined
 }) {
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
 
@@ -148,7 +143,7 @@ function TreeSection({
   treeName: string
   treeAbilities: SURefAbility[]
   selectedClass: SURefCoreClass | undefined
-  selectedAdvancedClass: SURefAdvancedClass | SURefHybridClass | undefined
+  selectedAdvancedClass: SURefAdvancedClass | undefined
   hideUnchosen?: boolean
   id: string | undefined
 }) {
@@ -160,9 +155,8 @@ function TreeSection({
     (treeName: string, treeAbilities: SURefAbility[]): Set<number> => {
       const selectedLevelsInTree = new Set(
         abilities
-          ?.map((ab) => allAbilities.find((a) => a.id === ab.id))
-          .filter((a) => a && a.tree === treeName)
-          .map((a) => Number(a!.level))
+          ?.filter((ab) => (ab.ref as SURefAbility).tree === treeName)
+          .map((ab) => Number((ab.ref as SURefAbility).level))
       )
 
       const availableLevels = new Set<number>()
@@ -187,7 +181,7 @@ function TreeSection({
 
       return availableLevels
     },
-    [abilities, allAbilities]
+    [abilities]
   )
 
   const isSelected = useCallback(
@@ -223,7 +217,7 @@ function TreeSection({
     )
 
     // Check if all advanced abilities are selected
-    return advancedTreeAbilities.every((ability) => abilities?.some((a) => a.id === ability.id))
+    return advancedTreeAbilities.every((ability) => abilities?.some((a) => a.ref.id === ability.id))
   }, [isLegendaryTree, selectedAdvancedClass, allAbilities, abilities])
 
   // Check if a legendary ability is already selected
@@ -251,7 +245,7 @@ function TreeSection({
                 key={ability.id}
                 data={ability}
                 trained={true}
-                collapsible={!alreadySelected}
+                collapsible={true}
                 disabled={false}
                 defaultExpanded={alreadySelected}
               />
@@ -320,7 +314,7 @@ function TreeSection({
               data={ability}
               disabled={isReadOnly ? false : !canSelect && !alreadySelected}
               trained={isReadOnly || alreadySelected}
-              collapsible={!alreadySelected}
+              collapsible={true}
               defaultExpanded={alreadySelected}
               buttonConfig={buttonConfig}
             />

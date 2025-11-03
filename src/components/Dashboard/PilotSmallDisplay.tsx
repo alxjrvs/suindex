@@ -61,26 +61,10 @@ export function PilotSmallDisplay({ id, label }: PilotSmallDisplayProps) {
     enabled: !!id,
   })
 
-  // Fetch owner's Discord username
-  const { data: ownerData } = useQuery({
-    queryKey: ['user-metadata', pilot?.user_id],
-    queryFn: async () => {
-      if (!pilot?.user_id) return null
-
-      const { data, error } = await supabase.auth.admin.getUserById(pilot.user_id)
-      if (error) {
-        console.error('Error fetching user metadata:', error)
-        return null
-      }
-      return data.user
-    },
-    enabled: !!pilot?.user_id,
-  })
-
   const isOwner = currentUserId === pilot?.user_id
-  const ownerName = isOwner
-    ? 'You'
-    : ownerData?.user_metadata?.full_name || ownerData?.email || pilot?.user_id
+  // For now, just show "Owner" for non-owned pilots
+  // TODO: Add a public users table or profile system to show owner names
+  const ownerName = isOwner ? 'You' : 'Owner'
 
   const onClick = () => navigate(`/dashboard/pilots/${id}`)
 

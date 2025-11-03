@@ -78,6 +78,9 @@ export function EntitySelectionModal({
   const filteredEntities = useMemo(() => {
     return allEntities
       .filter(({ entity, schemaName }) => {
+        // Exclude non-indexable entities
+        const isIndexable = 'indexable' in entity ? entity.indexable !== false : true
+
         // Search filter
         const matchesSearch =
           !searchTerm ||
@@ -98,7 +101,7 @@ export function EntitySelectionModal({
         // Schema filter (only if multiple schemas and filter is set)
         const matchesSchema = schemaFilter === null || schemaName === schemaFilter
 
-        return matchesSearch && matchesTechLevel && matchesSchema
+        return isIndexable && matchesSearch && matchesTechLevel && matchesSchema
       })
       .sort((a, b) => {
         // First, sort disabled entities to the end (use pre-computed set)

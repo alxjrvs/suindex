@@ -1,9 +1,4 @@
-import type {
-  SURefAbility,
-  SURefCoreClass,
-  SURefAdvancedClass,
-  SURefHybridClass,
-} from 'salvageunion-reference'
+import type { SURefAbility, SURefCoreClass, SURefAdvancedClass } from 'salvageunion-reference'
 import {
   LEGENDARY_ABILITY_COST,
   ADVANCED_ABILITY_COST,
@@ -17,7 +12,7 @@ import {
 export function getAbilityCost(
   ability: SURefAbility,
   selectedClass: SURefCoreClass | undefined,
-  selectedAdvancedClass?: SURefAdvancedClass | SURefHybridClass | undefined
+  selectedAdvancedClass?: SURefAdvancedClass | undefined
 ): number {
   if (!selectedClass) return 0
 

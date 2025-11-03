@@ -1,4 +1,4 @@
-import type { SURefMetaEntity, SURefMetaSchemaName, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
 import { getSchemaCatalog } from 'salvageunion-reference'
 
 // Cache the schema catalog for performance
@@ -9,12 +9,7 @@ const schemaDisplayNameMap = new Map(schemaCatalog.schemas.map((s) => [s.id, s.d
  * Get display name for schema (for page references, headers, etc.)
  * Uses package metadata for display names
  */
-export function getSchemaDisplayName(schemaName: SURefMetaSchemaName | 'actions'): string {
-  // Special case for 'actions' which is not a schema but a sub-entity type
-  if (schemaName === 'actions') {
-    return 'Action'
-  }
-
+export function getSchemaDisplayName(schemaName: SURefMetaSchemaName): string {
   return schemaDisplayNameMap.get(schemaName) || schemaName
 }
 
@@ -22,7 +17,7 @@ export function getSchemaDisplayName(schemaName: SURefMetaSchemaName | 'actions'
  * Get activation currency based on schema name
  */
 export function getActivationCurrency(
-  schemaName: SURefMetaSchemaName | 'actions' | undefined,
+  schemaName: SURefMetaSchemaName | undefined,
   variable: boolean = false
 ): 'AP' | 'EP' | 'XP' {
   if (variable) return 'XP'
@@ -50,7 +45,7 @@ export function extractName(data: SURefMetaEntity, schemaName: SURefMetaSchemaNa
  * Calculate background color for entity display based on schema, tech level, and entity data
  */
 export function calculateBackgroundColor(
-  schemaName: SURefSchemaName | 'actions',
+  schemaName: SURefMetaSchemaName,
   headerColor: string = '',
   techLevel: number | undefined,
   data: SURefMetaEntity,

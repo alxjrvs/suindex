@@ -79,7 +79,7 @@ export const MECH_DEFAULTS = {
  */
 export const DEBOUNCE_TIMINGS = {
   /** Auto-save delay for live sheet updates */
-  autoSave: 1000,
+  autoSave: 300,
   /** Search input delay */
   search: 300,
   /** Filter input delay */

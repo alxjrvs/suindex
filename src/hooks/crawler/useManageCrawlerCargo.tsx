@@ -18,8 +18,8 @@ export function useManageCrawlerCargo(id: string) {
       if (!id) return
 
       // Parse reference string if provided
-      let schemaName: string | null = null
-      let schemaRefId: string | null = null
+      let schemaName: string | undefined
+      let schemaRefId: string | undefined
       if (ref) {
         const parsed = SalvageUnionReference.parseRef(ref)
         if (parsed) {
@@ -32,8 +32,9 @@ export function useManageCrawlerCargo(id: string) {
         crawler_id: id,
         name,
         amount,
-        schema_name: schemaName,
-        schema_ref_id: schemaRefId,
+        ...(schemaName && schemaRefId
+          ? { schema_name: schemaName, schema_ref_id: schemaRefId }
+          : {}),
         metadata: position ? { position } : null,
       })
     },

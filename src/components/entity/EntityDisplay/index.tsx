@@ -3,9 +3,8 @@ import { type ReactNode, useState, memo } from 'react'
 import type {
   SURefAdvancedClass,
   SURefCoreClass,
-  SURefHybridClass,
   SURefMetaEntity,
-  SURefSchemaName,
+  SURefMetaSchemaName,
 } from 'salvageunion-reference'
 import { getTechLevel, hasActions, getPageReference } from 'salvageunion-reference'
 import { techLevelColors } from '../../../theme'
@@ -30,7 +29,7 @@ type EntityDisplayProps = {
   /** Entity data to display */
   data: SURefMetaEntity | undefined
   /** Schema name for the entity */
-  schemaName: SURefSchemaName | 'actions'
+  schemaName: SURefMetaSchemaName
   /** Optional header background color override */
   headerColor?: string
   /** Whether the ability is trained (affects header opacity for abilities) */
@@ -237,9 +236,7 @@ export const EntityDisplay = memo(function EntityDisplay({
                       schemaName === 'classes.core' ? (data as SURefCoreClass) : undefined
                     }
                     selectedAdvancedClass={
-                      schemaName === 'classes.advanced' || schemaName === 'classes.hybrid'
-                        ? (data as SURefAdvancedClass | SURefHybridClass)
-                        : undefined
+                      schemaName === 'classes.advanced' ? (data as SURefAdvancedClass) : undefined
                     }
                   />
                 )}

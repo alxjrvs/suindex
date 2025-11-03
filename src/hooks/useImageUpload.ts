@@ -41,18 +41,14 @@ export function useImageUpload({
 
       return newImageUrl
     },
-    onSuccess: async (newImageUrl) => {
+    onSuccess: (newImageUrl) => {
       // Immediately update the cache for instant UI feedback
+      // Don't invalidate immediately - let background refetch handle it
+      // This prevents the refetch from overwriting our optimistic update
+      // before the database has fully committed the change
       queryClient.setQueryData(queryKey, (oldData: unknown) => {
         if (!oldData || typeof oldData !== 'object') return oldData
-        // Create a completely new object to ensure React detects the change
-        return JSON.parse(JSON.stringify({ ...oldData, image_url: newImageUrl }))
-      })
-
-      // Then invalidate to ensure we refetch from server
-      await queryClient.invalidateQueries({
-        queryKey,
-        refetchType: 'active',
+        return { ...oldData, image_url: newImageUrl }
       })
 
       toaster.create({
@@ -80,18 +76,14 @@ export function useImageUpload({
       // Clear the entity's image_url field
       await updateEntityImage(entityType, entityId, null)
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       // Immediately update the cache for instant UI feedback
+      // Don't invalidate immediately - let background refetch handle it
+      // This prevents the refetch from overwriting our optimistic update
+      // before the database has fully committed the change
       queryClient.setQueryData(queryKey, (oldData: unknown) => {
         if (!oldData || typeof oldData !== 'object') return oldData
-        // Create a completely new object to ensure React detects the change
-        return JSON.parse(JSON.stringify({ ...oldData, image_url: null }))
-      })
-
-      // Then invalidate to ensure we refetch from server
-      await queryClient.invalidateQueries({
-        queryKey,
-        refetchType: 'active',
+        return { ...oldData, image_url: null }
       })
 
       toaster.create({
