@@ -12,6 +12,7 @@ import { PILOT_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { Notes } from '../shared/Notes'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { PermissionError } from '../shared/PermissionError'
+import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
 import { useUpdatePilot, useHydratedPilot, useDeletePilot } from '../../hooks/pilot'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isOwner } from '../../lib/permissions'
@@ -35,6 +36,8 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
 
   // Determine if the sheet is editable (user owns the pilot or it's local)
   const isEditable = isLocal || (pilot ? isOwner(pilot.user_id, userId) : false)
+
+  const selectedClassRef = selectedClass?.ref as SURefCoreClass | undefined
 
   if (!pilot && !loading) {
     return (
@@ -101,7 +104,13 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           disabled={!isEditable}
         />
       )}
-      <Flex gap={6} w="full">
+      <Flex gap={2} w="full">
+        <LiveSheetAssetDisplay
+          bg="su.orange"
+          url={selectedClassRef?.asset_url}
+          alt={selectedClassRef?.name}
+        />
+
         <PilotInfoInputs disabled={!selectedClass || !isEditable} id={id} />
 
         <PilotResourceSteppers id={id} disabled={!selectedClass || !isEditable} />

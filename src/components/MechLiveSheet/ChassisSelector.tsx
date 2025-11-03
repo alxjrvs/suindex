@@ -31,8 +31,12 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
   }, [allChassis])
 
   return (
-    <SheetSelect label="Chassis" value={chassisId} onChange={onChange}>
-      <option value="">Select a chassis...</option>
+    <SheetSelect
+      placeholder="Select a Chassis..."
+      label="Chassis"
+      value={chassisId}
+      onChange={onChange}
+    >
       {groupedChassis.map(({ techLevel, chassis }) => (
         <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>
           {chassis.map((c) => (

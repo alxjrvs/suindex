@@ -1,13 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
-import {
-  getTechLevel,
-  getSystemSlots,
-  getModuleSlots,
-  getCargoCapacity,
-  getSalvageValue,
-} from 'salvageunion-reference'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
 import { SystemsList } from './SystemsList'
@@ -15,9 +8,6 @@ import { ModulesList } from './ModulesList'
 import { CargoList } from './CargoList'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { RoundedBox } from '../shared/RoundedBox'
-import { ChassisInputs } from './ChassisInputs'
-import { StatDisplay } from '../StatDisplay'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
@@ -25,6 +15,8 @@ import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { useUpdateMech, useHydratedMech, useDeleteMech } from '../../hooks/mech'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isOwner } from '../../lib/permissions'
+import { MainMechDisplay } from './MainMechDisplay'
+import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
 
 export default function MechLiveSheet({ id }: { id: string }) {
   const navigate = useNavigate()
@@ -86,9 +78,6 @@ export default function MechLiveSheet({ id }: { id: string }) {
     )
   }
 
-  const title =
-    chassisRef?.name && mech?.pattern ? `${chassisRef.name} "${mech.pattern}"` : 'Mech Chassis'
-
   return (
     <LiveSheetLayout>
       {!isLocal && (
@@ -107,56 +96,9 @@ export default function MechLiveSheet({ id }: { id: string }) {
           disabled={!isEditable}
         />
       )}
-      <Flex gap={6}>
-        <VStack flex="1" gap={6} alignItems="stretch">
-          <RoundedBox
-            leftContent={
-              <StatDisplay
-                inverse
-                label="tech"
-                bottomLabel="Level"
-                value={chassisRef ? (getTechLevel(chassisRef) ?? 0) : 0}
-                disabled={!selectedChassis}
-              />
-            }
-            rightContent={
-              <Flex flexDirection="row" justifyContent="flex-end" gap={4}>
-                <StatDisplay
-                  label="Sys."
-                  bottomLabel="Slots"
-                  value={chassisRef ? (getSystemSlots(chassisRef) ?? 0) : 0}
-                  disabled={!selectedChassis}
-                />
-                <StatDisplay
-                  label="Mod."
-                  bottomLabel="Slots"
-                  value={chassisRef ? (getModuleSlots(chassisRef) ?? 0) : 0}
-                  disabled={!selectedChassis}
-                />
-                <StatDisplay
-                  label="Cargo"
-                  bottomLabel="Cap"
-                  value={chassisRef ? (getCargoCapacity(chassisRef) ?? 0) : 0}
-                  disabled={!selectedChassis}
-                />
-                <StatDisplay
-                  label="Salvage"
-                  bottomLabel="Value"
-                  value={chassisRef ? (getSalvageValue(chassisRef) ?? 0) : 0}
-                  disabled={!selectedChassis}
-                />
-              </Flex>
-            }
-            title={title}
-            bg="su.green"
-            w="full"
-            h="full"
-            disabled={!selectedChassis}
-          >
-            <ChassisInputs id={id} />
-          </RoundedBox>
-        </VStack>
-
+      <Flex gap={2}>
+        <LiveSheetAssetDisplay bg="su.green" url={chassisRef?.asset_url} alt={chassisRef?.name} />
+        <MainMechDisplay id={id} />
         <MechResourceSteppers id={id} disabled={!selectedChassis || !isEditable} />
       </Flex>
 

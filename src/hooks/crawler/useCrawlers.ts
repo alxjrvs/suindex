@@ -96,29 +96,6 @@ export const crawlersKeys = {
   byId: (id: string) => [...crawlersKeys.all, id] as const,
 }
 
-const defaultCrawler: Crawler = {
-  id: LOCAL_ID,
-  name: 'Unknown Name',
-  current_damage: 0,
-  tech_level: 1,
-  upgrade: 0,
-  active: false,
-  private: true,
-  user_id: 'local',
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-  description: null,
-  game_id: null,
-  notes: null,
-  npc: null,
-  scrap_tl_one: 0,
-  scrap_tl_two: 0,
-  scrap_tl_three: 0,
-  scrap_tl_four: 0,
-  scrap_tl_five: 0,
-  scrap_tl_six: 0,
-}
-
 /**
  * Hook to fetch a single crawler by ID
  *
@@ -145,7 +122,7 @@ export function useCrawler(id: string | undefined) {
     queryKey: crawlersKeys.byId(id!),
     queryFn: isLocal
       ? // Cache-only: Return undefined, data comes from cache
-        async () => defaultCrawler
+        async () => defaults.crawler
       : // API-backed: Fetch from Supabase
         () => fetchEntity<Crawler>('crawlers', id!),
     enabled: !!id, // Only run query if id is provided

@@ -201,14 +201,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         >
           {user && (
             <>
-              {/* Dashboard link */}
-              <NavigationLink
-                isActive={isActive('/dashboard') && !isActive('/dashboard/')}
-                onClick={() => handleNavigate('/dashboard')}
-              >
-                Dashboard
-              </NavigationLink>
-
               {/* Individual data links */}
               <NavigationLink
                 isActive={isActive('/dashboard/pilots')}
