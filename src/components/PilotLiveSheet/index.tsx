@@ -6,6 +6,7 @@ import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { ClassAbilitiesList } from './ClassAbilitiesList'
 import { GeneralAbilitiesList } from './GeneralAbilitiesList'
 import { PilotInventory } from './PilotInventory'
+import { CrawlerTab } from './CrawlerTab'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { Notes } from '../shared/Notes'
@@ -129,6 +130,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           </Tabs.Trigger>
           <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
           <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
+          <Tabs.Trigger value="crawler">Crawler</Tabs.Trigger>
         </Tabs.List>
 
         <Tabs.Content value="class-abilities">
@@ -159,6 +161,10 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
               disabled={!selectedClass || !isEditable}
             />
           </Grid>
+        </Tabs.Content>
+
+        <Tabs.Content value="crawler">
+          <CrawlerTab pilot={pilot} pilotId={id} isLocal={isLocal} isEditable={isEditable} />
         </Tabs.Content>
       </Tabs.Root>
 
