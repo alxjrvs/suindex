@@ -10,6 +10,7 @@ interface NumericStepperProps {
   max?: number
   step?: number
   disabled?: boolean
+  disableIncrement?: boolean
   flash?: boolean
 }
 
@@ -21,6 +22,7 @@ export default function NumericStepper({
   max,
   step = 1,
   disabled = false,
+  disableIncrement = false,
   flash = false,
 }: NumericStepperProps) {
   const handleIncrement = useCallback(() => {
@@ -53,7 +55,7 @@ export default function NumericStepper({
       <VStack h="full" justifyContent="center" gap={1} ml={-0.5}>
         <IconButton
           onClick={handleIncrement}
-          disabled={disabled || (max !== undefined && value >= max)}
+          disabled={disabled || disableIncrement || (max !== undefined && value >= max)}
           size="xs"
           w={5}
           h={5}

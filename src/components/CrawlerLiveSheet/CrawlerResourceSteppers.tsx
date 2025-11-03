@@ -56,7 +56,7 @@ export function CrawlerResourceSteppers({
         disabled={disabled}
         justifyContent="flex-start"
         rightContent={
-          <StatDisplay compact label="Total (TL1)" value={totalInTl1} disabled={disabled} />
+          <StatDisplay compact label="" bottomLabel="TL1" value={totalInTl1} disabled={disabled} />
         }
       >
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>

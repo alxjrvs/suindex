@@ -1,11 +1,13 @@
-import { CrawlerGridCard } from './CrawlerGridCard'
+import { CrawlerSmallDisplay } from './CrawlerSmallDisplay'
 import { EntityGrid } from './EntityGrid'
-import { getStructurePointsForTechLevel } from '../../utils/referenceDataHelpers'
 import { useCrawlerTypes } from '../../hooks/suentity'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
 import type { Tables } from '../../types/database-generated.types'
 
 export function CrawlersGrid() {
+  const { userId: currentUserId } = useCurrentUser()
+
   // Fetch crawlers to get IDs for singleton query
   const { items: crawlers } = useEntityGrid<Tables<'crawlers'>>({
     table: 'crawlers',
@@ -24,21 +26,21 @@ export function CrawlersGrid() {
       createButtonBgColor="su.crawlerPink"
       createButtonColor="su.white"
       emptyStateMessage="No crawlers yet"
-      renderCard={(crawler, onClick) => {
+      renderCard={(crawler, onClick, isInactive) => {
         const crawlerTypeData = crawlerTypes?.get(crawler.id)
         const crawlerTypeName = crawlerTypeData?.name || 'Unknown'
-
-        const maxSP = crawler.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
-        const currentSP = maxSP - (crawler.current_damage ?? 0)
+        const isOwner = currentUserId === crawler.user_id
 
         return (
-          <CrawlerGridCard
+          <CrawlerSmallDisplay
             key={crawler.id}
             name={crawler.name}
             typeName={crawlerTypeName}
-            currentSP={currentSP}
-            maxSP={maxSP}
+            techLevel={crawler.tech_level}
+            ownerUserId={crawler.user_id}
+            isOwner={isOwner}
             onClick={() => onClick(crawler.id)}
+            isInactive={isInactive}
           />
         )
       }}

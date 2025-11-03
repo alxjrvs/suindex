@@ -6,23 +6,18 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import NumericStepper from '../NumericStepper'
 import { StatDisplay } from '../StatDisplay'
-import UpkeepStepper from '../UpkeepStepper'
-import { useMemo, useState, useEffect } from 'react'
-import { MAX_UPGRADE } from '../../constants/gameRules'
+import { useMemo, useState, useEffect, useCallback } from 'react'
+import { MAX_UPGRADE, UPKEEP_STEP } from '../../constants/gameRules'
 import { useHydratedCrawler, useUpdateCrawler } from '../../hooks/crawler'
 import { useOnCrawlerTypeChange } from '../../hooks/crawler/useOnCrawlerTypeChange'
+import { calculateScrapRemoval, hasEnoughScrapAtTechLevel } from '../../utils/scrapCalculations'
 
 interface CrawlerHeaderInputsProps {
   disabled?: boolean
-  onScrapFlash: (techLevels: number[]) => void
   id: string
 }
 
-export function CrawlerHeaderInputs({
-  disabled = false,
-  id,
-  onScrapFlash,
-}: CrawlerHeaderInputsProps) {
+export function CrawlerHeaderInputs({ disabled = false, id }: CrawlerHeaderInputsProps) {
   const allCrawlers = useMemo(() => SalvageUnionReference.Crawlers.all(), [])
 
   const { crawler, upkeep, maxSP, selectedCrawlerType } = useHydratedCrawler(id)
@@ -75,21 +70,36 @@ export function CrawlerHeaderInputs({
     ]
   )
 
-  const handleUpgradeChange = (
-    newValue: number,
-    scrapUpdates: Record<string, number> = {},
-    affectedTLs?: number[]
-  ) => {
-    // If scrap updates are provided, merge them
-    if (scrapUpdates) {
-      setFlashUpkeep(true)
-      if (affectedTLs && onScrapFlash) {
-        onScrapFlash(affectedTLs)
-      }
-    }
+  // Check if we can increment upgrade (need scrap at crawler's tech level)
+  const canIncrementUpgrade = useMemo(() => {
+    if (currentUpgrade >= MAX_UPGRADE) return false
+    return hasEnoughScrapAtTechLevel(UPKEEP_STEP, currentTechLevel, scrapByTL)
+  }, [currentUpgrade, currentTechLevel, scrapByTL])
 
-    updateCrawler.mutate({ id, updates: { upgrade: newValue, ...scrapUpdates } })
-  }
+  const handleUpgradeChange = useCallback(
+    (newValue: number) => {
+      const isIncrement = newValue > currentUpgrade
+
+      if (isIncrement) {
+        // Check if we have enough scrap at the crawler's current tech level
+        if (hasEnoughScrapAtTechLevel(UPKEEP_STEP, currentTechLevel, scrapByTL)) {
+          // Calculate which scrap to remove
+          const upkeepCost = UPKEEP_STEP * currentTechLevel
+          const { updates: scrapUpdates } = calculateScrapRemoval(upkeepCost, scrapByTL)
+
+          // Flash the crawler's tech level (not the consumed scrap)
+          setFlashUpkeep(true)
+          setFlashTL(true)
+
+          updateCrawler.mutate({ id, updates: { upgrade: newValue, ...scrapUpdates } })
+        }
+      } else {
+        // Decrement doesn't consume scrap
+        updateCrawler.mutate({ id, updates: { upgrade: newValue } })
+      }
+    },
+    [currentUpgrade, currentTechLevel, scrapByTL, updateCrawler, id]
+  )
 
   const onCrawlerTypeChange = useOnCrawlerTypeChange(id)
 
@@ -154,13 +164,14 @@ export function CrawlerHeaderInputs({
       rightContent={
         <Flex gap="2">
           <StatDisplay disabled={disabled} label="UPKEEP" value={upkeep} flash={flashUpkeep} />
-          <UpkeepStepper
+          <NumericStepper
             label="UPGRADE"
             value={currentUpgrade}
             onChange={handleUpgradeChange}
+            max={MAX_UPGRADE}
+            min={0}
             disabled={disabled}
-            techLevel={currentTechLevel}
-            scrapByTL={scrapByTL}
+            disableIncrement={!canIncrementUpgrade}
             flash={flashUpgradeDisplay}
           />
           <NumericStepper

@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import type { SURefMetaEntity, SURefSchemaName, SURefMetaTraits } from 'salvageunion-reference'
+import type { SURefMetaEntity, SURefSchemaName, SURefMetaTrait } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import type { DataValue } from '../../../types/common'
 import { ActivationCostBox } from '../../shared/ActivationCostBox'
@@ -70,8 +70,8 @@ function extractDetails(
   }
 
   // Traits
-  const traits: SURefMetaTraits = 'traits' in data && data.traits?.length ? data.traits : []
-  traits.forEach((t) => {
+  const traits: SURefMetaTrait[] = 'traits' in data && data.traits?.length ? data.traits : []
+  traits.forEach((t: SURefMetaTrait) => {
     const label = t.type.charAt(0).toUpperCase() + t.type.slice(1)
     const value = 'amount' in t && t.amount !== undefined ? t.amount : undefined
     details.push({ label, value, type: 'trait' })

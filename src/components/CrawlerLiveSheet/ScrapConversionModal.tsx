@@ -1,5 +1,13 @@
 import { useState, useMemo } from 'react'
-import { Button, Flex, Text, VStack, NativeSelectRoot, NativeSelectField } from '@chakra-ui/react'
+import {
+  Button,
+  Flex,
+  Text,
+  VStack,
+  NativeSelectRoot,
+  NativeSelectField,
+  Input,
+} from '@chakra-ui/react'
 import Modal from '../Modal'
 
 interface ScrapConversionModalProps {
@@ -36,6 +44,7 @@ export function ScrapConversionModal({
 }: ScrapConversionModalProps) {
   const [fromTL, setFromTL] = useState<TechLevel | null>(null)
   const [toTL, setToTL] = useState<TechLevel | null>(null)
+  const [amount, setAmount] = useState<number>(1)
 
   // Map tech levels to their scrap counts
   const scrapByTL: Record<TechLevel, number> = useMemo(
@@ -69,12 +78,17 @@ export function ScrapConversionModal({
     })
   }, [fromTL, scrapByTL])
 
+  // Calculate max amount that can be converted
+  const maxAmount = useMemo(() => {
+    if (!fromTL) return 0
+    return scrapByTL[fromTL]
+  }, [fromTL, scrapByTL])
+
   // Calculate conversion result
   const conversionResult = useMemo(() => {
-    if (!fromTL || !toTL) return null
+    if (!fromTL || !toTL || amount <= 0) return null
 
-    const fromScrapCount = scrapByTL[fromTL]
-    const fromValueInTL1 = fromScrapCount * fromTL
+    const fromValueInTL1 = amount * fromTL
 
     // How many of the target TL can we make?
     const toScrapCount = Math.floor(fromValueInTL1 / toTL)
@@ -83,20 +97,21 @@ export function ScrapConversionModal({
     const remainderInTL1 = fromValueInTL1 % toTL
 
     return {
-      fromScrapCount,
+      fromScrapCount: amount,
       toScrapCount,
       remainderInTL1,
     }
-  }, [fromTL, toTL, scrapByTL])
+  }, [fromTL, toTL, amount])
 
   const handleConvert = () => {
-    if (!fromTL || !toTL || !conversionResult) return
+    if (!fromTL || !toTL || !conversionResult || amount <= 0) return
 
     // Build the updates object
     const updates: Record<string, number> = {}
 
-    // Zero out the FROM tech level
-    updates[`scrap_tl_${getTLFieldName(fromTL)}`] = 0
+    // Subtract the amount from the FROM tech level
+    const currentFromScrap = scrapByTL[fromTL]
+    updates[`scrap_tl_${getTLFieldName(fromTL)}`] = currentFromScrap - amount
 
     // Add to the TO tech level
     const currentToScrap = scrapByTL[toTL]
@@ -115,6 +130,7 @@ export function ScrapConversionModal({
   const handleClose = () => {
     setFromTL(null)
     setToTL(null)
+    setAmount(1)
     onClose()
   }
 
@@ -138,6 +154,7 @@ export function ScrapConversionModal({
                 const value = e.target.value
                 setFromTL(value ? (parseInt(value) as TechLevel) : null)
                 setToTL(null) // Reset TO when FROM changes
+                setAmount(1) // Reset amount when FROM changes
               }}
             >
               <option value="">Select tech level...</option>
@@ -152,6 +169,32 @@ export function ScrapConversionModal({
               })}
             </NativeSelectField>
           </NativeSelectRoot>
+
+          {/* Amount Input */}
+          {fromTL && (
+            <>
+              <Text fontWeight="bold" fontFamily="mono" mt={2}>
+                Amount
+              </Text>
+              <Input
+                type="number"
+                min={1}
+                max={maxAmount}
+                value={amount}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value)
+                  if (!isNaN(val) && val >= 1 && val <= maxAmount) {
+                    setAmount(val)
+                  }
+                }}
+                fontFamily="mono"
+                textAlign="center"
+              />
+              <Text fontSize="xs" color="fg.muted" fontFamily="mono">
+                Max: {maxAmount}
+              </Text>
+            </>
+          )}
         </VStack>
 
         {/* TO Selection */}

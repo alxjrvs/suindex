@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
@@ -23,7 +22,6 @@ interface CrawlerLiveSheetProps {
 
 export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   const navigate = useNavigate()
-  const [flashingScrapTLs, setFlashingScrapTLs] = useState<number[]>([])
 
   // TanStack Query hooks
   const { crawler, loading, error, selectedCrawlerType, isLocal, bays } = useHydratedCrawler(id)
@@ -38,16 +36,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
   // Determine if the sheet is editable (user owns the crawler or it's local)
   const isEditable = isLocal || (crawler ? isOwner(crawler.user_id, userId) : false)
-
-  // Clear flashing TLs after animation completes
-  useEffect(() => {
-    if (flashingScrapTLs.length > 0) {
-      const timer = setTimeout(() => {
-        setFlashingScrapTLs([])
-      }, 3100)
-      return () => clearTimeout(timer)
-    }
-  }, [flashingScrapTLs])
 
   if (!crawler && !loading) {
     return (
@@ -118,16 +106,12 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
       )}
       {/* Header Section */}
       <Flex gap={6} w="full" alignItems="stretch">
-        <CrawlerHeaderInputs
-          disabled={!selectedCrawlerType || !isEditable}
-          onScrapFlash={setFlashingScrapTLs}
-          id={id}
-        />
+        <CrawlerHeaderInputs disabled={!selectedCrawlerType || !isEditable} id={id} />
 
         <CrawlerResourceSteppers
           id={id}
           disabled={!selectedCrawlerType || !isEditable}
-          flashingTLs={flashingScrapTLs}
+          flashingTLs={[]}
         />
       </Flex>
 

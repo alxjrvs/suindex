@@ -18,7 +18,7 @@ interface EntityGridConfig<T extends ValidTable> {
   /** Create button text color */
   createButtonColor: string
   /** Function to render each grid item */
-  renderCard: (item: Tables<T>, onClick: (id: string) => void) => ReactNode
+  renderCard: (item: Tables<T>, onClick: (id: string) => void, isInactive?: boolean) => ReactNode
   /** Empty state message */
   emptyStateMessage?: string
   /** Empty state icon */
@@ -67,8 +67,8 @@ export function EntityGrid<T extends ValidTable>({
       title={title}
       loading={loading}
       error={error}
-      items={items}
-      renderItem={(item) => renderCard(item, handleClick)}
+      items={items as Array<Tables<T> & { active?: boolean }>}
+      renderItem={(item, isInactive) => renderCard(item as Tables<T>, handleClick, isInactive)}
       createButton={{
         onClick: handleCreate,
         label: createButtonLabel,
