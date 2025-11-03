@@ -98,11 +98,12 @@ export const crawlersKeys = {
 
 const defaultCrawler: Crawler = {
   id: LOCAL_ID,
-  name: 'Unknown Name',
+  name: 'New Crawler',
   current_damage: 0,
   tech_level: 1,
   upgrade: 0,
   active: false,
+  private: true,
   user_id: 'local',
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
@@ -200,6 +201,7 @@ export function useCreateCrawler() {
           current_damage: data.current_damage || null,
           notes: data.notes || null,
           active: data.active ?? false,
+          private: data.private ?? true,
           description: data.description || null,
           game_id: data.game_id || null,
           npc: data.npc || null,

@@ -105,3 +105,17 @@ export function hasEnoughScrap(totalNeeded: number, scrapByTL: Record<number, nu
 
   return totalAvailable >= totalNeeded
 }
+
+/**
+ * Check if there's enough scrap at a specific tech level to cover the cost
+ * @param requiredAmount - Amount of scrap needed (in units, not TL1 equivalent)
+ * @param techLevel - The tech level of scrap required
+ * @param scrapByTL - Current scrap amounts by tech level
+ */
+export function hasEnoughScrapAtTechLevel(
+  requiredAmount: number,
+  techLevel: number,
+  scrapByTL: Record<number, number>
+): boolean {
+  return (scrapByTL[techLevel] || 0) >= requiredAmount
+}

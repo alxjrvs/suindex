@@ -32,7 +32,7 @@ export const suColors = {
   // Derived colors for UI components
   inputBg: 'rgb(232, 229, 216)', // #e8e5d8
   inputText: 'rgb(45, 62, 54)', // #2d3e36
-  crawlerPink: 'rgb(201, 125, 158)', // #c97d9e
+  crawlerPink: 'rgb(206, 88, 152)', // Same as pink
   lightPeach: 'rgb(245, 193, 163)', // #f5c1a3
   // External brand colors
   discordBlurple: 'rgb(88, 101, 242)', // #5865F2

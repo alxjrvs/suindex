@@ -37,6 +37,8 @@ type RoundedBoxProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'dire
   label?: string
   /** Whether to use compact styling */
   compact?: boolean
+  /** Whether to reverse the header layout (title on right, rightContent on left) */
+  reverse?: boolean
 }
 
 export function RoundedBox({
@@ -58,6 +60,7 @@ export function RoundedBox({
   bodyPadding,
   onHeaderClick,
   headerTestId,
+  reverse = false,
   ...flexProps
 }: RoundedBoxProps) {
   const actualHeaderBg = disabled ? 'su.grey' : headerBg || bg
@@ -120,7 +123,7 @@ export function RoundedBox({
           overflow="visible"
         >
           <Flex
-            direction="row"
+            direction={reverse ? 'row-reverse' : 'row'}
             w="full"
             px="0"
             gap={2}
@@ -139,9 +142,15 @@ export function RoundedBox({
               flexGrow="1"
               overflow="visible"
               flexShrink="1"
+              justifyContent={reverse ? 'flex-end' : 'flex-start'}
             >
               {leftContent && (
-                <Flex direction="column" gap={1} alignItems="flex-start" flexShrink={0}>
+                <Flex
+                  direction="column"
+                  gap={1}
+                  alignItems={reverse ? 'flex-end' : 'flex-start'}
+                  flexShrink={0}
+                >
                   {leftContent}
                 </Flex>
               )}
@@ -152,6 +161,7 @@ export function RoundedBox({
                 h="full"
                 overflow="visible"
                 minW="0"
+                alignItems={reverse ? 'flex-end' : 'flex-start'}
               >
                 {title && (
                   <Text
@@ -165,12 +175,20 @@ export function RoundedBox({
                     textOverflow={compact ? 'clip' : 'ellipsis'}
                     fontSize={compact ? '1rem' : '2rem'}
                     lineHeight={compact ? '1.2' : 'normal'}
+                    textAlign={reverse ? 'right' : 'left'}
                   >
                     {title}
                   </Text>
                 )}
                 {subTitleContent && (
-                  <Flex overflow="visible" gap="1" flexWrap="wrap" alignItems="center" zIndex={10}>
+                  <Flex
+                    overflow="visible"
+                    gap="1"
+                    flexWrap="wrap"
+                    alignItems="center"
+                    zIndex={10}
+                    justifyContent={reverse ? 'flex-end' : 'flex-start'}
+                  >
                     {subTitleContent}
                   </Flex>
                 )}
@@ -183,7 +201,7 @@ export function RoundedBox({
                 direction="row"
                 alignItems="flex-start"
                 flexWrap="wrap"
-                justifyContent="flex-end"
+                justifyContent={reverse ? 'flex-start' : 'flex-end'}
                 gap={compact ? 0.5 : 1}
                 flexShrink={1}
               >

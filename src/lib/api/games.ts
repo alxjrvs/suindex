@@ -1,5 +1,6 @@
 import { supabase } from '../supabase'
 import type { Tables, TablesInsert } from '../../types/database-generated.types'
+import { assertCanViewGame } from '../permissions'
 
 export type GameRow = Tables<'games'>
 export type GameMember = {
@@ -13,13 +14,18 @@ export type ExternalLink = Tables<'external_links'>
 
 /**
  * Fetch a single game by ID
+ * Checks permissions before returning
  */
 export async function fetchGame(gameId: string): Promise<GameRow> {
   const { data, error } = await supabase.from('games').select('*').eq('id', gameId).single()
 
   if (error) throw error
   if (!data) throw new Error('Game not found')
-  return data as GameRow
+
+  const game = data as GameRow
+  await assertCanViewGame(game)
+
+  return game
 }
 
 /**

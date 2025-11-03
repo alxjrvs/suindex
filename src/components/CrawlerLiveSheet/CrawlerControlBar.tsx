@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import { HStack } from '@chakra-ui/react'
 import { fetchUserGames, getUser } from '../../lib/api'
 import { SheetSelect } from '../shared/SheetSelect'
 import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { LinkButton } from '../shared/LinkButton'
 import { ActiveToggle } from '../shared/ActiveToggle'
+import { PrivateToggle } from '../shared/PrivateToggle'
 
 interface CrawlerControlBarProps {
   gameId?: string | null
@@ -12,6 +14,8 @@ interface CrawlerControlBarProps {
   hasPendingChanges?: boolean
   active?: boolean
   onActiveChange?: (active: boolean) => void
+  isPrivate?: boolean
+  onPrivateChange?: (isPrivate: boolean) => void
   disabled?: boolean
 }
 
@@ -22,6 +26,8 @@ export function CrawlerControlBar({
   hasPendingChanges = false,
   active,
   onActiveChange,
+  isPrivate,
+  onPrivateChange,
   disabled = false,
 }: CrawlerControlBarProps) {
   const [games, setGames] = useState<{ id: string; name: string }[]>([])
@@ -64,10 +70,14 @@ export function CrawlerControlBar({
         />
       }
       centerContent={
-        active !== undefined &&
-        onActiveChange && (
-          <ActiveToggle active={active} onChange={onActiveChange} disabled={disabled} />
-        )
+        <HStack gap={4}>
+          {active !== undefined && onActiveChange && (
+            <ActiveToggle active={active} onChange={onActiveChange} disabled={disabled} />
+          )}
+          {isPrivate !== undefined && onPrivateChange && (
+            <PrivateToggle isPrivate={isPrivate} onChange={onPrivateChange} disabled={disabled} />
+          )}
+        </HStack>
       }
       rightContent={
         savedGameId && <LinkButton to={`/dashboard/games/${savedGameId}`} label="→ Game" />

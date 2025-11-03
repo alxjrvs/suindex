@@ -1,10 +1,12 @@
 import { supabase } from '../supabase'
 import type { Tables, TablesInsert } from '../../types/database-generated.types'
+import { assertCanViewPilot } from '../permissions'
 
 export type PilotRow = Tables<'pilots'>
 
 /**
  * Fetch all pilots for a crawler
+ * Checks permissions for each pilot before returning
  */
 export async function fetchCrawlerPilots(crawlerId: string): Promise<PilotRow[]> {
   const { data, error } = await supabase
@@ -14,7 +16,15 @@ export async function fetchCrawlerPilots(crawlerId: string): Promise<PilotRow[]>
     .order('callsign')
 
   if (error) throw error
-  return (data || []) as PilotRow[]
+
+  const pilots = (data || []) as PilotRow[]
+
+  // Check permissions for each pilot
+  for (const pilot of pilots) {
+    await assertCanViewPilot(pilot)
+  }
+
+  return pilots
 }
 
 /**

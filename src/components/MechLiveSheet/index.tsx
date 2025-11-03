@@ -1,13 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
-import {
-  getTechLevel,
-  getSystemSlots,
-  getModuleSlots,
-  getCargoCapacity,
-  getSalvageValue,
-} from 'salvageunion-reference'
 import { MechResourceSteppers } from './MechResourceSteppers'
 import { ChassisAbilities } from './ChassisAbilities'
 import { SystemsList } from './SystemsList'
@@ -15,13 +8,16 @@ import { ModulesList } from './ModulesList'
 import { CargoList } from './CargoList'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { RoundedBox } from '../shared/RoundedBox'
-import { ChassisInputs } from './ChassisInputs'
-import { StatDisplay } from '../StatDisplay'
 import { DeleteEntity } from '../shared/DeleteEntity'
+import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { useUpdateMech, useHydratedMech, useDeleteMech } from '../../hooks/mech'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { useImageUpload } from '../../hooks/useImageUpload'
+import { isOwner } from '../../lib/permissions'
+import { MainMechDisplay } from './MainMechDisplay'
+import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
 
 export default function MechLiveSheet({ id }: { id: string }) {
   const navigate = useNavigate()
@@ -30,6 +26,20 @@ export default function MechLiveSheet({ id }: { id: string }) {
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
   const updateMech = useUpdateMech()
   const deleteMech = useDeleteMech()
+
+  // Get current user for ownership check
+  const { userId } = useCurrentUser()
+
+  // Determine if the sheet is editable (user owns the mech or it's local)
+  const isEditable = isLocal || (mech ? isOwner(mech.user_id, userId) : false)
+
+  // Image upload hook - only enabled for non-local sheets
+  const { handleUpload, handleRemove, isUploading, isRemoving } = useImageUpload({
+    entityType: 'mechs',
+    entityId: id,
+    getCurrentImageUrl: () => mech?.image_url ?? null,
+    queryKey: ['mechs', id],
+  })
 
   if (!mech && !loading) {
     return (
@@ -56,6 +66,11 @@ export default function MechLiveSheet({ id }: { id: string }) {
   }
 
   if (error) {
+    // Check if it's a permission error
+    if (error.includes('permission') || error.includes('private') || error.includes('access')) {
+      return <PermissionError message={error} />
+    }
+
     return (
       <LiveSheetLayout>
         <Flex alignItems="center" justifyContent="center" h="64">
@@ -72,9 +87,6 @@ export default function MechLiveSheet({ id }: { id: string }) {
     )
   }
 
-  const title =
-    chassisRef?.name && mech?.pattern ? `${chassisRef.name} "${mech.pattern}"` : 'Mech Chassis'
-
   return (
     <LiveSheetLayout>
       {!isLocal && (
@@ -86,60 +98,26 @@ export default function MechLiveSheet({ id }: { id: string }) {
           hasPendingChanges={updateMech.isPending}
           active={mech?.active ?? false}
           onActiveChange={(active) => updateMech.mutate({ id, updates: { active } })}
-          disabled={!selectedChassis}
+          isPrivate={mech?.private ?? true}
+          onPrivateChange={(isPrivate) =>
+            updateMech.mutate({ id, updates: { private: isPrivate } })
+          }
+          disabled={!isEditable}
         />
       )}
-      <Flex gap={6}>
-        <VStack flex="1" gap={6} alignItems="stretch">
-          <RoundedBox
-            leftContent={
-              <StatDisplay
-                inverse
-                label="tech"
-                bottomLabel="Level"
-                value={chassisRef ? (getTechLevel(chassisRef) ?? 0) : 0}
-                disabled={!selectedChassis}
-              />
-            }
-            rightContent={
-              <Flex flexDirection="row" justifyContent="flex-end" gap={4}>
-                <StatDisplay
-                  label="Sys."
-                  bottomLabel="Slots"
-                  value={chassisRef ? (getSystemSlots(chassisRef) ?? 0) : 0}
-                  disabled={!selectedChassis}
-                />
-                <StatDisplay
-                  label="Mod."
-                  bottomLabel="Slots"
-                  value={chassisRef ? (getModuleSlots(chassisRef) ?? 0) : 0}
-                  disabled={!selectedChassis}
-                />
-                <StatDisplay
-                  label="Cargo"
-                  bottomLabel="Cap"
-                  value={chassisRef ? (getCargoCapacity(chassisRef) ?? 0) : 0}
-                  disabled={!selectedChassis}
-                />
-                <StatDisplay
-                  label="Salvage"
-                  bottomLabel="Value"
-                  value={chassisRef ? (getSalvageValue(chassisRef) ?? 0) : 0}
-                  disabled={!selectedChassis}
-                />
-              </Flex>
-            }
-            title={title}
-            bg="su.green"
-            w="full"
-            h="full"
-            disabled={!selectedChassis}
-          >
-            <ChassisInputs id={id} />
-          </RoundedBox>
-        </VStack>
-
-        <MechResourceSteppers id={id} disabled={!selectedChassis} />
+      <Flex gap={2}>
+        <LiveSheetAssetDisplay
+          bg="su.green"
+          url={chassisRef?.asset_url}
+          userImageUrl={mech?.image_url ?? undefined}
+          alt={chassisRef?.name}
+          onUpload={!isLocal && isEditable ? handleUpload : undefined}
+          onRemove={!isLocal && isEditable ? handleRemove : undefined}
+          isUploading={isUploading}
+          isRemoving={isRemoving}
+        />
+        <MainMechDisplay id={id} />
+        <MechResourceSteppers id={id} disabled={!selectedChassis || !isEditable} />
       </Flex>
 
       <Tabs.Root defaultValue="abilities">
@@ -161,20 +139,20 @@ export default function MechLiveSheet({ id }: { id: string }) {
 
         <Tabs.Content value="systems-modules">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <SystemsList id={id} disabled={!selectedChassis} />
+            <SystemsList id={id} disabled={!selectedChassis || !isEditable} />
 
-            <ModulesList id={id} disabled={!selectedChassis} />
+            <ModulesList id={id} disabled={!selectedChassis || !isEditable} />
           </Grid>
         </Tabs.Content>
 
         <Tabs.Content value="storage">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <CargoList id={id} disabled={!selectedChassis} />
+            <CargoList id={id} disabled={!selectedChassis || !isEditable} />
 
             <Notes
               notes={mech?.notes ?? ''}
               onChange={(value) => updateMech.mutate({ id, updates: { notes: value } })}
-              disabled={!selectedChassis}
+              disabled={!selectedChassis || !isEditable}
               backgroundColor="bg.builder.mech"
               placeholder="Add notes about your mech..."
             />
@@ -192,7 +170,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
               },
             })
           }
-          disabled={!id || updateMech.isPending}
+          disabled={!isEditable || !id || updateMech.isPending}
         />
       )}
     </LiveSheetLayout>

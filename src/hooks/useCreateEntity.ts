@@ -17,6 +17,67 @@ interface useCreateEntityResult {
   error: string | null
 }
 
+const initialNPC: CrawlerNPC = {
+  name: '',
+  notes: '',
+  hitPoints: 0,
+  damage: 0,
+}
+
+const defaults: Record<ValidTable, Record<string, unknown>> = {
+  mechs: {
+    pattern: 'New Mech',
+    current_damage: 0,
+    current_heat: 0,
+    current_ep: 0,
+  },
+  pilots: {
+    callsign: 'New Pilot',
+    max_hp: 10,
+    max_ap: 5,
+    current_damage: 0,
+    current_ap: 0,
+  },
+  crawlers: {
+    name: 'New Crawler',
+    current_damage: 0,
+    scrap_tl_one: 0,
+    scrap_tl_two: 0,
+    scrap_tl_three: 0,
+    scrap_tl_four: 0,
+    scrap_tl_five: 0,
+    scrap_tl_six: 0,
+    npc: initialNPC,
+    tech_level: 1,
+  },
+  games: {
+    name: 'Unknown Game',
+  },
+  external_links: {
+    name: 'Unknown Link',
+    url: 'https://example.com',
+  },
+  game_invites: {
+    code: 'UNKNOWN',
+  },
+  game_members: {
+    role: 'member',
+  },
+  suentities: {
+    schema_name: 'abilities',
+    schema_ref_id: '',
+  },
+  cargo: {
+    name: 'Unknown Cargo',
+  },
+  player_choices: {
+    choice_ref_id: '',
+    value: '',
+  },
+}
+
+export { defaults }
+
 /**
  * Hook for creating entities directly in Supabase with loading state and navigation
  * Creates a record with placeholder values and navigates to the show page
@@ -32,68 +93,7 @@ export function useCreateEntity<T extends ValidTable>(
   const [error, setError] = useState<string | null>(null)
   const createCrawlerMutation = useCreateCrawler()
 
-  // Get placeholder data based on table type
   const getPlaceholderData = useCallback((): Record<string, unknown> => {
-    // Initialize crawler NPC
-    const initialNPC: CrawlerNPC = {
-      name: '',
-      notes: '',
-      hitPoints: 0,
-      damage: 0,
-    }
-
-    const defaults: Record<ValidTable, Record<string, unknown>> = {
-      mechs: {
-        pattern: 'New Mech',
-        current_damage: 0,
-        current_heat: 0,
-        current_ep: 0,
-      },
-      pilots: {
-        callsign: 'Unknown Name',
-        max_hp: 10,
-        max_ap: 5,
-        current_damage: 0,
-        current_ap: 0,
-      },
-      crawlers: {
-        name: 'Unknown Name',
-        current_damage: 0,
-        scrap_tl_one: 0,
-        scrap_tl_two: 0,
-        scrap_tl_three: 0,
-        scrap_tl_four: 0,
-        scrap_tl_five: 0,
-        scrap_tl_six: 0,
-        npc: initialNPC,
-        tech_level: 1,
-      },
-      games: {
-        name: 'Unknown Game',
-      },
-      external_links: {
-        name: 'Unknown Link',
-        url: 'https://example.com',
-      },
-      game_invites: {
-        code: 'UNKNOWN',
-      },
-      game_members: {
-        role: 'member',
-      },
-      suentities: {
-        schema_name: 'abilities',
-        schema_ref_id: '',
-      },
-      cargo: {
-        name: 'Unknown Cargo',
-      },
-      player_choices: {
-        choice_ref_id: '',
-        value: '',
-      },
-    }
-
     return {
       ...defaults[config.table],
       ...config.placeholderData,

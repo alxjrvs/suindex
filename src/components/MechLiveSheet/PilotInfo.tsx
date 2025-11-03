@@ -79,7 +79,7 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
   const className = selectedAdvancedClass?.ref.name ?? selectedClass?.ref.name ?? 'No Class'
 
   return (
-    <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
+    <RoundedBox flex="1" title={pilot.callsign} disabled={disabled} bg="su.orange">
       <VStack gap={3} align="stretch" py={2} px={3}>
         <Text fontSize="lg" fontWeight="bold" fontFamily="mono" textAlign="center">
           {pilot.callsign} the {className}

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import { GameGridCard } from './GameGridCard'
+import { GameSmallDisplay } from './GameSmallDisplay'
 import { GridLayout } from './GridLayout'
 import { useGamesWithRelationships } from '../../hooks/useGameWithRelationships'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
@@ -31,14 +31,15 @@ export function GamesGrid() {
       loading={loading}
       error={error}
       items={games}
-      renderItem={(game) => (
-        <GameGridCard
+      renderItem={(game, isInactive) => (
+        <GameSmallDisplay
           key={game.id}
           name={game.name}
           crawlerName={game.crawler?.name}
           mediatorName={game.mediator?.user_name || game.mediator?.user_id}
           onClick={() => handleGameClick(game.id)}
           isLoading={loading}
+          isInactive={isInactive}
         />
       )}
       createButton={{

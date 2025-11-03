@@ -79,6 +79,7 @@ export type Database = {
           name: string
           notes: string | null
           npc: Json | null
+          private: boolean
           scrap_tl_five: number | null
           scrap_tl_four: number | null
           scrap_tl_one: number | null
@@ -100,6 +101,7 @@ export type Database = {
           name: string
           notes?: string | null
           npc?: Json | null
+          private?: boolean
           scrap_tl_five?: number | null
           scrap_tl_four?: number | null
           scrap_tl_one?: number | null
@@ -121,6 +123,7 @@ export type Database = {
           name?: string
           notes?: string | null
           npc?: Json | null
+          private?: boolean
           scrap_tl_five?: number | null
           scrap_tl_four?: number | null
           scrap_tl_one?: number | null
@@ -242,6 +245,7 @@ export type Database = {
           description: string | null
           id: string
           name: string
+          private: boolean
           updated_at: string | null
         }
         Insert: {
@@ -251,6 +255,7 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
+          private?: boolean
           updated_at?: string | null
         }
         Update: {
@@ -260,6 +265,7 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
+          private?: boolean
           updated_at?: string | null
         }
         Relationships: []
@@ -273,10 +279,12 @@ export type Database = {
           current_ep: number | null
           current_heat: number | null
           id: string
+          image_url: string | null
           modules: string[] | null
           notes: string | null
           pattern: string | null
           pilot_id: string | null
+          private: boolean
           quirk: string | null
           systems: string[] | null
           updated_at: string | null
@@ -290,10 +298,12 @@ export type Database = {
           current_ep?: number | null
           current_heat?: number | null
           id?: string
+          image_url?: string | null
           modules?: string[] | null
           notes?: string | null
           pattern?: string | null
           pilot_id?: string | null
+          private?: boolean
           quirk?: string | null
           systems?: string[] | null
           updated_at?: string | null
@@ -307,10 +317,12 @@ export type Database = {
           current_ep?: number | null
           current_heat?: number | null
           id?: string
+          image_url?: string | null
           modules?: string[] | null
           notes?: string | null
           pattern?: string | null
           pilot_id?: string | null
+          private?: boolean
           quirk?: string | null
           systems?: string[] | null
           updated_at?: string | null
@@ -341,6 +353,7 @@ export type Database = {
           current_tp: number | null
           equipment: string[] | null
           id: string
+          image_url: string | null
           keepsake: string | null
           keepsake_used: boolean | null
           max_ap: number | null
@@ -348,6 +361,7 @@ export type Database = {
           motto: string | null
           motto_used: boolean | null
           notes: string | null
+          private: boolean
           updated_at: string | null
           user_id: string
         }
@@ -365,6 +379,7 @@ export type Database = {
           current_tp?: number | null
           equipment?: string[] | null
           id?: string
+          image_url?: string | null
           keepsake?: string | null
           keepsake_used?: boolean | null
           max_ap?: number | null
@@ -372,6 +387,7 @@ export type Database = {
           motto?: string | null
           motto_used?: boolean | null
           notes?: string | null
+          private?: boolean
           updated_at?: string | null
           user_id: string
         }
@@ -389,6 +405,7 @@ export type Database = {
           current_tp?: number | null
           equipment?: string[] | null
           id?: string
+          image_url?: string | null
           keepsake?: string | null
           keepsake_used?: boolean | null
           max_ap?: number | null
@@ -396,6 +413,7 @@ export type Database = {
           motto?: string | null
           motto_used?: boolean | null
           notes?: string | null
+          private?: boolean
           updated_at?: string | null
           user_id?: string
         }

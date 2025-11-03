@@ -8,6 +8,7 @@ import { SalvageUnionReference, type SURefAbility } from 'salvageunion-reference
 import { useChangePilotClass } from '../../hooks/pilot/useChangePilotClass'
 import { useChangePilotAdvancedClass } from '../../hooks/pilot/useChangePilotAdvancedClass'
 import { useHydratedPilot, useUpdatePilot } from '../../hooks/pilot'
+import { Text } from '../base/Text'
 
 interface PilotInfoInputsProps {
   disabled?: boolean
@@ -26,7 +27,7 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
   const background = pilot?.background ?? ''
   const backgroundUsed = pilot?.background_used ?? false
   const appearance = pilot?.appearance ?? ''
-  const callsign = pilot?.callsign ?? ''
+  const callsign = pilot?.callsign
   const classId = selectedClass?.schema_ref_id ?? null
   const advancedClassId = selectedAdvancedClass?.schema_ref_id ?? null
   const allAdvancedClasses = useMemo(() => SalvageUnionReference.AdvancedClasses.all(), [])
@@ -98,12 +99,19 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
   }
 
   return (
-    <RoundedBox title="Pilot" bg="bg.builder.pilot" flex="1" minW="0" disabled={disabled}>
+    <RoundedBox
+      title={callsign ?? 'New Pilot'}
+      subTitleContent={<Text></Text>}
+      bg="bg.builder.pilot"
+      flex="1"
+      minW="0"
+      disabled={disabled}
+    >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
         {/* Callsign */}
         <SheetInput
           label="Callsign"
-          value={callsign}
+          value={callsign ?? ''}
           onChange={(value) => updatePilot.mutate({ id, updates: { callsign: value } })}
           placeholder="Enter callsign"
           disabled={disabled}

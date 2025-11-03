@@ -1,31 +1,76 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { Box, Flex, Grid, Input, Textarea, VStack, HStack } from '@chakra-ui/react'
+import { Box, Flex, VStack, HStack, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 
-import {
-  createGameInvite,
-  expireGameInvite,
-  deleteExternalLink,
-  createExternalLink,
-  updateGame,
-  deleteGame,
-  fetchGameExternalLinks,
-  fetchGameInvites,
-  type GameInvite,
-  type ExternalLink,
-} from '../../lib/api'
 import { ExternalLinkModal } from './ExternalLinkModal'
 import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
-import { getStructurePointsForTechLevel } from '../../utils/referenceDataHelpers'
 import { ActiveToggle } from '../shared/ActiveToggle'
+import { PrivateToggle } from '../shared/PrivateToggle'
+import { PermissionError } from '../shared/PermissionError'
 import { RoundedBox } from '../shared/RoundedBox'
+import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
-import { useCrawlerTypes, usePilotClasses, useMechChassis } from '../../hooks/suentity'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { isOwner } from '../../lib/permissions'
+import {
+  useUpdateGame,
+  useDeleteGame,
+  useGameInvites,
+  useCreateGameInvite,
+  useExpireGameInvite,
+  useExternalLinks,
+  useCreateExternalLink,
+  useDeleteExternalLink,
+} from '../../hooks/game'
+import type { GameInvite } from '../../lib/api/games'
+import { ValueDisplay } from '../shared/ValueDisplay'
+import { CrawlerSmallDisplay } from './CrawlerSmallDisplay'
+import { PilotSmallDisplay } from './PilotSmallDisplay'
+import { MechSmallDisplay } from './MechSmallDisplay'
+import { useHydratedMech } from '../../hooks/mech'
+import { supabase } from '../../lib/supabase'
 
 type GameInviteRow = GameInvite
-type ExternalLinkRow = ExternalLink
+
+// Helper component to render pilot-mech pair with label
+function PilotMechCell({ pilotId, mechId }: { pilotId: string; mechId: string | null }) {
+  const { mech, selectedChassis } = useHydratedMech(mechId || '')
+  const { data: pilot } = useQuery({
+    queryKey: ['pilot-callsign', pilotId],
+    queryFn: async () => {
+      const { data } = await supabase.from('pilots').select('callsign').eq('id', pilotId).single()
+      return data
+    },
+    enabled: !!pilotId,
+  })
+
+  const mechName = mech?.pattern || selectedChassis?.ref.name
+  const label = `${pilot?.callsign || ''}${mechName ? ` & ${mechName}` : ''}`
+
+  return (
+    <VStack gap={0} align="stretch">
+      <PilotSmallDisplay label={label} id={pilotId} />
+      {mechId ? (
+        <MechSmallDisplay reverse id={mechId} />
+      ) : (
+        <Box bg="su.lightBlue" p={4} borderRadius="md" borderWidth="2px" borderColor="black">
+          <Text
+            fontSize="sm"
+            color="su.brick"
+            fontWeight="bold"
+            textAlign="center"
+            textTransform="uppercase"
+          >
+            No Mech
+          </Text>
+        </Box>
+      )}
+    </VStack>
+  )
+}
 
 export function GameLiveSheet() {
   const { gameId } = useParams<{ gameId: string }>()
@@ -39,53 +84,55 @@ export function GameLiveSheet() {
     reload: reloadGame,
   } = useGameWithRelationships(gameId)
 
+  // Get current user for ownership check
+  const { userId } = useCurrentUser()
+
   // Determine if current user is a mediator
   const isMediator = useMemo(() => {
     if (!gameWithRelationships) return false
     return gameWithRelationships.members.some((m) => m.role === 'mediator')
   }, [gameWithRelationships])
 
-  // Fetch singleton entities for efficient display
-  const crawlerIds = useMemo(
-    () => (gameWithRelationships?.crawler ? [gameWithRelationships.crawler.id] : []),
-    [gameWithRelationships?.crawler]
-  )
-  const pilotIds = useMemo(
-    () => gameWithRelationships?.pilots.map((p) => p.pilot.id) || [],
-    [gameWithRelationships?.pilots]
-  )
-  const mechIds = useMemo(
-    () =>
-      (gameWithRelationships?.pilots
-        .map((p) => p.mech?.id)
-        .filter((id) => id !== null) as string[]) || [],
-    [gameWithRelationships?.pilots]
+  // Determine if the game is editable (user owns the game or is mediator)
+  const isEditable = gameWithRelationships
+    ? isOwner(gameWithRelationships.created_by, userId) || isMediator
+    : false
+
+  // Get active pilots (pilots with active=true)
+  const activePilots = useMemo(
+    () => gameWithRelationships?.pilots.filter((p) => p.pilot.active) || [],
+    [gameWithRelationships]
   )
 
-  const { data: crawlerTypes } = useCrawlerTypes(crawlerIds)
-  const { data: pilotClassData } = usePilotClasses(pilotIds)
-  const { data: mechChassisData } = useMechChassis(mechIds)
+  // TanStack Query hooks for game data
+  const updateGameMutation = useUpdateGame()
+  const deleteGameMutation = useDeleteGame()
 
-  const [invites, setInvites] = useState<GameInviteRow[]>([])
-  const [invitesLoading, setInvitesLoading] = useState(false)
-  const [inviteError, setInviteError] = useState<string | null>(null)
-
-  // Editable game fields
-  const [isEditingGame, setIsEditingGame] = useState(false)
-  const [editedName, setEditedName] = useState('')
-  const [editedDescription, setEditedDescription] = useState('')
-  const [saveGameLoading, setSaveGameLoading] = useState(false)
-  const [saveGameError, setSaveGameError] = useState<string | null>(null)
+  // Game invites (only for mediators)
+  const {
+    data: invites = [],
+    isLoading: invitesLoading,
+    error: inviteQueryError,
+  } = useGameInvites(isMediator ? gameId : undefined)
+  const createInviteMutation = useCreateGameInvite()
+  const expireInviteMutation = useExpireGameInvite()
 
   // External links
-  const [externalLinks, setExternalLinks] = useState<ExternalLinkRow[]>([])
-  const [linksLoading, setLinksLoading] = useState(false)
-  const [linksError, setLinksError] = useState<string | null>(null)
+  const {
+    data: externalLinks = [],
+    isLoading: linksLoading,
+    error: linksQueryError,
+  } = useExternalLinks(gameId)
+  const createLinkMutation = useCreateExternalLink()
+  const deleteLinkMutation = useDeleteExternalLink()
+
+  // Local UI state
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
 
-  // Danger zone
-  const [deleteLoading, setDeleteLoading] = useState(false)
-  const [deleteError, setDeleteError] = useState<string | null>(null)
+  // Error messages from mutations
+  const inviteError = inviteQueryError?.message || null
+  const linksError = linksQueryError?.message || null
+  const deleteError = deleteGameMutation.error?.message || null
 
   // Crawler creation
   const { createEntity: createCrawler, isLoading: isCreatingCrawler } = useCreateEntity({
@@ -94,58 +141,7 @@ export function GameLiveSheet() {
     placeholderData: gameId ? { game_id: gameId, active: true } : undefined,
   })
 
-  const loadExternalLinks = useCallback(async () => {
-    if (!gameId) return
-    try {
-      setLinksLoading(true)
-      setLinksError(null)
-      const links = await fetchGameExternalLinks(gameId)
-      setExternalLinks(links as ExternalLinkRow[])
-    } catch (err) {
-      console.error('Error loading external links:', err)
-      setLinksError(err instanceof Error ? err.message : 'Failed to load external links')
-    } finally {
-      setLinksLoading(false)
-    }
-  }, [gameId])
-
-  const loadInvites = useCallback(async () => {
-    if (!gameId) return
-    try {
-      setInvitesLoading(true)
-      setInviteError(null)
-      const invites = await fetchGameInvites(gameId)
-      const rows = invites as GameInviteRow[]
-      setInvites(rows.filter(isInviteActive))
-    } catch (err) {
-      console.error('Error loading invites:', err)
-      setInviteError(err instanceof Error ? err.message : 'Failed to load invites')
-    } finally {
-      setInvitesLoading(false)
-    }
-  }, [gameId])
-
-  // Initialize edited fields when game loads
-  useEffect(() => {
-    if (gameWithRelationships) {
-      setEditedName(gameWithRelationships.name)
-      setEditedDescription(gameWithRelationships.description || '')
-    }
-  }, [gameWithRelationships])
-
-  // Load invites and external links when game loads
-  useEffect(() => {
-    if (!gameWithRelationships) return
-
-    if (isMediator) {
-      loadInvites()
-    } else {
-      setInvites([])
-    }
-
-    loadExternalLinks()
-  }, [gameWithRelationships, isMediator, loadInvites, loadExternalLinks])
-
+  // Helper to check if invite is active
   const isInviteActive = (inv: GameInviteRow) => {
     const now = new Date()
     const notExpired = !inv.expires_at || new Date(inv.expires_at) > now
@@ -154,77 +150,24 @@ export function GameLiveSheet() {
     return notExpired && underUses
   }
 
+  // Filter active invites
+  const activeInvites = useMemo(() => invites.filter(isInviteActive), [invites])
+
+  // Mutation handlers
   const createInvite = async () => {
     if (!gameId) return
-    try {
-      setInviteError(null)
-      const invite = await createGameInvite(gameId)
-      if (isInviteActive(invite)) {
-        // Prepend the new invite
-        setInvites((prev) => [invite, ...prev])
-      }
-    } catch (err) {
-      console.error('Error creating invite:', err)
-      const msg = err instanceof Error ? err.message : 'Failed to create invite'
-      if (msg.includes('forbidden')) {
-        setInviteError('Only mediators can create invites.')
-      } else {
-        setInviteError(msg)
-      }
-    }
+    await createInviteMutation.mutateAsync(gameId)
   }
 
   const handleCreateExternalLink = async (name: string, url: string) => {
     if (!gameId) return
-    try {
-      setLinksError(null)
-      const link = await createExternalLink(gameId, url, name)
-      setExternalLinks((prev) => [link, ...prev])
-      setIsLinkModalOpen(false)
-    } catch (err) {
-      console.error('Error creating external link:', err)
-      setLinksError(err instanceof Error ? err.message : 'Failed to create external link')
-    }
+    await createLinkMutation.mutateAsync({ gameId, url, name })
+    setIsLinkModalOpen(false)
   }
 
   const deleteExternalLinkHandler = async (linkId: string) => {
-    try {
-      setLinksError(null)
-      await deleteExternalLink(linkId)
-      setExternalLinks((prev) => prev.filter((link) => link.id !== linkId))
-    } catch (err) {
-      console.error('Error deleting external link:', err)
-      setLinksError(err instanceof Error ? err.message : 'Failed to delete external link')
-    }
-  }
-
-  const handleSaveGame = async () => {
-    if (!gameId || !gameWithRelationships) return
-    try {
-      setSaveGameLoading(true)
-      setSaveGameError(null)
-
-      await updateGame(gameId, {
-        name: editedName,
-        description: editedDescription,
-      })
-
-      // Reload game data
-      reloadGame()
-      setIsEditingGame(false)
-    } catch (err) {
-      console.error('Error saving game:', err)
-      setSaveGameError(err instanceof Error ? err.message : 'Failed to save game')
-    } finally {
-      setSaveGameLoading(false)
-    }
-  }
-
-  const handleCancelEdit = () => {
-    setIsEditingGame(false)
-    setEditedName(gameWithRelationships?.name || '')
-    setEditedDescription(gameWithRelationships?.description || '')
-    setSaveGameError(null)
+    if (!gameId) return
+    await deleteLinkMutation.mutateAsync({ linkId, gameId })
   }
 
   const handleDeleteGame = async () => {
@@ -234,18 +177,8 @@ export function GameLiveSheet() {
     const ok = window.confirm(confirmMsg)
     if (!ok) return
 
-    try {
-      setDeleteLoading(true)
-      setDeleteError(null)
-
-      await deleteGame(gameId)
-      navigate('/dashboard')
-    } catch (err) {
-      console.error('Error deleting game:', err)
-      setDeleteError(err instanceof Error ? err.message : 'Failed to delete game')
-    } finally {
-      setDeleteLoading(false)
-    }
+    await deleteGameMutation.mutateAsync(gameId)
+    navigate('/dashboard')
   }
 
   useEffect(() => {
@@ -268,6 +201,14 @@ export function GameLiveSheet() {
   }
 
   if (error || !gameWithRelationships) {
+    // Check if it's a permission error
+    if (
+      error &&
+      (error.includes('permission') || error.includes('private') || error.includes('access'))
+    ) {
+      return <PermissionError message={error} />
+    }
+
     return (
       <Box p={8}>
         <VStack align="center" justify="center" minH="60vh" gap={4}>
@@ -290,187 +231,50 @@ export function GameLiveSheet() {
     )
   }
 
-  const { crawler, pilots } = gameWithRelationships
-
-  const crawlerTypeData = crawler ? crawlerTypes?.get(crawler.id) : null
-  const crawlerTypeName = crawlerTypeData?.name || ''
-
-  const crawlerMaxSP = crawler?.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
-
-  // Separate active and inactive pilots
-  const activePilots = pilots.filter((p) => p.pilot.active)
-  const inactivePilots = pilots.filter((p) => !p.pilot.active)
-
-  // Get all mechs from pilots and separate active/inactive
-  const allMechs = pilots.map((p) => p.mech).filter((m) => m !== null)
-  const inactiveMechs = allMechs.filter((m) => !m.active)
+  const crawler = gameWithRelationships.crawler
 
   return (
-    <Box p={4} maxW="6xl" mx="auto">
-      {/* Back Button */}
-      <Button
-        onClick={() => navigate('/dashboard')}
-        variant="plain"
-        color="su.brick"
-        mb={4}
-        _hover={{ textDecoration: 'underline' }}
-      >
-        ← Back to Dashboard
-      </Button>
-
-      {/* Control Bar */}
+    <LiveSheetLayout>
       <RoundedBox
         bg="su.gameBlue"
-        title={isEditingGame ? undefined : gameWithRelationships.name}
         rightContent={
-          isMediator && !isEditingGame ? (
+          isEditable ? (
             <HStack gap={2}>
               <ActiveToggle
                 active={gameWithRelationships.active ?? false}
                 onChange={async (active) => {
                   if (!gameId) return
-                  try {
-                    await updateGame(gameId, { active })
-                    reloadGame()
-                  } catch (err) {
-                    console.error('Error updating game active status:', err)
-                  }
+                  await updateGameMutation.mutateAsync({
+                    id: gameId,
+                    updates: { active },
+                  })
+                  reloadGame()
                 }}
               />
-              <Button
-                onClick={() => setIsEditingGame(true)}
-                variant="plain"
-                color="su.white"
-                fontSize="sm"
-                _hover={{ textDecoration: 'underline' }}
-              >
-                Edit
-              </Button>
+              <PrivateToggle
+                isPrivate={gameWithRelationships.private ?? true}
+                onChange={async (isPrivate) => {
+                  if (!gameId) return
+                  await updateGameMutation.mutateAsync({
+                    id: gameId,
+                    updates: { private: isPrivate },
+                  })
+                  reloadGame()
+                }}
+              />
             </HStack>
           ) : undefined
         }
-        mb={4}
-      >
-        {isEditingGame ? (
-          <VStack gap={4} align="stretch" w="full" p={4}>
-            <Box>
-              <Box
-                as="label"
-                display="block"
-                fontSize="sm"
-                fontWeight="medium"
-                color="su.white"
-                mb={2}
-              >
-                Game Name
-              </Box>
-              <Input
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                borderColor="su.white"
-                color="su.white"
-                focusRingColor="su.white"
-              />
-            </Box>
-            <Box>
-              <Box
-                as="label"
-                display="block"
-                fontSize="sm"
-                fontWeight="medium"
-                color="su.white"
-                mb={2}
-              >
-                Description
-              </Box>
-              <Textarea
-                value={editedDescription}
-                onChange={(e) => setEditedDescription(e.target.value)}
-                rows={4}
-                borderColor="su.white"
-                color="su.white"
-                focusRingColor="su.white"
-              />
-            </Box>
-            {saveGameError && (
-              <Text color="red.300" fontSize="sm">
-                {saveGameError}
-              </Text>
-            )}
-            <Flex gap={2}>
-              <Button
-                onClick={handleSaveGame}
-                disabled={saveGameLoading}
-                bg="su.white"
-                color="su.gameBlue"
-                fontWeight="bold"
-                py={2}
-                px={6}
-                _hover={{ opacity: 0.9 }}
-                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-              >
-                {saveGameLoading ? 'Saving...' : 'Save'}
-              </Button>
-              <Button
-                onClick={handleCancelEdit}
-                disabled={saveGameLoading}
-                bg="su.brick"
-                color="su.white"
-                fontWeight="bold"
-                py={2}
-                px={6}
-                _hover={{ opacity: 0.9 }}
-                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-              >
-                Cancel
-              </Button>
-            </Flex>
-          </VStack>
-        ) : (
-          gameWithRelationships.description && (
-            <Text fontSize="md" color="su.white" whiteSpace="pre-wrap" p={4}>
-              {gameWithRelationships.description}
-            </Text>
-          )
-        )}
-      </RoundedBox>
-      {/* Main Content - Grid Layout with max 5 cells wide */}
-      <Grid
-        templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }}
-        gap={4}
-        maxW="100%"
-        gridAutoFlow="dense"
-      >
-        {/* Row 1: Crawler Container */}
-        <RoundedBox
-          bg="su.gameBlue"
-          title="Crawler"
-          gridColumn={{ base: '1 / -1', md: '1 / 4' }}
-          gridRow={{ base: 'auto', md: '1' }}
-        >
+        mb={0}
+      />
+
+      {/* Two-column layout: Main content on left, sidebar on right */}
+      <Flex gap={4} direction={{ base: 'column', lg: 'row' }} align="stretch">
+        {/* Left Column: Main Content */}
+        <VStack flex="1" gap={4} align="stretch">
+          {/* Crawler Container */}
           {crawler ? (
-            <VStack gap={2} align="stretch" w="full" p={4}>
-              <Button
-                onClick={() => navigate(`/dashboard/crawlers/${crawler.id}`)}
-                variant="plain"
-                color="su.white"
-                textAlign="left"
-                _hover={{ textDecoration: 'underline' }}
-                p={0}
-              >
-                <VStack align="stretch" gap={1} w="full">
-                  <Text fontSize="xl" fontWeight="bold" color="su.white">
-                    {crawler.name}
-                  </Text>
-                  <Text fontSize="sm" color="su.white" opacity={0.9}>
-                    {crawlerTypeName}
-                  </Text>
-                  <Text fontSize="sm" color="su.white" opacity={0.75}>
-                    SP: {Math.max(crawlerMaxSP - (crawler.current_damage ?? 0), 0)}/{crawlerMaxSP}
-                  </Text>
-                </VStack>
-              </Button>
-            </VStack>
+            <CrawlerSmallDisplay id={crawler.id} />
           ) : (
             <Flex align="center" justify="center" p={4}>
               <Button
@@ -487,69 +291,76 @@ export function GameLiveSheet() {
                 py={2}
                 px={4}
                 _hover={{ opacity: 0.9 }}
-                disabled={isCreatingCrawler}
+                disabled={!isEditable || isCreatingCrawler}
               >
                 {isCreatingCrawler ? 'Creating...' : '+ Create Crawler'}
               </Button>
             </Flex>
           )}
-        </RoundedBox>
 
-        {/* Row 1 Right Column: Members, Invites, and Resources Stack */}
-        <VStack
-          gridColumn={{ base: '1 / -1', md: '4 / 5' }}
-          gridRow={{ base: 'auto', md: '1' }}
-          gap={4}
-          align="stretch"
-        >
-          {/* Members */}
-          <RoundedBox bg="su.gameBlue" title="Members">
-            {gameWithRelationships.members.length === 0 ? (
-              <Text color="su.brick" p={4}>
-                No members in this game yet.
-              </Text>
-            ) : (
-              <VStack gap={2} align="stretch" w="full">
-                {gameWithRelationships.members.map((member) => (
-                  <Flex
-                    key={member.user_id}
-                    align="center"
-                    justify="space-between"
-                    p={2}
-                    bg="su.white"
-                    borderRadius="md"
-                  >
-                    <Box>
-                      <Text fontWeight="medium" color="su.black" fontSize="sm">
-                        {member.user_name ||
-                          member.user_email ||
-                          `User ${member.user_id.slice(0, 8)}`}
-                      </Text>
-                    </Box>
-                    <Box
-                      px={2}
-                      py={1}
-                      borderRadius="full"
-                      fontSize="xs"
-                      fontWeight="medium"
-                      bg={member.role === 'mediator' ? 'su.brick' : 'su.green'}
-                      color="su.white"
-                    >
-                      {member.role.toUpperCase()}
-                    </Box>
-                  </Flex>
-                ))}
+          {/* Pilot-Mech Grid */}
+          {activePilots.length > 0 && (
+            <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4} w="full">
+              {activePilots.map(({ pilot, mech }) => (
+                <PilotMechCell key={pilot.id} pilotId={pilot.id} mechId={mech?.id || null} />
+              ))}
+            </Grid>
+          )}
+
+          {/* Danger Zone (mediator only) */}
+          {isMediator && (
+            <RoundedBox bg="red.600" title="Danger Zone">
+              <VStack gap={2} align="stretch" p={4}>
+                {deleteError && (
+                  <Text color="red.200" fontSize="sm">
+                    {deleteError}
+                  </Text>
+                )}
+                <Button
+                  onClick={handleDeleteGame}
+                  disabled={!isEditable || deleteGameMutation.isPending}
+                  w="full"
+                  bg="su.white"
+                  color="red.600"
+                  fontWeight="bold"
+                  py={3}
+                  px={4}
+                  _hover={{ bg: 'red.100' }}
+                  _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+                >
+                  {deleteGameMutation.isPending ? 'Deleting...' : 'DELETE THIS GAME'}
+                </Button>
+                <Text fontSize="xs" color="su.white" textAlign="center">
+                  This will permanently delete this game and all associated data. This action cannot
+                  be undone.
+                </Text>
               </VStack>
-            )}
+            </RoundedBox>
+          )}
+        </VStack>
+
+        {/* Right Column: Sidebar */}
+        <VStack w={{ base: 'full', lg: '400px' }} gap={4} align="stretch" flexShrink={0}>
+          <RoundedBox bg="su.gameBlue" title="Members">
+            <VStack gap={2} align="stretch" w="full">
+              {gameWithRelationships.members.map((member) => (
+                <ValueDisplay
+                  key={member.user_id}
+                  label={member.role.toUpperCase()}
+                  value={
+                    member.user_name ?? member.user_email ?? `User ${member.user_id.slice(0, 8)}`
+                  }
+                />
+              ))}
+            </VStack>
           </RoundedBox>
 
-          {/* Invites (mediator only) */}
           {isMediator && (
             <RoundedBox
               bg="su.gameBlue"
               title="Invites"
               rightContent={
-                invites.length === 0 ? (
+                activeInvites.length === 0 ? (
                   <Button
                     onClick={createInvite}
                     bg="su.brick"
@@ -574,13 +385,13 @@ export function GameLiveSheet() {
                 <Text color="su.brick" p={4}>
                   Loading invites…
                 </Text>
-              ) : invites.length === 0 ? (
+              ) : activeInvites.length === 0 ? (
                 <Text color="su.brick" p={4}>
                   No invites yet.
                 </Text>
               ) : (
                 <VStack gap={2} align="stretch" p={4}>
-                  {invites.map((inv) => (
+                  {activeInvites.map((inv) => (
                     <Box key={inv.id} p={2} bg="su.white" borderRadius="md">
                       <Text fontSize="xs" color="su.brick">
                         Uses: {inv.uses}
@@ -606,15 +417,11 @@ export function GameLiveSheet() {
                         </Button>
                         <Button
                           onClick={async () => {
-                            try {
-                              setInviteError(null)
-                              await expireGameInvite(inv.id)
-                              setInvites((prev) => prev.filter((i) => i.id !== inv.id))
-                            } catch (err) {
-                              const msg =
-                                err instanceof Error ? err.message : 'Failed to expire invite'
-                              setInviteError(msg)
-                            }
+                            if (!gameId) return
+                            await expireInviteMutation.mutateAsync({
+                              inviteId: inv.id,
+                              gameId,
+                            })
                           }}
                           variant="plain"
                           color="su.brick"
@@ -715,197 +522,7 @@ export function GameLiveSheet() {
             )}
           </RoundedBox>
         </VStack>
-
-        {/* Row 3+: Active Pilot Containers (diagonal split: orange top-left for pilot, green bottom-right for active mech) */}
-        {activePilots.map(({ pilot, mech }) => {
-          const classData = pilotClassData?.classes.get(pilot.id)
-          const className = classData?.name || 'No Class'
-          const chassisData = mech ? mechChassisData?.get(mech.id) : null
-          const chassisName = chassisData?.name || null
-          const mechDisplayName = mech ? mech.pattern || chassisName || 'Unnamed Mech' : null
-
-          return (
-            <Box
-              key={pilot.id}
-              position="relative"
-              overflow="hidden"
-              borderRadius="md"
-              borderWidth="3px"
-              borderColor="su.black"
-              minH="150px"
-              gridColumn={{ base: '1 / -1', md: 'span 1' }}
-            >
-              {/* Diagonal split background */}
-              <Box
-                position="absolute"
-                top={0}
-                left={0}
-                right={0}
-                bottom={0}
-                bg="linear-gradient(to bottom right, su.orange 0%, su.orange 50%, su.green 50%, su.green 100%)"
-                clipPath="polygon(0 0, 100% 0, 100% 100%, 0 100%)"
-              />
-
-              {/* Content */}
-              <Flex direction="column" position="relative" zIndex={1} p={4} gap={2} h="full">
-                {/* Pilot info (top-left) */}
-                <Button
-                  onClick={() => navigate(`/dashboard/pilots/${pilot.id}`)}
-                  variant="plain"
-                  color="su.white"
-                  textAlign="left"
-                  p={0}
-                  _hover={{ textDecoration: 'underline' }}
-                >
-                  <VStack align="flex-start" gap={0}>
-                    <Text fontSize="lg" fontWeight="bold" color="su.white">
-                      {pilot.callsign}
-                    </Text>
-                    <Text fontSize="sm" color="su.white" opacity={0.9}>
-                      {className}
-                    </Text>
-                  </VStack>
-                </Button>
-
-                {/* Mech info (bottom-right) */}
-                {mechDisplayName && mech ? (
-                  <Button
-                    onClick={() => navigate(`/dashboard/mechs/${mech.id}`)}
-                    variant="plain"
-                    color="su.white"
-                    textAlign="right"
-                    p={0}
-                    ml="auto"
-                    mt="auto"
-                    _hover={{ textDecoration: 'underline' }}
-                  >
-                    <VStack align="flex-end" gap={0}>
-                      <Text fontSize="lg" fontWeight="bold" color="su.white">
-                        {mechDisplayName}
-                      </Text>
-                      {mech.pattern && chassisName && (
-                        <Text fontSize="sm" color="su.white" opacity={0.9}>
-                          {chassisName}
-                        </Text>
-                      )}
-                    </VStack>
-                  </Button>
-                ) : (
-                  <Text
-                    fontSize="sm"
-                    color="su.white"
-                    fontStyle="italic"
-                    ml="auto"
-                    mt="auto"
-                    opacity={0.8}
-                  >
-                    No mech assigned
-                  </Text>
-                )}
-              </Flex>
-            </Box>
-          )
-        })}
-
-        {/* Inactive Pilots Grid */}
-        {inactivePilots.length > 0 && (
-          <RoundedBox bg="su.gameBlue" title="Inactive Pilots" gridColumn="1 / -1">
-            <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={2} p={4}>
-              {inactivePilots.map(({ pilot }) => {
-                const classData = pilotClassData?.classes.get(pilot.id)
-                const className = classData?.name || 'No Class'
-
-                return (
-                  <Button
-                    key={pilot.id}
-                    onClick={() => navigate(`/dashboard/pilots/${pilot.id}`)}
-                    bg="su.white"
-                    p={3}
-                    borderRadius="md"
-                    textAlign="left"
-                    _hover={{ bg: 'su.lightBlue' }}
-                  >
-                    <VStack align="flex-start" gap={0}>
-                      <Text fontSize="md" fontWeight="bold" color="su.black">
-                        {pilot.callsign}
-                      </Text>
-                      <Text fontSize="sm" color="su.brick">
-                        {className}
-                      </Text>
-                    </VStack>
-                  </Button>
-                )
-              })}
-            </Grid>
-          </RoundedBox>
-        )}
-
-        {/* Inactive Mechs Grid (showing pilot names) */}
-        {inactiveMechs.length > 0 && (
-          <RoundedBox bg="su.gameBlue" title="Inactive Mechs" gridColumn="1 / -1">
-            <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={2} p={4}>
-              {inactiveMechs.map((mech) => {
-                const chassisData = mechChassisData?.get(mech.id)
-                const chassisName = chassisData?.name || 'No Chassis'
-                const pilotName =
-                  pilots.find((p) => p.mech?.id === mech.id)?.pilot.callsign || 'Unassigned'
-
-                return (
-                  <Button
-                    key={mech.id}
-                    onClick={() => navigate(`/dashboard/mechs/${mech.id}`)}
-                    bg="su.white"
-                    p={3}
-                    borderRadius="md"
-                    textAlign="left"
-                    _hover={{ bg: 'su.lightBlue' }}
-                  >
-                    <VStack align="flex-start" gap={0}>
-                      <Text fontSize="md" fontWeight="bold" color="su.black">
-                        {mech.pattern || chassisName}
-                      </Text>
-                      <Text fontSize="sm" color="su.brick">
-                        Pilot: {pilotName}
-                      </Text>
-                    </VStack>
-                  </Button>
-                )
-              })}
-            </Grid>
-          </RoundedBox>
-        )}
-
-        {/* Danger Zone (mediator only) */}
-        {isMediator && (
-          <RoundedBox bg="red.600" title="Danger Zone" gridColumn="1 / -1">
-            <VStack gap={2} align="stretch" p={4}>
-              {deleteError && (
-                <Text color="red.200" fontSize="sm">
-                  {deleteError}
-                </Text>
-              )}
-              <Button
-                onClick={handleDeleteGame}
-                disabled={deleteLoading}
-                w="full"
-                bg="su.white"
-                color="red.600"
-                fontWeight="bold"
-                py={3}
-                px={4}
-                _hover={{ bg: 'red.100' }}
-                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-              >
-                {deleteLoading ? 'Deleting...' : 'DELETE THIS GAME'}
-              </Button>
-              <Text fontSize="xs" color="su.white" textAlign="center">
-                This will permanently delete this game and all associated data. This action cannot
-                be undone.
-              </Text>
-            </VStack>
-          </RoundedBox>
-        )}
-      </Grid>
+      </Flex>
 
       {/* External Link Modal */}
       <ExternalLinkModal
@@ -913,6 +530,6 @@ export function GameLiveSheet() {
         onClose={() => setIsLinkModalOpen(false)}
         onAdd={handleCreateExternalLink}
       />
-    </Box>
+    </LiveSheetLayout>
   )
 }

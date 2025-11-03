@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { Box, Flex, Grid, Spinner, VStack, Text } from '@chakra-ui/react'
+import { Box, Flex, Spinner, VStack, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 
@@ -16,14 +16,14 @@ interface GridLayoutProps<T> {
   loading: boolean
   error: string | null
   items: T[]
-  renderItem: (item: T) => ReactNode
+  renderItem: (item: T, isInactive?: boolean) => ReactNode
   createButton: CreateButtonConfig
   onRetry: () => void
   emptyStateMessage?: string
   emptyStateIcon?: string
 }
 
-export function GridLayout<T>({
+export function GridLayout<T extends { active?: boolean }>({
   title,
   loading,
   error,
@@ -33,6 +33,9 @@ export function GridLayout<T>({
   onRetry,
   emptyStateMessage,
 }: GridLayoutProps<T>) {
+  // Separate active and inactive items
+  const activeItems = items.filter((item) => item.active !== false)
+  const inactiveItems = items.filter((item) => item.active === false)
   return (
     <Box p={8}>
       <Flex mb={8} align="center" justify="space-between" gap={4}>
@@ -42,6 +45,7 @@ export function GridLayout<T>({
           bg={createButton.bgColor}
           color={createButton.color}
           fontWeight="bold"
+          border="3px solid black"
           py={2}
           px={6}
           _hover={{ opacity: 0.9 }}
@@ -92,9 +96,27 @@ export function GridLayout<T>({
         </Flex>
       )}
       {!loading && !error && items.length > 0 && (
-        <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
-          {items.map(renderItem)}
-        </Grid>
+        <VStack gap={8} alignItems="stretch" w="full">
+          {/* Active Section */}
+          {activeItems.length > 0 && (
+            <VStack gap={4} alignItems="stretch">
+              <Heading level="h2">Active</Heading>
+              <VStack gap={4} alignItems="stretch">
+                {activeItems.map((item) => renderItem(item, false))}
+              </VStack>
+            </VStack>
+          )}
+
+          {/* Inactive Section */}
+          {inactiveItems.length > 0 && (
+            <VStack gap={4} alignItems="stretch">
+              <Heading level="h2">Inactive</Heading>
+              <VStack gap={4} alignItems="stretch">
+                {inactiveItems.map((item) => renderItem(item, true))}
+              </VStack>
+            </VStack>
+          )}
+        </VStack>
       )}
     </Box>
   )

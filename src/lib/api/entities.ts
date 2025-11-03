@@ -1,5 +1,12 @@
 import { supabase } from '../supabase'
 import type { ValidTable } from '../../types/common'
+import type { Tables } from '../../types/database-generated.types'
+import {
+  assertCanViewGame,
+  assertCanViewCrawler,
+  assertCanViewPilot,
+  assertCanViewMech,
+} from '../permissions'
 
 /**
  * Helper to safely cast database results to expected type.
@@ -12,6 +19,7 @@ function castDatabaseResult<T>(data: unknown): T {
 
 /**
  * Fetch a single entity by ID from any table
+ * Checks permissions before returning
  *
  * @template T - The expected row type (should match Tables<tableName>)
  */
@@ -24,7 +32,21 @@ export async function fetchEntity<T>(table: ValidTable, id: string): Promise<T> 
 
   if (error) throw error
   if (!data) throw new Error(`${table} not found`)
-  return castDatabaseResult<T>(data)
+
+  const entity = castDatabaseResult<T>(data)
+
+  // Check permissions based on table type
+  if (table === 'games') {
+    await assertCanViewGame(entity as unknown as Tables<'games'>)
+  } else if (table === 'crawlers') {
+    await assertCanViewCrawler(entity as unknown as Tables<'crawlers'>)
+  } else if (table === 'pilots') {
+    await assertCanViewPilot(entity as unknown as Tables<'pilots'>)
+  } else if (table === 'mechs') {
+    await assertCanViewMech(entity as unknown as Tables<'mechs'>)
+  }
+
+  return entity
 }
 
 /**
