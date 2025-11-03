@@ -24,24 +24,10 @@ CREATE POLICY "Game members can view game crawlers"
   );
 
 -- ============================================================================
--- POLICY: Game members can view crawlers owned by other game members
+-- NOTE: Removed "Game members can view other members' crawlers" policy
 -- ============================================================================
--- Users can view crawlers owned by users who are in the same game(s)
--- This allows seeing crawlers from fellow game members even if not assigned to a game yet
-CREATE POLICY "Game members can view other members' crawlers"
-  ON crawlers FOR SELECT
-  TO authenticated
-  USING (
-    user_id IN (
-      SELECT DISTINCT gm.user_id
-      FROM game_members gm
-      WHERE gm.game_id IN (
-        SELECT game_id
-        FROM game_members
-        WHERE user_id = auth.uid()
-      )
-    )
-  );
+-- Users can ONLY see other users' crawlers if they are assigned to a shared game
+-- This prevents seeing crawlers owned by game members unless explicitly assigned to the game
 
 -- ============================================================================
 -- VERIFICATION QUERIES (commented out - run manually to verify)
@@ -60,18 +46,7 @@ CREATE POLICY "Game members can view other members' crawlers"
 --   -- Own crawlers
 --   c.user_id = auth.uid()
 --   OR
---   -- Game crawlers
+--   -- Crawlers assigned to games the user is a member of
 --   (c.game_id IS NOT NULL AND is_game_member(c.game_id, auth.uid()))
---   OR
---   -- Other game members' crawlers
---   c.user_id IN (
---     SELECT DISTINCT gm.user_id
---     FROM game_members gm
---     WHERE gm.game_id IN (
---       SELECT game_id
---       FROM game_members
---       WHERE user_id = auth.uid()
---     )
---   )
 -- );
 
