@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
+import type { BoxProps } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { RoundedBox } from '../shared/RoundedBox'
 import { ValueDisplay } from '../shared/ValueDisplay'
 
-interface UserEntitySmallDisplayProps {
+interface UserEntitySmallDisplayProps extends BoxProps {
   onClick: () => void
   /** Background color for the entire card */
   bgColor: string
@@ -19,10 +20,15 @@ interface UserEntitySmallDisplayProps {
   detailValue?: string | number
   /** Whether this entity is inactive (applies greyed out styling) */
   isInactive?: boolean
+  /** Optional label displayed as pseudo-header above the box */
+  label?: string
+  reverse?: boolean
 }
 
 export function UserEntitySmallDisplay({
   onClick,
+  reverse = false,
+  label,
   bgColor,
   leftHeader,
   detailLabel,
@@ -31,7 +37,7 @@ export function UserEntitySmallDisplay({
   isInactive = false,
 }: UserEntitySmallDisplayProps) {
   // Apply greyed out background for inactive entities
-  const effectiveBgColor = isInactive ? 'gray.400' : bgColor
+  const effectiveBgColor: string = isInactive ? 'gray.400' : bgColor
 
   const formattedRightHeader =
     typeof rightHeader === 'string' ? (
@@ -44,13 +50,16 @@ export function UserEntitySmallDisplay({
 
   return (
     <RoundedBox
+      reverse={reverse}
       bg={effectiveBgColor}
+      label={label}
       title={leftHeader}
       rightContent={formattedRightHeader}
       subTitleContent={detailLabel && <ValueDisplay label={detailLabel} value={detailValue} />}
       _hover={{ borderColor: 'su.brick' }}
       cursor="pointer"
       onClick={onClick}
+      w="full"
       opacity={isInactive ? 0.7 : 1}
     />
   )

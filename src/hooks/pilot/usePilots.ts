@@ -33,6 +33,7 @@ export const pilotsKeys = {
 
 const defaultPilot: Pilot = {
   id: LOCAL_ID,
+  image_url: null,
   callsign: 'Unknown Name',
   max_hp: 10,
   max_ap: 5,
@@ -125,41 +126,12 @@ export function useCreatePilot() {
     mutationFn: async (data: TablesInsert<'pilots'>) => {
       const pilotId = data.id
 
-      // Cache-only mode: Add to cache without API call
       if (pilotId && isLocalId(pilotId)) {
-        const localPilot: Pilot = {
-          id: pilotId,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          user_id: 'local',
-          callsign: data.callsign || '',
-          background: data.background || null,
-          appearance: data.appearance || null,
-          current_ap: data.current_ap || null,
-          current_damage: data.current_damage || null,
-          current_tp: data.current_tp || null,
-          notes: data.notes || null,
-          active: data.active ?? false,
-          private: data.private ?? true,
-          abilities: data.abilities || null,
-          background_used: data.background_used || null,
-          crawler_id: data.crawler_id || null,
-          equipment: data.equipment || null,
-          keepsake: data.keepsake || null,
-          keepsake_used: data.keepsake_used || null,
-          max_ap: data.max_ap || null,
-          max_hp: data.max_hp || null,
-          motto: data.motto || null,
-          motto_used: data.motto_used || null,
-        }
+        queryClient.setQueryData(pilotsKeys.byId(pilotId), defaultPilot)
 
-        // Set in cache
-        queryClient.setQueryData(pilotsKeys.byId(pilotId), localPilot)
-
-        return localPilot
+        return defaultPilot
       }
 
-      // API-backed mode: Create in Supabase
       return createEntity<Pilot>('pilots', data as Pilot)
     },
     onSuccess: (newPilot) => {

@@ -1,19 +1,18 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router'
-import { Box, Flex, Grid, VStack, HStack } from '@chakra-ui/react'
+import { Box, Flex, VStack, HStack, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
 
 import { ExternalLinkModal } from './ExternalLinkModal'
 import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
-import { getStructurePointsForTechLevel } from '../../utils/referenceDataHelpers'
 import { ActiveToggle } from '../shared/ActiveToggle'
 import { PrivateToggle } from '../shared/PrivateToggle'
 import { PermissionError } from '../shared/PermissionError'
 import { RoundedBox } from '../shared/RoundedBox'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
-import { useCrawlerTypes, usePilotClasses, useMechChassis } from '../../hooks/suentity'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isOwner } from '../../lib/permissions'
 import {
@@ -28,8 +27,50 @@ import {
 } from '../../hooks/game'
 import type { GameInvite } from '../../lib/api/games'
 import { ValueDisplay } from '../shared/ValueDisplay'
+import { CrawlerSmallDisplay } from './CrawlerSmallDisplay'
+import { PilotSmallDisplay } from './PilotSmallDisplay'
+import { MechSmallDisplay } from './MechSmallDisplay'
+import { useHydratedMech } from '../../hooks/mech'
+import { supabase } from '../../lib/supabase'
 
 type GameInviteRow = GameInvite
+
+// Helper component to render pilot-mech pair with label
+function PilotMechCell({ pilotId, mechId }: { pilotId: string; mechId: string | null }) {
+  const { mech, selectedChassis } = useHydratedMech(mechId || '')
+  const { data: pilot } = useQuery({
+    queryKey: ['pilot-callsign', pilotId],
+    queryFn: async () => {
+      const { data } = await supabase.from('pilots').select('callsign').eq('id', pilotId).single()
+      return data
+    },
+    enabled: !!pilotId,
+  })
+
+  const mechName = mech?.pattern || selectedChassis?.ref.name
+  const label = `${pilot?.callsign || ''}${mechName ? ` & ${mechName}` : ''}`
+
+  return (
+    <VStack gap={0} align="stretch">
+      <PilotSmallDisplay label={label} id={pilotId} />
+      {mechId ? (
+        <MechSmallDisplay reverse id={mechId} />
+      ) : (
+        <Box bg="su.lightBlue" p={4} borderRadius="md" borderWidth="2px" borderColor="black">
+          <Text
+            fontSize="sm"
+            color="su.brick"
+            fontWeight="bold"
+            textAlign="center"
+            textTransform="uppercase"
+          >
+            No Mech
+          </Text>
+        </Box>
+      )}
+    </VStack>
+  )
+}
 
 export function GameLiveSheet() {
   const { gameId } = useParams<{ gameId: string }>()
@@ -57,26 +98,11 @@ export function GameLiveSheet() {
     ? isOwner(gameWithRelationships.created_by, userId) || isMediator
     : false
 
-  // Fetch singleton entities for efficient display
-  const crawlerIds = useMemo(
-    () => (gameWithRelationships?.crawler ? [gameWithRelationships.crawler.id] : []),
+  // Get active pilots (pilots with active=true)
+  const activePilots = useMemo(
+    () => gameWithRelationships?.pilots.filter((p) => p.pilot.active) || [],
     [gameWithRelationships]
   )
-  const pilotIds = useMemo(
-    () => gameWithRelationships?.pilots.map((p) => p.pilot.id) || [],
-    [gameWithRelationships]
-  )
-  const mechIds = useMemo(
-    () =>
-      (gameWithRelationships?.pilots
-        .map((p) => p.mech?.id)
-        .filter((id) => id !== null) as string[]) || [],
-    [gameWithRelationships]
-  )
-
-  const { data: crawlerTypes } = useCrawlerTypes(crawlerIds)
-  const { data: pilotClassData } = usePilotClasses(pilotIds)
-  const { data: mechChassisData } = useMechChassis(mechIds)
 
   // TanStack Query hooks for game data
   const updateGameMutation = useUpdateGame()
@@ -205,20 +231,7 @@ export function GameLiveSheet() {
     )
   }
 
-  const { crawler, pilots } = gameWithRelationships
-
-  const crawlerTypeData = crawler ? crawlerTypes?.get(crawler.id) : null
-  const crawlerTypeName = crawlerTypeData?.name || ''
-
-  const crawlerMaxSP = crawler?.tech_level ? getStructurePointsForTechLevel(crawler.tech_level) : 20
-
-  // Separate active and inactive pilots
-  const activePilots = pilots.filter((p) => p.pilot.active)
-  const inactivePilots = pilots.filter((p) => !p.pilot.active)
-
-  // Get all mechs from pilots and separate active/inactive
-  const allMechs = pilots.map((p) => p.mech).filter((m) => m !== null)
-  const inactiveMechs = allMechs.filter((m) => !m.active)
+  const crawler = gameWithRelationships.crawler
 
   return (
     <LiveSheetLayout>
@@ -255,43 +268,13 @@ export function GameLiveSheet() {
         mb={0}
       />
 
-      {/* Main Content - Grid Layout with max 5 cells wide */}
-      <Grid
-        templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }}
-        gap={4}
-        maxW="100%"
-        gridAutoFlow="dense"
-      >
-        {/* Row 1: Crawler Container */}
-        <RoundedBox
-          bg="su.gameBlue"
-          title="Crawler"
-          gridColumn={{ base: '1 / -1', md: '1 / 4' }}
-          gridRow={{ base: 'auto', md: '1' }}
-        >
+      {/* Two-column layout: Main content on left, sidebar on right */}
+      <Flex gap={4} direction={{ base: 'column', lg: 'row' }} align="stretch">
+        {/* Left Column: Main Content */}
+        <VStack flex="1" gap={4} align="stretch">
+          {/* Crawler Container */}
           {crawler ? (
-            <VStack gap={2} align="stretch" w="full" p={4}>
-              <Button
-                onClick={() => navigate(`/dashboard/crawlers/${crawler.id}`)}
-                variant="plain"
-                color="su.white"
-                textAlign="left"
-                _hover={{ textDecoration: 'underline' }}
-                p={0}
-              >
-                <VStack align="stretch" gap={1} w="full">
-                  <Text fontSize="xl" fontWeight="bold" color="su.white">
-                    {crawler.name}
-                  </Text>
-                  <Text fontSize="sm" color="su.white" opacity={0.9}>
-                    {crawlerTypeName}
-                  </Text>
-                  <Text fontSize="sm" color="su.white" opacity={0.75}>
-                    SP: {Math.max(crawlerMaxSP - (crawler.current_damage ?? 0), 0)}/{crawlerMaxSP}
-                  </Text>
-                </VStack>
-              </Button>
-            </VStack>
+            <CrawlerSmallDisplay id={crawler.id} />
           ) : (
             <Flex align="center" justify="center" p={4}>
               <Button
@@ -314,14 +297,50 @@ export function GameLiveSheet() {
               </Button>
             </Flex>
           )}
-        </RoundedBox>
 
-        <VStack
-          gridColumn={{ base: '1 / -1', md: '4 / 5' }}
-          gridRow={{ base: 'auto', md: '1' }}
-          gap={4}
-          align="stretch"
-        >
+          {/* Pilot-Mech Grid */}
+          {activePilots.length > 0 && (
+            <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4} w="full">
+              {activePilots.map(({ pilot, mech }) => (
+                <PilotMechCell key={pilot.id} pilotId={pilot.id} mechId={mech?.id || null} />
+              ))}
+            </Grid>
+          )}
+
+          {/* Danger Zone (mediator only) */}
+          {isMediator && (
+            <RoundedBox bg="red.600" title="Danger Zone">
+              <VStack gap={2} align="stretch" p={4}>
+                {deleteError && (
+                  <Text color="red.200" fontSize="sm">
+                    {deleteError}
+                  </Text>
+                )}
+                <Button
+                  onClick={handleDeleteGame}
+                  disabled={!isEditable || deleteGameMutation.isPending}
+                  w="full"
+                  bg="su.white"
+                  color="red.600"
+                  fontWeight="bold"
+                  py={3}
+                  px={4}
+                  _hover={{ bg: 'red.100' }}
+                  _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+                >
+                  {deleteGameMutation.isPending ? 'Deleting...' : 'DELETE THIS GAME'}
+                </Button>
+                <Text fontSize="xs" color="su.white" textAlign="center">
+                  This will permanently delete this game and all associated data. This action cannot
+                  be undone.
+                </Text>
+              </VStack>
+            </RoundedBox>
+          )}
+        </VStack>
+
+        {/* Right Column: Sidebar */}
+        <VStack w={{ base: 'full', lg: '400px' }} gap={4} align="stretch" flexShrink={0}>
           <RoundedBox bg="su.gameBlue" title="Members">
             <VStack gap={2} align="stretch" w="full">
               {gameWithRelationships.members.map((member) => (
@@ -503,197 +522,7 @@ export function GameLiveSheet() {
             )}
           </RoundedBox>
         </VStack>
-
-        {/* Row 3+: Active Pilot Containers (diagonal split: orange top-left for pilot, green bottom-right for active mech) */}
-        {activePilots.map(({ pilot, mech }) => {
-          const classData = pilotClassData?.classes.get(pilot.id)
-          const className = classData?.name || 'No Class'
-          const chassisData = mech ? mechChassisData?.get(mech.id) : null
-          const chassisName = chassisData?.name || null
-          const mechDisplayName = mech ? mech.pattern || chassisName || 'Unnamed Mech' : null
-
-          return (
-            <Box
-              key={pilot.id}
-              position="relative"
-              overflow="hidden"
-              borderRadius="md"
-              borderWidth="3px"
-              borderColor="su.black"
-              minH="150px"
-              gridColumn={{ base: '1 / -1', md: 'span 1' }}
-            >
-              {/* Diagonal split background */}
-              <Box
-                position="absolute"
-                top={0}
-                left={0}
-                right={0}
-                bottom={0}
-                bg="linear-gradient(to bottom right, su.orange 0%, su.orange 50%, su.green 50%, su.green 100%)"
-                clipPath="polygon(0 0, 100% 0, 100% 100%, 0 100%)"
-              />
-
-              {/* Content */}
-              <Flex direction="column" position="relative" zIndex={1} p={4} gap={2} h="full">
-                {/* Pilot info (top-left) */}
-                <Button
-                  onClick={() => navigate(`/dashboard/pilots/${pilot.id}`)}
-                  variant="plain"
-                  color="su.white"
-                  textAlign="left"
-                  p={0}
-                  _hover={{ textDecoration: 'underline' }}
-                >
-                  <VStack align="flex-start" gap={0}>
-                    <Text fontSize="lg" fontWeight="bold" color="su.white">
-                      {pilot.callsign}
-                    </Text>
-                    <Text fontSize="sm" color="su.white" opacity={0.9}>
-                      {className}
-                    </Text>
-                  </VStack>
-                </Button>
-
-                {/* Mech info (bottom-right) */}
-                {mechDisplayName && mech ? (
-                  <Button
-                    onClick={() => navigate(`/dashboard/mechs/${mech.id}`)}
-                    variant="plain"
-                    color="su.white"
-                    textAlign="right"
-                    p={0}
-                    ml="auto"
-                    mt="auto"
-                    _hover={{ textDecoration: 'underline' }}
-                  >
-                    <VStack align="flex-end" gap={0}>
-                      <Text fontSize="lg" fontWeight="bold" color="su.white">
-                        {mechDisplayName}
-                      </Text>
-                      {mech.pattern && chassisName && (
-                        <Text fontSize="sm" color="su.white" opacity={0.9}>
-                          {chassisName}
-                        </Text>
-                      )}
-                    </VStack>
-                  </Button>
-                ) : (
-                  <Text
-                    fontSize="sm"
-                    color="su.white"
-                    fontStyle="italic"
-                    ml="auto"
-                    mt="auto"
-                    opacity={0.8}
-                  >
-                    No mech assigned
-                  </Text>
-                )}
-              </Flex>
-            </Box>
-          )
-        })}
-
-        {/* Inactive Pilots Grid */}
-        {inactivePilots.length > 0 && (
-          <RoundedBox bg="su.gameBlue" title="Inactive Pilots" gridColumn="1 / -1">
-            <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={2} p={4}>
-              {inactivePilots.map(({ pilot }) => {
-                const classData = pilotClassData?.classes.get(pilot.id)
-                const className = classData?.name || 'No Class'
-
-                return (
-                  <Button
-                    key={pilot.id}
-                    onClick={() => navigate(`/dashboard/pilots/${pilot.id}`)}
-                    bg="su.white"
-                    p={3}
-                    borderRadius="md"
-                    textAlign="left"
-                    _hover={{ bg: 'su.lightBlue' }}
-                  >
-                    <VStack align="flex-start" gap={0}>
-                      <Text fontSize="md" fontWeight="bold" color="su.black">
-                        {pilot.callsign}
-                      </Text>
-                      <Text fontSize="sm" color="su.brick">
-                        {className}
-                      </Text>
-                    </VStack>
-                  </Button>
-                )
-              })}
-            </Grid>
-          </RoundedBox>
-        )}
-
-        {/* Inactive Mechs Grid (showing pilot names) */}
-        {inactiveMechs.length > 0 && (
-          <RoundedBox bg="su.gameBlue" title="Inactive Mechs" gridColumn="1 / -1">
-            <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={2} p={4}>
-              {inactiveMechs.map((mech) => {
-                const chassisData = mechChassisData?.get(mech.id)
-                const chassisName = chassisData?.name || 'No Chassis'
-                const pilotName =
-                  pilots.find((p) => p.mech?.id === mech.id)?.pilot.callsign || 'Unassigned'
-
-                return (
-                  <Button
-                    key={mech.id}
-                    onClick={() => navigate(`/dashboard/mechs/${mech.id}`)}
-                    bg="su.white"
-                    p={3}
-                    borderRadius="md"
-                    textAlign="left"
-                    _hover={{ bg: 'su.lightBlue' }}
-                  >
-                    <VStack align="flex-start" gap={0}>
-                      <Text fontSize="md" fontWeight="bold" color="su.black">
-                        {mech.pattern || chassisName}
-                      </Text>
-                      <Text fontSize="sm" color="su.brick">
-                        Pilot: {pilotName}
-                      </Text>
-                    </VStack>
-                  </Button>
-                )
-              })}
-            </Grid>
-          </RoundedBox>
-        )}
-
-        {/* Danger Zone (mediator only) */}
-        {isMediator && (
-          <RoundedBox bg="red.600" title="Danger Zone" gridColumn="1 / -1">
-            <VStack gap={2} align="stretch" p={4}>
-              {deleteError && (
-                <Text color="red.200" fontSize="sm">
-                  {deleteError}
-                </Text>
-              )}
-              <Button
-                onClick={handleDeleteGame}
-                disabled={!isEditable || deleteGameMutation.isPending}
-                w="full"
-                bg="su.white"
-                color="red.600"
-                fontWeight="bold"
-                py={3}
-                px={4}
-                _hover={{ bg: 'red.100' }}
-                _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-              >
-                {deleteGameMutation.isPending ? 'Deleting...' : 'DELETE THIS GAME'}
-              </Button>
-              <Text fontSize="xs" color="su.white" textAlign="center">
-                This will permanently delete this game and all associated data. This action cannot
-                be undone.
-              </Text>
-            </VStack>
-          </RoundedBox>
-        )}
-      </Grid>
+      </Flex>
 
       {/* External Link Modal */}
       <ExternalLinkModal

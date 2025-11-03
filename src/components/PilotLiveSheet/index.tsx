@@ -15,6 +15,7 @@ import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
 import { useUpdatePilot, useHydratedPilot, useDeletePilot } from '../../hooks/pilot'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { useImageUpload } from '../../hooks/useImageUpload'
 import { isOwner } from '../../lib/permissions'
 
 interface PilotLiveSheetProps {
@@ -38,6 +39,14 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const isEditable = isLocal || (pilot ? isOwner(pilot.user_id, userId) : false)
 
   const selectedClassRef = selectedClass?.ref as SURefCoreClass | undefined
+
+  // Image upload hook - only enabled for non-local sheets
+  const { handleUpload, handleRemove, isUploading, isRemoving } = useImageUpload({
+    entityType: 'pilots',
+    entityId: id,
+    getCurrentImageUrl: () => pilot?.image_url ?? null,
+    queryKey: ['pilots', id],
+  })
 
   if (!pilot && !loading) {
     return (
@@ -108,7 +117,12 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
         <LiveSheetAssetDisplay
           bg="su.orange"
           url={selectedClassRef?.asset_url}
+          userImageUrl={pilot?.image_url ?? undefined}
           alt={selectedClassRef?.name}
+          onUpload={!isLocal && isEditable ? handleUpload : undefined}
+          onRemove={!isLocal && isEditable ? handleRemove : undefined}
+          isUploading={isUploading}
+          isRemoving={isRemoving}
         />
 
         <PilotInfoInputs disabled={!selectedClass || !isEditable} id={id} />

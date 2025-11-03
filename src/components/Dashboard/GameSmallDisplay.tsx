@@ -6,7 +6,6 @@ interface GameSmallDisplayProps {
   name: string
   crawlerName?: string
   mediatorName?: string
-  active?: boolean
   onClick: () => void
   isLoading?: boolean
   isInactive?: boolean
@@ -16,7 +15,6 @@ export function GameSmallDisplay({
   name,
   crawlerName,
   mediatorName,
-  active = true,
   onClick,
   isLoading = false,
   isInactive,
@@ -26,6 +24,7 @@ export function GameSmallDisplay({
       <UserEntitySmallDisplay
         onClick={onClick}
         bgColor="su.gameBlue"
+        w="full"
         leftHeader={name}
         rightHeader="LOADING..."
       />
@@ -71,7 +70,7 @@ export function GameSmallDisplay({
       detailValue={mediatorName || 'Unknown'}
       bgColor="su.gameBlue"
       leftHeader={name}
-      rightHeader={active ? 'ACTIVE' : 'INACTIVE'}
+      rightHeader={crawlerName || 'New Game'}
       detailContent={crawlerName || mediatorName ? detailContent : undefined}
       isInactive={isInactive}
     />

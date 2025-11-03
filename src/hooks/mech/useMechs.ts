@@ -48,6 +48,7 @@ const defaultMech: Mech = {
   notes: null,
   active: false,
   private: true,
+  image_url: null,
 }
 
 /**
@@ -123,29 +124,10 @@ export function useCreateMech() {
 
       // Cache-only mode: Add to cache without API call
       if (mechId && isLocalId(mechId)) {
-        const localMech: Mech = {
-          id: mechId,
-          systems: [],
-          modules: [],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          user_id: 'local',
-          pilot_id: data.pilot_id || null,
-          pattern: data.pattern || null,
-          quirk: data.quirk || null,
-          appearance: data.appearance || null,
-          current_damage: data.current_damage || 0,
-          current_ep: data.current_ep || 0,
-          current_heat: data.current_heat || 0,
-          notes: data.notes || null,
-          active: data.active ?? false,
-          private: data.private ?? true,
-        }
-
         // Set in cache
-        queryClient.setQueryData(mechsKeys.byId(mechId), localMech)
+        queryClient.setQueryData(mechsKeys.byId(mechId), defaultMech)
 
-        return localMech
+        return defaultMech
       }
 
       // API-backed mode: Create in Supabase

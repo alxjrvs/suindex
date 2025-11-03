@@ -37,7 +37,6 @@ export function GamesGrid() {
           name={game.name}
           crawlerName={game.crawler?.name}
           mediatorName={game.mediator?.user_name || game.mediator?.user_id}
-          active={game.active}
           onClick={() => handleGameClick(game.id)}
           isLoading={loading}
           isInactive={isInactive}

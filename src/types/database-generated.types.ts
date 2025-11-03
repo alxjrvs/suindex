@@ -279,6 +279,7 @@ export type Database = {
           current_ep: number | null
           current_heat: number | null
           id: string
+          image_url: string | null
           modules: string[] | null
           notes: string | null
           pattern: string | null
@@ -297,6 +298,7 @@ export type Database = {
           current_ep?: number | null
           current_heat?: number | null
           id?: string
+          image_url?: string | null
           modules?: string[] | null
           notes?: string | null
           pattern?: string | null
@@ -315,6 +317,7 @@ export type Database = {
           current_ep?: number | null
           current_heat?: number | null
           id?: string
+          image_url?: string | null
           modules?: string[] | null
           notes?: string | null
           pattern?: string | null
@@ -350,6 +353,7 @@ export type Database = {
           current_tp: number | null
           equipment: string[] | null
           id: string
+          image_url: string | null
           keepsake: string | null
           keepsake_used: boolean | null
           max_ap: number | null
@@ -375,6 +379,7 @@ export type Database = {
           current_tp?: number | null
           equipment?: string[] | null
           id?: string
+          image_url?: string | null
           keepsake?: string | null
           keepsake_used?: boolean | null
           max_ap?: number | null
@@ -400,6 +405,7 @@ export type Database = {
           current_tp?: number | null
           equipment?: string[] | null
           id?: string
+          image_url?: string | null
           keepsake?: string | null
           keepsake_used?: boolean | null
           max_ap?: number | null

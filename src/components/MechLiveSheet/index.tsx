@@ -14,6 +14,7 @@ import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { MECH_CONTROL_BAR_CONFIG } from '../shared/controlBarConfigs'
 import { useUpdateMech, useHydratedMech, useDeleteMech } from '../../hooks/mech'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { useImageUpload } from '../../hooks/useImageUpload'
 import { isOwner } from '../../lib/permissions'
 import { MainMechDisplay } from './MainMechDisplay'
 import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
@@ -31,6 +32,14 @@ export default function MechLiveSheet({ id }: { id: string }) {
 
   // Determine if the sheet is editable (user owns the mech or it's local)
   const isEditable = isLocal || (mech ? isOwner(mech.user_id, userId) : false)
+
+  // Image upload hook - only enabled for non-local sheets
+  const { handleUpload, handleRemove, isUploading, isRemoving } = useImageUpload({
+    entityType: 'mechs',
+    entityId: id,
+    getCurrentImageUrl: () => mech?.image_url ?? null,
+    queryKey: ['mechs', id],
+  })
 
   if (!mech && !loading) {
     return (
@@ -97,7 +106,16 @@ export default function MechLiveSheet({ id }: { id: string }) {
         />
       )}
       <Flex gap={2}>
-        <LiveSheetAssetDisplay bg="su.green" url={chassisRef?.asset_url} alt={chassisRef?.name} />
+        <LiveSheetAssetDisplay
+          bg="su.green"
+          url={chassisRef?.asset_url}
+          userImageUrl={mech?.image_url ?? undefined}
+          alt={chassisRef?.name}
+          onUpload={!isLocal && isEditable ? handleUpload : undefined}
+          onRemove={!isLocal && isEditable ? handleRemove : undefined}
+          isUploading={isUploading}
+          isRemoving={isRemoving}
+        />
         <MainMechDisplay id={id} />
         <MechResourceSteppers id={id} disabled={!selectedChassis || !isEditable} />
       </Flex>
