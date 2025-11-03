@@ -18,7 +18,7 @@ export function ValueDisplay({
   const valueVariant = inverse ? 'pseudoheader' : 'pseudoheaderInverse'
 
   return (
-    <Box display="inline-flex" gap={0}>
+    <Box display="inline-flex" gap={0} cursor="default">
       <Text variant={mainVariant} as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
         {label}
       </Text>
