@@ -990,7 +990,7 @@
 
     "safer-buffer": ["safer-buffer@2.1.2", "", {}, "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="],
 
-    "salvageunion-reference": ["salvageunion-reference@1.54.2", "", {}, "sha512-johGCslhBoSN6ecxfD1V7AG82gvbthE9VtpM2Fbp5znR7rnkPfy8iQhBh27OwprrbNWmTRDswx9Y18uAxjCCng=="],
+    "salvageunion-reference": ["salvageunion-reference@1.54.4", "", {}, "sha512-t28Vzd/rtyYz7xT6bqeiwOv8FYty5tuOgtXI3HZbD/eXhBJuaYFKsfqrB4QPvp9BsHe/lfQwrrkVMs4SoO0WPA=="],
 
     "scheduler": ["scheduler@0.27.0", "", {}, "sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q=="],
 
