@@ -142,6 +142,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           <Tabs.Trigger value="abilities">Abilities</Tabs.Trigger>
           <Tabs.Trigger value="bays">Bays</Tabs.Trigger>
           <Tabs.Trigger value="storage">Storage Bay</Tabs.Trigger>
+          <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
           <Tabs.Trigger value="pilots">Pilots & Mechs</Tabs.Trigger>
         </Tabs.List>
 
@@ -165,28 +166,25 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
         <Tabs.Content value="storage">
           <VStack gap="0" alignItems="stretch" mt={6}>
-            {/* Storage Bay and Notes Row */}
-            <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-              {/* Storage Bay */}
-              {storageBay && (
-                <BayCard bay={storageBay} disabled={!selectedCrawlerType || !isEditable} />
-              )}
-
-              {/* Notes */}
-              <Box pb="5">
-                <Notes
-                  notes={crawler?.notes ?? ''}
-                  onChange={(value) => updateCrawler.mutate({ id, updates: { notes: value } })}
-                  backgroundColor="bg.builder.crawler"
-                  placeholder="Add notes about your crawler..."
-                  disabled={!selectedCrawlerType || !isEditable}
-                  minH="300px"
-                />
-              </Box>
-            </Grid>
+            {/* Storage Bay */}
+            {storageBay && (
+              <BayCard bay={storageBay} disabled={!selectedCrawlerType || !isEditable} />
+            )}
 
             <StorageCargoBay id={id} disabled={!selectedCrawlerType || !isEditable} />
           </VStack>
+        </Tabs.Content>
+
+        <Tabs.Content value="notes">
+          <Box mt={6}>
+            <Notes
+              notes={crawler?.notes ?? ''}
+              onChange={(value) => updateCrawler.mutate({ id, updates: { notes: value } })}
+              backgroundColor="bg.builder.crawler"
+              placeholder="Add notes about your crawler..."
+              disabled={!selectedCrawlerType || !isEditable}
+            />
+          </Box>
         </Tabs.Content>
 
         <Tabs.Content value="pilots">
