@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Flex, VStack } from '@chakra-ui/react'
+import { Flex, Grid } from '@chakra-ui/react'
 import { SalvageUnionReference, type SURefEquipment } from 'salvageunion-reference'
 import { StatDisplay } from '../StatDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
@@ -8,6 +8,7 @@ import { EntityDisplay } from '../entity/EntityDisplay'
 import { EquipmentSelector } from './EquipmentSelector'
 import { useManagePilotInventory } from '../../hooks/pilot/useManagePilotInventory'
 import { useHydratedPilot } from '../../hooks/pilot'
+import type { HydratedEntity } from '../../types/hydrated'
 
 interface PilotInventoryProps {
   id: string | undefined
@@ -27,12 +28,47 @@ export function PilotInventory({ id, disabled = false }: PilotInventoryProps) {
     return equipment
       .map((equipment, index) => {
         const item = allEquipment.find((e) => e.id === equipment.ref.id)
-        return item ? { id: equipment.id, equipment: item, index } : null
+        return item ? { id: equipment.id, equipment: item, index, entity: equipment } : null
       })
       .filter(
-        (item): item is { id: string; equipment: SURefEquipment; index: number } => item !== null
+        (
+          item
+        ): item is {
+          id: string
+          equipment: SURefEquipment
+          index: number
+          entity: HydratedEntity
+        } => item !== null
       )
   }, [equipment, allEquipment])
+
+  const removeButtonConfig = (item: { id: string; equipment: SURefEquipment; index: number }) => ({
+    bg: 'su.brick',
+    color: 'su.white',
+    fontWeight: 'bold',
+    _hover: { bg: 'su.black' },
+    onClick: () => {
+      const confirmed = window.confirm(`Are you sure you want to remove "${item.equipment.name}"?`)
+      if (confirmed) {
+        handleRemoveEquipment(item.id)
+      }
+    },
+    children: `Remove ${item.equipment.name}`,
+  })
+
+  const disabledButtonConfig = (item: {
+    id: string
+    equipment: SURefEquipment
+    index: number
+    entity: HydratedEntity
+  }) => ({
+    bg: 'gray.200',
+    color: 'gray.500',
+    disabled: true,
+    fontWeight: 'bold',
+    children: item.entity.parentEntity?.ref.name,
+  })
+  console.log(equipment)
 
   return (
     <>
@@ -56,32 +92,19 @@ export function PilotInventory({ id, disabled = false }: PilotInventoryProps) {
           </Flex>
         }
       >
-        <VStack gap={3} w="full">
+        <Grid templateColumns="repeat(2, 1fr)" gap={3} w="full">
           {equipmentItems.map((item) => (
             <EntityDisplay
               key={`${item.id}-${item.index}`}
-              buttonConfig={{
-                bg: 'su.brick',
-                color: 'su.white',
-                fontWeight: 'bold',
-                _hover: { bg: 'su.black' },
-                onClick: (e) => {
-                  e.stopPropagation()
-                  const confirmed = window.confirm(
-                    `Are you sure you want to remove "${item.equipment.name}"?`
-                  )
-                  if (confirmed) {
-                    handleRemoveEquipment(item.id)
-                  }
-                },
-                children: `Remove ${item.equipment.name}`,
-              }}
+              buttonConfig={
+                item.entity.parentEntity ? disabledButtonConfig(item) : removeButtonConfig(item)
+              }
               schemaName="equipment"
               compact
               data={item.equipment}
             />
           ))}
-        </VStack>
+        </Grid>
       </RoundedBox>
       <EquipmentSelector
         isOpen={isEquipmentSelectorOpen}

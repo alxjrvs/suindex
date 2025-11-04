@@ -18,7 +18,6 @@ export interface Stat {
   label: string
   bottomLabel?: string
   value: number | string
-  compactHeader: boolean
 }
 interface StatListProps {
   schemaName: SURefMetaSchemaName
@@ -42,7 +41,6 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
 
     if (structurePoints !== undefined) {
       stats.push({
-        compactHeader: true,
         label: compact ? 'Strct' : 'Structure',
         bottomLabel: 'Points',
         value: structurePoints,
@@ -50,7 +48,6 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
     }
     if (energyPoints !== undefined) {
       stats.push({
-        compactHeader: true,
         label: compact ? 'En' : 'Energy',
         bottomLabel: 'Points',
         value: energyPoints,
@@ -58,7 +55,6 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
     }
     if (heatCapacity !== undefined) {
       stats.push({
-        compactHeader: true,
         label: 'Heat',
         bottomLabel: 'Capacity',
         value: heatCapacity,
@@ -66,7 +62,6 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
     }
     if (systemSlots !== undefined) {
       stats.push({
-        compactHeader: false,
         label: 'Sys',
         bottomLabel: 'Slots',
         value: systemSlots,
@@ -74,7 +69,6 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
     }
     if (moduleSlots !== undefined) {
       stats.push({
-        compactHeader: false,
         label: 'Mod',
         bottomLabel: 'Slots',
         value: moduleSlots,
@@ -82,7 +76,6 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
     }
     if (cargoCapacity !== undefined) {
       stats.push({
-        compactHeader: false,
         label: 'Cargo',
         bottomLabel: 'Capacity',
         value: cargoCapacity,
@@ -90,7 +83,6 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
     }
     if (salvageValue !== undefined) {
       stats.push({
-        compactHeader: false,
         label: compact ? 'Salv' : 'Salvage',
         bottomLabel: 'Value',
         value: salvageValue,
@@ -103,7 +95,6 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
     const salvageValue = getSalvageValue(data)
     if (salvageValue !== undefined) {
       stats.push({
-        compactHeader: false,
         label: compact ? 'Salv' : 'Salvage',
         bottomLabel: 'Value',
         value: salvageValue,
@@ -115,13 +106,13 @@ function extractHeaderStats(data: SURefMetaEntity, compact: boolean): Stat[] {
   const hitPoints = getHitPoints(data)
   if (hitPoints !== undefined) {
     const label = 'damageType' in data && data.damageType ? String(data.damageType) : 'HP'
-    stats.push({ compactHeader: true, label, value: hitPoints })
+    stats.push({ label, value: hitPoints })
   }
 
   // Structure points - use extractor
   const structurePoints = getStructurePoints(data)
   if (structurePoints !== undefined) {
-    stats.push({ compactHeader: true, label: 'SP', value: structurePoints })
+    stats.push({ label: 'SP', value: structurePoints })
   }
 
   return stats
@@ -134,7 +125,7 @@ export function StatList({ header, data, compact = false, schemaName }: StatList
   return (
     <Flex gap={2} justifyContent="flex-end">
       {stats.map((stat, index) => {
-        const visible = compact ? (header ? stat.compactHeader : !stat.compactHeader) : true
+        const visible = compact
 
         if (!visible) return null
 

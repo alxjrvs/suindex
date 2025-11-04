@@ -27,6 +27,7 @@ export type HydratedEntity = Tables<'suentities'> & {
    * Populated from player_choices table
    */
   choices: Tables<'player_choices'>[]
+  parentEntity?: HydratedEntity
 }
 
 /**

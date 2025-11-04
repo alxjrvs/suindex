@@ -212,11 +212,76 @@ export function useCreateEntity() {
       }
     },
     // Refetch on success (API-backed only)
-    onSuccess: (newEntity) => {
+    onSuccess: async (newEntity) => {
+      console.log('New entity created:', newEntity)
       const parentType = newEntity.pilot_id ? 'pilot' : newEntity.mech_id ? 'mech' : 'crawler'
       const parentId = newEntity.pilot_id || newEntity.mech_id || newEntity.crawler_id
 
       if (!parentId) return
+
+      // Check if the created entity's reference has a grants array
+      const ref = newEntity.ref
+      if (ref && 'grants' in ref && Array.isArray(ref.grants) && ref.grants.length > 0) {
+        // Create additional entities for each granted item
+        for (const grant of ref.grants) {
+          if (grant && typeof grant === 'object' && 'name' in grant && 'schema' in grant) {
+            const grantSchema = grant.schema as SURefSchemaName
+            const grantName = grant.name as string
+
+            // Find the granted item in the reference data
+            const grantedItem = SalvageUnionReference.findIn(
+              grantSchema,
+              (item) => item.name === grantName
+            )
+
+            if (grantedItem) {
+              // Create the granted entity with the same parent as the original entity
+              const grantedEntityData: TablesInsert<'suentities'> = {
+                pilot_id: newEntity.pilot_id,
+                mech_id: newEntity.mech_id,
+                crawler_id: newEntity.crawler_id,
+                parent_entity_id: newEntity.id,
+                schema_name: grantSchema,
+                schema_ref_id: grantedItem.id,
+                metadata: null,
+              }
+
+              try {
+                // Create the granted entity
+                if (isLocalId(parentId)) {
+                  // Cache-only mode
+                  const localGrantedEntity: HydratedEntity = {
+                    id: generateLocalId(),
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                    pilot_id: grantedEntityData.pilot_id || null,
+                    mech_id: grantedEntityData.mech_id || null,
+                    crawler_id: grantedEntityData.crawler_id || null,
+                    parent_entity_id: grantedEntityData.parent_entity_id || null,
+                    schema_name: grantedEntityData.schema_name,
+                    schema_ref_id: grantedEntityData.schema_ref_id,
+                    metadata: grantedEntityData.metadata || null,
+                    ref: grantedItem,
+                    choices: [],
+                    parentEntity: newEntity, // Associate parent entity in cache-only mode
+                  }
+
+                  const queryKey = [...entitiesKeys.forParent(parentType, parentId)]
+                  addToCache(queryClient, queryKey, localGrantedEntity)
+                } else {
+                  // API-backed mode
+                  await createNormalizedEntity(grantedEntityData)
+                  console.log('Granted entity created:', grantName, 'for parent:', newEntity.id)
+                }
+              } catch (error) {
+                console.error(`Failed to create granted entity ${grantName}:`, error)
+              }
+            } else {
+              console.warn(`Granted item not found: ${grantName} in schema ${grantSchema}`)
+            }
+          }
+        }
+      }
 
       // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
       if (isLocalId(parentId)) return
@@ -387,7 +452,7 @@ export function useDeleteEntity() {
       parentType: string
       parentId: string
     }) => {
-      // Cache-only mode: Remove from cache
+      // Cache-only mode: Remove from cache (including child entities)
       if (isLocalId(parentId)) {
         const queryKey = entitiesKeys.forParent(
           parentType as 'pilot' | 'mech' | 'crawler',
@@ -396,14 +461,31 @@ export function useDeleteEntity() {
         const currentEntities = queryClient.getQueryData<HydratedEntity[]>(queryKey)
 
         if (currentEntities) {
-          const updatedEntities = currentEntities.filter((entity) => entity.id !== id)
+          // Helper function to recursively collect entity IDs to delete
+          const collectEntityIdsToDelete = (
+            entityId: string,
+            entities: HydratedEntity[]
+          ): string[] => {
+            const idsToDelete = [entityId]
+            // Find all children of this entity
+            const children = entities.filter((e) => e.parent_entity_id === entityId)
+            for (const child of children) {
+              idsToDelete.push(...collectEntityIdsToDelete(child.id, entities))
+            }
+            return idsToDelete
+          }
+
+          const idsToDelete = collectEntityIdsToDelete(id, currentEntities)
+          const updatedEntities = currentEntities.filter(
+            (entity) => !idsToDelete.includes(entity.id)
+          )
           queryClient.setQueryData(queryKey, updatedEntities)
         }
 
         return
       }
 
-      // API-backed mode: Delete from Supabase
+      // API-backed mode: Delete from Supabase (cascade delete handled in API)
       await deleteNormalizedEntity(id)
     },
     onSuccess: (_, variables) => {

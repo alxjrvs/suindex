@@ -5,7 +5,7 @@ import type { EntityDisplaySubProps } from './types'
 import { EntitySubheader } from './EntitySubheader'
 import { EntityChassisPattern } from './EntityChassisPattern'
 
-export function EntityChassisPatterns({ data }: EntityDisplaySubProps) {
+export function EntityChassisPatterns({ data, compact }: EntityDisplaySubProps) {
   const [searchParams, setSearchParams] = useSearchParams()
 
   if (!('patterns' in data) || !data.patterns || data.patterns.length === 0) return null
@@ -25,7 +25,7 @@ export function EntityChassisPatterns({ data }: EntityDisplaySubProps) {
   }
 
   return (
-    <VStack gap={4} alignItems="stretch">
+    <VStack p={compact ? 1 : 2} gap={4} alignItems="stretch">
       <EntitySubheader compact={false} label="Patterns" />
 
       <Tabs.Root value={selectedPattern} onValueChange={(e) => handlePatternChange(e.value)}>

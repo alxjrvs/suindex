@@ -3,16 +3,16 @@ import { SheetDisplay } from '../../shared/SheetDisplay'
 import type { EntityDisplaySubProps } from './types'
 import { EntitySubheader } from './EntitySubheader'
 
-export function EntityTechLevelEffects({ data, compact }: EntityDisplaySubProps) {
-  const showTLE =
-    'techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0
+export function EntityBonusPerTechLevel({ data, compact }: EntityDisplaySubProps) {
+  const showBPTL =
+    'bonusPerTechLevel' in data && data.bonusPerTechLevel && data.bonusPerTechLevel.length > 0
 
-  if (!showTLE) return null
+  if (!showBPTL) return null
 
   return (
-    <VStack p={compact ? 1 : 2} gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
+    <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
       <EntitySubheader compact={compact} label="Abilities" />
-      {data.techLevelEffects.map((tle, index) => (
+      {data.bonusPerTechLevel.map((tle, index) => (
         <SheetDisplay
           compact={compact}
           key={index}

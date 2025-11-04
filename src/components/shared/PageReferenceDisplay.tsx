@@ -1,6 +1,7 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import type { EntityDisplaySubProps } from '../entity/EntityDisplay/types'
 import { getSchemaDisplayName } from '../entity/entityDisplayHelpers'
+import { Text } from '../base/Text'
 
 export function PageReferenceDisplay({ compact, data, schemaName }: EntityDisplaySubProps) {
   if (!('page' in data) || !data.page) return null
@@ -10,7 +11,7 @@ export function PageReferenceDisplay({ compact, data, schemaName }: EntityDispla
   const fontWeightSemibold = compact ? 'semibold' : 'semibold'
   return (
     <Flex
-      pt={3}
+      p={compact ? 1 : 2}
       borderTopWidth="2px"
       borderTopColor="su.black"
       color="su.black"
@@ -19,7 +20,6 @@ export function PageReferenceDisplay({ compact, data, schemaName }: EntityDispla
       w="full"
       gap={4}
     >
-      {/* Left side - Schema name */}
       {displayName && (
         <Text
           fontWeight={fontWeightBold}
@@ -35,23 +35,18 @@ export function PageReferenceDisplay({ compact, data, schemaName }: EntityDispla
         </Text>
       )}
 
-      {/* Right side - Source and page */}
-      <Box ml="auto" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" flex="0 1 auto">
-        {data.source && (
-          <Text
-            as="span"
-            mr={4}
-            fontSize="xs"
-            fontWeight={fontWeightSemibold}
-            textTransform="uppercase"
-          >
-            {data.source}
-          </Text>
-        )}
-        <Text as="span" fontSize="xs" fontWeight={fontWeightBold}>
-          Page {data.page}
-        </Text>
-      </Box>
+      <Text
+        as="span"
+        mr={4}
+        fontSize="xs"
+        fontWeight={fontWeightSemibold}
+        textTransform="uppercase"
+      >
+        {data.source}
+      </Text>
+      <Text as="span" fontSize="xs" fontWeight={fontWeightBold}>
+        Page {data.page}
+      </Text>
     </Flex>
   )
 }

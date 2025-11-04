@@ -140,14 +140,33 @@ export async function updateNormalizedEntity(
 }
 
 /**
- * Delete an entity
+ * Delete an entity and all its child entities (cascade)
  *
  * Note: Cascade delete will automatically remove associated player_choices.
+ * This function also deletes all entities that have this entity as their parent.
  *
  * @param id - Entity ID
  * @throws Error if database delete fails
  */
 export async function deleteNormalizedEntity(id: string): Promise<void> {
+  // First, find all child entities (entities with this entity as parent)
+  const { data: childEntities, error: fetchError } = await supabase
+    .from('suentities')
+    .select('id')
+    .eq('parent_entity_id', id)
+
+  if (fetchError) {
+    throw new Error(`Failed to fetch child entities: ${fetchError.message}`)
+  }
+
+  // Recursively delete all child entities
+  if (childEntities && childEntities.length > 0) {
+    for (const child of childEntities) {
+      await deleteNormalizedEntity(child.id)
+    }
+  }
+
+  // Delete the entity itself
   const { error } = await supabase.from('suentities').delete().eq('id', id)
 
   if (error) {

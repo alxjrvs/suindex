@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import { Box, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Tabs, Text, VStack } from '@chakra-ui/react'
 import type { SURefCoreClass, SURefAdvancedClass } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -130,6 +130,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           </Tabs.Trigger>
           <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
           <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
+          <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
           <Tabs.Trigger value="crawler">Crawler</Tabs.Trigger>
         </Tabs.List>
 
@@ -150,9 +151,13 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
         </Tabs.Content>
 
         <Tabs.Content value="inventory">
-          <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
+          <Box mt={6}>
             <PilotInventory id={id} disabled={!selectedClass || !isEditable} />
+          </Box>
+        </Tabs.Content>
 
+        <Tabs.Content value="notes">
+          <Box mt={6}>
             <Notes
               notes={pilot?.notes ?? ''}
               onChange={(value) => updatePilot.mutate({ id, updates: { notes: value } })}
@@ -160,7 +165,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
               placeholder="Add notes about your pilot..."
               disabled={!selectedClass || !isEditable}
             />
-          </Grid>
+          </Box>
         </Tabs.Content>
 
         <Tabs.Content value="crawler">

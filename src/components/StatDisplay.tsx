@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 interface StatDisplayProps {
   label: string
-  value: number | string
+  value: number | string | undefined
   outOfMax?: number // When provided, displays "value/outOfMax"
   bottomLabel?: string // Optional label positioned below the value
   labelId?: string
@@ -57,6 +57,7 @@ export function StatDisplay({
       clearTimeout(endTimer)
     }
   }, [flash])
+  if (value === undefined) return null
 
   const commonProps = {
     w: compact ? 7 : 16,
@@ -127,7 +128,7 @@ export function StatDisplay({
             containerType: 'inline-size',
           }}
         >
-          {outOfMax !== undefined ? `${value}/${outOfMax}` : value}
+          {outOfMax !== undefined ? `${value}/${outOfMax}` : value === 0 ? '-' : value}
         </Text>
       </WrapperComponent>
       <Text

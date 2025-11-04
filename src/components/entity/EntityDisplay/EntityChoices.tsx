@@ -33,7 +33,7 @@ export function EntityChoices({
   if (!isSchemaPageMode) {
     // Live sheet mode - show WIP for now
     return (
-      <Box p={compact ? 2 : 3} bg="su.lightBlue" borderRadius="md">
+      <Box p={compact ? 1 : 2} bg="su.lightBlue" borderRadius="md">
         <Text fontSize={compact ? 'sm' : 'md'} fontWeight="bold" color="su.black">
           WIP - Live sheet choices will be displayed here
         </Text>

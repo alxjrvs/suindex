@@ -12,10 +12,12 @@ export function ClassAbilitiesList({
   id,
   selectedClass,
   selectedAdvancedClass,
+  compact = false,
 }: {
   id?: string | undefined
   selectedClass: SURefCoreClass | undefined
   selectedAdvancedClass: SURefAdvancedClass | undefined
+  compact?: boolean
 }) {
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
 
@@ -77,7 +79,7 @@ export function ClassAbilitiesList({
     (selectedAdvancedClass?.legendaryTree && allTreeAbilities[selectedAdvancedClass.legendaryTree])
 
   return (
-    <Box w="full">
+    <Box p={compact ? 1 : 2} w="full">
       {/* Core Trees - 3 column grid */}
       <Grid
         gridTemplateColumns="repeat(3, 1fr)"

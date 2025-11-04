@@ -18,12 +18,24 @@ export function ValueDisplay({
   const valueVariant = inverse ? 'pseudoheader' : 'pseudoheaderInverse'
 
   return (
-    <Flex gap={compact ? 0.5 : 1} cursor="default">
-      <Text variant={mainVariant} as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
+    <Flex gap={0} cursor="default" whiteSpace="nowrap">
+      <Text
+        variant={mainVariant}
+        textTransform="uppercase"
+        as="span"
+        fontWeight={semiFontWeight}
+        fontSize={fontSize}
+      >
         {label}
       </Text>
       {value !== undefined && (
-        <Text variant={valueVariant} as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
+        <Text
+          textTransform="uppercase"
+          variant={valueVariant}
+          as="span"
+          fontWeight={semiFontWeight}
+          fontSize={fontSize}
+        >
           {value}
         </Text>
       )}

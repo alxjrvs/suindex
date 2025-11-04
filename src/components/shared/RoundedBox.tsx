@@ -39,6 +39,7 @@ type RoundedBoxProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'dire
   compact?: boolean
   /** Whether to reverse the header layout (title on right, rightContent on left) */
   reverse?: boolean
+  bottomHeaderBorder?: boolean
 }
 
 export function RoundedBox({
@@ -59,6 +60,7 @@ export function RoundedBox({
   bodyBg,
   bodyPadding,
   onHeaderClick,
+  bottomHeaderBorder = false,
   headerTestId,
   reverse = false,
   ...flexProps
@@ -120,6 +122,8 @@ export function RoundedBox({
           bg={actualHeaderBg}
           opacity={headerOpacity}
           h={compact ? '70px' : undefined}
+          borderBottomWidth="2px"
+          borderColor={bottomHeaderBorder ? 'su.black' : actualHeaderBg}
           overflow="visible"
         >
           <Flex

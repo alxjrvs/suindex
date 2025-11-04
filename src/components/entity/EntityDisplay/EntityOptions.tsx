@@ -6,7 +6,7 @@ import { EntitySubheader } from './EntitySubheader'
 export function EntityOptions({ data, compact }: EntityDisplaySubProps) {
   if (!('options' in data) || !data.options || data.options.length === 0) return null
   return (
-    <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
+    <VStack p={compact ? 1 : 2} gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
       <EntitySubheader compact={compact} label="Options" />
       <VStack gap={compact ? 1 : 2} alignItems="stretch">
         {data.options.map((option, optIndex) => {

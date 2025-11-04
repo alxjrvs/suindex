@@ -1,4 +1,4 @@
-import { Box, Flex, VStack, Button, type ButtonProps } from '@chakra-ui/react'
+import { Box, VStack, Button, type ButtonProps, Flex } from '@chakra-ui/react'
 import { type ReactNode, useState, memo } from 'react'
 import type {
   SURefAdvancedClass,
@@ -133,6 +133,7 @@ export const EntityDisplay = memo(function EntityDisplay({
       w="full"
       headerBg={backgroundColor}
       headerOpacity={headerOpacity}
+      bottomHeaderBorder
       absoluteElements={
         <EntityAbsoluteContent
           schemaName={schemaName}
@@ -162,72 +163,82 @@ export const EntityDisplay = memo(function EntityDisplay({
       headerTestId="frame-header-container"
     >
       {(!collapsible || isExpanded) && (
-        <Flex bg={backgroundColor} w="full" borderBottomRadius="md" overflow="hidden">
-          <VStack
-            flex="1"
-            bg={schemaName === 'actions' ? 'su.blue' : 'su.lightBlue'}
-            borderBottomRightRadius="md"
-            opacity={contentOpacity}
-            p={compact ? 1 : 3}
-            gap={compact ? 3 : 6}
-            alignItems="stretch"
-            minW="0"
-          >
-            <EntityTopMatter
-              hideActions={hideActions}
-              data={data}
-              schemaName={schemaName}
-              compact={compact}
-            />
+        <VStack
+          flex="1"
+          bg={schemaName === 'actions' ? 'su.blue' : 'su.lightBlue'}
+          borderBottomRightRadius="md"
+          borderBottomLeftRadius="md"
+          opacity={contentOpacity}
+          p={0}
+          gap={compact ? 3 : 6}
+          alignItems="stretch"
+          minW="0"
+        >
+          <EntityTopMatter
+            hideActions={hideActions}
+            data={data}
+            schemaName={schemaName}
+            compact={compact}
+          />
 
-            {'effect' in data && data.effect && (
+          {'effect' in data && data.effect && (
+            <Flex p={compact ? 1 : 2}>
               <SheetDisplay compact={compact} value={data.effect} />
-            )}
+            </Flex>
+          )}
 
-            <EntityRequirementDisplay data={data} compact={compact} schemaName={schemaName} />
-            {displayExtraSection && (
-              <>
-                <EntityChassisPatterns data={data} schemaName={schemaName} compact={compact} />
-                <EntityOptions data={data} compact={compact} schemaName={schemaName} />
-                {'table' in data && data.table && (
-                  <Box borderRadius="md" position="relative" zIndex={10}>
-                    <RollTable
-                      disabled={disabled || dimmed}
-                      table={data.table}
-                      showCommand
-                      compact
-                      tableName={'name' in data ? String(data.name) : undefined}
-                    />
-                  </Box>
-                )}
-                <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
-                {'damagedEffect' in data && data.damagedEffect && compact && (
+          <EntityRequirementDisplay data={data} compact={compact} schemaName={schemaName} />
+          {displayExtraSection && (
+            <>
+              <EntityChassisPatterns data={data} schemaName={schemaName} compact={compact} />
+              <EntityOptions data={data} compact={compact} schemaName={schemaName} />
+              {'table' in data && data.table && (
+                <Box p={compact ? 1 : 2} borderRadius="md" position="relative" zIndex={10}>
+                  <RollTable
+                    disabled={disabled || dimmed}
+                    table={data.table}
+                    showCommand
+                    compact
+                    tableName={'name' in data ? String(data.name) : undefined}
+                  />
+                </Box>
+              )}
+              <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
+              {'damagedEffect' in data && data.damagedEffect && compact && (
+                <Flex p={compact ? 1 : 2}>
                   <SheetDisplay
                     labelBgColor="su.brick"
                     borderColor="su.brick"
                     label="Damaged Effect"
                     value={data.damagedEffect}
                   />
-                )}
-                {schemaName.includes('classes') && (
-                  <ClassAbilitiesList
-                    selectedClass={
-                      schemaName === 'classes.core' ? (data as SURefCoreClass) : undefined
-                    }
-                    selectedAdvancedClass={
-                      schemaName === 'classes.advanced' ? (data as SURefAdvancedClass) : undefined
-                    }
-                  />
-                )}
-                <EntityChoices
-                  data={data}
-                  schemaName={schemaName}
+                </Flex>
+              )}
+              {schemaName.includes('classes') && (
+                <ClassAbilitiesList
                   compact={compact}
-                  userChoices={userChoices}
-                  onChoiceSelection={onChoiceSelection}
+                  selectedClass={
+                    schemaName === 'classes.core' ? (data as SURefCoreClass) : undefined
+                  }
+                  selectedAdvancedClass={
+                    schemaName === 'classes.advanced' ? (data as SURefAdvancedClass) : undefined
+                  }
                 />
-                {children && <Box mt="3">{children}</Box>}
-                {buttonConfig && (
+              )}
+              <EntityChoices
+                data={data}
+                schemaName={schemaName}
+                compact={compact}
+                userChoices={userChoices}
+                onChoiceSelection={onChoiceSelection}
+              />
+              {children && (
+                <Box mt="3" p={compact ? 1 : 2}>
+                  {children}
+                </Box>
+              )}
+              {buttonConfig && (
+                <Flex p={compact ? 1 : 2}>
                   <Button
                     w="full"
                     mt={3}
@@ -239,14 +250,14 @@ export const EntityDisplay = memo(function EntityDisplay({
                   >
                     {buttonConfig.children}
                   </Button>
-                )}
-              </>
-            )}
-            <Box mt="auto">
-              <PageReferenceDisplay compact={compact} data={data} schemaName={schemaName} />
-            </Box>
-          </VStack>
-        </Flex>
+                </Flex>
+              )}
+            </>
+          )}
+          {!hideActions && (
+            <PageReferenceDisplay compact={compact} data={data} schemaName={schemaName} />
+          )}
+        </VStack>
       )}
     </RoundedBox>
   )

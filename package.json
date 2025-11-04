@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc -b --noEmit",
-    "build": "tsc -b && vite build",
+    "build": "bun run gen:all && tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write .",
     "sanity": "bun run lint -- --fix && bun run format && bun run typecheck",
@@ -34,7 +34,7 @@
     "react-hook-form": "^7.66.0",
     "react-router-dom": "^7.9.5",
     "react-virtuoso": "^4.14.1",
-    "salvageunion-reference": "1.54.13",
+    "salvageunion-reference": "1.54.14",
     "type-fest": "^5.2.0"
   },
   "devDependencies": {

@@ -15,12 +15,14 @@ import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
  *
  * @param entity - Entity row from suentities table
  * @param choices - Associated player choices (optional, defaults to empty array)
+ * @param parentEntity - Parent entity if this entity has a parent_entity_id (optional)
  * @returns Hydrated entity with ref data
  * @throws Error if reference data not found
  */
 export function hydrateEntity(
   entity: Tables<'suentities'>,
-  choices: Tables<'player_choices'>[] = []
+  choices: Tables<'player_choices'>[] = [],
+  parentEntity?: HydratedEntity
 ): HydratedEntity {
   const ref = SalvageUnionReference.get(entity.schema_name as SURefSchemaName, entity.schema_ref_id)
 
@@ -32,6 +34,7 @@ export function hydrateEntity(
     ...entity,
     ref,
     choices,
+    parentEntity,
   }
 }
 
@@ -39,6 +42,8 @@ export function hydrateEntity(
  * Hydrate multiple entities with reference data (batch operation)
  *
  * Uses SalvageUnionReference.getMany() for efficient batch lookups.
+ * Handles parent entity relationships by hydrating parent entities first,
+ * then associating them with child entities.
  *
  * @param entities - Entity rows from suentities table
  * @param choicesByEntityId - Map of entity ID to player choices
@@ -67,8 +72,9 @@ export function hydrateEntities(
     }
   })
 
-  // Hydrate all entities
-  return entities.map((entity) => {
+  // First pass: Hydrate all entities without parent relationships
+  const hydratedById = new Map<string, HydratedEntity>()
+  entities.forEach((entity) => {
     const key = `${entity.schema_name}:${entity.schema_ref_id}`
     const ref = refsByKey.get(key)
 
@@ -78,12 +84,35 @@ export function hydrateEntities(
 
     const choices = choicesByEntityId.get(entity.id) || []
 
-    return {
+    hydratedById.set(entity.id, {
       ...entity,
       ref,
       choices,
+      parentEntity: undefined,
+    })
+  })
+
+  // Second pass: Associate parent entities
+  entities.forEach((entity) => {
+    if (entity.parent_entity_id) {
+      const hydrated = hydratedById.get(entity.id)
+      const parent = hydratedById.get(entity.parent_entity_id)
+
+      if (hydrated && parent) {
+        hydrated.parentEntity = parent
+        console.log(
+          `Associated parent entity: ${parent.ref.name} (${parent.id}) -> ${hydrated.ref.name} (${hydrated.id})`
+        )
+      } else {
+        console.warn(
+          `Parent entity not found for ${entity.schema_name}/${entity.schema_ref_id} (parent_entity_id: ${entity.parent_entity_id})`
+        )
+      }
     }
   })
+
+  // Return in original order
+  return entities.map((entity) => hydratedById.get(entity.id)!)
 }
 
 /**
