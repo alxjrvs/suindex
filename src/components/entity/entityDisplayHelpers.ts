@@ -38,7 +38,7 @@ export function extractName(data: SURefMetaEntity, schemaName: SURefMetaSchemaNa
   if (schemaName === 'ability-tree-requirements') {
     return data.name + ' Tree Requirements'
   }
-  return data.name
+  return data.name ?? ''
 }
 
 /**

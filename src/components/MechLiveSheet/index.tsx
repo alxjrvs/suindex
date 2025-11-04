@@ -193,6 +193,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
           <Tabs.Trigger value="abilities">Abilities</Tabs.Trigger>
           <Tabs.Trigger value="systems-modules">Systems & Modules</Tabs.Trigger>
           <Tabs.Trigger value="storage">Storage</Tabs.Trigger>
+          <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
           <Tabs.Trigger value="pilot">Pilot</Tabs.Trigger>
         </Tabs.List>
 
@@ -215,9 +216,13 @@ export default function MechLiveSheet({ id }: { id: string }) {
         </Tabs.Content>
 
         <Tabs.Content value="storage">
-          <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
+          <Box mt={6}>
             <CargoList id={id} disabled={!selectedChassis || !isEditable} />
+          </Box>
+        </Tabs.Content>
 
+        <Tabs.Content value="notes">
+          <Box mt={6}>
             <Notes
               notes={mech?.notes ?? ''}
               onChange={(value) => updateMech.mutate({ id, updates: { notes: value } })}
@@ -225,7 +230,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
               backgroundColor="bg.builder.mech"
               placeholder="Add notes about your mech..."
             />
-          </Grid>
+          </Box>
         </Tabs.Content>
 
         <Tabs.Content value="pilot">
