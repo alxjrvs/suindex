@@ -6,7 +6,7 @@ import type {
   SURefMetaEntity,
   SURefMetaSchemaName,
 } from 'salvageunion-reference'
-import { getTechLevel, hasActions, getPageReference } from 'salvageunion-reference'
+import { getTechLevel } from 'salvageunion-reference'
 import { techLevelColors } from '../../../theme'
 import { PageReferenceDisplay } from '../../shared/PageReferenceDisplay'
 import { RollTable } from '../../shared/RollTable'
@@ -104,27 +104,6 @@ export const EntityDisplay = memo(function EntityDisplay({
   const headerOpacity = trained ? 1 : 0.5
   const contentOpacity = disabled || dimmed ? 0.5 : 1
 
-  // Check if there's any content to render
-  const hasContent =
-    hasActions(data) ||
-    ('notes' in data && !!data.notes) ||
-    ('description' in data && !!data.description && schemaName !== 'abilities') ||
-    ('effect' in data && !!data.effect) ||
-    ('options' in data && data.options && Array.isArray(data.options) && data.options.length > 0) ||
-    ('table' in data && !!data.table) ||
-    ('techLevelEffects' in data &&
-      data.techLevelEffects &&
-      Array.isArray(data.techLevelEffects) &&
-      data.techLevelEffects.length > 0) ||
-    ('patterns' in data &&
-      data.patterns &&
-      Array.isArray(data.patterns) &&
-      data.patterns.length > 0) ||
-    ('choices' in data && data.choices && data.choices.length > 0) ||
-    !!children ||
-    !!buttonConfig ||
-    getPageReference(data) !== undefined
-
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
 
   const handleToggle = () => {
@@ -182,7 +161,7 @@ export const EntityDisplay = memo(function EntityDisplay({
       onHeaderClick={handleHeaderClick}
       headerTestId="frame-header-container"
     >
-      {(!collapsible || isExpanded) && hasContent && (
+      {(!collapsible || isExpanded) && (
         <Flex bg={backgroundColor} w="full" borderBottomRadius="md" overflow="hidden">
           <VStack
             flex="1"

@@ -129,31 +129,13 @@ export function RoundedBox({
             gap={2}
             h="full"
             cursor={headerCursor}
+            justifyContent={'space-between'}
             onClick={onHeaderClick}
             alignItems="center"
             data-testid={headerTestId}
           >
-            {/* Left section: leftContent + title/subtitle (65% base, can grow) */}
-            <Flex
-              direction="row"
-              gap={compact ? 0.5 : 1}
-              alignItems="center"
-              minW="0"
-              flexGrow="1"
-              overflow="visible"
-              flexShrink="1"
-              justifyContent={reverse ? 'flex-end' : 'flex-start'}
-            >
-              {leftContent && (
-                <Flex
-                  direction="column"
-                  gap={1}
-                  alignItems={reverse ? 'flex-end' : 'flex-start'}
-                  flexShrink={0}
-                >
-                  {leftContent}
-                </Flex>
-              )}
+            <Flex alignItems="center" gap={compact ? 0.5 : 1}>
+              {leftContent}
               <Flex
                 direction="column"
                 gap={compact ? 0.5 : 1}
@@ -183,31 +165,18 @@ export function RoundedBox({
                 {subTitleContent && (
                   <Flex
                     overflow="visible"
-                    gap={compact ? 0.5 : 1}
                     flexWrap="wrap"
                     alignItems="center"
                     zIndex={10}
                     justifyContent={reverse ? 'flex-end' : 'flex-start'}
+                    gap={compact ? 1 : 2}
                   >
                     {subTitleContent}
                   </Flex>
                 )}
               </Flex>
             </Flex>
-
-            {/* Right section: rightContent (35% base, can grow) */}
-            {rightContent && (
-              <Flex
-                direction="row"
-                alignItems="flex-start"
-                flexWrap="wrap"
-                justifyContent={reverse ? 'flex-start' : 'flex-end'}
-                gap={compact ? 0.5 : 1}
-                flexShrink={1}
-              >
-                {rightContent}
-              </Flex>
-            )}
+            {rightContent}
           </Flex>
         </VStack>
       )}

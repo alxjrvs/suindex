@@ -125,7 +125,7 @@ export function EntityRightHeaderContent({
   }
 
   return (
-    <>
+    <Flex>
       {abilityContent}
       {statsContent}
       {rightLabel && (
@@ -153,6 +153,6 @@ export function EntityRightHeaderContent({
           </Text>
         </Flex>
       )}
-    </>
+    </Flex>
   )
 }

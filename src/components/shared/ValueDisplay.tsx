@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 
 export function ValueDisplay({
@@ -18,7 +18,7 @@ export function ValueDisplay({
   const valueVariant = inverse ? 'pseudoheader' : 'pseudoheaderInverse'
 
   return (
-    <Box display="inline-flex" gap={0} cursor="default">
+    <Flex gap={compact ? 0.5 : 1} cursor="default">
       <Text variant={mainVariant} as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
         {label}
       </Text>
@@ -27,6 +27,6 @@ export function ValueDisplay({
           {value}
         </Text>
       )}
-    </Box>
+    </Flex>
   )
 }

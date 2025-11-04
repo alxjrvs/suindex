@@ -1,4 +1,3 @@
-import { Box } from '@chakra-ui/react'
 import type { SURefMetaEntity, SURefMetaTrait, SURefMetaSchemaName } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import type { DataValue } from '../../../types/common'
@@ -6,17 +5,19 @@ import { ActivationCostBox } from '../../shared/ActivationCostBox'
 import { EntityDetailDisplay } from '../EntityDetailDisplay'
 import { getActivationCurrency } from '../entityDisplayHelpers'
 import type { EntityDisplaySubProps } from './types'
+import { ValueDisplay } from '../../shared/ValueDisplay'
+import { Flex } from '@chakra-ui/react'
 
 export function EntitySubTitleElement({ data, schemaName, compact }: EntityDisplaySubProps) {
   const values = extractDetails(data, schemaName)
   if (values.length === 0) return null
 
   return (
-    <>
+    <Flex>
       {values.map((item, index) => (
         <DetailItem key={index} item={item} compact={compact} />
       ))}
-    </>
+    </Flex>
   )
 }
 
@@ -115,21 +116,5 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
     )
   }
 
-  return (
-    <Box display="inline-flex" gap={0}>
-      <Text variant="pseudoheader" as="span" fontWeight={semiFontWeight} fontSize={fontSize}>
-        {item.label}
-      </Text>
-      {item.value !== undefined && (
-        <Text
-          variant="pseudoheaderInverse"
-          as="span"
-          fontWeight={semiFontWeight}
-          fontSize={fontSize}
-        >
-          {item.value}
-        </Text>
-      )}
-    </Box>
-  )
+  return <ValueDisplay label={item.label} value={item.value} compact={compact} />
 }
