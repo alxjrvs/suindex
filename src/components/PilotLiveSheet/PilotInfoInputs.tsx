@@ -50,7 +50,7 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
       return []
     }
 
-    // Count abilities by tree
+    // Count abilities by tree to determine completed trees
     const abilitiesByTree: Record<string, number> = {}
     abilities.forEach((entity) => {
       const ability = entity.ref as SURefAbility
@@ -58,12 +58,37 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
     })
 
-    // Map all advanced classes (both Advanced and Hybrid types)
-    const available = allAdvancedClasses.map((advClass) => ({
-      id: advClass.id,
-      name: advClass.name,
-      isAdvancedVersion: advClass.type === 'Advanced',
-    }))
+    // A tree is completed when it has 3 abilities (levels 1, 2, 3)
+    const completedTrees = new Set(
+      Object.entries(abilitiesByTree)
+        .filter(([, count]) => count >= 3)
+        .map(([tree]) => tree)
+    )
+
+    // Get all ability tree requirements
+    const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
+
+    // Filter advanced classes based on completed trees
+    const available = allAdvancedClasses
+      .filter((advClass) => {
+        // Find the tree requirement for this advanced class
+        const treeRequirement = allTreeRequirements.find(
+          (req) => req.name === advClass.advancedTree
+        )
+
+        if (!treeRequirement) {
+          // If no requirement found, don't show the class
+          return false
+        }
+
+        // Check if all required trees are completed
+        return treeRequirement.requirement.every((requiredTree) => completedTrees.has(requiredTree))
+      })
+      .map((advClass) => ({
+        id: advClass.id,
+        name: advClass.name,
+        isAdvancedVersion: advClass.type === 'Advanced',
+      }))
 
     return available
   }, [abilities, selectedClass, allAdvancedClasses])
