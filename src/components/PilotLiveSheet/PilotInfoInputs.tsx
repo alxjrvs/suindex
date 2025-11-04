@@ -81,8 +81,8 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
           return false
         }
 
-        // Check if all required trees are completed
-        return treeRequirement.requirement.every((requiredTree) => completedTrees.has(requiredTree))
+        // Check if at least one of the required trees is completed
+        return treeRequirement.requirement.some((requiredTree) => completedTrees.has(requiredTree))
       })
       .map((advClass) => ({
         id: advClass.id,

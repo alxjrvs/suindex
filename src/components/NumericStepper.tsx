@@ -26,10 +26,8 @@ export default function NumericStepper({
   flash = false,
 }: NumericStepperProps) {
   const handleIncrement = useCallback(() => {
-    if (max === undefined || value < max) {
-      onChange(max !== undefined ? Math.min(value + step, max) : value + step)
-    }
-  }, [max, value, step, onChange])
+    onChange(value + step)
+  }, [value, step, onChange])
 
   const handleDecrement = useCallback(() => {
     if (value > min) {
@@ -42,6 +40,8 @@ export default function NumericStepper({
     [label]
   )
 
+  const isOverMax = max !== undefined && value > max
+
   return (
     <HStack gap={0} alignItems="center" role="group" aria-labelledby={labelId}>
       <StatDisplay
@@ -51,11 +51,12 @@ export default function NumericStepper({
         outOfMax={max}
         labelId={labelId}
         flash={flash}
+        isOverMax={isOverMax}
       />
       <VStack h="full" justifyContent="center" gap={1} ml={-0.5}>
         <IconButton
           onClick={handleIncrement}
-          disabled={disabled || disableIncrement || (max !== undefined && value >= max)}
+          disabled={disabled || disableIncrement}
           size="xs"
           w={5}
           h={5}

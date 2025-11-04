@@ -17,6 +17,7 @@ interface StatDisplayProps {
   compact?: boolean
   flash?: boolean // Trigger flash animation
   inverse?: boolean
+  isOverMax?: boolean // When true, shows green border
 }
 
 export function StatDisplay({
@@ -34,6 +35,7 @@ export function StatDisplay({
   compact = false,
   flash = false,
   inverse = false,
+  isOverMax = false,
 }: StatDisplayProps) {
   const [isFlashing, setIsFlashing] = useState(false)
   const WrapperComponent = onClick ? Button : Box
@@ -42,6 +44,7 @@ export function StatDisplay({
   const combinedAriaLabel = ariaLabel || (bottomLabel ? `${label} ${bottomLabel}` : label)
   const trueBg = inverse ? 'su.black' : bg
   const trueValueColor = inverse ? 'su.white' : valueColor
+  const trueBorderColor = isOverMax ? 'su.green' : borderColor
 
   useEffect(() => {
     if (!flash) return
@@ -61,7 +64,7 @@ export function StatDisplay({
     borderRadius: 0,
     bg: trueBg,
     borderWidth: compact ? '1px' : '2px',
-    borderColor,
+    borderColor: trueBorderColor,
     display: 'flex' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
