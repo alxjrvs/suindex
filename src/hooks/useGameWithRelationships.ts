@@ -141,60 +141,73 @@ export function useGamesWithRelationships() {
       const gameIds = gameMembers.map((gm) => gm.game_id)
       const gamesArray = await Promise.all(gameIds.map((id) => fetchGame(id)))
 
-      // Fetch all related data in parallel for all games
-      const relationshipsPromises = gamesArray.map(async (game) => {
-        const gameMember = gameMembers.find((gm) => gm.game_id === game.id)
-        const role = (gameMember?.role || 'player') as MemberRole
-
-        try {
-          // Fetch members and crawler in parallel
-          const [members, crawler] = await Promise.all([
-            fetchGameMembers(game.id),
-            fetchGameCrawler(game.id),
-          ])
-
-          const mediator = members.find((m) => m.role === 'mediator') || null
-
-          // Fetch pilots and mechs if crawler exists
-          let pilots: PilotWithMech[] = []
-          if (crawler) {
-            const pilotsArray = await fetchCrawlerPilots(crawler.id)
-
-            if (pilotsArray.length > 0) {
-              const pilotIds = pilotsArray.map((p) => p.id)
-              const mechsArray = await fetchPilotsMechs(pilotIds)
-
-              pilots = pilotsArray.map((pilot) => ({
-                pilot,
-                mech: mechsArray.find((m) => m.pilot_id === pilot.id) || null,
-              }))
-            }
-          }
-
-          return {
-            ...game,
-            role,
-            crawler,
-            pilots,
-            mediator,
-            members,
-          } as GameWithRelationships
-        } catch (err) {
-          console.error(`Error loading relationships for game ${game.id}:`, err)
-          // Return game with empty relationships on error
-          return {
-            ...game,
-            role,
-            crawler: null,
-            pilots: [],
-            mediator: null,
-            members: [],
-          } as GameWithRelationships
-        }
+      // Batch fetch all members for all games in parallel
+      const allMembersPromises = gameIds.map((id) => fetchGameMembers(id))
+      const allMembersArrays = await Promise.all(allMembersPromises)
+      const membersMap = new Map<string, GameMember[]>()
+      gameIds.forEach((id, index) => {
+        membersMap.set(id, allMembersArrays[index])
       })
 
-      // Wait for all relationships to load
-      const gamesWithRelationships = await Promise.all(relationshipsPromises)
+      // Batch fetch all crawlers for all games in parallel
+      const allCrawlersPromises = gameIds.map((id) => fetchGameCrawler(id))
+      const allCrawlers = await Promise.all(allCrawlersPromises)
+      const crawlersMap = new Map<string, CrawlerRow | null>()
+      gameIds.forEach((id, index) => {
+        crawlersMap.set(id, allCrawlers[index])
+      })
+
+      // Collect all crawler IDs that exist
+      const crawlerIds = allCrawlers.filter((c): c is CrawlerRow => c !== null).map((c) => c.id)
+
+      // Batch fetch all pilots for all crawlers in parallel
+      const allPilotsMap = new Map<string, PilotRow[]>()
+      if (crawlerIds.length > 0) {
+        const allPilotsPromises = crawlerIds.map((id) => fetchCrawlerPilots(id))
+        const allPilotsArrays = await Promise.all(allPilotsPromises)
+        crawlerIds.forEach((id, index) => {
+          allPilotsMap.set(id, allPilotsArrays[index])
+        })
+      }
+
+      // Collect all pilot IDs
+      const allPilotIds = Array.from(allPilotsMap.values())
+        .flat()
+        .map((p) => p.id)
+
+      // Batch fetch all mechs for all pilots in a single query
+      let allMechs: MechRow[] = []
+      if (allPilotIds.length > 0) {
+        allMechs = await fetchPilotsMechs(allPilotIds)
+      }
+
+      // Build the final games with relationships
+      const gamesWithRelationships = gamesArray.map((game) => {
+        const gameMember = gameMembers.find((gm) => gm.game_id === game.id)
+        const role = (gameMember?.role || 'player') as MemberRole
+        const members = membersMap.get(game.id) || []
+        const mediator = members.find((m) => m.role === 'mediator') || null
+        const crawler = crawlersMap.get(game.id) || null
+
+        let pilots: PilotWithMech[] = []
+        if (crawler) {
+          const pilotsArray = allPilotsMap.get(crawler.id) || []
+          pilots = pilotsArray.map((pilot) => ({
+            pilot,
+            mech: allMechs.find((m) => m.pilot_id === pilot.id) || null,
+          }))
+        }
+
+        return {
+          ...game,
+          role,
+          crawler,
+          pilots,
+          mediator,
+          members,
+        } as GameWithRelationships
+      })
+
       setGames(gamesWithRelationships)
     } catch (err) {
       console.error('Error loading games:', err)

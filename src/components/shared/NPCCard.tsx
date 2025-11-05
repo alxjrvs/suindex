@@ -25,8 +25,8 @@ export function NPCCard({
   choices: Tables<'player_choices'>[]
   npc: CrawlerNPC
   referenceBay: SURefCrawler | SURefCrawlerBay | undefined
-  onUpdateBay: (updates: Partial<{ npc: CrawlerNPC }>) => void
-  onUpdateChoice: (id: string, value: string) => void
+  onUpdateBay?: (updates: Partial<{ npc: CrawlerNPC }>) => void
+  onUpdateChoice?: (id: string, value: string) => void
   position: string
   description: string
   maxHP: number
@@ -36,9 +36,9 @@ export function NPCCard({
   const textRef = useRef<HTMLParagraphElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [fontSize, setFontSize] = useState(16)
-  const onUpdateDamage = (value: number) => onUpdateBay({ npc: { ...npc!, damage: value } })
-  const onUpdateName = (value: string) => onUpdateBay({ npc: { ...npc!, name: value } })
-  const onUpdateNotes = (value: string) => onUpdateBay({ npc: { ...npc!, notes: value } })
+  const onUpdateDamage = (value: number) => onUpdateBay?.({ npc: { ...npc!, damage: value } })
+  const onUpdateName = (value: string) => onUpdateBay?.({ npc: { ...npc!, name: value } })
+  const onUpdateNotes = (value: string) => onUpdateBay?.({ npc: { ...npc!, notes: value } })
 
   // Get choice definitions from reference data
   // Crawler types have npc.choices, crawler bays have choices at top level
@@ -156,15 +156,19 @@ export function NPCCard({
           key={choice.id}
           label={choice.name}
           placeholder={choice.description}
-          onDiceRoll={() => {
-            const {
-              result: { label },
-            } = rollTable(choice.name)
-            onUpdateChoice(choice.id, label)
-          }}
+          onDiceRoll={
+            onUpdateChoice
+              ? () => {
+                  const {
+                    result: { label },
+                  } = rollTable(choice.name)
+                  onUpdateChoice(choice.id, label)
+                }
+              : undefined
+          }
           value={choicesMap[choice.id] || ''}
-          onChange={(value) => onUpdateChoice(choice.id, value)}
-          disabled={disabled}
+          onChange={onUpdateChoice ? (value) => onUpdateChoice(choice.id, value) : undefined}
+          disabled={disabled || !onUpdateChoice}
         />
       ))}
 

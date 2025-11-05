@@ -5,10 +5,17 @@ import { useHydratedPilot, useUpdatePilot } from '../../hooks/pilot'
 
 interface PilotResourceSteppersProps {
   id: string
+  /** Disables all steppers */
   disabled?: boolean
+  /** Greys out the RoundedBox background (only for missing required data) */
+  incomplete?: boolean
 }
 
-export function PilotResourceSteppers({ id, disabled = false }: PilotResourceSteppersProps) {
+export function PilotResourceSteppers({
+  id,
+  disabled = false,
+  incomplete = false,
+}: PilotResourceSteppersProps) {
   const { pilot } = useHydratedPilot(id)
   const maxHP = pilot?.max_hp ?? 10
   const currentDamage = pilot?.current_damage ?? 0
@@ -19,7 +26,7 @@ export function PilotResourceSteppers({ id, disabled = false }: PilotResourceSte
   const currentHP = maxHP - currentDamage
 
   return (
-    <RoundedBox bg="bg.builder.pilot" disabled={disabled}>
+    <RoundedBox bg="bg.builder.pilot" disabled={incomplete}>
       <VStack alignItems="center" justifyContent="space-between" h="full">
         <NumericStepper
           label="HP"

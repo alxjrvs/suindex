@@ -11,11 +11,15 @@ import { useHydratedPilot } from '../../hooks/pilot'
 import type { HydratedEntity } from '../../types/hydrated'
 
 interface PilotInventoryProps {
-  id: string | undefined
+  id: string
+  /** Greys out the RoundedBox background (only for missing required data) */
   disabled?: boolean
+  /** Hides add/remove buttons when viewing another player's sheet */
+  readOnly?: boolean
 }
 
-export function PilotInventory({ id, disabled = false }: PilotInventoryProps) {
+export function PilotInventory({ id, disabled = false, readOnly = false }: PilotInventoryProps) {
+  const isReadOnly = readOnly
   const MAX_SLOTS = 6
   const { equipment } = useHydratedPilot(id)
   const [isEquipmentSelectorOpen, setIsEquipmentSelectorOpen] = useState(false)
@@ -56,20 +60,6 @@ export function PilotInventory({ id, disabled = false }: PilotInventoryProps) {
     children: `Remove ${item.equipment.name}`,
   })
 
-  const disabledButtonConfig = (item: {
-    id: string
-    equipment: SURefEquipment
-    index: number
-    entity: HydratedEntity
-  }) => ({
-    bg: 'gray.200',
-    color: 'gray.500',
-    disabled: true,
-    fontWeight: 'bold',
-    children: item.entity.parentEntity?.ref.name,
-  })
-  console.log(equipment)
-
   return (
     <>
       <RoundedBox
@@ -78,11 +68,13 @@ export function PilotInventory({ id, disabled = false }: PilotInventoryProps) {
         disabled={disabled}
         rightContent={
           <Flex alignItems="center" gap={4}>
-            <AddStatButton
-              onClick={() => setIsEquipmentSelectorOpen(true)}
-              disabled={disabled || isFull}
-              bottomLabel="Equipment"
-            />
+            {!isReadOnly && (
+              <AddStatButton
+                onClick={() => setIsEquipmentSelectorOpen(true)}
+                disabled={disabled || isFull}
+                bottomLabel="Equipment"
+              />
+            )}
             <StatDisplay
               label="Equipment"
               value={equipment.length}
@@ -97,7 +89,7 @@ export function PilotInventory({ id, disabled = false }: PilotInventoryProps) {
             <EntityDisplay
               key={`${item.id}-${item.index}`}
               buttonConfig={
-                item.entity.parentEntity ? disabledButtonConfig(item) : removeButtonConfig(item)
+                !isReadOnly && !item.entity.parentEntity ? removeButtonConfig(item) : undefined
               }
               schemaName="equipment"
               compact

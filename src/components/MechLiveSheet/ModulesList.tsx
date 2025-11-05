@@ -8,9 +8,11 @@ interface ModulesListProps {
   id: string
   /** Whether the component is disabled */
   disabled?: boolean
+  /** Hides add/remove buttons when viewing another player's sheet */
+  readOnly?: boolean
 }
 
-export function ModulesList({ id, disabled = false }: ModulesListProps) {
+export function ModulesList({ id, disabled = false, readOnly = false }: ModulesListProps) {
   const { modules, selectedChassis, usedModuleSlots } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
   const totalModuleSlots = chassisRef ? (getModuleSlots(chassisRef) ?? 0) : 0
@@ -22,8 +24,8 @@ export function ModulesList({ id, disabled = false }: ModulesListProps) {
       entityIds={modules.map((m) => m.ref.id)}
       usedSlots={usedModuleSlots}
       totalSlots={totalModuleSlots}
-      onRemove={handleRemoveModule}
-      onAdd={handleAddModule}
+      onRemove={readOnly ? undefined : handleRemoveModule}
+      onAdd={readOnly ? undefined : handleAddModule}
       disabled={disabled}
     />
   )

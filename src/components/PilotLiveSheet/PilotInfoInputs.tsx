@@ -11,11 +11,18 @@ import { useHydratedPilot, useUpdatePilot } from '../../hooks/pilot'
 import { Text } from '../base/Text'
 
 interface PilotInfoInputsProps {
+  /** Disables all inputs */
   disabled?: boolean
+  /** Greys out the RoundedBox background (only for missing required data) */
+  incomplete?: boolean
   id: string
 }
 
-export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) {
+export function PilotInfoInputs({
+  id,
+  disabled = false,
+  incomplete = false,
+}: PilotInfoInputsProps) {
   const { pilot, abilities, selectedClass, selectedAdvancedClass } = useHydratedPilot(id)
   const onClassChange = useChangePilotClass(id)
   const onAdvancedClassChange = useChangePilotAdvancedClass(id)
@@ -122,7 +129,7 @@ export function PilotInfoInputs({ id, disabled = false }: PilotInfoInputsProps) 
       bg="bg.builder.pilot"
       flex="1"
       minW="0"
-      disabled={disabled}
+      disabled={incomplete}
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
         <SheetInput

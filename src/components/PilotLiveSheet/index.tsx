@@ -7,15 +7,19 @@ import { ClassAbilitiesList } from './ClassAbilitiesList'
 import { GeneralAbilitiesList } from './GeneralAbilitiesList'
 import { PilotInventory } from './PilotInventory'
 import { CrawlerTab } from './CrawlerTab'
+import { MechsTab } from './MechsTab'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { Notes } from '../shared/Notes'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
-import { useUpdatePilot, useHydratedPilot, useDeletePilot } from '../../hooks/pilot'
+import { useUpdatePilot, useHydratedPilot, useDeletePilot, pilotsKeys } from '../../hooks/pilot'
+import { entitiesKeys } from '../../hooks/suentity/useSUEntities'
+import { playerChoicesKeys } from '../../hooks/suentity/usePlayerChoices'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { useImageUpload } from '../../hooks/useImageUpload'
+import { useRealtimeSubscription } from '../../hooks/useRealtimeSubscription'
 import { isOwner } from '../../lib/permissions'
 
 interface PilotLiveSheetProps {
@@ -46,6 +50,31 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
     entityId: id,
     getCurrentImageUrl: () => pilot?.image_url ?? null,
     queryKey: ['pilots', id],
+  })
+
+  // Real-time subscriptions for live updates
+  useRealtimeSubscription({
+    table: 'pilots',
+    id,
+    queryKey: pilotsKeys.byId(id),
+    enabled: !isLocal && !!id,
+    toastMessage: 'Pilot data updated',
+  })
+
+  // Subscribe to entities (abilities, equipment, etc.) for this pilot
+  useRealtimeSubscription({
+    table: 'suentities',
+    queryKey: entitiesKeys.forParent('pilot', id),
+    enabled: !isLocal && !!id,
+    showToast: false, // Don't show toast for entity changes (too noisy)
+  })
+
+  // Subscribe to player choices (invalidate all choices when any change)
+  useRealtimeSubscription({
+    table: 'player_choices',
+    queryKey: playerChoicesKeys.all,
+    enabled: !isLocal && !!id,
+    showToast: false, // Don't show toast for choice changes (too noisy)
   })
 
   if (!pilot && !loading) {
@@ -118,9 +147,9 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           isUploading={isUploading}
         />
 
-        <PilotInfoInputs disabled={!selectedClass || !isEditable} id={id} />
+        <PilotInfoInputs disabled={!isEditable} incomplete={!selectedClass} id={id} />
 
-        <PilotResourceSteppers id={id} disabled={!selectedClass || !isEditable} />
+        <PilotResourceSteppers id={id} disabled={!isEditable} incomplete={!selectedClass} />
       </Flex>
 
       <Tabs.Root defaultValue="general-abilities">
@@ -130,6 +159,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           </Tabs.Trigger>
           <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
           <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
+          <Tabs.Trigger value="mechs">Mechs</Tabs.Trigger>
           <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
           <Tabs.Trigger value="crawler">Crawler</Tabs.Trigger>
         </Tabs.List>
@@ -140,6 +170,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
               id={id}
               selectedClass={selectedClass?.ref as SURefCoreClass | undefined}
               selectedAdvancedClass={selectedAdvancedClass?.ref as SURefAdvancedClass | undefined}
+              hideUnchosen={!isEditable}
             />
           </Box>
         </Tabs.Content>
@@ -152,7 +183,13 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
 
         <Tabs.Content value="inventory">
           <Box mt={6}>
-            <PilotInventory id={id} disabled={!selectedClass || !isEditable} />
+            <PilotInventory id={id} disabled={!selectedClass} readOnly={!isEditable} />
+          </Box>
+        </Tabs.Content>
+
+        <Tabs.Content value="mechs">
+          <Box mt={6}>
+            <MechsTab pilotId={id} isLocal={isLocal} isEditable={isEditable} />
           </Box>
         </Tabs.Content>
 
@@ -163,7 +200,8 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
               onChange={(value) => updatePilot.mutate({ id, updates: { notes: value } })}
               backgroundColor="bg.builder.pilot"
               placeholder="Add notes about your pilot..."
-              disabled={!selectedClass || !isEditable}
+              disabled={!isEditable}
+              incomplete={!selectedClass}
             />
           </Box>
         </Tabs.Content>

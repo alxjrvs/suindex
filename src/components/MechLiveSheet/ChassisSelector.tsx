@@ -6,9 +6,15 @@ interface ChassisSelectorProps {
   chassisId: string | null
   allChassis: SURefChassis[]
   onChange: (chassisId: string | null) => void
+  disabled?: boolean
 }
 
-export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSelectorProps) {
+export function ChassisSelector({
+  chassisId,
+  allChassis,
+  onChange,
+  disabled = false,
+}: ChassisSelectorProps) {
   const groupedChassis = useMemo(() => {
     const groups = new Map<number, SURefChassis[]>()
 
@@ -36,6 +42,7 @@ export function ChassisSelector({ chassisId, allChassis, onChange }: ChassisSele
       label="Chassis"
       value={chassisId}
       onChange={onChange}
+      disabled={disabled}
     >
       {groupedChassis.map(({ techLevel, chassis }) => (
         <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>

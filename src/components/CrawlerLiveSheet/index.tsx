@@ -13,9 +13,18 @@ import { CrawlerNPC } from './CrawlerNPC'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { PermissionError } from '../shared/PermissionError'
 import { PilotMechCell } from '../Dashboard/PilotMechCell'
-import { useUpdateCrawler, useHydratedCrawler, useDeleteCrawler } from '../../hooks/crawler'
+import {
+  useUpdateCrawler,
+  useHydratedCrawler,
+  useDeleteCrawler,
+  crawlersKeys,
+} from '../../hooks/crawler'
 import { useInitializeCrawlerBays } from '../../hooks/crawler/useInitializeCrawlerBays'
+import { entitiesKeys } from '../../hooks/suentity/useSUEntities'
+import { playerChoicesKeys } from '../../hooks/suentity/usePlayerChoices'
+import { cargoKeys } from '../../hooks/cargo/useCargo'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { useRealtimeSubscription } from '../../hooks/useRealtimeSubscription'
 import { isOwner } from '../../lib/permissions'
 import { fetchCrawlerPilots, fetchPilotsMechs } from '../../lib/api'
 
@@ -33,6 +42,39 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
   // Initialize bays for local (playground) crawlers
   useInitializeCrawlerBays(id, bays.length > 0)
+
+  // Real-time subscriptions for live updates
+  useRealtimeSubscription({
+    table: 'crawlers',
+    id,
+    queryKey: crawlersKeys.byId(id),
+    enabled: !isLocal && !!id,
+    toastMessage: 'Crawler data updated',
+  })
+
+  // Subscribe to entities (abilities, bays, NPCs)
+  useRealtimeSubscription({
+    table: 'suentities',
+    queryKey: entitiesKeys.forParent('crawler', id),
+    enabled: !isLocal && !!id,
+    showToast: false,
+  })
+
+  // Subscribe to player choices
+  useRealtimeSubscription({
+    table: 'player_choices',
+    queryKey: playerChoicesKeys.all,
+    enabled: !isLocal && !!id,
+    showToast: false,
+  })
+
+  // Subscribe to cargo
+  useRealtimeSubscription({
+    table: 'cargo',
+    queryKey: cargoKeys.forParent('crawler', id),
+    enabled: !isLocal && !!id,
+    showToast: false,
+  })
 
   // Fetch pilots and their mechs for this crawler
   const { data: pilotsWithMechs = [] } = useQuery({
@@ -128,11 +170,12 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
       )}
       {/* Header Section */}
       <Flex gap={6} w="full" alignItems="stretch">
-        <CrawlerHeaderInputs disabled={!selectedCrawlerType || !isEditable} id={id} />
+        <CrawlerHeaderInputs disabled={!isEditable} incomplete={!selectedCrawlerType} id={id} />
 
         <CrawlerResourceSteppers
           id={id}
-          disabled={!selectedCrawlerType || !isEditable}
+          disabled={!isEditable}
+          incomplete={!selectedCrawlerType}
           flashingTLs={[]}
         />
       </Flex>
@@ -148,8 +191,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
         <Tabs.Content value="abilities">
           <Flex gap={6} w="full" mt={6}>
-            <CrawlerAbilities id={id} disabled={!selectedCrawlerType || !isEditable} />
-            <CrawlerNPC id={id} disabled={!selectedCrawlerType || !isEditable} />
+            <CrawlerAbilities id={id} disabled={!selectedCrawlerType} readOnly={!isEditable} />
+            <CrawlerNPC id={id} disabled={!selectedCrawlerType} readOnly={!isEditable} />
           </Flex>
         </Tabs.Content>
 
@@ -158,7 +201,12 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           {regularBays.length > 0 && (
             <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
               {regularBays.map((bay) => (
-                <BayCard key={bay.id} bay={bay} disabled={!selectedCrawlerType || !isEditable} />
+                <BayCard
+                  key={bay.id}
+                  bay={bay}
+                  disabled={!selectedCrawlerType}
+                  readOnly={!isEditable}
+                />
               ))}
             </Grid>
           )}
@@ -168,10 +216,10 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           <VStack gap="0" alignItems="stretch" mt={6}>
             {/* Storage Bay */}
             {storageBay && (
-              <BayCard bay={storageBay} disabled={!selectedCrawlerType || !isEditable} />
+              <BayCard bay={storageBay} disabled={!selectedCrawlerType} readOnly={!isEditable} />
             )}
 
-            <StorageCargoBay id={id} disabled={!selectedCrawlerType || !isEditable} />
+            <StorageCargoBay id={id} disabled={!selectedCrawlerType} readOnly={!isEditable} />
           </VStack>
         </Tabs.Content>
 
@@ -182,7 +230,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
               onChange={(value) => updateCrawler.mutate({ id, updates: { notes: value } })}
               backgroundColor="bg.builder.crawler"
               placeholder="Add notes about your crawler..."
-              disabled={!selectedCrawlerType || !isEditable}
+              disabled={!isEditable}
+              incomplete={!selectedCrawlerType}
             />
           </Box>
         </Tabs.Content>

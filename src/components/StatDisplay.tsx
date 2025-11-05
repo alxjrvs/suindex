@@ -128,7 +128,7 @@ export function StatDisplay({
             containerType: 'inline-size',
           }}
         >
-          {outOfMax !== undefined ? `${value}/${outOfMax}` : value === 0 ? '-' : value}
+          {outOfMax !== undefined ? `${value}/${outOfMax}` : value}
         </Text>
       </WrapperComponent>
       <Text

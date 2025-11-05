@@ -9,9 +9,10 @@ import { useHydratedCrawler } from '../../hooks/crawler'
 interface CargoBayProps {
   id: string
   disabled?: boolean
+  readOnly?: boolean
 }
 
-export function StorageCargoBay({ disabled = false, id }: CargoBayProps) {
+export function StorageCargoBay({ disabled = false, readOnly = false, id }: CargoBayProps) {
   const titleRotation = useMemo(() => getTiltRotation(), [])
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
   const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
@@ -31,11 +32,15 @@ export function StorageCargoBay({ disabled = false, id }: CargoBayProps) {
         <DynamicBay
           items={cargo}
           maxCapacity={25}
-          onRemove={handleRemoveCargo}
-          onAddClick={(position) => {
-            setCargoPosition(position)
-            setIsCargoModalOpen(true)
-          }}
+          onRemove={readOnly ? undefined : handleRemoveCargo}
+          onAddClick={
+            readOnly
+              ? undefined
+              : (position) => {
+                  setCargoPosition(position)
+                  setIsCargoModalOpen(true)
+                }
+          }
           disabled={disabled}
           singleCellMode
         />

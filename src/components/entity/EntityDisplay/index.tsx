@@ -24,6 +24,7 @@ import { EntityTopMatter } from './EntityTopMatter'
 import { EntityRequirementDisplay } from './EntityRequirementDisplay'
 import { EntityChoices } from './EntityChoices'
 import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
+import { EntityBonusPerTechLevel } from './EntityBonusPerTechLevel'
 
 type EntityDisplayProps = {
   /** Entity data to display */
@@ -33,15 +34,13 @@ type EntityDisplayProps = {
   /** Optional header background color override */
   headerColor?: string
   /** Whether the ability is trained (affects header opacity for abilities) */
-  trained?: boolean
+  dimHeader?: boolean
   /** Optional children to render in the content area */
   children?: ReactNode
   /** Optional click handler for the entity */
   onClick?: () => void
   /** Whether the entity is disabled (affects opacity and click behavior) */
   disabled?: boolean
-  /** Whether the entity is dimmed (affects opacity) */
-  dimmed?: boolean
   /** Whether the entity can be collapsed/expanded */
   collapsible?: boolean
   /** Default expanded state (only used if expanded is not controlled) */
@@ -71,11 +70,10 @@ export const EntityDisplay = memo(function EntityDisplay({
   data,
   hideLevel = false,
   headerColor,
-  trained = true,
+  dimHeader = false,
   children,
   onClick,
   disabled = false,
-  dimmed = false,
   collapsible = false,
   defaultExpanded = true,
   expanded,
@@ -101,8 +99,8 @@ export const EntityDisplay = memo(function EntityDisplay({
     data,
     techLevelColors
   )
-  const headerOpacity = trained ? 1 : 0.5
-  const contentOpacity = disabled || dimmed ? 0.5 : 1
+  const headerOpacity = dimHeader ? 0.5 : 1
+  const contentOpacity = disabled ? 0.5 : 1
 
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
 
@@ -181,6 +179,7 @@ export const EntityDisplay = memo(function EntityDisplay({
             compact={compact}
           />
 
+          <EntityBonusPerTechLevel data={data} compact={compact} schemaName={schemaName} />
           {'effect' in data && data.effect && (
             <Flex p={compact ? 1 : 2}>
               <SheetDisplay compact={compact} value={data.effect} />
@@ -195,7 +194,7 @@ export const EntityDisplay = memo(function EntityDisplay({
               {'table' in data && data.table && (
                 <Box p={compact ? 1 : 2} borderRadius="md" position="relative" zIndex={10}>
                   <RollTable
-                    disabled={disabled || dimmed}
+                    disabled={disabled}
                     table={data.table}
                     showCommand
                     compact

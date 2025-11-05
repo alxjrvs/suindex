@@ -12,7 +12,7 @@ export function SheetEntityChoiceDisplay({
   entityId,
 }: {
   choice: SURefMetaChoice
-  onUpdateChoice: (choiceId: string, value: string | undefined) => void
+  onUpdateChoice?: (choiceId: string, value: string | undefined) => void
   entityId: string | undefined
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -74,12 +74,12 @@ export function SheetEntityChoiceDisplay({
   }, [choice])
 
   const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
-    onUpdateChoice(choice.id, SalvageUnionReference.composeRef(schemaName, entityId))
+    onUpdateChoice?.(choice.id, SalvageUnionReference.composeRef(schemaName, entityId))
     setIsModalOpen(false)
   }
 
   const handleRemove = () => {
-    onUpdateChoice(choice.id, undefined)
+    onUpdateChoice?.(choice.id, undefined)
   }
 
   const entityName =
@@ -90,9 +90,11 @@ export function SheetEntityChoiceDisplay({
   return (
     <>
       {!selectedEntity ? (
-        <Button onClick={() => setIsModalOpen(true)} w="full" mt={2}>
-          Select {choice.name}
-        </Button>
+        onUpdateChoice && (
+          <Button onClick={() => setIsModalOpen(true)} w="full" mt={2}>
+            Select {choice.name}
+          </Button>
+        )
       ) : (
         <EntityDisplay
           schemaName={selectedEntity.schemaName as SURefSchemaName}
@@ -100,31 +102,39 @@ export function SheetEntityChoiceDisplay({
           compact
           collapsible
           defaultExpanded={false}
-          buttonConfig={{
-            bg: 'su.brick',
-            color: 'su.white',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            _hover: { bg: 'su.black' },
-            onClick: (e) => {
-              e.stopPropagation()
-              const confirmed = window.confirm(`Are you sure you want to remove "${entityName}"?`)
-              if (confirmed) {
-                handleRemove()
-              }
-            },
-            children: `Remove ${choice.name}`,
-          }}
+          buttonConfig={
+            onUpdateChoice
+              ? {
+                  bg: 'su.brick',
+                  color: 'su.white',
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  _hover: { bg: 'su.black' },
+                  onClick: (e) => {
+                    e.stopPropagation()
+                    const confirmed = window.confirm(
+                      `Are you sure you want to remove "${entityName}"?`
+                    )
+                    if (confirmed) {
+                      handleRemove()
+                    }
+                  },
+                  children: `Remove ${choice.name}`,
+                }
+              : undefined
+          }
         />
       )}
 
-      <EntitySelectionModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        schemaNames={schemaNames}
-        onSelect={handleSelect}
-        title={`Select ${choice.name}`}
-      />
+      {onUpdateChoice && (
+        <EntitySelectionModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          schemaNames={schemaNames}
+          onSelect={handleSelect}
+          title={`Select ${choice.name}`}
+        />
+      )}
     </>
   )
 }

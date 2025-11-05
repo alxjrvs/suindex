@@ -10,9 +10,15 @@ interface PatternSelectorProps {
   pattern: string
   selectedChassis: HydratedEntity | undefined
   onChange: (patternName: string) => void
+  disabled?: boolean
 }
 
-export function PatternSelector({ pattern, selectedChassis, onChange }: PatternSelectorProps) {
+export function PatternSelector({
+  pattern,
+  selectedChassis,
+  onChange,
+  disabled = false,
+}: PatternSelectorProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
 
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
@@ -41,7 +47,7 @@ export function PatternSelector({ pattern, selectedChassis, onChange }: PatternS
       onBlur={() => {
         setTimeout(() => setShowSuggestions(false), 200)
       }}
-      disabled={!selectedChassis}
+      disabled={disabled || !selectedChassis}
       placeholder="Enter or select a pattern..."
       onDiceRoll={handleRollPattern}
       diceRollAriaLabel="Roll for pattern name"

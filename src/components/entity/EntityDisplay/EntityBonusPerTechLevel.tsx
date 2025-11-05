@@ -1,25 +1,23 @@
 import { VStack } from '@chakra-ui/react'
-import { SheetDisplay } from '../../shared/SheetDisplay'
 import type { EntityDisplaySubProps } from './types'
-import { EntitySubheader } from './EntitySubheader'
+import { EntityStats } from './EntityStats'
 
-export function EntityBonusPerTechLevel({ data, compact }: EntityDisplaySubProps) {
-  const showBPTL =
-    'bonusPerTechLevel' in data && data.bonusPerTechLevel && data.bonusPerTechLevel.length > 0
+export function EntityBonusPerTechLevel({ data, compact, schemaName }: EntityDisplaySubProps) {
+  const showBPTL = 'bonusPerTechLevel' in data && data.bonusPerTechLevel && data.bonusPerTechLevel
 
   if (!showBPTL) return null
 
   return (
-    <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
-      <EntitySubheader compact={compact} label="Abilities" />
-      {data.bonusPerTechLevel.map((tle, index) => (
-        <SheetDisplay
+    <VStack p={compact ? 1 : 2} gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
+      {data.bonusPerTechLevel && (
+        <EntityStats
+          label="Bonus Per Tech Level"
+          prefix="+"
+          data={data.bonusPerTechLevel}
           compact={compact}
-          key={index}
-          label={`Tech Level ${tle.techLevelMin}`}
-          value={tle.effect}
+          schemaName={schemaName}
         />
-      ))}
+      )}
     </VStack>
   )
 }

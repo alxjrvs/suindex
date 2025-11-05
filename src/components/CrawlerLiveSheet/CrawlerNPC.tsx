@@ -7,7 +7,15 @@ import { useHydratedCrawler, useUpdateCrawler } from '../../hooks/crawler'
 import { useManageEntityChoices } from '../../hooks/suentity'
 import { useCallback } from 'react'
 
-export function CrawlerNPC({ id, disabled = false }: { id: string; disabled?: boolean }) {
+export function CrawlerNPC({
+  id,
+  disabled = false,
+  readOnly = false,
+}: {
+  id: string
+  disabled?: boolean
+  readOnly?: boolean
+}) {
   const { crawler, selectedCrawlerType } = useHydratedCrawler(id)
   const updateCrawler = useUpdateCrawler()
   const handleUpdateChoice = useManageEntityChoices(selectedCrawlerType?.id)
@@ -45,8 +53,8 @@ export function CrawlerNPC({ id, disabled = false }: { id: string; disabled?: bo
         description={crawlerTypeRef?.npc.description || ''}
         maxHP={crawlerTypeRef?.npc.hitPoints || 0}
         referenceBay={crawlerTypeRef}
-        onUpdateBay={handleUpdateNPC}
-        onUpdateChoice={handleUpdateChoice}
+        onUpdateBay={readOnly ? undefined : handleUpdateNPC}
+        onUpdateChoice={readOnly ? undefined : handleUpdateChoice}
         position={crawlerTypeRef?.npc.position || 'NPC'}
         disabled={!crawlerTypeRef}
       />

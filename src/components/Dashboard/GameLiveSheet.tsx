@@ -16,7 +16,7 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { ControlBarContainer } from '../shared/ControlBarContainer'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { isOwner } from '../../lib/permissions'
+import { isGameMediator } from '../../lib/permissions'
 import {
   useUpdateGame,
   useDeleteGame,
@@ -45,14 +45,12 @@ export function GameLiveSheet() {
 
   // Determine if current user is a mediator
   const isMediator = useMemo(() => {
-    if (!gameWithRelationships) return false
-    return gameWithRelationships.members.some((m) => m.role === 'mediator')
-  }, [gameWithRelationships])
+    if (!gameWithRelationships || !userId) return false
+    return isGameMediator(gameWithRelationships.members, userId)
+  }, [gameWithRelationships, userId])
 
-  // Determine if the game is editable (user owns the game or is mediator)
-  const isEditable = gameWithRelationships
-    ? isOwner(gameWithRelationships.created_by, userId) || isMediator
-    : false
+  // Determine if the game is editable (only mediators can edit)
+  const isEditable = isMediator
 
   // Get active pilots (pilots with active=true)
   const activePilots = useMemo(

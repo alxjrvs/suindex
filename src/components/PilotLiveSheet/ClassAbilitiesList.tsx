@@ -13,11 +13,13 @@ export function ClassAbilitiesList({
   selectedClass,
   selectedAdvancedClass,
   compact = false,
+  hideUnchosen = false,
 }: {
   id?: string | undefined
   selectedClass: SURefCoreClass | undefined
   selectedAdvancedClass: SURefAdvancedClass | undefined
   compact?: boolean
+  hideUnchosen?: boolean
 }) {
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
 
@@ -95,6 +97,7 @@ export function ClassAbilitiesList({
             treeName={treeName}
             treeAbilities={allTreeAbilities[treeName] || []}
             id={id}
+            hideUnchosen={hideUnchosen}
           />
         ))}
       </Grid>
@@ -112,6 +115,7 @@ export function ClassAbilitiesList({
                 treeName={selectedAdvancedClass.advancedTree}
                 treeAbilities={allTreeAbilities[selectedAdvancedClass.advancedTree] || []}
                 id={id}
+                hideUnchosen={hideUnchosen}
               />
             )}
 
@@ -124,7 +128,7 @@ export function ClassAbilitiesList({
                 key={selectedAdvancedClass.legendaryTree}
                 treeName={selectedAdvancedClass.legendaryTree}
                 treeAbilities={allTreeAbilities[selectedAdvancedClass.legendaryTree] || []}
-                hideUnchosen={true}
+                hideUnchosen={hideUnchosen || true}
                 id={id}
               />
             )}
@@ -190,7 +194,8 @@ function TreeSection({
     (abilityId: string) => abilities?.some((a) => a.ref.id === abilityId) ?? false,
     [abilities]
   )
-  const isReadOnly = id === undefined
+  // Read-only mode when hideUnchosen is true (viewing another player's sheet)
+  const isReadOnly = hideUnchosen
 
   // Check if this is a legendary tree
   const isLegendaryTree = selectedAdvancedClass?.legendaryTree === treeName
@@ -238,6 +243,8 @@ function TreeSection({
           const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
           const alreadySelected = isSelected(ability.id)
 
+          if (hideUnchosen && !alreadySelected) return null
+
           // Read-only mode: no dimming, no add/remove buttons
           if (isReadOnly) {
             return (
@@ -246,7 +253,6 @@ function TreeSection({
                 compact
                 key={ability.id}
                 data={ability}
-                trained={true}
                 collapsible={true}
                 disabled={false}
                 defaultExpanded={alreadySelected}
@@ -312,11 +318,11 @@ function TreeSection({
             <EntityDisplay
               schemaName="abilities"
               compact
+              collapsible={!alreadySelected}
               key={ability.id}
               data={ability}
-              disabled={isReadOnly ? false : !canSelect && !alreadySelected}
-              trained={isReadOnly || alreadySelected}
-              collapsible={true}
+              disabled={!canSelect && !alreadySelected}
+              dimHeader={!canSelect}
               defaultExpanded={alreadySelected}
               buttonConfig={buttonConfig}
             />

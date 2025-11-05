@@ -1,4 +1,8 @@
-import type { SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
+import type {
+  SURefMetaEntity,
+  SURefMetaSchemaName,
+  SURefMetaBonusPerTechLevel,
+} from 'salvageunion-reference'
 import { getSchemaCatalog } from 'salvageunion-reference'
 
 // Cache the schema catalog for performance
@@ -30,11 +34,21 @@ export function getActivationCurrency(
 /**
  * Extract level (for abilities)
  */
-export function extractLevel(data: SURefMetaEntity): string | number | undefined {
+export function extractLevel(
+  data: SURefMetaEntity | SURefMetaBonusPerTechLevel
+): string | number | undefined {
   return 'level' in data ? data.level : undefined
 }
 
-export function extractName(data: SURefMetaEntity, schemaName: SURefMetaSchemaName): string {
+export function extractName(
+  data: SURefMetaEntity | SURefMetaBonusPerTechLevel,
+  schemaName: SURefMetaSchemaName
+): string {
+  // SURefMetaBonusPerTechLevel (SURefMetaStats) doesn't have a name property
+  if (!('name' in data)) {
+    return ''
+  }
+
   if (schemaName === 'ability-tree-requirements') {
     return data.name + ' Tree Requirements'
   }
@@ -48,7 +62,7 @@ export function calculateBackgroundColor(
   schemaName: SURefMetaSchemaName,
   headerColor: string = '',
   techLevel: number | undefined,
-  data: SURefMetaEntity,
+  data: SURefMetaEntity | SURefMetaBonusPerTechLevel,
   techLevelColors: Record<number, string>
 ): string {
   if (schemaName === 'chassis') return 'su.green'

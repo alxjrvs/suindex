@@ -8,13 +8,17 @@ import { useHydratedCrawler, useUpdateCrawler } from '../../hooks/crawler'
 
 interface CrawlerResourceSteppersProps {
   id: string
+  /** Disables all steppers */
   disabled?: boolean
+  /** Greys out the RoundedBox background (only for missing required data) */
+  incomplete?: boolean
   flashingTLs?: number[]
 }
 
 export function CrawlerResourceSteppers({
   id,
   disabled = false,
+  incomplete = false,
   flashingTLs = [],
 }: CrawlerResourceSteppersProps) {
   const { crawler } = useHydratedCrawler(id)
@@ -53,10 +57,16 @@ export function CrawlerResourceSteppers({
       <RoundedBox
         title="SCRAP"
         bg="bg.builder.crawler"
-        disabled={disabled}
+        disabled={incomplete}
         justifyContent="flex-start"
         rightContent={
-          <StatDisplay compact label="" bottomLabel="TL1" value={totalInTl1} disabled={disabled} />
+          <StatDisplay
+            compact
+            label=""
+            bottomLabel="TL1"
+            value={totalInTl1}
+            disabled={incomplete}
+          />
         }
       >
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>

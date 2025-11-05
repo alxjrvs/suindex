@@ -10,74 +10,101 @@ import {
   getModuleSlots,
   getCargoCapacity,
   getHitPoints,
+  type SURefMetaBonusPerTechLevel,
+  type SURefMetaEntity,
 } from 'salvageunion-reference'
+import { Text } from '../../base/Text'
 import type { EntityDisplaySubProps } from './types'
 
-export function EntityStats({ data, compact }: EntityDisplaySubProps) {
-  const slotsRequired = getSlotsRequired(data)
-  const salvageValue = getSalvageValue(data)
-  const structurePoints = getStructurePoints(data)
-  const energyPoints = getEnergyPoints(data)
-  const heatCapacity = getHeatCapacity(data)
-  const systemSlots = getSystemSlots(data)
-  const moduleSlots = getModuleSlots(data)
-  const cargoCapacity = getCargoCapacity(data)
-  const hitPoints = getHitPoints(data)
-  console.log('Hit Points', hitPoints)
+export function EntityStats({
+  data,
+  compact,
+  label = '',
+  prefix = '',
+}: Omit<EntityDisplaySubProps, 'data'> & {
+  data: SURefMetaEntity | SURefMetaBonusPerTechLevel
+  label?: string
+  prefix?: string
+}) {
+  // Type assertion: SURefMetaBonusPerTechLevel is SURefMetaStats which has the same structure
+  // as the stats properties these functions expect
+  const entityData = data as SURefMetaEntity
+
+  const slotsRequired = getSlotsRequired(entityData)
+  const salvageValue = getSalvageValue(entityData)
+  const structurePoints = getStructurePoints(entityData)
+  const energyPoints = getEnergyPoints(entityData)
+  const heatCapacity = getHeatCapacity(entityData)
+  const systemSlots = getSystemSlots(entityData)
+  const moduleSlots = getModuleSlots(entityData)
+  const cargoCapacity = getCargoCapacity(entityData)
+  const hitPoints = getHitPoints(entityData)
+
+  const applyLabel = (value: number | string | undefined) => {
+    if (value === undefined) return undefined
+    if (value === 0) return '-'
+    return `${prefix}${value}`
+  }
+
   return (
-    <Flex gap={1} justifyContent="flex-end">
+    <Flex gap={1} justifyContent="flex-end" alignItems="center">
+      {label && (
+        <Text variant="pseudoheader" fontSize={compact ? 'xs' : 'sm'}>
+          {label}
+        </Text>
+      )}
       <StatDisplay
         label="Slots"
         bottomLabel={compact ? '' : 'Required'}
-        value={slotsRequired}
+        value={applyLabel(slotsRequired)}
         compact={compact}
       />
       <StatDisplay
         label={compact ? 'SP' : 'Structure'}
         bottomLabel={compact ? '' : 'Points'}
-        value={structurePoints}
+        value={applyLabel(structurePoints)}
         compact={compact}
       />
       <StatDisplay
         label={compact ? 'HP' : 'Hit'}
         bottomLabel={compact ? '' : 'Points'}
-        value={hitPoints}
+        value={applyLabel(hitPoints)}
         compact={compact}
       />
       <StatDisplay
         label={compact ? 'EP' : 'Energy'}
         bottomLabel={compact ? '' : 'Points'}
-        value={energyPoints}
+        value={applyLabel(energyPoints)}
         compact={compact}
       />
       <StatDisplay
         label={compact ? 'SV' : 'Salvge'}
         bottomLabel={compact ? '' : 'Value'}
-        value={salvageValue}
+        value={applyLabel(salvageValue)}
         compact={compact}
       />
       <StatDisplay
         label={compact ? 'Sys' : 'System'}
         bottomLabel={compact ? 'Slts' : 'Slots'}
-        value={systemSlots}
+        value={applyLabel(systemSlots)}
         compact={compact}
       />
       <StatDisplay
         label={compact ? 'Mod' : 'Module'}
         bottomLabel={compact ? 'Slts' : 'Slots'}
-        value={moduleSlots}
+        value={applyLabel(moduleSlots)}
         compact={compact}
       />
       <StatDisplay
         label={compact ? 'Crgo' : 'Cargo'}
         bottomLabel={compact ? 'Cap' : 'Capacity'}
-        value={cargoCapacity}
+        value={applyLabel(cargoCapacity)}
         compact={compact}
       />
       <StatDisplay
         label="Heat"
         bottomLabel={compact ? 'Cap' : 'Capacity'}
-        value={heatCapacity}
+        value={applyLabel(heatCapacity)}
         compact={compact}
       />
     </Flex>

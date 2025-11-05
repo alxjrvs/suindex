@@ -8,9 +8,11 @@ interface SystemsListProps {
   id: string
   /** Whether the component is disabled */
   disabled?: boolean
+  /** Hides add/remove buttons when viewing another player's sheet */
+  readOnly?: boolean
 }
 
-export function SystemsList({ id, disabled = false }: SystemsListProps) {
+export function SystemsList({ id, disabled = false, readOnly = false }: SystemsListProps) {
   const { systems, selectedChassis, usedSystemSlots } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
   const totalSystemSlots = chassisRef ? (getSystemSlots(chassisRef) ?? 0) : 0
@@ -23,8 +25,8 @@ export function SystemsList({ id, disabled = false }: SystemsListProps) {
       entityIds={systems.map((s) => s.ref.id)}
       usedSlots={usedSystemSlots}
       totalSlots={totalSystemSlots}
-      onRemove={handleRemoveSystem}
-      onAdd={handleAddSystem}
+      onRemove={readOnly ? undefined : handleRemoveSystem}
+      onAdd={readOnly ? undefined : handleAddSystem}
       disabled={disabled}
     />
   )

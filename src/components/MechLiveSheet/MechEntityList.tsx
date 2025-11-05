@@ -20,9 +20,9 @@ interface MechEntityListProps {
   /** Total available slots */
   totalSlots: number
   /** Callback when an entity is removed */
-  onRemove: (id: string) => void
+  onRemove?: (id: string) => void
   /** Callback when an entity is added */
-  onAdd: (id: string) => void
+  onAdd?: (id: string) => void
   /** Whether the component is disabled */
   disabled?: boolean
 }
@@ -61,7 +61,7 @@ export function MechEntityList({
   const canAddMore = usedSlots < totalSlots
 
   const handleSelect = (entityId: string) => {
-    onAdd(entityId)
+    onAdd?.(entityId)
     setIsModalOpen(false)
   }
 
@@ -75,11 +75,13 @@ export function MechEntityList({
         disabled={disabled}
         rightContent={
           <Flex gap={3}>
-            <AddStatButton
-              onClick={() => setIsModalOpen(true)}
-              disabled={disabled || !canAddMore}
-              bottomLabel={title}
-            />
+            {onAdd && (
+              <AddStatButton
+                onClick={() => setIsModalOpen(true)}
+                disabled={disabled || !canAddMore}
+                bottomLabel={title}
+              />
+            )}
             <StatDisplay
               label={label}
               bottomLabel="Slots"
@@ -98,23 +100,27 @@ export function MechEntityList({
               data={entity}
               compact
               disabled={disabled}
-              buttonConfig={{
-                bg: 'su.brick',
-                color: 'su.white',
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                _hover: { bg: 'su.black' },
-                onClick: (e) => {
-                  e.stopPropagation()
-                  const confirmed = window.confirm(
-                    `Are you sure you want to remove "${entity.name}"?`
-                  )
-                  if (confirmed) {
-                    onRemove(entity.id)
-                  }
-                },
-                children: `Remove ${schemaName === 'systems' ? 'System' : 'Module'}`,
-              }}
+              buttonConfig={
+                onRemove
+                  ? {
+                      bg: 'su.brick',
+                      color: 'su.white',
+                      fontWeight: 'bold',
+                      textTransform: 'uppercase',
+                      _hover: { bg: 'su.black' },
+                      onClick: (e) => {
+                        e.stopPropagation()
+                        const confirmed = window.confirm(
+                          `Are you sure you want to remove "${entity.name}"?`
+                        )
+                        if (confirmed) {
+                          onRemove(entity.id)
+                        }
+                      },
+                      children: `Remove ${schemaName === 'systems' ? 'System' : 'Module'}`,
+                    }
+                  : undefined
+              }
             />
           ))}
         </VStack>

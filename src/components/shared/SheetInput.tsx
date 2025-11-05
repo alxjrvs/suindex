@@ -7,7 +7,7 @@ import { DEBOUNCE_TIMINGS } from '../../constants/gameRules'
 interface SheetInputProps {
   label?: string
   value: string
-  onChange: (value: string) => void
+  onChange?: (value: string) => void
   placeholder?: string
   disabled?: boolean
   // Optional dice roller
@@ -59,7 +59,7 @@ export function SheetInput({
   // Debounce the onChange callback
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (localValue !== value) {
+      if (localValue !== value && onChange) {
         onChange(localValue)
       }
     }, DEBOUNCE_TIMINGS.autoSave)

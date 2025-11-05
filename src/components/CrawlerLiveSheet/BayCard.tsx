@@ -13,9 +13,10 @@ import { useUpdateEntity, useManageEntityChoices } from '../../hooks/suentity'
 interface BayCardProps {
   bay: HydratedBay
   disabled?: boolean
+  readOnly?: boolean
 }
 
-export function BayCard({ bay, disabled = false }: BayCardProps) {
+export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProps) {
   const updateEntity = useUpdateEntity()
   const handleUpdateChoice = useManageEntityChoices(bay.id)
 
@@ -78,14 +79,16 @@ export function BayCard({ bay, disabled = false }: BayCardProps) {
       titleRotation={metadata.damaged ? titleRotation : 0}
       disabled={disabled}
       rightContent={
-        <StatDisplay
-          label={metadata.damaged ? 'Repair' : 'Damage'}
-          value={metadata.damaged ? '+' : '-'}
-          onClick={handleToggleDamaged}
-          bg={metadata.damaged ? 'su.orange' : 'su.brick'}
-          valueColor="su.white"
-          disabled={disabled}
-        />
+        !readOnly ? (
+          <StatDisplay
+            label={metadata.damaged ? 'Repair' : 'Damage'}
+            value={metadata.damaged ? '+' : '-'}
+            onClick={handleToggleDamaged}
+            bg={metadata.damaged ? 'su.orange' : 'su.brick'}
+            valueColor="su.white"
+            disabled={disabled}
+          />
+        ) : undefined
       }
     >
       <Box position="relative" w="full">
@@ -112,8 +115,8 @@ export function BayCard({ bay, disabled = false }: BayCardProps) {
               referenceBay={bayRef}
               description={bayRef.npc.description || ''}
               maxHP={bayRef.npc.hitPoints || 0}
-              onUpdateChoice={handleUpdateChoice}
-              onUpdateBay={handleUpdateNPC}
+              onUpdateChoice={readOnly ? undefined : handleUpdateChoice}
+              onUpdateBay={readOnly ? undefined : handleUpdateNPC}
               position={bayRef.npc.position || 'NPC'}
               tilted={metadata.damaged}
               disabled={disabled}

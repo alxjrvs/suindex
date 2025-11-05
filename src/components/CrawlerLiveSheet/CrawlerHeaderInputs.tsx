@@ -13,11 +13,18 @@ import { useOnCrawlerTypeChange } from '../../hooks/crawler/useOnCrawlerTypeChan
 import { calculateScrapRemoval, hasEnoughScrapAtTechLevel } from '../../utils/scrapCalculations'
 
 interface CrawlerHeaderInputsProps {
+  /** Disables all inputs */
   disabled?: boolean
+  /** Greys out the RoundedBox background (only for missing required data) */
+  incomplete?: boolean
   id: string
 }
 
-export function CrawlerHeaderInputs({ disabled = false, id }: CrawlerHeaderInputsProps) {
+export function CrawlerHeaderInputs({
+  disabled = false,
+  incomplete = false,
+  id,
+}: CrawlerHeaderInputsProps) {
   const allCrawlers = useMemo(() => SalvageUnionReference.Crawlers.all(), [])
 
   const { crawler, upkeep, maxSP, selectedCrawlerType } = useHydratedCrawler(id)
@@ -137,7 +144,7 @@ export function CrawlerHeaderInputs({ disabled = false, id }: CrawlerHeaderInput
       title={crawler?.name ?? 'Crawler'}
       bg="bg.builder.crawler"
       flex="1"
-      disabled={disabled}
+      disabled={incomplete}
       leftContent={
         isMaxUpgrade && !isTechLevel6 ? (
           <StatDisplay

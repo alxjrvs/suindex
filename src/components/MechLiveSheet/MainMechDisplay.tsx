@@ -13,7 +13,7 @@ import { ChassisInputs } from './ChassisInputs'
 import { useHydratedMech } from '../../hooks/mech'
 import { Text } from '../base/Text'
 
-export function MainMechDisplay({ id }: { id: string }) {
+export function MainMechDisplay({ id, isEditable }: { id: string; isEditable: boolean }) {
   const { mech, selectedChassis } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
   const title =
@@ -68,7 +68,7 @@ export function MainMechDisplay({ id }: { id: string }) {
         h="full"
         disabled={!selectedChassis}
       >
-        <ChassisInputs id={id} />
+        <ChassisInputs id={id} isEditable={isEditable} />
       </RoundedBox>
     </VStack>
   )

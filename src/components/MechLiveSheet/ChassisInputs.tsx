@@ -10,9 +10,10 @@ import { useChangeMechChassisPattern } from '../../hooks/mech/useChangeMechChass
 
 interface ChassisInputsProps {
   id: string
+  isEditable: boolean
 }
 
-export function ChassisInputs({ id }: ChassisInputsProps) {
+export function ChassisInputs({ id, isEditable }: ChassisInputsProps) {
   const { mech, selectedChassis } = useHydratedMech(id)
   const onChassisChange = useChangeMechChassis(id)
   const onPatternChange = useChangeMechChassisPattern(id)
@@ -22,15 +23,21 @@ export function ChassisInputs({ id }: ChassisInputsProps) {
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full" h="full" alignItems="center">
-      <ChassisSelector chassisId={chassisId} allChassis={allChassis} onChange={onChassisChange} />
+      <ChassisSelector
+        chassisId={chassisId}
+        allChassis={allChassis}
+        onChange={onChassisChange}
+        disabled={!isEditable}
+      />
       <PatternSelector
         pattern={pattern}
         selectedChassis={selectedChassis}
         onChange={onPatternChange}
+        disabled={!isEditable}
       />
 
-      <QuirkInput id={id} disabled={!selectedChassis} />
-      <AppearanceInput id={id} disabled={!selectedChassis} />
+      <QuirkInput id={id} disabled={!isEditable} />
+      <AppearanceInput id={id} disabled={!isEditable} />
     </Grid>
   )
 }

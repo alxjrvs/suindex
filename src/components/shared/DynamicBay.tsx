@@ -12,7 +12,7 @@ import { useUpdateCargo } from '../../hooks/cargo/useCargo'
 interface DynamicBayProps {
   items: HydratedCargo[]
   maxCapacity: number
-  onRemove: (id: string) => void
+  onRemove?: (id: string) => void
   onAddClick?: (position: { row: number; col: number }) => void
   disabled?: boolean
   singleCellMode?: boolean // If true, all items take up exactly 1 cell regardless of amount
@@ -225,7 +225,7 @@ export function DynamicBay({
 
         const handleRemoveClick = (e: React.MouseEvent) => {
           e.stopPropagation()
-          onRemove(cargoItem.id)
+          onRemove?.(cargoItem.id)
         }
 
         // Use hydrated ref for color
@@ -257,7 +257,7 @@ export function DynamicBay({
             cursor={cargoItem.ref ? 'pointer' : 'default'}
             _hover={cargoItem.ref ? { opacity: 0.8 } : undefined}
           >
-            {cell.isTopRight && (
+            {cell.isTopRight && onRemove && (
               <Button
                 onClick={handleRemoveClick}
                 position="absolute"

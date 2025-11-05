@@ -6,7 +6,15 @@ import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 import { useHydratedCrawler } from '../../hooks/crawler'
 import { useManageEntityChoices } from '../../hooks/suentity'
 
-export function CrawlerAbilities({ id, disabled = false }: { id: string; disabled?: boolean }) {
+export function CrawlerAbilities({
+  id,
+  disabled = false,
+  readOnly = false,
+}: {
+  id: string
+  disabled?: boolean
+  readOnly?: boolean
+}) {
   const { selectedCrawlerType } = useHydratedCrawler(id)
   const crawlerTypeRef = selectedCrawlerType?.ref as SURefCrawler | undefined
 
@@ -30,6 +38,7 @@ export function CrawlerAbilities({ id, disabled = false }: { id: string; disable
       ).map((ability, idx) => (
         <CrawlerAbility
           disabled={disabled}
+          readOnly={readOnly}
           key={idx}
           ability={ability}
           crawlerTypeEntityId={selectedCrawlerType?.id}
@@ -42,10 +51,12 @@ export function CrawlerAbilities({ id, disabled = false }: { id: string; disable
 function CrawlerAbility({
   ability,
   disabled = false,
+  readOnly = false,
   crawlerTypeEntityId,
 }: {
   ability: SURefCrawler['actions'][0]
   disabled?: boolean
+  readOnly?: boolean
   crawlerTypeEntityId: string | undefined
 }) {
   const handleUpdateChoice = useManageEntityChoices(crawlerTypeEntityId)
@@ -56,7 +67,7 @@ function CrawlerAbility({
       <SheetDisplay disabled={disabled} label={ability.name} value={ability.description} />
       {wrappedChoice.map((choice, idx) => (
         <SheetEntityChoiceDisplay
-          onUpdateChoice={handleUpdateChoice}
+          onUpdateChoice={readOnly ? undefined : handleUpdateChoice}
           key={idx}
           choice={choice}
           entityId={crawlerTypeEntityId}

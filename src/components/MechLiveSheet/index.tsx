@@ -16,10 +16,14 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
-import { useUpdateMech, useHydratedMech, useDeleteMech } from '../../hooks/mech'
+import { useUpdateMech, useHydratedMech, useDeleteMech, mechsKeys } from '../../hooks/mech'
 import { useCreatePilot } from '../../hooks/pilot'
+import { entitiesKeys } from '../../hooks/suentity/useSUEntities'
+import { playerChoicesKeys } from '../../hooks/suentity/usePlayerChoices'
+import { cargoKeys } from '../../hooks/cargo/useCargo'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { useImageUpload } from '../../hooks/useImageUpload'
+import { useRealtimeSubscription } from '../../hooks/useRealtimeSubscription'
 import { useEntityRelationships } from '../../hooks/useEntityRelationships'
 import { isOwner } from '../../lib/permissions'
 import { MainMechDisplay } from './MainMechDisplay'
@@ -49,6 +53,39 @@ export default function MechLiveSheet({ id }: { id: string }) {
     entityId: id,
     getCurrentImageUrl: () => mech?.image_url ?? null,
     queryKey: ['mechs', id],
+  })
+
+  // Real-time subscriptions for live updates
+  useRealtimeSubscription({
+    table: 'mechs',
+    id,
+    queryKey: mechsKeys.byId(id),
+    enabled: !isLocal && !!id,
+    toastMessage: 'Mech data updated',
+  })
+
+  // Subscribe to entities (systems, modules, chassis)
+  useRealtimeSubscription({
+    table: 'suentities',
+    queryKey: entitiesKeys.forParent('mech', id),
+    enabled: !isLocal && !!id,
+    showToast: false,
+  })
+
+  // Subscribe to player choices
+  useRealtimeSubscription({
+    table: 'player_choices',
+    queryKey: playerChoicesKeys.all,
+    enabled: !isLocal && !!id,
+    showToast: false,
+  })
+
+  // Subscribe to cargo
+  useRealtimeSubscription({
+    table: 'cargo',
+    queryKey: cargoKeys.forParent('mech', id),
+    enabled: !isLocal && !!id,
+    showToast: false,
   })
 
   // Create pilot hook
@@ -184,8 +221,8 @@ export default function MechLiveSheet({ id }: { id: string }) {
           isUploading={isUploading}
           isRemoving={isRemoving}
         />
-        <MainMechDisplay id={id} />
-        <MechResourceSteppers id={id} disabled={!selectedChassis || !isEditable} />
+        <MainMechDisplay id={id} isEditable={isEditable} />
+        <MechResourceSteppers id={id} disabled={!isEditable} incomplete={!selectedChassis} />
       </Flex>
 
       <Tabs.Root defaultValue="abilities">
@@ -209,15 +246,15 @@ export default function MechLiveSheet({ id }: { id: string }) {
 
         <Tabs.Content value="systems-modules">
           <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6} mt={6}>
-            <SystemsList id={id} disabled={!selectedChassis || !isEditable} />
+            <SystemsList id={id} disabled={!selectedChassis} readOnly={!isEditable} />
 
-            <ModulesList id={id} disabled={!selectedChassis || !isEditable} />
+            <ModulesList id={id} disabled={!selectedChassis} readOnly={!isEditable} />
           </Grid>
         </Tabs.Content>
 
         <Tabs.Content value="storage">
           <Box mt={6}>
-            <CargoList id={id} disabled={!selectedChassis || !isEditable} />
+            <CargoList id={id} disabled={!selectedChassis} readOnly={!isEditable} />
           </Box>
         </Tabs.Content>
 
@@ -226,7 +263,8 @@ export default function MechLiveSheet({ id }: { id: string }) {
             <Notes
               notes={mech?.notes ?? ''}
               onChange={(value) => updateMech.mutate({ id, updates: { notes: value } })}
-              disabled={!selectedChassis || !isEditable}
+              disabled={!isEditable}
+              incomplete={!selectedChassis}
               backgroundColor="bg.builder.mech"
               placeholder="Add notes about your mech..."
             />

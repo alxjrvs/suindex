@@ -7,10 +7,17 @@ import { useHydratedMech, useUpdateMech } from '../../hooks/mech'
 
 interface MechResourceSteppersProps {
   id: string
+  /** Disables all steppers */
   disabled?: boolean
+  /** Greys out the RoundedBox background (only for missing required data) */
+  incomplete?: boolean
 }
 
-export function MechResourceSteppers({ id, disabled = false }: MechResourceSteppersProps) {
+export function MechResourceSteppers({
+  id,
+  disabled = false,
+  incomplete = false,
+}: MechResourceSteppersProps) {
   const { mech, selectedChassis } = useHydratedMech(id)
   const updateMech = useUpdateMech()
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
@@ -21,7 +28,7 @@ export function MechResourceSteppers({ id, disabled = false }: MechResourceStepp
   const currentSP = maxSP - currentDamage
 
   return (
-    <RoundedBox bg="su.green" disabled={disabled}>
+    <RoundedBox bg="su.green" disabled={incomplete}>
       <VStack alignItems="center" gap={2} h="full" justifyContent="space-between">
         <NumericStepper
           label="SP"

@@ -38,6 +38,19 @@ export function isOwner(entityUserId: string, currentUserId: string | null): boo
 }
 
 /**
+ * Check if the current user is a mediator for a game (synchronous check)
+ * @param gameMembers - Array of game members with user_id and role
+ * @param currentUserId - The current authenticated user's ID
+ */
+export function isGameMediator(
+  gameMembers: Array<{ user_id: string; role: string }>,
+  currentUserId: string | null
+): boolean {
+  if (!currentUserId) return false
+  return gameMembers.some((m) => m.role === 'mediator' && m.user_id === currentUserId)
+}
+
+/**
  * Check if a user is a member of a game
  */
 async function isUserInGame(userId: string, gameId: string): Promise<boolean> {

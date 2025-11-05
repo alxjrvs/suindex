@@ -11,13 +11,15 @@ import { useHydratedMech } from '../../hooks/mech'
 interface CargoListProps {
   disabled?: boolean
   id: string
+  /** Hides add/remove buttons when viewing another player's sheet */
+  readOnly?: boolean
 }
 
-export function CargoList({ id, disabled = false }: CargoListProps) {
+export function CargoList({ id, disabled = false, readOnly = false }: CargoListProps) {
   const { cargo, selectedChassis, totalCargo } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
   const maxCargo = chassisRef ? (getCargoCapacity(chassisRef) ?? 0) : 0
-  const canAddCargo = !!selectedChassis
+  const canAddCargo = !!selectedChassis && !readOnly
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
   const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
   const { handleAddCargo, handleRemoveCargo } = useManageMechCargo(id)
@@ -38,7 +40,7 @@ export function CargoList({ id, disabled = false }: CargoListProps) {
         <DynamicBay
           items={cargo}
           maxCapacity={maxCargo}
-          onRemove={handleRemoveCargo}
+          onRemove={readOnly ? undefined : handleRemoveCargo}
           onAddClick={canAddCargo ? onAddClick : undefined}
           disabled={disabled}
         />

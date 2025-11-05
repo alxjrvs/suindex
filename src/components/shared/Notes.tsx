@@ -4,7 +4,10 @@ import { RoundedBox } from './RoundedBox'
 interface NotesProps {
   notes: string
   onChange: (value: string) => void
+  /** Disables the textarea input */
   disabled?: boolean
+  /** Greys out the RoundedBox background (only for missing required data) */
+  incomplete?: boolean
   backgroundColor?: string
   placeholder?: string
   h?: string | number
@@ -17,6 +20,7 @@ export function Notes({
   onChange,
   placeholder,
   disabled = false,
+  incomplete = false,
   backgroundColor = 'bg.builder',
   h,
   flex,
@@ -26,7 +30,7 @@ export function Notes({
     <RoundedBox
       title="notes"
       bg={backgroundColor}
-      disabled={disabled}
+      disabled={incomplete}
       h={h ?? 'full'}
       flex={flex}
       minH={minH}
