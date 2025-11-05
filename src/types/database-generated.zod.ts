@@ -600,6 +600,12 @@ export const publicGetGameMembersReturnsSchema = z.array(
   })
 )
 
+export const publicGetUserDisplayNameArgsSchema = z.object({
+  p_user_id: z.string(),
+})
+
+export const publicGetUserDisplayNameReturnsSchema = z.string()
+
 export const publicIsGameMediatorArgsSchema = z.object({
   game_uuid: z.string(),
   user_uuid: z.string(),

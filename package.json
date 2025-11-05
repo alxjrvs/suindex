@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc -b --noEmit",
-    "build": "bun run gen:all && tsc -b && vite build",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write .",
     "sanity": "bun run lint -- --fix && bun run format && bun run typecheck",
