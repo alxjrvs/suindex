@@ -24,6 +24,7 @@ import { EntityBonusPerTechLevel } from './EntityBonusPerTechLevel'
 import { EntityDisplayProvider } from './entityDisplayProvider'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { ConditionalSheetDisplay } from './ConditionalSheetDisplay'
+import { EntityPopulationRange } from './EntityPopulationRange'
 
 type EntityDisplayProps = {
   /** Entity data to display */
@@ -216,6 +217,7 @@ function EntityDisplayContent({
         >
           <EntityTopMatter hideActions={hideActions} />
 
+          <EntityPopulationRange />
           <EntityBonusPerTechLevel />
           <ConditionalSheetDisplay propertyName="effect" />
 

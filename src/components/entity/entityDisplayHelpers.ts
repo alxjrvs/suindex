@@ -65,7 +65,19 @@ export function calculateBackgroundColor(
   data: SURefMetaEntity | SURefMetaBonusPerTechLevel,
   techLevelColors: Record<number, string>
 ): string {
+  // Schema-specific colors (from old entityDisplayConfig)
   if (schemaName === 'chassis') return 'su.green'
+  if (schemaName === 'crawlers') return headerColor || 'su.pink'
+  if (schemaName === 'crawler-tech-levels') return headerColor || 'su.pink'
+  if (schemaName === 'crawler-bays') return headerColor || 'su.pink'
+  if (schemaName === 'creatures') return headerColor || 'su.orange'
+  if (schemaName === 'bio-titans') return headerColor || 'su.orange'
+  if (schemaName === 'keywords') return headerColor || 'su.orange'
+  if (schemaName === 'traits') return headerColor || 'su.orange'
+  if (schemaName === 'roll-tables') return headerColor || 'su.orange'
+  if (schemaName === 'classes.core') return headerColor || 'su.orange'
+  if (schemaName === 'classes.advanced') return headerColor || 'su.pink'
+
   if (schemaName === 'actions') {
     if (techLevel) return techLevelColors[techLevel]
     return 'su.threeBlue'

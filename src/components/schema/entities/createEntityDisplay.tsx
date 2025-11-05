@@ -1,7 +1,6 @@
 import type { ComponentType } from 'react'
 import type { SURefEntity, SURefMetaSchemaName } from 'salvageunion-reference'
 import { EntityDisplay } from '../../entity/EntityDisplay'
-import { ENTITY_DISPLAY_CONFIGS } from './entityDisplayConfig'
 
 interface EntityDisplayProps {
   data: SURefEntity
@@ -13,8 +12,8 @@ interface EntityDisplayProps {
 }
 
 /**
- * Factory function to create simple entity display components from configuration.
- * This eliminates the need for individual wrapper files for simple displays.
+ * Factory function to create simple entity display components.
+ * EntityDisplay now handles all schema-specific logic internally.
  *
  * @param schemaName - The schema name (e.g., 'npcs', 'creatures', etc.)
  * @returns A display component configured for the specified entity type
@@ -30,7 +29,6 @@ export function createEntityDisplay(
     onClick,
     hideActions = false,
   }: EntityDisplayProps) => {
-    const config = ENTITY_DISPLAY_CONFIGS[schemaName] || {}
     return (
       <EntityDisplay
         schemaName={schemaName}
@@ -40,7 +38,6 @@ export function createEntityDisplay(
         defaultExpanded={defaultExpanded}
         onClick={onClick}
         hideActions={hideActions}
-        {...config}
       />
     )
   }
