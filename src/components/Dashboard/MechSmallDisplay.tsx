@@ -6,21 +6,22 @@ import { useHydratedMech } from '../../hooks/mech'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { fetchUserDisplayName } from '../../lib/api/users'
 
 interface MechSmallDisplayProps {
-  id: string
+  id?: string
   reverse?: boolean
 }
 
 export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps) {
   const navigate = useNavigate()
   const { userId: currentUserId } = useCurrentUser()
-  const { mech, selectedChassis } = useHydratedMech(id)
+  const { mech, selectedChassis, loading: mechLoading } = useHydratedMech(id)
 
   const chassisName = selectedChassis?.ref.name || 'No Chassis'
 
   // Fetch pilot name and crawler_id if mech has pilot_id
-  const { data: pilotData } = useQuery({
+  const { data: pilotData, isLoading: pilotLoading } = useQuery({
     queryKey: ['pilot-data', mech?.pilot_id],
     queryFn: async () => {
       if (!mech?.pilot_id) return null
@@ -41,7 +42,7 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
   })
 
   // Fetch crawler name if pilot has crawler_id
-  const { data: crawlerName } = useQuery({
+  const { data: crawlerName, isLoading: crawlerLoading } = useQuery({
     queryKey: ['crawler-name', pilotData?.crawler_id],
     queryFn: async () => {
       if (!pilotData?.crawler_id) return null
@@ -61,14 +62,31 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     enabled: !!pilotData?.crawler_id,
   })
 
+  // Fetch owner's Discord username
+  const { data: ownerData } = useQuery({
+    queryKey: ['user-display-name', mech?.user_id],
+    queryFn: () => fetchUserDisplayName(mech!.user_id),
+    enabled: !!mech?.user_id && currentUserId !== mech?.user_id, // Only fetch if not the current user
+  })
+
   const isOwner = currentUserId === mech?.user_id
-  // For now, just show "Owner" for non-owned mechs
-  // TODO: Add a public users table or profile system to show owner names
-  const ownerName = isOwner ? 'You' : 'Owner'
+  const ownerName = isOwner ? 'You' : ownerData || 'Owner'
 
   const onClick = () => navigate(`/dashboard/mechs/${id}`)
 
-  if (!mech) return null
+  const isLoading = !id || mechLoading || pilotLoading || crawlerLoading
+
+  if (isLoading || !mech) {
+    return (
+      <UserEntitySmallDisplay
+        reverse={reverse}
+        onClick={onClick}
+        bgColor="su.green"
+        leftHeader="Loading..."
+        rightHeader="..."
+      />
+    )
+  }
   const detailContent = (
     <VStack gap={1} alignItems="stretch">
       {/* Crawler badge (pink) */}

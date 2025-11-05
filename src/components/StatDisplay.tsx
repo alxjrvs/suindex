@@ -70,7 +70,6 @@ export function StatDisplay({
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     cursor: onClick && !disabled ? ('pointer' as const) : ('default' as const),
-    opacity: disabled ? 0.3 : 1,
     pointerEvents: disabled ? ('none' as const) : ('auto' as const),
     transition: isFlashing ? 'all 3s ease-out' : 'opacity 0.2s',
     transform: isFlashing ? 'scale(1)' : 'scale(1)',
@@ -109,15 +108,13 @@ export function StatDisplay({
         variant="pseudoheader"
         zIndex={1}
         id={labelId}
-        bg={disabled ? 'gray.600' : undefined}
-        color={disabled ? 'gray.300' : undefined}
       >
         {label}
       </Text>
       <WrapperComponent {...buttonProps}>
         <Text
           fontWeight="bold"
-          color={disabled ? 'su.black' : trueValueColor}
+          color={trueValueColor}
           textAlign="center"
           overflow="hidden"
           whiteSpace="nowrap"
@@ -138,8 +135,6 @@ export function StatDisplay({
         alignSelf="center"
         variant="pseudoheader"
         zIndex={1}
-        bg={disabled ? 'gray.600' : undefined}
-        color={disabled ? 'gray.300' : undefined}
         visibility={bottomLabel ? 'visible' : 'hidden'}
       >
         {bottomLabel || '\u00A0'}

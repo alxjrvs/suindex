@@ -6,21 +6,28 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { fetchUserDisplayName } from '../../lib/api/users'
 
 interface PilotSmallDisplayProps {
-  id: string
+  id?: string
+  waitForId?: boolean
   label?: string
 }
 
-export function PilotSmallDisplay({ id, label }: PilotSmallDisplayProps) {
+export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDisplayProps) {
   const navigate = useNavigate()
   const { userId: currentUserId } = useCurrentUser()
-  const { pilot, selectedClass } = useHydratedPilot(id)
-
+  const {
+    pilot,
+    selectedClass,
+    selectedAdvancedClass,
+    loading: pilotLoading,
+  } = useHydratedPilot(id)
   const className = selectedClass?.ref.name
+  const advancedClassName = selectedAdvancedClass?.ref.name
 
   // Fetch crawler name if pilot has crawler_id
-  const { data: crawlerName } = useQuery({
+  const { data: crawlerName, isLoading: crawlerLoading } = useQuery({
     queryKey: ['crawler-name', pilot?.crawler_id],
     queryFn: async () => {
       if (!pilot?.crawler_id) return null
@@ -41,13 +48,13 @@ export function PilotSmallDisplay({ id, label }: PilotSmallDisplayProps) {
   })
 
   // Fetch mech pattern if pilot has a mech
-  const { data: mechChassisPattern } = useQuery({
+  const { data: mechChassisPattern, isLoading: mechLoading } = useQuery({
     queryKey: ['mech-pattern', id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('mechs')
         .select('pattern')
-        .eq('pilot_id', id)
+        .eq('pilot_id', id!)
         .eq('active', true)
         .single()
 
@@ -61,14 +68,34 @@ export function PilotSmallDisplay({ id, label }: PilotSmallDisplayProps) {
     enabled: !!id,
   })
 
+  // Fetch owner's Discord username
+  const { data: ownerData } = useQuery({
+    queryKey: ['user-display-name', pilot?.user_id],
+    queryFn: () => fetchUserDisplayName(pilot!.user_id),
+    enabled: !!pilot?.user_id && currentUserId !== pilot?.user_id, // Only fetch if not the current user
+  })
+  if (!id && !waitForId) {
+    return null
+  }
+
   const isOwner = currentUserId === pilot?.user_id
-  // For now, just show "Owner" for non-owned pilots
-  // TODO: Add a public users table or profile system to show owner names
-  const ownerName = isOwner ? 'You' : 'Owner'
+  const ownerName = isOwner ? 'You' : ownerData || 'Owner'
 
   const onClick = () => navigate(`/dashboard/pilots/${id}`)
 
-  if (!pilot) return null
+  const isLoading = (!id && waitForId) || pilotLoading || crawlerLoading || mechLoading
+
+  if (isLoading || !pilot) {
+    return (
+      <UserEntitySmallDisplay
+        onClick={onClick}
+        label={label}
+        bgColor="su.orange"
+        leftHeader="Loading..."
+        rightHeader="..."
+      />
+    )
+  }
   const detailContent = (
     <VStack gap={1} alignItems="stretch">
       {/* Crawler badge (pink) */}
@@ -91,6 +118,10 @@ export function PilotSmallDisplay({ id, label }: PilotSmallDisplayProps) {
     </VStack>
   )
 
+  const rightHeader = advancedClassName?.toUpperCase()
+    ? advancedClassName.toUpperCase()
+    : className?.toUpperCase()
+
   return (
     <UserEntitySmallDisplay
       onClick={onClick}
@@ -99,7 +130,7 @@ export function PilotSmallDisplay({ id, label }: PilotSmallDisplayProps) {
       detailLabel="Player"
       detailValue={ownerName}
       leftHeader={pilot.callsign}
-      rightHeader={className?.toUpperCase()}
+      rightHeader={rightHeader}
       detailContent={crawlerName || mechChassisPattern ? detailContent : undefined}
       isInactive={pilot.active === false}
     />

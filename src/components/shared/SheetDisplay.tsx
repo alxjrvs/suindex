@@ -35,8 +35,7 @@ export function SheetDisplay({
             fontSize={compact ? 'xs' : 'sm'}
             textTransform="uppercase"
             ml={compact ? 2 : 3}
-            bg={disabled ? 'gray.600' : labelBgColor}
-            color={disabled ? 'gray.300' : undefined}
+            bg={labelBgColor}
           >
             {label}
           </Text>
@@ -57,8 +56,8 @@ export function SheetDisplay({
         whiteSpace="pre-wrap"
         fontSize={compact ? 'xs' : 'sm'}
         overflowY="auto"
-        opacity={disabled ? 0.5 : 1}
         cursor={disabled ? 'not-allowed' : 'default'}
+        pointerEvents={disabled ? 'none' : 'auto'}
       >
         {children || value}
       </Box>

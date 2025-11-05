@@ -14,7 +14,7 @@ interface CrawlerSmallDisplayProps {
 export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
   const navigate = useNavigate()
   const { userId: currentUserId } = useCurrentUser()
-  const { crawler, selectedCrawlerType } = useHydratedCrawler(id)
+  const { crawler, selectedCrawlerType, loading } = useHydratedCrawler(id)
   const typeName = selectedCrawlerType?.ref.name ?? 'Unknown'
   const techLevel = crawler?.tech_level ?? 1
   const name = crawler?.name
@@ -35,7 +35,18 @@ export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
         : 'Unknown'
 
   const onClick = () => navigate(`/dashboard/crawlers/${id}`)
-  if (!crawler) return null
+
+  if (loading || !crawler) {
+    return (
+      <UserEntitySmallDisplay
+        label="CRAWLER"
+        onClick={onClick}
+        bgColor="su.pink"
+        leftHeader="Loading..."
+        rightHeader="..."
+      />
+    )
+  }
   return (
     <UserEntitySmallDisplay
       label="CRAWLER"

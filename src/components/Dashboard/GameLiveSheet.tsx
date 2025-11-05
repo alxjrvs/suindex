@@ -7,7 +7,6 @@ import { Button } from '@chakra-ui/react'
 import { ExternalLinkModal } from './ExternalLinkModal'
 import { GameInfo } from './GameInfo'
 import { PilotMechCell } from './PilotMechCell'
-import { useGameWithRelationships } from '../../hooks/useGameWithRelationships'
 import { ActiveToggle } from '../shared/ActiveToggle'
 import { PrivateToggle } from '../shared/PrivateToggle'
 import { PermissionError } from '../shared/PermissionError'
@@ -18,6 +17,8 @@ import { useCreateEntity } from '../../hooks/useCreateEntity'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isGameMediator } from '../../lib/permissions'
 import {
+  useGame,
+  useGameCrawler,
   useUpdateGame,
   useDeleteGame,
   useGameInvites,
@@ -27,6 +28,7 @@ import {
   useCreateExternalLink,
   useDeleteExternalLink,
 } from '../../hooks/game'
+import { useGameMembers } from '../../hooks/game/useGameMembers'
 import type { GameInvite } from '../../lib/api/games'
 import { ValueDisplay } from '../shared/ValueDisplay'
 import { CrawlerSmallDisplay } from './CrawlerSmallDisplay'
@@ -37,26 +39,26 @@ export function GameLiveSheet() {
   const { gameId } = useParams<{ gameId: string }>()
   const navigate = useNavigate()
 
-  // Load game with all relationships using the hook
-  const { game: gameWithRelationships, loading, error } = useGameWithRelationships(gameId)
-
   // Get current user for ownership check
   const { userId } = useCurrentUser()
 
+  // Fetch game data (lightweight - just the game row)
+  const { data: game, isLoading: gameLoading, error: gameError } = useGame(gameId)
+
+  // Fetch game members
+  const { data: members = [] } = useGameMembers(gameId)
+
+  // Fetch game crawler
+  const { data: crawler } = useGameCrawler(gameId)
+
   // Determine if current user is a mediator
   const isMediator = useMemo(() => {
-    if (!gameWithRelationships || !userId) return false
-    return isGameMediator(gameWithRelationships.members, userId)
-  }, [gameWithRelationships, userId])
+    if (!members || !userId) return false
+    return isGameMediator(members, userId)
+  }, [members, userId])
 
   // Determine if the game is editable (only mediators can edit)
   const isEditable = isMediator
-
-  // Get active pilots (pilots with active=true)
-  const activePilots = useMemo(
-    () => gameWithRelationships?.pilots.filter((p) => p.pilot.active) || [],
-    [gameWithRelationships]
-  )
 
   // TanStack Query hooks for game data
   const updateGameMutation = useUpdateGame()
@@ -142,7 +144,7 @@ export function GameLiveSheet() {
     }
   }, [gameId, navigate])
 
-  if (loading) {
+  if (gameLoading) {
     return (
       <Box p={8}>
         <Flex align="center" justify="center" minH="60vh">
@@ -154,7 +156,9 @@ export function GameLiveSheet() {
     )
   }
 
-  if (error || !gameWithRelationships) {
+  const error = gameError?.message || null
+
+  if (error || !game) {
     // Check if it's a permission error
     if (
       error &&
@@ -185,8 +189,6 @@ export function GameLiveSheet() {
     )
   }
 
-  const crawler = gameWithRelationships.crawler
-
   return (
     <LiveSheetLayout>
       <ControlBarContainer
@@ -195,7 +197,7 @@ export function GameLiveSheet() {
         leftContent={
           <HStack gap={4}>
             <ActiveToggle
-              active={gameWithRelationships.active ?? false}
+              active={game.active ?? false}
               onChange={(active) => {
                 if (!gameId) return
                 updateGameMutation.mutate({
@@ -206,7 +208,7 @@ export function GameLiveSheet() {
               disabled={!isEditable}
             />
             <PrivateToggle
-              isPrivate={gameWithRelationships.private ?? true}
+              isPrivate={game.private ?? true}
               onChange={(isPrivate) => {
                 if (!gameId) return
                 updateGameMutation.mutate({
@@ -226,8 +228,8 @@ export function GameLiveSheet() {
         <VStack flex="1" gap={4} align="stretch">
           {/* Game Info */}
           <GameInfo
-            name={gameWithRelationships.name}
-            description={gameWithRelationships.description}
+            name={game.name}
+            description={game.description}
             onNameChange={(value) => {
               if (!gameId) return
               updateGameMutation.mutate({
@@ -269,12 +271,20 @@ export function GameLiveSheet() {
             </Flex>
           )}
 
-          {/* Pilot-Mech Grid */}
-          {activePilots.length > 0 && (
+          {/* Pilot-Mech Grid - Each member fetches their own data */}
+          {crawler && members.length > 0 && (
             <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4} w="full">
-              {activePilots.map(({ pilot, mech }) => (
-                <PilotMechCell key={pilot.id} pilotId={pilot.id} mechId={mech?.id || null} />
-              ))}
+              {members.map(
+                (member) =>
+                  member.role === 'player' && (
+                    <PilotMechCell
+                      key={member.user_id}
+                      memberId={member.user_id}
+                      crawlerId={crawler.id}
+                      displayName={member.user_name}
+                    />
+                  )
+              )}
             </Grid>
           )}
 
@@ -314,7 +324,7 @@ export function GameLiveSheet() {
         <VStack w={{ base: 'full', lg: '400px' }} gap={4} align="stretch" flexShrink={0}>
           <RoundedBox bg="su.gameBlue" title="Members">
             <VStack gap={2} align="stretch" w="full">
-              {gameWithRelationships.members.map((member) => (
+              {members.map((member) => (
                 <ValueDisplay
                   key={member.user_id}
                   label={member.role.toUpperCase()}

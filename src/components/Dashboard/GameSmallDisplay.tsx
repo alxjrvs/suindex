@@ -1,32 +1,32 @@
 import { VStack, Box, Flex } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
+import { useGame, useGameCrawler } from '../../hooks/game/useGames'
+import { useGameMembers } from '../../hooks/game/useGameMembers'
 
 interface GameSmallDisplayProps {
-  name: string
-  crawlerName?: string
-  mediatorName?: string
+  id: string
   onClick: () => void
-  isLoading?: boolean
   isInactive?: boolean
 }
 
-export function GameSmallDisplay({
-  name,
-  crawlerName,
-  mediatorName,
-  onClick,
-  isLoading = false,
-  isInactive,
-}: GameSmallDisplayProps) {
-  if (isLoading) {
+export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayProps) {
+  const { data: game, isLoading: gameLoading } = useGame(id)
+  const { data: members } = useGameMembers(id)
+  const { data: crawler } = useGameCrawler(id)
+
+  const mediator = members?.find((m) => m.role === 'mediator')
+  const mediatorName = mediator?.user_name || mediator?.user_id
+  const crawlerName = crawler?.name
+
+  if (gameLoading || !game) {
     return (
       <UserEntitySmallDisplay
         onClick={onClick}
         bgColor="su.gameBlue"
         w="full"
-        leftHeader={name}
-        rightHeader="LOADING..."
+        leftHeader="Loading..."
+        rightHeader="..."
       />
     )
   }
@@ -69,7 +69,7 @@ export function GameSmallDisplay({
       detailLabel="Mediator"
       detailValue={mediatorName || 'Unknown'}
       bgColor="su.gameBlue"
-      leftHeader={name}
+      leftHeader={game.name}
       rightHeader={crawlerName || 'New Game'}
       detailContent={crawlerName || mediatorName ? detailContent : undefined}
       isInactive={isInactive}

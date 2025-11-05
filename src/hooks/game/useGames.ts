@@ -7,8 +7,10 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { TablesUpdate } from '../../types/database-generated.types'
-import { fetchGame, updateGame, deleteGame } from '../../lib/api/games'
+import { fetchGame, updateGame, deleteGame, fetchUserGamesWithRoles } from '../../lib/api/games'
+import { fetchGameCrawler } from '../../lib/api/crawlers'
 import type { Tables } from '../../types/database-generated.types'
+import { getUser } from '../../lib/api'
 
 type Game = Tables<'games'>
 
@@ -20,6 +22,29 @@ export const gamesKeys = {
   all: ['games'] as const,
   byId: (id: string) => [...gamesKeys.all, id] as const,
   byUser: (userId: string) => [...gamesKeys.all, 'user', userId] as const,
+  userGamesList: (userId: string) => [...gamesKeys.all, 'user', userId, 'list'] as const,
+  gameCrawler: (gameId: string) => [...gamesKeys.all, gameId, 'crawler'] as const,
+}
+
+/**
+ * Hook to fetch user's game IDs and roles (lightweight)
+ *
+ * @returns Query object with array of { game_id, role }
+ *
+ * @example
+ * ```tsx
+ * const { data: games, isLoading } = useUserGamesList()
+ * ```
+ */
+export function useUserGamesList() {
+  return useQuery({
+    queryKey: ['user-games-list'],
+    queryFn: async () => {
+      const user = await getUser()
+      if (!user) throw new Error('Not authenticated')
+      return fetchUserGamesWithRoles(user.id)
+    },
+  })
 }
 
 /**
@@ -41,6 +66,23 @@ export function useGame(id: string | undefined) {
       return fetchGame(id)
     },
     enabled: !!id,
+  })
+}
+
+/**
+ * Hook to fetch game crawler
+ *
+ * @param gameId - Game ID to fetch crawler for
+ * @returns Query object with crawler data or null
+ */
+export function useGameCrawler(gameId: string | undefined) {
+  return useQuery({
+    queryKey: gameId ? gamesKeys.gameCrawler(gameId) : ['games', 'undefined', 'crawler'],
+    queryFn: () => {
+      if (!gameId) throw new Error('Game ID is required')
+      return fetchGameCrawler(gameId)
+    },
+    enabled: !!gameId,
   })
 }
 

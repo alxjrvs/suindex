@@ -55,14 +55,7 @@ export function SheetTextarea({
       {/* Label with pseudoheader styling */}
       {label && (
         <Flex alignItems="center" mb={-2} zIndex={1}>
-          <Text
-            variant="pseudoheader"
-            fontSize="sm"
-            textTransform="uppercase"
-            ml={3}
-            bg={disabled ? 'gray.600' : undefined}
-            color={disabled ? 'gray.300' : undefined}
-          >
+          <Text variant="pseudoheader" fontSize="sm" textTransform="uppercase" ml={3}>
             {label}
           </Text>
         </Flex>
@@ -86,7 +79,12 @@ export function SheetTextarea({
         color="su.black"
         fontWeight="semibold"
         resize="none"
-        _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+        _disabled={{
+          cursor: 'not-allowed',
+          opacity: 1,
+          bg: 'su.white',
+          color: 'su.black',
+        }}
       />
     </Flex>
   )

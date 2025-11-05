@@ -576,6 +576,7 @@ export type Database = {
           user_name: string
         }[]
       }
+      get_user_display_name: { Args: { p_user_id: string }; Returns: string }
       is_game_mediator: {
         Args: { game_uuid: string; user_uuid: string }
         Returns: boolean

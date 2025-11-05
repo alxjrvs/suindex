@@ -1,4 +1,4 @@
-import { Flex, VStack, type FlexProps } from '@chakra-ui/react'
+import { Flex, type FlexProps } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
 import { Text } from '../base/Text'
 
@@ -112,13 +112,19 @@ export function RoundedBox({
         </Text>
       )}
       {hasHeader && (
-        <VStack
+        <Flex
+          direction={reverse ? 'row-reverse' : 'row'}
+          w="full"
+          px="0"
+          gap={2}
+          cursor={headerCursor}
+          justifyContent={'space-between'}
+          onClick={onHeaderClick}
+          alignItems="center"
+          data-testid={headerTestId}
           p={compact ? 1 : 2}
-          gap={0}
           borderTopRadius="xs"
           borderBottomRadius={headerBottomRadius}
-          alignItems="stretch"
-          w="full"
           bg={actualHeaderBg}
           opacity={headerOpacity}
           h={compact ? '70px' : undefined}
@@ -126,63 +132,50 @@ export function RoundedBox({
           borderColor={bottomHeaderBorder ? 'su.black' : actualHeaderBg}
           overflow="visible"
         >
-          <Flex
-            direction={reverse ? 'row-reverse' : 'row'}
-            w="full"
-            px="0"
-            gap={2}
-            h="full"
-            cursor={headerCursor}
-            justifyContent={'space-between'}
-            onClick={onHeaderClick}
-            alignItems="center"
-            data-testid={headerTestId}
-          >
-            <Flex alignItems="center" gap={compact ? 0.5 : 1}>
-              {leftContent}
-              <Flex
-                direction="column"
-                gap={compact ? 0.5 : 1}
-                justifyContent="center"
-                h="full"
-                overflow="visible"
-                minW="0"
-                alignItems={reverse ? 'flex-end' : 'flex-start'}
-              >
-                {title && (
-                  <Text
-                    variant="pseudoheader"
-                    textTransform="uppercase"
-                    transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
-                    transition="transform 0.3s ease"
-                    opacity={disabled ? 0.5 : 1}
-                    whiteSpace={compact ? 'normal' : 'nowrap'}
-                    overflow={compact ? 'visible' : 'hidden'}
-                    textOverflow={compact ? 'clip' : 'ellipsis'}
-                    fontSize={compact ? '1rem' : '2rem'}
-                    lineHeight={compact ? '1.2' : 'normal'}
-                    textAlign={reverse ? 'right' : 'left'}
-                  >
-                    {title}
-                  </Text>
-                )}
-                {subTitleContent && (
-                  <Flex
-                    overflow="visible"
-                    flexWrap="wrap"
-                    alignItems="center"
-                    zIndex={10}
-                    justifyContent={reverse ? 'flex-end' : 'flex-start'}
-                    gap={compact ? 1 : 2}
-                  >
-                    {subTitleContent}
-                  </Flex>
-                )}
-              </Flex>
+          <Flex alignItems="center" gap={compact ? 0.5 : 1}>
+            {leftContent}
+            <Flex
+              direction="column"
+              gap={compact ? 0.5 : 1}
+              justifyContent="center"
+              h="full"
+              overflow="visible"
+              minW="0"
+              alignItems={reverse ? 'flex-end' : 'flex-start'}
+            >
+              {title && (
+                <Text
+                  variant="pseudoheader"
+                  textTransform="uppercase"
+                  transform={titleRotation !== 0 ? `rotate(${titleRotation}deg)` : undefined}
+                  transition="transform 0.3s ease"
+                  opacity={disabled ? 0.5 : 1}
+                  whiteSpace={compact ? 'normal' : 'nowrap'}
+                  overflow={compact ? 'visible' : 'hidden'}
+                  textOverflow={compact ? 'clip' : 'ellipsis'}
+                  fontSize={compact ? '1rem' : '2rem'}
+                  lineHeight={compact ? '1.2' : 'normal'}
+                  textAlign={reverse ? 'right' : 'left'}
+                >
+                  {title}
+                </Text>
+              )}
+              {subTitleContent && (
+                <Flex
+                  overflow="visible"
+                  flexWrap="wrap"
+                  alignItems="center"
+                  zIndex={10}
+                  justifyContent={reverse ? 'flex-end' : 'flex-start'}
+                  gap={compact ? 1 : 2}
+                >
+                  {subTitleContent}
+                </Flex>
+              )}
             </Flex>
-            {rightContent}
           </Flex>
-        </VStack>
+          {rightContent}
+        </Flex>
       )}
       {children && (
         <Flex

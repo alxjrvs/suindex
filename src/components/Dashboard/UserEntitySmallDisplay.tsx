@@ -50,6 +50,7 @@ export function UserEntitySmallDisplay({
 
   return (
     <RoundedBox
+      minH="90px"
       reverse={reverse}
       bg={effectiveBgColor}
       label={label}

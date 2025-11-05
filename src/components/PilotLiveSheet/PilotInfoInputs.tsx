@@ -161,6 +161,7 @@ export function PilotInfoInputs({
               label="Class"
               value={classId}
               onChange={onClassChange}
+              disabled={disabled}
               placeholder="Select..."
             >
               {sortedCoreClasses.map((cls) => (

@@ -92,7 +92,7 @@ export const EntityDisplay = memo(function EntityDisplay({
   const title = extractName(data, schemaName)
   const techLevel = getTechLevel(data)
 
-  const backgroundColor = calculateBackgroundColor(
+  const headerBg = calculateBackgroundColor(
     schemaName,
     headerColor,
     techLevel,
@@ -129,7 +129,7 @@ export const EntityDisplay = memo(function EntityDisplay({
       borderWidth="2px"
       bg={'su.lightBlue'}
       w="full"
-      headerBg={backgroundColor}
+      headerBg={headerBg}
       headerOpacity={headerOpacity}
       bottomHeaderBorder
       absoluteElements={
@@ -254,7 +254,12 @@ export const EntityDisplay = memo(function EntityDisplay({
             </>
           )}
           {!hideActions && (
-            <PageReferenceDisplay compact={compact} data={data} schemaName={schemaName} />
+            <PageReferenceDisplay
+              bg={headerBg}
+              compact={compact}
+              data={data}
+              schemaName={schemaName}
+            />
           )}
         </VStack>
       )}

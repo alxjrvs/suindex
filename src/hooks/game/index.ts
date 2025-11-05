@@ -4,7 +4,14 @@
  * Centralized exports for all game management hooks
  */
 
-export { useGame, useUpdateGame, useDeleteGame, gamesKeys } from './useGames'
+export {
+  useGame,
+  useUpdateGame,
+  useDeleteGame,
+  useUserGamesList,
+  useGameCrawler,
+  gamesKeys,
+} from './useGames'
 export {
   useGameInvites,
   useCreateGameInvite,

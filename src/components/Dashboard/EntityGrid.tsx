@@ -63,7 +63,7 @@ export function EntityGrid<T extends ValidTable>({
   }
 
   return (
-    <GridLayout
+    <GridLayout<Tables<T> & { active?: boolean }>
       title={title}
       loading={loading}
       error={error}

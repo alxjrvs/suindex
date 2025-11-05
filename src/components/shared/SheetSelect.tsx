@@ -34,9 +34,6 @@ export function SheetSelect({
         ml={3}
         mb={-2}
         zIndex={1}
-        py={disabled ? 0.5 : 0}
-        bg={disabled ? 'gray.600' : undefined}
-        color={disabled ? 'gray.300' : undefined}
       >
         {label}
       </Text>
@@ -55,7 +52,12 @@ export function SheetSelect({
           bg="su.white"
           color="su.black"
           fontWeight="semibold"
-          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+          _disabled={{
+            cursor: 'not-allowed',
+            opacity: 1,
+            bg: 'su.white',
+            color: 'su.black',
+          }}
           aria-label={label}
         >
           <option value="">{loading ? 'Loading...' : placeholder}</option>

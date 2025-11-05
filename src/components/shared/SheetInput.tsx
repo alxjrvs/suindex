@@ -76,14 +76,7 @@ export function SheetInput({
       {/* Label with optional toggle */}
       {label && (
         <Flex alignItems="center" mb={hasToggle ? -4 : -2} zIndex={1}>
-          <Text
-            variant="pseudoheader"
-            fontSize="sm"
-            textTransform="uppercase"
-            ml={3}
-            bg={disabled ? 'gray.600' : undefined}
-            color={disabled ? 'gray.300' : undefined}
-          >
+          <Text variant="pseudoheader" fontSize="sm" textTransform="uppercase" ml={3}>
             {label}
           </Text>
           {hasToggle && (
@@ -131,7 +124,12 @@ export function SheetInput({
           bg="su.white"
           color="su.black"
           fontWeight="semibold"
-          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+          _disabled={{
+            cursor: 'not-allowed',
+            opacity: 1,
+            bg: 'su.white',
+            color: 'su.black',
+          }}
         />
         {hasSuffix && (
           <Flex
@@ -146,7 +144,6 @@ export function SheetInput({
             fontSize="sm"
             whiteSpace="nowrap"
             flexShrink={0}
-            opacity={disabled ? 0.3 : 1}
           >
             {suffixText}
           </Flex>
@@ -158,7 +155,7 @@ export function SheetInput({
             color="su.white"
             bg="su.black"
             _hover={{ bg: 'su.brick' }}
-            _disabled={{ opacity: 0.3, cursor: 'not-allowed' }}
+            _disabled={{ cursor: 'not-allowed' }}
             borderWidth="2px"
             borderColor="su.black"
             borderRadius="0"

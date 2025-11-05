@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router'
 import { GameSmallDisplay } from './GameSmallDisplay'
 import { GridLayout } from './GridLayout'
-import { useGamesWithRelationships } from '../../hooks/useGameWithRelationships'
+import { useUserGamesList } from '../../hooks/game/useGames'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
 
 export function GamesGrid() {
   const navigate = useNavigate()
-  const { games, loading, error, reload } = useGamesWithRelationships()
+  const { data: games, isLoading: loading, error, refetch: reload } = useUserGamesList()
 
   const { createEntity: createGame, isLoading: isCreating } = useCreateEntity({
     table: 'games',
@@ -26,20 +26,16 @@ export function GamesGrid() {
   }
 
   return (
-    <GridLayout
+    <GridLayout<{ game_id: string; role: string }>
       title="Your Games"
       loading={loading}
-      error={error}
-      items={games}
-      renderItem={(game, isInactive) => (
+      error={error?.message || null}
+      items={games || []}
+      renderItem={(game) => (
         <GameSmallDisplay
-          key={game.id}
-          name={game.name}
-          crawlerName={game.crawler?.name}
-          mediatorName={game.mediator?.user_name || game.mediator?.user_id}
-          onClick={() => handleGameClick(game.id)}
-          isLoading={loading}
-          isInactive={isInactive}
+          key={game.game_id}
+          id={game.game_id}
+          onClick={() => handleGameClick(game.game_id)}
         />
       )}
       createButton={{
@@ -50,6 +46,9 @@ export function GamesGrid() {
         isLoading: isCreating,
       }}
       onRetry={reload}
+      primarySectionLabel="Mediator Games"
+      secondarySectionLabel="Member Games"
+      getSectionType={(game) => (game.role === 'mediator' ? 'primary' : 'secondary')}
     />
   )
 }

@@ -233,6 +233,11 @@ function TreeSection({
     return treeAbilities.some((ability) => isSelected(ability.id))
   }, [isLegendaryTree, treeAbilities, isSelected])
 
+  // If in read-only mode with hideUnchosen and no selected abilities, hide the entire tree
+  if (isReadOnly && hideUnchosen && !hasSelectedAbilities) {
+    return null
+  }
+
   return (
     <Box>
       <Heading level="h3" textTransform="uppercase" textAlign="center" mb={2}>

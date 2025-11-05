@@ -13,7 +13,7 @@ export function EntitySubTitleElement({ data, schemaName, compact }: EntityDispl
   if (values.length === 0) return null
 
   return (
-    <Flex gap={compact ? 0.5 : 1}>
+    <Flex gap={compact ? 0.5 : 1} flexWrap="wrap">
       {values.map((item, index) => (
         <DetailItem key={index} item={item} compact={compact} />
       ))}
@@ -44,7 +44,7 @@ function extractDetails(data: SURefMetaEntity, schemaName?: SURefMetaSchemaName)
     const actionType = data.actionType.includes('action')
       ? data.actionType
       : `${data.actionType} Action`
-    details.push({ label: actionType, value: isGeneric ? 'Pilot' : '', type: 'keyword' })
+    details.push({ label: actionType, value: isGeneric ? 'Pilot' : undefined, type: 'keyword' })
   }
 
   if ('mechActionType' in data && data.mechActionType) {

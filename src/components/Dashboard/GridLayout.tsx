@@ -21,9 +21,12 @@ interface GridLayoutProps<T> {
   onRetry: () => void
   emptyStateMessage?: string
   emptyStateIcon?: string
+  primarySectionLabel?: string
+  secondarySectionLabel?: string
+  getSectionType?: (item: T) => 'primary' | 'secondary'
 }
 
-export function GridLayout<T extends { active?: boolean }>({
+export function GridLayout<T extends object>({
   title,
   loading,
   error,
@@ -32,10 +35,28 @@ export function GridLayout<T extends { active?: boolean }>({
   createButton,
   onRetry,
   emptyStateMessage,
+  primarySectionLabel = 'Active',
+  secondarySectionLabel = 'Inactive',
+  getSectionType,
 }: GridLayoutProps<T>) {
-  // Separate active and inactive items
-  const activeItems = items.filter((item) => item.active !== false)
-  const inactiveItems = items.filter((item) => item.active === false)
+  // Separate items into primary and secondary sections
+  let primaryItems: T[]
+  let secondaryItems: T[]
+
+  if (getSectionType) {
+    // Use custom section type function
+    primaryItems = items.filter((item) => getSectionType(item) === 'primary')
+    secondaryItems = items.filter((item) => getSectionType(item) === 'secondary')
+  } else {
+    // Fall back to active/inactive logic
+    const hasActiveProperty = items.length > 0 && 'active' in items[0]
+    primaryItems = hasActiveProperty
+      ? items.filter((item) => (item as { active?: boolean }).active !== false)
+      : items
+    secondaryItems = hasActiveProperty
+      ? items.filter((item) => (item as { active?: boolean }).active === false)
+      : []
+  }
   return (
     <Box p={8}>
       <Flex mb={8} align="center" justify="space-between" gap={4}>
@@ -97,22 +118,22 @@ export function GridLayout<T extends { active?: boolean }>({
       )}
       {!loading && !error && items.length > 0 && (
         <VStack gap={8} alignItems="stretch" w="full">
-          {/* Active Section */}
-          {activeItems.length > 0 && (
+          {/* Primary Section */}
+          {primaryItems.length > 0 && (
             <VStack gap={4} alignItems="stretch">
-              <Heading level="h2">Active</Heading>
+              <Heading level="h2">{primarySectionLabel}</Heading>
               <VStack gap={4} alignItems="stretch">
-                {activeItems.map((item) => renderItem(item, false))}
+                {primaryItems.map((item) => renderItem(item, false))}
               </VStack>
             </VStack>
           )}
 
-          {/* Inactive Section */}
-          {inactiveItems.length > 0 && (
+          {/* Secondary Section */}
+          {secondaryItems.length > 0 && (
             <VStack gap={4} alignItems="stretch">
-              <Heading level="h2">Inactive</Heading>
+              <Heading level="h2">{secondarySectionLabel}</Heading>
               <VStack gap={4} alignItems="stretch">
-                {inactiveItems.map((item) => renderItem(item, true))}
+                {secondaryItems.map((item) => renderItem(item, true))}
               </VStack>
             </VStack>
           )}

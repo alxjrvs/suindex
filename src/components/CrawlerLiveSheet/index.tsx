@@ -246,8 +246,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
               </Box>
             ) : (
               <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-                {pilotsWithMechs.map(({ pilot, mech }) => (
-                  <PilotMechCell key={pilot.id} pilotId={pilot.id} mechId={mech?.id ?? null} />
+                {pilotsWithMechs.map(({ pilot }) => (
+                  <PilotMechCell key={pilot.id} crawlerId={id} memberId={pilot.user_id} />
                 ))}
               </Grid>
             )}

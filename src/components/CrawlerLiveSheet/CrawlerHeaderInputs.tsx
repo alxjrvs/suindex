@@ -209,6 +209,7 @@ export function CrawlerHeaderInputs({
             label="Type"
             value={selectedCrawlerType?.schema_ref_id ?? ''}
             onChange={onCrawlerTypeChange}
+            disabled={disabled}
           >
             <option value="">Select crawler type...</option>
             {allCrawlers.map((crawler) => (

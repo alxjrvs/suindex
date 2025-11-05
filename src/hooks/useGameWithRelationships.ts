@@ -38,6 +38,14 @@ export interface GameWithRelationships extends GameRow {
 }
 
 /**
+ * @deprecated This hook is deprecated. Use the component-level data fetching pattern instead:
+ * - Use `useGame(gameId)` for game data
+ * - Use `useGameMembers(gameId)` for members
+ * - Use `useGameCrawler(gameId)` for crawler
+ * - Let child components fetch their own pilot/mech data
+ *
+ * See `GameLiveSheet` and `PilotMechCell` components for the new pattern.
+ *
  * Hook to load a single game with all its relationships (crawler, pilots, mechs, members).
  * Optimizes the loading by batching queries where possible.
  */
@@ -112,6 +120,12 @@ export function useGameWithRelationships(gameId: string | undefined) {
 }
 
 /**
+ * @deprecated This hook is deprecated. Use the component-level data fetching pattern instead:
+ * - Use `useUserGamesList()` for lightweight game list (IDs and roles only)
+ * - Let individual `GameSmallDisplay` components fetch their own data
+ *
+ * See `GamesGrid` and `GameSmallDisplay` components for the new pattern.
+ *
  * Hook to load all games for the current user with their relationships.
  * Optimizes loading by batching queries and loading relationships in parallel.
  */
