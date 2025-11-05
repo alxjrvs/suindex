@@ -39,6 +39,7 @@ export function Notes({
         value={notes}
         onChange={onChange}
         disabled={disabled}
+        isOwner={!disabled}
         placeholder={placeholder}
         height="full"
       />

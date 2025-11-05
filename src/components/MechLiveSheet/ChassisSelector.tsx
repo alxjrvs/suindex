@@ -43,6 +43,7 @@ export function ChassisSelector({
       value={chassisId}
       onChange={onChange}
       disabled={disabled}
+      isOwner={!disabled}
     >
       {groupedChassis.map(({ techLevel, chassis }) => (
         <optgroup key={techLevel} label={`Tech Level ${techLevel}`}>

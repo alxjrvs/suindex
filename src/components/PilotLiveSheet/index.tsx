@@ -6,6 +6,7 @@ import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { ClassAbilitiesList } from './ClassAbilitiesList'
 import { GeneralAbilitiesList } from './GeneralAbilitiesList'
 import { PilotInventory } from './PilotInventory'
+import { PilotModulesSystems } from './PilotModulesSystems'
 import { CrawlerTab } from './CrawlerTab'
 import { MechsTab } from './MechsTab'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
@@ -30,7 +31,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const navigate = useNavigate()
 
   // TanStack Query hooks
-  const { pilot, isLocal, selectedClass, selectedAdvancedClass, loading, error } =
+  const { pilot, isLocal, selectedClass, selectedAdvancedClass, modules, systems, loading, error } =
     useHydratedPilot(id)
 
   const updatePilot = useUpdatePilot()
@@ -159,8 +160,12 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           </Tabs.Trigger>
           <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
           <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
-          <Tabs.Trigger value="mechs">Mechs</Tabs.Trigger>
+          {(modules.length > 0 || systems.length > 0) && (
+            <Tabs.Trigger value="modules-systems">Modules & Systems</Tabs.Trigger>
+          )}
           <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
+          <Box flex="1" />
+          <Tabs.Trigger value="mechs">Mechs</Tabs.Trigger>
           <Tabs.Trigger value="crawler">Crawler</Tabs.Trigger>
         </Tabs.List>
 
@@ -186,6 +191,14 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
             <PilotInventory id={id} disabled={!selectedClass} readOnly={!isEditable} />
           </Box>
         </Tabs.Content>
+
+        {(modules.length > 0 || systems.length > 0) && (
+          <Tabs.Content value="modules-systems">
+            <Box mt={6}>
+              <PilotModulesSystems id={id} disabled={!selectedClass} />
+            </Box>
+          </Tabs.Content>
+        )}
 
         <Tabs.Content value="mechs">
           <Box mt={6}>

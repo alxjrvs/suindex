@@ -41,10 +41,11 @@ function extractDetails(data: SURefMetaEntity, schemaName?: SURefMetaSchemaName)
   const isGeneric = schemaName === 'abilities' && 'level' in data && data.level === 'G'
   // Action type
   if ('actionType' in data && data.actionType) {
-    const actionType = data.actionType.includes('action')
-      ? data.actionType
-      : `${data.actionType} Action`
-    details.push({ label: actionType, value: isGeneric ? 'Pilot' : undefined, type: 'keyword' })
+    details.push({
+      label: data.actionType,
+      value: isGeneric ? 'Pilot' : undefined,
+      type: 'keyword',
+    })
   }
 
   if ('mechActionType' in data && data.mechActionType) {

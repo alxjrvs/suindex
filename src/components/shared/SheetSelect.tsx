@@ -8,6 +8,8 @@ interface SheetSelectProps {
   value: string | null
   onChange: (value: string | null) => void
   disabled?: boolean
+  // Whether the current user owns this entity (affects disabled styling)
+  isOwner?: boolean
   placeholder?: string
   loading?: boolean
   options?: { id: string; name: string }[]
@@ -19,11 +21,16 @@ export function SheetSelect({
   value,
   onChange,
   disabled = false,
+  isOwner = true,
   placeholder = 'Select an option...',
   loading = false,
   options,
   children,
 }: SheetSelectProps) {
+  // When disabled and owner, show dimmed styling
+  // When disabled and not owner, show active styling but still disabled
+  const showDisabledStyling = disabled && isOwner
+
   return (
     <Flex direction="column">
       {/* Label */}
@@ -52,12 +59,21 @@ export function SheetSelect({
           bg="su.white"
           color="su.black"
           fontWeight="semibold"
-          _disabled={{
-            cursor: 'not-allowed',
-            opacity: 1,
-            bg: 'su.white',
-            color: 'su.black',
-          }}
+          _disabled={
+            showDisabledStyling
+              ? {
+                  cursor: 'not-allowed',
+                  opacity: 0.5,
+                  bg: 'gray.100',
+                  color: 'gray.500',
+                }
+              : {
+                  cursor: 'not-allowed',
+                  opacity: 1,
+                  bg: 'su.white',
+                  color: 'su.black',
+                }
+          }
           aria-label={label}
         >
           <option value="">{loading ? 'Loading...' : placeholder}</option>

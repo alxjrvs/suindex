@@ -19,6 +19,7 @@ export function AppearanceInput({ id, disabled }: { disabled: boolean; id: strin
       onChange={(value) => updateMech.mutate({ id, updates: { appearance: value } })}
       placeholder="Enter appearance..."
       disabled={disabled}
+      isOwner={!disabled}
       onDiceRoll={handleRollAppearance}
       diceRollAriaLabel="Roll for appearance"
       diceRollTitle="Roll on the Mech Appearance table"

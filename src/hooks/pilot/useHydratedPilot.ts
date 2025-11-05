@@ -21,6 +21,8 @@ export interface HydratedPilot {
   pilot: Tables<'pilots'> | undefined
   abilities: HydratedEntity[]
   equipment: HydratedEntity[]
+  modules: HydratedEntity[]
+  systems: HydratedEntity[]
   selectedClass: HydratedEntity | undefined
   selectedAdvancedClass: HydratedEntity | undefined
   isLocal: boolean
@@ -69,6 +71,10 @@ export function useHydratedPilot(id: string | undefined): HydratedPilot {
 
   const equipment = useMemo(() => entities.filter((e) => e.schema_name === 'equipment'), [entities])
 
+  const modules = useMemo(() => entities.filter((e) => e.schema_name === 'modules'), [entities])
+
+  const systems = useMemo(() => entities.filter((e) => e.schema_name === 'systems'), [entities])
+
   // Get selected class from entities (schema_name='classes.core')
   const selectedClass = useMemo(
     () => entities.find((e) => e.schema_name === 'classes.core'),
@@ -94,6 +100,8 @@ export function useHydratedPilot(id: string | undefined): HydratedPilot {
     pilot,
     abilities,
     equipment,
+    modules,
+    systems,
     selectedClass,
     selectedAdvancedClass,
     loading,

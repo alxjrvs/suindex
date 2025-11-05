@@ -9,6 +9,8 @@ interface SheetTextareaProps {
   onChange: (value: string) => void
   placeholder?: string
   disabled?: boolean
+  // Whether the current user owns this entity (affects disabled styling)
+  isOwner?: boolean
   height?: string | number
   rows?: number
 }
@@ -19,11 +21,16 @@ export function SheetTextarea({
   onChange,
   placeholder,
   disabled = false,
+  isOwner = true,
   height = '20',
   rows,
 }: SheetTextareaProps) {
   // Local state for immediate UI updates
   const [localValue, setLocalValue] = useState(value)
+
+  // When disabled and owner, show dimmed styling
+  // When disabled and not owner, show active styling but still disabled
+  const showDisabledStyling = disabled && isOwner
 
   // Sync local value when prop value changes (e.g., from external updates)
   useEffect(() => {
@@ -79,12 +86,21 @@ export function SheetTextarea({
         color="su.black"
         fontWeight="semibold"
         resize="none"
-        _disabled={{
-          cursor: 'not-allowed',
-          opacity: 1,
-          bg: 'su.white',
-          color: 'su.black',
-        }}
+        _disabled={
+          showDisabledStyling
+            ? {
+                cursor: 'not-allowed',
+                opacity: 0.5,
+                bg: 'gray.100',
+                color: 'gray.500',
+              }
+            : {
+                cursor: 'not-allowed',
+                opacity: 1,
+                bg: 'su.white',
+                color: 'su.black',
+              }
+        }
       />
     </Flex>
   )

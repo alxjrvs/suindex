@@ -186,6 +186,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           <Tabs.Trigger value="bays">Bays</Tabs.Trigger>
           <Tabs.Trigger value="storage">Storage Bay</Tabs.Trigger>
           <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
+          <Box flex="1" />
           <Tabs.Trigger value="pilots">Pilots & Mechs</Tabs.Trigger>
         </Tabs.List>
 

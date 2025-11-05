@@ -203,6 +203,7 @@ export function CrawlerHeaderInputs({
             onChange={(value) => updateCrawler.mutate({ id, updates: { name: value } })}
             placeholder="Enter crawler name..."
             disabled={disabled}
+            isOwner={!disabled}
           />
 
           <SheetSelect
@@ -210,6 +211,7 @@ export function CrawlerHeaderInputs({
             value={selectedCrawlerType?.schema_ref_id ?? ''}
             onChange={onCrawlerTypeChange}
             disabled={disabled}
+            isOwner={!disabled}
           >
             <option value="">Select crawler type...</option>
             {allCrawlers.map((crawler) => (
@@ -227,6 +229,7 @@ export function CrawlerHeaderInputs({
             onChange={(value) => updateCrawler.mutate({ id, updates: { description: value } })}
             placeholder="Enter crawler description..."
             disabled={disabled}
+            isOwner={!disabled}
             height="full"
           />
         </Flex>

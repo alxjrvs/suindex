@@ -48,6 +48,7 @@ export function PatternSelector({
         setTimeout(() => setShowSuggestions(false), 200)
       }}
       disabled={disabled || !selectedChassis}
+      isOwner={!disabled}
       placeholder="Enter or select a pattern..."
       onDiceRoll={handleRollPattern}
       diceRollAriaLabel="Roll for pattern name"

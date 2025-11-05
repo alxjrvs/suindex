@@ -138,6 +138,7 @@ export function PilotInfoInputs({
           onChange={(value) => updatePilot.mutate({ id, updates: { callsign: value } })}
           placeholder="Enter callsign"
           disabled={disabled}
+          isOwner={!disabled}
         />
 
         <SheetInput
@@ -146,6 +147,7 @@ export function PilotInfoInputs({
           onChange={(value) => updatePilot.mutate({ id, updates: { motto: value } })}
           placeholder="Enter motto"
           disabled={disabled}
+          isOwner={!disabled}
           toggleChecked={mottoUsed}
           onToggleChange={(value) => updatePilot.mutate({ id, updates: { motto_used: value } })}
           onDiceRoll={handleMottoRoll}
@@ -162,6 +164,7 @@ export function PilotInfoInputs({
               value={classId}
               onChange={onClassChange}
               disabled={disabled}
+              isOwner={!disabled}
               placeholder="Select..."
             >
               {sortedCoreClasses.map((cls) => (
@@ -179,6 +182,7 @@ export function PilotInfoInputs({
               value={advancedClassId}
               onChange={onAdvancedClassChange}
               disabled={disabled || availableAdvancedClasses.length === 0}
+              isOwner={!disabled}
               placeholder="Select..."
             >
               {availableAdvancedClasses.map((option) => (
@@ -197,6 +201,7 @@ export function PilotInfoInputs({
           onChange={(value) => updatePilot.mutate({ id, updates: { keepsake: value } })}
           placeholder="Enter keepsake"
           disabled={disabled}
+          isOwner={!disabled}
           toggleChecked={keepsakeUsed}
           onToggleChange={(value) => updatePilot.mutate({ id, updates: { keepsake_used: value } })}
           onDiceRoll={handleKeepsakeRoll}
@@ -211,6 +216,7 @@ export function PilotInfoInputs({
           onChange={(value) => updatePilot.mutate({ id, updates: { appearance: value } })}
           placeholder="Enter appearance"
           disabled={disabled}
+          isOwner={!disabled}
           onDiceRoll={handleAppearanceRoll}
           diceRollAriaLabel="Roll on the Pilot Appearance table"
           diceRollTitle="Roll on the Pilot Appearance table"
@@ -223,6 +229,7 @@ export function PilotInfoInputs({
           onChange={(value) => updatePilot.mutate({ id, updates: { background: value } })}
           placeholder="Enter background"
           disabled={disabled}
+          isOwner={!disabled}
           toggleChecked={backgroundUsed}
           onToggleChange={(value) =>
             updatePilot.mutate({ id, updates: { background_used: value } })

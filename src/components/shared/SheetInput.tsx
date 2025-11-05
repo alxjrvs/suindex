@@ -10,6 +10,8 @@ interface SheetInputProps {
   onChange?: (value: string) => void
   placeholder?: string
   disabled?: boolean
+  // Whether the current user owns this entity (affects disabled styling)
+  isOwner?: boolean
   // Optional dice roller
   onDiceRoll?: () => void
   diceRollAriaLabel?: string
@@ -33,6 +35,7 @@ export function SheetInput({
   onChange,
   placeholder,
   disabled = false,
+  isOwner = true,
   onDiceRoll,
   diceRollAriaLabel,
   diceRollTitle,
@@ -47,6 +50,10 @@ export function SheetInput({
   const hasToggle = toggleChecked !== undefined && onToggleChange !== undefined
   const hasDiceRoll = onDiceRoll !== undefined
   const hasSuffix = suffixText !== undefined
+
+  // When disabled and owner, show dimmed styling
+  // When disabled and not owner, show active styling but still disabled
+  const showDisabledStyling = disabled && isOwner
 
   // Local state for immediate UI updates
   const [localValue, setLocalValue] = useState(value)
@@ -124,12 +131,21 @@ export function SheetInput({
           bg="su.white"
           color="su.black"
           fontWeight="semibold"
-          _disabled={{
-            cursor: 'not-allowed',
-            opacity: 1,
-            bg: 'su.white',
-            color: 'su.black',
-          }}
+          _disabled={
+            showDisabledStyling
+              ? {
+                  cursor: 'not-allowed',
+                  opacity: 0.5,
+                  bg: 'gray.100',
+                  color: 'gray.500',
+                }
+              : {
+                  cursor: 'not-allowed',
+                  opacity: 1,
+                  bg: 'su.white',
+                  color: 'su.black',
+                }
+          }
         />
         {hasSuffix && (
           <Flex

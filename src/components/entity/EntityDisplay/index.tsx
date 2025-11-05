@@ -171,6 +171,7 @@ export const EntityDisplay = memo(function EntityDisplay({
           gap={compact ? 3 : 6}
           alignItems="stretch"
           minW="0"
+          w="full"
         >
           <EntityTopMatter
             hideActions={hideActions}

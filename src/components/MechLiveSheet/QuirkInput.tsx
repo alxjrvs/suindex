@@ -20,6 +20,7 @@ export function QuirkInput({ disabled, id }: { disabled: boolean; id: string }) 
       onChange={(value) => updateMech.mutate({ id, updates: { quirk: value } })}
       placeholder="Enter quirk..."
       disabled={disabled}
+      isOwner={!disabled}
       onDiceRoll={handleRollQuirk}
       diceRollAriaLabel="Roll for quirk"
       diceRollTitle="Roll on the Quirks table"
