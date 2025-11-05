@@ -5,16 +5,12 @@ import type { SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-referenc
  * Spacing helpers based on compact mode
  */
 export const getEntitySpacing = (compact: boolean) => ({
-  /** Padding for content sections: 1 (compact) or 2 (normal) */
-  contentPadding: compact ? 1 : 2,
   /** Gap between small elements: 2 (compact) or 3 (normal) */
   smallGap: compact ? 2 : 3,
-  /** Gap between major sections: 3 (compact) or 6 (normal) */
-  largeGap: compact ? 3 : 6,
   /** Gap for minimal spacing: 0.5 (compact) or 1 (normal) */
   minimalGap: compact ? 0.5 : 1,
   /** Gap for single spacing: 1 (compact) or 2 (normal) */
-  singleGap: compact ? 1 : 2,
+  contentPadding: compact ? 1 : 2,
 })
 
 /**

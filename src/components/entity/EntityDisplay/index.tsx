@@ -23,7 +23,7 @@ import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
 import { EntityBonusPerTechLevel } from './EntityBonusPerTechLevel'
 import { EntityDisplayProvider } from './entityDisplayProvider'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
-import { ConditionalSheetDisplay } from './ConditionalSheetDisplay'
+import { ConditionalSheetInfo } from './ConditionalSheetInfo'
 import { EntityPopulationRange } from './EntityPopulationRange'
 
 type EntityDisplayProps = {
@@ -221,7 +221,7 @@ function EntityDisplayContent({
           borderBottomLeftRadius="md"
           opacity={contentOpacity}
           p={0}
-          gap={spacing.largeGap}
+          gap={spacing.smallGap}
           alignItems="stretch"
           minW="0"
           w="full"
@@ -230,7 +230,7 @@ function EntityDisplayContent({
 
           <EntityPopulationRange />
           <EntityBonusPerTechLevel />
-          <ConditionalSheetDisplay propertyName="effect" />
+          <ConditionalSheetInfo propertyName="effect" />
 
           <EntityRequirementDisplay />
           {shouldShowExtraContent && (
@@ -250,7 +250,7 @@ function EntityDisplayContent({
               )}
               <EntityTechLevelEffects />
               {'damagedEffect' in data && data.damagedEffect && compact && (
-                <ConditionalSheetDisplay
+                <ConditionalSheetInfo
                   propertyName="damagedEffect"
                   labelBgColor="su.brick"
                   borderColor="su.brick"

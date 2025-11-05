@@ -14,7 +14,7 @@ export function EntityOptions() {
       borderRadius="md"
     >
       <EntitySubheader label="Options" />
-      <VStack gap={spacing.singleGap} alignItems="stretch">
+      <VStack gap={spacing.contentPadding} alignItems="stretch">
         {data.options.map((option, optIndex) => {
           const label = typeof option === 'string' ? '' : option.label
           const value = typeof option === 'string' ? option : option.value

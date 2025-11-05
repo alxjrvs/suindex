@@ -47,7 +47,7 @@ export function EntityListDisplay({
   if (visibleEntities.length === 0) return null
 
   return (
-    <VStack gap={spacing.singleGap} alignItems="start">
+    <VStack gap={spacing.contentPadding} alignItems="start">
       {visibleEntities.map((entity, idx) => {
         // Determine button config based on whether onChoiceSelection is defined
         let buttonConfig: (ButtonProps & { children: React.ReactNode }) | undefined

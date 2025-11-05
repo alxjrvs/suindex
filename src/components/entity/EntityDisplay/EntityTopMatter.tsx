@@ -10,8 +10,8 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
   const notes = 'notes' in data ? data.notes : undefined
   const description = 'description' in data ? data.description : undefined
   const showDescription = description && schemaName !== 'abilities'
-
-  if (!notes && !showDescription && !hasActions(data)) {
+  const hasContent = !!notes || !!showDescription || (hasActions(data) && data.actions.length > 0)
+  if (!hasContent) {
     return null
   }
 
@@ -21,7 +21,7 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
       <VStack
         justifyContent="space-between"
         flex="1"
-        gap={spacing.smallGap}
+        gap={spacing.contentPadding}
         alignItems="stretch"
         h="full"
         minW="0"

@@ -2,7 +2,7 @@ import { Flex } from '@chakra-ui/react'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-interface ConditionalSheetDisplayProps {
+interface ConditionalSheetInfoProps {
   /** Property name to check in data */
   propertyName: string
   /** Optional label for the SheetDisplay */
@@ -19,13 +19,13 @@ interface ConditionalSheetDisplayProps {
  * Wrapper component for conditional SheetDisplay rendering.
  * Checks if a property exists in entity data and renders SheetDisplay with consistent padding.
  */
-export function ConditionalSheetDisplay({
+export function ConditionalSheetInfo({
   propertyName,
   label,
   labelBgColor,
   borderColor,
   children,
-}: ConditionalSheetDisplayProps) {
+}: ConditionalSheetInfoProps) {
   const { data, spacing, compact } = useEntityDisplayContext()
 
   // Check if property exists and has a value
