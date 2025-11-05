@@ -6,13 +6,9 @@ import type {
   SURefMetaEntity,
   SURefMetaSchemaName,
 } from 'salvageunion-reference'
-import { getTechLevel } from 'salvageunion-reference'
-import { techLevelColors } from '../../../theme'
 import { PageReferenceDisplay } from '../../shared/PageReferenceDisplay'
 import { RollTable } from '../../shared/RollTable'
 import { RoundedBox } from '../../shared/RoundedBox'
-import { SheetDisplay } from '../../shared/SheetDisplay'
-import { calculateBackgroundColor, extractName } from '../entityDisplayHelpers'
 import { EntityAbsoluteContent } from './EntityAbsoluteContent'
 import { EntitySubTitleElement } from './EntitySubTitleContent'
 import { EntityLeftContent } from './EntityLeftContent'
@@ -25,6 +21,9 @@ import { EntityRequirementDisplay } from './EntityRequirementDisplay'
 import { EntityChoices } from './EntityChoices'
 import { ClassAbilitiesList } from '../../PilotLiveSheet/ClassAbilitiesList'
 import { EntityBonusPerTechLevel } from './EntityBonusPerTechLevel'
+import { EntityDisplayProvider } from './entityDisplayProvider'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
+import { ConditionalSheetDisplay } from './ConditionalSheetDisplay'
 
 type EntityDisplayProps = {
   /** Entity data to display */
@@ -89,16 +88,6 @@ export const EntityDisplay = memo(function EntityDisplay({
 
   if (!data) return null
 
-  const title = extractName(data, schemaName)
-  const techLevel = getTechLevel(data)
-
-  const headerBg = calculateBackgroundColor(
-    schemaName,
-    headerColor,
-    techLevel,
-    data,
-    techLevelColors
-  )
   const headerOpacity = dimHeader ? 0.5 : 1
   const contentOpacity = disabled ? 0.5 : 1
 
@@ -125,6 +114,70 @@ export const EntityDisplay = memo(function EntityDisplay({
   const displayExtraSection = compact ? !hideActions : true
 
   return (
+    <EntityDisplayProvider
+      data={data}
+      schemaName={schemaName}
+      compact={compact}
+      headerColor={headerColor}
+    >
+      <EntityDisplayContent
+        hideLevel={hideLevel}
+        headerOpacity={headerOpacity}
+        contentOpacity={contentOpacity}
+        isExpanded={isExpanded}
+        collapsible={collapsible}
+        rightLabel={rightLabel}
+        handleHeaderClick={handleHeaderClick}
+        displayExtraSection={displayExtraSection}
+        hideActions={hideActions}
+        disabled={disabled}
+        buttonConfig={buttonConfig}
+        userChoices={userChoices}
+        onChoiceSelection={onChoiceSelection}
+      >
+        {children}
+      </EntityDisplayContent>
+    </EntityDisplayProvider>
+  )
+})
+
+interface EntityDisplayContentProps {
+  hideLevel: boolean
+  headerOpacity: number
+  contentOpacity: number
+  isExpanded: boolean
+  collapsible: boolean
+  rightLabel?: string
+  handleHeaderClick: () => void
+  displayExtraSection: boolean
+  hideActions: boolean
+  disabled: boolean
+  buttonConfig?: ButtonProps & { children: ReactNode }
+  userChoices?: Record<string, string> | null
+  onChoiceSelection?: (choiceId: string, value: string | undefined) => void
+  children?: ReactNode
+}
+
+function EntityDisplayContent({
+  hideLevel,
+  headerOpacity,
+  contentOpacity,
+  isExpanded,
+  collapsible,
+  rightLabel,
+  handleHeaderClick,
+  displayExtraSection,
+  hideActions,
+  disabled,
+  buttonConfig,
+  userChoices,
+  onChoiceSelection,
+  children,
+}: EntityDisplayContentProps) {
+  const { data, schemaName, compact, title, headerBg, spacing, contentBg } =
+    useEntityDisplayContext()
+
+  return (
     <RoundedBox
       borderWidth="2px"
       bg={'su.lightBlue'}
@@ -132,23 +185,11 @@ export const EntityDisplay = memo(function EntityDisplay({
       headerBg={headerBg}
       headerOpacity={headerOpacity}
       bottomHeaderBorder
-      absoluteElements={
-        <EntityAbsoluteContent
-          schemaName={schemaName}
-          data={data}
-          compact={compact}
-          hideLevel={hideLevel}
-        />
-      }
-      leftContent={<EntityLeftContent schemaName={schemaName} data={data} compact={compact} />}
-      subTitleContent={
-        <EntitySubTitleElement schemaName={schemaName} data={data} compact={compact} />
-      }
+      absoluteElements={<EntityAbsoluteContent hideLevel={hideLevel} />}
+      leftContent={<EntityLeftContent />}
+      subTitleContent={<EntitySubTitleElement />}
       rightContent={
         <EntityRightHeaderContent
-          schemaName={schemaName}
-          data={data}
-          compact={compact}
           isExpanded={isExpanded}
           collapsible={collapsible}
           rightLabel={rightLabel}
@@ -163,37 +204,28 @@ export const EntityDisplay = memo(function EntityDisplay({
       {(!collapsible || isExpanded) && (
         <VStack
           flex="1"
-          bg={schemaName === 'actions' ? 'su.blue' : 'su.lightBlue'}
+          bg={contentBg}
           borderBottomRightRadius="md"
           borderBottomLeftRadius="md"
           opacity={contentOpacity}
           p={0}
-          gap={compact ? 3 : 6}
+          gap={spacing.largeGap}
           alignItems="stretch"
           minW="0"
           w="full"
         >
-          <EntityTopMatter
-            hideActions={hideActions}
-            data={data}
-            schemaName={schemaName}
-            compact={compact}
-          />
+          <EntityTopMatter hideActions={hideActions} />
 
-          <EntityBonusPerTechLevel data={data} compact={compact} schemaName={schemaName} />
-          {'effect' in data && data.effect && (
-            <Flex p={compact ? 1 : 2}>
-              <SheetDisplay compact={compact} value={data.effect} />
-            </Flex>
-          )}
+          <EntityBonusPerTechLevel />
+          <ConditionalSheetDisplay propertyName="effect" />
 
-          <EntityRequirementDisplay data={data} compact={compact} schemaName={schemaName} />
+          <EntityRequirementDisplay />
           {displayExtraSection && (
             <>
-              <EntityChassisPatterns data={data} schemaName={schemaName} compact={compact} />
-              <EntityOptions data={data} compact={compact} schemaName={schemaName} />
+              <EntityChassisPatterns />
+              <EntityOptions />
               {'table' in data && data.table && (
-                <Box p={compact ? 1 : 2} borderRadius="md" position="relative" zIndex={10}>
+                <Box p={spacing.contentPadding} borderRadius="md" position="relative" zIndex={10}>
                   <RollTable
                     disabled={disabled}
                     table={data.table}
@@ -203,16 +235,14 @@ export const EntityDisplay = memo(function EntityDisplay({
                   />
                 </Box>
               )}
-              <EntityTechLevelEffects data={data} compact={compact} schemaName={schemaName} />
+              <EntityTechLevelEffects />
               {'damagedEffect' in data && data.damagedEffect && compact && (
-                <Flex p={compact ? 1 : 2}>
-                  <SheetDisplay
-                    labelBgColor="su.brick"
-                    borderColor="su.brick"
-                    label="Damaged Effect"
-                    value={data.damagedEffect}
-                  />
-                </Flex>
+                <ConditionalSheetDisplay
+                  propertyName="damagedEffect"
+                  labelBgColor="su.brick"
+                  borderColor="su.brick"
+                  label="Damaged Effect"
+                />
               )}
               {schemaName.includes('classes') && (
                 <ClassAbilitiesList
@@ -225,20 +255,14 @@ export const EntityDisplay = memo(function EntityDisplay({
                   }
                 />
               )}
-              <EntityChoices
-                data={data}
-                schemaName={schemaName}
-                compact={compact}
-                userChoices={userChoices}
-                onChoiceSelection={onChoiceSelection}
-              />
+              <EntityChoices userChoices={userChoices} onChoiceSelection={onChoiceSelection} />
               {children && (
-                <Box mt="3" p={compact ? 1 : 2}>
+                <Box mt="3" p={spacing.contentPadding}>
                   {children}
                 </Box>
               )}
               {buttonConfig && (
-                <Flex p={compact ? 1 : 2}>
+                <Flex p={spacing.contentPadding}>
                   <Button
                     w="full"
                     mt={3}
@@ -254,16 +278,9 @@ export const EntityDisplay = memo(function EntityDisplay({
               )}
             </>
           )}
-          {!hideActions && (
-            <PageReferenceDisplay
-              bg={headerBg}
-              compact={compact}
-              data={data}
-              schemaName={schemaName}
-            />
-          )}
+          {!hideActions && <PageReferenceDisplay bg={headerBg} />}
         </VStack>
       )}
     </RoundedBox>
   )
-})
+}

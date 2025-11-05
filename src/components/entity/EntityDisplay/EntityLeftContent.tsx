@@ -1,9 +1,8 @@
-import { getTechLevel } from 'salvageunion-reference'
 import { StatDisplay } from '../../StatDisplay'
-import type { EntityDisplaySubProps } from './types'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityLeftContent({ data, compact }: EntityDisplaySubProps) {
-  const techLevel = getTechLevel(data)
+export function EntityLeftContent() {
+  const { techLevel, compact } = useEntityDisplayContext()
   if (!techLevel) return null
   return (
     <StatDisplay

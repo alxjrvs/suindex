@@ -1,12 +1,9 @@
 import { LevelDisplay } from '../../shared/LevelDisplay'
 import { extractLevel } from '../entityDisplayHelpers'
-import type { EntityDisplaySubProps } from './types'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityAbsoluteContent({
-  data,
-  compact,
-  hideLevel,
-}: EntityDisplaySubProps & { hideLevel: boolean }) {
+export function EntityAbsoluteContent({ hideLevel }: { hideLevel: boolean }) {
+  const { data, compact } = useEntityDisplayContext()
   const level = extractLevel(data)
   if (!level || hideLevel) return null
   return <LevelDisplay level={level} compact={compact} />

@@ -1,16 +1,12 @@
 import { Flex, VStack } from '@chakra-ui/react'
 import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
-import type { EntityDisplaySubProps } from './types'
 import { Text } from '../../base/Text'
 import { hasActions } from 'salvageunion-reference'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityTopMatter({
-  data,
-  schemaName,
-  hideActions,
-  compact,
-}: EntityDisplaySubProps & { hideActions: boolean }) {
+export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
+  const { data, schemaName, spacing, fontSize } = useEntityDisplayContext()
   const notes = 'notes' in data ? data.notes : undefined
   const description = 'description' in data ? data.description : undefined
   const showDescription = description && schemaName !== 'abilities'
@@ -20,12 +16,12 @@ export function EntityTopMatter({
   }
 
   return (
-    <Flex gap={compact ? 2 : 3} p={compact ? 1 : 2} alignItems="flex-start">
-      <EntityImage data={data} schemaName={schemaName} compact={compact} />
+    <Flex gap={spacing.smallGap} p={spacing.contentPadding} alignItems="flex-start">
+      <EntityImage />
       <VStack
         justifyContent="space-between"
         flex="1"
-        gap={compact ? 2 : 3}
+        gap={spacing.smallGap}
         alignItems="stretch"
         h="full"
         minW="0"
@@ -41,12 +37,12 @@ export function EntityTopMatter({
             whiteSpace="normal"
             overflow="hidden"
             maxW="100%"
-            fontSize={compact ? 'xs' : 'sm'}
+            fontSize={fontSize.sm}
           >
             {description}
           </Text>
         )}
-        {!hideActions && <EntityActions data={data} compact={compact} schemaName={schemaName} />}
+        {!hideActions && <EntityActions />}
         {notes && (
           <Text
             color="su.black"
@@ -58,7 +54,7 @@ export function EntityTopMatter({
             whiteSpace="normal"
             overflow="hidden"
             maxW="100%"
-            fontSize={compact ? 'xs' : 'sm'}
+            fontSize={fontSize.sm}
           >
             {notes}
           </Text>

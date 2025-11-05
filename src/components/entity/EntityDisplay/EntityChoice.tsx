@@ -37,7 +37,7 @@ export function EntityChoice({
       {/* Only show label for non-simple choices */}
       {!isSimpleChoice && (
         <HStack mb={2} gap={2}>
-          <EntitySubheader disabled={isSchemaPageMode} compact={compact} label={choice.name} />
+          <EntitySubheader disabled={isSchemaPageMode} label={choice.name} />
           {hasLimitedChoices && !selectedChoice && (
             <Text fontSize={compact ? 'xs' : 'sm'} color="su.black" opacity={0.7}>
               (choose one)

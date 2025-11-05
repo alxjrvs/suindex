@@ -1,17 +1,19 @@
 import { Flex } from '@chakra-ui/react'
-import type { EntityDisplaySubProps } from './types'
 import { Text } from '../../base/Text'
 import { isAbility } from 'salvageunion-reference'
 import { EntityStats } from './EntityStats'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export function EntityRightHeaderContent({
-  data,
-  compact,
   rightLabel,
   collapsible,
-  schemaName,
   isExpanded,
-}: EntityDisplaySubProps & { isExpanded: boolean; collapsible: boolean; rightLabel?: string }) {
+}: {
+  isExpanded: boolean
+  collapsible: boolean
+  rightLabel?: string
+}) {
+  const { data, compact, fontSize } = useEntityDisplayContext()
   const description = 'description' in data ? data.description : undefined
 
   const abilityContent = description && isAbility(data) && (
@@ -22,11 +24,11 @@ export function EntityRightHeaderContent({
       fontWeight="medium"
       maxH="60px"
       minW="0"
-      fontSize={compact ? '2xs' : 'sm'}
+      fontSize={fontSize.xs}
       flexShrink="1"
       whiteSpace="normal"
       lineHeight="shorter"
-      maxW={compact ? '150px' : undefined}
+      maxW={compact ? '175px' : undefined}
       flexWrap="wrap"
       overflow="hidden"
     >
@@ -37,7 +39,7 @@ export function EntityRightHeaderContent({
   return (
     <Flex>
       {abilityContent}
-      <EntityStats data={data} compact={compact} schemaName={schemaName} />
+      <EntityStats data={data} compact={compact} />
       {rightLabel && (
         <Text
           variant="pseudoheader"

@@ -1,24 +1,18 @@
 import { Box, VStack } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
-import type { SURefMetaChoice, SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
+import type { SURefMetaChoice } from 'salvageunion-reference'
 import { EntityChoice } from './EntityChoice'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export interface EntityChoicesProps {
-  data: SURefMetaEntity
-  schemaName: SURefMetaSchemaName
-  compact: boolean
   /** User choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
   userChoices?: Record<string, string> | null
   /** Callback when a choice is selected - if undefined, we're in schema page mode (not a live sheet) */
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
 }
 
-export function EntityChoices({
-  data,
-  compact,
-  userChoices,
-  onChoiceSelection,
-}: EntityChoicesProps) {
+export function EntityChoices({ userChoices, onChoiceSelection }: EntityChoicesProps) {
+  const { data, spacing, fontSize } = useEntityDisplayContext()
   // Extract choices from the entity data
   const entityChoices: SURefMetaChoice[] = ('choices' in data && data.choices) || []
 
@@ -33,8 +27,8 @@ export function EntityChoices({
   if (!isSchemaPageMode) {
     // Live sheet mode - show WIP for now
     return (
-      <Box p={compact ? 1 : 2} bg="su.lightBlue" borderRadius="md">
-        <Text fontSize={compact ? 'sm' : 'md'} fontWeight="bold" color="su.black">
+      <Box p={spacing.contentPadding} bg="su.lightBlue" borderRadius="md">
+        <Text fontSize={fontSize.md} fontWeight="bold" color="su.black">
           WIP - Live sheet choices will be displayed here
         </Text>
       </Box>
@@ -42,13 +36,13 @@ export function EntityChoices({
   }
 
   return (
-    <VStack gap={compact ? 2 : 3} alignItems="stretch" px="2">
+    <VStack gap={spacing.smallGap} alignItems="stretch" px="2">
       {entityChoices.map((choice) => {
         return (
           <EntityChoice
             key={choice.id}
             choice={choice}
-            compact={compact}
+            compact={spacing.contentPadding === 1}
             userChoices={userChoices}
             onChoiceSelection={onChoiceSelection}
           />

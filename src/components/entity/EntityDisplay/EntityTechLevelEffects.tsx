@@ -1,20 +1,26 @@
 import { VStack } from '@chakra-ui/react'
 import { SheetDisplay } from '../../shared/SheetDisplay'
-import type { EntityDisplaySubProps } from './types'
 import { EntitySubheader } from './EntitySubheader'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityTechLevelEffects({ data, compact }: EntityDisplaySubProps) {
+export function EntityTechLevelEffects() {
+  const { data, spacing } = useEntityDisplayContext()
   const showTLE =
     'techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0
 
   if (!showTLE) return null
 
   return (
-    <VStack p={compact ? 1 : 2} gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
-      <EntitySubheader compact={compact} label="Abilities" />
+    <VStack
+      p={spacing.contentPadding}
+      gap={spacing.smallGap}
+      alignItems="stretch"
+      borderRadius="md"
+    >
+      <EntitySubheader label="Abilities" />
       {data.techLevelEffects.map((tle, index) => (
         <SheetDisplay
-          compact={compact}
+          compact={spacing.contentPadding === 1}
           key={index}
           label={`Tech Level ${tle.techLevelMin}`}
           value={tle.effect}

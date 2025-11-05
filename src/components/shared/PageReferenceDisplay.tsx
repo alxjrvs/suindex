@@ -1,24 +1,18 @@
 import { Flex } from '@chakra-ui/react'
-import type { EntityDisplaySubProps } from '../entity/EntityDisplay/types'
 import { getSchemaDisplayName } from '../entity/entityDisplayHelpers'
 import { Text } from '../base/Text'
+import { useEntityDisplayContext } from '../entity/EntityDisplay/useEntityDisplayContext'
 
-export function PageReferenceDisplay({
-  compact,
-  data,
-  schemaName,
-  bg,
-}: EntityDisplaySubProps & {
-  bg?: string
-}) {
+export function PageReferenceDisplay({ bg }: { bg?: string }) {
+  const { data, schemaName, spacing } = useEntityDisplayContext()
   if (!('page' in data) || !data.page) return null
   const displayName = getSchemaDisplayName(schemaName)
 
-  const fontWeightBold = compact ? 'semibold' : 'bold'
-  const fontWeightSemibold = compact ? 'semibold' : 'semibold'
+  const fontWeightBold = spacing.contentPadding === 1 ? 'semibold' : 'bold'
+  const fontWeightSemibold = 'semibold'
   return (
     <Flex
-      p={compact ? 1 : 2}
+      p={spacing.contentPadding}
       borderTopWidth="2px"
       borderTopColor="su.black"
       color="su.black"

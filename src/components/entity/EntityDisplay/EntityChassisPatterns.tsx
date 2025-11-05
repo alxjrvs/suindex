@@ -1,11 +1,12 @@
 import { VStack, Tabs } from '@chakra-ui/react'
 import { useSearchParams } from 'react-router-dom'
 import { Text } from '../../base/Text'
-import type { EntityDisplaySubProps } from './types'
 import { EntitySubheader } from './EntitySubheader'
 import { EntityChassisPattern } from './EntityChassisPattern'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityChassisPatterns({ data, compact }: EntityDisplaySubProps) {
+export function EntityChassisPatterns() {
+  const { data, spacing } = useEntityDisplayContext()
   const [searchParams, setSearchParams] = useSearchParams()
 
   if (!('patterns' in data) || !data.patterns || data.patterns.length === 0) return null
@@ -25,8 +26,8 @@ export function EntityChassisPatterns({ data, compact }: EntityDisplaySubProps) 
   }
 
   return (
-    <VStack p={compact ? 1 : 2} gap={4} alignItems="stretch">
-      <EntitySubheader compact={false} label="Patterns" />
+    <VStack p={spacing.contentPadding} gap={4} alignItems="stretch">
+      <EntitySubheader label="Patterns" />
 
       <Tabs.Root value={selectedPattern} onValueChange={(e) => handlePatternChange(e.value)}>
         <Tabs.List borderBottom="3px solid" borderColor="su.black">

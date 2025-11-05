@@ -1,15 +1,14 @@
 import { Box, Image } from '@chakra-ui/react'
 import { useState } from 'react'
-import type { EntityDisplaySubProps } from './types'
-import { extractName } from '../entityDisplayHelpers'
 import { getAssetUrl, isAdvancedClass } from 'salvageunion-reference'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps) {
+export function EntityImage() {
+  const { data, title, compact } = useEntityDisplayContext()
   const [showImage, setShowImage] = useState(true)
 
   const isAdvanced = isAdvancedClass(data)
   const assetUrl = getAssetUrl(data)
-  const name = extractName(data, schemaName)
 
   if (!showImage || !assetUrl) return null
 
@@ -23,7 +22,7 @@ export function EntityImage({ data, schemaName, compact }: EntityDisplaySubProps
     >
       <Image
         src={assetUrl}
-        alt={name}
+        alt={title}
         w="full"
         maxW={compact ? `200px` : undefined}
         h="auto"

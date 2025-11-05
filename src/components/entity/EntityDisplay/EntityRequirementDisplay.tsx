@@ -1,16 +1,17 @@
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import { Text } from '../../base/Text'
-import type { EntityDisplaySubProps } from './types'
 import { Fragment } from 'react/jsx-runtime'
 import { Flex } from '@chakra-ui/react'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityRequirementDisplay({ data, compact }: EntityDisplaySubProps) {
+export function EntityRequirementDisplay() {
+  const { data, spacing } = useEntityDisplayContext()
   if (!('requirement' in data) || !data.requirement || data.requirement.length === 0) return null
 
   return (
-    <Flex p={compact ? 1 : 2}>
+    <Flex p={spacing.contentPadding}>
       <SheetDisplay
-        compact={compact}
+        compact={spacing.contentPadding === 1}
         label="Requirements"
         labelBgColor="su.brick"
         borderColor="su.brick"

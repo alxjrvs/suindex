@@ -1,10 +1,11 @@
-import type { EntityDisplaySubProps } from './types'
 import { EntityDisplay } from '../EntityDisplay'
 import { VStack } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
 import { hasActions, extractActions } from 'salvageunion-reference'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityActions({ data, compact, schemaName }: EntityDisplaySubProps) {
+export function EntityActions() {
+  const { data, schemaName, spacing } = useEntityDisplayContext()
   if (!hasActions(data)) return null
 
   const actions = extractActions(data)
@@ -13,7 +14,7 @@ export function EntityActions({ data, compact, schemaName }: EntityDisplaySubPro
   const label = schemaName === 'chassis' ? 'Chassis Abilities' : 'Actions'
 
   return (
-    <VStack gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
+    <VStack gap={spacing.smallGap} alignItems="stretch" borderRadius="md">
       <Text fontSize="xl" variant="pseudoheader">
         {label}
       </Text>

@@ -18,7 +18,7 @@ export function ValueDisplay({
   const valueVariant = inverse ? 'pseudoheader' : 'pseudoheaderInverse'
 
   return (
-    <Flex gap={0} cursor="default" whiteSpace="nowrap">
+    <Flex gap={0} cursor="default" whiteSpace="nowrap" border="1px solid black">
       <Text
         variant={mainVariant}
         textTransform="uppercase"

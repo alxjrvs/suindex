@@ -1,18 +1,31 @@
 import { VStack } from '@chakra-ui/react'
 import { SheetDisplay } from '../../shared/SheetDisplay'
-import type { EntityDisplaySubProps } from './types'
 import { EntitySubheader } from './EntitySubheader'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
-export function EntityOptions({ data, compact }: EntityDisplaySubProps) {
+export function EntityOptions() {
+  const { data, spacing } = useEntityDisplayContext()
   if (!('options' in data) || !data.options || data.options.length === 0) return null
   return (
-    <VStack p={compact ? 1 : 2} gap={compact ? 2 : 3} alignItems="stretch" borderRadius="md">
-      <EntitySubheader compact={compact} label="Options" />
-      <VStack gap={compact ? 1 : 2} alignItems="stretch">
+    <VStack
+      p={spacing.contentPadding}
+      gap={spacing.smallGap}
+      alignItems="stretch"
+      borderRadius="md"
+    >
+      <EntitySubheader label="Options" />
+      <VStack gap={spacing.singleGap} alignItems="stretch">
         {data.options.map((option, optIndex) => {
           const label = typeof option === 'string' ? '' : option.label
           const value = typeof option === 'string' ? option : option.value
-          return <SheetDisplay compact={compact} key={optIndex} label={label} value={value} />
+          return (
+            <SheetDisplay
+              compact={spacing.contentPadding === 1}
+              key={optIndex}
+              label={label}
+              value={value}
+            />
+          )
         })}
       </VStack>
     </VStack>
