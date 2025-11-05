@@ -2,7 +2,7 @@ import type { ButtonProps } from '@chakra-ui/react'
 import { type ReactNode, memo } from 'react'
 import type { SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
 import { EntityDisplayContent } from './components/EntityDisplayContent'
-import { EntityDisplayProvider } from './xuEntityDisplayProvider'
+import { EntityDisplayProvider } from './EntityDisplayProvider'
 
 type EntityDisplayProps = {
   /** Entity data to display */
@@ -77,7 +77,6 @@ export const EntityDisplay = memo(function EntityDisplay({
       hideActions={hideActions}
       collapsible={collapsible}
       onClick={onClick}
-      hasButtonConfig={!!buttonConfig}
       hideLevel={hideLevel}
       rightLabel={rightLabel}
       buttonConfig={buttonConfig}

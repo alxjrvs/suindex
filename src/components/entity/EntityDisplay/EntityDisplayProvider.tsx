@@ -29,7 +29,6 @@ interface EntityDisplayProviderProps {
   collapsible: boolean
   defaultExpanded: boolean
   onClick?: () => void
-  hasButtonConfig: boolean
   hideLevel: boolean
   expanded?: boolean
   rightLabel?: string
@@ -52,7 +51,6 @@ export function EntityDisplayProvider({
   expanded,
   defaultExpanded,
   onClick,
-  hasButtonConfig,
   hideLevel,
   rightLabel,
   buttonConfig,
@@ -61,6 +59,7 @@ export function EntityDisplayProvider({
   onToggleExpanded,
   children,
 }: EntityDisplayProviderProps) {
+  const hasButtonConfig = !!buttonConfig
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
   const isExpanded = expanded !== undefined ? expanded : internalExpanded
 
