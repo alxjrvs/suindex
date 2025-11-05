@@ -116,3 +116,60 @@ export function calculateBackgroundColor(
   if (techLevel) return techLevelColors[techLevel]
   return 'su.orange'
 }
+
+/**
+ * Get background color for content area based on schema
+ */
+export function getContentBackground(schemaName: SURefMetaSchemaName): string {
+  return schemaName === 'actions' ? 'su.blue' : 'su.lightBlue'
+}
+
+/**
+ * Calculate opacity values for entity display
+ */
+export function calculateOpacity(dimHeader: boolean, disabled: boolean) {
+  return {
+    header: dimHeader ? 0.5 : 1,
+    content: disabled ? 0.5 : 1,
+  }
+}
+
+/**
+ * Determine which action to take when header is clicked
+ * Priority order:
+ * 1. If there's a button config and it's collapsible, toggle
+ * 2. If there's an onClick handler and not disabled, call it
+ * 3. If collapsible, toggle
+ */
+export function createHeaderClickHandler(
+  hasButtonConfig: boolean,
+  collapsible: boolean,
+  onClick: (() => void) | undefined,
+  disabled: boolean,
+  onToggle: () => void
+): () => void {
+  return () => {
+    if (hasButtonConfig && collapsible) {
+      onToggle()
+      return
+    }
+
+    if (onClick && !disabled) {
+      onClick()
+      return
+    }
+
+    if (collapsible) {
+      onToggle()
+    }
+  }
+}
+
+/**
+ * Determine if extra content should be shown based on compact mode and hideActions flag
+ * In compact mode, only show extra sections if actions are not hidden
+ * In normal mode, always show extra sections
+ */
+export function shouldShowExtraContent(compact: boolean, hideActions: boolean): boolean {
+  return compact ? !hideActions : true
+}

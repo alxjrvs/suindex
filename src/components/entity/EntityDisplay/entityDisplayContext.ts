@@ -1,4 +1,6 @@
 import { createContext } from 'react'
+import type { ReactNode } from 'react'
+import type { ButtonProps } from '@chakra-ui/react'
 import type { SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
 
 /**
@@ -46,6 +48,32 @@ export interface EntityDisplayContextValue {
   fontSize: ReturnType<typeof getEntityFontSizes>
   /** Content background color */
   contentBg: string
+  /** Computed opacity values */
+  opacity: { header: number; content: number }
+  /** Whether to show extra content sections */
+  shouldShowExtraContent: boolean
+  /** Header click handler */
+  handleHeaderClick: () => void
+  /** Whether the component is expanded */
+  isExpanded: boolean
+  /** Whether the component is collapsible */
+  collapsible: boolean
+  /** Whether to hide actions */
+  hideActions: boolean
+  /** Whether to hide tech level */
+  hideLevel: boolean
+  /** Right label for header */
+  rightLabel?: string
+  /** Whether the component is disabled */
+  disabled: boolean
+  /** Button configuration */
+  buttonConfig?: ButtonProps & { children: ReactNode }
+  /** User choices for entity options */
+  userChoices?: Record<string, string> | null
+  /** Choice selection handler */
+  onChoiceSelection?: (choiceId: string, value: string | undefined) => void
+  /** Children to render in the content area */
+  children?: ReactNode
 }
 
 export const EntityDisplayContext = createContext<EntityDisplayContextValue | null>(null)
