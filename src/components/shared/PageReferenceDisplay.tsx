@@ -4,11 +4,11 @@ import { Text } from '../base/Text'
 import { useEntityDisplayContext } from '../entity/EntityDisplay/useEntityDisplayContext'
 
 export function PageReferenceDisplay({ bg }: { bg?: string }) {
-  const { data, schemaName, spacing } = useEntityDisplayContext()
+  const { data, schemaName, spacing, compact } = useEntityDisplayContext()
   if (!('page' in data) || !data.page) return null
   const displayName = getSchemaDisplayName(schemaName)
 
-  const fontWeightBold = spacing.contentPadding === 1 ? 'semibold' : 'bold'
+  const fontWeightBold = compact ? 'semibold' : 'bold'
   const fontWeightSemibold = 'semibold'
   return (
     <Flex

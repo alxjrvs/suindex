@@ -26,7 +26,7 @@ export function ConditionalSheetDisplay({
   borderColor,
   children,
 }: ConditionalSheetDisplayProps) {
-  const { data, spacing } = useEntityDisplayContext()
+  const { data, spacing, compact } = useEntityDisplayContext()
 
   // Check if property exists and has a value
   if (!(propertyName in data) || !data[propertyName as keyof typeof data]) {
@@ -38,7 +38,7 @@ export function ConditionalSheetDisplay({
   return (
     <Flex p={spacing.contentPadding}>
       <SheetDisplay
-        compact={spacing.contentPadding === 1}
+        compact={compact}
         value={typeof value === 'string' ? value : undefined}
         label={label}
         labelBgColor={labelBgColor}

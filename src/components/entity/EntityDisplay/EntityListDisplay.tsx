@@ -3,11 +3,11 @@ import type { SURefMetaChoice } from 'salvageunion-reference'
 import type { ButtonProps } from '@chakra-ui/react'
 import { getModel } from '../../../utils/modelMap'
 import { EntityDisplay } from './index'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export interface EntityListDisplayProps {
   choice: SURefMetaChoice
   selectedChoice?: string
-  compact: boolean
   userChoices?: Record<string, string> | null
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
 }
@@ -20,10 +20,10 @@ export interface EntityListDisplayProps {
 export function EntityListDisplay({
   choice,
   selectedChoice,
-  compact,
   userChoices,
   onChoiceSelection,
 }: EntityListDisplayProps) {
+  const { spacing } = useEntityDisplayContext()
   // Get entities from either schemaEntities (via model lookup) or customSystemOptions (direct)
   const entities = choice.schemaEntities
     ? choice.schemaEntities
@@ -47,7 +47,7 @@ export function EntityListDisplay({
   if (visibleEntities.length === 0) return null
 
   return (
-    <VStack gap={compact ? 1 : 2} alignItems="start">
+    <VStack gap={spacing.singleGap} alignItems="start">
       {visibleEntities.map((entity, idx) => {
         // Determine button config based on whether onChoiceSelection is defined
         let buttonConfig: (ButtonProps & { children: React.ReactNode }) | undefined

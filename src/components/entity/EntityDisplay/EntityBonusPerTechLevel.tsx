@@ -16,12 +16,7 @@ export function EntityBonusPerTechLevel() {
       borderRadius="md"
     >
       {data.bonusPerTechLevel && (
-        <EntityStats
-          label="Bonus Per Tech Level"
-          prefix="+"
-          data={data.bonusPerTechLevel}
-          compact={spacing.contentPadding === 1}
-        />
+        <EntityStats label="Bonus Per Tech Level" prefix="+" data={data.bonusPerTechLevel} />
       )}
     </VStack>
   )

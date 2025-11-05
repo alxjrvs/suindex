@@ -5,21 +5,16 @@ import { SheetInput } from '../../shared/SheetInput'
 import { EntitySubheader } from './EntitySubheader'
 import { EntityListDisplay } from './EntityListDisplay'
 import { PreselectedEntityDisplay } from './PreselectedEntityDisplay'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 interface EntityChoiceProps {
   choice: SURefMetaChoice
-  compact: boolean
   userChoices?: Record<string, string> | null
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
-  premadeChoice?: { id: string; value: string }
 }
 
-export function EntityChoice({
-  choice,
-  compact,
-  userChoices,
-  onChoiceSelection,
-}: EntityChoiceProps) {
+export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityChoiceProps) {
+  const { fontSize } = useEntityDisplayContext()
   const hasSchemaEntities = 'schemaEntities' in choice && choice.schemaEntities
   const hasCustomSystemOptions = 'customSystemOptions' in choice && choice.customSystemOptions
   const hasSchema = 'schema' in choice && choice.schema && choice.schema.length > 0
@@ -28,7 +23,7 @@ export function EntityChoice({
   // Simple choice = only has id, name, and/or description (no schema, no schema entities, no custom options)
   const isSimpleChoice = !hasSchema && !hasSchemaEntities && !hasCustomSystemOptions
 
-  // If no onChoiceSelection and we have a premadeChoice, use it
+  // Schema page mode = no onChoiceSelection handler (viewing reference data, not editing)
   const isSchemaPageMode = onChoiceSelection === undefined
   const hasLimitedChoices = hasSchemaEntities || hasCustomSystemOptions
 
@@ -39,7 +34,7 @@ export function EntityChoice({
         <HStack mb={2} gap={2}>
           <EntitySubheader disabled={isSchemaPageMode} label={choice.name} />
           {hasLimitedChoices && !selectedChoice && (
-            <Text fontSize={compact ? 'xs' : 'sm'} color="su.black" opacity={0.7}>
+            <Text fontSize={fontSize.sm} color="su.black" opacity={0.7}>
               (choose one)
             </Text>
           )}
@@ -52,11 +47,7 @@ export function EntityChoice({
         hasSchema &&
         !hasSchemaEntities &&
         !hasCustomSystemOptions && (
-          <PreselectedEntityDisplay
-            choice={choice}
-            selectedChoice={selectedChoice}
-            compact={compact}
-          />
+          <PreselectedEntityDisplay choice={choice} selectedChoice={selectedChoice} />
         )}
 
       {/* Render entity list (schemaEntities or customSystemOptions) */}
@@ -64,7 +55,6 @@ export function EntityChoice({
         <EntityListDisplay
           choice={choice}
           selectedChoice={selectedChoice}
-          compact={compact}
           userChoices={userChoices}
           onChoiceSelection={onChoiceSelection}
         />

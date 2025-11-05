@@ -42,7 +42,6 @@ export function EntityChoices({ userChoices, onChoiceSelection }: EntityChoicesP
           <EntityChoice
             key={choice.id}
             choice={choice}
-            compact={spacing.contentPadding === 1}
             userChoices={userChoices}
             onChoiceSelection={onChoiceSelection}
           />

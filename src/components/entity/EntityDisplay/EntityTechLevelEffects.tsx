@@ -4,7 +4,7 @@ import { EntitySubheader } from './EntitySubheader'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export function EntityTechLevelEffects() {
-  const { data, spacing } = useEntityDisplayContext()
+  const { data, spacing, compact } = useEntityDisplayContext()
   const showTLE =
     'techLevelEffects' in data && data.techLevelEffects && data.techLevelEffects.length > 0
 
@@ -20,7 +20,7 @@ export function EntityTechLevelEffects() {
       <EntitySubheader label="Abilities" />
       {data.techLevelEffects.map((tle, index) => (
         <SheetDisplay
-          compact={spacing.contentPadding === 1}
+          compact={compact}
           key={index}
           label={`Tech Level ${tle.techLevelMin}`}
           value={tle.effect}

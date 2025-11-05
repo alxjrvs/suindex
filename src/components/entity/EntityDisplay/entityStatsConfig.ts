@@ -60,7 +60,7 @@ export const ENTITY_STATS_CONFIG: StatConfig[] = [
   {
     getter: getSalvageValue,
     compactLabel: 'SV',
-    normalLabel: 'Salvge',
+    normalLabel: 'Salvage',
     compactBottomLabel: '',
     normalBottomLabel: 'Value',
   },

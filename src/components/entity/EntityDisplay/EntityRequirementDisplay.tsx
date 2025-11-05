@@ -5,13 +5,13 @@ import { Flex } from '@chakra-ui/react'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export function EntityRequirementDisplay() {
-  const { data, spacing } = useEntityDisplayContext()
+  const { data, spacing, compact } = useEntityDisplayContext()
   if (!('requirement' in data) || !data.requirement || data.requirement.length === 0) return null
 
   return (
     <Flex p={spacing.contentPadding}>
       <SheetDisplay
-        compact={spacing.contentPadding === 1}
+        compact={compact}
         label="Requirements"
         labelBgColor="su.brick"
         borderColor="su.brick"

@@ -3,15 +3,16 @@ import { StatDisplay } from '../../StatDisplay'
 import type { SURefMetaBonusPerTechLevel, SURefMetaEntity } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import { ENTITY_STATS_CONFIG, applyStatLabel } from './entityStatsConfig'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export interface EntityStatsProps {
   data: SURefMetaEntity | SURefMetaBonusPerTechLevel
-  compact: boolean
   label?: string
   prefix?: string
 }
 
-export function EntityStats({ data, compact, label = '', prefix = '' }: EntityStatsProps) {
+export function EntityStats({ data, label = '', prefix = '' }: EntityStatsProps) {
+  const { compact } = useEntityDisplayContext()
   // Type assertion: SURefMetaBonusPerTechLevel is SURefMetaStats which has the same structure
   // as the stats properties these functions expect
   const entityData = data as SURefMetaEntity

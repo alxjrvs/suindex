@@ -39,7 +39,7 @@ export function EntityRightHeaderContent({
   return (
     <Flex>
       {abilityContent}
-      <EntityStats data={data} compact={compact} />
+      <EntityStats data={data} />
       {rightLabel && (
         <Text
           variant="pseudoheader"

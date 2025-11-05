@@ -103,16 +103,27 @@ export const EntityDisplay = memo(function EntityDisplay({
   }
 
   const handleHeaderClick = () => {
+    // Priority 1: If there's a button config and it's collapsible, toggle
     if (buttonConfig && collapsible) {
       handleToggle()
-    } else if (onClick && !disabled) {
+      return
+    }
+
+    // Priority 2: If there's an onClick handler and not disabled, call it
+    if (onClick && !disabled) {
       onClick()
-    } else if (collapsible) {
+      return
+    }
+
+    // Priority 3: If collapsible, toggle
+    if (collapsible) {
       handleToggle()
     }
   }
 
-  const displayExtraSection = compact ? !hideActions : true
+  // In compact mode, only show extra sections if actions are not hidden
+  // In normal mode, always show extra sections
+  const shouldShowExtraContent = compact ? !hideActions : true
 
   return (
     <EntityDisplayProvider
@@ -129,7 +140,7 @@ export const EntityDisplay = memo(function EntityDisplay({
         collapsible={collapsible}
         rightLabel={rightLabel}
         handleHeaderClick={handleHeaderClick}
-        displayExtraSection={displayExtraSection}
+        shouldShowExtraContent={shouldShowExtraContent}
         hideActions={hideActions}
         disabled={disabled}
         buttonConfig={buttonConfig}
@@ -150,7 +161,7 @@ interface EntityDisplayContentProps {
   collapsible: boolean
   rightLabel?: string
   handleHeaderClick: () => void
-  displayExtraSection: boolean
+  shouldShowExtraContent: boolean
   hideActions: boolean
   disabled: boolean
   buttonConfig?: ButtonProps & { children: ReactNode }
@@ -167,7 +178,7 @@ function EntityDisplayContent({
   collapsible,
   rightLabel,
   handleHeaderClick,
-  displayExtraSection,
+  shouldShowExtraContent,
   hideActions,
   disabled,
   buttonConfig,
@@ -222,7 +233,7 @@ function EntityDisplayContent({
           <ConditionalSheetDisplay propertyName="effect" />
 
           <EntityRequirementDisplay />
-          {displayExtraSection && (
+          {shouldShowExtraContent && (
             <>
               <EntityChassisPatterns />
               <EntityOptions />

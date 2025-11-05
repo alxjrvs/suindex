@@ -4,7 +4,7 @@ import { EntitySubheader } from './EntitySubheader'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export function EntityOptions() {
-  const { data, spacing } = useEntityDisplayContext()
+  const { data, spacing, compact } = useEntityDisplayContext()
   if (!('options' in data) || !data.options || data.options.length === 0) return null
   return (
     <VStack
@@ -18,14 +18,7 @@ export function EntityOptions() {
         {data.options.map((option, optIndex) => {
           const label = typeof option === 'string' ? '' : option.label
           const value = typeof option === 'string' ? option : option.value
-          return (
-            <SheetDisplay
-              compact={spacing.contentPadding === 1}
-              key={optIndex}
-              label={label}
-              value={value}
-            />
-          )
+          return <SheetDisplay compact={compact} key={optIndex} label={label} value={value} />
         })}
       </VStack>
     </VStack>
