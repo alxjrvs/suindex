@@ -1,8 +1,9 @@
 import { VStack } from '@chakra-ui/react'
-import type { SURefMetaChoice } from 'salvageunion-reference'
+import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
 import type { ButtonProps } from '@chakra-ui/react'
 import { getModel } from '../../../utils/modelMap'
 import { EntityDisplay } from './index'
+import { NestedActionDisplay } from '../NestedActionDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export interface EntityListDisplayProps {
@@ -91,12 +92,24 @@ export function EntityListDisplay({
           }
         }
 
+        // Check if this is a SURefMetaSystemModule (has action property but no id/name like regular entities)
+        // SURefMetaSystemModule has: action, actions, techLevel, slotsRequired, etc.
+        // Regular entities have: id, name, etc.
+        const isSystemModule = 'action' in entity && !('id' in entity)
+
+        if (isSystemModule) {
+          // Render the action from SURefMetaSystemModule using NestedActionDisplay
+          return <NestedActionDisplay key={idx} data={entity.action} compact />
+        }
+
+        // Regular entity - use EntityDisplay with proper schema
+        const schema = (choice.schema?.[0] || 'systems') as SURefSchemaName
         return (
           <EntityDisplay
             key={idx}
             hideActions
             data={entity}
-            schemaName="actions"
+            schemaName={schema}
             compact
             collapsible
             defaultExpanded={false}

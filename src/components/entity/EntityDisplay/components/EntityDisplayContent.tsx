@@ -114,7 +114,6 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
                 <ConditionalSheetInfo
                   propertyName="damagedEffect"
                   labelBgColor="su.brick"
-                  borderColor="su.brick"
                   label="Damaged Effect"
                 />
               )}

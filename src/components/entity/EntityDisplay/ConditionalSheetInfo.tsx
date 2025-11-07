@@ -1,4 +1,4 @@
-import { Flex, Box } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
@@ -8,13 +8,11 @@ interface ConditionalSheetInfoProps {
   propertyName: string
   /** Optional explicit value to display (takes precedence over propertyName) */
   value?: string
-  /** Optional label for the SheetDisplay */
+  /** Optional label */
   label?: string
-  /** Optional label background color */
+  /** Optional label color */
   labelBgColor?: string
-  /** Optional border color */
-  borderColor?: string
-  /** Optional children to render inside SheetDisplay */
+  /** Optional children to render */
   children?: React.ReactNode
 }
 
@@ -27,7 +25,6 @@ export function ConditionalSheetInfo({
   value: explicitValue,
   label,
   labelBgColor,
-  borderColor,
   children,
 }: ConditionalSheetInfoProps) {
   const { data, spacing, compact } = useEntityDisplayContext()
@@ -37,10 +34,7 @@ export function ConditionalSheetInfo({
   if (explicitValue !== undefined) {
     displayValue = explicitValue
   } else {
-    // Check if property exists and has a value
-    if (!(propertyName in data) || !data[propertyName as keyof typeof data]) {
-      return null
-    }
+    // Extract from data if property exists
     const extractedValue = data[propertyName as keyof typeof data]
     displayValue = typeof extractedValue === 'string' ? extractedValue : undefined
   }
@@ -50,24 +44,17 @@ export function ConditionalSheetInfo({
     `[ConditionalSheetInfo] Parsing trait references for entity="${entityName}", property="${propertyName}", value="${displayValue?.substring(0, 50)}..."`
   )
 
-  // Parse trait references in the display value
+  // Parse trait references in the display value (must be called before early returns)
   const parsedContent = useParseTraitReferences(displayValue)
 
+  // Early returns after all hooks
   if (!displayValue) return null
+  if (!(propertyName in data) && explicitValue === undefined) return null
 
   return (
     <Flex p={spacing.contentPadding}>
-      <SheetDisplay
-        compact={compact}
-        label={label}
-        labelBgColor={labelBgColor}
-        borderColor={borderColor}
-      >
-        {children || (
-          <Box lineHeight="relaxed" color="su.black">
-            {parsedContent}
-          </Box>
-        )}
+      <SheetDisplay compact={compact} label={label} labelColor={labelBgColor}>
+        {children || parsedContent}
       </SheetDisplay>
     </Flex>
   )

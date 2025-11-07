@@ -2,7 +2,7 @@ import { VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
-import { EntityDisplay } from '../entity/EntityDisplay'
+import { NestedActionDisplay } from '../entity/NestedActionDisplay'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
@@ -35,7 +35,7 @@ export function ChassisAbilities({
             },
           ]
         ).map((ability, idx) => (
-          <EntityDisplay key={idx} data={ability} disabled={disabled} schemaName="actions" />
+          <NestedActionDisplay key={idx} data={ability} compact />
         ))}
       </VStack>
     </RoundedBox>

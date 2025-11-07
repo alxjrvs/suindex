@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import type { ButtonProps } from '@chakra-ui/react'
-import type { SURefMetaEntity, SURefMetaSchemaName } from 'salvageunion-reference'
+import type { SURefEntity, SURefMetaSchemaName } from 'salvageunion-reference'
 import { getTechLevel } from 'salvageunion-reference'
 import { techLevelColors } from '../../../theme'
 import {
@@ -19,7 +19,7 @@ import {
 } from './entityDisplayContext'
 
 interface EntityDisplayProviderProps {
-  data: SURefMetaEntity
+  data: SURefEntity
   schemaName: SURefMetaSchemaName
   compact: boolean
   headerColor?: string

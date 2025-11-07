@@ -3,9 +3,25 @@ import { SheetDisplay } from '../../shared/SheetDisplay'
 import { EntitySubheader } from './EntitySubheader'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
+/**
+ * EntityOptions component
+ *
+ * Note: Since EntityDisplay now only accepts SURefEntity (not SURefMetaAction),
+ * and options only exist on SURefMetaAction, this component will never render.
+ * It's kept for backward compatibility but will always return null.
+ */
 export function EntityOptions() {
   const { data, spacing, compact } = useEntityDisplayContext()
-  if (!('options' in data) || !data.options || data.options.length === 0) return null
+
+  // Type guard: Check if data has options property
+  // This will always be false for SURefEntity types
+  if (!('options' in data)) return null
+
+  // TypeScript doesn't know that data.options exists, so we need to cast
+  const options = (data as { options?: Array<string | { label: string; value: string }> }).options
+
+  if (!options || options.length === 0) return null
+
   return (
     <VStack
       p={spacing.contentPadding}
@@ -15,7 +31,7 @@ export function EntityOptions() {
     >
       <EntitySubheader label="Options" />
       <VStack gap={spacing.contentPadding} alignItems="stretch">
-        {data.options.map((option, optIndex) => {
+        {options.map((option, optIndex) => {
           const label = typeof option === 'string' ? '' : option.label
           const value = typeof option === 'string' ? option : option.value
           return <SheetDisplay compact={compact} key={optIndex} label={label} value={value} />

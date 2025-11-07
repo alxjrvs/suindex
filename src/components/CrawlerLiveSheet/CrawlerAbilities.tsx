@@ -38,7 +38,6 @@ export function CrawlerAbilities({
         ]
       ).map((ability, idx) => (
         <CrawlerAbility
-          disabled={disabled}
           readOnly={readOnly}
           key={idx}
           ability={ability}
@@ -51,12 +50,10 @@ export function CrawlerAbilities({
 
 function CrawlerAbility({
   ability,
-  disabled = false,
   readOnly = false,
   crawlerTypeEntityId,
 }: {
   ability: SURefCrawler['actions'][0]
-  disabled?: boolean
   readOnly?: boolean
   crawlerTypeEntityId: string | undefined
 }) {
@@ -65,7 +62,7 @@ function CrawlerAbility({
 
   return (
     <VStack gap={3} alignItems="stretch" w="full">
-      <SheetDisplay disabled={disabled} label={ability.name} value={ability.description} />
+      <SheetDisplay label={ability.name} value={ability.description} />
       {wrappedChoice.map((choice, idx) => (
         <SheetEntityChoiceDisplay
           onUpdateChoice={readOnly ? undefined : handleUpdateChoice}

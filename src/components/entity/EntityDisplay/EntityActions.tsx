@@ -1,11 +1,11 @@
-import { EntityDisplay } from '../EntityDisplay'
 import { VStack } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
 import { hasActions, extractActions } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
+import { NestedActionDisplay } from '../NestedActionDisplay'
 
 export function EntityActions() {
-  const { data, schemaName, spacing } = useEntityDisplayContext()
+  const { data, schemaName, spacing, compact } = useEntityDisplayContext()
   if (!hasActions(data)) return null
 
   const actions = extractActions(data)
@@ -19,7 +19,7 @@ export function EntityActions() {
         {label}
       </Text>
       {actions.map((action, index) => {
-        return <EntityDisplay compact key={index} data={action} schemaName="actions" />
+        return <NestedActionDisplay compact={compact} key={index} data={action} />
       })}
     </VStack>
   )

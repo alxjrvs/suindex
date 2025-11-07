@@ -77,10 +77,10 @@ function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefMetaSchemaN
 /**
  * Extract range detail
  */
-function extractRangeDetail(data: SURefMetaEntity): DataValue | null {
+function extractRangeDetail(data: SURefMetaEntity): DataValue[] | null {
   const range = getRange(data)
   if (!range) return null
-  return { label: 'Range', value: range, type: 'keyword' }
+  return range.map((r) => ({ label: 'Range', value: r, type: 'keyword' }))
 }
 
 /**
@@ -122,8 +122,8 @@ function extractDetails(data: SURefMetaEntity, schemaName?: SURefMetaSchemaName)
   details.push(...extractActionTypes(data, schemaName))
 
   // Range
-  const range = extractRangeDetail(data)
-  if (range) details.push(range)
+  const ranges = extractRangeDetail(data)
+  if (ranges) ranges.map((r) => details.push(r))
 
   // Damage
   const damage = extractDamageDetail(data)
