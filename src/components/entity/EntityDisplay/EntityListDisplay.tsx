@@ -41,7 +41,10 @@ export function EntityListDisplay({
 
   // Filter to show only selected entity if provided
   const visibleEntities = selectedChoice
-    ? entities.filter((entity) => entity.name === selectedChoice)
+    ? entities.filter((entity) => {
+        const entityName = 'name' in entity ? entity.name : entity.action.name
+        return entityName === selectedChoice
+      })
     : entities
 
   if (visibleEntities.length === 0) return null
@@ -72,6 +75,7 @@ export function EntityListDisplay({
             }
           } else {
             // Show ADD button
+            const entityName = 'name' in entity ? entity.name : entity.action.name
             buttonConfig = {
               bg: 'su.orange',
               color: 'su.white',
@@ -80,7 +84,7 @@ export function EntityListDisplay({
               _hover: { bg: 'su.black' },
               onClick: (e) => {
                 e.stopPropagation()
-                onChoiceSelection(choice.id, entity.name)
+                onChoiceSelection(choice.id, entityName)
               },
               children: 'Add',
             }

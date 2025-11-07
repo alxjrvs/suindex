@@ -331,6 +331,7 @@ export function GameLiveSheet() {
                   value={
                     member.user_name ?? member.user_email ?? `User ${member.user_id.slice(0, 8)}`
                   }
+                  inline={false}
                 />
               ))}
             </VStack>

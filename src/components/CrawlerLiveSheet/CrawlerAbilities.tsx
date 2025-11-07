@@ -31,6 +31,7 @@ export function CrawlerAbilities({
       {(
         crawlerTypeRef?.actions || [
           {
+            id: 'no-crawler-type',
             name: '',
             description: 'No crawler type selected.',
           },

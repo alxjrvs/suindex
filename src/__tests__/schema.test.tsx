@@ -54,7 +54,12 @@ function verifyEntityProperties(
 ) {
   // Check description if present
   if ('description' in entity && entity.description) {
-    expect(textContent).toContain(entity.description)
+    // Remove bracket notation from description for comparison since parseTraitReferences
+    // converts [[trait]] to styled elements without the brackets
+    const descriptionWithoutBrackets = entity.description
+      .replace(/\[\[\[([^\]]+)\]\s*\(([^)]+)\)\]\]/g, '$1 ($2)')
+      .replace(/\[\[([^\]]+)\]\]/g, '$1')
+    expect(textContent).toContain(descriptionWithoutBrackets)
   }
 
   // Check schema-specific properties

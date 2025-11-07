@@ -37,12 +37,17 @@ export function EntityDisplayTooltip({
   openDelay = 200,
   closeDelay = 100,
 }: EntityDisplayTooltipProps) {
+  console.log(`[EntityDisplayTooltip] Rendering for schema="${schemaName}", entityId="${entityId}"`)
+
   const entity = SalvageUnionReference.get(schemaName, entityId)
 
   // If entity doesn't exist, just render children without tooltip
   if (!entity) {
+    console.log(`[EntityDisplayTooltip] Entity not found, rendering children only`)
     return <>{children}</>
   }
+
+  console.log(`[EntityDisplayTooltip] Entity found, setting up HoverCard for:`, entity.name)
 
   return (
     <HoverCard.Root openDelay={openDelay} closeDelay={closeDelay}>
@@ -59,6 +64,13 @@ export function EntityDisplayTooltip({
             border="none"
             shadow="2xl"
             p={0}
+            onPointerEnter={() => {
+              console.log(
+                `[EntityDisplayTooltip] Tooltip opened for entity:`,
+                entity.name,
+                `(${schemaName}/${entityId})`
+              )
+            }}
           >
             {showArrow && <HoverCard.Arrow />}
             <EntityDisplay schemaName={schemaName} data={entity} collapsible={false} />

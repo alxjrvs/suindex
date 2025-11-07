@@ -195,7 +195,7 @@ function TreeSection({
     [abilities]
   )
   // Read-only mode when hideUnchosen is true (viewing another player's sheet)
-  const isReadOnly = hideUnchosen
+  const isReadOnly = hideUnchosen || !id
 
   // Check if this is a legendary tree
   const isLegendaryTree = selectedAdvancedClass?.legendaryTree === treeName

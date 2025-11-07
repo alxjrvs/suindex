@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import { Box, Flex, IconButton, Text, Button } from '@chakra-ui/react'
+import { Box, Flex, IconButton, Button } from '@chakra-ui/react'
 import { resultForTable, type SURefMetaTable } from 'salvageunion-reference'
 import { roll } from '@randsum/roller'
+import { useParseTraitReferences } from '../../utils/parseTraitReferences'
+import { Text } from '../base/Text'
 
 interface DigestedRollTable {
   order: number
@@ -10,15 +12,19 @@ interface DigestedRollTable {
   key: string
 }
 
+type RollTableType =
+  | SURefMetaTable
+  | { type: 'standard' | 'alternate' | 'flat' | 'full'; [key: string]: string }
+
 interface RollTableDisplayProps {
-  table: SURefMetaTable
+  table: RollTableType
   showCommand?: boolean
   disabled?: boolean
   compact?: boolean
   tableName?: string
 }
 
-function digestRollTable(table: SURefMetaTable): DigestedRollTable[] {
+function digestRollTable(table: RollTableType): DigestedRollTable[] {
   if (!table) return []
   const sorted = Object.keys(table)
     .sort((a, b) => {
@@ -42,6 +48,30 @@ function digestRollTable(table: SURefMetaTable): DigestedRollTable[] {
   })
 }
 
+function RollTableDescription({
+  name,
+  description,
+  showTitle,
+  compact,
+}: {
+  name: string
+  description: string
+  showTitle: boolean
+  compact?: boolean
+}) {
+  const parsed = useParseTraitReferences(description)
+  return (
+    <Box color="su.black" fontSize={compact ? 'xs' : 'md'}>
+      {showTitle && (
+        <Box as="span" fontWeight="bold">
+          {name}:{' '}
+        </Box>
+      )}
+      {parsed}
+    </Box>
+  )
+}
+
 export function RollTable({
   compact,
   disabled,
@@ -61,7 +91,7 @@ export function RollTable({
 
   const handleRoll = () => {
     setHighlightedKey(null)
-    const { key } = resultForTable(table, roll('1d20').total)
+    const { key } = resultForTable(table as SURefMetaTable, roll('1d20').total)
     setTimeout(() => setHighlightedKey(key), 300)
   }
 
@@ -197,14 +227,12 @@ export function RollTable({
                 alignItems="center"
                 py={compact ? 0.5 : 1}
               >
-                <Text color="su.black" fontSize={compact ? 'xs' : 'md'}>
-                  {showTitle && (
-                    <Text as="span" fontWeight="bold">
-                      {name}:{' '}
-                    </Text>
-                  )}
-                  {description}
-                </Text>
+                <RollTableDescription
+                  name={name}
+                  description={description}
+                  showTitle={showTitle}
+                  compact={compact}
+                />
               </Flex>
             </Flex>
           )

@@ -28,6 +28,7 @@ export function ChassisAbilities({
         {(
           chassis?.actions || [
             {
+              id: 'no-chassis',
               name: '',
               description: 'No chassis selected.',
               options: [{ label: '', value: '' }],

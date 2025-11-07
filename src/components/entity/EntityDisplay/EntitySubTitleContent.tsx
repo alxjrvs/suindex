@@ -1,4 +1,11 @@
 import type { SURefMetaEntity, SURefMetaTrait, SURefMetaSchemaName } from 'salvageunion-reference'
+import {
+  getActivationCost,
+  getActionType,
+  getRange,
+  getDamage,
+  getTraits,
+} from 'salvageunion-reference'
 import type { DataValue } from '../../../types/common'
 import { ActivationCostBox } from '../../shared/ActivationCostBox'
 import { EntityDetailDisplay } from '../EntityDetailDisplay'
@@ -24,18 +31,19 @@ export function EntitySubTitleElement() {
 /**
  * Extract activation cost detail
  */
-function extractActivationCost(
+function extractActivationCostDetail(
   data: SURefMetaEntity,
   schemaName?: SURefMetaSchemaName
 ): DataValue | null {
-  if (!('activationCost' in data) || data.activationCost === undefined) return null
+  const activationCost = getActivationCost(data)
+  if (activationCost === undefined) return null
 
   const variableCost = 'activationCurrency' in data && schemaName === 'abilities'
   const activationCurrency = getActivationCurrency(schemaName, variableCost)
-  const isVariable = String(data.activationCost).toLowerCase() === 'variable'
+  const isVariable = String(activationCost).toLowerCase() === 'variable'
   const costValue = isVariable
     ? `X ${activationCurrency}`
-    : `${data.activationCost} ${activationCurrency}`
+    : `${activationCost} ${activationCurrency}`
 
   return { label: costValue, type: 'cost' }
 }
@@ -47,9 +55,10 @@ function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefMetaSchemaN
   const details: DataValue[] = []
   const isGeneric = schemaName === 'abilities' && 'level' in data && data.level === 'G'
 
-  if ('actionType' in data && data.actionType) {
+  const actionType = getActionType(data)
+  if (actionType) {
     details.push({
-      label: data.actionType,
+      label: actionType,
       value: isGeneric ? 'Pilot' : undefined,
       type: 'keyword',
     })
@@ -68,27 +77,30 @@ function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefMetaSchemaN
 /**
  * Extract range detail
  */
-function extractRange(data: SURefMetaEntity): DataValue | null {
-  if (!('range' in data) || !data.range) return null
-  return { label: 'Range', value: data.range, type: 'keyword' }
+function extractRangeDetail(data: SURefMetaEntity): DataValue | null {
+  const range = getRange(data)
+  if (!range) return null
+  return { label: 'Range', value: range, type: 'keyword' }
 }
 
 /**
  * Extract damage detail
  */
-function extractDamage(data: SURefMetaEntity): DataValue | null {
-  if (!('damage' in data) || !data.damage) return null
+function extractDamageDetail(data: SURefMetaEntity): DataValue | null {
+  const damage = getDamage(data)
+  if (!damage) return null
   return {
     label: 'Damage',
-    value: `${data.damage.amount}${data.damage.damageType ?? 'HP'}`,
+    value: `${damage.amount}${damage.damageType ?? 'HP'}`,
   }
 }
 
 /**
  * Extract trait details
  */
-function extractTraits(data: SURefMetaEntity): DataValue[] {
-  const traits: SURefMetaTrait[] = 'traits' in data && data.traits?.length ? data.traits : []
+function extractTraitDetails(data: SURefMetaEntity): DataValue[] {
+  const traits = getTraits(data)
+  if (!traits || traits.length === 0) return []
   return traits.map((t: SURefMetaTrait) => {
     const label = t.type.charAt(0).toUpperCase() + t.type.slice(1)
     const value = 'amount' in t && t.amount !== undefined ? t.amount : undefined
@@ -103,22 +115,22 @@ function extractDetails(data: SURefMetaEntity, schemaName?: SURefMetaSchemaName)
   const details: DataValue[] = []
 
   // Activation cost
-  const activationCost = extractActivationCost(data, schemaName)
+  const activationCost = extractActivationCostDetail(data, schemaName)
   if (activationCost) details.push(activationCost)
 
   // Action types
   details.push(...extractActionTypes(data, schemaName))
 
   // Range
-  const range = extractRange(data)
+  const range = extractRangeDetail(data)
   if (range) details.push(range)
 
   // Damage
-  const damage = extractDamage(data)
+  const damage = extractDamageDetail(data)
   if (damage) details.push(damage)
 
   // Traits
-  details.push(...extractTraits(data))
+  details.push(...extractTraitDetails(data))
 
   return details
 }
@@ -137,6 +149,7 @@ function DetailItem({ item }: { item: DataValue }) {
         value={item.value}
         compact={compact}
         schemaName="traits"
+        inline={false}
       />
     )
   }
@@ -148,13 +161,14 @@ function DetailItem({ item }: { item: DataValue }) {
         value={item.value}
         compact={compact}
         schemaName="keywords"
+        inline={false}
       />
     )
   }
 
   if (item.type === 'meta') {
-    return <ValueDisplay label={item.label} compact={compact} />
+    return <ValueDisplay label={item.label} compact={compact} inline={false} />
   }
 
-  return <ValueDisplay label={item.label} value={item.value} compact={compact} />
+  return <ValueDisplay label={item.label} value={item.value} compact={compact} inline={false} />
 }

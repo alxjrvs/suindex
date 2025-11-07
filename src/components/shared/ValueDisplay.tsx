@@ -6,11 +6,14 @@ export function ValueDisplay({
   value,
   compact = false,
   inverse = false,
+  inline = true,
 }: {
   label: string | number
   value?: string | number
   compact?: boolean
   inverse?: boolean
+  /** Whether to display inline (default: true). Set to false for flex container contexts. */
+  inline?: boolean
 }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
   const fontSize = compact ? 'xs' : 'md'
@@ -18,7 +21,13 @@ export function ValueDisplay({
   const valueVariant = inverse ? 'pseudoheader' : 'pseudoheaderInverse'
 
   return (
-    <Flex gap={0} cursor="default" whiteSpace="nowrap" border="1px solid black">
+    <Flex
+      gap={0}
+      cursor="default"
+      whiteSpace="nowrap"
+      border="1px solid black"
+      display={inline ? 'inline-flex' : 'flex'}
+    >
       <Text
         variant={mainVariant}
         textTransform="uppercase"

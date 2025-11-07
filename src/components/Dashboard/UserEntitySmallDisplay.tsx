@@ -56,7 +56,9 @@ export function UserEntitySmallDisplay({
       label={label}
       title={leftHeader}
       rightContent={formattedRightHeader}
-      subTitleContent={detailLabel && <ValueDisplay label={detailLabel} value={detailValue} />}
+      subTitleContent={
+        detailLabel && <ValueDisplay label={detailLabel} value={detailValue} inline={false} />
+      }
       _hover={{ borderColor: 'su.brick' }}
       cursor="pointer"
       onClick={onClick}

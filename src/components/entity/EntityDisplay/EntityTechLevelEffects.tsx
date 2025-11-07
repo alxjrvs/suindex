@@ -18,14 +18,16 @@ export function EntityTechLevelEffects() {
       borderRadius="md"
     >
       <EntitySubheader label="Abilities" />
-      {data.techLevelEffects.map((tle, index) => (
-        <SheetDisplay
-          compact={compact}
-          key={index}
-          label={`Tech Level ${tle.techLevelMin}`}
-          value={tle.effect}
-        />
-      ))}
+      {data.techLevelEffects.map((tle, index) =>
+        tle.effects.map((effect, effIdx) => (
+          <SheetDisplay
+            compact={compact}
+            key={`${index}-${effIdx}`}
+            label={effect.label || `Tech Level ${tle.techLevelMin}`}
+            value={effect.value}
+          />
+        ))
+      )}
     </VStack>
   )
 }

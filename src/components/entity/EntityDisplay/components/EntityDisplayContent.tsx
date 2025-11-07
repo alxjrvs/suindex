@@ -1,5 +1,6 @@
 import { Box, VStack, Button, Flex } from '@chakra-ui/react'
 import type { SURefAdvancedClass, SURefCoreClass } from 'salvageunion-reference'
+import { getEffects, getTable } from 'salvageunion-reference'
 import { PageReferenceDisplay } from '../../../shared/PageReferenceDisplay'
 import { RollTable } from '../../../shared/RollTable'
 import { RoundedBox } from '../../../shared/RoundedBox'
@@ -83,18 +84,25 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
 
           <EntityPopulationRange />
           <EntityBonusPerTechLevel />
-          <ConditionalSheetInfo propertyName="effect" />
+          {getEffects(data)?.map((effect, index) => (
+            <ConditionalSheetInfo
+              key={index}
+              propertyName="effects"
+              label={effect.label}
+              value={effect.value}
+            />
+          ))}
 
           <EntityRequirementDisplay />
           {shouldShowExtraContent && (
             <>
               <EntityChassisPatterns />
               <EntityOptions />
-              {'table' in data && data.table && (
+              {getTable(data) && (
                 <Box p={spacing.contentPadding} borderRadius="md" position="relative" zIndex={10}>
                   <RollTable
                     disabled={disabled}
-                    table={data.table}
+                    table={getTable(data)!}
                     showCommand
                     compact
                     tableName={'name' in data ? String(data.name) : undefined}

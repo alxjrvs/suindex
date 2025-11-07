@@ -1,14 +1,37 @@
 import { useState } from 'react'
-import { VStack, Text, HStack } from '@chakra-ui/react'
+import { VStack, HStack, Box } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 import { useManageEntityChoices } from '../../hooks/suentity'
+import { useParseTraitReferences } from '../../utils/parseTraitReferences'
 
 interface BayInfoProps {
   bayRef: SURefCrawlerBay
   bayEntityId: string
+}
+
+function AbilityDisplay({ name, description }: { name: string; description?: string }) {
+  const parsed = useParseTraitReferences(description)
+  return (
+    <SheetDisplay label={name}>
+      <Box lineHeight="relaxed" color="su.black">
+        {parsed}
+      </Box>
+    </SheetDisplay>
+  )
+}
+
+function EffectDisplay({ label, value }: { label: string; value: string }) {
+  const parsed = useParseTraitReferences(value)
+  return (
+    <SheetDisplay label={label}>
+      <Box lineHeight="relaxed" color="su.black">
+        {parsed}
+      </Box>
+    </SheetDisplay>
+  )
 }
 
 export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
@@ -80,7 +103,9 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
       {/* Function Section */}
       {isFunctionExpanded && hasFunction && (
         <SheetDisplay label="Function">
-          <Text lineHeight="relaxed">{bayRef.description}</Text>
+          <Box lineHeight="relaxed" color="su.black">
+            {bayRef.description}
+          </Box>
         </SheetDisplay>
       )}
 
@@ -88,15 +113,17 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
       {isAbilitiesExpanded && hasAbilities && (
         <VStack gap={3} alignItems="stretch" w="full">
           {bayRef.actions!.map((ability, idx) => (
-            <SheetDisplay key={idx} label={ability.name}>
-              <Text lineHeight="relaxed">{ability.description}</Text>
-            </SheetDisplay>
+            <AbilityDisplay key={idx} name={ability.name} description={ability.description} />
           ))}
-          {techLevelEffects?.map((effect, idx) => (
-            <SheetDisplay key={idx} label={`Tech Level ${effect.techLevelMin}`}>
-              <Text lineHeight="relaxed">{effect.effect}</Text>
-            </SheetDisplay>
-          ))}
+          {techLevelEffects?.map((effect, idx) =>
+            effect.effects.map((eff, effIdx) => (
+              <EffectDisplay
+                key={`${idx}-${effIdx}`}
+                label={eff.label || `Tech Level ${effect.techLevelMin}`}
+                value={eff.value}
+              />
+            ))
+          )}
         </VStack>
       )}
     </VStack>

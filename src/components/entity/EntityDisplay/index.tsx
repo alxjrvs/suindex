@@ -64,6 +64,13 @@ export const EntityDisplay = memo(function EntityDisplay({
   onChoiceSelection,
 }: EntityDisplayProps) {
   if (!data) return null
+
+  const entityName = 'name' in data ? data.name : 'unknown'
+  const entityId = 'id' in data ? data.id : 'unknown'
+  console.log(
+    `[EntityDisplay] Rendering entity="${entityName}" (${entityId}), schema="${schemaName}", collapsible=${collapsible}`
+  )
+
   return (
     <EntityDisplayProvider
       data={data}
