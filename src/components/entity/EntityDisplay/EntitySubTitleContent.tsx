@@ -80,7 +80,9 @@ function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefMetaSchemaN
 function extractRangeDetail(data: SURefMetaEntity): DataValue[] | null {
   const range = getRange(data)
   if (!range) return null
-  return range.map((r) => ({ label: 'Range', value: r, type: 'keyword' }))
+  // Range can be a string or array of strings
+  const ranges = Array.isArray(range) ? range : [range]
+  return ranges.map((r) => ({ label: 'Range', value: r, type: 'keyword' }))
 }
 
 /**

@@ -30,6 +30,7 @@ export const componentRegistry: Record<string, DisplayComponentType> = {
   chassis: createEntityDisplay('chassis'),
   crawlers: createEntityDisplay('crawlers'),
   creatures: createEntityDisplay('creatures'),
+  distances: createEntityDisplay('distances'),
   drones: createEntityDisplay('drones'),
   equipment: createEntityDisplay('equipment'),
   keywords: createEntityDisplay('keywords'),

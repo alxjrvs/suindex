@@ -6,4 +6,6 @@ export interface SchemaInfo {
   schemaFile: string
   itemCount: number
   requiredFields: string[]
+  displayName?: string
+  displayNamePlural?: string
 }

@@ -92,12 +92,19 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
     )
   }
 
+  // Capitalize schema name (e.g., "abilities" -> "Abilities")
+  const capitalizedTitle =
+    currentSchema.displayNamePlural ||
+    currentSchema.title.charAt(0).toUpperCase() + currentSchema.title.slice(1)
+
   return (
     <Flex flexDirection="column" minH="100%">
-      <ReferenceHeader title={currentSchema.title} textAlign="center">
-        <Text color="su.brick" textAlign="center" mb={4}>
-          {currentSchema.description}
-        </Text>
+      <ReferenceHeader title={capitalizedTitle} textAlign="center">
+        <Box maxW="800px" mx="auto" w="full">
+          <Text color="su.brick" textAlign="center" mb={4}>
+            {currentSchema.description}
+          </Text>
+        </Box>
 
         {/* Search Bar */}
         <Box mb={4} w="full">
