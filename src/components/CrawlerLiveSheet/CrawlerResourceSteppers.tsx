@@ -41,16 +41,28 @@ export function CrawlerResourceSteppers({
     return states
   }, [flashingTLs])
 
-  const totalInTl1 = useMemo(() => {
-    return (
-      (scrap_tl_one ?? 0) +
-      (scrap_tl_two ?? 0) * 2 +
-      (scrap_tl_three ?? 0) * 3 +
-      (scrap_tl_four ?? 0) * 4 +
-      (scrap_tl_five ?? 0) * 5 +
-      (scrap_tl_six ?? 0) * 6
-    )
-  }, [scrap_tl_one, scrap_tl_two, scrap_tl_three, scrap_tl_four, scrap_tl_five, scrap_tl_six])
+  const scrapByTL = useMemo(
+    () => ({
+      1: scrap_tl_one,
+      2: scrap_tl_two,
+      3: scrap_tl_three,
+      4: scrap_tl_four,
+      5: scrap_tl_five,
+      6: scrap_tl_six,
+    }),
+    [scrap_tl_one, scrap_tl_two, scrap_tl_three, scrap_tl_four, scrap_tl_five, scrap_tl_six]
+  )
+
+  const totalInTl1 = useMemo(
+    () =>
+      (scrapByTL[1] ?? 0) +
+      (scrapByTL[2] ?? 0) * 2 +
+      (scrapByTL[3] ?? 0) * 3 +
+      (scrapByTL[4] ?? 0) * 4 +
+      (scrapByTL[5] ?? 0) * 5 +
+      (scrapByTL[6] ?? 0) * 6,
+    [scrapByTL]
+  )
 
   return (
     <>

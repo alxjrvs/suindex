@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack, HStack } from '@chakra-ui/react'
 import { useIsMutating } from '@tanstack/react-query'
-import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefChassis } from 'salvageunion-reference'
 import { PilotSmallDisplay } from '../Dashboard/PilotSmallDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
@@ -14,20 +13,20 @@ import { CargoList } from './CargoList'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { DeleteEntity } from '../shared/DeleteEntity'
-import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
+import { LiveSheetLoadingState } from '../shared/LiveSheetLoadingState'
+import { LiveSheetNotFoundState } from '../shared/LiveSheetNotFoundState'
+import { LiveSheetErrorState } from '../shared/LiveSheetErrorState'
 import { useUpdateMech, useHydratedMech, useDeleteMech, mechsKeys } from '../../hooks/mech'
 import { useCreatePilot } from '../../hooks/pilot'
-import { entitiesKeys } from '../../hooks/suentity/useSUEntities'
-import { playerChoicesKeys } from '../../hooks/suentity/usePlayerChoices'
-import { cargoKeys } from '../../hooks/cargo/useCargo'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { useImageUpload } from '../../hooks/useImageUpload'
-import { useRealtimeSubscription } from '../../hooks/useRealtimeSubscription'
+import { useLiveSheetSubscriptions } from '../../hooks/useLiveSheetSubscriptions'
 import { useEntityRelationships } from '../../hooks/useEntityRelationships'
 import { isOwner } from '../../lib/permissions'
 import { MainMechDisplay } from './MainMechDisplay'
 import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
+import { SalvageUnionReference } from 'salvageunion-reference'
 
 export default function MechLiveSheet({ id }: { id: string }) {
   const navigate = useNavigate()
@@ -56,36 +55,12 @@ export default function MechLiveSheet({ id }: { id: string }) {
   })
 
   // Real-time subscriptions for live updates
-  useRealtimeSubscription({
-    table: 'mechs',
+  useLiveSheetSubscriptions({
+    entityType: 'mech',
     id,
-    queryKey: mechsKeys.byId(id),
+    entityQueryKey: mechsKeys.byId(id),
     enabled: !isLocal && !!id,
-    toastMessage: 'Mech data updated',
-  })
-
-  // Subscribe to entities (systems, modules, chassis)
-  useRealtimeSubscription({
-    table: 'suentities',
-    queryKey: entitiesKeys.forParent('mech', id),
-    enabled: !isLocal && !!id,
-    showToast: false,
-  })
-
-  // Subscribe to player choices
-  useRealtimeSubscription({
-    table: 'player_choices',
-    queryKey: playerChoicesKeys.all,
-    enabled: !isLocal && !!id,
-    showToast: false,
-  })
-
-  // Subscribe to cargo
-  useRealtimeSubscription({
-    table: 'cargo',
-    queryKey: cargoKeys.forParent('mech', id),
-    enabled: !isLocal && !!id,
-    showToast: false,
+    includeCargo: true,
   })
 
   // Create pilot hook
@@ -106,32 +81,6 @@ export default function MechLiveSheet({ id }: { id: string }) {
   // Filter out the current pilot from the dropdown
   const availablePilots = allPilots.filter((p) => p.id !== mech?.pilot_id)
 
-  // Format pilot name with class information
-  const formatPilotName = (pilot: {
-    callsign: string
-    class_id: string | null
-    advanced_class_id: string | null
-  }) => {
-    const parts = [pilot.callsign]
-
-    if (pilot.class_id) {
-      const coreClass = SalvageUnionReference.get('classes.core', pilot.class_id)
-      if (coreClass) {
-        parts.push(coreClass.name)
-      }
-    }
-
-    if (pilot.advanced_class_id) {
-      // All advanced and hybrid classes are now in 'classes.advanced' schema
-      const advancedClass = SalvageUnionReference.get('classes.advanced', pilot.advanced_class_id)
-      if (advancedClass) {
-        parts.push(`/ ${advancedClass.name}`)
-      }
-    }
-
-    return parts.join(' - ')
-  }
-
   // Handle creating a new pilot with this mech pre-assigned
   const handleCreatePilot = async () => {
     if (!userId) return
@@ -150,49 +99,15 @@ export default function MechLiveSheet({ id }: { id: string }) {
   }
 
   if (!mech && !loading) {
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Text fontSize="xl" fontFamily="mono">
-            Mech not found
-          </Text>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetNotFoundState entityType="Mech" />
   }
 
   if (loading) {
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Text fontSize="xl" fontFamily="mono">
-            Loading mech...
-          </Text>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetLoadingState entityType="Mech" />
   }
 
   if (error) {
-    // Check if it's a permission error
-    if (error.includes('permission') || error.includes('private') || error.includes('access')) {
-      return <PermissionError message={error} />
-    }
-
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <VStack textAlign="center">
-            <Text fontSize="xl" fontFamily="mono" color="red.600" mb={4}>
-              Error loading mech
-            </Text>
-            <Text fontSize="sm" fontFamily="mono" color="gray.600">
-              {error}
-            </Text>
-          </VStack>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetErrorState entityType="Mech" error={error} />
   }
 
   return (
@@ -282,7 +197,21 @@ export default function MechLiveSheet({ id }: { id: string }) {
                     <SheetSelect
                       label="Change Pilot"
                       value={null}
-                      options={availablePilots.map((p) => ({ id: p.id, name: formatPilotName(p) }))}
+                      options={availablePilots.map((p) => {
+                        const parts = [p.callsign]
+                        if (p.class_id) {
+                          const coreClass = SalvageUnionReference.get('classes.core', p.class_id)
+                          if (coreClass) parts.push(coreClass.name)
+                        }
+                        if (p.advanced_class_id) {
+                          const advancedClass = SalvageUnionReference.get(
+                            'classes.advanced',
+                            p.advanced_class_id
+                          )
+                          if (advancedClass) parts.push(`/ ${advancedClass.name}`)
+                        }
+                        return { id: p.id, name: parts.join(' - ') }
+                      })}
                       onChange={(pilotId) => {
                         if (pilotId) {
                           updateMech.mutate({ id, updates: { pilot_id: pilotId } })
@@ -314,10 +243,24 @@ export default function MechLiveSheet({ id }: { id: string }) {
                           <SheetSelect
                             label="Or Assign Existing"
                             value={null}
-                            options={availablePilots.map((p) => ({
-                              id: p.id,
-                              name: formatPilotName(p),
-                            }))}
+                            options={availablePilots.map((p) => {
+                              const parts = [p.callsign]
+                              if (p.class_id) {
+                                const coreClass = SalvageUnionReference.get(
+                                  'classes.core',
+                                  p.class_id
+                                )
+                                if (coreClass) parts.push(coreClass.name)
+                              }
+                              if (p.advanced_class_id) {
+                                const advancedClass = SalvageUnionReference.get(
+                                  'classes.advanced',
+                                  p.advanced_class_id
+                                )
+                                if (advancedClass) parts.push(`/ ${advancedClass.name}`)
+                              }
+                              return { id: p.id, name: parts.join(' - ') }
+                            })}
                             onChange={(pilotId) => {
                               if (pilotId) {
                                 updateMech.mutate({ id, updates: { pilot_id: pilotId } })

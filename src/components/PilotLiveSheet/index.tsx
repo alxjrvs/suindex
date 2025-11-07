@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import { Box, Flex, Tabs, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Tabs } from '@chakra-ui/react'
 import type { SURefCoreClass, SURefAdvancedClass } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
@@ -13,14 +13,14 @@ import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { Notes } from '../shared/Notes'
 import { DeleteEntity } from '../shared/DeleteEntity'
-import { PermissionError } from '../shared/PermissionError'
 import { LiveSheetAssetDisplay } from '../shared/LiveSheetAssetDisplay'
+import { LiveSheetLoadingState } from '../shared/LiveSheetLoadingState'
+import { LiveSheetNotFoundState } from '../shared/LiveSheetNotFoundState'
+import { LiveSheetErrorState } from '../shared/LiveSheetErrorState'
 import { useUpdatePilot, useHydratedPilot, useDeletePilot, pilotsKeys } from '../../hooks/pilot'
-import { entitiesKeys } from '../../hooks/suentity/useSUEntities'
-import { playerChoicesKeys } from '../../hooks/suentity/usePlayerChoices'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { useImageUpload } from '../../hooks/useImageUpload'
-import { useRealtimeSubscription } from '../../hooks/useRealtimeSubscription'
+import { useLiveSheetSubscriptions } from '../../hooks/useLiveSheetSubscriptions'
 import { isOwner } from '../../lib/permissions'
 
 interface PilotLiveSheetProps {
@@ -54,74 +54,23 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   })
 
   // Real-time subscriptions for live updates
-  useRealtimeSubscription({
-    table: 'pilots',
+  useLiveSheetSubscriptions({
+    entityType: 'pilot',
     id,
-    queryKey: pilotsKeys.byId(id),
+    entityQueryKey: pilotsKeys.byId(id),
     enabled: !isLocal && !!id,
-    toastMessage: 'Pilot data updated',
-  })
-
-  // Subscribe to entities (abilities, equipment, etc.) for this pilot
-  useRealtimeSubscription({
-    table: 'suentities',
-    queryKey: entitiesKeys.forParent('pilot', id),
-    enabled: !isLocal && !!id,
-    showToast: false, // Don't show toast for entity changes (too noisy)
-  })
-
-  // Subscribe to player choices (invalidate all choices when any change)
-  useRealtimeSubscription({
-    table: 'player_choices',
-    queryKey: playerChoicesKeys.all,
-    enabled: !isLocal && !!id,
-    showToast: false, // Don't show toast for choice changes (too noisy)
   })
 
   if (!pilot && !loading) {
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Text fontSize="xl" fontFamily="mono">
-            Pilot not found
-          </Text>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetNotFoundState entityType="Pilot" />
   }
 
   if (loading) {
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Text fontSize="xl" fontFamily="mono">
-            Loading pilot...
-          </Text>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetLoadingState entityType="Pilot" />
   }
 
   if (error) {
-    // Check if it's a permission error
-    if (error.includes('permission') || error.includes('private') || error.includes('access')) {
-      return <PermissionError message={error} />
-    }
-
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <VStack textAlign="center">
-            <Text fontSize="xl" fontFamily="mono" color="red.600" mb={4}>
-              Error loading pilot
-            </Text>
-            <Text fontSize="sm" fontFamily="mono" color="gray.600">
-              {error}
-            </Text>
-          </VStack>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetErrorState entityType="Pilot" error={error} />
   }
   return (
     <LiveSheetLayout>

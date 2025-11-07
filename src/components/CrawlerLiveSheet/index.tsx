@@ -8,11 +8,13 @@ import { BayCard } from './BayCard'
 import { StorageCargoBay } from './StorageCargoBay'
 import { Notes } from '../shared/Notes'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
-import { CrawlerControlBar } from './CrawlerControlBar'
+import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { CrawlerNPC } from './CrawlerNPC'
 import { DeleteEntity } from '../shared/DeleteEntity'
-import { PermissionError } from '../shared/PermissionError'
 import { PilotMechCell } from '../Dashboard/PilotMechCell'
+import { LiveSheetLoadingState } from '../shared/LiveSheetLoadingState'
+import { LiveSheetNotFoundState } from '../shared/LiveSheetNotFoundState'
+import { LiveSheetErrorState } from '../shared/LiveSheetErrorState'
 import {
   useUpdateCrawler,
   useHydratedCrawler,
@@ -20,11 +22,8 @@ import {
   crawlersKeys,
 } from '../../hooks/crawler'
 import { useInitializeCrawlerBays } from '../../hooks/crawler/useInitializeCrawlerBays'
-import { entitiesKeys } from '../../hooks/suentity/useSUEntities'
-import { playerChoicesKeys } from '../../hooks/suentity/usePlayerChoices'
-import { cargoKeys } from '../../hooks/cargo/useCargo'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { useRealtimeSubscription } from '../../hooks/useRealtimeSubscription'
+import { useLiveSheetSubscriptions } from '../../hooks/useLiveSheetSubscriptions'
 import { isOwner } from '../../lib/permissions'
 import { fetchCrawlerPilots, fetchPilotsMechs } from '../../lib/api'
 
@@ -44,36 +43,12 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   useInitializeCrawlerBays(id, bays.length > 0)
 
   // Real-time subscriptions for live updates
-  useRealtimeSubscription({
-    table: 'crawlers',
+  useLiveSheetSubscriptions({
+    entityType: 'crawler',
     id,
-    queryKey: crawlersKeys.byId(id),
+    entityQueryKey: crawlersKeys.byId(id),
     enabled: !isLocal && !!id,
-    toastMessage: 'Crawler data updated',
-  })
-
-  // Subscribe to entities (abilities, bays, NPCs)
-  useRealtimeSubscription({
-    table: 'suentities',
-    queryKey: entitiesKeys.forParent('crawler', id),
-    enabled: !isLocal && !!id,
-    showToast: false,
-  })
-
-  // Subscribe to player choices
-  useRealtimeSubscription({
-    table: 'player_choices',
-    queryKey: playerChoicesKeys.all,
-    enabled: !isLocal && !!id,
-    showToast: false,
-  })
-
-  // Subscribe to cargo
-  useRealtimeSubscription({
-    table: 'cargo',
-    queryKey: cargoKeys.forParent('crawler', id),
-    enabled: !isLocal && !!id,
-    showToast: false,
+    includeCargo: true,
   })
 
   // Fetch pilots and their mechs for this crawler
@@ -105,49 +80,15 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   const isEditable = isLocal || (crawler ? isOwner(crawler.user_id, userId) : false)
 
   if (!crawler && !loading) {
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Text fontSize="xl" fontFamily="mono">
-            Crawler not found
-          </Text>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetNotFoundState entityType="Crawler" />
   }
 
   if (loading) {
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Text fontSize="xl" fontFamily="mono">
-            Loading crawler...
-          </Text>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetLoadingState entityType="Crawler" />
   }
 
   if (error) {
-    // Check if it's a permission error
-    if (error.includes('permission') || error.includes('private') || error.includes('access')) {
-      return <PermissionError message={error} />
-    }
-
-    return (
-      <LiveSheetLayout>
-        <Flex alignItems="center" justifyContent="center" h="64">
-          <Box textAlign="center">
-            <Text fontSize="xl" fontFamily="mono" color="red.600" mb={4}>
-              Error loading crawler
-            </Text>
-            <Text fontSize="sm" fontFamily="mono" color="gray.600">
-              {error}
-            </Text>
-          </Box>
-        </Flex>
-      </LiveSheetLayout>
-    )
+    return <LiveSheetErrorState entityType="Crawler" error={error} />
   }
 
   // Separate storage bay from other bays
@@ -157,7 +98,8 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   return (
     <LiveSheetLayout>
       {!isLocal && (
-        <CrawlerControlBar
+        <LiveSheetControlBar
+          bg="su.pink"
           hasPendingChanges={hasPendingChanges}
           active={crawler?.active ?? false}
           onActiveChange={(active) => updateCrawler.mutate({ id, updates: { active } })}

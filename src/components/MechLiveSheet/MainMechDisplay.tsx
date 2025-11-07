@@ -16,10 +16,11 @@ import { Text } from '../base/Text'
 export function MainMechDisplay({ id, isEditable }: { id: string; isEditable: boolean }) {
   const { mech, selectedChassis } = useHydratedMech(id)
   const chassisRef = selectedChassis?.ref as SURefChassis | undefined
-  const title =
-    chassisRef?.name && mech?.pattern ? `"${mech.pattern}"` : chassisRef?.name || 'Mech Chassis'
+  const chassisName = chassisRef?.name
+  const pattern = mech?.pattern ?? undefined
 
-  const subtitle = mech?.pattern ? `${chassisRef?.name} Chassis` : ''
+  const title = chassisName && pattern ? `"${pattern}"` : chassisName || 'Mech Chassis'
+  const subtitle = pattern && chassisName ? `${chassisName} Chassis` : ''
 
   return (
     <VStack flex="1" gap={2} alignItems="stretch">

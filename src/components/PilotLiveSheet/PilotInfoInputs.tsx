@@ -3,12 +3,12 @@ import { Box, Flex, Grid } from '@chakra-ui/react'
 import { SheetInput } from '../shared/SheetInput'
 import { SheetSelect } from '../shared/SheetSelect'
 import { RoundedBox } from '../shared/RoundedBox'
-import { rollTable } from '@randsum/salvageunion'
 import { SalvageUnionReference, type SURefAbility } from 'salvageunion-reference'
 import { useChangePilotClass } from '../../hooks/pilot/useChangePilotClass'
 import { useChangePilotAdvancedClass } from '../../hooks/pilot/useChangePilotAdvancedClass'
 import { useHydratedPilot, useUpdatePilot } from '../../hooks/pilot'
 import { Text } from '../base/Text'
+import { rollTable } from '@randsum/salvageunion'
 
 interface PilotInfoInputsProps {
   /** Disables all inputs */
@@ -104,8 +104,7 @@ export function PilotInfoInputs({
     const {
       result: { label },
     } = rollTable('Motto')
-
-    await updatePilot.mutate({ id, updates: { motto: label } })
+    updatePilot.mutate({ id, updates: { motto: label } })
   }
 
   const handleKeepsakeRoll = async () => {
