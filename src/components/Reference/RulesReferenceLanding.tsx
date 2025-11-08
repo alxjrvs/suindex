@@ -170,8 +170,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   }, [selectedIndex, searchResults, containerRef])
 
   return (
-    <Flex flexDirection="column" bg="su.white" minH="100vh" position="relative">
-      {/* Search bar and header - positioned above the masonry grid */}
+    <Flex flexDirection="column" bg="su.white" h="90vh" scrollBehavior="none" position="relative">
       <Box position="relative" zIndex={20} bg="su.white">
         <ReferenceHeader title="Salvage Union Rules Reference">
           <Box position="relative" maxW="2xl" w="full">
