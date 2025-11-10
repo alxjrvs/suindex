@@ -85,4 +85,3 @@ export function ReferenceError({ error }: ErrorComponentProps) {
     </Flex>
   )
 }
-

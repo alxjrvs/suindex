@@ -10,7 +10,6 @@ type: 'always_apply'
 // 1. Imports (grouped)
 import { Box, Flex } from '@chakra-ui/react'
 import { useState, useCallback } from 'react'
-import { useNavigate } from '@tanstack/react-router'
 import type { SURefEntity } from 'salvageunion-reference'
 
 // 2. Types/Interfaces
@@ -23,7 +22,6 @@ interface MyComponentProps {
 export function MyComponent({ data, onUpdate }: MyComponentProps) {
   // Hooks first
   const [state, setState] = useState(false)
-  const navigate = useNavigate()
 
   // Callbacks
   const handleClick = useCallback(() => {
@@ -39,11 +37,10 @@ export function MyComponent({ data, onUpdate }: MyComponentProps) {
 
 1. Chakra UI components
 2. React hooks
-3. TanStack Router hooks (`useNavigate`, `useParams`, `useSearch`, etc.)
-4. Third-party libraries
-5. Local components
-6. Utils/helpers
-7. Types (with `import type`)
+3. Third-party libraries
+4. Local components
+5. Utils/helpers
+6. Types (with `import type`)
 
 ## State Management
 
@@ -54,6 +51,8 @@ export function MyComponent({ data, onUpdate }: MyComponentProps) {
   - `src/hooks/crawler/` - Crawler hooks (useCrawler, useUpdateCrawler, useHydratedCrawler)
   - `src/hooks/entity/` - Entity hooks (useEntitiesFor, usePlayerChoices)
   - `src/hooks/cargo/` - Cargo hooks (useCargo, useCreateCargo, useDeleteCargo)
+- **TanStack Form**: Form state management with Zod validation
+- **TanStack Virtual**: List virtualization for large datasets
 - **Auto-save**: Debounced updates to Supabase (300ms delay)
 
 ## Component Organization

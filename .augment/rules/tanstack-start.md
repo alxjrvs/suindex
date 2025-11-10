@@ -18,12 +18,14 @@ paths: ['src/routes/**/*.tsx', 'src/router.tsx']
 Reference pages are perfect candidates for static prerendering since game data rarely changes.
 
 **Benefits**:
+
 - Instant page loads (no server computation)
 - Better SEO (fully rendered HTML)
 - Reduced server costs
 - Works offline
 
 **Implementation**:
+
 ```typescript
 // src/routes/schema/$schemaId/index.tsx
 export const Route = createFileRoute('/schema/$schemaId/')({
@@ -40,6 +42,7 @@ export const Route = createFileRoute('/schema/$schemaId/')({
 ```
 
 **Prerender Configuration** (add to `src/prerender.config.ts`):
+
 ```typescript
 import { getSchemaCatalog } from 'salvageunion-reference'
 
@@ -65,8 +68,8 @@ Split large components to reduce initial bundle size.
 // src/routes/dashboard/pilots/$id.tsx
 import { lazy } from 'react'
 
-const PilotEdit = lazy(() => 
-  import('../../../components/Dashboard/PilotEdit').then(m => ({ default: m.PilotEdit }))
+const PilotEdit = lazy(() =>
+  import('../../../components/Dashboard/PilotEdit').then((m) => ({ default: m.PilotEdit }))
 )
 
 export const Route = createFileRoute('/dashboard/pilots/$id')({
@@ -113,6 +116,7 @@ export const requireAuth = createServerFn('GET', async () => {
 The reference package is large - optimize its loading.
 
 **vite.config.ts**:
+
 ```typescript
 optimizeDeps: {
   exclude: ['salvageunion-reference'], // ✅ Already done
@@ -157,14 +161,17 @@ export const Route = createFileRoute('/dashboard')({
 ## Priority Recommendations
 
 ### High Priority (Immediate Impact)
+
 1. ✅ **Static prerendering** for `/schema/*` routes - Biggest performance win
 2. **Route-level code splitting** for dashboard - Reduce initial bundle
 
 ### Medium Priority (Nice to Have)
+
 3. **Server functions for auth** - Better security
 4. **Error boundaries per route** - Better UX
 
 ### Low Priority (Already Optimized)
+
 5. ✅ Data prefetching - Already using `defaultPreload: 'intent'`
 6. ✅ Code splitting - Already using manual chunks
 
@@ -173,4 +180,3 @@ export const Route = createFileRoute('/dashboard')({
 - **TanStack Start Prerendering**: https://tanstack.com/start/latest/docs/framework/react/guide/static-prerendering
 - **TanStack Start Server Functions**: https://tanstack.com/start/latest/docs/framework/react/guide/server-functions
 - **TanStack Router Preloading**: https://tanstack.com/router/latest/docs/framework/react/guide/preloading
-

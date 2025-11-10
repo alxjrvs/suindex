@@ -85,4 +85,3 @@ export function DashboardError({ error }: ErrorComponentProps) {
     </Flex>
   )
 }
-

@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { Box, Flex, Link, Input, VStack } from '@chakra-ui/react'
+import { Box, Flex, Link, Input } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { ReferenceHeader } from '../shared/ReferenceHeader'
 import Footer from '../Footer'
 import type { SchemaInfo } from '../../types/schema'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { useVirtualScroll } from '../../hooks/useVirtualScroll'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { extractMatchSnippet, highlightMatch } from '../../utils/searchHighlight'
 
 // Constants for virtual scrolling
@@ -148,14 +148,14 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   }, [searchResults, selectedIndex, handleSelectResult])
 
   // Virtual scrolling for search results (only when there are results)
-  const { virtualItems, totalHeight, offsetY, containerRef } = useVirtualScroll(
-    searchResults.length > 0 ? searchResults : [],
-    {
-      itemHeight: SEARCH_RESULT_HEIGHT,
-      containerHeight: SEARCH_RESULTS_MAX_HEIGHT,
-      overscan: 5,
-    }
-  )
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const virtualizer = useVirtualizer({
+    count: searchResults.length,
+    getScrollElement: () => containerRef.current,
+    estimateSize: () => SEARCH_RESULT_HEIGHT,
+    overscan: 5,
+  })
 
   // Scroll selected item into view
   useEffect(() => {
@@ -227,102 +227,100 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                 zIndex={30}
               >
                 {/* Virtual scroll container */}
-                <Box position="relative" h={`${totalHeight}px`}>
-                  <Box
-                    position="absolute"
-                    top={0}
-                    left={0}
-                    right={0}
-                    transform={`translateY(${offsetY}px)`}
-                  >
-                    <VStack gap={0} alignItems="stretch">
-                      {virtualItems.map(({ index, item: result }) => {
-                        // Determine if match is in title or description
-                        const matchInTitle =
-                          result.matchedFields?.includes('name') ||
-                          result.type === 'schema' ||
-                          !result.matchedFields?.includes('description')
+                <Box position="relative" h={`${virtualizer.getTotalSize()}px`}>
+                  {virtualizer.getVirtualItems().map((virtualItem) => {
+                    const result = searchResults[virtualItem.index]
+                    const index = virtualItem.index
 
-                        // Extract and highlight description snippet if match is in description
-                        let descriptionSnippet = null
-                        if (!matchInTitle && result.description && debouncedQuery) {
-                          const snippet = extractMatchSnippet(result.description, debouncedQuery)
-                          if (snippet) {
-                            const highlighted = highlightMatch(
-                              snippet.snippet,
-                              snippet.matchStart,
-                              snippet.matchEnd
-                            )
-                            descriptionSnippet = highlighted
-                          }
-                        }
+                    // Determine if match is in title or description
+                    const matchInTitle =
+                      result.matchedFields?.includes('name') ||
+                      result.type === 'schema' ||
+                      !result.matchedFields?.includes('description')
 
-                        // Highlight title if match is in title
-                        let titleHighlighted = null
-                        if (matchInTitle && debouncedQuery) {
-                          const lowerTitle = result.matchText.toLowerCase()
-                          const lowerQuery = debouncedQuery.toLowerCase()
-                          const matchIndex = lowerTitle.indexOf(lowerQuery)
-                          if (matchIndex !== -1) {
-                            titleHighlighted = highlightMatch(
-                              result.matchText,
-                              matchIndex,
-                              matchIndex + debouncedQuery.length
-                            )
-                          }
-                        }
-
-                        return (
-                          <Box
-                            key={`${result.type}-${result.schemaId}-${result.itemId || ''}`}
-                            data-index={index}
-                            px={4}
-                            py={3}
-                            h={`${SEARCH_RESULT_HEIGHT}px`}
-                            cursor="pointer"
-                            bg={index === selectedIndex ? 'su.lightBlue' : 'transparent'}
-                            _hover={{ bg: 'su.lightOrange' }}
-                            onClick={() => handleSelectResult(result)}
-                            borderBottomWidth={index < searchResults.length - 1 ? '1px' : 0}
-                            borderBottomColor="su.lightBlue"
-                          >
-                            <Text fontWeight="semibold" color="su.black">
-                              {titleHighlighted ? (
-                                <>
-                                  {titleHighlighted.before}
-                                  <Box as="mark" bg="su.orange" color="su.white" px={0.5}>
-                                    {titleHighlighted.match}
-                                  </Box>
-                                  {titleHighlighted.after}
-                                </>
-                              ) : (
-                                result.matchText
-                              )}
-                            </Text>
-                            {descriptionSnippet ? (
-                              <Text
-                                fontSize="sm"
-                                color="su.brick"
-                                overflow="hidden"
-                                textOverflow="ellipsis"
-                                whiteSpace="nowrap"
-                              >
-                                {descriptionSnippet.before}
-                                <Box as="mark" bg="su.orange" color="su.white" px={0.5}>
-                                  {descriptionSnippet.match}
-                                </Box>
-                                {descriptionSnippet.after}
-                              </Text>
-                            ) : (
-                              <Text fontSize="sm" color="su.brick">
-                                {result.type === 'schema' ? 'Schema' : result.schemaTitle}
-                              </Text>
-                            )}
-                          </Box>
+                    // Extract and highlight description snippet if match is in description
+                    let descriptionSnippet = null
+                    if (!matchInTitle && result.description && debouncedQuery) {
+                      const snippet = extractMatchSnippet(result.description, debouncedQuery)
+                      if (snippet) {
+                        const highlighted = highlightMatch(
+                          snippet.snippet,
+                          snippet.matchStart,
+                          snippet.matchEnd
                         )
-                      })}
-                    </VStack>
-                  </Box>
+                        descriptionSnippet = highlighted
+                      }
+                    }
+
+                    // Highlight title if match is in title
+                    let titleHighlighted = null
+                    if (matchInTitle && debouncedQuery) {
+                      const lowerTitle = result.matchText.toLowerCase()
+                      const lowerQuery = debouncedQuery.toLowerCase()
+                      const matchIndex = lowerTitle.indexOf(lowerQuery)
+                      if (matchIndex !== -1) {
+                        titleHighlighted = highlightMatch(
+                          result.matchText,
+                          matchIndex,
+                          matchIndex + debouncedQuery.length
+                        )
+                      }
+                    }
+
+                    return (
+                      <Box
+                        key={virtualItem.key}
+                        position="absolute"
+                        top={0}
+                        left={0}
+                        right={0}
+                        transform={`translateY(${virtualItem.start}px)`}
+                        data-index={index}
+                        px={4}
+                        py={3}
+                        h={`${SEARCH_RESULT_HEIGHT}px`}
+                        cursor="pointer"
+                        bg={index === selectedIndex ? 'su.lightBlue' : 'transparent'}
+                        _hover={{ bg: 'su.lightOrange' }}
+                        onClick={() => handleSelectResult(result)}
+                        borderBottomWidth={index < searchResults.length - 1 ? '1px' : 0}
+                        borderBottomColor="su.lightBlue"
+                      >
+                        <Text fontWeight="semibold" color="su.black">
+                          {titleHighlighted ? (
+                            <>
+                              {titleHighlighted.before}
+                              <Box as="mark" bg="su.orange" color="su.white" px={0.5}>
+                                {titleHighlighted.match}
+                              </Box>
+                              {titleHighlighted.after}
+                            </>
+                          ) : (
+                            result.matchText
+                          )}
+                        </Text>
+                        {descriptionSnippet ? (
+                          <Text
+                            fontSize="sm"
+                            color="su.brick"
+                            overflow="hidden"
+                            textOverflow="ellipsis"
+                            whiteSpace="nowrap"
+                          >
+                            {descriptionSnippet.before}
+                            <Box as="mark" bg="su.orange" color="su.white" px={0.5}>
+                              {descriptionSnippet.match}
+                            </Box>
+                            {descriptionSnippet.after}
+                          </Text>
+                        ) : (
+                          <Text fontSize="sm" color="su.brick">
+                            {result.type === 'schema' ? 'Schema' : result.schemaTitle}
+                          </Text>
+                        )}
+                      </Box>
+                    )
+                  })}
                 </Box>
               </Box>
             )}

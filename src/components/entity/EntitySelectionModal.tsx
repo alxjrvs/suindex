@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import {
@@ -7,7 +7,7 @@ import {
   type SURefEntity,
   type SURefSchemaName,
 } from 'salvageunion-reference'
-import { Virtuoso } from 'react-virtuoso'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import Modal from '../Modal'
 import { EntityDisplay } from './EntityDisplay'
 import { TECH_LEVELS } from '../../constants/gameRules'
@@ -141,6 +141,16 @@ export function EntitySelectionModal({
     return allEntities.some(({ entity }) => getEntityTechLevel(entity) !== null)
   }, [schemaNames, allEntities])
 
+  // TanStack Virtual setup
+  const parentRef = useRef<HTMLDivElement>(null)
+
+  const virtualizer = useVirtualizer({
+    count: filteredEntities.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 200, // Estimated height per item
+    overscan: 5, // Render 5 items above/below viewport
+  })
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <VStack gap={0} alignItems="stretch" h="80vh" overflow="hidden">
@@ -250,23 +260,48 @@ export function EntitySelectionModal({
         </VStack>
 
         {/* Scrollable Entity List - Virtualized */}
-        <Box flex="1" minH={0}>
+        <Box
+          ref={parentRef}
+          flex="1"
+          minH={0}
+          overflowY="auto"
+          css={{
+            '&::-webkit-scrollbar': {
+              width: '8px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'var(--chakra-colors-su-lightBlue)',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: 'var(--chakra-colors-su-orange)',
+              borderRadius: '4px',
+            },
+          }}
+        >
           {filteredEntities.length === 0 ? (
             <Text textAlign="center" color="su.black" py={8}>
               No items found matching your criteria.
             </Text>
           ) : (
-            <Virtuoso
-              style={{ height: '100%' }}
-              data={filteredEntities}
-              itemContent={(_index, { entity, schemaName }) => {
+            <Box position="relative" h={`${virtualizer.getTotalSize()}px`} w="full">
+              {virtualizer.getVirtualItems().map((virtualItem) => {
+                const { entity, schemaName } = filteredEntities[virtualItem.index]
                 const entityId = 'id' in entity ? (entity.id as string) : ''
                 const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
                 const buttonText = `${selectButtonTextPrefix} ${entityName}`
                 const isDisabled = shouldDisableEntity ? shouldDisableEntity(entity) : false
 
                 return (
-                  <Box px={4} pb={2}>
+                  <Box
+                    key={virtualItem.key}
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    w="full"
+                    transform={`translateY(${virtualItem.start}px)`}
+                    px={4}
+                    pb={2}
+                  >
                     <EntityDisplay
                       schemaName={schemaName}
                       compact
@@ -291,8 +326,8 @@ export function EntitySelectionModal({
                     />
                   </Box>
                 )
-              }}
-            />
+              })}
+            </Box>
           )}
         </Box>
       </VStack>
