@@ -12,11 +12,6 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
   const showDescription = description && schemaName !== 'abilities'
   const hasContent = !!notes || !!showDescription || (hasActions(data) && data.actions.length > 0)
 
-  const entityName = 'name' in data ? data.name : 'unknown'
-  console.log(
-    `[EntityTopMatter] Rendering for entity="${entityName}", schema="${schemaName}", hasDescription=${!!description}, hasNotes=${!!notes}`
-  )
-
   const parsedDescription = useParseTraitReferences(description)
   const parsedNotes = useParseTraitReferences(notes)
 

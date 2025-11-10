@@ -39,11 +39,6 @@ export function ConditionalSheetInfo({
     displayValue = typeof extractedValue === 'string' ? extractedValue : undefined
   }
 
-  const entityName = 'name' in data ? data.name : 'unknown'
-  console.log(
-    `[ConditionalSheetInfo] Parsing trait references for entity="${entityName}", property="${propertyName}", value="${displayValue?.substring(0, 50)}..."`
-  )
-
   // Parse trait references in the display value (must be called before early returns)
   const parsedContent = useParseTraitReferences(displayValue)
 

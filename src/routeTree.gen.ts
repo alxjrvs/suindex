@@ -29,12 +29,11 @@ import { Route as DashboardGamesGameIdRouteImport } from './routes/dashboard/gam
 import { Route as DashboardCrawlersIdRouteImport } from './routes/dashboard/crawlers/$id'
 import { Route as SchemaSchemaIdItemItemIdRouteImport } from './routes/schema/$schemaId/item/$itemId'
 
-const Super_secret_haven_loginRoute =
-  Super_secret_haven_loginRouteImport.update({
-    id: '/super_secret_haven_login',
-    path: '/super_secret_haven_login',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const Super_secret_haven_loginRoute = Super_secret_haven_loginRouteImport.update({
+  id: '/super_secret_haven_login',
+  path: '/super_secret_haven_login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -120,12 +119,11 @@ const DashboardCrawlersIdRoute = DashboardCrawlersIdRouteImport.update({
   path: '/crawlers/$id',
   getParentRoute: () => DashboardRoute,
 } as any)
-const SchemaSchemaIdItemItemIdRoute =
-  SchemaSchemaIdItemItemIdRouteImport.update({
-    id: '/schema/$schemaId/item/$itemId',
-    path: '/schema/$schemaId/item/$itemId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const SchemaSchemaIdItemItemIdRoute = SchemaSchemaIdItemItemIdRouteImport.update({
+  id: '/schema/$schemaId/item/$itemId',
+  path: '/schema/$schemaId/item/$itemId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -431,9 +429,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardPilotsIndexRoute: DashboardPilotsIndexRoute,
 }
 
-const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
-)
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(DashboardRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,

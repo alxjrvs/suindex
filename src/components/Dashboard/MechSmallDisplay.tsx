@@ -3,10 +3,13 @@ import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { useNavigate } from '@tanstack/react-router'
 import { useHydratedMech } from '../../hooks/mech'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { fetchUserDisplayName } from '../../lib/api/users'
+import { mechsKeys } from '../../hooks/mech/useMechs'
+import { fetchEntity } from '../../lib/api/entities'
+import type { Tables } from '../../types/database-generated.types'
 
 interface MechSmallDisplayProps {
   id?: string
@@ -15,10 +18,20 @@ interface MechSmallDisplayProps {
 
 export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const { mech, selectedChassis, loading: mechLoading } = useHydratedMech(id)
 
   const chassisName = selectedChassis?.ref.name || 'No Chassis'
+
+  // Prefetch mech data on hover
+  const handleMouseEnter = () => {
+    if (!id) return
+    queryClient.prefetchQuery({
+      queryKey: mechsKeys.byId(id),
+      queryFn: () => fetchEntity<Tables<'mechs'>>('mechs', id),
+    })
+  }
 
   // Fetch pilot name and crawler_id if mech has pilot_id
   const { data: pilotData, isLoading: pilotLoading } = useQuery({
@@ -116,6 +129,7 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     <UserEntitySmallDisplay
       reverse={reverse}
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
       bgColor="su.green"
       detailLabel="Player"
       detailValue={ownerName}

@@ -3,10 +3,13 @@ import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { useHydratedPilot } from '../../hooks/pilot'
 import { useNavigate } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { fetchUserDisplayName } from '../../lib/api/users'
+import { pilotsKeys } from '../../hooks/pilot/usePilots'
+import { fetchEntity } from '../../lib/api/entities'
+import type { Tables } from '../../types/database-generated.types'
 
 interface PilotSmallDisplayProps {
   id?: string
@@ -16,6 +19,7 @@ interface PilotSmallDisplayProps {
 
 export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDisplayProps) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const {
     pilot,
@@ -25,6 +29,15 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   } = useHydratedPilot(id)
   const className = selectedClass?.ref.name
   const advancedClassName = selectedAdvancedClass?.ref.name
+
+  // Prefetch pilot data on hover
+  const handleMouseEnter = () => {
+    if (!id) return
+    queryClient.prefetchQuery({
+      queryKey: pilotsKeys.byId(id),
+      queryFn: () => fetchEntity<Tables<'pilots'>>('pilots', id),
+    })
+  }
 
   // Fetch crawler name if pilot has crawler_id
   const { data: crawlerName, isLoading: crawlerLoading } = useQuery({
@@ -128,6 +141,7 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   return (
     <UserEntitySmallDisplay
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
       label={label}
       bgColor="su.orange"
       detailLabel="Player"

@@ -1,6 +1,5 @@
 ---
-type: 'context_file'
-paths: ['vite.config.ts', '.env.example']
+type: 'always_apply'
 ---
 
 # Vite Build Configuration

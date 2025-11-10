@@ -148,11 +148,12 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [searchResults, selectedIndex, handleSelectResult])
+  }, [searchResults, navigate, selectedIndex, handleSelectResult])
 
   // Virtual scrolling for search results (only when there are results)
   const containerRef = useRef<HTMLDivElement>(null)
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: searchResults.length,
     getScrollElement: () => containerRef.current,

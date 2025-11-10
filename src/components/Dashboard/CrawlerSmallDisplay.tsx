@@ -6,6 +6,10 @@ import { ValueDisplay } from '../shared/ValueDisplay'
 import { useNavigate } from '@tanstack/react-router'
 import { useHydratedCrawler } from '../../hooks/crawler'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { useQueryClient } from '@tanstack/react-query'
+import { crawlersKeys } from '../../hooks/crawler/useCrawlers'
+import { fetchEntity } from '../../lib/api/entities'
+import type { Tables } from '../../types/database-generated.types'
 
 interface CrawlerSmallDisplayProps {
   id: string
@@ -13,6 +17,7 @@ interface CrawlerSmallDisplayProps {
 
 export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const { crawler, selectedCrawlerType, loading } = useHydratedCrawler(id)
   const typeName = selectedCrawlerType?.ref.name ?? 'Unknown'
@@ -24,6 +29,14 @@ export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
 
   const isOwner = currentUserId === crawler?.user_id
   const ownerName = isOwner ? 'You' : 'Owner'
+
+  // Prefetch crawler data on hover
+  const handleMouseEnter = () => {
+    queryClient.prefetchQuery({
+      queryKey: crawlersKeys.byId(id),
+      queryFn: () => fetchEntity<Tables<'crawlers'>>('crawlers', id),
+    })
+  }
 
   const techLevelData = techLevel ? findCrawlerTechLevel(techLevel) : null
   const populationMax = techLevelData?.populationMax ?? 0
@@ -51,6 +64,7 @@ export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
     <UserEntitySmallDisplay
       label="CRAWLER"
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
       bgColor="su.pink"
       leftHeader={name ?? 'New Crawler'}
       detailLabel="Player"
