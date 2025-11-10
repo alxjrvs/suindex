@@ -12,4 +12,3 @@ export const Route = createFileRoute('/sheets/pilot')({
 function PilotLiveSheetPage() {
   return <PilotLiveSheet id={LOCAL_ID} />
 }
-

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Box, Flex, Tabs } from '@chakra-ui/react'
 import type { SURefCoreClass, SURefAdvancedClass } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
@@ -179,7 +179,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
             entityName="Pilot"
             onConfirmDelete={() => {
               deletePilot.mutate(id, {
-                onSuccess: () => navigate('/dashboard/pilots'),
+                onSuccess: () => navigate({ to: '/dashboard/pilots' }),
               })
             }}
             disabled={!isEditable || !id || updatePilot.isPending}

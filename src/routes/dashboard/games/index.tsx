@@ -7,4 +7,3 @@ export const Route = createFileRoute('/dashboard/games/')({
     ssr: false,
   },
 })
-

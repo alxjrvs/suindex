@@ -7,4 +7,3 @@ export const Route = createFileRoute('/dashboard')({
     ssr: false, // SPA mode for dashboard
   },
 })
-

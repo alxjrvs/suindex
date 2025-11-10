@@ -1,6 +1,5 @@
 ---
-type: 'context_file'
-paths: ['.github/workflows/**/*.yml', 'netlify.toml', 'vite.config.ts']
+type: 'always_apply'
 ---
 
 # Deployment

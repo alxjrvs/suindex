@@ -8,6 +8,7 @@ import prettier from 'eslint-config-prettier'
 export default [
   {
     ignores: [
+      '.netlify',
       'dist',
       'node_modules',
       '.git',

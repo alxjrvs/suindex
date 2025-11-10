@@ -1,26 +1,15 @@
 import { defineConfig } from 'vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import viteReact from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react'
 import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { VitePluginRadar } from 'vite-plugin-radar'
-import netlify from '@netlify/vite-plugin-tanstack-start'
-import { getStaticPaths } from './src/prerender.config'
 
-// https://vite.dev/config/
+// https://tanstack.com/start/latest/docs/framework/react/getting-started
 export default defineConfig({
   plugins: [
-    tanstackStart({
-      prerender: {
-        filter: (args) => {
-          // Prerender all static paths
-          const staticPaths = getStaticPaths()
-          return staticPaths.includes(args.path)
-        },
-      },
-    }),
-    netlify(),
-    viteReact({
+    tanstackStart(),
+    react({
       jsxRuntime: 'automatic',
     }),
     compression({
@@ -47,16 +36,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Only apply manual chunks for client build
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('@tanstack/react-router')) {
-              return 'vendor'
-            }
-            if (id.includes('salvageunion-reference')) {
-              return 'salvage-union'
-            }
-          }
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['@tanstack/react-router', '@tanstack/react-start'],
+          'salvage-union': ['salvageunion-reference'],
         },
       },
       onwarn(warning, warn) {

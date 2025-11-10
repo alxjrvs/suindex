@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Box, Flex, Grid, Tabs, Text, VStack, HStack } from '@chakra-ui/react'
 import { useIsMutating } from '@tanstack/react-query'
 import type { SURefChassis } from 'salvageunion-reference'
@@ -95,7 +95,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
     })
     // Assign this mech to the new pilot
     updateMech.mutate({ id, updates: { pilot_id: newPilot.id } })
-    navigate(`/dashboard/pilots/${newPilot.id}`)
+    navigate({ to: `/dashboard/pilots/${newPilot.id}` })
   }
 
   if (!mech && !loading) {
@@ -285,7 +285,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
           onConfirmDelete={() =>
             deleteMech.mutate(id, {
               onSuccess: () => {
-                navigate('/dashboard/mechs')
+                navigate({ to: '/dashboard/mechs' })
               },
             })
           }

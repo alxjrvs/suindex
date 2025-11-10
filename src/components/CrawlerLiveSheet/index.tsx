@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
 import { useIsMutating, useQuery } from '@tanstack/react-query'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
@@ -227,7 +227,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           onConfirmDelete={() =>
             deleteCrawler.mutate(id, {
               onSuccess: () => {
-                navigate('/dashboard/crawlers')
+                navigate({ to: '/dashboard/crawlers' })
               },
             })
           }

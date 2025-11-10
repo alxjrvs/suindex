@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate } from '@tanstack/react-router'
 import type { TablesInsert } from '../types/database-generated.types'
 import type { ValidTable, CrawlerNPC } from '../types/common'
 import { getUser, createEntity as createEntityAPI } from '../lib/api'
@@ -143,7 +143,7 @@ export function useCreateEntity<T extends ValidTable>(
 
       // Navigate to the newly created entity
       const navigationUrl = config.navigationPath(createdEntity.id)
-      navigate(navigationUrl)
+      navigate({ to: navigationUrl })
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : `Failed to create ${config.table}`
       console.error(`Error creating ${config.table}:`, err)

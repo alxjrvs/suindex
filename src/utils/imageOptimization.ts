@@ -44,17 +44,6 @@ export function generateSrcSet(url: string, widths: number[] = [320, 640, 960, 1
 }
 
 /**
- * Get image dimensions from URL or return defaults
- */
-export function getImageDimensions(_url: string): { width: number; height: number } {
-  // Default dimensions for mech/pilot/crawler images
-  return {
-    width: 400,
-    height: 400,
-  }
-}
-
-/**
  * Preload critical images for SSR
  */
 export function preloadImage(url: string, options: ImageOptimizationOptions = {}) {

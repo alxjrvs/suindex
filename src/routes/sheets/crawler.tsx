@@ -12,4 +12,3 @@ export const Route = createFileRoute('/sheets/crawler')({
 function CrawlerLiveSheetPage() {
   return <CrawlerLiveSheet id={LOCAL_ID} />
 }
-

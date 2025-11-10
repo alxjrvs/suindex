@@ -12,4 +12,3 @@ export const Route = createFileRoute('/sheets/mech')({
 function MechLiveSheetPage() {
   return <MechLiveSheet id={LOCAL_ID} />
 }
-

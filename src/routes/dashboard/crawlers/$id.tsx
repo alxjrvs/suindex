@@ -7,4 +7,3 @@ export const Route = createFileRoute('/dashboard/crawlers/$id')({
     ssr: false,
   },
 })
-

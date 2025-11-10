@@ -3,38 +3,39 @@ type: 'context_file'
 paths: ['vite.config.ts', '.env.example']
 ---
 
-# TanStack Start + Vite Build Configuration
+# Vite Build Configuration
 
 ## Setup
 
 - **Config**: `vite.config.ts`
-- **Framework**: TanStack Start with SSR
-- **Deployment**: Netlify via `@netlify/vite-plugin-tanstack-start`
-- **React plugin**: `@vitejs/plugin-react` with automatic JSX runtime
+- **TanStack Start**: Using `tanstackStart()` plugin from `@tanstack/react-start/plugin/vite`
 - **Compression**: gzip enabled via `vite-plugin-compression`
 - **Analytics**: Google Analytics 4 via `vite-plugin-radar`
+
+## TanStack Start Configuration
+
+```typescript
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [
+    tanstackStart(), // Must be first
+    // ... other plugins
+  ],
+})
+```
 
 ## Build Optimization
 
 ```typescript
-// Dynamic chunks for vendor code splitting (SSR-compatible)
-manualChunks: (id) => {
-  if (id.includes('node_modules')) {
-    if (id.includes('react') || id.includes('@tanstack/react-router')) {
-      return 'vendor'
-    }
-    if (id.includes('salvageunion-reference')) {
-      return 'salvage-union'
-    }
-  }
+// Manual chunks for vendor code splitting
+manualChunks: {
+  vendor: ['react', 'react-dom'],
+  router: ['@tanstack/react-router', '@tanstack/react-start'],
+  'salvage-union': ['salvageunion-reference'],
 }
 ```
-
-## Static Prerendering
-
-- **Config**: `src/prerender.config.ts`
-- **Generates**: All reference pages (landing, schema indexes, item details)
-- **Filter**: Configured in `vite.config.ts` via `tanstackStart({ prerender: { filter } })`
 
 ## Environment Variables
 
@@ -44,6 +45,6 @@ manualChunks: (id) => {
 
 ## Documentation
 
-- **TanStack Start**: https://tanstack.com/start/latest
-- **Vite docs**: https://vite.dev/
-- **Env variables**: https://vite.dev/guide/env-and-mode.html
+- **Vite docs**: <https://vite.dev/>
+- **TanStack Start**: <https://tanstack.com/start/latest/docs/framework/react/getting-started>
+- **Env variables**: <https://vite.dev/guide/env-and-mode.html>

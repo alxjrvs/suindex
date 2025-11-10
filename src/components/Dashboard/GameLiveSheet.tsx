@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useParams, useNavigate } from 'react-router'
+import { useParams, useNavigate } from '@tanstack/react-router'
 import { Box, Flex, VStack, HStack, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
@@ -36,7 +36,7 @@ import { CrawlerSmallDisplay } from './CrawlerSmallDisplay'
 type GameInviteRow = GameInvite
 
 export function GameLiveSheet() {
-  const { gameId } = useParams<{ gameId: string }>()
+  const { gameId } = useParams({ strict: false })
   const navigate = useNavigate()
 
   // Get current user for ownership check
@@ -134,12 +134,12 @@ export function GameLiveSheet() {
     if (!ok) return
 
     await deleteGameMutation.mutateAsync(gameId)
-    navigate('/dashboard')
+    navigate({ to: '/dashboard' })
   }
 
   useEffect(() => {
     if (!gameId) {
-      navigate('/dashboard')
+      navigate({ to: '/dashboard' })
       return
     }
   }, [gameId, navigate])
@@ -174,7 +174,7 @@ export function GameLiveSheet() {
             {error || 'Game not found'}
           </Text>
           <Button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate({ to: '/dashboard' })}
             bg="su.brick"
             color="su.white"
             fontWeight="bold"

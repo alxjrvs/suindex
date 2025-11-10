@@ -7,4 +7,3 @@ export const Route = createFileRoute('/dashboard/mechs/')({
     ssr: false,
   },
 })
-

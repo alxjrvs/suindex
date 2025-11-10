@@ -7,4 +7,3 @@ export const Route = createFileRoute('/dashboard/join')({
     ssr: false,
   },
 })
-
