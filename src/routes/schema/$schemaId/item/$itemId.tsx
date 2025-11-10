@@ -125,6 +125,6 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
 })
 
 function ItemShowPageComponent() {
-  const { schemas } = Route.useLoaderData()
-  return <ItemShowPage schemas={schemas} />
+  const { schemas, item } = Route.useLoaderData()
+  return <ItemShowPage schemas={schemas} prefetchedItem={item} />
 }

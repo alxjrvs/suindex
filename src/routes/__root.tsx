@@ -5,6 +5,7 @@ import { Box, Flex, ChakraProvider } from '@chakra-ui/react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { TopNavigation } from '../components/TopNavigation'
 import { ErrorBoundary } from '../components/ErrorBoundary'
+import { GlobalLoadingBar } from '../components/shared/GlobalLoadingBar'
 import { getSchemaCatalog } from 'salvageunion-reference'
 import { getSession, onAuthStateChange } from '../lib/api'
 import type { User } from '@supabase/supabase-js'
@@ -71,6 +72,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Providers>
           <ErrorBoundary>
             <EntityViewerModalProvider>
+              <GlobalLoadingBar />
               <Flex flexDirection="column" h="100vh" bg="su.white">
                 <TopNavigation user={user} schemas={schemaIndexData.schemas} />
                 <Box

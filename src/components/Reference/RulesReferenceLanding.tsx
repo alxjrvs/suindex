@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { Route } from '../../routes/index'
 import { Box, Flex, Link, Input } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { ReferenceHeader } from '../shared/ReferenceHeader'
@@ -29,9 +30,10 @@ interface SearchResultDisplay {
 }
 
 export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
-  const [searchQuery, setSearchQuery] = useState('')
+  // Get search query from URL params
+  const { q: searchQuery = '' } = Route.useSearch()
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const navigate = useNavigate()
+  const navigate = useNavigate({ from: Route.fullPath })
   const inputRef = useRef<HTMLInputElement>(null)
 
   // No debouncing - search immediately on every keystroke
@@ -58,7 +60,8 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
           params: { schemaId: result.schemaId, itemId: result.itemId },
         })
       }
-      setSearchQuery('')
+      // Clear search query from URL
+      navigate({ search: { q: undefined }, replace: true })
       setSelectedIndex(0)
     },
     [navigate]
@@ -138,7 +141,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         e.preventDefault()
         handleSelectResult(searchResults[selectedIndex])
       } else if (e.key === 'Escape') {
-        setSearchQuery('')
+        navigate({ search: { q: undefined }, replace: true })
         setSelectedIndex(0)
       }
     }
@@ -192,7 +195,10 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
               ref={inputRef}
               value={searchQuery}
               onChange={(e) => {
-                setSearchQuery(e.target.value)
+                navigate({
+                  search: { q: e.target.value || undefined },
+                  replace: true, // Don't add to history for every keystroke
+                })
                 setSelectedIndex(0)
               }}
               placeholder="Search all rules, items, and schemas..."

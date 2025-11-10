@@ -1,16 +1,36 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog } from 'salvageunion-reference'
+import { z } from 'zod'
 import SchemaViewer from '../../../components/schema/SchemaViewer'
 import { ReferenceError } from '../../../components/errors/ReferenceError'
+import { getModel } from '../../../utils/modelMap'
+import type { SURefEntity } from 'salvageunion-reference'
 
 const schemaIndexData = getSchemaCatalog()
+
+// Search param schema for URL-based filter state
+const schemaViewerSearchSchema = z.object({
+  search: z.string().optional(),
+  tl: z.array(z.number()).optional(), // Tech levels as array
+})
 
 export const Route = createFileRoute('/schema/$schemaId/')({
   component: SchemaViewerPage,
   errorComponent: ReferenceError,
+  validateSearch: schemaViewerSearchSchema,
   loader: ({ params }) => {
     const schema = schemaIndexData.schemas.find((s) => s.id === params.schemaId)
-    return { schemas: schemaIndexData.schemas, schema }
+
+    // Prefetch schema data
+    let data: SURefEntity[] = []
+    if (schema) {
+      const model = getModel(params.schemaId)
+      if (model) {
+        data = model.all() as SURefEntity[]
+      }
+    }
+
+    return { schemas: schemaIndexData.schemas, schema, data }
   },
   head: ({ loaderData }) => {
     const schemaName = loaderData?.schema?.displayName || 'Schema'
@@ -59,6 +79,6 @@ export const Route = createFileRoute('/schema/$schemaId/')({
 })
 
 function SchemaViewerPage() {
-  const { schemas } = Route.useLoaderData()
-  return <SchemaViewer schemas={schemas} />
+  const { schemas, data } = Route.useLoaderData()
+  return <SchemaViewer schemas={schemas} data={data} />
 }
