@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { VitePluginRadar } from 'vite-plugin-radar'
@@ -7,6 +8,10 @@ import { VitePluginRadar } from 'vite-plugin-radar'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    TanStackRouterVite({
+      routesDirectory: 'src/app',
+      generatedRouteTree: 'src/routeTree.gen.ts',
+    }),
     react({
       jsxRuntime: 'automatic',
     }),
@@ -35,7 +40,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
+          vendor: ['react', 'react-dom', '@tanstack/react-router'],
           'salvage-union': ['salvageunion-reference'],
         },
       },

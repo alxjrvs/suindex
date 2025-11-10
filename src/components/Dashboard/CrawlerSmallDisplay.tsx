@@ -3,7 +3,7 @@ import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { findCrawlerTechLevel } from '../../utils/referenceDataHelpers'
 import { ValueDisplay } from '../shared/ValueDisplay'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { useHydratedCrawler } from '../../hooks/crawler'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 
@@ -34,7 +34,7 @@ export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
         ? techLevelData.populationMin.toLocaleString()
         : 'Unknown'
 
-  const onClick = () => navigate(`/dashboard/crawlers/${id}`)
+  const onClick = () => navigate({ to: '/dashboard/crawlers/$id', params: { id } })
 
   if (loading || !crawler) {
     return (

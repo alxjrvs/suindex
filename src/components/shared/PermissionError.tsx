@@ -1,5 +1,5 @@
 import { Box, VStack, Heading, Text, Button } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 
 interface PermissionErrorProps {
   message?: string
@@ -40,7 +40,7 @@ export function PermissionError({
 
         {showHomeButton && (
           <Button
-            onClick={() => navigate('/')}
+            onClick={() => navigate({ to: '/' })}
             bg="su.orange"
             color="su.white"
             _hover={{ opacity: 0.8 }}

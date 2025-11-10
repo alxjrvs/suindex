@@ -6,7 +6,7 @@ import type { SchemaInfo } from '../../types/schema'
 import { useSchemaData } from './useSchemaData'
 import { useSchemaId } from '../../hooks/useSchemaParams'
 import { useMemo, useState, Suspense } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { getDisplayComponent } from '../componentRegistry'
 import type { SURefEntity } from 'salvageunion-reference'
 import { getTechLevel } from 'salvageunion-reference'
@@ -191,7 +191,12 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
                 zIndex: { base: 'auto', md: 10 },
                 boxShadow: { base: 'none', md: '0 8px 16px rgba(0, 0, 0, 0.2)' },
               }}
-              onClick={() => navigate(`/schema/${schemaId}/item/${item.id}`)}
+              onClick={() =>
+                navigate({
+                  to: '/schema/$schemaId/item/$itemId',
+                  params: { schemaId, itemId: item.id },
+                })
+              }
             >
               <Suspense fallback={<Box h="200px" bg="su.lightBlue" borderRadius="md" />}>
                 <DisplayComponent hideActions data={item} compact={true} collapsible={false} />

@@ -1,20 +1,20 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { Box, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '.././base/Heading'
 import { redeemInviteCode } from '../../lib/api'
 
 export function JoinGame() {
-  const [searchParams] = useSearchParams()
-  const [code, setCode] = useState(searchParams.get('code') || '')
+  const search = useSearch({ from: '/dashboard/join' })
+  const [code, setCode] = useState((search as { code?: string }).code || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    setCode(searchParams.get('code') || '')
-  }, [searchParams])
+    setCode((search as { code?: string }).code || '')
+  }, [search])
 
   const redeem = useCallback(
     async (invite: string) => {
@@ -22,7 +22,7 @@ export function JoinGame() {
       setLoading(true)
       try {
         const gameId = await redeemInviteCode(invite)
-        navigate(`/dashboard/games/${gameId}`)
+        navigate({ to: '/dashboard/games/$gameId', params: { gameId } })
       } catch (err) {
         console.error('Failed to join game', err)
         const message = err instanceof Error ? err.message : 'Failed to join game'
@@ -49,17 +49,17 @@ export function JoinGame() {
   }
 
   useEffect(() => {
-    const q = searchParams.get('code')
+    const q = (search as { code?: string }).code
     if (q && q.trim()) {
       // Auto-join when a code is present
       redeem(q)
     }
-  }, [searchParams, redeem])
+  }, [search, redeem])
 
   return (
     <Box p={8} maxW="xl" mx="auto">
       <Button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate({ to: '/dashboard' })}
         variant="plain"
         color="su.brick"
         mb={4}

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { Box, Flex, Link, Input, VStack } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { ReferenceHeader } from '../shared/ReferenceHeader'
@@ -51,9 +51,12 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   const handleSelectResult = useCallback(
     (result: SearchResultDisplay) => {
       if (result.type === 'schema') {
-        navigate(`/schema/${result.schemaId}`)
-      } else {
-        navigate(`/schema/${result.schemaId}/item/${result.itemId}`)
+        navigate({ to: '/schema/$schemaId', params: { schemaId: result.schemaId } })
+      } else if (result.itemId) {
+        navigate({
+          to: '/schema/$schemaId/item/$itemId',
+          params: { schemaId: result.schemaId, itemId: result.itemId },
+        })
       }
       setSearchQuery('')
       setSelectedIndex(0)

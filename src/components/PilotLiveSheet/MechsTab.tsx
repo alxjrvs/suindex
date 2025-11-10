@@ -1,6 +1,6 @@
 import { Box, VStack, HStack } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { Text } from '../base/Text'
 import { AddStatButton } from '../shared/AddStatButton'
 import { MechSmallDisplay } from '../Dashboard/MechSmallDisplay'
@@ -54,7 +54,7 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
       pilot_id: pilotId,
     })
 
-    navigate(`/dashboard/mechs/${newMech.id}`)
+    navigate({ to: '/dashboard/mechs/$id', params: { id: newMech.id } })
   }
 
   if (isLocal) {

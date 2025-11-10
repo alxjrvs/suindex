@@ -1,7 +1,7 @@
 import { VStack, Box } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { useHydratedMech } from '../../hooks/mech'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
@@ -72,7 +72,10 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
   const isOwner = currentUserId === mech?.user_id
   const ownerName = isOwner ? 'You' : ownerData || 'Owner'
 
-  const onClick = () => navigate(`/dashboard/mechs/${id}`)
+  const onClick = () => {
+    if (!id) return
+    navigate({ to: '/dashboard/mechs/$id', params: { id } })
+  }
 
   const isLoading = !id || mechLoading || pilotLoading || crawlerLoading
 

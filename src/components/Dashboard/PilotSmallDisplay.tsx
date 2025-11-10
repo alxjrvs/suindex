@@ -2,7 +2,7 @@ import { VStack, Box } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { useHydratedPilot } from '../../hooks/pilot'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
@@ -81,7 +81,10 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   const isOwner = currentUserId === pilot?.user_id
   const ownerName = isOwner ? 'You' : ownerData || 'Owner'
 
-  const onClick = () => navigate(`/dashboard/pilots/${id}`)
+  const onClick = () => {
+    if (!id) return
+    navigate({ to: '/dashboard/pilots/$id', params: { id } })
+  }
 
   const isLoading = (!id && waitForId) || pilotLoading || crawlerLoading || mechLoading
 

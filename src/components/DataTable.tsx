@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { Box, Flex, Input, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import type { SchemaInfo } from '../types/schema'
@@ -401,7 +401,10 @@ export default function DataTable({ data, schema }: DataTableProps) {
                     cursor="pointer"
                     _hover={{ bg: 'su.lightOrange' }}
                     onClick={() => {
-                      navigate(`/schema/${schemaId}/item/${item.id}`)
+                      navigate({
+                        to: '/schema/$schemaId/item/$itemId',
+                        params: { schemaId, itemId: item.id },
+                      })
                     }}
                     borderTopWidth={index > 0 ? '1px' : '0'}
                     borderColor="su.lightBlue"

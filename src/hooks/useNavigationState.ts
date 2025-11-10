@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from '@tanstack/react-router'
 import { signOut } from '../lib/api'
 
 /**
@@ -14,7 +14,7 @@ export function useNavigationState() {
 
   const handleNavigate = useCallback(
     (path: string) => {
-      navigate(path)
+      navigate({ to: path })
       setIsOpen(false)
     },
     [navigate]
