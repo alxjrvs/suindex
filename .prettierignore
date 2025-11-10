@@ -4,4 +4,5 @@ node_modules
 *.tsbuildinfo
 core
 src/types/database-generated.types.ts
+src/routeTree.gen.ts
 
