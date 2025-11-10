@@ -128,7 +128,7 @@ export function ClassAbilitiesList({
                 key={selectedAdvancedClass.legendaryTree}
                 treeName={selectedAdvancedClass.legendaryTree}
                 treeAbilities={allTreeAbilities[selectedAdvancedClass.legendaryTree] || []}
-                hideUnchosen={hideUnchosen || true}
+                hideUnchosen={hideUnchosen}
                 id={id}
               />
             )}
@@ -234,7 +234,8 @@ function TreeSection({
   }, [isLegendaryTree, treeAbilities, isSelected])
 
   // If in read-only mode with hideUnchosen and no selected abilities, hide the entire tree
-  if (isReadOnly && hideUnchosen && !hasSelectedAbilities) {
+  // Exception: Always show legendary trees (even with no selections) so players can see what's available
+  if (isReadOnly && hideUnchosen && !hasSelectedAbilities && !isLegendaryTree) {
     return null
   }
 
@@ -248,7 +249,9 @@ function TreeSection({
           const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
           const alreadySelected = isSelected(ability.id)
 
-          if (hideUnchosen && !alreadySelected) return null
+          // For legendary trees, don't filter out unselected abilities here
+          // The displayedAbilities memo already handles this correctly
+          if (hideUnchosen && !alreadySelected && !isLegendaryTree) return null
 
           // Read-only mode: no dimming, no add/remove buttons
           if (isReadOnly) {

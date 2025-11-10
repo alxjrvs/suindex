@@ -14,7 +14,7 @@ export function ReferenceHeader({ title, children, ...boxProps }: ReferenceHeade
       shadow="sm"
       borderBottomWidth="1px"
       borderColor="su.lightBlue"
-      p={4}
+      p={20}
       display="flex"
       flexDirection="column"
       alignItems="center"

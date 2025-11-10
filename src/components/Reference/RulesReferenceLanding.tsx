@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Flex, Link, Input, VStack } from '@chakra-ui/react'
 import { Text } from '../base/Text'
@@ -8,11 +8,6 @@ import type { SchemaInfo } from '../../types/schema'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { useVirtualScroll } from '../../hooks/useVirtualScroll'
 import { extractMatchSnippet, highlightMatch } from '../../utils/searchHighlight'
-
-// Lazy load the masonry grid to improve initial page load
-const AnimatedMasonryGrid = lazy(() =>
-  import('./AnimatedMasonryGrid').then((m) => ({ default: m.AnimatedMasonryGrid }))
-)
 
 // Constants for virtual scrolling
 const SEARCH_RESULT_HEIGHT = 72 // px - approximate height of each result item
@@ -40,7 +35,6 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   // No debouncing - search immediately on every keystroke
-  // Performance is good enough with memoized AnimatedMasonryGrid
   const debouncedQuery = searchQuery
 
   // Memoize schema metadata to avoid repeated string operations
@@ -170,8 +164,8 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   }, [selectedIndex, searchResults, containerRef])
 
   return (
-    <Flex flexDirection="column" bg="su.white" h="90vh" scrollBehavior="none" position="relative">
-      <Box position="relative" zIndex={20} bg="su.white">
+    <Flex flexDirection="column" bg="su.lightBlue" h="full" w="full">
+      <Flex flex="1" alignItems="center" justifyContent="center" w="full">
         <ReferenceHeader title="Salvage Union Rules Reference">
           <Box position="relative" maxW="2xl" w="full">
             <Text fontSize="sm" color="su.brick" mb={3} textAlign="center">
@@ -328,19 +322,9 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
             )}
           </Box>
         </ReferenceHeader>
-      </Box>
+      </Flex>
 
-      {/* Masonry grid - positioned behind header and footer */}
-      <Box flex="1" position="relative" zIndex={1}>
-        <Suspense fallback={<Box flex="1" bg="su.white" />}>
-          <AnimatedMasonryGrid />
-        </Suspense>
-      </Box>
-
-      {/* Footer - sticky at bottom, positioned above the masonry grid */}
-      <Box position="sticky" bottom={0} zIndex={20} bg="su.white">
-        <Footer />
-      </Box>
+      <Footer />
     </Flex>
   )
 }
