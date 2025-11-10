@@ -10,7 +10,7 @@ interface DiscordSignInButtonProps extends ButtonProps {
 }
 
 export function DiscordSignInButton({
-  redirectTo = `${window.location.origin}/dashboard`,
+  redirectTo,
   respect = true,
   ...props
 }: DiscordSignInButtonProps) {
@@ -24,7 +24,10 @@ export function DiscordSignInButton({
   const handleDiscordLogin = async () => {
     try {
       setLoading(true)
-      await signInWithDiscord(redirectTo)
+      // Use window.location.origin only on client side, with fallback
+      const defaultRedirect =
+        typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : '/dashboard'
+      await signInWithDiscord(redirectTo || defaultRedirect)
     } catch (error) {
       console.error('Error signing in:', error)
     } finally {

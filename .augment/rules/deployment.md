@@ -1,6 +1,6 @@
 ---
 type: 'context_file'
-paths: ['.github/workflows/**/*.yml', 'public/_redirects']
+paths: ['.github/workflows/**/*.yml', 'netlify.toml', 'vite.config.ts']
 ---
 
 # Deployment
@@ -8,8 +8,9 @@ paths: ['.github/workflows/**/*.yml', 'public/_redirects']
 ## Platform
 
 - **Host**: Netlify
+- **Framework**: TanStack Start with SSR
 - **URL**: Configured via Netlify dashboard
-- **SPA routing**: `public/_redirects` handles client-side routing
+- **Adapter**: `@netlify/vite-plugin-tanstack-start`
 
 ## CI/CD Pipeline
 
@@ -19,14 +20,15 @@ paths: ['.github/workflows/**/*.yml', 'public/_redirects']
 2. **Netlify Deployment**
    - Automatic deployments from GitHub
    - Triggered on push to `main` branch
-   - Build command: `bun run build`
-   - Publish directory: `dist`
+   - Build command: `vite build`
+   - Publish directory: `dist/client`
+   - SSR functions deployed to Netlify serverless functions
 
 ## Build Process
 
 ```bash
 bun install --frozen-lockfile  # Install deps
-bun run build                  # TypeScript compile + Vite build
+vite build                     # TanStack Start build (client + server)
 ```
 
 ## Environment Variables
@@ -35,14 +37,25 @@ bun run build                  # TypeScript compile + Vite build
 - Required: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 - Optional: `VITE_GA_MEASUREMENT_ID`, `VITE_SHOW_DISCORD_SIGNIN`
 
-## SPA Routing
+## SSR Configuration
 
-- `public/_redirects` contains: `/* /index.html 200`
-- Ensures all routes serve `index.html` for client-side routing
-- Netlify automatically processes this file during deployment
+- **Reference pages** (`/`, `/schema/*`) - Server-side rendered
+- **Dashboard pages** (`/dashboard/*`) - Client-side only (SPA)
+- **Server functions** - Auth and data fetching on server
+- **Static prerendering** - All reference pages pre-generated at build time
+
+## Local Development
+
+- Run `bun dev` to start dev server with full Netlify platform emulation
+- No need for Netlify CLI - the Vite plugin provides:
+  - Serverless functions
+  - Edge functions
+  - Blobs, Cache API, Image CDN
+  - Redirects, headers, environment variables
 
 ## Documentation
 
+- **TanStack Start on Netlify**: https://docs.netlify.com/build/frameworks/framework-setup-guides/tanstack-start/
 - **Netlify**: https://docs.netlify.com/
-- **Netlify SPA routing**: https://docs.netlify.com/routing/redirects/rewrites-proxies/#history-pushstate-and-single-page-apps
+- **TanStack Start**: https://tanstack.com/start/latest
 - **GitHub Actions**: https://docs.github.com/en/actions

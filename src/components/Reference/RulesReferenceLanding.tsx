@@ -122,6 +122,9 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
 
   // Handle keyboard navigation
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!searchResults.length) return
 

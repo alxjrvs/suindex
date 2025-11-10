@@ -5,9 +5,10 @@
   "type": "module",
   "license": "Salvage Union Open Game Licence 1.0b",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite dev",
     "typecheck": "tsc -b --noEmit",
-    "build": "tsc -b && vite build",
+    "build": "vite build && tsc --noEmit",
+    "start": "vite start",
     "lint": "eslint .",
     "format": "prettier --write .",
     "sanity": "bun run lint -- --fix && bun run format && bun run typecheck",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@happy-dom/global-registrator": "^20.0.10",
+    "@netlify/vite-plugin-tanstack-start": "^1.1.11",
     "@tanstack/react-query-devtools": "^5.90.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",

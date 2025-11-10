@@ -1,16 +1,15 @@
-# Netlify Configuration for SUIndex
+# Netlify Configuration for SUIndex (TanStack Start)
 # https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [build]
-  # Build command
-  command = "bun run build"
-  
-  # Publish directory (Vite outputs to dist/)
-  publish = "dist"
+  # Build command for TanStack Start
+  command = "vite build"
 
-# SPA routing - redirect all requests to index.html
-# This is handled by public/_redirects file
-# Netlify automatically processes _redirects from the publish directory
+  # Publish directory (TanStack Start outputs to dist/client/)
+  publish = "dist/client"
+
+# SSR and Server Functions are automatically deployed to Netlify serverless functions
+# via @netlify/vite-plugin-tanstack-start
 
 # Environment variables should be set in Netlify dashboard:
 # - VITE_SUPABASE_URL

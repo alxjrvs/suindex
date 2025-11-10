@@ -8,25 +8,25 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './app/__root'
-import { Route as Super_secret_haven_loginRouteImport } from './app/super_secret_haven_login'
-import { Route as DashboardRouteImport } from './app/dashboard'
-import { Route as IndexRouteImport } from './app/index'
-import { Route as DashboardIndexRouteImport } from './app/dashboard/index'
-import { Route as SheetsPilotRouteImport } from './app/sheets/pilot'
-import { Route as SheetsMechRouteImport } from './app/sheets/mech'
-import { Route as SheetsCrawlerRouteImport } from './app/sheets/crawler'
-import { Route as DashboardJoinRouteImport } from './app/dashboard/join'
-import { Route as SchemaSchemaIdIndexRouteImport } from './app/schema/$schemaId/index'
-import { Route as DashboardPilotsIndexRouteImport } from './app/dashboard/pilots/index'
-import { Route as DashboardMechsIndexRouteImport } from './app/dashboard/mechs/index'
-import { Route as DashboardGamesIndexRouteImport } from './app/dashboard/games/index'
-import { Route as DashboardCrawlersIndexRouteImport } from './app/dashboard/crawlers/index'
-import { Route as DashboardPilotsIdRouteImport } from './app/dashboard/pilots/$id'
-import { Route as DashboardMechsIdRouteImport } from './app/dashboard/mechs/$id'
-import { Route as DashboardGamesGameIdRouteImport } from './app/dashboard/games/$gameId'
-import { Route as DashboardCrawlersIdRouteImport } from './app/dashboard/crawlers/$id'
-import { Route as SchemaSchemaIdItemItemIdRouteImport } from './app/schema/$schemaId/item/$itemId'
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as Super_secret_haven_loginRouteImport } from './routes/super_secret_haven_login'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as SheetsPilotRouteImport } from './routes/sheets/pilot'
+import { Route as SheetsMechRouteImport } from './routes/sheets/mech'
+import { Route as SheetsCrawlerRouteImport } from './routes/sheets/crawler'
+import { Route as DashboardJoinRouteImport } from './routes/dashboard/join'
+import { Route as SchemaSchemaIdIndexRouteImport } from './routes/schema/$schemaId/index'
+import { Route as DashboardPilotsIndexRouteImport } from './routes/dashboard/pilots/index'
+import { Route as DashboardMechsIndexRouteImport } from './routes/dashboard/mechs/index'
+import { Route as DashboardGamesIndexRouteImport } from './routes/dashboard/games/index'
+import { Route as DashboardCrawlersIndexRouteImport } from './routes/dashboard/crawlers/index'
+import { Route as DashboardPilotsIdRouteImport } from './routes/dashboard/pilots/$id'
+import { Route as DashboardMechsIdRouteImport } from './routes/dashboard/mechs/$id'
+import { Route as DashboardGamesGameIdRouteImport } from './routes/dashboard/games/$gameId'
+import { Route as DashboardCrawlersIdRouteImport } from './routes/dashboard/crawlers/$id'
+import { Route as SchemaSchemaIdItemItemIdRouteImport } from './routes/schema/$schemaId/item/$itemId'
 
 const Super_secret_haven_loginRoute =
   Super_secret_haven_loginRouteImport.update({
@@ -428,3 +428,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
