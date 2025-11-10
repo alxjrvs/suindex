@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog } from 'salvageunion-reference'
 import SchemaViewer from '../../../components/schema/SchemaViewer'
+import { ReferenceError } from '../../../components/errors/ReferenceError'
 
 const schemaIndexData = getSchemaCatalog()
 
 export const Route = createFileRoute('/schema/$schemaId/')({
   component: SchemaViewerPage,
+  errorComponent: ReferenceError,
   loader: ({ params }) => {
     const schema = schemaIndexData.schemas.find((s) => s.id === params.schemaId)
     return { schemas: schemaIndexData.schemas, schema }
@@ -34,6 +36,7 @@ export const Route = createFileRoute('/schema/$schemaId/')({
   },
   staticData: {
     ssr: true, // SSR for reference pages
+    prerender: true, // Prerender at build time for instant loads
   },
 })
 

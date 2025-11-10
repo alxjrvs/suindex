@@ -1,5 +1,9 @@
+import { lazy } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { PilotEdit } from '../../../components/Dashboard/PilotEdit'
+
+const PilotEdit = lazy(() =>
+  import('../../../components/Dashboard/PilotEdit').then((m) => ({ default: m.PilotEdit }))
+)
 
 export const Route = createFileRoute('/dashboard/pilots/$id')({
   component: PilotEdit,

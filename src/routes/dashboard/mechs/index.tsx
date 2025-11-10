@@ -1,5 +1,9 @@
+import { lazy } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { MechsGrid } from '../../../components/Dashboard/MechsGrid'
+
+const MechsGrid = lazy(() =>
+  import('../../../components/Dashboard/MechsGrid').then((m) => ({ default: m.MechsGrid }))
+)
 
 export const Route = createFileRoute('/dashboard/mechs/')({
   component: MechsGrid,

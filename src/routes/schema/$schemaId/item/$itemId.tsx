@@ -2,11 +2,13 @@ import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog, SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import ItemShowPage from '../../../../components/ItemShowPage'
+import { ReferenceError } from '../../../../components/errors/ReferenceError'
 
 const schemaIndexData = getSchemaCatalog()
 
 export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
   component: ItemShowPageComponent,
+  errorComponent: ReferenceError,
   loader: ({ params }) => {
     const schema = schemaIndexData.schemas.find((s) => s.id === params.schemaId)
     // Try to find the item in the schema
@@ -58,6 +60,7 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
   },
   staticData: {
     ssr: true, // SSR for reference pages
+    prerender: true, // Prerender all item detail pages at build time
   },
 })
 

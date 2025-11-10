@@ -1,5 +1,6 @@
 ---
-type: 'always_apply'
+type: 'context_file'
+paths: ['.github/workflows/**/*.yml', 'public/_redirects']
 ---
 
 # Deployment
@@ -8,53 +9,40 @@ type: 'always_apply'
 
 - **Host**: Netlify
 - **Framework**: TanStack Start with SSR
-- **URL**: Configured via Netlify dashboard
-- **Adapter**: `@netlify/vite-plugin-tanstack-start`
+- **Plugin**: `@netlify/vite-plugin-tanstack-start` for Netlify Functions integration
+- **Routing**: Automatic SSR/SPA routing via TanStack Start
 
 ## CI/CD Pipeline
 
 1. **CI Workflow** (`.github/workflows/ci.yml`)
    - Runs on: Push to `main`, PRs
    - Steps: Lint → Format → Typecheck → Test → Build
-2. **Netlify Deployment**
-   - Automatic deployments from GitHub
-   - Triggered on push to `main` branch
-   - Build command: `vite build`
-   - Publish directory: `dist/client`
-   - SSR functions deployed to Netlify serverless functions
+2. **Netlify Deploy**
+   - Automatic deployment on push to `main`
+   - Builds using `bun run build`
+   - Deploys to Netlify Functions for SSR routes
 
 ## Build Process
 
 ```bash
 bun install --frozen-lockfile  # Install deps
-vite build                     # TanStack Start build (client + server)
+bun run build                  # TanStack Start build (client + server)
 ```
 
 ## Environment Variables
 
-- Set in Netlify dashboard (Site settings → Environment variables)
+- Set in Netlify environment variables
 - Required: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 - Optional: `VITE_GA_MEASUREMENT_ID`, `VITE_SHOW_DISCORD_SIGNIN`
 
 ## SSR Configuration
 
-- **Reference pages** (`/`, `/schema/*`) - Server-side rendered
-- **Dashboard pages** (`/dashboard/*`) - Client-side only (SPA)
-- **Server functions** - Auth and data fetching on server
-- **Static prerendering** - All reference pages pre-generated at build time
-
-## Local Development
-
-- Run `bun dev` to start dev server with full Netlify platform emulation
-- No need for Netlify CLI - the Vite plugin provides:
-  - Serverless functions
-  - Edge functions
-  - Blobs, Cache API, Image CDN
-  - Redirects, headers, environment variables
+- **Reference pages**: SSR enabled (`ssr: true` in route config)
+- **Dashboard**: SPA mode (`ssr: false` in route config)
+- **Server functions**: Use `createServerFn` from `@tanstack/react-start`
 
 ## Documentation
 
-- **TanStack Start on Netlify**: https://docs.netlify.com/build/frameworks/framework-setup-guides/tanstack-start/
 - **Netlify**: https://docs.netlify.com/
-- **TanStack Start**: https://tanstack.com/start/latest
-- **GitHub Actions**: https://docs.github.com/en/actions
+- **TanStack Start Hosting**: https://tanstack.com/start/latest/docs/framework/react/guide/hosting
+- **Netlify Functions**: https://docs.netlify.com/functions/overview/

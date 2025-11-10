@@ -5,22 +5,28 @@ paths: ['vite.config.ts', '.env.example']
 
 # Vite Build Configuration
 
-## Setup
+## TanStack Start + Vite Configuration
 
 - **Config**: `vite.config.ts`
-- **TanStack Start**: Using `tanstackStart()` plugin from `@tanstack/react-start/plugin/vite`
+- **Framework**: TanStack Start with SSR
+- **TanStack Start plugin**: `@tanstack/react-start/plugin/vite` - **MUST be first plugin**
+- **Netlify plugin**: `@netlify/vite-plugin-tanstack-start` for Netlify deployment
+- **React plugin**: `@vitejs/plugin-react` with automatic JSX runtime
 - **Compression**: gzip enabled via `vite-plugin-compression`
 - **Analytics**: Google Analytics 4 via `vite-plugin-radar`
 
-## TanStack Start Configuration
+## Plugin Ordering
+
+**CRITICAL**: The `tanstackStart()` plugin **MUST** come before the `react()` plugin in the plugins array. This ensures proper React JSX transformation for both client and server rendering.
 
 ```typescript
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import { defineConfig } from 'vite'
-
 export default defineConfig({
   plugins: [
-    tanstackStart(), // Must be first
+    tanstackStart(), // MUST be first
+    react({
+      jsxRuntime: 'automatic',
+    }),
+    netlify(), // Netlify deployment plugin
     // ... other plugins
   ],
 })
@@ -45,6 +51,5 @@ manualChunks: {
 
 ## Documentation
 
-- **Vite docs**: <https://vite.dev/>
-- **TanStack Start**: <https://tanstack.com/start/latest/docs/framework/react/getting-started>
-- **Env variables**: <https://vite.dev/guide/env-and-mode.html>
+- **Vite docs**: https://vite.dev/
+- **Env variables**: https://vite.dev/guide/env-and-mode.html

@@ -1,5 +1,9 @@
+import { lazy } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { GamesGrid } from '../../../components/Dashboard/GamesGrid'
+
+const GamesGrid = lazy(() =>
+  import('../../../components/Dashboard/GamesGrid').then((m) => ({ default: m.GamesGrid }))
+)
 
 export const Route = createFileRoute('/dashboard/games/')({
   component: GamesGrid,

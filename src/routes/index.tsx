@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog } from 'salvageunion-reference'
 import { RulesReferenceLanding } from '../components/Reference/RulesReferenceLanding'
+import { ReferenceError } from '../components/errors/ReferenceError'
 
 const schemaIndexData = getSchemaCatalog()
 
@@ -11,6 +12,7 @@ function IndexPage() {
 
 export const Route = createFileRoute('/')({
   component: IndexPage,
+  errorComponent: ReferenceError,
   loader: () => {
     return { schemas: schemaIndexData.schemas }
   },
@@ -41,5 +43,6 @@ export const Route = createFileRoute('/')({
   }),
   staticData: {
     ssr: true,
+    prerender: true,
   },
 })

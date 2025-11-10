@@ -1,17 +1,21 @@
 import { defineConfig } from 'vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import react from '@vitejs/plugin-react'
+import netlify from '@netlify/vite-plugin-tanstack-start'
 import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { VitePluginRadar } from 'vite-plugin-radar'
 
-// https://tanstack.com/start/latest/docs/framework/react/getting-started
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    // CRITICAL: tanstackStart() MUST come before react() plugin
+    // This ensures proper React JSX transformation for SSR/SSG
     tanstackStart(),
     react({
       jsxRuntime: 'automatic',
     }),
+    netlify(),
     compression({
       algorithm: 'gzip',
       ext: '.gz',
@@ -36,10 +40,26 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['@tanstack/react-router', '@tanstack/react-start'],
-          'salvage-union': ['salvageunion-reference'],
+        manualChunks(id) {
+          // Only apply manual chunks for client build (not SSR)
+          // Check if this is a client build by looking for browser-specific modules
+          if (id.includes('node_modules')) {
+            // TanStack Router packages
+            if (id.includes('@tanstack/react-router') || id.includes('@tanstack/react-start')) {
+              return 'router'
+            }
+            // Salvage Union reference data
+            if (id.includes('salvageunion-reference')) {
+              return 'salvage-union'
+            }
+            // React vendor bundle (only for client)
+            if (
+              id.includes('react-dom') ||
+              (id.includes('react') && !id.includes('react-router'))
+            ) {
+              return 'vendor'
+            }
+          }
         },
       },
       onwarn(warning, warn) {
