@@ -7,8 +7,8 @@ paths: ['.github/workflows/**/*.yml', 'public/_redirects']
 
 ## Platform
 
-- **Host**: GitHub Pages (not Netlify)
-- **URL**: Configured via GitHub Pages settings
+- **Host**: Netlify
+- **URL**: Configured via Netlify dashboard
 - **SPA routing**: `public/_redirects` handles client-side routing
 
 ## CI/CD Pipeline
@@ -16,9 +16,11 @@ paths: ['.github/workflows/**/*.yml', 'public/_redirects']
 1. **CI Workflow** (`.github/workflows/ci.yml`)
    - Runs on: Push to `main`, PRs
    - Steps: Lint → Format → Typecheck → Test → Build
-2. **Deploy Workflow** (`.github/workflows/deploy.yml`)
-   - Runs on: CI success on `main` branch
-   - Deploys `dist/` to GitHub Pages
+2. **Netlify Deployment**
+   - Automatic deployments from GitHub
+   - Triggered on push to `main` branch
+   - Build command: `bun run build`
+   - Publish directory: `dist`
 
 ## Build Process
 
@@ -29,7 +31,7 @@ bun run build                  # TypeScript compile + Vite build
 
 ## Environment Variables
 
-- Set in GitHub repository secrets
+- Set in Netlify dashboard (Site settings → Environment variables)
 - Required: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 - Optional: `VITE_GA_MEASUREMENT_ID`, `VITE_SHOW_DISCORD_SIGNIN`
 
@@ -37,8 +39,10 @@ bun run build                  # TypeScript compile + Vite build
 
 - `public/_redirects` contains: `/* /index.html 200`
 - Ensures all routes serve `index.html` for client-side routing
+- Netlify automatically processes this file during deployment
 
 ## Documentation
 
-- **GitHub Pages**: https://docs.github.com/en/pages
+- **Netlify**: https://docs.netlify.com/
+- **Netlify SPA routing**: https://docs.netlify.com/routing/redirects/rewrites-proxies/#history-pushstate-and-single-page-apps
 - **GitHub Actions**: https://docs.github.com/en/actions

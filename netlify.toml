@@ -1,0 +1,20 @@
+# Netlify Configuration for SUIndex
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Build command
+  command = "bun run build"
+  
+  # Publish directory (Vite outputs to dist/)
+  publish = "dist"
+
+# SPA routing - redirect all requests to index.html
+# This is handled by public/_redirects file
+# Netlify automatically processes _redirects from the publish directory
+
+# Environment variables should be set in Netlify dashboard:
+# - VITE_SUPABASE_URL
+# - VITE_SUPABASE_ANON_KEY
+# - VITE_GA_MEASUREMENT_ID (optional)
+# - VITE_SHOW_DISCORD_SIGNIN (optional)
+
