@@ -24,13 +24,9 @@ export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
   const techLevel = crawler?.tech_level ?? 1
   const name = crawler?.name
 
-  // For now, just show "Owner" for non-owned crawlers
-  // TODO: Add a public users table or profile system to show owner names
-
   const isOwner = currentUserId === crawler?.user_id
   const ownerName = isOwner ? 'You' : 'Owner'
 
-  // Prefetch crawler data on hover
   const handleMouseEnter = () => {
     queryClient.prefetchQuery({
       queryKey: crawlersKeys.byId(id),

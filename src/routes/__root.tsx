@@ -1,7 +1,6 @@
-/// <reference types="vite/client" />
 import { useEffect, useState } from 'react'
 import { createRootRoute, Outlet, Scripts, HeadContent } from '@tanstack/react-router'
-import { Box, Flex, ChakraProvider } from '@chakra-ui/react'
+import { Box, Flex, ChakraProvider, VStack, Button } from '@chakra-ui/react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { TopNavigation } from '../components/TopNavigation'
 import { ErrorBoundary } from '../components/ErrorBoundary'
@@ -15,13 +14,15 @@ import { fetchCurrentUser } from '../lib/supabase.server'
 import { system } from '../theme'
 import { queryClient } from '../lib/queryClient'
 import type React from 'react'
+import { Heading } from '../components/base/Heading'
+import { Text } from '../components/base/Text'
 
 const schemaIndexData = getSchemaCatalog()
 
 export const Route = createRootRoute({
   component: RootComponent,
+  notFoundComponent: NotFoundComponent,
   beforeLoad: async () => {
-    // Fetch user on server for SSR routes
     const serverUser = await fetchCurrentUser()
     return {
       serverUser,
@@ -92,5 +93,93 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
+  )
+}
+
+function NotFoundComponent() {
+  return (
+    <Flex alignItems="center" justifyContent="center" minH="80vh" bg="su.lightBlue" p={4}>
+      <Box
+        maxW="2xl"
+        w="full"
+        p={8}
+        bg="su.white"
+        borderRadius="md"
+        shadow="lg"
+        borderWidth="2px"
+        borderColor="su.brick"
+      >
+        <VStack gap={6} alignItems="center">
+          <Heading level="h1" fontSize="6xl" fontWeight="bold" color="su.brick">
+            404
+          </Heading>
+          <Heading level="h2" fontSize="2xl" fontWeight="bold" textAlign="center">
+            SALVAGE OPERATION FAILED
+          </Heading>
+          <Text color="su.black" textAlign="center" fontSize="lg">
+            The page you're looking for has been lost to the wastes. It might have been scrapped,
+            relocated, or never existed in the first place.
+          </Text>
+
+          <Box w="full" mt={4}>
+            <Text color="su.brick" fontWeight="semibold" mb={2}>
+              Try one of these instead:
+            </Text>
+            <VStack gap={2} alignItems="stretch">
+              <Button
+                asChild
+                w="full"
+                px={4}
+                py={2}
+                bg="su.orange"
+                color="su.white"
+                borderRadius="md"
+                _hover={{ bg: 'su.brick' }}
+                fontWeight="medium"
+              >
+                <a href="/">Return to Home</a>
+              </Button>
+              <Button
+                asChild
+                w="full"
+                px={4}
+                py={2}
+                bg="su.green"
+                color="su.white"
+                borderRadius="md"
+                _hover={{ bg: 'su.brick' }}
+                fontWeight="medium"
+              >
+                <a href="/">Browse Reference Data</a>
+              </Button>
+            </VStack>
+          </Box>
+
+          <Box w="full" mt={6} pt={6} borderTopWidth="2px" borderTopColor="su.lightBlue">
+            <Text color="su.brick" fontWeight="semibold" mb={3} fontSize="sm">
+              Popular Schemas:
+            </Text>
+            <Flex flexWrap="wrap" gap={2}>
+              {schemaIndexData.schemas.slice(0, 6).map((schema) => (
+                <Button
+                  key={schema.id}
+                  asChild
+                  size="sm"
+                  px={3}
+                  py={1}
+                  bg="su.lightBlue"
+                  color="su.black"
+                  borderRadius="md"
+                  _hover={{ bg: 'su.orange', color: 'su.white' }}
+                  fontSize="xs"
+                >
+                  <a href={`/schema/${schema.id}`}>{schema.displayName}</a>
+                </Button>
+              ))}
+            </Flex>
+          </Box>
+        </VStack>
+      </Box>
+    </Flex>
   )
 }

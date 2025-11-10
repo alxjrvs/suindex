@@ -13,8 +13,7 @@ export interface EntityStatsProps {
 
 export function EntityStats({ data, label = '', prefix = '' }: EntityStatsProps) {
   const { compact } = useEntityDisplayContext()
-  // Type assertion: SURefMetaBonusPerTechLevel is SURefMetaStats which has the same structure
-  // as the stats properties these functions expect
+
   const entityData = data as SURefMetaEntity
 
   return (

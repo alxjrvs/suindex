@@ -164,7 +164,6 @@ export function RollTable({
               zIndex={isHighlighted ? 1 : 0}
               gap={compact ? 1 : 2}
             >
-              {/* Reroll button - absolutely positioned below the row */}
               {isHighlighted && (
                 <Button
                   onClick={(e: React.MouseEvent) => {

@@ -11,7 +11,6 @@ export function useChangePilotClass(id: string | undefined) {
     (classId: string | null) => {
       if (!id || !pilot) return
 
-      // If null or empty, delete the existing class entity
       if (!classId) {
         if (selectedClass) {
           deleteEntity.mutate({ id: selectedClass.id, parentType: 'pilot', parentId: id })
@@ -22,7 +21,6 @@ export function useChangePilotClass(id: string | undefined) {
       const isChangingClass = selectedClass && selectedClass.schema_ref_id !== classId
 
       if (isChangingClass) {
-        // Delete all abilities and equipment when changing class
         abilities.forEach((ability) => {
           deleteEntity.mutate({ id: ability.id, parentType: 'pilot', parentId: id })
         })
@@ -31,22 +29,18 @@ export function useChangePilotClass(id: string | undefined) {
           deleteEntity.mutate({ id: equip.id, parentType: 'pilot', parentId: id })
         })
 
-        // Delete advanced class if it exists
         if (selectedAdvancedClass) {
           deleteEntity.mutate({ id: selectedAdvancedClass.id, parentType: 'pilot', parentId: id })
         }
 
-        // Delete old class entity
         deleteEntity.mutate({ id: selectedClass.id, parentType: 'pilot', parentId: id })
 
-        // Create new class entity
         createEntity.mutate({
           pilot_id: id,
           schema_name: 'classes.core',
           schema_ref_id: classId,
         })
       } else if (!selectedClass) {
-        // First time selection - create class entity
         createEntity.mutate({
           pilot_id: id,
           schema_name: 'classes.core',

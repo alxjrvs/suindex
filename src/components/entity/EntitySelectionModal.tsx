@@ -40,12 +40,10 @@ export function EntitySelectionModal({
   const [techLevelFilter, setTechLevelFilter] = useState<number | null>(null)
   const [schemaFilter, setSchemaFilter] = useState<SURefSchemaName | null>(null)
 
-  // Fetch all entities from the specified types
   const allEntities = useMemo(() => {
     const entities: Array<{ entity: SURefEntity; schemaName: SURefSchemaName }> = []
 
     schemaNames.forEach((schemaName) => {
-      // Use findAllIn to get all items from the schema
       const items = SalvageUnionReference.findAllIn(schemaName, () => true)
       items.forEach((item) => {
         entities.push({ entity: item, schemaName })
@@ -55,12 +53,10 @@ export function EntitySelectionModal({
     return entities
   }, [schemaNames])
 
-  // Helper function to get tech level from entity (uses package utility)
   const getEntityTechLevel = (entity: SURefEntity): number | null => {
     return getTechLevel(entity) ?? null
   }
 
-  // Pre-compute disabled status for all entities (memoized separately to avoid re-sorting)
   const disabledEntities = useMemo(() => {
     if (!shouldDisableEntity) return new Set<string>()
 
@@ -74,14 +70,11 @@ export function EntitySelectionModal({
     return disabled
   }, [allEntities, shouldDisableEntity])
 
-  // Filter entities based on search term, tech level, and schema
   const filteredEntities = useMemo(() => {
     return allEntities
       .filter(({ entity, schemaName }) => {
-        // Exclude non-indexable entities
         const isIndexable = 'indexable' in entity ? entity.indexable !== false : true
 
-        // Search filter
         const matchesSearch =
           !searchTerm ||
           ('name' in entity &&
@@ -91,20 +84,17 @@ export function EntitySelectionModal({
             typeof entity.description === 'string' &&
             entity.description.toLowerCase().includes(searchTerm.toLowerCase()))
 
-        // Tech level filter (only if enabled and entity has techLevel)
         const entityTechLevel = getEntityTechLevel(entity)
         const matchesTechLevel =
           techLevelFilter === null ||
           entityTechLevel === null ||
           entityTechLevel === techLevelFilter
 
-        // Schema filter (only if multiple schemas and filter is set)
         const matchesSchema = schemaFilter === null || schemaName === schemaFilter
 
         return isIndexable && matchesSearch && matchesTechLevel && matchesSchema
       })
       .sort((a, b) => {
-        // First, sort disabled entities to the end (use pre-computed set)
         const aId = 'id' in a.entity ? (a.entity.id as string) : ''
         const bId = 'id' in b.entity ? (b.entity.id as string) : ''
         const aDisabled = disabledEntities.has(`${a.schemaName}-${aId}`)
@@ -114,7 +104,6 @@ export function EntitySelectionModal({
           return aDisabled ? 1 : -1
         }
 
-        // Then sort by tech level (if available), then by name
         const aTechLevel = getEntityTechLevel(a.entity) || 0
         const bTechLevel = getEntityTechLevel(b.entity) || 0
 
@@ -133,23 +122,19 @@ export function EntitySelectionModal({
     onClose()
   }
 
-  // Derive whether to show tech level filter based on schema definitions
   const showTechLevelFilter = useMemo(() => {
     if (!schemaNames || schemaNames.length === 0) return false
 
-    // Check if any of the schemas have entities with tech levels
     return allEntities.some(({ entity }) => getEntityTechLevel(entity) !== null)
   }, [schemaNames, allEntities])
 
-  // TanStack Virtual setup
   const parentRef = useRef<HTMLDivElement>(null)
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: filteredEntities.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 200, // Estimated height per item
-    overscan: 5, // Render 5 items above/below viewport
+    estimateSize: () => 200,
+    overscan: 5,
   })
 
   return (
@@ -167,7 +152,6 @@ export function EntitySelectionModal({
           bg="su.mediumGrey"
           w="full"
         >
-          {/* Search Input */}
           <Input
             type="text"
             placeholder="Search by name or description..."
@@ -183,7 +167,6 @@ export function EntitySelectionModal({
             color="su.black"
           />
 
-          {/* Filters Row */}
           <Flex
             gap={4}
             justifyContent="space-between"
@@ -191,7 +174,6 @@ export function EntitySelectionModal({
             flexWrap="wrap"
             w="full"
           >
-            {/* Tech Level Filter */}
             {showTechLevelFilter && (
               <Flex gap={1} flexWrap="wrap">
                 {TECH_LEVELS.map((tl) => (
@@ -224,7 +206,6 @@ export function EntitySelectionModal({
               </Flex>
             )}
 
-            {/* Schema Filter - only show if multiple schemas */}
             {schemaNames.length > 1 && (
               <Flex gap={2} flexWrap="wrap" justifyContent="flex-end">
                 {schemaNames.map((schema) => (
@@ -260,7 +241,6 @@ export function EntitySelectionModal({
           </Flex>
         </VStack>
 
-        {/* Scrollable Entity List - Virtualized */}
         <Box
           ref={parentRef}
           flex="1"

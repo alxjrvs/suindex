@@ -7,14 +7,12 @@ import { z } from 'zod'
 import { Heading } from '.././base/Heading'
 import { redeemInviteCode } from '../../lib/api'
 
-// Validation schema for invite code
 const codeValidator = z.string().min(1, 'Invite code is required').trim()
 
 export function JoinGame() {
   const search = useSearch({ from: '/dashboard/join' })
   const navigate = useNavigate()
 
-  // TanStack Form setup
   const form = useForm({
     defaultValues: {
       code: (search as { code?: string }).code || '',
@@ -27,7 +25,6 @@ export function JoinGame() {
         console.error('Failed to join game', err)
         const message = err instanceof Error ? err.message : 'Failed to join game'
 
-        // Set form-level error
         let errorMessage = message
         if (message.includes('invalid_or_expired_code')) {
           errorMessage = 'That invite code is invalid or expired.'
@@ -37,20 +34,17 @@ export function JoinGame() {
           errorMessage = 'You must be signed in to join a game.'
         }
 
-        // Throw error to prevent form submission
         throw new Error(errorMessage)
       }
     },
   })
 
-  // Auto-join when a code is present in URL
   useEffect(() => {
     const urlCode = (search as { code?: string }).code
     if (urlCode && urlCode.trim()) {
       form.setFieldValue('code', urlCode)
       form.handleSubmit()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
   return (

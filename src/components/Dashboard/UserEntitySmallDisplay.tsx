@@ -39,7 +39,6 @@ export function UserEntitySmallDisplay({
   rightHeader,
   isInactive = false,
 }: UserEntitySmallDisplayProps) {
-  // Apply greyed out background for inactive entities
   const effectiveBgColor: string = isInactive ? 'gray.400' : bgColor
 
   const formattedRightHeader =

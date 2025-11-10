@@ -11,7 +11,7 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
   errorComponent: ReferenceError,
   loader: ({ params }) => {
     const schema = schemaIndexData.schemas.find((s) => s.id === params.schemaId)
-    // Try to find the item in the schema
+
     let item = null
     let itemName = params.itemId
     let itemDescription = ''
@@ -28,7 +28,7 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
           itemDescription = item.description
         }
       } catch {
-        // Item not found, use itemId as name
+        // Ignore errors when item not found
       }
     }
     return { schemas: schemaIndexData.schemas, schema, itemName, itemDescription, item }
@@ -47,12 +47,10 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
     const schemaId = params.schemaId
     const itemId = params.itemId
 
-    // Use actual item description for meta tags if available
     const metaDescription =
       itemDescription ||
       `Detailed information about ${itemName} from ${schemaName} in Salvage Union TTRPG.`
 
-    // Build structured data with actual game data
     const structuredData: Record<string, unknown> = {
       '@context': 'https://schema.org',
       '@type': 'Article',
@@ -66,9 +64,7 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
       },
     }
 
-    // Add additional properties from the actual item data
     if (item) {
-      // Add source/page reference if available
       if ('source' in item && item.source) {
         structuredData.isPartOf = {
           '@type': 'Book',
@@ -79,7 +75,6 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
         structuredData.pagination = `Page ${item.page}`
       }
 
-      // Add tech level if available
       if ('stats' in item && item.stats && typeof item.stats === 'object') {
         const stats = item.stats as Record<string, unknown>
         if ('techLevel' in stats && stats.techLevel) {
@@ -119,8 +114,8 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
     }
   },
   staticData: {
-    ssr: true, // SSR for reference pages
-    prerender: true, // Prerender all item detail pages at build time
+    ssr: true,
+    prerender: true,
   },
 })
 

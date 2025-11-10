@@ -40,22 +40,19 @@ export function NPCCard({
   const onUpdateName = (value: string) => onUpdateBay?.({ npc: { ...npc!, name: value } })
   const onUpdateNotes = (value: string) => onUpdateBay?.({ npc: { ...npc!, notes: value } })
 
-  // Get choice definitions from reference data
-  // Crawler types have npc.choices, crawler bays have choices at top level
   const choiceDefinitions = useMemo(() => {
     if (!referenceBay) return []
-    // Check if it's a crawler bay (has choices at top level)
+
     if ('choices' in referenceBay && referenceBay.choices) {
       return referenceBay.choices
     }
-    // Check if it's a crawler type (has npc.choices)
+
     if ('npc' in referenceBay && referenceBay.npc && 'choices' in referenceBay.npc) {
       return referenceBay.npc.choices || []
     }
     return []
   }, [referenceBay])
 
-  // Convert choices array to lookup map
   const choicesMap = useMemo(() => {
     return choices.reduce(
       (acc, choice) => {
@@ -72,12 +69,10 @@ export function NPCCard({
 
       const maxHeight = 72
       const maxWidth = containerRef.current.offsetWidth
-      let currentSize = 16 // Start with 16px
+      let currentSize = 16
 
-      // Reset to max size first
       textRef.current.style.fontSize = `${currentSize}px`
 
-      // Shrink until it fits
       while (
         (textRef.current.scrollHeight > maxHeight || textRef.current.scrollWidth > maxWidth) &&
         currentSize > 8
@@ -94,7 +89,6 @@ export function NPCCard({
     return () => window.removeEventListener('resize', adjustFontSize)
   }, [description])
 
-  // Generate tilt rotations for each element
   const descriptionRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
   const hpRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
   const nameRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])

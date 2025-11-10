@@ -80,7 +80,7 @@ function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefMetaSchemaN
 function extractRangeDetail(data: SURefMetaEntity): DataValue[] | null {
   const range = getRange(data)
   if (!range) return null
-  // Range can be a string or array of strings
+
   const ranges = Array.isArray(range) ? range : [range]
   return ranges.map((r) => ({ label: 'Range', value: r, type: 'keyword' }))
 }
@@ -116,22 +116,17 @@ function extractTraitDetails(data: SURefMetaEntity): DataValue[] {
 function extractDetails(data: SURefMetaEntity, schemaName?: SURefMetaSchemaName): DataValue[] {
   const details: DataValue[] = []
 
-  // Activation cost
   const activationCost = extractActivationCostDetail(data, schemaName)
   if (activationCost) details.push(activationCost)
 
-  // Action types
   details.push(...extractActionTypes(data, schemaName))
 
-  // Range
   const ranges = extractRangeDetail(data)
   if (ranges) ranges.map((r) => details.push(r))
 
-  // Damage
   const damage = extractDamageDetail(data)
   if (damage) details.push(damage)
 
-  // Traits
   details.push(...extractTraitDetails(data))
 
   return details

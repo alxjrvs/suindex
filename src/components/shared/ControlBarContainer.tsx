@@ -17,7 +17,6 @@ export function ControlBarContainer({
   hasPendingChanges = false,
   centerContent,
 }: ControlBarContainerProps) {
-  // Save status indicator component
   const saveStatusIndicator = (
     <Box
       display="flex"

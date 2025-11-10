@@ -15,6 +15,7 @@ export default [
       'coverage',
       'build',
       'src/types/database-generated.types.ts',
+      'src/routeTree.gen.ts',
     ],
   },
   js.configs.recommended,

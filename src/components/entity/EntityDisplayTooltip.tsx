@@ -39,7 +39,6 @@ export function EntityDisplayTooltip({
 }: EntityDisplayTooltipProps) {
   const entity = SalvageUnionReference.get(schemaName, entityId)
 
-  // If entity doesn't exist, just render children without tooltip
   if (!entity) {
     return <>{children}</>
   }

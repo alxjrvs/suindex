@@ -14,7 +14,7 @@ import { getTechLevel } from 'salvageunion-reference'
 
 interface SchemaViewerProps {
   schemas: SchemaInfo[]
-  data?: SURefEntity[] // Optional prefetched data from loader
+  data?: SURefEntity[]
 }
 
 export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaViewerProps) {
@@ -22,18 +22,14 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
   const { data: fetchedData, loading, error } = useSchemaData(schemaId)
   const navigate = useNavigate({ from: Route.fullPath })
 
-  // Use prefetched data if available, otherwise use fetched data
   const data = prefetchedData ?? fetchedData
 
-  // Get search params from URL
   const { search = '', tl = [] } = Route.useSearch()
 
-  // Convert tech level array to Set for filtering
   const techLevelFilters = useMemo(() => new Set(tl.map(String)), [tl])
 
   const currentSchema = schemas.find((s) => s.id === schemaId)
 
-  // Get unique tech levels from data
   const techLevels = useMemo(() => {
     const levels = new Set<number>()
     data.forEach((item) => {
@@ -45,10 +41,8 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
     return Array.from(levels).sort()
   }, [data])
 
-  // Filter data based on search and tech level
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      // Search filter
       if (search) {
         const searchLower = search.toLowerCase()
         const nameMatch =
@@ -58,7 +52,6 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
         if (!nameMatch && !descMatch) return false
       }
 
-      // Tech level filter
       if (techLevelFilters.size > 0) {
         const techLevel = getTechLevel(item)
         const itemTechLevel = techLevel?.toString()
@@ -101,7 +94,6 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
     )
   }
 
-  // Capitalize schema name (e.g., "abilities" -> "Abilities")
   const capitalizedTitle =
     currentSchema.displayNamePlural ||
     currentSchema.title.charAt(0).toUpperCase() + currentSchema.title.slice(1)
@@ -120,7 +112,6 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
           </Text>
         </Box>
 
-        {/* Search Bar */}
         <Box mb={techLevels.length > 1 ? 3 : 2} w="full" maxW="600px" mx="auto">
           <Input
             type="text"
@@ -129,7 +120,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
             onChange={(e) => {
               navigate({
                 search: (prev) => ({ ...prev, search: e.target.value || undefined }),
-                replace: true, // Don't add to history for every keystroke
+                replace: true,
               })
             }}
             borderColor="su.lightBlue"
@@ -140,7 +131,6 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
           />
         </Box>
 
-        {/* Tech Level Filters */}
         {techLevels.length > 1 && (
           <Flex flexWrap="wrap" gap={2}>
             <Button

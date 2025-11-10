@@ -22,7 +22,6 @@ export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProp
 
   const bayRef = bay.ref as SURefCrawlerBay
 
-  // Memoize metadata to avoid recreating on every render
   const metadata = useMemo(() => {
     return (
       bay.metadata || {

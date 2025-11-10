@@ -35,14 +35,12 @@ export const cargoSchemaNameSchema = z.enum(CARGO_SCHEMA_NAMES).optional()
  */
 export const createCargoSchema = publicCargoInsertSchema
   .extend({
-    // Override schema_name to use our stricter enum
     schema_name: cargoSchemaNameSchema,
-    // Override amount to enforce positive integers
+
     amount: z.number().int().positive().optional().nullable(),
   })
   .refine(
     (data) => {
-      // Ensure exactly one parent is set
       const parentCount = [data.mech_id, data.crawler_id].filter(Boolean).length
       return parentCount === 1
     },
@@ -50,7 +48,6 @@ export const createCargoSchema = publicCargoInsertSchema
   )
   .refine(
     (data) => {
-      // Ensure either amount is set OR both schema_name and schema_ref_id are set
       const hasAmount = data.amount !== undefined && data.amount !== null
       const hasRef = data.schema_name !== undefined && data.schema_ref_id !== undefined
       return hasAmount || hasRef
@@ -59,7 +56,6 @@ export const createCargoSchema = publicCargoInsertSchema
   )
   .refine(
     (data) => {
-      // If schema_name and schema_ref_id are set, validate they exist in reference data
       if (data.schema_name && data.schema_ref_id) {
         return SalvageUnionReference.exists(data.schema_name as SURefSchemaName, data.schema_ref_id)
       }
@@ -73,7 +69,6 @@ export const createCargoSchema = publicCargoInsertSchema
  * Extends auto-generated schema with stricter amount validation
  */
 export const updateCargoSchema = publicCargoUpdateSchema.extend({
-  // Override amount to enforce positive integers
   amount: z.number().int().positive().optional().nullable(),
 })
 

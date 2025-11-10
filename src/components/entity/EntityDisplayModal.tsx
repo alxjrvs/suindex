@@ -26,7 +26,6 @@ export function EntityDisplayModal({
   schemaName,
   entityId,
 }: EntityDisplayModalProps) {
-  // Only render the dialog content if we have valid data
   const hasValidData = schemaName && entityId
   const entity = hasValidData ? SalvageUnionReference.get(schemaName, entityId) : null
 

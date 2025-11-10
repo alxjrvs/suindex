@@ -17,10 +17,10 @@ interface CargoModalProps {
     ref?: string,
     position?: { row: number; col: number }
   ) => void
-  maxCargo?: number // Optional - if provided, shows amount input and tracking
-  currentCargo?: number // Optional - if provided, shows available cargo
-  backgroundColor?: string // For different builder colors
-  position?: { row: number; col: number } | null // Optional - grid position where item should be placed
+  maxCargo?: number
+  currentCargo?: number
+  backgroundColor?: string
+  position?: { row: number; col: number } | null
 }
 
 export function CargoModal({
@@ -35,7 +35,6 @@ export function CargoModal({
   const hasCargoTracking = maxCargo !== undefined
   const availableCargo = hasCargoTracking ? maxCargo - currentCargo : 0
 
-  // Validation schemas
   const amountValidator = hasCargoTracking
     ? z
         .number()
@@ -64,14 +63,12 @@ export function CargoModal({
     },
   })
 
-  // Function to determine if an entity should be disabled based on salvage value
   const shouldDisableEntity = useCallback(
     (entity: SURefEntity): boolean => {
       if (!hasCargoTracking) return false
 
       let salvageValue: number | undefined
 
-      // Check for nested salvageValue (chassis has stats.salvageValue)
       if ('stats' in entity && typeof entity.stats === 'object' && entity.stats) {
         const stats = entity.stats as { salvageValue?: number }
         if ('salvageValue' in stats) {
@@ -79,7 +76,6 @@ export function CargoModal({
         }
       }
 
-      // Check for top-level salvageValue (systems, modules)
       if (salvageValue === undefined && 'salvageValue' in entity) {
         salvageValue = entity.salvageValue as number
       }
@@ -90,14 +86,11 @@ export function CargoModal({
     [hasCargoTracking, availableCargo]
   )
 
-  // Handle entity selection from the modal
   const handleEntitySelect = (entityId: string, schemaName: SURefSchemaName) => {
-    // Get the entity from reference data using the newer .get() method
     const entity = SalvageUnionReference.get(schemaName, entityId)
     if (entity && 'name' in entity) {
       const entityName = entity.name as string
 
-      // Extract salvage value - check nested (chassis) first, then top-level
       let salvageValue = 1
       if ('stats' in entity && typeof entity.stats === 'object' && entity.stats) {
         const stats = entity.stats as { salvageValue?: number }
@@ -109,16 +102,9 @@ export function CargoModal({
         salvageValue = (entity.salvageValue as number) || 1
       }
 
-      // Compose reference string for database storage
       const ref = SalvageUnionReference.composeRef(schemaName, entityId)
 
-      onAdd(
-        salvageValue,
-        entityName,
-        '', // Color is ignored - determined by ref data at render time
-        ref,
-        position ?? undefined
-      )
+      onAdd(salvageValue, entityName, '', ref, position ?? undefined)
       form.setFieldValue('isEntitySelectorOpen', false)
       form.reset()
       onClose()
@@ -146,7 +132,6 @@ export function CargoModal({
           }}
         >
           <VStack direction="column" gap={3} alignItems="stretch">
-            {/* Select System/Module/Chassis Button */}
             {hasCargoTracking && (
               <Button
                 type="button"
@@ -357,7 +342,6 @@ export function CargoModal({
         </form>
       </Modal>
 
-      {/* Entity Selection Modal for Systems/Modules/Chassis */}
       <EntitySelectionModal
         isOpen={form.state.values.isEntitySelectorOpen}
         onClose={() => form.setFieldValue('isEntitySelectorOpen', false)}

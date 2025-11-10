@@ -22,11 +22,9 @@ function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // ✅ turns retries off for tests
         retry: false,
       },
       mutations: {
-        // ✅ turns retries off for tests
         retry: false,
       },
     },
@@ -34,10 +32,8 @@ function createTestQueryClient() {
 }
 
 export function render(ui: ReactNode) {
-  // ✅ creates a new QueryClient for each test
   const queryClient = createTestQueryClient()
 
-  // Create a simple root route for testing
   const rootRoute = createRootRoute({
     component: () => <>{ui}</>,
   })

@@ -12,12 +12,10 @@ export function useChangeMechChassis(id: string | undefined) {
   const createEntity = useCreateEntity()
   const deleteCargo = useDeleteCargo()
 
-  // Handler functions
   return useCallback(
     async (chassisId: string | null) => {
       if (!id || !mech) return
 
-      // If null or empty, delete the existing chassis entity
       if (!chassisId) {
         if (selectedChassis) {
           deleteEntity.mutate({ id: selectedChassis.id, parentType: 'mech', parentId: id })
@@ -30,7 +28,6 @@ export function useChangeMechChassis(id: string | undefined) {
       if (isChangingChassis) {
         const newChassis = SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
 
-        // Delete all systems, modules, and cargo when changing chassis
         systems.forEach((system) => {
           deleteEntity.mutate({ id: system.id, parentType: 'mech', parentId: id })
         })
@@ -43,17 +40,14 @@ export function useChangeMechChassis(id: string | undefined) {
           deleteCargo.mutate({ id: cargo.id, parentType: 'mech', parentId: id })
         })
 
-        // Delete old chassis entity
         deleteEntity.mutate({ id: selectedChassis.id, parentType: 'mech', parentId: id })
 
-        // Create new chassis entity
         createEntity.mutate({
           mech_id: id,
           schema_name: 'chassis',
           schema_ref_id: chassisId,
         })
 
-        // Reset to initial state and set initial stats
         updateMech.mutate({
           id,
           updates: {
@@ -67,7 +61,6 @@ export function useChangeMechChassis(id: string | undefined) {
           },
         })
       } else if (!selectedChassis) {
-        // First time selection - create chassis entity and initialize EP
         const newChassis = SalvageUnionReference.Chassis.find((c) => c.id === chassisId)
         createEntity.mutate({
           mech_id: id,

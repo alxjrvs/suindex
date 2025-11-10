@@ -25,7 +25,6 @@ export function GameInfo({
   return (
     <Box bg="su.gameBlue" border="2px solid" borderColor="black" borderRadius="md" p={4} w="full">
       {isExpanded ? (
-        // Expanded state: Show editable fields
         <VStack gap={4} align="stretch">
           <Flex justify="space-between" align="center">
             <Heading as="h2" fontSize="lg" textTransform="uppercase">
@@ -61,7 +60,6 @@ export function GameInfo({
           />
         </VStack>
       ) : (
-        // Collapsed state: Show name, description, and Edit button
         <HStack justify="space-between" align="center" gap={4}>
           <Text variant="pseudoheader" fontSize="4xl" textTransform="uppercase">
             {name}

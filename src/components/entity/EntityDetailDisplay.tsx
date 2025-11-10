@@ -17,7 +17,6 @@ export function EntityDetailDisplay({
   /** Whether to display inline (default: true). Set to false for flex container contexts. */
   inline?: boolean
 }) {
-  // Find entity by name (case-insensitive) to get its ID for tooltip
   const entity = useMemo(() => {
     const found = SalvageUnionReference.findIn(
       schemaName,

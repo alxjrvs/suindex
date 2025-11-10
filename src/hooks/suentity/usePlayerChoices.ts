@@ -58,8 +58,8 @@ export function usePlayerChoices(entityId: string | undefined) {
   return useQuery({
     queryKey: playerChoicesKeys.forEntity(entityId!),
     queryFn: () => fetchChoicesForEntity(entityId!),
-    enabled: !!entityId && !isLocal, // Only run query if entityId is provided AND not local
-    // For local data, initialize with empty array
+    enabled: !!entityId && !isLocal,
+
     initialData: isLocal ? [] : undefined,
   })
 }
@@ -84,8 +84,8 @@ export function useNestedChoices(choiceId: string | undefined) {
   return useQuery({
     queryKey: playerChoicesKeys.forChoice(choiceId!),
     queryFn: () => fetchChoicesForChoice(choiceId!),
-    enabled: !!choiceId && !isLocal, // Only run query if choiceId is provided AND not local
-    // For local data, initialize with empty array
+    enabled: !!choiceId && !isLocal,
+
     initialData: isLocal ? [] : undefined,
   })
 }
@@ -129,7 +129,6 @@ export function useUpsertPlayerChoice() {
       const entityId = data.entity_id
       const choiceId = (data as { player_choice_id?: string }).player_choice_id
 
-      // Cache-only mode: Update cache without API call
       if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId))) {
         const queryKey = entityId
           ? playerChoicesKeys.forEntity(entityId)
@@ -137,7 +136,6 @@ export function useUpsertPlayerChoice() {
 
         const currentChoices = queryClient.getQueryData<Tables<'player_choices'>[]>(queryKey) || []
 
-        // Find existing choice with same choice_ref_id
         const existingIndex = currentChoices.findIndex(
           (c) => c.choice_ref_id === data.choice_ref_id
         )
@@ -153,7 +151,6 @@ export function useUpsertPlayerChoice() {
           value: data.value!,
         }
 
-        // Update cache
         const updatedChoices =
           existingIndex >= 0
             ? currentChoices.map((c, i) => (i === existingIndex ? upsertedChoice : c))
@@ -164,15 +161,13 @@ export function useUpsertPlayerChoice() {
         return upsertedChoice
       }
 
-      // API-backed mode: Upsert in Supabase
       return upsertPlayerChoice(data)
     },
-    // Optimistic update for API-backed mode
+
     onMutate: async (data) => {
       const entityId = data.entity_id
       const choiceId = (data as { player_choice_id?: string }).player_choice_id
 
-      // Skip optimistic update for local IDs
       if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId))) {
         return
       }
@@ -185,13 +180,10 @@ export function useUpsertPlayerChoice() {
 
       if (!queryKey) return
 
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey })
 
-      // Snapshot previous value
       const previousChoices = queryClient.getQueryData<Tables<'player_choices'>[]>(queryKey) || []
 
-      // Find existing choice with same choice_ref_id
       const existingIndex = previousChoices.findIndex((c) => c.choice_ref_id === data.choice_ref_id)
 
       const now = new Date().toISOString()
@@ -205,7 +197,6 @@ export function useUpsertPlayerChoice() {
         value: data.value!,
       }
 
-      // Optimistically update cache
       const updatedChoices =
         existingIndex >= 0
           ? previousChoices.map((c, i) => (i === existingIndex ? optimisticChoice : c))
@@ -215,29 +206,25 @@ export function useUpsertPlayerChoice() {
 
       return { previousChoices, queryKey, entityId, choiceId }
     },
-    // Rollback on error
+
     onError: (_err, _data, context) => {
       if (context?.previousChoices && context.queryKey) {
         queryClient.setQueryData(context.queryKey, context.previousChoices)
       }
     },
-    // Refetch on success (API-backed only)
+
     onSuccess: (choice) => {
       const entityId = choice.entity_id
       const choiceId = (choice as { player_choice_id?: string }).player_choice_id
 
-      // For local IDs, update the entity cache with the new choice
       if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId))) {
-        // Update all entity caches to include the new choice
         queryClient.setQueriesData<HydratedEntity[]>(
           { queryKey: entitiesKeys.all },
           (oldEntities) => {
             if (!oldEntities) return oldEntities
 
             return oldEntities.map((entity) => {
-              // If this entity matches the choice's entity_id, add the choice
               if (entity.id === entityId) {
-                // Check if choice already exists (update case)
                 const existingIndex = entity.choices.findIndex(
                   (c) => c.choice_ref_id === choice.choice_ref_id
                 )
@@ -259,7 +246,6 @@ export function useUpsertPlayerChoice() {
         return
       }
 
-      // Invalidate choice cache for parent (entity or choice)
       if (entityId) {
         queryClient.invalidateQueries({
           queryKey: playerChoicesKeys.forEntity(entityId),
@@ -271,8 +257,6 @@ export function useUpsertPlayerChoice() {
         })
       }
 
-      // Invalidate all entity caches (since we don't know the root parent)
-      // This ensures hydrated entities get updated choices
       queryClient.invalidateQueries({
         queryKey: entitiesKeys.all,
       })
@@ -317,7 +301,6 @@ export function useDeletePlayerChoice() {
       entityId?: string
       choiceId?: string
     }) => {
-      // Cache-only mode: Remove from cache
       if ((entityId && isLocalId(entityId)) || (choiceId && isLocalId(choiceId)) || isLocalId(id)) {
         const queryKey = entityId
           ? playerChoicesKeys.forEntity(entityId)
@@ -336,24 +319,20 @@ export function useDeletePlayerChoice() {
         return
       }
 
-      // API-backed mode: Delete from Supabase
       return deletePlayerChoice(id)
     },
     onSuccess: (_, variables) => {
-      // For local IDs, update the entity cache to remove the choice
       if (
         (variables.entityId && isLocalId(variables.entityId)) ||
         (variables.choiceId && isLocalId(variables.choiceId)) ||
         isLocalId(variables.id)
       ) {
-        // Update all entity caches to remove the choice
         queryClient.setQueriesData<HydratedEntity[]>(
           { queryKey: entitiesKeys.all },
           (oldEntities) => {
             if (!oldEntities) return oldEntities
 
             return oldEntities.map((entity) => {
-              // If this entity matches the choice's entity_id, remove the choice
               if (entity.id === variables.entityId) {
                 return {
                   ...entity,
@@ -367,7 +346,6 @@ export function useDeletePlayerChoice() {
         return
       }
 
-      // Invalidate choice cache for parent (entity or choice)
       if (variables.entityId) {
         queryClient.invalidateQueries({
           queryKey: playerChoicesKeys.forEntity(variables.entityId),
@@ -379,8 +357,6 @@ export function useDeletePlayerChoice() {
         })
       }
 
-      // Invalidate all entity caches (since we don't know the root parent)
-      // This ensures hydrated entities get updated choices
       queryClient.invalidateQueries({
         queryKey: entitiesKeys.all,
       })
@@ -410,13 +386,10 @@ export function useDeleteChoicesForEntity() {
   return useMutation({
     mutationFn: ({ entityId }: { entityId: string }) => deleteChoicesForEntity(entityId),
     onSuccess: (_, variables) => {
-      // Invalidate choice cache for this entity
       queryClient.invalidateQueries({
         queryKey: playerChoicesKeys.forEntity(variables.entityId),
       })
 
-      // Invalidate all entity caches (since we don't know the parent)
-      // This ensures hydrated entities get updated choices
       queryClient.invalidateQueries({
         queryKey: entitiesKeys.all,
       })
@@ -446,13 +419,10 @@ export function useDeleteChoicesForChoice() {
   return useMutation({
     mutationFn: ({ choiceId }: { choiceId: string }) => deleteChoicesForChoice(choiceId),
     onSuccess: (_, variables) => {
-      // Invalidate choice cache for this choice
       queryClient.invalidateQueries({
         queryKey: playerChoicesKeys.forChoice(variables.choiceId),
       })
 
-      // Invalidate all entity caches (since we don't know the root parent)
-      // This ensures hydrated entities get updated choices
       queryClient.invalidateQueries({
         queryKey: entitiesKeys.all,
       })

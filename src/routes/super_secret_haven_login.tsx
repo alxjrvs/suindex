@@ -5,7 +5,7 @@ import { DiscordSignInButton } from '../components/DiscordSignInButton'
 export const Route = createFileRoute('/super_secret_haven_login')({
   component: LoginPage,
   staticData: {
-    ssr: false, // SPA mode for login
+    ssr: false,
   },
 })
 

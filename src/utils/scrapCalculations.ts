@@ -15,7 +15,6 @@ export function calculateScrapRemoval(
   const affectedTLs: number[] = []
   let remaining = totalNeeded
 
-  // Start from the highest TL and work down for efficiency
   const techLevels = [6, 5, 4, 3, 2, 1]
 
   for (const tl of techLevels) {
@@ -24,7 +23,7 @@ export function calculateScrapRemoval(
     const available = scrapByTL[tl] || 0
     if (available === 0) continue
 
-    const tlValue = tl // Each scrap at this TL is worth tl in TL1
+    const tlValue = tl
     const maxCanUse = Math.floor(remaining / tlValue)
     const toUse = Math.min(maxCanUse, available)
 
@@ -36,11 +35,7 @@ export function calculateScrapRemoval(
     }
   }
 
-  // If we still have remaining, we need to break down higher TL scrap
-  // This happens when we can't perfectly match with higher TL scrap
-  // For example: need 10 TL1, have 1 TL6 -> use the TL6 (worth 6) and need 4 more
   if (remaining > 0) {
-    // Find the lowest TL that has enough value to cover the remaining cost
     for (const tl of techLevels) {
       const available = scrapByTL[tl] || 0
       const fieldName = getTLFieldName(tl)
@@ -49,17 +44,14 @@ export function calculateScrapRemoval(
       const stillAvailable = available - alreadyUsed
 
       if (stillAvailable > 0 && tl >= remaining) {
-        // Use one piece of this TL scrap
         const currentAmount = updates[`scrap_tl_${fieldName}`] ?? (scrapByTL[tl] || 0)
         updates[`scrap_tl_${fieldName}`] = currentAmount - 1
         if (!affectedTLs.includes(tl)) {
           affectedTLs.push(tl)
         }
 
-        // Calculate change to give back
         const change = tl - remaining
 
-        // Give change back as TL1 scrap (simplest approach)
         if (change > 0) {
           const tl1FieldName = getTLFieldName(1)
           const currentTL1 = updates[`scrap_tl_${tl1FieldName}`] ?? scrapByTL[1] ?? 0
@@ -75,7 +67,6 @@ export function calculateScrapRemoval(
     }
   }
 
-  // Final check - this should never happen if we have enough total scrap
   if (remaining > 0) {
     console.warn('Not enough scrap to cover upkeep cost')
   }

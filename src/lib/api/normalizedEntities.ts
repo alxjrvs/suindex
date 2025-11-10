@@ -25,10 +25,8 @@ export async function fetchEntitiesForParent(
   parentType: 'pilot' | 'mech' | 'crawler',
   parentId: string
 ): Promise<HydratedEntity[]> {
-  // Build query based on parent type
   const column = `${parentType}_id` as const
 
-  // Fetch entities from suentities table
   const { data: entities, error: entitiesError } = await supabase
     .from('suentities')
     .select('*')
@@ -43,7 +41,6 @@ export async function fetchEntitiesForParent(
     return []
   }
 
-  // Fetch all player choices for these entities
   const entityIds = entities.map((e) => e.id)
   const { data: choices, error: choicesError } = await supabase
     .from('player_choices')
@@ -54,17 +51,14 @@ export async function fetchEntitiesForParent(
     throw new Error(`Failed to fetch player choices: ${choicesError.message}`)
   }
 
-  // Group choices by entity ID (skip nested choices that don't have entity_id)
   const choicesByEntityId = new Map<string, Tables<'player_choices'>[]>()
   for (const choice of choices || []) {
     if (choice.entity_id) {
-      // Only include choices directly on entities (not nested choices)
       const existing = choicesByEntityId.get(choice.entity_id) || []
       choicesByEntityId.set(choice.entity_id, [...existing, choice])
     }
   }
 
-  // Hydrate entities with reference data and choices
   return hydrateEntities(entities, choicesByEntityId)
 }
 
@@ -78,10 +72,8 @@ export async function fetchEntitiesForParent(
 export async function createNormalizedEntity(
   data: TablesInsert<'suentities'>
 ): Promise<HydratedEntity> {
-  // Validate input
   const validated = createEntitySchema.parse(data)
 
-  // Insert entity into suentities table
   const { data: entity, error } = await supabase
     .from('suentities')
     .insert(validated)
@@ -92,7 +84,6 @@ export async function createNormalizedEntity(
     throw new Error(`Failed to create entity: ${error.message}`)
   }
 
-  // Hydrate and return (no choices yet)
   return hydrateEntity(entity, [])
 }
 
@@ -110,10 +101,8 @@ export async function updateNormalizedEntity(
   id: string,
   updates: TablesUpdate<'suentities'>
 ): Promise<HydratedEntity> {
-  // Validate input
   const validated = updateEntitySchema.parse(updates)
 
-  // Update entity in suentities table
   const { data: entity, error: updateError } = await supabase
     .from('suentities')
     .update(validated)
@@ -125,7 +114,6 @@ export async function updateNormalizedEntity(
     throw new Error(`Failed to update entity: ${updateError.message}`)
   }
 
-  // Fetch associated choices
   const { data: choices, error: choicesError } = await supabase
     .from('player_choices')
     .select('*')
@@ -135,7 +123,6 @@ export async function updateNormalizedEntity(
     throw new Error(`Failed to fetch player choices: ${choicesError.message}`)
   }
 
-  // Hydrate and return
   return hydrateEntity(entity, choices || [])
 }
 
@@ -149,7 +136,6 @@ export async function updateNormalizedEntity(
  * @throws Error if database delete fails
  */
 export async function deleteNormalizedEntity(id: string): Promise<void> {
-  // First, find all child entities (entities with this entity as parent)
   const { data: childEntities, error: fetchError } = await supabase
     .from('suentities')
     .select('id')
@@ -159,14 +145,12 @@ export async function deleteNormalizedEntity(id: string): Promise<void> {
     throw new Error(`Failed to fetch child entities: ${fetchError.message}`)
   }
 
-  // Recursively delete all child entities
   if (childEntities && childEntities.length > 0) {
     for (const child of childEntities) {
       await deleteNormalizedEntity(child.id)
     }
   }
 
-  // Delete the entity itself
   const { error } = await supabase.from('suentities').delete().eq('id', id)
 
   if (error) {

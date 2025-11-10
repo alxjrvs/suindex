@@ -58,31 +58,25 @@ export interface HydratedMech {
  * ```
  */
 export function useHydratedMech(id: string | undefined): HydratedMech {
-  // Fetch mech data
   const { data: mech, isLoading: mechLoading, error: mechError } = useMech(id)
 
-  // Fetch normalized entities (systems, modules)
   const {
     data: entities = [],
     isLoading: entitiesLoading,
     error: entitiesError,
   } = useEntitiesFor('mech', id)
 
-  // Fetch cargo
   const { data: cargo = [], isLoading: cargoLoading, error: cargoError } = useCargo('mech', id)
 
-  // Derive typed lists from hydrated entities
   const systems = useMemo(() => entities.filter((e) => e.schema_name === 'systems'), [entities])
 
   const modules = useMemo(() => entities.filter((e) => e.schema_name === 'modules'), [entities])
 
-  // Get selected chassis from entities (schema_name='chassis')
   const selectedChassis = useMemo(
     () => entities.find((e) => e.schema_name === 'chassis'),
     [entities]
   )
 
-  // Combined loading/error states
   const loading = mechLoading || entitiesLoading || cargoLoading
   const error =
     (mechError ? String(mechError) : null) ||

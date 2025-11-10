@@ -34,7 +34,6 @@ export function CrawlerTab({ pilot, pilotId, isLocal, isEditable }: CrawlerTabPr
       user_id: userId,
     })
 
-    // Assign the pilot to the new crawler
     updatePilot.mutate({
       id: pilotId,
       updates: { crawler_id: newCrawler.id },
@@ -48,14 +47,12 @@ export function CrawlerTab({ pilot, pilotId, isLocal, isEditable }: CrawlerTabPr
     })
   }
 
-  // Filter out the currently assigned crawler from the dropdown
   const unassignedCrawlers = availableCrawlers.filter((c) => c.id !== pilot?.crawler_id)
 
   return (
     <VStack gap={6} align="stretch" mt={6}>
       {pilot?.crawler_id ? (
         <>
-          {/* Crawler Selector - only show if there are other crawlers available */}
           {!isLocal && isEditable && unassignedCrawlers.length > 0 && (
             <Box>
               <SheetSelect

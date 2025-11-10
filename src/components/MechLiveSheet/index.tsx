@@ -36,17 +36,13 @@ export default function MechLiveSheet({ id }: { id: string }) {
   const updateMech = useUpdateMech()
   const deleteMech = useDeleteMech()
 
-  // Track all mutations for this mech (for syncing indicator)
   const mutatingCount = useIsMutating()
   const hasPendingChanges = mutatingCount > 0
 
-  // Get current user for ownership check
   const { userId } = useCurrentUser()
 
-  // Determine if the sheet is editable (user owns the mech or it's local)
   const isEditable = isLocal || (mech ? isOwner(mech.user_id, userId) : false)
 
-  // Image upload hook - only enabled for non-local sheets
   const { handleUpload, handleRemove, isUploading, isRemoving } = useImageUpload({
     entityType: 'mechs',
     entityId: id,
@@ -54,7 +50,6 @@ export default function MechLiveSheet({ id }: { id: string }) {
     queryKey: ['mechs', id],
   })
 
-  // Real-time subscriptions for live updates
   useLiveSheetSubscriptions({
     entityType: 'mech',
     id,
@@ -63,10 +58,8 @@ export default function MechLiveSheet({ id }: { id: string }) {
     includeCargo: true,
   })
 
-  // Create pilot hook
   const createPilot = useCreatePilot()
 
-  // Fetch available pilots for the dropdown
   const { items: allPilots } = useEntityRelationships<{
     id: string
     callsign: string
@@ -78,10 +71,8 @@ export default function MechLiveSheet({ id }: { id: string }) {
     orderBy: 'callsign',
   })
 
-  // Filter out the current pilot from the dropdown
   const availablePilots = allPilots.filter((p) => p.id !== mech?.pilot_id)
 
-  // Handle creating a new pilot with this mech pre-assigned
   const handleCreatePilot = async () => {
     if (!userId) return
 
@@ -93,7 +84,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
       current_ap: 0,
       user_id: userId,
     })
-    // Assign this mech to the new pilot
+
     updateMech.mutate({ id, updates: { pilot_id: newPilot.id } })
     navigate({ to: `/dashboard/pilots/${newPilot.id}` })
   }
@@ -191,7 +182,6 @@ export default function MechLiveSheet({ id }: { id: string }) {
           <VStack gap={6} align="stretch" mt={6}>
             {mech?.pilot_id ? (
               <>
-                {/* Pilot Selector */}
                 {!isLocal && isEditable && availablePilots.length > 0 && (
                   <Box>
                     <SheetSelect

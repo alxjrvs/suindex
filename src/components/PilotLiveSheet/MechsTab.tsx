@@ -22,7 +22,6 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
   const { userId } = useCurrentUser()
   const createMech = useCreateMech()
 
-  // Fetch all mechs for this pilot
   const { data: mechs = [], isLoading } = useQuery({
     queryKey: ['pilot-mechs', pilotId],
     queryFn: async () => {
@@ -38,7 +37,6 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
     enabled: !!pilotId && !isLocal,
   })
 
-  // Separate mechs by active status
   const activeMechs = mechs.filter((m) => m.active)
   const inactiveMechs = mechs.filter((m) => !m.active)
 
@@ -77,7 +75,6 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
 
   return (
     <VStack gap={6} alignItems="stretch">
-      {/* Create Mech Button */}
       {isEditable && (
         <HStack justify="flex-start">
           <AddStatButton
@@ -90,7 +87,6 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
         </HStack>
       )}
 
-      {/* Active Mechs Section */}
       {activeMechs.length > 0 && (
         <VStack gap={3} alignItems="stretch">
           <Text variant="pseudoheader" fontSize="lg">
@@ -102,7 +98,6 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
         </VStack>
       )}
 
-      {/* Inactive Mechs Section */}
       {inactiveMechs.length > 0 && (
         <VStack gap={3} alignItems="stretch">
           <Text variant="pseudoheader" fontSize="lg">
@@ -114,7 +109,6 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
         </VStack>
       )}
 
-      {/* Empty State */}
       {mechs.length === 0 && (
         <Box bg="su.lightBlue" p={8} borderRadius="md" borderWidth="2px" borderColor="black">
           <Text textAlign="center" color="su.brick" fontWeight="bold">

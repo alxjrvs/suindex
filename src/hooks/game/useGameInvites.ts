@@ -66,7 +66,6 @@ export function useCreateGameInvite() {
       return createGameInvite(gameId)
     },
     onSuccess: (newInvite) => {
-      // Invalidate invites list to refetch
       queryClient.invalidateQueries({
         queryKey: gameInvitesKeys.byGame(newInvite.game_id),
       })
@@ -98,13 +97,10 @@ export function useExpireGameInvite() {
       return inviteId
     },
     onMutate: async ({ inviteId, gameId }) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: gameInvitesKeys.byGame(gameId) })
 
-      // Snapshot previous value
       const previousInvites = queryClient.getQueryData<GameInvite[]>(gameInvitesKeys.byGame(gameId))
 
-      // Optimistically remove the invite
       if (previousInvites) {
         queryClient.setQueryData<GameInvite[]>(
           gameInvitesKeys.byGame(gameId),
@@ -115,13 +111,11 @@ export function useExpireGameInvite() {
       return { previousInvites }
     },
     onError: (_err, { gameId }, context) => {
-      // Rollback on error
       if (context?.previousInvites) {
         queryClient.setQueryData(gameInvitesKeys.byGame(gameId), context.previousInvites)
       }
     },
     onSuccess: (_data, { gameId }) => {
-      // Invalidate to refetch fresh data
       queryClient.invalidateQueries({
         queryKey: gameInvitesKeys.byGame(gameId),
       })
@@ -152,7 +146,6 @@ export function useRedeemInviteCode() {
       return redeemInviteCode(inviteCode)
     },
     onSuccess: () => {
-      // Invalidate all games to update the user's game list
       queryClient.invalidateQueries({
         queryKey: gamesKeys.all,
       })

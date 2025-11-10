@@ -15,11 +15,9 @@ interface DynamicBayProps {
   onRemove?: (id: string) => void
   onAddClick?: (position: { row: number; col: number }) => void
   disabled?: boolean
-  singleCellMode?: boolean // If true, all items take up exactly 1 cell regardless of amount
+  singleCellMode?: boolean
 }
 
-// Store previous grids outside component to preserve across renders
-// Key is a combination of component instance and capacity
 const previousGrids = new Map<string, ReturnType<typeof packCargoGrid>>()
 
 /**
@@ -36,13 +34,11 @@ export function DynamicBay({
 }: DynamicBayProps) {
   const updateCargo = useUpdateCargo()
 
-  // Determine background color for a cargo item based on its hydrated ref
   const getCargoItemBgColor = (item: HydratedCargo): string => {
-    if (!item.ref) return 'bg.input' // Default color for items without ref
+    if (!item.ref) return 'bg.input'
 
     const schemaName = item.schema_name
 
-    // Systems and Modules use tech level colors
     if (schemaName === 'systems' || schemaName === 'modules') {
       if ('techLevel' in item.ref) {
         const techLevel = item.ref.techLevel as number
@@ -50,39 +46,32 @@ export function DynamicBay({
       }
     }
 
-    // Chassis uses dark mech green
     if (schemaName === 'chassis') {
       return 'su.darkGreen'
     }
 
-    return 'bg.input' // Default for other schemas
+    return 'bg.input'
   }
 
-  // Create a stable key for this instance
   const instanceKey = `${maxCapacity}`
 
   const { rows, cols, packedGrid, itemsMap, newPositions } = useMemo(() => {
-    // Convert HydratedCargo to format expected by packCargoGrid
     const packableItems = items.map((item) => {
-      // Extract position from metadata
       const metadata = item.metadata as { position?: { row: number; col: number } } | null
       return {
         id: item.id,
         amount: singleCellMode ? 1 : item.amount || 1,
-        position: metadata?.position, // Use position from metadata
+        position: metadata?.position,
       }
     })
 
     const previousGrid = previousGrids.get(instanceKey)
     const packed = packCargoGrid(packableItems, maxCapacity, previousGrid)
 
-    // Store for next render
     previousGrids.set(instanceKey, packed)
 
-    // Create a map of item IDs to item data for quick lookup
     const map = new Map(items.map((item) => [item.id, item]))
 
-    // Extract new positions from packed grid
     const positions = new Map<string, { row: number; col: number }>()
     packed.cells.forEach((cell, index) => {
       if (cell.itemId && cell.isCenter) {
@@ -101,23 +90,19 @@ export function DynamicBay({
     }
   }, [items, maxCapacity, instanceKey, singleCellMode])
 
-  // Save position changes to database (or cache for local items)
   useEffect(() => {
-    // Only save positions if we have items and positions have changed
     if (items.length === 0 || disabled) return
 
     items.forEach((item) => {
       const newPosition = newPositions.get(item.id)
-      // Extract old position from metadata
+
       const metadata = item.metadata as { position?: { row: number; col: number } } | null
       const oldPosition = metadata?.position
 
-      // Check if position changed
       if (
         newPosition &&
         (!oldPosition || newPosition.row !== oldPosition.row || newPosition.col !== oldPosition.col)
       ) {
-        // Use the hook which handles both local and API-backed cargo
         updateCargo.mutate({
           id: item.id,
           updates: { metadata: { position: newPosition } },
@@ -126,7 +111,6 @@ export function DynamicBay({
     })
   }, [items, newPositions, disabled, updateCargo])
 
-  // Helper to check if two cells belong to the same item
   const isSameItem = (index1: number, index2: number): boolean => {
     if (index1 < 0 || index1 >= packedGrid.length) return false
     if (index2 < 0 || index2 >= packedGrid.length) return false
@@ -149,14 +133,12 @@ export function DynamicBay({
       {packedGrid.map((cell, index) => {
         const col = index % cols
 
-        // Calculate neighbor indices
         const topIndex = index - cols
         const bottomIndex = index + cols
         const leftIndex = col > 0 ? index - 1 : -1
         const rightIndex = col < cols - 1 ? index + 1 : -1
 
         if (!cell.itemId) {
-          // Empty cell
           const isTopEdge = topIndex < 0
           const isBottomEdge = bottomIndex >= packedGrid.length
           const isLeftEdge = leftIndex < 0
@@ -208,30 +190,26 @@ export function DynamicBay({
           )
         }
 
-        // Item cell - calculate which borders to show
         const showTopBorder = topIndex < 0 || !isSameItem(index, topIndex)
         const showBottomBorder = bottomIndex >= packedGrid.length || !isSameItem(index, bottomIndex)
         const showLeftBorder = leftIndex < 0 || !isSameItem(index, leftIndex)
         const showRightBorder = rightIndex < 0 || !isSameItem(index, rightIndex)
 
-        // Calculate which corners should be rounded
         const topLeftRounded = showTopBorder && showLeftBorder
         const topRightRounded = showTopBorder && showRightBorder
         const bottomLeftRounded = showBottomBorder && showLeftBorder
         const bottomRightRounded = showBottomBorder && showRightBorder
 
         const cargoItem = itemsMap.get(cell.itemId)
-        if (!cargoItem) return null // Should never happen
+        if (!cargoItem) return null
 
         const handleRemoveClick = (e: React.MouseEvent) => {
           e.stopPropagation()
           onRemove?.(cargoItem.id)
         }
 
-        // Use hydrated ref for color
         const itemBgColor = getCargoItemBgColor(cargoItem)
 
-        // Get schema name and entity ID for tooltip
         const schemaName = cargoItem.schema_name
         const entityId = cargoItem.schema_ref_id
 
@@ -316,7 +294,6 @@ export function DynamicBay({
           </Box>
         )
 
-        // Wrap with tooltip if item has a ref
         return cargoItem.ref && schemaName && entityId ? (
           <EntityDisplayTooltip
             key={`item-${index}`}

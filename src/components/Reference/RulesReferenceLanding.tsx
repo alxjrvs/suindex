@@ -10,9 +10,8 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { extractMatchSnippet, highlightMatch } from '../../utils/searchHighlight'
 
-// Constants for virtual scrolling
-const SEARCH_RESULT_HEIGHT = 72 // px - approximate height of each result item
-const SEARCH_RESULTS_MAX_HEIGHT = 400 // px - max height of dropdown
+const SEARCH_RESULT_HEIGHT = 72
+const SEARCH_RESULTS_MAX_HEIGHT = 400
 
 interface RulesReferenceLandingProps {
   schemas: SchemaInfo[]
@@ -30,16 +29,13 @@ interface SearchResultDisplay {
 }
 
 export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
-  // Get search query from URL params
   const { q: searchQuery = '' } = Route.useSearch()
   const [selectedIndex, setSelectedIndex] = useState(0)
   const navigate = useNavigate({ from: Route.fullPath })
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // No debouncing - search immediately on every keystroke
   const debouncedQuery = searchQuery
 
-  // Memoize schema metadata to avoid repeated string operations
   const schemaMetadata = useMemo(
     () =>
       schemas.map((schema) => ({
@@ -60,14 +56,13 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
           params: { schemaId: result.schemaId, itemId: result.itemId },
         })
       }
-      // Clear search query from URL
+
       navigate({ search: { q: undefined }, replace: true })
       setSelectedIndex(0)
     },
     [navigate]
   )
 
-  // Full text search using salvageunion-reference search API (debounced)
   const searchResults = useMemo(() => {
     if (!debouncedQuery.trim()) {
       return []
@@ -75,7 +70,6 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
 
     const results: SearchResultDisplay[] = []
 
-    // Search schema names using memoized metadata
     for (const schema of schemaMetadata) {
       if (
         schema.displayName.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
@@ -90,12 +84,10 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       }
     }
 
-    // Use salvageunion-reference search API for entity search
     const entityResults = SalvageUnionReference.search({
       query: debouncedQuery,
     })
 
-    // Convert to our display format
     for (const result of entityResults) {
       const description =
         result.entity && 'description' in result.entity
@@ -114,7 +106,6 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       })
     }
 
-    // Sort results: schemas first, then items by match score, alphabetically within each group
     return results.sort((a, b) => {
       if (a.type !== b.type) {
         return a.type === 'schema' ? -1 : 1
@@ -123,9 +114,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
     })
   }, [debouncedQuery, schemaMetadata])
 
-  // Handle keyboard navigation
   useEffect(() => {
-    // Only run on client side
     if (typeof window === 'undefined') return
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -150,10 +139,8 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [searchResults, navigate, selectedIndex, handleSelectResult])
 
-  // Virtual scrolling for search results (only when there are results)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: searchResults.length,
     getScrollElement: () => containerRef.current,
@@ -161,7 +148,6 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
     overscan: 5,
   })
 
-  // Scroll selected item into view
   useEffect(() => {
     if (containerRef.current && searchResults.length > 0) {
       const selectedElement = containerRef.current.querySelector(
@@ -198,7 +184,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
               onChange={(e) => {
                 navigate({
                   search: { q: e.target.value || undefined },
-                  replace: true, // Don't add to history for every keystroke
+                  replace: true,
                 })
                 setSelectedIndex(0)
               }}
@@ -233,19 +219,16 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                 overflowY="auto"
                 zIndex={30}
               >
-                {/* Virtual scroll container */}
                 <Box position="relative" h={`${virtualizer.getTotalSize()}px`}>
                   {virtualizer.getVirtualItems().map((virtualItem) => {
                     const result = searchResults[virtualItem.index]
                     const index = virtualItem.index
 
-                    // Determine if match is in title or description
                     const matchInTitle =
                       result.matchedFields?.includes('name') ||
                       result.type === 'schema' ||
                       !result.matchedFields?.includes('description')
 
-                    // Extract and highlight description snippet if match is in description
                     let descriptionSnippet = null
                     if (!matchInTitle && result.description && debouncedQuery) {
                       const snippet = extractMatchSnippet(result.description, debouncedQuery)
@@ -259,7 +242,6 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                       }
                     }
 
-                    // Highlight title if match is in title
                     let titleHighlighted = null
                     if (matchInTitle && debouncedQuery) {
                       const lowerTitle = result.matchText.toLowerCase()

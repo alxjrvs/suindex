@@ -113,13 +113,10 @@ export function useUpdateGame() {
       return { id, updates }
     },
     onMutate: async ({ id, updates }) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: gamesKeys.byId(id) })
 
-      // Snapshot previous value
       const previousGame = queryClient.getQueryData<Game>(gamesKeys.byId(id))
 
-      // Optimistically update
       if (previousGame) {
         queryClient.setQueryData<Game>(gamesKeys.byId(id), {
           ...previousGame,
@@ -130,14 +127,10 @@ export function useUpdateGame() {
       return { previousGame }
     },
     onError: (_err, { id }, context) => {
-      // Rollback on error
       if (context?.previousGame) {
         queryClient.setQueryData(gamesKeys.byId(id), context.previousGame)
       }
     },
-    // Don't invalidate immediately - let background refetch handle it
-    // This prevents the refetch from overwriting our optimistic update
-    // before the database has fully committed the change
   })
 }
 
@@ -165,25 +158,20 @@ export function useDeleteGame() {
       return id
     },
     onMutate: async (id) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: gamesKeys.byId(id) })
 
-      // Snapshot previous value
       const previousGame = queryClient.getQueryData<Game>(gamesKeys.byId(id))
 
-      // Optimistically remove from cache
       queryClient.removeQueries({ queryKey: gamesKeys.byId(id) })
 
       return { previousGame }
     },
     onError: (_err, id, context) => {
-      // Rollback on error
       if (context?.previousGame) {
         queryClient.setQueryData(gamesKeys.byId(id), context.previousGame)
       }
     },
     onSuccess: () => {
-      // Invalidate all games queries to update lists
       queryClient.invalidateQueries({
         queryKey: gamesKeys.all,
       })

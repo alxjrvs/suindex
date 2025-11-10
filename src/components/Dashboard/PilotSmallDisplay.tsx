@@ -30,7 +30,6 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   const className = selectedClass?.ref.name
   const advancedClassName = selectedAdvancedClass?.ref.name
 
-  // Prefetch pilot data on hover
   const handleMouseEnter = () => {
     if (!id) return
     queryClient.prefetchQuery({
@@ -39,7 +38,6 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
     })
   }
 
-  // Fetch crawler name if pilot has crawler_id
   const { data: crawlerName, isLoading: crawlerLoading } = useQuery({
     queryKey: ['crawler-name', pilot?.crawler_id],
     queryFn: async () => {
@@ -60,7 +58,6 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
     enabled: !!pilot?.crawler_id,
   })
 
-  // Fetch mech pattern if pilot has a mech
   const { data: mechChassisPattern, isLoading: mechLoading } = useQuery({
     queryKey: ['mech-pattern', id],
     queryFn: async () => {
@@ -72,7 +69,7 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
         .single()
 
       if (error) {
-        if (error.code === 'PGRST116') return null // No mech found
+        if (error.code === 'PGRST116') return null
         console.error('Error fetching mech:', error)
         return null
       }
@@ -81,11 +78,10 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
     enabled: !!id,
   })
 
-  // Fetch owner's Discord username
   const { data: ownerData } = useQuery({
     queryKey: ['user-display-name', pilot?.user_id],
     queryFn: () => fetchUserDisplayName(pilot!.user_id),
-    enabled: !!pilot?.user_id && currentUserId !== pilot?.user_id, // Only fetch if not the current user
+    enabled: !!pilot?.user_id && currentUserId !== pilot?.user_id,
   })
   if (!id && !waitForId) {
     return null
@@ -114,7 +110,6 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   }
   const detailContent = (
     <VStack gap={1} alignItems="stretch">
-      {/* Crawler badge (pink) */}
       {crawlerName && (
         <Box bg="su.pink" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
           <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">
@@ -123,7 +118,6 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
         </Box>
       )}
 
-      {/* Mech badge (green) */}
       {mechChassisPattern && (
         <Box bg="su.green" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
           <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">

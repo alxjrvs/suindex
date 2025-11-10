@@ -55,18 +55,15 @@ export interface HydratedPilot {
  * ```
  */
 export function useHydratedPilot(id: string | undefined): HydratedPilot {
-  // Fetch pilot data
   const { data: pilot, isLoading: pilotLoading, error: pilotError } = usePilot(id)
   const isLocal = isLocalId(id)
 
-  // Fetch normalized entities (abilities, equipment)
   const {
     data: entities = [],
     isLoading: entitiesLoading,
     error: entitiesError,
   } = useEntitiesFor('pilot', id)
 
-  // Derive typed lists from hydrated entities
   const abilities = useMemo(() => entities.filter((e) => e.schema_name === 'abilities'), [entities])
 
   const equipment = useMemo(() => entities.filter((e) => e.schema_name === 'equipment'), [entities])
@@ -75,13 +72,11 @@ export function useHydratedPilot(id: string | undefined): HydratedPilot {
 
   const systems = useMemo(() => entities.filter((e) => e.schema_name === 'systems'), [entities])
 
-  // Get selected class from entities (schema_name='classes.core')
   const selectedClass = useMemo(
     () => entities.find((e) => e.schema_name === 'classes.core'),
     [entities]
   )
 
-  // Get selected advanced class from entities (schema_name='classes.advanced' or 'classes.hybrid')
   const selectedAdvancedClass = useMemo(
     () =>
       entities.find(
@@ -90,7 +85,6 @@ export function useHydratedPilot(id: string | undefined): HydratedPilot {
     [entities]
   )
 
-  // Combined loading/error states
   const loading = pilotLoading || entitiesLoading
   const error =
     (pilotError ? String(pilotError) : null) || (entitiesError ? String(entitiesError) : null)

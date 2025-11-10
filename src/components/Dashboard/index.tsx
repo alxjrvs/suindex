@@ -11,37 +11,29 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Handle OAuth callback
     const handleAuthCallback = async () => {
       const params = new URLSearchParams(window.location.search)
       const code = params.get('code')
       const hash = window.location.hash
 
       if (code) {
-        // Check if we have the PKCE verifier
         const pkceVerifier = localStorage.getItem('supabase.auth.token')
         console.log('PKCE verifier in storage:', pkceVerifier ? 'found' : 'NOT FOUND')
 
-        // Supabase will automatically exchange the code for a session
-        // We need to wait for it to complete
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        // Check session after exchange
         const session = await getSession()
         console.log('Session after code exchange:', session ? 'found' : 'not found')
 
         if (session) {
-          // Clean up the URL only if successful
           window.history.replaceState({}, document.title, window.location.pathname)
         }
       } else if (hash) {
-        // Give Supabase a moment to process the hash
         await new Promise((resolve) => setTimeout(resolve, 100))
-        // Clean up the URL
+
         window.history.replaceState({}, document.title, window.location.pathname)
       }
 
-      // Now check for session
       const session = await getSession()
       setUser(session?.user ?? null)
       setLoading(false)
@@ -49,7 +41,6 @@ export default function Dashboard() {
 
     handleAuthCallback()
 
-    // Listen for auth changes
     const subscription = onAuthStateChange((authUser) => {
       setUser(authUser)
     })

@@ -34,7 +34,6 @@ export function useManageEntityChoices(entityId: string | undefined) {
       if (!entityId) return
 
       if (value === undefined) {
-        // Delete the choice - need to find it by choice_ref_id
         const choices = queryClient.getQueryData<Tables<'player_choices'>[]>(
           playerChoicesKeys.forEntity(entityId)
         )
@@ -44,7 +43,6 @@ export function useManageEntityChoices(entityId: string | undefined) {
           deleteChoice.mutate({ id: existingChoice.id, entityId })
         }
       } else {
-        // Create or update the choice (upsert based on entity_id + choice_ref_id)
         upsertChoice.mutate({
           entity_id: entityId,
           choice_ref_id: choiceRefId,

@@ -14,18 +14,16 @@ export interface DisplayComponentProps {
 type DisplayComponentType = ComponentType<DisplayComponentProps>
 
 export const componentRegistry: Record<string, DisplayComponentType> = {
-  // EntityDisplay now handles all schema-specific logic internally
   abilities: createEntityDisplay('abilities'),
   'ability-tree-requirements': createEntityDisplay('ability-tree-requirements'),
-  classes: createEntityDisplay('classes.core'), // Fallback for generic 'classes'
+  classes: createEntityDisplay('classes.core'),
   'classes.core': createEntityDisplay('classes.core'),
   'classes.advanced': createEntityDisplay('classes.advanced'),
-  // Note: 'classes.hybrid' is now merged into 'classes.advanced' in salvageunion-reference v1.54.0
-  'classes.hybrid': createEntityDisplay('classes.advanced'), // Backward compatibility
+
+  'classes.hybrid': createEntityDisplay('classes.advanced'),
   'crawler-bays': createEntityDisplay('crawler-bays'),
   'crawler-tech-levels': createEntityDisplay('crawler-tech-levels'),
 
-  // All other schemas use factory pattern
   'bio-titans': createEntityDisplay('bio-titans'),
   chassis: createEntityDisplay('chassis'),
   crawlers: createEntityDisplay('crawlers'),

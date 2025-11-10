@@ -36,7 +36,6 @@ async function createCrawlerBays(crawlerId: string, queryClient: QueryClient): P
   const isLocal = isLocalId(crawlerId)
 
   if (isLocal) {
-    // Cache-only mode: Add bay entities to cache
     const bayEntities: HydratedEntity[] = allBays.map((bay) => {
       const now = new Date().toISOString()
       return {
@@ -63,10 +62,8 @@ async function createCrawlerBays(crawlerId: string, queryClient: QueryClient): P
       }
     })
 
-    // Set bay entities in cache
     queryClient.setQueryData(entitiesKeys.forParent('crawler', crawlerId), bayEntities)
   } else {
-    // API-backed mode: Create bay entities in Supabase
     await Promise.all(
       allBays.map((bay) =>
         createNormalizedEntity({
@@ -144,13 +141,9 @@ export function useCrawler(id: string | undefined) {
 
   return useQuery({
     queryKey: crawlersKeys.byId(id!),
-    queryFn: isLocal
-      ? // Cache-only: Return undefined, data comes from cache
-        async () => defaultCrawler
-      : // API-backed: Fetch from Supabase
-        () => fetchEntity<Crawler>('crawlers', id!),
-    enabled: !!id, // Only run query if id is provided
-    // For local data, initialize with undefined
+    queryFn: isLocal ? async () => defaultCrawler : () => fetchEntity<Crawler>('crawlers', id!),
+    enabled: !!id,
+
     initialData: isLocal ? defaultCrawler : undefined,
   })
 }
@@ -189,7 +182,6 @@ export function useCreateCrawler() {
     mutationFn: async (data: TablesInsert<'crawlers'>) => {
       const crawlerId = data.id
 
-      // Cache-only mode: Add to cache without API call
       if (crawlerId && isLocalId(crawlerId)) {
         const localCrawler: Crawler = {
           id: crawlerId,
@@ -214,23 +206,18 @@ export function useCreateCrawler() {
           scrap_tl_six: data.scrap_tl_six || null,
         }
 
-        // Set in cache
         queryClient.setQueryData(crawlersKeys.byId(crawlerId), localCrawler)
 
         return localCrawler
       }
 
-      // API-backed mode: Create in Supabase
       return createEntity<Crawler>('crawlers', data as Crawler)
     },
     onSuccess: async (newCrawler) => {
-      // Create bay entities for the new crawler
       await createCrawlerBays(newCrawler.id, queryClient)
 
-      // Don't invalidate for local IDs - cache is already set and there's no API to refetch from
       if (isLocalId(newCrawler.id)) return
 
-      // Invalidate crawler cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: crawlersKeys.byId(newCrawler.id),
       })
@@ -261,7 +248,6 @@ export function useUpdateCrawler() {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: TablesUpdate<'crawlers'> }) => {
-      // Cache-only mode: Update cache without API call
       if (isLocalId(id)) {
         const currentCrawler = queryClient.getQueryData<Crawler>(crawlersKeys.byId(id))
         if (!currentCrawler) {
@@ -278,22 +264,18 @@ export function useUpdateCrawler() {
         return updatedCrawler
       }
 
-      // API-backed mode: Update in Supabase
       await updateEntity<Crawler>('crawlers', id, updates)
-      // Fetch updated entity
+
       return fetchEntity<Crawler>('crawlers', id)
     },
-    // Optimistic update for API-backed mode
+
     onMutate: async ({ id, updates }) => {
       if (isLocalId(id)) return
 
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: crawlersKeys.byId(id) })
 
-      // Snapshot previous value
       const previousCrawler = queryClient.getQueryData<Crawler>(crawlersKeys.byId(id))
 
-      // Optimistically update cache
       if (previousCrawler) {
         queryClient.setQueryData<Crawler>(crawlersKeys.byId(id), {
           ...previousCrawler,
@@ -304,15 +286,14 @@ export function useUpdateCrawler() {
 
       return { previousCrawler, id }
     },
-    // Rollback on error
+
     onError: (_err, _variables, context) => {
       if (context?.previousCrawler) {
         queryClient.setQueryData(crawlersKeys.byId(context.id), context.previousCrawler)
       }
     },
-    // Refetch on success (API-backed only)
+
     onSuccess: (_updatedCrawler, variables) => {
-      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
       if (isLocalId(variables.id)) return
 
       queryClient.invalidateQueries({
@@ -341,20 +322,16 @@ export function useDeleteCrawler() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      // Cache-only mode: Remove from cache
       if (isLocalId(id)) {
         queryClient.removeQueries({ queryKey: crawlersKeys.byId(id) })
         return
       }
 
-      // API-backed mode: Delete from Supabase
       await deleteEntity('crawlers', id)
     },
     onSuccess: (_, id) => {
-      // Don't invalidate for local IDs - cache is already removed
       if (isLocalId(id)) return
 
-      // Invalidate crawler cache
       queryClient.invalidateQueries({
         queryKey: crawlersKeys.byId(id),
       })

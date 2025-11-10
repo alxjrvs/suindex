@@ -33,7 +33,6 @@ export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayPr
 
   const detailContent = (
     <VStack gap={1} alignItems="stretch">
-      {/* Crawler info */}
       {crawlerName && (
         <Flex gap={1} alignItems="center">
           <Box bg="su.pink" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
@@ -47,7 +46,6 @@ export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayPr
         </Flex>
       )}
 
-      {/* Mediator info */}
       {mediatorName && (
         <Flex gap={1} alignItems="center">
           <Box bg="su.brick" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">

@@ -75,13 +75,9 @@ export function useMech(id: string | undefined) {
 
   return useQuery({
     queryKey: mechsKeys.byId(id!),
-    queryFn: isLocal
-      ? // Cache-only: Return undefined, data comes from cache
-        async () => defaultMech
-      : // API-backed: Fetch from Supabase
-        () => fetchEntity<Mech>('mechs', id!),
-    enabled: !!id, // Only run query if id is provided
-    // For local data, initialize with undefined
+    queryFn: isLocal ? async () => defaultMech : () => fetchEntity<Mech>('mechs', id!),
+    enabled: !!id,
+
     initialData: isLocal ? defaultMech : undefined,
   })
 }
@@ -122,22 +118,17 @@ export function useCreateMech() {
     mutationFn: async (data: TablesInsert<'mechs'>) => {
       const mechId = data.id
 
-      // Cache-only mode: Add to cache without API call
       if (mechId && isLocalId(mechId)) {
-        // Set in cache
         queryClient.setQueryData(mechsKeys.byId(mechId), defaultMech)
 
         return defaultMech
       }
 
-      // API-backed mode: Create in Supabase
       return createEntity<Mech>('mechs', data as Mech)
     },
     onSuccess: (newMech) => {
-      // Don't invalidate for local IDs - cache is already set and there's no API to refetch from
       if (isLocalId(newMech.id)) return
 
-      // Invalidate mech cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: mechsKeys.byId(newMech.id),
       })
@@ -168,7 +159,6 @@ export function useUpdateMech() {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: TablesUpdate<'mechs'> }) => {
-      // Cache-only mode: Update cache without API call
       if (isLocalId(id)) {
         const currentMech = queryClient.getQueryData<Mech>(mechsKeys.byId(id))
         if (!currentMech) {
@@ -185,22 +175,18 @@ export function useUpdateMech() {
         return updatedMech
       }
 
-      // API-backed mode: Update in Supabase
       await updateEntity<Mech>('mechs', id, updates)
-      // Fetch updated entity
+
       return fetchEntity<Mech>('mechs', id)
     },
-    // Optimistic update for API-backed mode
+
     onMutate: async ({ id, updates }) => {
       if (isLocalId(id)) return
 
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: mechsKeys.byId(id) })
 
-      // Snapshot previous value
       const previousMech = queryClient.getQueryData<Mech>(mechsKeys.byId(id))
 
-      // Optimistically update cache
       if (previousMech) {
         queryClient.setQueryData<Mech>(mechsKeys.byId(id), {
           ...previousMech,
@@ -211,15 +197,14 @@ export function useUpdateMech() {
 
       return { previousMech, id }
     },
-    // Rollback on error
+
     onError: (_err, _variables, context) => {
       if (context?.previousMech) {
         queryClient.setQueryData(mechsKeys.byId(context.id), context.previousMech)
       }
     },
-    // Refetch on success (API-backed only)
+
     onSuccess: (_updatedMech, variables) => {
-      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
       if (isLocalId(variables.id)) return
 
       queryClient.invalidateQueries({
@@ -248,20 +233,16 @@ export function useDeleteMech() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      // Cache-only mode: Remove from cache
       if (isLocalId(id)) {
         queryClient.removeQueries({ queryKey: mechsKeys.byId(id) })
         return
       }
 
-      // API-backed mode: Delete from Supabase
       await deleteEntity('mechs', id)
     },
     onSuccess: (_, id) => {
-      // Don't invalidate for local IDs - cache is already removed
       if (isLocalId(id)) return
 
-      // Invalidate mech cache
       queryClient.invalidateQueries({
         queryKey: mechsKeys.byId(id),
       })

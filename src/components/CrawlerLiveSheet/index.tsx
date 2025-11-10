@@ -34,15 +34,12 @@ interface CrawlerLiveSheetProps {
 export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   const navigate = useNavigate()
 
-  // TanStack Query hooks
   const { crawler, loading, error, selectedCrawlerType, isLocal, bays } = useHydratedCrawler(id)
   const deleteCrawler = useDeleteCrawler()
   const updateCrawler = useUpdateCrawler()
 
-  // Initialize bays for local (playground) crawlers
   useInitializeCrawlerBays(id, bays.length > 0)
 
-  // Real-time subscriptions for live updates
   useLiveSheetSubscriptions({
     entityType: 'crawler',
     id,
@@ -51,7 +48,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
     includeCargo: true,
   })
 
-  // Fetch pilots and their mechs for this crawler
   const { data: pilotsWithMechs = [] } = useQuery({
     queryKey: ['crawler-pilots-mechs', id],
     queryFn: async () => {
@@ -69,14 +65,11 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
     enabled: !!id && !isLocal,
   })
 
-  // Track all mutations for this crawler (for syncing indicator)
   const mutatingCount = useIsMutating()
   const hasPendingChanges = mutatingCount > 0
 
-  // Get current user for ownership check
   const { userId } = useCurrentUser()
 
-  // Determine if the sheet is editable (user owns the crawler or it's local)
   const isEditable = isLocal || (crawler ? isOwner(crawler.user_id, userId) : false)
 
   if (!crawler && !loading) {
@@ -91,7 +84,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
     return <LiveSheetErrorState entityType="Crawler" error={error} />
   }
 
-  // Separate storage bay from other bays
   const storageBay = bays.find((bay) => bay.ref.name === 'Storage Bay')
   const regularBays = bays.filter((bay) => bay.ref.name !== 'Storage Bay')
 
@@ -110,7 +102,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           disabled={!isEditable}
         />
       )}
-      {/* Header Section */}
       <Flex gap={6} w="full" alignItems="stretch">
         <CrawlerHeaderInputs disabled={!isEditable} incomplete={!selectedCrawlerType} id={id} />
 
@@ -140,7 +131,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
         </Tabs.Content>
 
         <Tabs.Content value="bays">
-          {/* Bays Grid - Dynamic Layout */}
           {regularBays.length > 0 && (
             <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
               {regularBays.map((bay) => (
@@ -157,7 +147,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
 
         <Tabs.Content value="storage">
           <VStack gap="0" alignItems="stretch" mt={6}>
-            {/* Storage Bay */}
             {storageBay && (
               <BayCard bay={storageBay} disabled={!selectedCrawlerType} readOnly={!isEditable} />
             )}
@@ -198,7 +187,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
         </Tabs.Content>
       </Tabs.Root>
 
-      {/* Downgrade Tech Level Button */}
       <Button
         w="full"
         bg="gray.500"

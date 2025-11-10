@@ -66,12 +66,10 @@ export function useEntitiesFor(
   return useQuery({
     queryKey: entitiesKeys.forParent(parentType, parentId!),
     queryFn: isLocal
-      ? // Cache-only: Return empty array, data comes from cache
-        async () => [] as HydratedEntity[]
-      : // API-backed: Fetch from Supabase
-        () => fetchEntitiesForParent(parentType, parentId!),
-    enabled: !!parentId, // Only run query if parentId is provided
-    // For local data, initialize with empty array
+      ? async () => [] as HydratedEntity[]
+      : () => fetchEntitiesForParent(parentType, parentId!),
+    enabled: !!parentId,
+
     initialData: isLocal ? [] : undefined,
   })
 }
@@ -111,7 +109,6 @@ export function useCreateEntity() {
 
   return useMutation({
     mutationFn: async (data: TablesInsert<'suentities'>) => {
-      // Determine parent type and ID
       const parentType = data.pilot_id ? 'pilot' : data.mech_id ? 'mech' : 'crawler'
       const parentId = data.pilot_id || data.mech_id || data.crawler_id
 
@@ -119,9 +116,7 @@ export function useCreateEntity() {
         throw new Error('Parent ID is required')
       }
 
-      // Cache-only mode: Add to cache without API call
       if (isLocalId(parentId)) {
-        // Get reference data
         const ref = SalvageUnionReference.get(
           data.schema_name as SURefSchemaName,
           data.schema_ref_id
@@ -146,33 +141,27 @@ export function useCreateEntity() {
           choices: [],
         }
 
-        // Add to cache
         const queryKey = [...entitiesKeys.forParent(parentType, parentId)]
         addToCache(queryClient, queryKey, localEntity)
 
         return localEntity
       }
 
-      // API-backed mode: Create in Supabase
       return createNormalizedEntity(data)
     },
-    // Optimistic update for API-backed mode
+
     onMutate: async (data) => {
       const parentType = data.pilot_id ? 'pilot' : data.mech_id ? 'mech' : 'crawler'
       const parentId = data.pilot_id || data.mech_id || data.crawler_id
 
       if (!parentId || isLocalId(parentId)) return
 
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: entitiesKeys.forParent(parentType, parentId) })
 
-      // Snapshot previous value
       const previousEntities = queryClient.getQueryData(
         entitiesKeys.forParent(parentType, parentId)
       )
 
-      // Optimistically update cache
-      // Get reference data
       const ref = SalvageUnionReference.get(data.schema_name as SURefSchemaName, data.schema_ref_id)
 
       if (!ref) {
@@ -180,7 +169,7 @@ export function useCreateEntity() {
       }
 
       const optimisticEntity: HydratedEntity = {
-        id: generateLocalId(), // Temporary ID
+        id: generateLocalId(),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         pilot_id: data.pilot_id || null,
@@ -199,7 +188,7 @@ export function useCreateEntity() {
 
       return { previousEntities, parentType, parentId }
     },
-    // Rollback on error
+
     onError: (_err, _data, context) => {
       if (context) {
         queryClient.setQueryData(
@@ -211,7 +200,7 @@ export function useCreateEntity() {
         )
       }
     },
-    // Refetch on success (API-backed only)
+
     onSuccess: async (newEntity) => {
       console.log('New entity created:', newEntity)
       const parentType = newEntity.pilot_id ? 'pilot' : newEntity.mech_id ? 'mech' : 'crawler'
@@ -219,23 +208,19 @@ export function useCreateEntity() {
 
       if (!parentId) return
 
-      // Check if the created entity's reference has a grants array
       const ref = newEntity.ref
       if (ref && 'grants' in ref && Array.isArray(ref.grants) && ref.grants.length > 0) {
-        // Create additional entities for each granted item
         for (const grant of ref.grants) {
           if (grant && typeof grant === 'object' && 'name' in grant && 'schema' in grant) {
             const grantSchema = grant.schema as SURefSchemaName
             const grantName = grant.name as string
 
-            // Find the granted item in the reference data
             const grantedItem = SalvageUnionReference.findIn(
               grantSchema,
               (item) => item.name === grantName
             )
 
             if (grantedItem) {
-              // Create the granted entity with the same parent as the original entity
               const grantedEntityData: TablesInsert<'suentities'> = {
                 pilot_id: newEntity.pilot_id,
                 mech_id: newEntity.mech_id,
@@ -247,9 +232,7 @@ export function useCreateEntity() {
               }
 
               try {
-                // Create the granted entity
                 if (isLocalId(parentId)) {
-                  // Cache-only mode
                   const localGrantedEntity: HydratedEntity = {
                     id: generateLocalId(),
                     created_at: new Date().toISOString(),
@@ -263,13 +246,12 @@ export function useCreateEntity() {
                     metadata: grantedEntityData.metadata || null,
                     ref: grantedItem,
                     choices: [],
-                    parentEntity: newEntity, // Associate parent entity in cache-only mode
+                    parentEntity: newEntity,
                   }
 
                   const queryKey = [...entitiesKeys.forParent(parentType, parentId)]
                   addToCache(queryClient, queryKey, localGrantedEntity)
                 } else {
-                  // API-backed mode
                   await createNormalizedEntity(grantedEntityData)
                   console.log('Granted entity created:', grantName, 'for parent:', newEntity.id)
                 }
@@ -283,10 +265,8 @@ export function useCreateEntity() {
         }
       }
 
-      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
       if (isLocalId(parentId)) return
 
-      // Invalidate parent's entity cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: entitiesKeys.forParent(parentType, parentId),
       })
@@ -320,9 +300,7 @@ export function useUpdateEntity() {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: TablesUpdate<'suentities'> }) => {
-      // Cache-only mode: Update cache without API call
       if (isLocalId(id)) {
-        // Find the entity in cache to determine parent
         const allQueries = queryClient.getQueriesData<HydratedEntity[]>({
           queryKey: entitiesKeys.all,
         })
@@ -332,7 +310,6 @@ export function useUpdateEntity() {
 
           const entity = entities.find((e) => e.id === id)
           if (entity) {
-            // Update the entity in cache
             const updatedEntities = entities.map((e) =>
               e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
             )
@@ -345,14 +322,12 @@ export function useUpdateEntity() {
         throw new Error(`Entity not found in cache: ${id}`)
       }
 
-      // API-backed mode: Update in Supabase
       return updateNormalizedEntity(id, updates)
     },
-    // Optimistic update for API-backed mode
+
     onMutate: async ({ id, updates }) => {
       if (isLocalId(id)) return
 
-      // Find the entity in cache to determine parent
       const allQueries = queryClient.getQueriesData<HydratedEntity[]>({
         queryKey: entitiesKeys.all,
       })
@@ -375,13 +350,10 @@ export function useUpdateEntity() {
 
       if (!parentType || !parentId || !queryKey) return
 
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: entitiesKeys.forParent(parentType, parentId) })
 
-      // Snapshot previous value
       const previousEntities = queryClient.getQueryData<HydratedEntity[]>(queryKey)
 
-      // Optimistically update cache
       if (previousEntities) {
         const updatedEntities = previousEntities.map((e) =>
           e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
@@ -391,15 +363,14 @@ export function useUpdateEntity() {
 
       return { previousEntities, queryKey, parentType, parentId }
     },
-    // Rollback on error
+
     onError: (_err, _variables, context) => {
       if (context?.previousEntities && context.queryKey) {
         queryClient.setQueryData(context.queryKey, context.previousEntities)
       }
     },
-    // Refetch on success (API-backed only)
+
     onSuccess: (updatedEntity) => {
-      // Determine parent type and ID
       const parentType = updatedEntity.pilot_id
         ? 'pilot'
         : updatedEntity.mech_id
@@ -409,10 +380,8 @@ export function useUpdateEntity() {
 
       if (!parentId) return
 
-      // Don't invalidate for local IDs - cache is already updated
       if (isLocalId(parentId)) return
 
-      // Invalidate parent's entity cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: entitiesKeys.forParent(parentType, parentId),
       })
@@ -452,7 +421,6 @@ export function useDeleteEntity() {
       parentType: string
       parentId: string
     }) => {
-      // Cache-only mode: Remove from cache (including child entities)
       if (isLocalId(parentId)) {
         const queryKey = entitiesKeys.forParent(
           parentType as 'pilot' | 'mech' | 'crawler',
@@ -461,13 +429,12 @@ export function useDeleteEntity() {
         const currentEntities = queryClient.getQueryData<HydratedEntity[]>(queryKey)
 
         if (currentEntities) {
-          // Helper function to recursively collect entity IDs to delete
           const collectEntityIdsToDelete = (
             entityId: string,
             entities: HydratedEntity[]
           ): string[] => {
             const idsToDelete = [entityId]
-            // Find all children of this entity
+
             const children = entities.filter((e) => e.parent_entity_id === entityId)
             for (const child of children) {
               idsToDelete.push(...collectEntityIdsToDelete(child.id, entities))
@@ -485,14 +452,11 @@ export function useDeleteEntity() {
         return
       }
 
-      // API-backed mode: Delete from Supabase (cascade delete handled in API)
       await deleteNormalizedEntity(id)
     },
     onSuccess: (_, variables) => {
-      // Don't invalidate for local IDs - cache is already updated
       if (isLocalId(variables.parentId)) return
 
-      // Invalidate parent's entity cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: entitiesKeys.forParent(
           variables.parentType as 'pilot' | 'mech' | 'crawler',

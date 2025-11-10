@@ -267,15 +267,12 @@ export function getAbilitiesByLevel(
   abilitiesOrLevel: SURefAbility[] | number,
   level?: number
 ): SURefAbility[] {
-  // If first param is a number, get all abilities at that level
   if (typeof abilitiesOrLevel === 'number') {
     return SalvageUnionReference.Abilities.all().filter((a) => a.level === abilitiesOrLevel)
   }
-  // If first param is an array and level is provided, filter that array
   if (level !== undefined) {
     return abilitiesOrLevel.filter((a) => a.level === level)
   }
-  // Otherwise return empty array
   return []
 }
 

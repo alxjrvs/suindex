@@ -25,7 +25,7 @@ export function EntityListDisplay({
   onChoiceSelection,
 }: EntityListDisplayProps) {
   const { spacing } = useEntityDisplayContext()
-  // Get entities from either schemaEntities (via model lookup) or customSystemOptions (direct)
+
   const entities = choice.schemaEntities
     ? choice.schemaEntities
         .map((entityName) => {
@@ -40,7 +40,6 @@ export function EntityListDisplay({
         .filter((e) => e !== null && e !== undefined)
     : choice.customSystemOptions || []
 
-  // Filter to show only selected entity if provided
   const visibleEntities = selectedChoice
     ? entities.filter((entity) => {
         const entityName = 'name' in entity ? entity.name : entity.action.name
@@ -53,15 +52,12 @@ export function EntityListDisplay({
   return (
     <VStack gap={spacing.contentPadding} alignItems="start">
       {visibleEntities.map((entity, idx) => {
-        // Determine button config based on whether onChoiceSelection is defined
         let buttonConfig: (ButtonProps & { children: React.ReactNode }) | undefined
 
         if (onChoiceSelection) {
-          // Check if this entity is already selected in userChoices
           const isSelected = userChoices?.[choice.id] !== undefined
 
           if (isSelected) {
-            // Show REMOVE button
             buttonConfig = {
               bg: 'su.brick',
               color: 'su.white',
@@ -75,7 +71,6 @@ export function EntityListDisplay({
               children: 'Remove',
             }
           } else {
-            // Show ADD button
             const entityName = 'name' in entity ? entity.name : entity.action.name
             buttonConfig = {
               bg: 'su.orange',
@@ -92,17 +87,12 @@ export function EntityListDisplay({
           }
         }
 
-        // Check if this is a SURefMetaSystemModule (has action property but no id/name like regular entities)
-        // SURefMetaSystemModule has: action, actions, techLevel, slotsRequired, etc.
-        // Regular entities have: id, name, etc.
         const isSystemModule = 'action' in entity && !('id' in entity)
 
         if (isSystemModule) {
-          // Render the action from SURefMetaSystemModule using NestedActionDisplay
           return <NestedActionDisplay key={idx} data={entity.action} compact />
         }
 
-        // Regular entity - use EntityDisplay with proper schema
         const schema = (choice.schema?.[0] || 'systems') as SURefSchemaName
         return (
           <EntityDisplay

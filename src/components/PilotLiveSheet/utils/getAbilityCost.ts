@@ -16,7 +16,6 @@ export function getAbilityCost(
 ): number {
   if (!selectedClass) return 0
 
-  // Check if it's a legendary ability (by tree)
   const isLegendary = selectedAdvancedClass?.legendaryTree === ability.tree
   if (isLegendary) return LEGENDARY_ABILITY_COST
 

@@ -18,14 +18,11 @@ export function extractMatchSnippet(
     return null
   }
 
-  // Calculate snippet boundaries
   const snippetStart = Math.max(0, matchIndex - contextChars)
   const snippetEnd = Math.min(text.length, matchIndex + query.length + contextChars)
 
-  // Extract snippet
   let snippet = text.slice(snippetStart, snippetEnd)
 
-  // Add ellipses if we're not at the start/end
   if (snippetStart > 0) {
     snippet = '...' + snippet
   }
@@ -33,7 +30,6 @@ export function extractMatchSnippet(
     snippet = snippet + '...'
   }
 
-  // Calculate match positions within the snippet
   const matchStart = snippetStart > 0 ? matchIndex - snippetStart + 3 : matchIndex - snippetStart
   const matchEnd = matchStart + query.length
 

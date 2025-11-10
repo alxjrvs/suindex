@@ -12,14 +12,11 @@ export function EntityChassisPatterns() {
 
   if (!('patterns' in data) || !data.patterns || data.patterns.length === 0) return null
 
-  // Get the first pattern as default value
   const defaultPattern = data.patterns[0].name.replace(/\s+Pattern$/i, '')
 
-  // Get pattern from URL or use default
   const patternParam = (search as { pattern?: string }).pattern
   const selectedPattern = patternParam || defaultPattern
 
-  // Handle tab change - update URL
   const handlePatternChange = (value: string) => {
     const currentUrl = new URL(window.location.href)
     currentUrl.searchParams.set('pattern', value)

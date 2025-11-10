@@ -16,7 +16,6 @@ export function DiscordSignInButton({
 }: DiscordSignInButtonProps) {
   const [loading, setLoading] = useState(false)
 
-  // Check if Discord sign-in should be shown
   if (respect && import.meta.env.VITE_SHOW_DISCORD_SIGNIN !== '1') {
     return null
   }
@@ -24,7 +23,7 @@ export function DiscordSignInButton({
   const handleDiscordLogin = async () => {
     try {
       setLoading(true)
-      // Use window.location.origin only on client side, with fallback
+
       const defaultRedirect =
         typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : '/dashboard'
       await signInWithDiscord(redirectTo || defaultRedirect)

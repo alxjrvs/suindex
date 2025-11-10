@@ -20,7 +20,7 @@ export function GlobalLoadingBar() {
       zIndex={9999}
       size="xs"
       colorPalette="orange"
-      value={null} // Indeterminate progress
+      value={null}
     >
       <Progress.Track bg="su.lightBlue">
         <Progress.Range bg="su.orange" />

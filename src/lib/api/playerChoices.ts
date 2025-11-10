@@ -63,10 +63,8 @@ export async function fetchChoicesForChoice(choiceId: string): Promise<Tables<'p
 export async function upsertPlayerChoice(
   data: TablesInsert<'player_choices'>
 ): Promise<Tables<'player_choices'>> {
-  // Validate input
   const validated = upsertPlayerChoiceSchema.parse(data)
 
-  // Upsert player choice
   const { data: choice, error } = await supabase
     .from('player_choices')
     .upsert(validated, {

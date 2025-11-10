@@ -16,7 +16,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export function getSupabaseServerClient() {
   return createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
-      persistSession: false, // Don't persist session on server
+      persistSession: false,
       autoRefreshToken: false,
       detectSessionInUrl: false,
     },

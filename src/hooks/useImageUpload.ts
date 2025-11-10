@@ -22,30 +22,22 @@ export function useImageUpload({
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      // Upload the new image
       const newImageUrl = await uploadImage(file, entityType, entityId)
 
-      // Delete the old image if it exists
       const currentImageUrl = getCurrentImageUrl()
       if (currentImageUrl) {
         try {
           await deleteImage(currentImageUrl)
         } catch (error) {
-          // Log but don't fail if old image deletion fails
           console.warn('Failed to delete old image:', error)
         }
       }
 
-      // Update the entity with the new image URL
       await updateEntityImage(entityType, entityId, newImageUrl)
 
       return newImageUrl
     },
     onSuccess: (newImageUrl) => {
-      // Immediately update the cache for instant UI feedback
-      // Don't invalidate immediately - let background refetch handle it
-      // This prevents the refetch from overwriting our optimistic update
-      // before the database has fully committed the change
       queryClient.setQueryData(queryKey, (oldData: unknown) => {
         if (!oldData || typeof oldData !== 'object') return oldData
         return { ...oldData, image_url: newImageUrl }
@@ -67,20 +59,14 @@ export function useImageUpload({
 
   const removeMutation = useMutation({
     mutationFn: async () => {
-      // Delete the image from storage
       const currentImageUrl = getCurrentImageUrl()
       if (currentImageUrl) {
         await deleteImage(currentImageUrl)
       }
 
-      // Clear the entity's image_url field
       await updateEntityImage(entityType, entityId, null)
     },
     onSuccess: () => {
-      // Immediately update the cache for instant UI feedback
-      // Don't invalidate immediately - let background refetch handle it
-      // This prevents the refetch from overwriting our optimistic update
-      // before the database has fully committed the change
       queryClient.setQueryData(queryKey, (oldData: unknown) => {
         if (!oldData || typeof oldData !== 'object') return oldData
         return { ...oldData, image_url: null }

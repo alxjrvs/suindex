@@ -8,7 +8,6 @@ interface LiveSheetErrorStateProps {
 }
 
 export function LiveSheetErrorState({ entityType, error }: LiveSheetErrorStateProps) {
-  // Check if it's a permission error
   if (error.includes('permission') || error.includes('private') || error.includes('access')) {
     return <PermissionError message={error} />
   }

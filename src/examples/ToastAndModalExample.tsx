@@ -13,7 +13,6 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 export function ToastAndModalExample() {
   const { openEntityModal } = useEntityModal()
 
-  // Get a sample ability for demonstration
   const sampleAbility = SalvageUnionReference.Abilities.all()[0]
 
   const handleShowToast = () => {

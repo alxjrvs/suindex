@@ -28,7 +28,6 @@ export function useChangeMechChassisPattern(id: string | undefined) {
         const confirmed = window.confirm(message)
 
         if (confirmed) {
-          // Delete existing systems and modules if replacing
           if (hasExistingSystems) {
             systems.forEach((system) => {
               deleteEntity.mutate({ id: system.id, parentType: 'mech', parentId: id })
@@ -46,7 +45,7 @@ export function useChangeMechChassisPattern(id: string | undefined) {
                 'count' in systemEntry && typeof systemEntry.count === 'number'
                   ? systemEntry.count
                   : 1
-              // Create the system entity multiple times if count > 1
+
               for (let i = 0; i < count; i++) {
                 createEntity.mutate({
                   mech_id: id,
@@ -64,7 +63,7 @@ export function useChangeMechChassisPattern(id: string | undefined) {
                 'count' in moduleEntry && typeof moduleEntry.count === 'number'
                   ? moduleEntry.count
                   : 1
-              // Create the module entity multiple times if count > 1
+
               for (let i = 0; i < count; i++) {
                 createEntity.mutate({
                   mech_id: id,

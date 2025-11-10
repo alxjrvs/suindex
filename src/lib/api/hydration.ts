@@ -54,16 +54,13 @@ export function hydrateEntities(
   entities: Tables<'suentities'>[],
   choicesByEntityId: Map<string, Tables<'player_choices'>[]> = new Map()
 ): HydratedEntity[] {
-  // Build requests array for getMany
   const requests = entities.map((entity) => ({
     schemaName: entity.schema_name as SURefSchemaName,
     id: entity.schema_ref_id,
   }))
 
-  // Batch fetch all reference data
   const refs = SalvageUnionReference.getMany(requests)
 
-  // Build map of refs by schema:id key
   const refsByKey = new Map<string, SURefEntity>()
   refs.forEach((ref, index) => {
     if (ref) {
@@ -72,7 +69,6 @@ export function hydrateEntities(
     }
   })
 
-  // First pass: Hydrate all entities without parent relationships
   const hydratedById = new Map<string, HydratedEntity>()
   entities.forEach((entity) => {
     const key = `${entity.schema_name}:${entity.schema_ref_id}`
@@ -92,7 +88,6 @@ export function hydrateEntities(
     })
   })
 
-  // Second pass: Associate parent entities
   entities.forEach((entity) => {
     if (entity.parent_entity_id) {
       const hydrated = hydratedById.get(entity.id)
@@ -111,7 +106,6 @@ export function hydrateEntities(
     }
   })
 
-  // Return in original order
   return entities.map((entity) => hydratedById.get(entity.id)!)
 }
 
@@ -122,7 +116,6 @@ export function hydrateEntities(
  * @returns Hydrated cargo with optional ref data (position is in metadata)
  */
 export function hydrateCargo(cargo: Tables<'cargo'>): HydratedCargo {
-  // If cargo has schema reference, hydrate it
   if (cargo.schema_name && cargo.schema_ref_id) {
     const ref = SalvageUnionReference.get(cargo.schema_name as SURefSchemaName, cargo.schema_ref_id)
 
@@ -136,7 +129,6 @@ export function hydrateCargo(cargo: Tables<'cargo'>): HydratedCargo {
     }
   }
 
-  // Custom cargo - no reference data
   return {
     ...cargo,
     ref: undefined,
@@ -150,20 +142,16 @@ export function hydrateCargo(cargo: Tables<'cargo'>): HydratedCargo {
  * @returns Array of hydrated cargo items
  */
 export function hydrateCargoItems(cargoItems: Tables<'cargo'>[]): HydratedCargo[] {
-  // Separate schema-based and custom cargo
   const schemaBased = cargoItems.filter((c) => c.schema_name && c.schema_ref_id)
   const custom = cargoItems.filter((c) => !c.schema_name || !c.schema_ref_id)
 
-  // Build requests array for getMany
   const requests = schemaBased.map((cargo) => ({
     schemaName: cargo.schema_name as SURefSchemaName,
     id: cargo.schema_ref_id!,
   }))
 
-  // Batch fetch all reference data
   const refs = SalvageUnionReference.getMany(requests)
 
-  // Build map of refs by schema:id key
   const refsByKey = new Map<string, SURefEntity>()
   refs.forEach((ref, index) => {
     if (ref) {
@@ -172,7 +160,6 @@ export function hydrateCargoItems(cargoItems: Tables<'cargo'>[]): HydratedCargo[
     }
   })
 
-  // Hydrate schema-based cargo
   const hydratedSchemaBased: HydratedCargo[] = schemaBased.map((cargo) => {
     const key = `${cargo.schema_name}:${cargo.schema_ref_id}`
     const ref = refsByKey.get(key)
@@ -187,13 +174,11 @@ export function hydrateCargoItems(cargoItems: Tables<'cargo'>[]): HydratedCargo[
     }
   })
 
-  // Hydrate custom cargo (no ref)
   const hydratedCustom: HydratedCargo[] = custom.map((cargo) => ({
     ...cargo,
     ref: undefined,
   }))
 
-  // Combine and return in original order
   const result: HydratedCargo[] = []
   for (const cargo of cargoItems) {
     const hydrated =

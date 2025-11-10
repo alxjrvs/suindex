@@ -28,11 +28,10 @@ export function LevelDisplay({
       opacity={1}
       css={{
         opacity: '1 !important',
-        // Prevent clipping in column layouts
+
         transform: 'translateZ(0)',
         willChange: 'transform',
       }}
-      // Ensure the element is not clipped by parent overflow
       pointerEvents="none"
     >
       {level}

@@ -39,16 +39,13 @@ export function GridLayout<T extends object>({
   secondarySectionLabel = 'Inactive',
   getSectionType,
 }: GridLayoutProps<T>) {
-  // Separate items into primary and secondary sections
   let primaryItems: T[]
   let secondaryItems: T[]
 
   if (getSectionType) {
-    // Use custom section type function
     primaryItems = items.filter((item) => getSectionType(item) === 'primary')
     secondaryItems = items.filter((item) => getSectionType(item) === 'secondary')
   } else {
-    // Fall back to active/inactive logic
     const hasActiveProperty = items.length > 0 && 'active' in items[0]
     primaryItems = hasActiveProperty
       ? items.filter((item) => (item as { active?: boolean }).active !== false)
@@ -118,7 +115,6 @@ export function GridLayout<T extends object>({
       )}
       {!loading && !error && items.length > 0 && (
         <VStack gap={8} alignItems="stretch" w="full">
-          {/* Primary Section */}
           {primaryItems.length > 0 && (
             <VStack gap={4} alignItems="stretch">
               <Heading level="h2">{primarySectionLabel}</Heading>
@@ -128,7 +124,6 @@ export function GridLayout<T extends object>({
             </VStack>
           )}
 
-          {/* Secondary Section */}
           {secondaryItems.length > 0 && (
             <VStack gap={4} alignItems="stretch">
               <Heading level="h2">{secondarySectionLabel}</Heading>

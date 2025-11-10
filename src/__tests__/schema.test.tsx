@@ -8,8 +8,6 @@ import { act } from '@testing-library/react'
 
 const schemaCatalog = getSchemaCatalog()
 
-// Dynamically generate list of schemas to test from the catalog
-// Exclude schemas that don't have entity models or are used only as nested components
 const EXCLUDED_SCHEMAS = [
   'actions',
   'ability-tree-requirements',
@@ -20,8 +18,6 @@ const SCHEMAS_TO_TEST = schemaCatalog.schemas
   .map((schema) => schema.id)
   .filter((id) => !EXCLUDED_SCHEMAS.includes(id)) as SURefSchemaName[]
 
-// Schema-specific properties to check
-// Note: Only include properties that are actually rendered in the EntityDisplay component
 type PropertyCheckConfig = {
   /** Properties that should appear as numbers in the rendered output */
   numericProps?: string[]
@@ -52,21 +48,16 @@ function verifyEntityProperties(
   entity: SURefEntity,
   schemaId: SURefSchemaName
 ) {
-  // Check description if present
   if ('description' in entity && entity.description) {
-    // Remove bracket notation from description for comparison since parseTraitReferences
-    // converts [[trait]] to styled elements without the brackets
     const descriptionWithoutBrackets = entity.description
       .replace(/\[\[\[([^\]]+)\]\s*\(([^)]+)\)\]\]/g, '$1 ($2)')
       .replace(/\[\[([^\]]+)\]\]/g, '$1')
     expect(textContent).toContain(descriptionWithoutBrackets)
   }
 
-  // Check schema-specific properties
   const propertyChecks = SCHEMA_PROPERTY_CHECKS[schemaId]
   if (!propertyChecks) return
 
-  // Check numeric properties
   propertyChecks.numericProps?.forEach((prop) => {
     if (prop in entity) {
       const value = entity[prop as keyof typeof entity]
@@ -76,7 +67,6 @@ function verifyEntityProperties(
     }
   })
 
-  // Check text properties (only if length > 1 to avoid single-char values like "G")
   propertyChecks.textProps?.forEach((prop) => {
     if (prop in entity) {
       const value = entity[prop as keyof typeof entity]
@@ -104,10 +94,8 @@ describe('Schema Entity Display Tests', () => {
         test.skip(`No entities found for ${schemaId}`, () => {})
       }
 
-      // Test each entity in the schema
       for (const entity of allEntities) {
         test(`displays all properties for: ${entity.name}`, async () => {
-          // Render the EntityDisplay component wrapped in act() to handle Tabs state updates
           let result: ReturnType<typeof render>
           await act(async () => {
             result = render(
@@ -121,14 +109,11 @@ describe('Schema Entity Display Tests', () => {
             )
           })
 
-          // Wait for any async updates to complete (for Tabs component)
           await waitFor(() => {
-            // Verify entity name appears in the rendered output
             const entityNameElements = result!.getAllByText(entity.name, { exact: false })
             expect(entityNameElements.length).toBeGreaterThan(0)
           })
 
-          // Verify properties are rendered
           const textContent = result!.container.textContent || ''
           verifyEntityProperties(textContent, entity, schemaId)
         })

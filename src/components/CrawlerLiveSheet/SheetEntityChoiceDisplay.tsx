@@ -18,33 +18,28 @@ export function SheetEntityChoiceDisplay({
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { data: playerChoices } = usePlayerChoices(entityId)
 
-  // Get the selected value from player choices
   const selectedValue = useMemo(() => {
     const playerChoice = playerChoices?.find((pc) => pc.choice_ref_id === choice.id)
     return playerChoice?.value || null
   }, [playerChoices, choice.id])
 
-  // Parse the selected value to get schema and entity ID
   const selectedEntity = useMemo(() => {
     if (!selectedValue) return null
 
     const entity = SalvageUnionReference.getByRef(selectedValue)
     if (!entity) return null
 
-    // Extract schema name from the reference string
     const parsed = SalvageUnionReference.parseRef(selectedValue)
     if (!parsed) return null
 
     return { entity, schemaName: parsed.schemaName.toLowerCase() }
   }, [selectedValue])
 
-  // Convert schema to schema names for the modal
-  // Normalize plural schema names to kebab-case (e.g., "Systems" -> "systems")
   const schemaNames = useMemo(() => {
     const { schema } = choice
 
     if (!schema) return []
-    // Map plural to kebab-case schema names
+
     const pluralToSchemaName: Record<string, SURefSchemaName> = {
       Systems: 'systems',
       Modules: 'modules',
@@ -64,11 +59,10 @@ export function SheetEntityChoiceDisplay({
     }
 
     return schema.map((schema) => {
-      // If it's in the map, use the mapped value
       if (schema in pluralToSchemaName) {
         return pluralToSchemaName[schema as keyof typeof pluralToSchemaName]
       }
-      // Otherwise assume it's already a schema name
+
       return schema as SURefSchemaName
     })
   }, [choice])

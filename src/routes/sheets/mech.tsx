@@ -5,7 +5,7 @@ import { LOCAL_ID } from '../../lib/cacheHelpers'
 export const Route = createFileRoute('/sheets/mech')({
   component: MechLiveSheetPage,
   staticData: {
-    ssr: false, // SPA mode for live sheets
+    ssr: false,
   },
 })
 

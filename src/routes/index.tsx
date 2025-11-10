@@ -6,9 +6,8 @@ import { ReferenceError } from '../components/errors/ReferenceError'
 
 const schemaIndexData = getSchemaCatalog()
 
-// Search param schema for URL-based search query
 const landingSearchSchema = z.object({
-  q: z.string().optional(), // Search query
+  q: z.string().optional(),
 })
 
 function IndexPage() {

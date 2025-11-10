@@ -24,7 +24,6 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
 
   const chassisName = selectedChassis?.ref.name || 'No Chassis'
 
-  // Prefetch mech data on hover
   const handleMouseEnter = () => {
     if (!id) return
     queryClient.prefetchQuery({
@@ -33,7 +32,6 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     })
   }
 
-  // Fetch pilot name and crawler_id if mech has pilot_id
   const { data: pilotData, isLoading: pilotLoading } = useQuery({
     queryKey: ['pilot-data', mech?.pilot_id],
     queryFn: async () => {
@@ -54,7 +52,6 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     enabled: !!mech?.pilot_id,
   })
 
-  // Fetch crawler name if pilot has crawler_id
   const { data: crawlerName, isLoading: crawlerLoading } = useQuery({
     queryKey: ['crawler-name', pilotData?.crawler_id],
     queryFn: async () => {
@@ -75,11 +72,10 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     enabled: !!pilotData?.crawler_id,
   })
 
-  // Fetch owner's Discord username
   const { data: ownerData } = useQuery({
     queryKey: ['user-display-name', mech?.user_id],
     queryFn: () => fetchUserDisplayName(mech!.user_id),
-    enabled: !!mech?.user_id && currentUserId !== mech?.user_id, // Only fetch if not the current user
+    enabled: !!mech?.user_id && currentUserId !== mech?.user_id,
   })
 
   const isOwner = currentUserId === mech?.user_id
@@ -105,7 +101,6 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
   }
   const detailContent = (
     <VStack gap={1} alignItems="stretch">
-      {/* Crawler badge (pink) */}
       {crawlerName && (
         <Box bg="su.pink" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
           <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">
@@ -114,7 +109,6 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
         </Box>
       )}
 
-      {/* Pilot badge (orange) */}
       {pilotData?.callsign && (
         <Box bg="su.orange" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
           <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">

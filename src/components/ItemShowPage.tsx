@@ -11,7 +11,7 @@ import type { SURefEntity } from 'salvageunion-reference'
 
 interface ItemShowPageProps {
   schemas: SchemaInfo[]
-  prefetchedItem?: SURefEntity | null // Optional prefetched item from loader
+  prefetchedItem?: SURefEntity | null
 }
 
 export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPageProps) {
@@ -19,11 +19,10 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
   const { data, loading, error } = useSchemaData(schemaId)
   const search = useSearch({ strict: false })
 
-  // Read compact query parameter, default to false for full display
   const compact = (search as { compact?: string }).compact === 'true'
 
   const currentSchema = schemas.find((s) => s.id === schemaId)
-  // Use prefetched item if available, otherwise find it in the data
+
   const item = prefetchedItem ?? data.find((d) => d.id === itemId)
 
   const formatValue = (value: unknown): ReactElement => {

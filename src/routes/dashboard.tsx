@@ -17,11 +17,11 @@ export const Route = createFileRoute('/dashboard')({
       },
       {
         name: 'robots',
-        content: 'noindex, nofollow', // Don't index user dashboard
+        content: 'noindex, nofollow',
       },
     ],
   }),
   staticData: {
-    ssr: false, // SPA mode for dashboard
+    ssr: false,
   },
 })

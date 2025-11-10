@@ -22,10 +22,8 @@ export async function fetchCargoForParent(
   parentType: 'mech' | 'crawler',
   parentId: string
 ): Promise<HydratedCargo[]> {
-  // Build query based on parent type
   const column = `${parentType}_id` as const
 
-  // Fetch cargo
   const { data: cargo, error } = await supabase
     .from('cargo')
     .select('*')
@@ -40,7 +38,6 @@ export async function fetchCargoForParent(
     return []
   }
 
-  // Hydrate cargo with reference data
   return hydrateCargoItems(cargo)
 }
 
@@ -52,17 +49,14 @@ export async function fetchCargoForParent(
  * @throws Error if validation fails or database insert fails
  */
 export async function createCargo(data: TablesInsert<'cargo'>): Promise<HydratedCargo> {
-  // Validate input
   const validated = createCargoSchema.parse(data)
 
-  // Insert cargo
   const { data: cargo, error } = await supabase.from('cargo').insert(validated).select().single()
 
   if (error) {
     throw new Error(`Failed to create cargo: ${error.message}`)
   }
 
-  // Hydrate and return
   return hydrateCargo(cargo)
 }
 
@@ -78,10 +72,8 @@ export async function updateCargo(
   id: string,
   updates: TablesUpdate<'cargo'>
 ): Promise<HydratedCargo> {
-  // Validate input
   const validated = updateCargoSchema.parse(updates)
 
-  // Update cargo
   const { data: cargo, error } = await supabase
     .from('cargo')
     .update(validated)
@@ -93,7 +85,6 @@ export async function updateCargo(
     throw new Error(`Failed to update cargo: ${error.message}`)
   }
 
-  // Hydrate and return
   return hydrateCargo(cargo)
 }
 
@@ -109,7 +100,6 @@ export async function updateCargoPosition(
   id: string,
   position: { row: number; col: number }
 ): Promise<HydratedCargo> {
-  // Update metadata with new position
   const { data: cargo, error } = await supabase
     .from('cargo')
     .update({ metadata: { position } })
@@ -121,7 +111,6 @@ export async function updateCargoPosition(
     throw new Error(`Failed to update cargo position: ${error.message}`)
   }
 
-  // Hydrate and return
   return hydrateCargo(cargo)
 }
 

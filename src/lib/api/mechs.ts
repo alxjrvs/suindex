@@ -17,7 +17,6 @@ export async function fetchPilotsMechs(pilotIds: string[]): Promise<MechRow[]> {
 
   const mechs = (data || []) as MechRow[]
 
-  // Check permissions for each mech
   for (const mech of mechs) {
     await assertCanViewMech(mech)
   }
@@ -49,9 +48,7 @@ export async function createMech(userId: string): Promise<MechRow> {
  * If setting active to true, automatically deactivates all other mechs for the same pilot
  */
 export async function updateMech(mechId: string, updates: Partial<MechRow>): Promise<void> {
-  // If setting this mech as active, deactivate others for the same pilot
   if (updates.active === true) {
-    // First get the pilot_id for this mech
     const { data: mech, error: fetchError } = await supabase
       .from('mechs')
       .select('pilot_id')
@@ -61,7 +58,6 @@ export async function updateMech(mechId: string, updates: Partial<MechRow>): Pro
     if (fetchError) throw fetchError
 
     if (mech?.pilot_id) {
-      // Deactivate all other mechs for this pilot
       const { error: deactivateError } = await supabase
         .from('mechs')
         .update({ active: false })
@@ -72,7 +68,6 @@ export async function updateMech(mechId: string, updates: Partial<MechRow>): Pro
     }
   }
 
-  // Then update the current mech
   const { error } = await supabase.from('mechs').update(updates).eq('id', mechId)
 
   if (error) throw error

@@ -30,22 +30,18 @@ interface PilotLiveSheetProps {
 export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const navigate = useNavigate()
 
-  // TanStack Query hooks
   const { pilot, isLocal, selectedClass, selectedAdvancedClass, modules, systems, loading, error } =
     useHydratedPilot(id)
 
   const updatePilot = useUpdatePilot()
   const deletePilot = useDeletePilot()
 
-  // Get current user for ownership check
   const { userId } = useCurrentUser()
 
-  // Determine if the sheet is editable (user owns the pilot or it's local)
   const isEditable = isLocal || (pilot ? isOwner(pilot.user_id, userId) : false)
 
   const selectedClassRef = selectedClass?.ref as SURefCoreClass | undefined
 
-  // Image upload hook - only enabled for non-local sheets
   const { handleUpload, isUploading } = useImageUpload({
     entityType: 'pilots',
     entityId: id,
@@ -53,7 +49,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
     queryKey: ['pilots', id],
   })
 
-  // Real-time subscriptions for live updates
   useLiveSheetSubscriptions({
     entityType: 'pilot',
     id,
