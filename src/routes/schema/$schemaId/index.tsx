@@ -14,6 +14,7 @@ export const Route = createFileRoute('/schema/$schemaId/')({
   },
   head: ({ loaderData }) => {
     const schemaName = loaderData?.schema?.displayName || 'Schema'
+    const schemaId = loaderData?.schema?.id || ''
     return {
       meta: [
         {
@@ -30,6 +31,23 @@ export const Route = createFileRoute('/schema/$schemaId/')({
         {
           property: 'og:description',
           content: `Browse all ${schemaName} in Salvage Union. Complete reference with stats, abilities, and details.`,
+        },
+      ],
+      scripts: [
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Dataset',
+            name: schemaName,
+            description: `Salvage Union ${schemaName} reference data`,
+            url: `https://suindex.pages.dev/schema/${schemaId}`,
+            keywords: ['Salvage Union', 'TTRPG', 'Reference', schemaName],
+            creator: {
+              '@type': 'Organization',
+              name: 'SUindex',
+            },
+          }),
         },
       ],
     }

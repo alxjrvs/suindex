@@ -134,7 +134,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                           value={schema.id}
                           onSelect={() => handleNavigate(`/schema/${schema.id}`)}
                         >
-                          {schema.title.replace('Salvage Union ', '')}
+                          {schema.displayName || schema.title.replace('Salvage Union ', '')}
                         </Menu.Item>
                       ))}
                     </Menu.Content>

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Super_secret_haven_loginRouteImport } from './routes/super_secret_haven_login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as R404RouteImport } from './routes/404'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as SheetsPilotRouteImport } from './routes/sheets/pilot'
@@ -37,6 +38,11 @@ const Super_secret_haven_loginRoute =
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R404Route = R404RouteImport.update({
+  id: '/404',
+  path: '/404',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -123,6 +129,7 @@ const SchemaSchemaIdItemItemIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/dashboard': typeof DashboardRouteWithChildren
   '/super_secret_haven_login': typeof Super_secret_haven_loginRoute
   '/dashboard/join': typeof DashboardJoinRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/super_secret_haven_login': typeof Super_secret_haven_loginRoute
   '/dashboard/join': typeof DashboardJoinRoute
   '/sheets/crawler': typeof SheetsCrawlerRoute
@@ -163,6 +171,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/dashboard': typeof DashboardRouteWithChildren
   '/super_secret_haven_login': typeof Super_secret_haven_loginRoute
   '/dashboard/join': typeof DashboardJoinRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/404'
     | '/dashboard'
     | '/super_secret_haven_login'
     | '/dashboard/join'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/404'
     | '/super_secret_haven_login'
     | '/dashboard/join'
     | '/sheets/crawler'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/404'
     | '/dashboard'
     | '/super_secret_haven_login'
     | '/dashboard/join'
@@ -245,6 +257,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  R404Route: typeof R404Route
   DashboardRoute: typeof DashboardRouteWithChildren
   Super_secret_haven_loginRoute: typeof Super_secret_haven_loginRoute
   SheetsCrawlerRoute: typeof SheetsCrawlerRoute
@@ -268,6 +281,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/404': {
+      id: '/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof R404RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -417,6 +437,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  R404Route: R404Route,
   DashboardRoute: DashboardRouteWithChildren,
   Super_secret_haven_loginRoute: Super_secret_haven_loginRoute,
   SheetsCrawlerRoute: SheetsCrawlerRoute,
