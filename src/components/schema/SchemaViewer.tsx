@@ -68,7 +68,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
 
   if (loading) {
     return (
-      <Flex alignItems="center" justifyContent="center" h="full">
+      <Flex alignItems="center" justifyContent="center" h="90vh">
         <Text fontSize="xl">Loading data...</Text>
       </Flex>
     )
@@ -182,7 +182,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
         )}
       </ReferenceHeader>
 
-      <Box flex="1" overflowY="auto" p={6}>
+      <Box flex="1" p={6}>
         <Box
           maxW="1400px"
           mx="auto"
