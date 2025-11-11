@@ -2,7 +2,7 @@
 # TanStack Start deployment with optimized caching
 
 [build]
-  command = "bun install && vite build"
+  command = "vite build"
   publish = "dist/client"
 
 # Cache headers for static assets
