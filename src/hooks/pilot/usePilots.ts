@@ -82,12 +82,8 @@ export function usePilot(id: string | undefined) {
 
   return useQuery({
     queryKey: pilotsKeys.byId(id!),
-    queryFn: isLocal
-      ? // Cache-only: Return undefined, data comes from cache
-        async () => defaultPilot
-      : // API-backed: Fetch from Supabase
-        () => fetchEntity<Pilot>('pilots', id!),
-    enabled: !!id, // Only run query if id is provided
+    queryFn: isLocal ? async () => defaultPilot : () => fetchEntity<Pilot>('pilots', id!),
+    enabled: !!id,
     initialData: isLocal ? defaultPilot : undefined,
   })
 }
@@ -135,10 +131,8 @@ export function useCreatePilot() {
       return createEntity<Pilot>('pilots', data as Pilot)
     },
     onSuccess: (newPilot) => {
-      // Don't invalidate for local IDs - cache is already set and there's no API to refetch from
       if (isLocalId(newPilot.id)) return
 
-      // Invalidate pilot cache to trigger refetch
       queryClient.invalidateQueries({
         queryKey: pilotsKeys.byId(newPilot.id),
       })
@@ -169,7 +163,6 @@ export function useUpdatePilot() {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: TablesUpdate<'pilots'> }) => {
-      // Cache-only mode: Update cache without API call
       if (isLocalId(id)) {
         const currentPilot = queryClient.getQueryData<Pilot>(pilotsKeys.byId(id))
         if (!currentPilot) {
@@ -186,21 +179,18 @@ export function useUpdatePilot() {
         return updatedPilot
       }
 
-      // API-backed mode: Update in Supabase
       await updateEntity<Pilot>('pilots', id, updates)
-      // Fetch updated entity
+
       return fetchEntity<Pilot>('pilots', id)
     },
-    // Optimistic update for API-backed mode only
+
     onMutate: async ({ id, updates }) => {
-      // Skip optimistic updates for local IDs - they're handled in mutationFn
       if (isLocalId(id)) return
 
       await queryClient.cancelQueries({ queryKey: pilotsKeys.byId(id) })
 
       const previousPilot = queryClient.getQueryData<Pilot>(pilotsKeys.byId(id))
 
-      // Optimistically update cache
       if (previousPilot) {
         queryClient.setQueryData<Pilot>(pilotsKeys.byId(id), {
           ...previousPilot,
@@ -211,15 +201,14 @@ export function useUpdatePilot() {
 
       return { previousPilot, id }
     },
-    // Rollback on error (API-backed only)
+
     onError: (_err, _variables, context) => {
       if (context?.previousPilot) {
         queryClient.setQueryData(pilotsKeys.byId(context.id), context.previousPilot)
       }
     },
-    // Refetch on success (API-backed only)
+
     onSuccess: (_updatedPilot, variables) => {
-      // Don't invalidate for local IDs - cache is already updated and there's no API to refetch from
       if (isLocalId(variables.id)) return
 
       queryClient.invalidateQueries({
@@ -248,20 +237,16 @@ export function useDeletePilot() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      // Cache-only mode: Remove from cache
       if (isLocalId(id)) {
         queryClient.removeQueries({ queryKey: pilotsKeys.byId(id) })
         return
       }
 
-      // API-backed mode: Delete from Supabase
       await deleteEntity('pilots', id)
     },
     onSuccess: (_, id) => {
-      // Don't invalidate for local IDs - cache is already removed
       if (isLocalId(id)) return
 
-      // Invalidate pilot cache
       queryClient.invalidateQueries({
         queryKey: pilotsKeys.byId(id),
       })

@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite'
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import react from '@vitejs/plugin-react'
+import netlify from '@netlify/vite-plugin-tanstack-start'
 import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { VitePluginRadar } from 'vite-plugin-radar'
@@ -7,9 +9,11 @@ import { VitePluginRadar } from 'vite-plugin-radar'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    tanstackStart(),
     react({
       jsxRuntime: 'automatic',
     }),
+    netlify(),
     compression({
       algorithm: 'gzip',
       ext: '.gz',
@@ -20,11 +24,9 @@ export default defineConfig({
       filename: 'dist/bundle-analysis.html',
     }),
     VitePluginRadar({
-      // Google Analytics 4
       analytics: {
         id: process.env.VITE_GA_MEASUREMENT_ID || '',
       },
-      // Only enable in production
       enableDev: false,
     }),
   ],
@@ -34,9 +36,18 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          'salvage-union': ['salvageunion-reference'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('salvageunion-reference')) {
+              return 'salvage-union'
+            }
+            if (id.includes('@tanstack/react-router') || id.includes('@tanstack/react-start')) {
+              return 'router'
+            }
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'vendor'
+            }
+          }
         },
       },
       onwarn(warning, warn) {

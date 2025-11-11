@@ -10,13 +10,11 @@ export function useCurrentUser() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial user
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUserId(user?.id || null)
       setLoading(false)
     })
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {

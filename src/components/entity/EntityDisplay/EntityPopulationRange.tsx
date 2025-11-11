@@ -7,10 +7,8 @@ import { useEntityDisplayContext } from './useEntityDisplayContext'
 export function EntityPopulationRange() {
   const { data, schemaName, spacing } = useEntityDisplayContext()
 
-  // Only show for crawler-tech-levels
   if (schemaName !== 'crawler-tech-levels') return null
 
-  // Type guard to check if data has population fields
   if (
     !('populationMin' in data) ||
     !('populationMax' in data) ||

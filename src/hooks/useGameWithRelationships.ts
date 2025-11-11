@@ -65,26 +65,20 @@ export function useGameWithRelationships(gameId: string | undefined) {
       setLoading(true)
       setError(null)
 
-      // Get current user
       const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Fetch game data and members in parallel
       const [gameData, members] = await Promise.all([fetchGame(gameId), fetchGameMembers(gameId)])
 
-      // Get user's role in the game
       const userRole = (await getUserGameRole(gameId, user.id)) as MemberRole
       const mediator = members.find((m) => m.role === 'mediator') || null
 
-      // Fetch crawler for this game
       const crawler = await fetchGameCrawler(gameId)
 
-      // Fetch pilots and mechs if crawler exists
       let pilots: PilotWithMech[] = []
       if (crawler) {
         const pilotsArray = await fetchCrawlerPilots(crawler.id)
 
-        // Fetch mechs for these pilots in a single query
         if (pilotsArray.length > 0) {
           const pilotIds = pilotsArray.map((p) => p.id)
           const mechsArray = await fetchPilotsMechs(pilotIds)
@@ -139,11 +133,9 @@ export function useGamesWithRelationships() {
       setLoading(true)
       setError(null)
 
-      // Get current user
       const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Fetch games the user is a member of with their roles
       const gameMembers = await fetchUserGamesWithRoles(user.id)
 
       if (gameMembers.length === 0) {
@@ -151,11 +143,9 @@ export function useGamesWithRelationships() {
         return
       }
 
-      // Fetch all game data in parallel
       const gameIds = gameMembers.map((gm) => gm.game_id)
       const gamesArray = await Promise.all(gameIds.map((id) => fetchGame(id)))
 
-      // Batch fetch all members for all games in parallel
       const allMembersPromises = gameIds.map((id) => fetchGameMembers(id))
       const allMembersArrays = await Promise.all(allMembersPromises)
       const membersMap = new Map<string, GameMember[]>()
@@ -163,7 +153,6 @@ export function useGamesWithRelationships() {
         membersMap.set(id, allMembersArrays[index])
       })
 
-      // Batch fetch all crawlers for all games in parallel
       const allCrawlersPromises = gameIds.map((id) => fetchGameCrawler(id))
       const allCrawlers = await Promise.all(allCrawlersPromises)
       const crawlersMap = new Map<string, CrawlerRow | null>()
@@ -171,10 +160,8 @@ export function useGamesWithRelationships() {
         crawlersMap.set(id, allCrawlers[index])
       })
 
-      // Collect all crawler IDs that exist
       const crawlerIds = allCrawlers.filter((c): c is CrawlerRow => c !== null).map((c) => c.id)
 
-      // Batch fetch all pilots for all crawlers in parallel
       const allPilotsMap = new Map<string, PilotRow[]>()
       if (crawlerIds.length > 0) {
         const allPilotsPromises = crawlerIds.map((id) => fetchCrawlerPilots(id))
@@ -184,18 +171,15 @@ export function useGamesWithRelationships() {
         })
       }
 
-      // Collect all pilot IDs
       const allPilotIds = Array.from(allPilotsMap.values())
         .flat()
         .map((p) => p.id)
 
-      // Batch fetch all mechs for all pilots in a single query
       let allMechs: MechRow[] = []
       if (allPilotIds.length > 0) {
         allMechs = await fetchPilotsMechs(allPilotIds)
       }
 
-      // Build the final games with relationships
       const gamesWithRelationships = gamesArray.map((game) => {
         const gameMember = gameMembers.find((gm) => gm.game_id === game.id)
         const role = (gameMember?.role || 'player') as MemberRole

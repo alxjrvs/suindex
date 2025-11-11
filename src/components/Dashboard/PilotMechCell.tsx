@@ -19,19 +19,16 @@ interface PilotMechCellProps {
  * Fetches the member's active pilot and their mech from the crawler
  */
 export function PilotMechCell({ crawlerId, memberId, displayName }: PilotMechCellProps) {
-  // Fetch pilots for this crawler
   const { data: pilots = [], isLoading: pilotsLoading } = useQuery({
     queryKey: ['game-member-pilots', memberId, crawlerId],
     queryFn: () => fetchCrawlerPilots(crawlerId),
     enabled: !!crawlerId,
   })
 
-  // Find this member's active pilot (or first active pilot if no memberId)
   const pilot = memberId
     ? pilots.find((p) => p.user_id === memberId && p.active)
     : pilots.find((p) => p.active)
 
-  // Fetch mech for this pilot
   const { data: mechs = [] } = useQuery({
     queryKey: ['game-member-mechs', memberId, pilot?.id],
     queryFn: () => {
@@ -43,7 +40,6 @@ export function PilotMechCell({ crawlerId, memberId, displayName }: PilotMechCel
 
   const mech = mechs.find((m) => m.pilot_id === pilot?.id)
 
-  // Fetch pilot callsign and mech details for label
   const { mech: hydratedMech, selectedChassis } = useHydratedMech(mech?.id || '')
   const { data: pilotData } = useQuery({
     queryKey: ['pilot-callsign', pilot?.id],
@@ -59,7 +55,6 @@ export function PilotMechCell({ crawlerId, memberId, displayName }: PilotMechCel
     ? 'Loading...'
     : `${pilotData?.callsign || ''}${mechName ? ` & ${mechName}` : ''}`
 
-  // Use display name or default label
   const label = displayName || defaultLabel
 
   return (

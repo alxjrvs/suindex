@@ -41,7 +41,6 @@ export function CrawlerHeaderInputs({
 
   const handleUpgradeToNextTechLevel = () => {
     if (isMaxUpgrade && currentTechLevel < 6) {
-      // Trigger all flash animations
       setFlashUpkeep(true)
       setFlashTL(true)
       setFlashUpgradeDisplay(true)
@@ -57,7 +56,6 @@ export function CrawlerHeaderInputs({
     }
   }
 
-  // Build scrapByTL object
   const scrapByTL = useMemo(
     () => ({
       1: crawler?.scrap_tl_one ?? 0,
@@ -77,7 +75,6 @@ export function CrawlerHeaderInputs({
     ]
   )
 
-  // Check if we can increment upgrade (need scrap at crawler's tech level)
   const canIncrementUpgrade = useMemo(() => {
     if (currentUpgrade >= MAX_UPGRADE) return false
     return hasEnoughScrapAtTechLevel(UPKEEP_STEP, currentTechLevel, scrapByTL)
@@ -88,20 +85,16 @@ export function CrawlerHeaderInputs({
       const isIncrement = newValue > currentUpgrade
 
       if (isIncrement) {
-        // Check if we have enough scrap at the crawler's current tech level
         if (hasEnoughScrapAtTechLevel(UPKEEP_STEP, currentTechLevel, scrapByTL)) {
-          // Calculate which scrap to remove
           const upkeepCost = UPKEEP_STEP * currentTechLevel
           const { updates: scrapUpdates } = calculateScrapRemoval(upkeepCost, scrapByTL)
 
-          // Flash the crawler's tech level (not the consumed scrap)
           setFlashUpkeep(true)
           setFlashTL(true)
 
           updateCrawler.mutate({ id, updates: { upgrade: newValue, ...scrapUpdates } })
         }
       } else {
-        // Decrement doesn't consume scrap
         updateCrawler.mutate({ id, updates: { upgrade: newValue } })
       }
     },
@@ -110,7 +103,6 @@ export function CrawlerHeaderInputs({
 
   const onCrawlerTypeChange = useOnCrawlerTypeChange(id)
 
-  // Reset flash states
   useEffect(() => {
     if (flashUpkeep) {
       const timer = setTimeout(() => setFlashUpkeep(false), 3100)

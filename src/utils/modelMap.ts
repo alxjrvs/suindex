@@ -7,11 +7,10 @@ export const modelMap = {
   chassis: SalvageUnionReference.Chassis,
   'classes-core': SalvageUnionReference.CoreClasses,
   'classes-advanced': SalvageUnionReference.AdvancedClasses,
-  'classes-hybrid': SalvageUnionReference.AdvancedClasses, // Now merged into AdvancedClasses
-  // Support dot notation for classes (used in schema catalog)
+  'classes-hybrid': SalvageUnionReference.AdvancedClasses,
   'classes.core': SalvageUnionReference.CoreClasses,
   'classes.advanced': SalvageUnionReference.AdvancedClasses,
-  'classes.hybrid': SalvageUnionReference.AdvancedClasses, // Now merged into AdvancedClasses
+  'classes.hybrid': SalvageUnionReference.AdvancedClasses,
   crawlers: SalvageUnionReference.Crawlers,
   'crawler-bays': SalvageUnionReference.CrawlerBays,
   'crawler-tech-levels': SalvageUnionReference.CrawlerTechLevels,

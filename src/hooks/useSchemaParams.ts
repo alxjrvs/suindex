@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams } from '@tanstack/react-router'
 
 export interface SchemaRouteParams {
   schemaId: string
@@ -6,10 +6,10 @@ export interface SchemaRouteParams {
 }
 
 export function useSchemaParams(): SchemaRouteParams {
-  const params = useParams<{ schemaId: string; itemId?: string }>()
+  const params = useParams({ strict: false })
   return {
-    schemaId: params.schemaId || '',
-    itemId: params.itemId,
+    schemaId: (params as { schemaId?: string }).schemaId || '',
+    itemId: (params as { itemId?: string }).itemId,
   }
 }
 

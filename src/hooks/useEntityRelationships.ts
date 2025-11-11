@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { Database } from '../types/database-generated.types'
 import { getUser, fetchUserEntities } from '../lib/api'
 
@@ -32,7 +32,7 @@ export function useEntityRelationships<T extends { id: string } = { id: string; 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const load = async () => {
+  const load = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -53,12 +53,11 @@ export function useEntityRelationships<T extends { id: string } = { id: string; 
     } finally {
       setLoading(false)
     }
-  }
+  }, [config.table, config.orderBy, config.filterField, config.filterValue])
 
   useEffect(() => {
     load()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config.table, config.selectFields, config.orderBy, config.filterField, config.filterValue])
+  }, [load])
 
   return { items, loading, error, reload: load }
 }

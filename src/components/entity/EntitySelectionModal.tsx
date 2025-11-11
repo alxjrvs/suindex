@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import {
@@ -7,7 +7,7 @@ import {
   type SURefEntity,
   type SURefSchemaName,
 } from 'salvageunion-reference'
-import { Virtuoso } from 'react-virtuoso'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import Modal from '../Modal'
 import { EntityDisplay } from './EntityDisplay'
 import { TECH_LEVELS } from '../../constants/gameRules'
@@ -40,12 +40,10 @@ export function EntitySelectionModal({
   const [techLevelFilter, setTechLevelFilter] = useState<number | null>(null)
   const [schemaFilter, setSchemaFilter] = useState<SURefSchemaName | null>(null)
 
-  // Fetch all entities from the specified types
   const allEntities = useMemo(() => {
     const entities: Array<{ entity: SURefEntity; schemaName: SURefSchemaName }> = []
 
     schemaNames.forEach((schemaName) => {
-      // Use findAllIn to get all items from the schema
       const items = SalvageUnionReference.findAllIn(schemaName, () => true)
       items.forEach((item) => {
         entities.push({ entity: item, schemaName })
@@ -55,12 +53,10 @@ export function EntitySelectionModal({
     return entities
   }, [schemaNames])
 
-  // Helper function to get tech level from entity (uses package utility)
   const getEntityTechLevel = (entity: SURefEntity): number | null => {
     return getTechLevel(entity) ?? null
   }
 
-  // Pre-compute disabled status for all entities (memoized separately to avoid re-sorting)
   const disabledEntities = useMemo(() => {
     if (!shouldDisableEntity) return new Set<string>()
 
@@ -74,14 +70,11 @@ export function EntitySelectionModal({
     return disabled
   }, [allEntities, shouldDisableEntity])
 
-  // Filter entities based on search term, tech level, and schema
   const filteredEntities = useMemo(() => {
     return allEntities
       .filter(({ entity, schemaName }) => {
-        // Exclude non-indexable entities
         const isIndexable = 'indexable' in entity ? entity.indexable !== false : true
 
-        // Search filter
         const matchesSearch =
           !searchTerm ||
           ('name' in entity &&
@@ -91,20 +84,17 @@ export function EntitySelectionModal({
             typeof entity.description === 'string' &&
             entity.description.toLowerCase().includes(searchTerm.toLowerCase()))
 
-        // Tech level filter (only if enabled and entity has techLevel)
         const entityTechLevel = getEntityTechLevel(entity)
         const matchesTechLevel =
           techLevelFilter === null ||
           entityTechLevel === null ||
           entityTechLevel === techLevelFilter
 
-        // Schema filter (only if multiple schemas and filter is set)
         const matchesSchema = schemaFilter === null || schemaName === schemaFilter
 
         return isIndexable && matchesSearch && matchesTechLevel && matchesSchema
       })
       .sort((a, b) => {
-        // First, sort disabled entities to the end (use pre-computed set)
         const aId = 'id' in a.entity ? (a.entity.id as string) : ''
         const bId = 'id' in b.entity ? (b.entity.id as string) : ''
         const aDisabled = disabledEntities.has(`${a.schemaName}-${aId}`)
@@ -114,7 +104,6 @@ export function EntitySelectionModal({
           return aDisabled ? 1 : -1
         }
 
-        // Then sort by tech level (if available), then by name
         const aTechLevel = getEntityTechLevel(a.entity) || 0
         const bTechLevel = getEntityTechLevel(b.entity) || 0
 
@@ -133,13 +122,20 @@ export function EntitySelectionModal({
     onClose()
   }
 
-  // Derive whether to show tech level filter based on schema definitions
   const showTechLevelFilter = useMemo(() => {
     if (!schemaNames || schemaNames.length === 0) return false
 
-    // Check if any of the schemas have entities with tech levels
     return allEntities.some(({ entity }) => getEntityTechLevel(entity) !== null)
   }, [schemaNames, allEntities])
+
+  const parentRef = useRef<HTMLDivElement>(null)
+
+  const virtualizer = useVirtualizer({
+    count: filteredEntities.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 200,
+    overscan: 5,
+  })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
@@ -156,7 +152,6 @@ export function EntitySelectionModal({
           bg="su.mediumGrey"
           w="full"
         >
-          {/* Search Input */}
           <Input
             type="text"
             placeholder="Search by name or description..."
@@ -172,7 +167,6 @@ export function EntitySelectionModal({
             color="su.black"
           />
 
-          {/* Filters Row */}
           <Flex
             gap={4}
             justifyContent="space-between"
@@ -180,7 +174,6 @@ export function EntitySelectionModal({
             flexWrap="wrap"
             w="full"
           >
-            {/* Tech Level Filter */}
             {showTechLevelFilter && (
               <Flex gap={1} flexWrap="wrap">
                 {TECH_LEVELS.map((tl) => (
@@ -213,7 +206,6 @@ export function EntitySelectionModal({
               </Flex>
             )}
 
-            {/* Schema Filter - only show if multiple schemas */}
             {schemaNames.length > 1 && (
               <Flex gap={2} flexWrap="wrap" justifyContent="flex-end">
                 {schemaNames.map((schema) => (
@@ -249,24 +241,48 @@ export function EntitySelectionModal({
           </Flex>
         </VStack>
 
-        {/* Scrollable Entity List - Virtualized */}
-        <Box flex="1" minH={0}>
+        <Box
+          ref={parentRef}
+          flex="1"
+          minH={0}
+          overflowY="auto"
+          css={{
+            '&::-webkit-scrollbar': {
+              width: '8px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'var(--chakra-colors-su-lightBlue)',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: 'var(--chakra-colors-su-orange)',
+              borderRadius: '4px',
+            },
+          }}
+        >
           {filteredEntities.length === 0 ? (
             <Text textAlign="center" color="su.black" py={8}>
               No items found matching your criteria.
             </Text>
           ) : (
-            <Virtuoso
-              style={{ height: '100%' }}
-              data={filteredEntities}
-              itemContent={(_index, { entity, schemaName }) => {
+            <Box position="relative" h={`${virtualizer.getTotalSize()}px`} w="full">
+              {virtualizer.getVirtualItems().map((virtualItem) => {
+                const { entity, schemaName } = filteredEntities[virtualItem.index]
                 const entityId = 'id' in entity ? (entity.id as string) : ''
                 const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
                 const buttonText = `${selectButtonTextPrefix} ${entityName}`
                 const isDisabled = shouldDisableEntity ? shouldDisableEntity(entity) : false
 
                 return (
-                  <Box px={4} pb={2}>
+                  <Box
+                    key={virtualItem.key}
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    w="full"
+                    transform={`translateY(${virtualItem.start}px)`}
+                    px={4}
+                    pb={2}
+                  >
                     <EntityDisplay
                       schemaName={schemaName}
                       compact
@@ -291,8 +307,8 @@ export function EntitySelectionModal({
                     />
                   </Box>
                 )
-              }}
-            />
+              })}
+            </Box>
           )}
         </Box>
       </VStack>

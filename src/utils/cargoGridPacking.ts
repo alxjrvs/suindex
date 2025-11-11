@@ -9,8 +9,8 @@ import { getCargoGridConfig } from '../constants/gameRules'
 
 export interface GridCell {
   itemId: string | null
-  isCenter: boolean // Where to render the label
-  isTopRight: boolean // Where to render the close button
+  isCenter: boolean
+  isTopRight: boolean
 }
 
 export interface PackedGrid {
@@ -38,7 +38,6 @@ function findBestShape(amount: number, maxCols: number): { width: number; height
     }
   }
 
-  // If no perfect factors, find closest rectangular approximation
   if (factors.length === 0) {
     const sqrt = Math.sqrt(amount)
     const width = Math.min(Math.ceil(sqrt), maxCols)
@@ -46,7 +45,6 @@ function findBestShape(amount: number, maxCols: number): { width: number; height
     return { width, height }
   }
 
-  // Return the shape with minimum perimeter (most square-like)
   factors.sort((a, b) => a.perimeter - b.perimeter)
   return { width: factors[0].width, height: factors[0].height }
 }
@@ -95,7 +93,6 @@ function findConnectedRegion(
 ): number[] | null {
   const visited = new Set<number>()
 
-  // Try to find a region matching the preferred shape first
   if (preferredShape) {
     const region = findRectangularRegion(
       cells,
@@ -107,7 +104,6 @@ function findConnectedRegion(
     if (region) return region
   }
 
-  // Otherwise, try flood fill from each empty cell
   for (let startIdx = 0; startIdx < cells.length; startIdx++) {
     if (cells[startIdx].itemId !== null || visited.has(startIdx)) continue
 
@@ -155,13 +151,11 @@ function findRectangularRegion(
   width: number,
   height: number
 ): number[] | null {
-  // Try each possible top-left corner
   for (let startRow = 0; startRow <= rows - height; startRow++) {
     for (let startCol = 0; startCol <= cols - width; startCol++) {
       const region: number[] = []
       let valid = true
 
-      // Check if all cells in this rectangle are empty
       for (let r = startRow; r < startRow + height && valid; r++) {
         for (let c = startCol; c < startCol + width && valid; c++) {
           const idx = posToIndex({ row: r, col: c }, cols)
@@ -196,15 +190,12 @@ function findConnectedRegionIncludingCell(
 ): number[] | null {
   const targetIdx = posToIndex(targetCell, cols)
 
-  // Check if target cell is valid and empty
   if (targetIdx < 0 || targetIdx >= cells.length || cells[targetIdx].itemId !== null) {
     return null
   }
 
-  // Try rectangular region centered on target cell first
   if (preferredShape) {
     const { width, height } = preferredShape
-    // Try different offsets to center the rectangle on the target cell
     for (let offsetRow = 0; offsetRow < height; offsetRow++) {
       for (let offsetCol = 0; offsetCol < width; offsetCol++) {
         const startRow = targetCell.row - offsetRow
@@ -238,7 +229,6 @@ function findConnectedRegionIncludingCell(
     }
   }
 
-  // Fall back to flood fill from target cell
   const region: number[] = []
   const queue: number[] = [targetIdx]
   const visited = new Set<number>()
@@ -280,7 +270,6 @@ function findSpecialCells(
 ): { centerIdx: number; topRightIdx: number } {
   const positions = region.map((idx) => indexToPos(idx, cols))
 
-  // Find center: cell closest to the geometric center
   const avgRow = positions.reduce((sum, p) => sum + p.row, 0) / positions.length
   const avgCol = positions.reduce((sum, p) => sum + p.col, 0) / positions.length
 
@@ -296,7 +285,6 @@ function findSpecialCells(
     }
   }
 
-  // Find top-right: minimum row, then maximum col
   let topRightIdx = region[0]
   let minRow = Infinity
   let maxCol = -Infinity
@@ -322,11 +310,9 @@ export function packCargoGrid(
   maxCapacity: number,
   previousGrid?: PackedGrid
 ): PackedGrid {
-  // Calculate grid dimensions using centralized config
   const { cols } = getCargoGridConfig(maxCapacity)
   const rows = Math.ceil(maxCapacity / cols)
 
-  // Initialize empty grid
   const cells: GridCell[] = Array(maxCapacity)
     .fill(null)
     .map(() => ({
@@ -335,9 +321,7 @@ export function packCargoGrid(
       isTopRight: false,
     }))
 
-  // If we have a previous grid, try to preserve existing placements
   if (previousGrid) {
-    // First, restore all existing items that are still in the new items list
     const itemIds = new Set(items.map((item) => item.id))
 
     for (let i = 0; i < Math.min(previousGrid.cells.length, cells.length); i++) {
@@ -348,18 +332,15 @@ export function packCargoGrid(
     }
   }
 
-  // Find items that need to be placed (new items or items not in previous grid)
   const placedItemIds = new Set(
     cells.filter((cell) => cell.itemId !== null).map((cell) => cell.itemId)
   )
   const itemsToPlace = items.filter((item) => !placedItemIds.has(item.id))
 
-  // Try to place new items
   let needsRepack = false
   for (const item of itemsToPlace) {
     const preferredShape = findBestShape(item.amount, cols)
 
-    // If item has a position, try to place it including that cell
     let region: number[] | null = null
     if (item.position) {
       region = findConnectedRegionIncludingCell(
@@ -372,20 +353,17 @@ export function packCargoGrid(
       )
     }
 
-    // If no position or couldn't place at position, use normal placement
     if (!region) {
       region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
     }
 
     if (!region) {
-      // No space available - need to repack everything
       needsRepack = true
       break
     }
 
     const { centerIdx, topRightIdx } = findSpecialCells(region, cols)
 
-    // Assign cells to this item
     for (const idx of region) {
       cells[idx].itemId = item.id
       cells[idx].isCenter = idx === centerIdx
@@ -393,9 +371,7 @@ export function packCargoGrid(
     }
   }
 
-  // If we need to repack, start fresh and pack all items
   if (needsRepack) {
-    // Clear the grid
     for (let i = 0; i < cells.length; i++) {
       cells[i] = {
         itemId: null,
@@ -404,17 +380,13 @@ export function packCargoGrid(
       }
     }
 
-    // Clear positions from all items to allow free rearrangement
-    // Sort by amount (descending) for better packing - larger items first
     const sortedItems = [...items]
       .map((item) => ({ ...item, position: undefined }))
       .sort((a, b) => b.amount - a.amount)
 
-    // Try to place each item
     for (const item of sortedItems) {
       const preferredShape = findBestShape(item.amount, cols)
 
-      // Find any available region (no position constraints during repack)
       const region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
 
       if (!region) {
@@ -424,7 +396,6 @@ export function packCargoGrid(
 
       const { centerIdx, topRightIdx } = findSpecialCells(region, cols)
 
-      // Assign cells to this item
       for (const idx of region) {
         cells[idx].itemId = item.id
         cells[idx].isCenter = idx === centerIdx

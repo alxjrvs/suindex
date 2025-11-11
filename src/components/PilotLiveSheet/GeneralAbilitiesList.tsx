@@ -4,7 +4,6 @@ import { SalvageUnionReference } from 'salvageunion-reference'
 import { EntityDisplay } from '../entity/EntityDisplay'
 
 export function GeneralAbilitiesList() {
-  // Get all abilities with level === "G" (Generic)
   const genericAbilities = useMemo(() => {
     return SalvageUnionReference.Abilities.all()
       .filter((ability) => String(ability.level).toUpperCase() === 'G')
@@ -31,7 +30,7 @@ export function GeneralAbilitiesList() {
           css={{
             breakInside: 'avoid',
             marginBottom: '1rem',
-            // Prevent clipping of rounded corners and shadows
+
             padding: '2px',
           }}
           position="relative"

@@ -5,26 +5,31 @@ import Footer from '../Footer'
 import type { SchemaInfo } from '../../types/schema'
 import { useSchemaData } from './useSchemaData'
 import { useSchemaId } from '../../hooks/useSchemaParams'
-import { useMemo, useState, Suspense } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useMemo, Suspense } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { Route } from '../../routes/schema/$schemaId/index'
 import { getDisplayComponent } from '../componentRegistry'
 import type { SURefEntity } from 'salvageunion-reference'
 import { getTechLevel } from 'salvageunion-reference'
 
 interface SchemaViewerProps {
   schemas: SchemaInfo[]
+  data?: SURefEntity[]
 }
 
-export default function SchemaViewer({ schemas }: SchemaViewerProps) {
+export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaViewerProps) {
   const schemaId = useSchemaId()
-  const { data, loading, error } = useSchemaData(schemaId)
-  const navigate = useNavigate()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [techLevelFilters, setTechLevelFilters] = useState<Set<string>>(new Set())
+  const { data: fetchedData, loading, error } = useSchemaData(schemaId)
+  const navigate = useNavigate({ from: Route.fullPath })
+
+  const data = prefetchedData ?? fetchedData
+
+  const { search = '', tl = [] } = Route.useSearch()
+
+  const techLevelFilters = useMemo(() => new Set(tl.map(String)), [tl])
 
   const currentSchema = schemas.find((s) => s.id === schemaId)
 
-  // Get unique tech levels from data
   const techLevels = useMemo(() => {
     const levels = new Set<number>()
     data.forEach((item) => {
@@ -36,12 +41,10 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
     return Array.from(levels).sort()
   }, [data])
 
-  // Filter data based on search and tech level
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      // Search filter
-      if (searchTerm) {
-        const searchLower = searchTerm.toLowerCase()
+      if (search) {
+        const searchLower = search.toLowerCase()
         const nameMatch =
           'name' in item && item.name?.toString().toLowerCase().includes(searchLower)
         const descMatch =
@@ -49,7 +52,6 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
         if (!nameMatch && !descMatch) return false
       }
 
-      // Tech level filter
       if (techLevelFilters.size > 0) {
         const techLevel = getTechLevel(item)
         const itemTechLevel = techLevel?.toString()
@@ -60,7 +62,7 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
 
       return true
     })
-  }, [data, searchTerm, techLevelFilters])
+  }, [data, search, techLevelFilters])
 
   const DisplayComponent = useMemo(() => getDisplayComponent(schemaId), [schemaId])
 
@@ -92,27 +94,35 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
     )
   }
 
-  // Capitalize schema name (e.g., "abilities" -> "Abilities")
   const capitalizedTitle =
     currentSchema.displayNamePlural ||
     currentSchema.title.charAt(0).toUpperCase() + currentSchema.title.slice(1)
 
   return (
     <Flex flexDirection="column" minH="100%">
-      <ReferenceHeader title={capitalizedTitle} textAlign="center">
+      <ReferenceHeader
+        title={capitalizedTitle}
+        textAlign="center"
+        py={techLevels.length > 1 ? 6 : 4}
+        px={6}
+      >
         <Box maxW="800px" mx="auto" w="full">
-          <Text color="su.brick" textAlign="center" mb={4}>
+          <Text color="su.brick" textAlign="center" mb={techLevels.length > 1 ? 3 : 2}>
             {currentSchema.description}
           </Text>
         </Box>
 
-        {/* Search Bar */}
-        <Box mb={4} w="full">
+        <Box mb={techLevels.length > 1 ? 3 : 2} w="full" maxW="600px" mx="auto">
           <Input
             type="text"
             placeholder="Search by name or description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={search}
+            onChange={(e) => {
+              navigate({
+                search: (prev) => ({ ...prev, search: e.target.value || undefined }),
+                replace: true,
+              })
+            }}
             borderColor="su.lightBlue"
             focusRingColor="su.orange"
             bg="su.white"
@@ -121,11 +131,14 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
           />
         </Box>
 
-        {/* Tech Level Filters */}
         {techLevels.length > 1 && (
-          <Flex flexWrap="wrap" gap={2} mb={4}>
+          <Flex flexWrap="wrap" gap={2}>
             <Button
-              onClick={() => setTechLevelFilters(new Set())}
+              onClick={() => {
+                navigate({
+                  search: (prev) => ({ ...prev, tl: undefined }),
+                })
+              }}
               px={4}
               py={2}
               fontWeight="medium"
@@ -143,13 +156,14 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
                 <Button
                   key={level}
                   onClick={() => {
-                    const newFilters = new Set(techLevelFilters)
-                    if (isSelected) {
-                      newFilters.delete(String(level))
-                    } else {
-                      newFilters.add(String(level))
-                    }
-                    setTechLevelFilters(newFilters)
+                    navigate({
+                      search: (prev) => ({
+                        ...prev,
+                        tl: prev.tl?.includes(level)
+                          ? prev.tl.filter((l) => l !== level)
+                          : [...(prev.tl || []), level],
+                      }),
+                    })
                   }}
                   px={4}
                   py={2}
@@ -191,7 +205,12 @@ export default function SchemaViewer({ schemas }: SchemaViewerProps) {
                 zIndex: { base: 'auto', md: 10 },
                 boxShadow: { base: 'none', md: '0 8px 16px rgba(0, 0, 0, 0.2)' },
               }}
-              onClick={() => navigate(`/schema/${schemaId}/item/${item.id}`)}
+              onClick={() =>
+                navigate({
+                  to: '/schema/$schemaId/item/$itemId',
+                  params: { schemaId, itemId: item.id },
+                })
+              }
             >
               <Suspense fallback={<Box h="200px" bg="su.lightBlue" borderRadius="md" />}>
                 <DisplayComponent hideActions data={item} compact={true} collapsible={false} />

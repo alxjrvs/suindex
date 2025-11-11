@@ -8,7 +8,7 @@ interface SheetSelectProps {
   value: string | null
   onChange: (value: string | null) => void
   disabled?: boolean
-  // Whether the current user owns this entity (affects disabled styling)
+
   isOwner?: boolean
   placeholder?: string
   loading?: boolean
@@ -27,13 +27,10 @@ export function SheetSelect({
   options,
   children,
 }: SheetSelectProps) {
-  // When disabled and owner, show dimmed styling
-  // When disabled and not owner, show active styling but still disabled
   const showDisabledStyling = disabled && isOwner
 
   return (
     <Flex direction="column">
-      {/* Label */}
       <Text
         variant="pseudoheader"
         fontSize="sm"
@@ -45,7 +42,6 @@ export function SheetSelect({
         {label}
       </Text>
 
-      {/* Select */}
       <NativeSelectRoot disabled={disabled}>
         <NativeSelectField
           value={value ?? ''}

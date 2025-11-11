@@ -49,9 +49,7 @@ export async function updateCrawler(
   crawlerId: string,
   updates: Partial<CrawlerRow>
 ): Promise<void> {
-  // If setting this crawler as active, deactivate others for the same game
   if (updates.active === true) {
-    // First get the game_id for this crawler
     const { data: crawler, error: fetchError } = await supabase
       .from('crawlers')
       .select('game_id')
@@ -61,7 +59,6 @@ export async function updateCrawler(
     if (fetchError) throw fetchError
 
     if (crawler?.game_id) {
-      // Deactivate all other crawlers for this game
       const { error: deactivateError } = await supabase
         .from('crawlers')
         .update({ active: false })
@@ -72,7 +69,6 @@ export async function updateCrawler(
     }
   }
 
-  // Then update the current crawler
   const { error } = await supabase.from('crawlers').update(updates).eq('id', crawlerId)
 
   if (error) throw error

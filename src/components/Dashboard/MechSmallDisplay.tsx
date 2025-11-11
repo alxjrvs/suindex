@@ -1,12 +1,15 @@
 import { VStack, Box } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { useHydratedMech } from '../../hooks/mech'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { fetchUserDisplayName } from '../../lib/api/users'
+import { mechsKeys } from '../../hooks/mech/useMechs'
+import { fetchEntity } from '../../lib/api/entities'
+import type { Tables } from '../../types/database-generated.types'
 
 interface MechSmallDisplayProps {
   id?: string
@@ -15,12 +18,20 @@ interface MechSmallDisplayProps {
 
 export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const { mech, selectedChassis, loading: mechLoading } = useHydratedMech(id)
 
   const chassisName = selectedChassis?.ref.name || 'No Chassis'
 
-  // Fetch pilot name and crawler_id if mech has pilot_id
+  const handleMouseEnter = () => {
+    if (!id) return
+    queryClient.prefetchQuery({
+      queryKey: mechsKeys.byId(id),
+      queryFn: () => fetchEntity<Tables<'mechs'>>('mechs', id),
+    })
+  }
+
   const { data: pilotData, isLoading: pilotLoading } = useQuery({
     queryKey: ['pilot-data', mech?.pilot_id],
     queryFn: async () => {
@@ -41,7 +52,6 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     enabled: !!mech?.pilot_id,
   })
 
-  // Fetch crawler name if pilot has crawler_id
   const { data: crawlerName, isLoading: crawlerLoading } = useQuery({
     queryKey: ['crawler-name', pilotData?.crawler_id],
     queryFn: async () => {
@@ -62,17 +72,19 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     enabled: !!pilotData?.crawler_id,
   })
 
-  // Fetch owner's Discord username
   const { data: ownerData } = useQuery({
     queryKey: ['user-display-name', mech?.user_id],
     queryFn: () => fetchUserDisplayName(mech!.user_id),
-    enabled: !!mech?.user_id && currentUserId !== mech?.user_id, // Only fetch if not the current user
+    enabled: !!mech?.user_id && currentUserId !== mech?.user_id,
   })
 
   const isOwner = currentUserId === mech?.user_id
   const ownerName = isOwner ? 'You' : ownerData || 'Owner'
 
-  const onClick = () => navigate(`/dashboard/mechs/${id}`)
+  const onClick = () => {
+    if (!id) return
+    navigate({ to: '/dashboard/mechs/$id', params: { id } })
+  }
 
   const isLoading = !id || mechLoading || pilotLoading || crawlerLoading
 
@@ -89,7 +101,6 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
   }
   const detailContent = (
     <VStack gap={1} alignItems="stretch">
-      {/* Crawler badge (pink) */}
       {crawlerName && (
         <Box bg="su.pink" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
           <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">
@@ -98,7 +109,6 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
         </Box>
       )}
 
-      {/* Pilot badge (orange) */}
       {pilotData?.callsign && (
         <Box bg="su.orange" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
           <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">
@@ -113,6 +123,7 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     <UserEntitySmallDisplay
       reverse={reverse}
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
       bgColor="su.green"
       detailLabel="Player"
       detailValue={ownerName}

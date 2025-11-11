@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '@chakra-ui/react'
 
 interface DeleteEntityProps {
-  entityName: string // e.g., "Crawler", "Mech", "Pilot", "Game"
+  entityName: string
   onConfirmDelete: () => void | Promise<void>
   disabled?: boolean
 }
@@ -26,7 +26,6 @@ export function DeleteEntity({ entityName, onConfirmDelete, disabled = false }: 
       await onConfirmDelete()
     } catch (error) {
       console.error(`Error deleting ${entityName}:`, error)
-      // Error handling is done in the parent component
     } finally {
       setIsDeleting(false)
     }

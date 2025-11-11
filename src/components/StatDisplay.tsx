@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react'
 interface StatDisplayProps {
   label: string
   value: number | string | undefined
-  outOfMax?: number // When provided, displays "value/outOfMax"
-  bottomLabel?: string // Optional label positioned below the value
+  outOfMax?: number
+  bottomLabel?: string
   labelId?: string
   disabled?: boolean
   onClick?: () => void
@@ -15,9 +15,9 @@ interface StatDisplayProps {
   borderColor?: string
   ariaLabel?: string
   compact?: boolean
-  flash?: boolean // Trigger flash animation
+  flash?: boolean
   inverse?: boolean
-  isOverMax?: boolean // When true, shows green border
+  isOverMax?: boolean
 }
 
 export function StatDisplay({
@@ -40,7 +40,6 @@ export function StatDisplay({
   const [isFlashing, setIsFlashing] = useState(false)
   const WrapperComponent = onClick ? Button : Box
 
-  // Combine label and bottomLabel for aria-label
   const combinedAriaLabel = ariaLabel || (bottomLabel ? `${label} ${bottomLabel}` : label)
   const trueBg = inverse ? 'su.black' : bg
   const trueValueColor = inverse ? 'su.white' : valueColor

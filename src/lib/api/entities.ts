@@ -35,7 +35,6 @@ export async function fetchEntity<T>(table: ValidTable, id: string): Promise<T> 
 
   const entity = castDatabaseResult<T>(data)
 
-  // Check permissions based on table type
   if (table === 'games') {
     await assertCanViewGame(entity as unknown as Tables<'games'>)
   } else if (table === 'crawlers') {

@@ -10,22 +10,22 @@ interface SheetInputProps {
   onChange?: (value: string) => void
   placeholder?: string
   disabled?: boolean
-  // Whether the current user owns this entity (affects disabled styling)
+
   isOwner?: boolean
-  // Optional dice roller
+
   onDiceRoll?: () => void
   diceRollAriaLabel?: string
   diceRollTitle?: string
-  // Optional toggle
+
   toggleChecked?: boolean
   onToggleChange?: (checked: boolean) => void
   toggleLabel?: string
-  // Optional typeahead/autocomplete
+
   onFocus?: () => void
   onBlur?: () => void
-  // Optional suffix text (e.g., "the Engineer")
+
   suffixText?: string
-  // Additional customization
+
   children?: ReactNode
 }
 
@@ -51,19 +51,14 @@ export function SheetInput({
   const hasDiceRoll = onDiceRoll !== undefined
   const hasSuffix = suffixText !== undefined
 
-  // When disabled and owner, show dimmed styling
-  // When disabled and not owner, show active styling but still disabled
   const showDisabledStyling = disabled && isOwner
 
-  // Local state for immediate UI updates
   const [localValue, setLocalValue] = useState(value)
 
-  // Sync local value when prop value changes (e.g., from external updates)
   useEffect(() => {
     setLocalValue(value)
   }, [value])
 
-  // Debounce the onChange callback
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localValue !== value && onChange) {
@@ -80,7 +75,6 @@ export function SheetInput({
 
   return (
     <Flex direction="column" position="relative">
-      {/* Label with optional toggle */}
       {label && (
         <Flex alignItems="center" mb={hasToggle ? -4 : -2} zIndex={1}>
           <Text variant="pseudoheader" fontSize="sm" textTransform="uppercase" ml={3}>
@@ -112,7 +106,6 @@ export function SheetInput({
         </Flex>
       )}
 
-      {/* Input with optional suffix, dice roller */}
       <Group attached w="full">
         <Input
           type="text"

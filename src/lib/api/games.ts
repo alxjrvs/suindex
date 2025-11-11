@@ -217,14 +217,12 @@ export async function updateGame(gameId: string, updates: Partial<GameRow>): Pro
  * Delete a game and all related data
  */
 export async function deleteGame(gameId: string): Promise<void> {
-  // 1) Un-assign crawlers pointing to this game (keep user association)
   const { error: crawlerUpdateError } = await supabase
     .from('crawlers')
     .update({ game_id: null })
     .eq('game_id', gameId)
   if (crawlerUpdateError) throw crawlerUpdateError
 
-  // 2) Clean up related rows for this game
   const { error: linksDeleteError } = await supabase
     .from('external_links')
     .delete()
@@ -243,7 +241,6 @@ export async function deleteGame(gameId: string): Promise<void> {
     .eq('game_id', gameId)
   if (membersDeleteError) throw membersDeleteError
 
-  // 3) Delete the game itself
   const { error: gameDeleteError } = await supabase.from('games').delete().eq('id', gameId)
   if (gameDeleteError) throw gameDeleteError
 }

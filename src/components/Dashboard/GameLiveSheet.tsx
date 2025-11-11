@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useParams, useNavigate } from 'react-router'
+import { useParams, useNavigate } from '@tanstack/react-router'
 import { Box, Flex, VStack, HStack, Grid } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { Button } from '@chakra-ui/react'
@@ -36,35 +36,27 @@ import { CrawlerSmallDisplay } from './CrawlerSmallDisplay'
 type GameInviteRow = GameInvite
 
 export function GameLiveSheet() {
-  const { gameId } = useParams<{ gameId: string }>()
+  const { gameId } = useParams({ strict: false })
   const navigate = useNavigate()
 
-  // Get current user for ownership check
   const { userId } = useCurrentUser()
 
-  // Fetch game data (lightweight - just the game row)
   const { data: game, isLoading: gameLoading, error: gameError } = useGame(gameId)
 
-  // Fetch game members
   const { data: members = [] } = useGameMembers(gameId)
 
-  // Fetch game crawler
   const { data: crawler } = useGameCrawler(gameId)
 
-  // Determine if current user is a mediator
   const isMediator = useMemo(() => {
     if (!members || !userId) return false
     return isGameMediator(members, userId)
   }, [members, userId])
 
-  // Determine if the game is editable (only mediators can edit)
   const isEditable = isMediator
 
-  // TanStack Query hooks for game data
   const updateGameMutation = useUpdateGame()
   const deleteGameMutation = useDeleteGame()
 
-  // Game invites (only for mediators)
   const {
     data: invites = [],
     isLoading: invitesLoading,
@@ -73,7 +65,6 @@ export function GameLiveSheet() {
   const createInviteMutation = useCreateGameInvite()
   const expireInviteMutation = useExpireGameInvite()
 
-  // External links
   const {
     data: externalLinks = [],
     isLoading: linksLoading,
@@ -82,22 +73,18 @@ export function GameLiveSheet() {
   const createLinkMutation = useCreateExternalLink()
   const deleteLinkMutation = useDeleteExternalLink()
 
-  // Local UI state
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
 
-  // Error messages from mutations
   const inviteError = inviteQueryError?.message || null
   const linksError = linksQueryError?.message || null
   const deleteError = deleteGameMutation.error?.message || null
 
-  // Crawler creation
   const { createEntity: createCrawler, isLoading: isCreatingCrawler } = useCreateEntity({
     table: 'crawlers',
     navigationPath: (id: string) => `/dashboard/crawlers/${id}`,
     placeholderData: gameId ? { game_id: gameId, active: true } : undefined,
   })
 
-  // Helper to check if invite is active
   const isInviteActive = (inv: GameInviteRow) => {
     const now = new Date()
     const notExpired = !inv.expires_at || new Date(inv.expires_at) > now
@@ -106,10 +93,8 @@ export function GameLiveSheet() {
     return notExpired && underUses
   }
 
-  // Filter active invites
   const activeInvites = useMemo(() => invites.filter(isInviteActive), [invites])
 
-  // Mutation handlers
   const createInvite = async () => {
     if (!gameId) return
     await createInviteMutation.mutateAsync(gameId)
@@ -134,12 +119,12 @@ export function GameLiveSheet() {
     if (!ok) return
 
     await deleteGameMutation.mutateAsync(gameId)
-    navigate('/dashboard')
+    navigate({ to: '/dashboard' })
   }
 
   useEffect(() => {
     if (!gameId) {
-      navigate('/dashboard')
+      navigate({ to: '/dashboard' })
       return
     }
   }, [gameId, navigate])
@@ -159,7 +144,6 @@ export function GameLiveSheet() {
   const error = gameError?.message || null
 
   if (error || !game) {
-    // Check if it's a permission error
     if (
       error &&
       (error.includes('permission') || error.includes('private') || error.includes('access'))
@@ -174,7 +158,7 @@ export function GameLiveSheet() {
             {error || 'Game not found'}
           </Text>
           <Button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate({ to: '/dashboard' })}
             bg="su.brick"
             color="su.white"
             fontWeight="bold"
@@ -222,11 +206,8 @@ export function GameLiveSheet() {
         }
       />
 
-      {/* Two-column layout: Main content on left, sidebar on right */}
       <Flex gap={4} direction={{ base: 'column', lg: 'row' }} align="stretch">
-        {/* Left Column: Main Content */}
         <VStack flex="1" gap={4} align="stretch">
-          {/* Game Info */}
           <GameInfo
             name={game.name}
             description={game.description}
@@ -271,7 +252,6 @@ export function GameLiveSheet() {
             </Flex>
           )}
 
-          {/* Pilot-Mech Grid - Each member fetches their own data */}
           {crawler && members.length > 0 && (
             <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4} w="full">
               {members.map(
@@ -288,7 +268,6 @@ export function GameLiveSheet() {
             </Grid>
           )}
 
-          {/* Danger Zone (mediator only) */}
           {isMediator && (
             <RoundedBox bg="red.600" title="Danger Zone">
               <VStack gap={2} align="stretch" p={4}>
@@ -320,7 +299,6 @@ export function GameLiveSheet() {
           )}
         </VStack>
 
-        {/* Right Column: Sidebar */}
         <VStack w={{ base: 'full', lg: '400px' }} gap={4} align="stretch" flexShrink={0}>
           <RoundedBox bg="su.gameBlue" title="Members">
             <VStack gap={2} align="stretch" w="full">
@@ -421,7 +399,6 @@ export function GameLiveSheet() {
             </RoundedBox>
           )}
 
-          {/* Resources Section */}
           <RoundedBox
             bg="su.gameBlue"
             title="Resources"
@@ -506,7 +483,6 @@ export function GameLiveSheet() {
         </VStack>
       </Flex>
 
-      {/* External Link Modal */}
       <ExternalLinkModal
         isOpen={isLinkModalOpen}
         onClose={() => setIsLinkModalOpen(false)}

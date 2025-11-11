@@ -16,7 +16,6 @@ interface PilotInfoProps {
 export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: PilotInfoProps) {
   const { pilot, selectedClass, selectedAdvancedClass } = useHydratedPilot(pilotId ?? '')
 
-  // Fetch available pilots for the selector
   const { items: allPilots, loading: loadingPilots } = useEntityRelationships<{
     id: string
     callsign: string
@@ -27,10 +26,8 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     orderBy: 'callsign',
   })
 
-  // Filter out pilots that already have a mech assigned (except the currently assigned pilot)
   const pilots = allPilots.filter((p) => !p.mech_id || p.id === pilotId)
 
-  // State 1: No mech ID (draft mode) - show disabled message
   if (!mechId) {
     return (
       <RoundedBox
@@ -43,7 +40,6 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     )
   }
 
-  // State 2: Mech ID but no pilot ID - show selector
   if (!pilotId) {
     return (
       <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
@@ -62,7 +58,6 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     )
   }
 
-  // State 3: Mech ID and pilot ID - show pilot info
   if (!pilot) {
     return (
       <RoundedBox flex="1" title="Pilot" disabled={disabled} bg="su.orange">
@@ -75,7 +70,6 @@ export function PilotInfo({ mechId, pilotId, onPilotChange, disabled = false }: 
     )
   }
 
-  // Determine class name: selectedAdvancedClass takes priority over selectedClass
   const className = selectedAdvancedClass?.ref.name ?? selectedClass?.ref.name ?? 'No Class'
 
   return (

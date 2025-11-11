@@ -71,30 +71,25 @@ export function useRealtimeSubscription({
   const channelRef = useRef<RealtimeChannel | null>(null)
 
   useEffect(() => {
-    // Don't subscribe if disabled or no table
     if (!enabled || !table) return
 
-    // Create a unique channel name
     const channelName = id ? `${table}:${id}` : `${table}:all`
 
-    // Set up the subscription
     const channel = supabase
       .channel(channelName)
       .on(
         'postgres_changes',
         {
-          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          event: '*',
           schema: 'public',
           table,
-          ...(id && { filter: `id=eq.${id}` }), // Filter by ID if provided
+          ...(id && { filter: `id=eq.${id}` }),
         },
         (payload) => {
           console.log(`[Realtime] ${table} change:`, payload)
 
-          // Invalidate the query to trigger a refetch
           queryClient.invalidateQueries({ queryKey })
 
-          // Show toast notification
           if (showToast) {
             const message = toastMessage || `${table.slice(0, -1)} updated`
             toaster.create({
@@ -110,7 +105,6 @@ export function useRealtimeSubscription({
 
     channelRef.current = channel
 
-    // Cleanup subscription on unmount
     return () => {
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current)

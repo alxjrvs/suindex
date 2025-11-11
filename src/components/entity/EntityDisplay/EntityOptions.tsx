@@ -13,11 +13,8 @@ import { useEntityDisplayContext } from './useEntityDisplayContext'
 export function EntityOptions() {
   const { data, spacing, compact } = useEntityDisplayContext()
 
-  // Type guard: Check if data has options property
-  // This will always be false for SURefEntity types
   if (!('options' in data)) return null
 
-  // TypeScript doesn't know that data.options exists, so we need to cast
   const options = (data as { options?: Array<string | { label: string; value: string }> }).options
 
   if (!options || options.length === 0) return null

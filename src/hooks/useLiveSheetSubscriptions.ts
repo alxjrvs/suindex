@@ -27,7 +27,6 @@ export function useLiveSheetSubscriptions({
   enabled,
   includeCargo = false,
 }: UseLiveSheetSubscriptionsOptions) {
-  // Subscribe to main entity table
   useRealtimeSubscription({
     table: `${entityType}s` as 'pilots' | 'mechs' | 'crawlers',
     id,
@@ -36,7 +35,6 @@ export function useLiveSheetSubscriptions({
     toastMessage: `${entityType.charAt(0).toUpperCase() + entityType.slice(1)} data updated`,
   })
 
-  // Subscribe to entities (systems, modules, chassis, abilities, etc.)
   useRealtimeSubscription({
     table: 'suentities',
     queryKey: entitiesKeys.forParent(entityType, id),
@@ -44,7 +42,6 @@ export function useLiveSheetSubscriptions({
     showToast: false,
   })
 
-  // Subscribe to player choices
   useRealtimeSubscription({
     table: 'player_choices',
     queryKey: playerChoicesKeys.all,
@@ -52,7 +49,6 @@ export function useLiveSheetSubscriptions({
     showToast: false,
   })
 
-  // Subscribe to cargo (for mech and crawler only)
   const cargoEnabled =
     includeCargo && enabled && (entityType === 'mech' || entityType === 'crawler')
   useRealtimeSubscription({

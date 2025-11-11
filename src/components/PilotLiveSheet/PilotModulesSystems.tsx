@@ -12,7 +12,6 @@ interface PilotModulesSystemsProps {
 export function PilotModulesSystems({ id, disabled = false }: PilotModulesSystemsProps) {
   const { modules, systems } = useHydratedPilot(id)
 
-  // Sort modules by tech level and name
   const sortedModules = useMemo(() => {
     return modules
       .map((m) => m.ref as SURefModule)
@@ -24,7 +23,6 @@ export function PilotModulesSystems({ id, disabled = false }: PilotModulesSystem
       })
   }, [modules])
 
-  // Sort systems by tech level and name
   const sortedSystems = useMemo(() => {
     return systems
       .map((s) => s.ref as SURefSystem)
@@ -38,7 +36,6 @@ export function PilotModulesSystems({ id, disabled = false }: PilotModulesSystem
 
   return (
     <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
-      {/* Systems Column */}
       <RoundedBox bg="bg.builder.pilot" title="Systems" disabled={disabled}>
         <VStack gap={2} w="full" alignItems="flex-start">
           {sortedSystems.length === 0 ? (
@@ -55,7 +52,6 @@ export function PilotModulesSystems({ id, disabled = false }: PilotModulesSystem
         </VStack>
       </RoundedBox>
 
-      {/* Modules Column */}
       <RoundedBox bg="bg.builder.pilot" title="Modules" disabled={disabled}>
         <VStack gap={2} w="full" alignItems="flex-start">
           {sortedModules.length === 0 ? (

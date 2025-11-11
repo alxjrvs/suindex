@@ -29,7 +29,6 @@ export function useCrawlerTypes(crawlerIds: string[]) {
         return new Map()
       }
 
-      // Fetch all crawler type entities in a single query
       const { data: entities, error } = await supabase
         .from('suentities')
         .select('crawler_id, schema_ref_id')
@@ -40,15 +39,12 @@ export function useCrawlerTypes(crawlerIds: string[]) {
         throw new Error(`Failed to fetch crawler types: ${error.message}`)
       }
 
-      // Build map of crawler ID to crawler type data
       const map = new Map<string, { name: string; ref_id: string } | null>()
 
-      // Initialize all crawler IDs with null
       for (const id of crawlerIds) {
         map.set(id, null)
       }
 
-      // Populate with actual data
       for (const entity of entities || []) {
         if (entity.crawler_id) {
           const ref = SalvageUnionReference.get('crawlers', entity.schema_ref_id)
@@ -64,7 +60,7 @@ export function useCrawlerTypes(crawlerIds: string[]) {
       return map
     },
     enabled: crawlerIds.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   })
 }
 
@@ -85,7 +81,6 @@ export function usePilotClasses(pilotIds: string[]) {
         return { classes: new Map(), advancedClasses: new Map() }
       }
 
-      // Fetch all class entities in a single query
       const { data: entities, error } = await supabase
         .from('suentities')
         .select('pilot_id, schema_name, schema_ref_id')
@@ -96,17 +91,14 @@ export function usePilotClasses(pilotIds: string[]) {
         throw new Error(`Failed to fetch pilot classes: ${error.message}`)
       }
 
-      // Build maps
       const classes = new Map<string, { name: string; ref_id: string } | null>()
       const advancedClasses = new Map<string, { name: string; ref_id: string } | null>()
 
-      // Initialize all pilot IDs with null
       for (const id of pilotIds) {
         classes.set(id, null)
         advancedClasses.set(id, null)
       }
 
-      // Populate with actual data
       for (const entity of entities || []) {
         if (entity.pilot_id) {
           const ref = SalvageUnionReference.get(
@@ -122,7 +114,6 @@ export function usePilotClasses(pilotIds: string[]) {
             if (entity.schema_name === 'classes.core') {
               classes.set(entity.pilot_id, data)
             } else {
-              // Advanced or hybrid class
               advancedClasses.set(entity.pilot_id, data)
             }
           }
@@ -132,7 +123,7 @@ export function usePilotClasses(pilotIds: string[]) {
       return { classes, advancedClasses }
     },
     enabled: pilotIds.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   })
 }
 
@@ -150,7 +141,6 @@ export function useMechChassis(mechIds: string[]) {
         return new Map()
       }
 
-      // Fetch all chassis entities in a single query
       const { data: entities, error } = await supabase
         .from('suentities')
         .select('mech_id, schema_ref_id')
@@ -161,15 +151,12 @@ export function useMechChassis(mechIds: string[]) {
         throw new Error(`Failed to fetch mech chassis: ${error.message}`)
       }
 
-      // Build map of mech ID to chassis data
       const map = new Map<string, { name: string; ref_id: string } | null>()
 
-      // Initialize all mech IDs with null
       for (const id of mechIds) {
         map.set(id, null)
       }
 
-      // Populate with actual data
       for (const entity of entities || []) {
         if (entity.mech_id) {
           const ref = SalvageUnionReference.get('chassis', entity.schema_ref_id)
@@ -185,6 +172,6 @@ export function useMechChassis(mechIds: string[]) {
       return map
     },
     enabled: mechIds.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   })
 }

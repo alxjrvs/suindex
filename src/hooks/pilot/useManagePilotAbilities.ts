@@ -23,14 +23,12 @@ export function useManagePilotAbilities(id: string | undefined) {
       const ability = SalvageUnionReference.get('abilities', abilityId)
       if (!ability) return
 
-      // Calculate cost
       const cost = getAbilityCost(
         ability,
         selectedClass?.ref as SURefCoreClass | undefined,
         selectedAdvancedClass?.ref as SURefAdvancedClass | undefined
       )
 
-      // Check if pilot has enough TP
       if ((pilot?.current_tp ?? 0) < cost) {
         alert(`Not enough TP. This ability costs ${cost} TP.`)
         return
@@ -56,8 +54,6 @@ export function useManagePilotAbilities(id: string | undefined) {
           },
         }
       )
-
-      // Deduct TP
     },
     [id, pilot, selectedClass, selectedAdvancedClass, createEntity, updatePilot]
   )

@@ -5,7 +5,6 @@ import { supabase } from '../supabase'
  * Returns the Discord username or email-based fallback
  */
 export async function fetchUserDisplayName(userId: string): Promise<string | null> {
-  // Query the auth.users table via RPC function
   const { data, error } = await supabase.rpc('get_user_display_name', {
     p_user_id: userId,
   })

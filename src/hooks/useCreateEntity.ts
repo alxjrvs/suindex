@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate } from '@tanstack/react-router'
 import type { TablesInsert } from '../types/database-generated.types'
 import type { ValidTable, CrawlerNPC } from '../types/common'
 import { getUser, createEntity as createEntityAPI } from '../lib/api'
@@ -105,45 +105,35 @@ export function useCreateEntity<T extends ValidTable>(
       setIsLoading(true)
       setError(null)
 
-      // Get current user
       const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Prepare data with placeholder values and appropriate user field
-      // Different tables use different column names for the user identifier
       const placeholderData = getPlaceholderData()
       let data: Record<string, unknown>
 
       if (config.table === 'games' || config.table === 'game_invites') {
-        // games and game_invites use 'created_by' instead of 'user_id'
         data = {
           ...placeholderData,
           created_by: user.id,
         }
       } else if (config.table === 'external_links') {
-        // external_links doesn't have a user field (associated via game_id)
         data = placeholderData
       } else {
-        // mechs, pilots, crawlers, game_members use 'user_id'
         data = {
           ...placeholderData,
           user_id: user.id,
         }
       }
 
-      // Create entity using appropriate method
       let createdEntity: { id: string }
       if (config.table === 'crawlers') {
-        // Use crawler mutation to ensure bays are created
         createdEntity = await createCrawlerMutation.mutateAsync(data as never)
       } else {
-        // Use generic API for other tables
         createdEntity = await createEntityAPI(config.table, data as never)
       }
 
-      // Navigate to the newly created entity
       const navigationUrl = config.navigationPath(createdEntity.id)
-      navigate(navigationUrl)
+      navigate({ to: navigationUrl })
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : `Failed to create ${config.table}`
       console.error(`Error creating ${config.table}:`, err)

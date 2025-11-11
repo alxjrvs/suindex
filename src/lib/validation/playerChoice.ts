@@ -24,7 +24,7 @@ export const upsertPlayerChoiceSchema = publicPlayerChoicesInsertSchema.refine(
   (data) => {
     const hasEntityId = !!data.entity_id
     const hasChoiceId = !!(data as { player_choice_id?: string }).player_choice_id
-    return hasEntityId !== hasChoiceId // XOR: exactly one must be true
+    return hasEntityId !== hasChoiceId
   },
   {
     message: 'Must have exactly one parent: entity_id OR player_choice_id',

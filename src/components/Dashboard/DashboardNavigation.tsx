@@ -16,7 +16,6 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
 
   return (
     <>
-      {/* Mobile menu button */}
       <IconButton
         onClick={toggleMenu}
         position="fixed"
@@ -40,7 +39,6 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
         </svg>
       </IconButton>
 
-      {/* Mobile overlay */}
       {isOpen && (
         <Box
           position="fixed"
@@ -52,7 +50,6 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
         />
       )}
 
-      {/* Top navigation bar */}
       <Flex
         as="nav"
         position={{ base: 'fixed', lg: 'static' }}
@@ -71,7 +68,6 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
         gap={{ base: 4, lg: 0 }}
         shadow={{ base: isOpen ? 'lg' : 'none', lg: 'sm' }}
       >
-        {/* Logo/Brand */}
         <Button
           onClick={() => handleNavigate('/')}
           _hover={{ bg: 'su.lightOrange' }}
@@ -88,7 +84,6 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
           </Text>
         </Button>
 
-        {/* Navigation links */}
         <HStack
           as="ul"
           gap={2}
@@ -138,7 +133,6 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
           </Box>
         </HStack>
 
-        {/* User info and sign out / Sign in */}
         <Flex
           alignItems="center"
           gap={4}

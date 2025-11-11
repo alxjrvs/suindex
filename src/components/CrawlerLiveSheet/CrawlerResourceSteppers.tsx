@@ -32,7 +32,6 @@ export function CrawlerResourceSteppers({
 
   const [isConversionModalOpen, setIsConversionModalOpen] = useState(false)
 
-  // Derive flash states directly from flashingTLs prop
   const flashStates = useMemo(() => {
     const states: Record<number, boolean> = {}
     flashingTLs.forEach((tl) => {

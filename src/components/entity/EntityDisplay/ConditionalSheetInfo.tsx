@@ -29,25 +29,16 @@ export function ConditionalSheetInfo({
 }: ConditionalSheetInfoProps) {
   const { data, spacing, compact } = useEntityDisplayContext()
 
-  // Use explicit value if provided, otherwise extract from data
   let displayValue: string | undefined
   if (explicitValue !== undefined) {
     displayValue = explicitValue
   } else {
-    // Extract from data if property exists
     const extractedValue = data[propertyName as keyof typeof data]
     displayValue = typeof extractedValue === 'string' ? extractedValue : undefined
   }
 
-  const entityName = 'name' in data ? data.name : 'unknown'
-  console.log(
-    `[ConditionalSheetInfo] Parsing trait references for entity="${entityName}", property="${propertyName}", value="${displayValue?.substring(0, 50)}..."`
-  )
-
-  // Parse trait references in the display value (must be called before early returns)
   const parsedContent = useParseTraitReferences(displayValue)
 
-  // Early returns after all hooks
   if (!displayValue) return null
   if (!(propertyName in data) && explicitValue === undefined) return null
 

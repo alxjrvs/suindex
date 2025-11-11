@@ -44,7 +44,6 @@ export function PilotInfoInputs({
   }, [allCoreClasses])
 
   const availableAdvancedClasses = useMemo(() => {
-    // Early exit conditions
     if (abilities.length < 6) {
       return []
     }
@@ -57,7 +56,6 @@ export function PilotInfoInputs({
       return []
     }
 
-    // Count abilities by tree to determine completed trees
     const abilitiesByTree: Record<string, number> = {}
     abilities.forEach((entity) => {
       const ability = entity.ref as SURefAbility
@@ -65,30 +63,24 @@ export function PilotInfoInputs({
       abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
     })
 
-    // A tree is completed when it has 3 abilities (levels 1, 2, 3)
     const completedTrees = new Set(
       Object.entries(abilitiesByTree)
         .filter(([, count]) => count >= 3)
         .map(([tree]) => tree)
     )
 
-    // Get all ability tree requirements
     const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
 
-    // Filter advanced classes based on completed trees
     const available = allAdvancedClasses
       .filter((advClass) => {
-        // Find the tree requirement for this advanced class
         const treeRequirement = allTreeRequirements.find(
           (req) => req.name === advClass.advancedTree
         )
 
         if (!treeRequirement) {
-          // If no requirement found, don't show the class
           return false
         }
 
-        // Check if at least one of the required trees is completed
         return treeRequirement.requirement.some((requiredTree) => completedTrees.has(requiredTree))
       })
       .map((advClass) => ({
@@ -154,9 +146,7 @@ export function PilotInfoInputs({
           diceRollTitle="Roll on the Motto table"
         />
 
-        {/* Class and Advanced Class - Together take same width as Callsign */}
         <Flex gap={4} h="full">
-          {/* Class */}
           <Box flex="1" h="full">
             <SheetSelect
               label="Class"
@@ -174,7 +164,6 @@ export function PilotInfoInputs({
             </SheetSelect>
           </Box>
 
-          {/* Advanced Class */}
           <Box flex="1" h="full">
             <SheetSelect
               label="Advanced"
@@ -193,7 +182,6 @@ export function PilotInfoInputs({
           </Box>
         </Flex>
 
-        {/* Keepsake */}
         <SheetInput
           label="Keepsake"
           value={keepsake}
@@ -208,7 +196,6 @@ export function PilotInfoInputs({
           diceRollTitle="Roll on the Keepsake table"
         />
 
-        {/* Appearance */}
         <SheetInput
           label="Appearance"
           value={appearance}
@@ -221,7 +208,6 @@ export function PilotInfoInputs({
           diceRollTitle="Roll on the Pilot Appearance table"
         />
 
-        {/* Background */}
         <SheetInput
           label="Background"
           value={background}

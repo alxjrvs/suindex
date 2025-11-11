@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { GameSmallDisplay } from './GameSmallDisplay'
 import { GridLayout } from './GridLayout'
 import { useUserGamesList } from '../../hooks/game/useGames'
@@ -22,7 +22,7 @@ export function GamesGrid() {
   }
 
   const handleGameClick = (gameId: string) => {
-    navigate(`/dashboard/games/${gameId}`)
+    navigate({ to: `/dashboard/games/${gameId}` })
   }
 
   return (

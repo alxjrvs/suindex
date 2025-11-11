@@ -1,6 +1,11 @@
 import { render as rtlRender } from '@testing-library/react'
 import { ChakraProvider } from '@chakra-ui/react'
-import { MemoryRouter } from 'react-router-dom'
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRouter,
+  RouterProvider,
+} from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { system } from '../theme'
 import type { ReactNode } from 'react'
@@ -17,11 +22,9 @@ function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // ✅ turns retries off for tests
         retry: false,
       },
       mutations: {
-        // ✅ turns retries off for tests
         retry: false,
       },
     },
@@ -29,18 +32,26 @@ function createTestQueryClient() {
 }
 
 export function render(ui: ReactNode) {
-  // ✅ creates a new QueryClient for each test
   const queryClient = createTestQueryClient()
 
-  return rtlRender(ui, {
-    wrapper: ({ children }: { children: ReactNode }) => (
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <ChakraProvider value={system}>
-            <div style={{ width: '1920px', minWidth: '1920px' }}>{children}</div>
-          </ChakraProvider>
-        </MemoryRouter>
-      </QueryClientProvider>
-    ),
+  const rootRoute = createRootRoute({
+    component: () => <>{ui}</>,
   })
+
+  const router = createRouter({
+    routeTree: rootRoute,
+    history: createMemoryHistory({
+      initialEntries: ['/'],
+    }),
+  })
+
+  return rtlRender(
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider value={system}>
+        <div style={{ width: '1920px', minWidth: '1920px' }}>
+          <RouterProvider router={router} />
+        </div>
+      </ChakraProvider>
+    </QueryClientProvider>
+  )
 }

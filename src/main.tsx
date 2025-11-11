@@ -1,20 +1,11 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { ChakraProvider } from '@chakra-ui/react'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { hydrateRoot } from 'react-dom/client'
+import { StartClient } from '@tanstack/react-start/client'
 import './index.css'
-import App from './App.tsx'
-import { system } from './theme'
-import { queryClient } from './lib/queryClient'
 
-createRoot(document.getElementById('root')!).render(
+hydrateRoot(
+  document,
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider value={system}>
-        <App />
-      </ChakraProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <StartClient />
   </StrictMode>
 )

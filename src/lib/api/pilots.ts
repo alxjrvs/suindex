@@ -19,7 +19,6 @@ export async function fetchCrawlerPilots(crawlerId: string): Promise<PilotRow[]>
 
   const pilots = (data || []) as PilotRow[]
 
-  // Check permissions for each pilot
   for (const pilot of pilots) {
     await assertCanViewPilot(pilot)
   }

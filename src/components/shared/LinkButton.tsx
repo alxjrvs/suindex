@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
 import { Button } from '@chakra-ui/react'
 
 interface LinkButtonProps {
@@ -22,7 +22,7 @@ export function LinkButton({ to, label }: LinkButtonProps) {
       fontWeight="semibold"
       _hover={{ bg: 'gray.100' }}
     >
-      <RouterLink to={to}>{label}</RouterLink>
+      <Link to={to}>{label}</Link>
     </Button>
   )
 }

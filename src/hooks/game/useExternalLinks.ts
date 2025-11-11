@@ -64,7 +64,6 @@ export function useCreateExternalLink() {
       return createExternalLink(gameId, url, name)
     },
     onSuccess: (newLink) => {
-      // Invalidate links list to refetch
       queryClient.invalidateQueries({
         queryKey: externalLinksKeys.byGame(newLink.game_id),
       })
@@ -96,15 +95,12 @@ export function useDeleteExternalLink() {
       return linkId
     },
     onMutate: async ({ linkId, gameId }) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: externalLinksKeys.byGame(gameId) })
 
-      // Snapshot previous value
       const previousLinks = queryClient.getQueryData<ExternalLink[]>(
         externalLinksKeys.byGame(gameId)
       )
 
-      // Optimistically remove the link
       if (previousLinks) {
         queryClient.setQueryData<ExternalLink[]>(
           externalLinksKeys.byGame(gameId),
@@ -115,13 +111,11 @@ export function useDeleteExternalLink() {
       return { previousLinks }
     },
     onError: (_err, { gameId }, context) => {
-      // Rollback on error
       if (context?.previousLinks) {
         queryClient.setQueryData(externalLinksKeys.byGame(gameId), context.previousLinks)
       }
     },
     onSuccess: (_data, { gameId }) => {
-      // Invalidate to refetch fresh data
       queryClient.invalidateQueries({
         queryKey: externalLinksKeys.byGame(gameId),
       })

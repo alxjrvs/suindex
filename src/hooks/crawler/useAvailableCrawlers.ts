@@ -18,7 +18,6 @@ export function useAvailableCrawlers() {
   return useQuery({
     queryKey: ['available-crawlers'],
     queryFn: async () => {
-      // RLS policies will automatically filter to only show crawlers the user can see
       const { data, error } = await supabase
         .from('crawlers')
         .select('id, name, game_id, user_id, active, private')

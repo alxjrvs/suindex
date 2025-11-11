@@ -143,7 +143,7 @@ export function createCacheOnlyMutation<TData, TVariables>(
 ): (variables: TVariables) => Promise<TData> {
   return async (variables: TVariables) => {
     const result = mutationFn(variables)
-    // Invalidate queries to trigger re-render
+
     await queryClient.invalidateQueries({ queryKey })
     return result
   }

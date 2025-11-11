@@ -71,10 +71,8 @@ async function isUserInGame(userId: string, gameId: string): Promise<boolean> {
  * - Private games (private=true): Only members can view
  */
 export async function canViewGame(game: GameRow): Promise<boolean> {
-  // Public games are viewable by anyone
   if (!game.private) return true
 
-  // Private games require authentication and membership
   const userId = await getCurrentUserId()
   if (!userId) return false
 
@@ -87,20 +85,15 @@ export async function canViewGame(game: GameRow): Promise<boolean> {
  * - Private crawlers (private=true): Owner or users in the crawler's game can view
  */
 export async function canViewCrawler(crawler: CrawlerRow): Promise<boolean> {
-  // Public crawlers are viewable by anyone
   if (!crawler.private) return true
 
-  // Private crawlers require authentication
   const userId = await getCurrentUserId()
   if (!userId) return false
 
-  // Owner can always view their own crawler
   if (crawler.user_id === userId) return true
 
-  // If no game_id, only owner can view
   if (!crawler.game_id) return false
 
-  // Check if user is in the crawler's game
   return isUserInGame(userId, crawler.game_id)
 }
 
@@ -110,20 +103,15 @@ export async function canViewCrawler(crawler: CrawlerRow): Promise<boolean> {
  * - Private pilots (private=true): Owner or users in the pilot's crawler's game can view
  */
 export async function canViewPilot(pilot: PilotRow): Promise<boolean> {
-  // Public pilots are viewable by anyone
   if (!pilot.private) return true
 
-  // Private pilots require authentication
   const userId = await getCurrentUserId()
   if (!userId) return false
 
-  // Owner can always view their own pilot
   if (pilot.user_id === userId) return true
 
-  // If no crawler_id, only owner can view
   if (!pilot.crawler_id) return false
 
-  // Fetch the crawler to get the game_id
   const { data: crawler, error } = await supabase
     .from('crawlers')
     .select('game_id')
@@ -133,7 +121,6 @@ export async function canViewPilot(pilot: PilotRow): Promise<boolean> {
   if (error) throw error
   if (!crawler || !crawler.game_id) return false
 
-  // Check if user is in the crawler's game
   return isUserInGame(userId, crawler.game_id)
 }
 
@@ -143,20 +130,15 @@ export async function canViewPilot(pilot: PilotRow): Promise<boolean> {
  * - Private mechs (private=true): Owner or users in the mech's pilot's crawler's game can view
  */
 export async function canViewMech(mech: MechRow): Promise<boolean> {
-  // Public mechs are viewable by anyone
   if (!mech.private) return true
 
-  // Private mechs require authentication
   const userId = await getCurrentUserId()
   if (!userId) return false
 
-  // Owner can always view their own mech
   if (mech.user_id === userId) return true
 
-  // If no pilot_id, only owner can view
   if (!mech.pilot_id) return false
 
-  // Fetch the pilot to get the crawler_id
   const { data: pilot, error: pilotError } = await supabase
     .from('pilots')
     .select('crawler_id')
@@ -166,7 +148,6 @@ export async function canViewMech(mech: MechRow): Promise<boolean> {
   if (pilotError) throw pilotError
   if (!pilot || !pilot.crawler_id) return false
 
-  // Fetch the crawler to get the game_id
   const { data: crawler, error: crawlerError } = await supabase
     .from('crawlers')
     .select('game_id')
@@ -176,7 +157,6 @@ export async function canViewMech(mech: MechRow): Promise<boolean> {
   if (crawlerError) throw crawlerError
   if (!crawler || !crawler.game_id) return false
 
-  // Check if user is in the crawler's game
   return isUserInGame(userId, crawler.game_id)
 }
 

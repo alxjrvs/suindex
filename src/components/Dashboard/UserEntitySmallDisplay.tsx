@@ -6,6 +6,8 @@ import { ValueDisplay } from '../shared/ValueDisplay'
 
 interface UserEntitySmallDisplayProps extends BoxProps {
   onClick: () => void
+  /** Mouse enter handler for prefetching */
+  onMouseEnter?: () => void
   /** Background color for the entire card */
   bgColor: string
   /** Left header content (entity name) - larger pseudoheader */
@@ -27,6 +29,7 @@ interface UserEntitySmallDisplayProps extends BoxProps {
 
 export function UserEntitySmallDisplay({
   onClick,
+  onMouseEnter,
   reverse = false,
   label,
   bgColor,
@@ -36,7 +39,6 @@ export function UserEntitySmallDisplay({
   rightHeader,
   isInactive = false,
 }: UserEntitySmallDisplayProps) {
-  // Apply greyed out background for inactive entities
   const effectiveBgColor: string = isInactive ? 'gray.400' : bgColor
 
   const formattedRightHeader =
@@ -62,6 +64,7 @@ export function UserEntitySmallDisplay({
       _hover={{ borderColor: 'su.brick' }}
       cursor="pointer"
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
       w="full"
       opacity={isInactive ? 0.7 : 1}
     />

@@ -11,8 +11,9 @@ Concise, actionable rules for the SUIndex project. Each file links to official d
 
 ### Build & Deploy
 
-- **[vite.md](./vite.md)** - Vite build configuration
-- **[deployment.md](./deployment.md)** - GitHub Pages deployment via CI/CD
+- **[vite.md](./vite.md)** - TanStack Start + Vite build configuration
+- **[tanstack-start.md](./tanstack-start.md)** - TanStack Start optimization guide
+- **[deployment.md](./deployment.md)** - Netlify deployment via CI/CD
 
 ### Data & Backend
 

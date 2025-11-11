@@ -41,7 +41,6 @@ export function NestedActionDisplay({ data, compact = false }: NestedActionDispl
   const parsedDescription = useParseTraitReferences(description)
   const parsedNotes = useParseTraitReferences(notes)
 
-  // Extract details for header
   const details = extractActionDetails(data)
   const effects = getEffects(data)
 
@@ -59,9 +58,7 @@ export function NestedActionDisplay({ data, compact = false }: NestedActionDispl
       bg="su.lightBlue"
       overflow="hidden"
     >
-      {/* Header */}
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
-        {/* Title */}
         <Text
           fontSize={titleFontSize}
           fontWeight="bold"
@@ -74,7 +71,6 @@ export function NestedActionDisplay({ data, compact = false }: NestedActionDispl
         </Text>
       </Flex>
 
-      {/* Details (activation cost, action type, range, damage, traits) */}
       {details.length > 0 && (
         <Flex gap={compact ? 0.5 : 1} flexWrap="wrap" alignItems="center" p={spacing} pt={0}>
           {details.map((item, index) => (
@@ -83,7 +79,6 @@ export function NestedActionDisplay({ data, compact = false }: NestedActionDispl
         </Flex>
       )}
 
-      {/* Content */}
       {hasContent && (
         <VStack
           gap={spacing}
@@ -132,7 +127,6 @@ export function NestedActionDisplay({ data, compact = false }: NestedActionDispl
 function extractActionDetails(data: SURefMetaAction): DataValue[] {
   const details: DataValue[] = []
 
-  // Activation cost
   const activationCost = getActivationCost(data)
   if (activationCost !== undefined) {
     const costValue =
@@ -140,23 +134,19 @@ function extractActionDetails(data: SURefMetaAction): DataValue[] {
     details.push({ label: costValue, type: 'cost' })
   }
 
-  // Action type
   const actionType = getActionType(data)
   if (actionType) {
     details.push({ label: actionType, type: 'keyword' })
   }
 
-  // Range
   const range = getRange(data)
   if (range) {
-    // Range can be a string or array of strings
     const ranges = Array.isArray(range) ? range : [range]
     ranges.forEach((r) => {
       details.push({ label: 'Range', value: r, type: 'keyword' })
     })
   }
 
-  // Damage
   const damage = getDamage(data)
   if (damage) {
     details.push({
@@ -165,7 +155,6 @@ function extractActionDetails(data: SURefMetaAction): DataValue[] {
     })
   }
 
-  // Traits
   const traits = getTraits(data)
   if (traits && traits.length > 0) {
     traits.forEach((t) => {

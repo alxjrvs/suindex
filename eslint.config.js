@@ -8,12 +8,14 @@ import prettier from 'eslint-config-prettier'
 export default [
   {
     ignores: [
+      '.netlify',
       'dist',
       'node_modules',
       '.git',
       'coverage',
       'build',
       'src/types/database-generated.types.ts',
+      'src/routeTree.gen.ts',
     ],
   },
   js.configs.recommended,

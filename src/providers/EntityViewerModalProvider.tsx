@@ -20,7 +20,7 @@ export function EntityViewerModalProvider({ children }: EntityViewerModalProvide
 
   const closeEntityModal = () => {
     setIsOpen(false)
-    // Clear state after animation completes
+
     setTimeout(() => {
       setSchemaName(null)
       setEntityId(null)

@@ -23,8 +23,6 @@ export function ClassAbilitiesList({
 }) {
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
 
-  // Get all available levels for a tree (any level where all previous levels are selected)
-  // Organize ALL abilities by tree (not just selected ones)
   const { allTreeAbilities } = useMemo(() => {
     if (!selectedClass && !selectedAdvancedClass) {
       return {
@@ -34,37 +32,30 @@ export function ClassAbilitiesList({
 
     const allTreeAbilities: Record<string, SURefAbility[]> = {}
 
-    // Initialize core tree arrays
     if (selectedClass) {
       selectedClass.coreTrees.forEach((tree) => {
         allTreeAbilities[tree] = []
       })
     }
 
-    // Initialize advanced tree if exists
     if (selectedAdvancedClass?.advancedTree) {
       allTreeAbilities[selectedAdvancedClass.advancedTree] = []
     }
 
-    // Initialize legendary tree if exists
     if (selectedAdvancedClass?.legendaryTree) {
       allTreeAbilities[selectedAdvancedClass.legendaryTree] = []
     }
 
     allAbilities.forEach((ability) => {
-      // Add ability to its tree if the tree is in our map
       if (allTreeAbilities[ability.tree]) {
         allTreeAbilities[ability.tree].push(ability)
       }
     })
 
-    // Sort abilities by level within each tree (or by name for legendary)
     Object.keys(allTreeAbilities).forEach((tree) => {
       if (selectedAdvancedClass?.legendaryTree === tree) {
-        // Legendary abilities sort by name
         allTreeAbilities[tree].sort((a, b) => a.name.localeCompare(b.name))
       } else {
-        // Regular abilities sort by level
         allTreeAbilities[tree].sort((a, b) => Number(a.level) - Number(b.level))
       }
     })
@@ -82,7 +73,6 @@ export function ClassAbilitiesList({
 
   return (
     <Box p={compact ? 1 : 2} w="full">
-      {/* Core Trees - 3 column grid */}
       <Grid
         gridTemplateColumns="repeat(3, 1fr)"
         gap={2}
@@ -102,10 +92,8 @@ export function ClassAbilitiesList({
         ))}
       </Grid>
 
-      {/* Advanced and Legendary Trees - 2 column grid */}
       {hasAdvancedOrLegendary && (
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={2} w="full">
-          {/* Advanced Tree */}
           {selectedAdvancedClass?.advancedTree &&
             allTreeAbilities[selectedAdvancedClass.advancedTree] && (
               <TreeSection
@@ -119,7 +107,6 @@ export function ClassAbilitiesList({
               />
             )}
 
-          {/* Legendary Tree */}
           {selectedAdvancedClass?.legendaryTree &&
             allTreeAbilities[selectedAdvancedClass.legendaryTree] && (
               <TreeSection
@@ -167,11 +154,9 @@ function TreeSection({
 
       const availableLevels = new Set<number>()
 
-      // Check each level in the tree
       treeAbilities.forEach((ability) => {
         const level = Number(ability.level)
 
-        // Level is available if all previous levels are selected
         let allPreviousSelected = true
         for (let i = 1; i < level; i++) {
           if (!selectedLevelsInTree.has(i)) {
@@ -194,20 +179,15 @@ function TreeSection({
     (abilityId: string) => abilities?.some((a) => a.ref.id === abilityId) ?? false,
     [abilities]
   )
-  // Read-only mode when hideUnchosen is true (viewing another player's sheet)
+
   const isReadOnly = hideUnchosen || !id
 
-  // Check if this is a legendary tree
   const isLegendaryTree = selectedAdvancedClass?.legendaryTree === treeName
 
-  // Check if any abilities in this tree are selected (for hideUnchosen logic)
   const hasSelectedAbilities = useMemo(() => {
     return treeAbilities.some((ability) => isSelected(ability.id))
   }, [treeAbilities, isSelected])
 
-  // Filter abilities if hideUnchosen is enabled and some are selected
-  // For legendary trees, always show all abilities (even when hideUnchosen is true)
-  // so that disabled buttons can be displayed
   const displayedAbilities = useMemo(() => {
     if (hideUnchosen && hasSelectedAbilities && !isLegendaryTree) {
       return treeAbilities.filter((ability) => isSelected(ability.id))
@@ -215,7 +195,6 @@ function TreeSection({
     return treeAbilities
   }, [hideUnchosen, hasSelectedAbilities, treeAbilities, isSelected, isLegendaryTree])
 
-  // Check if all advanced abilities are selected
   const allAdvancedAbilitiesSelected = useMemo(() => {
     if (!isLegendaryTree || !selectedAdvancedClass?.advancedTree) return true
 
@@ -223,18 +202,14 @@ function TreeSection({
       (a) => a.tree === selectedAdvancedClass.advancedTree
     )
 
-    // Check if all advanced abilities are selected
     return advancedTreeAbilities.every((ability) => abilities?.some((a) => a.ref.id === ability.id))
   }, [isLegendaryTree, selectedAdvancedClass, allAbilities, abilities])
 
-  // Check if a legendary ability is already selected
   const hasLegendaryAbilitySelected = useMemo(() => {
     if (!isLegendaryTree) return false
     return treeAbilities.some((ability) => isSelected(ability.id))
   }, [isLegendaryTree, treeAbilities, isSelected])
 
-  // If in read-only mode with hideUnchosen and no selected abilities, hide the entire tree
-  // Exception: Always show legendary trees (even with no selections) so players can see what's available
   if (isReadOnly && hideUnchosen && !hasSelectedAbilities && !isLegendaryTree) {
     return null
   }
@@ -249,11 +224,8 @@ function TreeSection({
           const cost = getAbilityCost(ability, selectedClass, selectedAdvancedClass)
           const alreadySelected = isSelected(ability.id)
 
-          // For legendary trees, don't filter out unselected abilities here
-          // The displayedAbilities memo already handles this correctly
           if (hideUnchosen && !alreadySelected && !isLegendaryTree) return null
 
-          // Read-only mode: no dimming, no add/remove buttons
           if (isReadOnly) {
             return (
               <EntityDisplay
@@ -268,23 +240,18 @@ function TreeSection({
             )
           }
 
-          // Interactive mode: check affordability and availability
           const canAfford = currentTP >= cost
           const availableLevels = getAvailableLevels(treeName, treeAbilities)
           const abilityLevel = Number(ability.level)
           const isAvailable = availableLevels.has(abilityLevel)
 
-          // For legendary abilities, also check if all advanced abilities are selected
           const canSelect = canAfford && isAvailable && allAdvancedAbilitiesSelected
 
-          // For legendary abilities, only show the select button if no legendary ability is already selected
           const showSelectButton =
             !alreadySelected && !(isLegendaryTree && hasLegendaryAbilitySelected)
 
-          // Determine button config based on state
           let buttonConfig = undefined
           if (alreadySelected && handleRemoveAbility) {
-            // Show remove button
             buttonConfig = {
               bg: 'su.brick',
               color: 'su.white',
@@ -305,7 +272,6 @@ function TreeSection({
               children: 'Remove Ability',
             }
           } else if (showSelectButton && handleAddAbility) {
-            // Show select button
             buttonConfig = {
               bg: 'su.orange',
               color: 'su.white',

@@ -33,11 +33,9 @@ export function useEntityGrid<T extends { id: string }>(
       setLoading(true)
       setError(null)
 
-      // Get current user
       const user = await getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Fetch user entities with optional filtering and ordering
       const data = await fetchUserEntities<T>(config.table, user.id, {
         filterField: config.filterField,
         filterValue: config.filterValue,

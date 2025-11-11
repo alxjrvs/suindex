@@ -1,5 +1,5 @@
 import { VStack, Tabs } from '@chakra-ui/react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearch, useRouter } from '@tanstack/react-router'
 import { Text } from '../../base/Text'
 import { EntitySubheader } from './EntitySubheader'
 import { EntityChassisPattern } from './EntityChassisPattern'
@@ -7,22 +7,20 @@ import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export function EntityChassisPatterns() {
   const { data, spacing } = useEntityDisplayContext()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const search = useSearch({ strict: false })
+  const router = useRouter()
 
   if (!('patterns' in data) || !data.patterns || data.patterns.length === 0) return null
 
-  // Get the first pattern as default value
   const defaultPattern = data.patterns[0].name.replace(/\s+Pattern$/i, '')
 
-  // Get pattern from URL or use default
-  const patternParam = searchParams.get('pattern')
+  const patternParam = (search as { pattern?: string }).pattern
   const selectedPattern = patternParam || defaultPattern
 
-  // Handle tab change - update URL
   const handlePatternChange = (value: string) => {
-    const newParams = new URLSearchParams(searchParams)
-    newParams.set('pattern', value)
-    setSearchParams(newParams, { replace: true })
+    const currentUrl = new URL(window.location.href)
+    currentUrl.searchParams.set('pattern', value)
+    router.history.replace(currentUrl.pathname + currentUrl.search)
   }
 
   return (

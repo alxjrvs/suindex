@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router'
+import { useNavigate } from '@tanstack/react-router'
 import type { Tables } from '../../types/database-generated.types'
 import { useEntityGrid } from '../../hooks/useEntityGrid'
 import { useCreateEntity } from '../../hooks/useCreateEntity'
@@ -59,7 +59,7 @@ export function EntityGrid<T extends ValidTable>({
   }
 
   const handleClick = (id: string) => {
-    navigate(`/dashboard/${table}/${id}`)
+    navigate({ to: `/dashboard/${table}/${id}` })
   }
 
   return (

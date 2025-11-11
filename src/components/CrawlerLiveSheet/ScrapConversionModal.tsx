@@ -46,7 +46,6 @@ export function ScrapConversionModal({
   const [toTL, setToTL] = useState<TechLevel | null>(null)
   const [amount, setAmount] = useState<number>(1)
 
-  // Map tech levels to their scrap counts
   const scrapByTL: Record<TechLevel, number> = useMemo(
     () => ({
       1: scrapTlOne,
@@ -59,41 +58,34 @@ export function ScrapConversionModal({
     [scrapTlOne, scrapTlTwo, scrapTlThree, scrapTlFour, scrapTlFive, scrapTlSix]
   )
 
-  // Calculate which FROM tech levels are available (have at least 1 scrap)
   const availableFromTLs = useMemo(() => {
     return ([1, 2, 3, 4, 5, 6] as TechLevel[]).filter((tl) => scrapByTL[tl] > 0)
   }, [scrapByTL])
 
-  // Calculate which TO tech levels are valid based on FROM selection
   const availableToTLs = useMemo(() => {
     if (!fromTL) return []
 
     const fromScrapCount = scrapByTL[fromTL]
     const fromValueInTL1 = fromScrapCount * fromTL
 
-    // Can convert to any TL where we have enough value
     return ([1, 2, 3, 4, 5, 6] as TechLevel[]).filter((tl) => {
-      if (tl === fromTL) return false // Can't convert to same level
-      return fromValueInTL1 >= tl // Need at least enough value for 1 scrap of target TL
+      if (tl === fromTL) return false
+      return fromValueInTL1 >= tl
     })
   }, [fromTL, scrapByTL])
 
-  // Calculate max amount that can be converted
   const maxAmount = useMemo(() => {
     if (!fromTL) return 0
     return scrapByTL[fromTL]
   }, [fromTL, scrapByTL])
 
-  // Calculate conversion result
   const conversionResult = useMemo(() => {
     if (!fromTL || !toTL || amount <= 0) return null
 
     const fromValueInTL1 = amount * fromTL
 
-    // How many of the target TL can we make?
     const toScrapCount = Math.floor(fromValueInTL1 / toTL)
 
-    // How much TL1 value is left over?
     const remainderInTL1 = fromValueInTL1 % toTL
 
     return {
@@ -106,18 +98,14 @@ export function ScrapConversionModal({
   const handleConvert = () => {
     if (!fromTL || !toTL || !conversionResult || amount <= 0) return
 
-    // Build the updates object
     const updates: Record<string, number> = {}
 
-    // Subtract the amount from the FROM tech level
     const currentFromScrap = scrapByTL[fromTL]
     updates[`scrap_tl_${getTLFieldName(fromTL)}`] = currentFromScrap - amount
 
-    // Add to the TO tech level
     const currentToScrap = scrapByTL[toTL]
     updates[`scrap_tl_${getTLFieldName(toTL)}`] = currentToScrap + conversionResult.toScrapCount
 
-    // Add remainder to TL1 if any
     if (conversionResult.remainderInTL1 > 0) {
       const currentTL1 = scrapByTL[1]
       updates[`scrap_tl_one`] = currentTL1 + conversionResult.remainderInTL1
@@ -142,7 +130,6 @@ export function ScrapConversionModal({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Convert Scrap">
       <Flex gap={6} align="stretch" w="full">
-        {/* FROM Selection */}
         <VStack gap={2} align="stretch" w="full">
           <Text fontWeight="bold" fontFamily="mono">
             FROM Tech Level
@@ -153,8 +140,8 @@ export function ScrapConversionModal({
               onChange={(e) => {
                 const value = e.target.value
                 setFromTL(value ? (parseInt(value) as TechLevel) : null)
-                setToTL(null) // Reset TO when FROM changes
-                setAmount(1) // Reset amount when FROM changes
+                setToTL(null)
+                setAmount(1)
               }}
             >
               <option value="">Select tech level...</option>
@@ -170,7 +157,6 @@ export function ScrapConversionModal({
             </NativeSelectField>
           </NativeSelectRoot>
 
-          {/* Amount Input */}
           {fromTL && (
             <>
               <Text fontWeight="bold" fontFamily="mono" mt={2}>
@@ -197,7 +183,6 @@ export function ScrapConversionModal({
           )}
         </VStack>
 
-        {/* TO Selection */}
         <VStack gap={2} align="stretch" w="full">
           <Text fontWeight="bold" fontFamily="mono">
             TO Tech Level
@@ -223,7 +208,6 @@ export function ScrapConversionModal({
           </NativeSelectRoot>
         </VStack>
 
-        {/* Conversion Preview */}
         {conversionResult && (
           <VStack gap={2} align="stretch" p={4} bg="bg.muted" borderRadius="md" borderWidth="2px">
             <Text fontWeight="bold" fontFamily="mono" fontSize="sm">

@@ -40,12 +40,11 @@ export function LiveSheetAssetDisplay({
     const file = event.target.files?.[0]
     if (file && onUpload) {
       await onUpload(file)
-      // Reset the input so the same file can be uploaded again if needed
+
       event.target.value = ''
     }
   }
 
-  // Use user image if available, otherwise fall back to default URL
   const displayUrl = userImageUrl || url
   const hasUserImage = !!userImageUrl
 
@@ -81,7 +80,6 @@ export function LiveSheetAssetDisplay({
           )}
         </Box>
 
-        {/* Upload/Remove buttons - only show if onUpload is provided and user is hovering */}
         {onUpload && isHovered && (
           <Box
             position="absolute"
@@ -121,7 +119,6 @@ export function LiveSheetAssetDisplay({
           </Box>
         )}
 
-        {/* Hidden file input */}
         <Input
           ref={fileInputRef}
           type="file"

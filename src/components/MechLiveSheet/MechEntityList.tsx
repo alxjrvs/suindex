@@ -39,13 +39,11 @@ export function MechEntityList({
 }: MechEntityListProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Fetch all entities of this type
   const allEntities = useMemo(
     () => SalvageUnionReference.findAllIn(schemaName, () => true),
     [schemaName]
   )
 
-  // Sort entities by tech level and name
   const sortedEntities = useMemo(() => {
     return entityIds
       .map((id) => allEntities.find((e) => e.id === id))

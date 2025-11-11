@@ -13,19 +13,16 @@ export interface EntityChoicesProps {
 
 export function EntityChoices({ userChoices, onChoiceSelection }: EntityChoicesProps) {
   const { data, spacing, fontSize } = useEntityDisplayContext()
-  // Extract choices from the entity data
+
   const entityChoices: SURefMetaChoice[] = ('choices' in data && data.choices) || []
 
-  // If no choices in the entity, don't render anything
   if (entityChoices.length === 0) {
     return null
   }
 
-  // If onChoiceSelection is undefined, we're in schema page mode (not a live sheet)
   const isSchemaPageMode = onChoiceSelection === undefined
 
   if (!isSchemaPageMode) {
-    // Live sheet mode - show WIP for now
     return (
       <Box p={spacing.contentPadding} bg="su.lightBlue" borderRadius="md">
         <Text fontSize={fontSize.md} fontWeight="bold" color="su.black">

@@ -11,13 +11,12 @@ export function useManageCrawlerCargo(id: string) {
     async (
       amount: number,
       name: string,
-      _color: string, // Ignored - color is determined by ref data at render time
-      ref?: string, // Reference string in format "schema::id"
-      position?: { row: number; col: number } // Position in cargo grid
+      _color: string,
+      ref?: string,
+      position?: { row: number; col: number }
     ) => {
       if (!id) return
 
-      // Parse reference string if provided
       let schemaName: string | undefined
       let schemaRefId: string | undefined
       if (ref) {

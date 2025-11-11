@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../types/database-generated.types'
 
-// In test environment, use process.env; in production, use import.meta.env
 const isTest = typeof process !== 'undefined' && process.env.NODE_ENV === 'test'
 const supabaseUrl = isTest ? process.env.VITE_SUPABASE_URL : import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = isTest

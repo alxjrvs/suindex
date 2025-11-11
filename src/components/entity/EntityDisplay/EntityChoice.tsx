@@ -20,16 +20,13 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
   const hasSchema = 'schema' in choice && choice.schema && choice.schema.length > 0
   const selectedChoice = userChoices?.[choice.id]
 
-  // Simple choice = only has id, name, and/or description (no schema, no schema entities, no custom options)
   const isSimpleChoice = !hasSchema && !hasSchemaEntities && !hasCustomSystemOptions
 
-  // Schema page mode = no onChoiceSelection handler (viewing reference data, not editing)
   const isSchemaPageMode = onChoiceSelection === undefined
   const hasLimitedChoices = hasSchemaEntities || hasCustomSystemOptions
 
   return (
     <Box>
-      {/* Only show label for non-simple choices */}
       {!isSimpleChoice && (
         <HStack mb={2} gap={2}>
           <EntitySubheader disabled={isSchemaPageMode} label={choice.name} />
@@ -41,7 +38,6 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
         </HStack>
       )}
 
-      {/* Render schema-based choice with premade selection (schema page mode only) */}
       {isSchemaPageMode &&
         userChoices &&
         hasSchema &&
@@ -50,7 +46,6 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
           <PreselectedEntityDisplay choice={choice} selectedChoice={selectedChoice} />
         )}
 
-      {/* Render entity list (schemaEntities or customSystemOptions) */}
       {(hasSchemaEntities || hasCustomSystemOptions) && (
         <EntityListDisplay
           choice={choice}
@@ -60,7 +55,6 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
         />
       )}
 
-      {/* Render input field for simple choices */}
       {isSimpleChoice && (
         <SheetInput
           label={choice.name}

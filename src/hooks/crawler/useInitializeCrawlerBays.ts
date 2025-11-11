@@ -23,7 +23,6 @@ export function useInitializeCrawlerBays(crawlerId: string, baysExist: boolean) 
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    // Only initialize for local crawlers that don't have bays yet
     if (!isLocalId(crawlerId) || baysExist) {
       return
     }
@@ -55,7 +54,6 @@ export function useInitializeCrawlerBays(crawlerId: string, baysExist: boolean) 
       }
     })
 
-    // Set bay entities in cache
     queryClient.setQueryData(entitiesKeys.forParent('crawler', crawlerId), bayEntities)
   }, [crawlerId, baysExist, queryClient])
 }

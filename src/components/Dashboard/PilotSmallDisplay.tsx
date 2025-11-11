@@ -2,11 +2,14 @@ import { VStack, Box } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { useHydratedPilot } from '../../hooks/pilot'
-import { useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { fetchUserDisplayName } from '../../lib/api/users'
+import { pilotsKeys } from '../../hooks/pilot/usePilots'
+import { fetchEntity } from '../../lib/api/entities'
+import type { Tables } from '../../types/database-generated.types'
 
 interface PilotSmallDisplayProps {
   id?: string
@@ -16,6 +19,7 @@ interface PilotSmallDisplayProps {
 
 export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDisplayProps) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const {
     pilot,
@@ -26,7 +30,14 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   const className = selectedClass?.ref.name
   const advancedClassName = selectedAdvancedClass?.ref.name
 
-  // Fetch crawler name if pilot has crawler_id
+  const handleMouseEnter = () => {
+    if (!id) return
+    queryClient.prefetchQuery({
+      queryKey: pilotsKeys.byId(id),
+      queryFn: () => fetchEntity<Tables<'pilots'>>('pilots', id),
+    })
+  }
+
   const { data: crawlerName, isLoading: crawlerLoading } = useQuery({
     queryKey: ['crawler-name', pilot?.crawler_id],
     queryFn: async () => {
@@ -47,7 +58,6 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
     enabled: !!pilot?.crawler_id,
   })
 
-  // Fetch mech pattern if pilot has a mech
   const { data: mechChassisPattern, isLoading: mechLoading } = useQuery({
     queryKey: ['mech-pattern', id],
     queryFn: async () => {
@@ -59,7 +69,7 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
         .single()
 
       if (error) {
-        if (error.code === 'PGRST116') return null // No mech found
+        if (error.code === 'PGRST116') return null
         console.error('Error fetching mech:', error)
         return null
       }
@@ -68,11 +78,10 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
     enabled: !!id,
   })
 
-  // Fetch owner's Discord username
   const { data: ownerData } = useQuery({
     queryKey: ['user-display-name', pilot?.user_id],
     queryFn: () => fetchUserDisplayName(pilot!.user_id),
-    enabled: !!pilot?.user_id && currentUserId !== pilot?.user_id, // Only fetch if not the current user
+    enabled: !!pilot?.user_id && currentUserId !== pilot?.user_id,
   })
   if (!id && !waitForId) {
     return null
@@ -81,7 +90,10 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   const isOwner = currentUserId === pilot?.user_id
   const ownerName = isOwner ? 'You' : ownerData || 'Owner'
 
-  const onClick = () => navigate(`/dashboard/pilots/${id}`)
+  const onClick = () => {
+    if (!id) return
+    navigate({ to: '/dashboard/pilots/$id', params: { id } })
+  }
 
   const isLoading = (!id && waitForId) || pilotLoading || crawlerLoading || mechLoading
 
@@ -98,7 +110,6 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   }
   const detailContent = (
     <VStack gap={1} alignItems="stretch">
-      {/* Crawler badge (pink) */}
       {crawlerName && (
         <Box bg="su.pink" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
           <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">
@@ -107,7 +118,6 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
         </Box>
       )}
 
-      {/* Mech badge (green) */}
       {mechChassisPattern && (
         <Box bg="su.green" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
           <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">
@@ -125,6 +135,7 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   return (
     <UserEntitySmallDisplay
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
       label={label}
       bgColor="su.orange"
       detailLabel="Player"

@@ -1,27 +1,29 @@
 import { Suspense } from 'react'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearch } from '@tanstack/react-router'
 import Footer from './Footer'
 import type { SchemaInfo } from '../types/schema'
 import { getDisplayComponent } from './componentRegistry'
 import { useSchemaData } from './schema/useSchemaData'
 import { useSchemaParams } from '../hooks/useSchemaParams'
+import type { SURefEntity } from 'salvageunion-reference'
 
 interface ItemShowPageProps {
   schemas: SchemaInfo[]
+  prefetchedItem?: SURefEntity | null
 }
 
-export default function ItemShowPage({ schemas }: ItemShowPageProps) {
+export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPageProps) {
   const { schemaId, itemId } = useSchemaParams()
   const { data, loading, error } = useSchemaData(schemaId)
-  const [searchParams] = useSearchParams()
+  const search = useSearch({ strict: false })
 
-  // Read compact query parameter, default to false for full display
-  const compact = searchParams.get('compact') === 'true'
+  const compact = (search as { compact?: string }).compact === 'true'
 
   const currentSchema = schemas.find((s) => s.id === schemaId)
-  const item = data.find((d) => d.id === itemId)
+
+  const item = prefetchedItem ?? data.find((d) => d.id === itemId)
 
   const formatValue = (value: unknown): ReactElement => {
     if (value === undefined || value === null) {

@@ -46,12 +46,10 @@ export const entitySchemaNameSchema = z.enum(ENTITY_SCHEMA_NAMES)
  */
 export const createEntitySchema = publicSuentitiesInsertSchema
   .extend({
-    // Override schema_name to use our stricter enum
     schema_name: entitySchemaNameSchema,
   })
   .refine(
     (data) => {
-      // Ensure exactly one parent is set
       const parentCount = [data.pilot_id, data.mech_id, data.crawler_id].filter(Boolean).length
       return parentCount === 1
     },
@@ -59,7 +57,6 @@ export const createEntitySchema = publicSuentitiesInsertSchema
   )
   .refine(
     (data) => {
-      // Validate that schema_ref_id exists in reference data
       return SalvageUnionReference.exists(data.schema_name as SURefSchemaName, data.schema_ref_id)
     },
     { message: 'Invalid entity reference - schema_ref_id does not exist in reference data' }

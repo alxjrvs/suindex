@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom'
+import { useParams } from '@tanstack/react-router'
 import { Flex, Text } from '@chakra-ui/react'
 import PilotLiveSheet from '../PilotLiveSheet'
 
 export function PilotEdit() {
-  const { id } = useParams<{ id: string }>()
+  const params = useParams({ from: '/dashboard/pilots/$id' })
+  const id = params.id
 
   if (!id) {
     return (

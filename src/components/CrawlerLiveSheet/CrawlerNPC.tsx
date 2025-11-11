@@ -22,7 +22,6 @@ export function CrawlerNPC({
 
   const crawlerTypeRef = selectedCrawlerType?.ref as SURefCrawler | undefined
 
-  // Default NPC if none exists
   const npc: CrawlerNPCType = (crawler?.npc as unknown as CrawlerNPCType) || {
     name: '',
     notes: '',

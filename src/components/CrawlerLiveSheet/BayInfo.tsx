@@ -39,11 +39,6 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
   const [isAbilitiesExpanded, setIsAbilitiesExpanded] = useState(false)
   const handleUpdateChoice = useManageEntityChoices(bayEntityId)
 
-  // Get crawler to access tech level (we need the crawler ID from the bay entity)
-  // For now, we'll skip tech level filtering since we don't have easy access to it
-  // TODO: Consider passing crawler ID or tech level as prop if needed
-
-  // Don't render if there's no reference bay or no content to show
   if (!bayRef.description && (!bayRef.actions || bayRef.actions.length === 0)) {
     return null
   }
@@ -53,7 +48,6 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
     !!(bayRef.actions && bayRef.actions.length > 0) ||
     (!!bayRef.techLevelEffects && bayRef.techLevelEffects.length > 0)
 
-  // For now, show all tech level effects (we don't have easy access to crawler tech level)
   const techLevelEffects = bayRef.techLevelEffects
 
   return (
@@ -100,7 +94,6 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
         )}
       </HStack>
 
-      {/* Function Section */}
       {isFunctionExpanded && hasFunction && (
         <SheetDisplay label="Function">
           <Box lineHeight="relaxed" color="su.black">
@@ -109,7 +102,6 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
         </SheetDisplay>
       )}
 
-      {/* Abilities Section */}
       {isAbilitiesExpanded && hasAbilities && (
         <VStack gap={3} alignItems="stretch" w="full">
           {bayRef.actions!.map((ability, idx) => (

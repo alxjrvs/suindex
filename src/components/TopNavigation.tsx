@@ -17,7 +17,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
 
   return (
     <>
-      {/* Mobile menu button */}
       <IconButton
         onClick={toggleMenu}
         position="fixed"
@@ -41,7 +40,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         </svg>
       </IconButton>
 
-      {/* Mobile overlay */}
       {isOpen && (
         <Box
           position="fixed"
@@ -53,7 +51,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         />
       )}
 
-      {/* Top navigation bar */}
       <Flex
         as="nav"
         position={{ base: 'fixed', lg: 'static' }}
@@ -72,7 +69,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         gap={{ base: 4, lg: 0 }}
         shadow={{ base: isOpen ? 'lg' : 'none', lg: 'sm' }}
       >
-        {/* Left section: Logo + Navigation links */}
         <Flex
           alignItems="center"
           gap={2}
@@ -80,7 +76,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           flexDirection={{ base: 'column', lg: 'row' }}
           flex={{ base: 'none', lg: 1 }}
         >
-          {/* Logo/Brand */}
           <Button
             onClick={() => handleNavigate('/')}
             _hover={{ bg: 'su.lightOrange' }}
@@ -96,7 +91,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
             </Text>
           </Button>
 
-          {/* Navigation links */}
           <HStack
             as="ul"
             gap={2}
@@ -104,7 +98,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
             flexDirection={{ base: 'column', lg: 'row' }}
             w={{ base: 'full', lg: 'auto' }}
           >
-            {/* Schemas Dropdown */}
             <Box as="li">
               <Menu.Root>
                 <Menu.Trigger asChild>
@@ -134,7 +127,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                           value={schema.id}
                           onSelect={() => handleNavigate(`/schema/${schema.id}`)}
                         >
-                          {schema.title.replace('Salvage Union ', '')}
+                          {schema.displayName || schema.title.replace('Salvage Union ', '')}
                         </Menu.Item>
                       ))}
                     </Menu.Content>
@@ -143,7 +136,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
               </Menu.Root>
             </Box>
 
-            {/* Playground Dropdown */}
             <Box as="li">
               <Menu.Root>
                 <Menu.Trigger asChild>
@@ -190,7 +182,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           </HStack>
         </Flex>
 
-        {/* Right section: User data links, User info and sign out / Sign in */}
         <Flex
           alignItems="center"
           gap={4}
@@ -201,7 +192,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         >
           {user && (
             <>
-              {/* Individual data links */}
               <NavigationLink
                 isActive={isActive('/dashboard/pilots')}
                 onClick={() => handleNavigate('/dashboard/pilots')}

@@ -54,13 +54,10 @@ export interface HydratedCrawler {
  * ```
  */
 export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
-  // Fetch crawler data
   const { data: crawler, isLoading: crawlerLoading, error: crawlerError } = useCrawler(id)
 
-  // Fetch cargo
   const { data: cargo = [], isLoading: cargoLoading, error: cargoError } = useCargo('crawler', id)
 
-  // Fetch normalized entities (crawler type, bays)
   const {
     data: entities = [],
     isLoading: entitiesLoading,
@@ -71,13 +68,11 @@ export function useHydratedCrawler(id: string | undefined): HydratedCrawler {
 
   const allTechLevels = SalvageUnionReference.CrawlerTechLevels.all()
 
-  // Get selected crawler type from entities (schema_name='crawlers')
   const selectedCrawlerType = useMemo(
     () => entities.find((e) => e.schema_name === 'crawlers'),
     [entities]
   )
 
-  // Get bays from entities (schema_name='crawler-bays')
   const bays = useMemo(
     () => entities.filter((e) => e.schema_name === 'crawler-bays') as HydratedBay[],
     [entities]
