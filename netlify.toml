@@ -50,9 +50,5 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
-# Redirects for SPA routing (handled by TanStack Start)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+
 
