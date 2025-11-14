@@ -180,7 +180,7 @@ export function useUpsertPlayerChoice() {
 
       if (!queryKey) return
 
-      await queryClient.cancelQueries({ queryKey })
+      await queryClient.cancelQueries({ queryKey: queryKey as readonly string[] })
 
       const previousChoices = queryClient.getQueryData<Tables<'player_choices'>[]>(queryKey) || []
 

@@ -1,6 +1,6 @@
 import type { ButtonProps } from '@chakra-ui/react'
 import { type ReactNode, memo } from 'react'
-import type { SURefEntity, SURefMetaSchemaName } from 'salvageunion-reference'
+import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { EntityDisplayContent } from './components/EntityDisplayContent'
 import { EntityDisplayProvider } from './EntityDisplayProvider'
 
@@ -8,7 +8,7 @@ type EntityDisplayProps = {
   /** Entity data to display - only accepts SURefEntity (not SURefMetaAction or SURefMetaSystemModule) */
   data: SURefEntity | undefined
   /** Schema name for the entity */
-  schemaName: SURefMetaSchemaName
+  schemaName: SURefSchemaName
   /** Optional header background color override */
   headerColor?: string
   /** Whether the ability is trained (affects header opacity for abilities) */

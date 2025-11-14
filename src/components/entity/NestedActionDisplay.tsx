@@ -1,17 +1,8 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
-import type { SURefMetaAction, SURefMetaEffect } from 'salvageunion-reference'
-import {
-  getActivationCost,
-  getActionType,
-  getRange,
-  getDamage,
-  getTraits,
-  getEffects,
-} from 'salvageunion-reference'
+import type { SURefMetaAction } from 'salvageunion-reference'
 import { Text } from '../base/Text'
 import { ActivationCostBox } from '../shared/ActivationCostBox'
 import { ValueDisplay } from '../shared/ValueDisplay'
-import { SheetDisplay } from '../shared/SheetDisplay'
 import { EntityDetailDisplay } from './EntityDetailDisplay'
 import { useParseTraitReferences } from '../../utils/parseTraitReferences'
 import type { DataValue } from '../../types/common'
@@ -21,6 +12,10 @@ interface NestedActionDisplayProps {
   data: SURefMetaAction
   /** Whether to use compact styling */
   compact?: boolean
+  /** Whether this is the last item in a list (affects bottom border) */
+  isLast?: boolean
+  /** Whether to hide the action content/description */
+  hideContent?: boolean
 }
 
 /**
@@ -35,38 +30,32 @@ interface NestedActionDisplayProps {
  * Matches the rulebook pattern where main abilities use EntityDisplay
  * and sub-actions use this component.
  */
-export function NestedActionDisplay({ data, compact = false }: NestedActionDisplayProps) {
-  const description = data.description
-  const notes = data.notes
+export function NestedActionDisplay({
+  data,
+  compact = false,
+  isLast = false,
+  hideContent = false,
+}: NestedActionDisplayProps) {
+  // Extract description from content blocks
+  const descriptionBlock = data.content?.find((block) => !block.type || block.type === 'paragraph')
+  const description = descriptionBlock?.value
   const parsedDescription = useParseTraitReferences(description)
-  const parsedNotes = useParseTraitReferences(notes)
 
   const details = extractActionDetails(data)
-  const effects = getEffects(data)
 
   const fontSize = compact ? 'sm' : 'md'
   const titleFontSize = compact ? 'md' : 'lg'
   const spacing = compact ? 1 : 2
 
-  const hasContent = description || notes || (effects && effects.length > 0)
+  const hasContent = !!description
 
   return (
-    <Box
-      border="2px solid"
-      borderColor="su.black"
-      borderRadius="md"
-      bg="su.lightBlue"
-      overflow="hidden"
-    >
+    <Box bg="su.lightBlue" overflow="hidden" pb={isLast ? 0 : spacing} position="relative">
+      {!isLast && (
+        <Box position="absolute" bottom={0} left="10%" width="80%" height="2px" bg="gray.300" />
+      )}
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
-        <Text
-          fontSize={titleFontSize}
-          fontWeight="bold"
-          textTransform="uppercase"
-          color="su.black"
-          flex="1"
-          minW="0"
-        >
+        <Text fontSize={titleFontSize} variant="pseudoheader" width="fit-content">
           {data.name}
         </Text>
       </Flex>
@@ -79,7 +68,7 @@ export function NestedActionDisplay({ data, compact = false }: NestedActionDispl
         </Flex>
       )}
 
-      {hasContent && (
+      {hasContent && !hideContent && (
         <VStack
           gap={spacing}
           p={spacing}
@@ -97,24 +86,6 @@ export function NestedActionDisplay({ data, compact = false }: NestedActionDispl
               {parsedDescription}
             </Box>
           )}
-          {notes && (
-            <Box
-              color="su.black"
-              fontWeight="medium"
-              lineHeight="relaxed"
-              fontStyle="italic"
-              fontSize={fontSize}
-            >
-              {parsedNotes}
-            </Box>
-          )}
-          {effects && effects.length > 0 && (
-            <>
-              {effects.map((effect, index) => (
-                <EffectDisplay key={index} effect={effect} compact={compact} />
-              ))}
-            </>
-          )}
         </VStack>
       )}
     </Box>
@@ -127,19 +98,22 @@ export function NestedActionDisplay({ data, compact = false }: NestedActionDispl
 function extractActionDetails(data: SURefMetaAction): DataValue[] {
   const details: DataValue[] = []
 
-  const activationCost = getActivationCost(data)
+  // Access activationCost directly from action
+  const activationCost = data.activationCost
   if (activationCost !== undefined) {
     const costValue =
       String(activationCost).toLowerCase() === 'variable' ? 'X AP' : `${activationCost} AP`
     details.push({ label: costValue, type: 'cost' })
   }
 
-  const actionType = getActionType(data)
+  // Access actionType directly from action
+  const actionType = data.actionType
   if (actionType) {
     details.push({ label: actionType, type: 'keyword' })
   }
 
-  const range = getRange(data)
+  // Access range directly from action
+  const range = data.range
   if (range) {
     const ranges = Array.isArray(range) ? range : [range]
     ranges.forEach((r) => {
@@ -147,7 +121,8 @@ function extractActionDetails(data: SURefMetaAction): DataValue[] {
     })
   }
 
-  const damage = getDamage(data)
+  // Access damage directly from action
+  const damage = data.damage
   if (damage) {
     details.push({
       label: 'Damage',
@@ -155,7 +130,8 @@ function extractActionDetails(data: SURefMetaAction): DataValue[] {
     })
   }
 
-  const traits = getTraits(data)
+  // Access traits directly from action
+  const traits = data.traits
   if (traits && traits.length > 0) {
     traits.forEach((t) => {
       const label = t.type.charAt(0).toUpperCase() + t.type.slice(1)
@@ -200,19 +176,4 @@ function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
   }
 
   return <ValueDisplay label={item.label} value={item.value} compact={compact} inline={false} />
-}
-
-/**
- * Component to display an effect with parsed trait references
- */
-function EffectDisplay({
-  effect,
-  compact = false,
-}: {
-  effect: SURefMetaEffect
-  compact?: boolean
-}) {
-  const parsedValue = useParseTraitReferences(effect.value)
-
-  return <SheetDisplay compact={compact} label={effect.label} children={parsedValue} />
 }

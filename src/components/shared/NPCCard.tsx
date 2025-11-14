@@ -149,7 +149,10 @@ export function NPCCard({
         <SheetInput
           key={choice.id}
           label={choice.name}
-          placeholder={choice.description}
+          placeholder={
+            choice.content?.find((b) => !b.type || b.type === 'paragraph')?.value ||
+            'Enter value...'
+          }
           onDiceRoll={
             onUpdateChoice
               ? () => {

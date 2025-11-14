@@ -1,4 +1,4 @@
-import type { SURefMetaEntity, SURefMetaTrait, SURefMetaSchemaName } from 'salvageunion-reference'
+import type { SURefMetaEntity, SURefMetaTrait, SURefSchemaName } from 'salvageunion-reference'
 import {
   getActivationCost,
   getActionType,
@@ -33,7 +33,7 @@ export function EntitySubTitleElement() {
  */
 function extractActivationCostDetail(
   data: SURefMetaEntity,
-  schemaName?: SURefMetaSchemaName
+  schemaName?: SURefSchemaName
 ): DataValue | null {
   const activationCost = getActivationCost(data)
   if (activationCost === undefined) return null
@@ -51,7 +51,7 @@ function extractActivationCostDetail(
 /**
  * Extract action type details
  */
-function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefMetaSchemaName): DataValue[] {
+function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefSchemaName): DataValue[] {
   const details: DataValue[] = []
   const isGeneric = schemaName === 'abilities' && 'level' in data && data.level === 'G'
 
@@ -113,7 +113,7 @@ function extractTraitDetails(data: SURefMetaEntity): DataValue[] {
 /**
  * Extract details for header (activation cost, range, damage, traits)
  */
-function extractDetails(data: SURefMetaEntity, schemaName?: SURefMetaSchemaName): DataValue[] {
+function extractDetails(data: SURefMetaEntity, schemaName?: SURefSchemaName): DataValue[] {
   const details: DataValue[] = []
 
   const activationCost = extractActivationCostDetail(data, schemaName)

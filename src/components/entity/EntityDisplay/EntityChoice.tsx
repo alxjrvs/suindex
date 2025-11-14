@@ -1,6 +1,7 @@
 import { Box, HStack } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
 import type { SURefMetaChoice } from 'salvageunion-reference'
+
 import { SheetInput } from '../../shared/SheetInput'
 import { EntitySubheader } from './EntitySubheader'
 import { EntityListDisplay } from './EntityListDisplay'
@@ -61,7 +62,10 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
           value={userChoices?.[choice.id] || ''}
           onChange={(value) => onChoiceSelection?.(choice.id, value)}
           onDiceRoll={() => {}}
-          placeholder={choice.description || 'Enter value...'}
+          placeholder={
+            choice.content?.find((b) => !b.type || b.type === 'paragraph')?.value ||
+            'Enter value...'
+          }
           disabled={onChoiceSelection === undefined}
           diceRollTitle={choice.rollTable}
         />

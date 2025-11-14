@@ -1,9 +1,14 @@
 import type {
   SURefMetaEntity,
-  SURefMetaSchemaName,
+  SURefSchemaName,
   SURefMetaBonusPerTechLevel,
 } from 'salvageunion-reference'
 import { getSchemaCatalog } from 'salvageunion-reference'
+
+/**
+ * Local type that extends SURefSchemaName to include meta schemas like 'actions'
+ */
+type SURefMetaSchemaName = SURefSchemaName | 'actions'
 
 const schemaCatalog = getSchemaCatalog()
 const schemaDisplayNameMap = new Map(schemaCatalog.schemas.map((s) => [s.id, s.displayName]))
@@ -12,7 +17,7 @@ const schemaDisplayNameMap = new Map(schemaCatalog.schemas.map((s) => [s.id, s.d
  * Get display name for schema (for page references, headers, etc.)
  * Uses package metadata for display names
  */
-export function getSchemaDisplayName(schemaName: SURefMetaSchemaName): string {
+export function getSchemaDisplayName(schemaName: SURefSchemaName): string {
   return schemaDisplayNameMap.get(schemaName) || schemaName
 }
 
@@ -41,7 +46,7 @@ export function extractLevel(
 
 export function extractName(
   data: SURefMetaEntity | SURefMetaBonusPerTechLevel,
-  schemaName: SURefMetaSchemaName
+  schemaName: SURefSchemaName
 ): string {
   if (!('name' in data)) {
     return ''
@@ -74,11 +79,6 @@ export function calculateBackgroundColor(
   if (schemaName === 'roll-tables') return headerColor || 'su.orange'
   if (schemaName === 'classes.core') return headerColor || 'su.orange'
   if (schemaName === 'classes.advanced') return headerColor || 'su.pink'
-
-  if (schemaName === 'actions') {
-    if (techLevel) return techLevelColors[techLevel]
-    return 'su.threeBlue'
-  }
 
   if (schemaName === 'abilities' && !headerColor) {
     const isLegendary =

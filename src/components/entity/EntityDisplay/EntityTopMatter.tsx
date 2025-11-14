@@ -1,19 +1,37 @@
-import { Flex, VStack, Box } from '@chakra-ui/react'
+import { Flex, VStack } from '@chakra-ui/react'
 import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
-import { hasActions, getDescription } from 'salvageunion-reference'
+import { hasActions, extractActions, getChassisAbilities } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
-import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
+import { ContentBlockRenderer } from './ContentBlockRenderer'
+import { EntityChassisAbilitiesContent } from './EntityChassisAbilitiesContent'
 
 export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
-  const { data, schemaName, spacing, fontSize } = useEntityDisplayContext()
-  const notes = 'notes' in data ? data.notes : undefined
-  const description = getDescription(data)
-  const showDescription = description && schemaName !== 'abilities'
-  const hasContent = !!notes || !!showDescription || (hasActions(data) && data.actions.length > 0)
+  const { data, schemaName, spacing, fontSize, compact } = useEntityDisplayContext()
 
-  const parsedDescription = useParseTraitReferences(description)
-  const parsedNotes = useParseTraitReferences(notes)
+  // Determine which content to render
+  let contentBlocks = 'content' in data ? data.content : undefined
+
+  // For single-action entities, use the action's content instead
+  const isSingleAction = hasActions(data) && extractActions(data)?.length === 1
+  if (isSingleAction) {
+    const actions = extractActions(data)
+    if (actions && actions.length === 1) {
+      contentBlocks = actions[0].content
+    }
+  }
+
+  // Show content if:
+  // 1. Entity has content blocks, OR
+  // 2. Entity has a single action (content extracted above)
+  // Note: For abilities with single actions, we show the action content inline
+  // For abilities with multiple actions, we show them as NestedActionDisplay (handled by EntityActions)
+  const showContent = contentBlocks && contentBlocks.length > 0
+
+  const hasChassisAbilities = schemaName === 'chassis' && getChassisAbilities(data)
+
+  const hasContent =
+    !!showContent || (hasActions(data) && data.actions.length > 1) || hasChassisAbilities
 
   if (!hasContent) {
     return null
@@ -30,39 +48,11 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
         h="full"
         minW="0"
       >
-        {showDescription && (
-          <Box
-            color="su.black"
-            fontWeight="medium"
-            lineHeight="relaxed"
-            fontStyle="italic"
-            wordBreak="break-word"
-            overflowWrap="break-word"
-            whiteSpace="normal"
-            overflow="hidden"
-            maxW="100%"
-            fontSize={fontSize.sm}
-          >
-            {parsedDescription}
-          </Box>
+        {showContent && <ContentBlockRenderer content={contentBlocks!} fontSize={fontSize.sm} />}
+        {schemaName === 'chassis' && getChassisAbilities(data) && (!hideActions || compact) && (
+          <EntityChassisAbilitiesContent />
         )}
-        {!hideActions && <EntityActions />}
-        {notes && (
-          <Box
-            color="su.black"
-            fontWeight="medium"
-            lineHeight="relaxed"
-            fontStyle="italic"
-            wordBreak="break-word"
-            overflowWrap="break-word"
-            whiteSpace="normal"
-            overflow="hidden"
-            maxW="100%"
-            fontSize={fontSize.sm}
-          >
-            {parsedNotes}
-          </Box>
-        )}
+        {(!hideActions || compact) && <EntityActions />}
       </VStack>
     </Flex>
   )

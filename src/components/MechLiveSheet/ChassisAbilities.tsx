@@ -1,5 +1,6 @@
 import { VStack } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
+import { getChassisAbilities } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
 import { NestedActionDisplay } from '../entity/NestedActionDisplay'
@@ -15,6 +16,8 @@ export function ChassisAbilities({
   chassis,
   disabled = false,
 }: ChassisAbilitiesProps) {
+  const chassisAbilities = chassis ? getChassisAbilities(chassis) : undefined
+
   return (
     <RoundedBox
       rightContent={
@@ -26,12 +29,11 @@ export function ChassisAbilities({
     >
       <VStack gap={3} alignItems="stretch" w="full">
         {(
-          chassis?.actions || [
+          chassisAbilities || [
             {
               id: 'no-chassis',
               name: '',
-              description: 'No chassis selected.',
-              options: [{ label: '', value: '' }],
+              content: [{ type: 'paragraph', value: 'No chassis selected.' }],
             },
           ]
         ).map((ability, idx) => (

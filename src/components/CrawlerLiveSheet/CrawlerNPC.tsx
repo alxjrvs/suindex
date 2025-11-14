@@ -1,4 +1,5 @@
 import type { SURefCrawler } from 'salvageunion-reference'
+
 import { RoundedBox } from '../shared/RoundedBox'
 import type { CrawlerNPC as CrawlerNPCType } from '../../types/common'
 import type { Json } from '../../types/database-generated.types'
@@ -49,7 +50,9 @@ export function CrawlerNPC({
       <NPCCard
         npc={npc}
         choices={selectedCrawlerType?.choices || []}
-        description={crawlerTypeRef?.npc.description || ''}
+        description={
+          crawlerTypeRef?.npc.content?.find((b) => !b.type || b.type === 'paragraph')?.value || ''
+        }
         maxHP={crawlerTypeRef?.npc.hitPoints || 0}
         referenceBay={crawlerTypeRef}
         onUpdateBay={readOnly ? undefined : handleUpdateNPC}

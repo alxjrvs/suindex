@@ -1,8 +1,9 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
 import { isAbility } from 'salvageunion-reference'
 import { EntityStats } from './EntityStats'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
+import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
 
 export function EntityRightHeaderContent({
   rightLabel,
@@ -15,9 +16,10 @@ export function EntityRightHeaderContent({
 }) {
   const { data, compact, fontSize } = useEntityDisplayContext()
   const description = 'description' in data ? data.description : undefined
+  const parsedDescription = useParseTraitReferences(description)
 
   const abilityContent = description && isAbility(data) && (
-    <Text
+    <Box
       color="su.white"
       fontStyle="italic"
       textAlign="right"
@@ -32,8 +34,8 @@ export function EntityRightHeaderContent({
       flexWrap="wrap"
       overflow="hidden"
     >
-      {description}
-    </Text>
+      {parsedDescription}
+    </Box>
   )
 
   return (

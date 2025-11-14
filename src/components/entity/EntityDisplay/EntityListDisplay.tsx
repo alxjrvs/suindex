@@ -42,7 +42,7 @@ export function EntityListDisplay({
 
   const visibleEntities = selectedChoice
     ? entities.filter((entity) => {
-        const entityName = 'name' in entity ? entity.name : entity.action.name
+        const entityName = 'name' in entity ? entity.name : entity.actions[0].name
         return entityName === selectedChoice
       })
     : entities
@@ -71,7 +71,7 @@ export function EntityListDisplay({
               children: 'Remove',
             }
           } else {
-            const entityName = 'name' in entity ? entity.name : entity.action.name
+            const entityName = 'name' in entity ? entity.name : entity.actions[0].name
             buttonConfig = {
               bg: 'su.orange',
               color: 'su.white',
@@ -87,10 +87,10 @@ export function EntityListDisplay({
           }
         }
 
-        const isSystemModule = 'action' in entity && !('id' in entity)
+        const isSystemModule = 'actions' in entity && !('id' in entity)
 
         if (isSystemModule) {
-          return <NestedActionDisplay key={idx} data={entity.action} compact />
+          return <NestedActionDisplay key={idx} data={entity.actions[0]} compact />
         }
 
         const schema = (choice.schema?.[0] || 'systems') as SURefSchemaName

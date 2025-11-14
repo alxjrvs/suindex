@@ -1,7 +1,7 @@
 import { createContext } from 'react'
 import type { ReactNode } from 'react'
 import type { ButtonProps } from '@chakra-ui/react'
-import type { SURefEntity, SURefMetaSchemaName } from 'salvageunion-reference'
+import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 
 /**
  * Spacing helpers based on compact mode
@@ -33,7 +33,7 @@ export interface EntityDisplayContextValue {
   /** Entity data - only SURefEntity (not SURefMetaAction or SURefMetaSystemModule) */
   data: SURefEntity
   /** Schema name */
-  schemaName: SURefMetaSchemaName
+  schemaName: SURefSchemaName
   /** Compact mode flag */
   compact: boolean
   /** Computed entity name */

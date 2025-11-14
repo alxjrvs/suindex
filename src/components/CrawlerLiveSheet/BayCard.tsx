@@ -1,6 +1,7 @@
 import { useMemo, useCallback } from 'react'
 import { Box, VStack } from '@chakra-ui/react'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
+
 import type { HydratedBay } from '../../types/hydrated'
 import { RoundedBox } from '../shared/RoundedBox'
 import { NPCCard } from '../shared/NPCCard'
@@ -112,7 +113,9 @@ export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProp
               npc={metadata.npc}
               choices={bay.choices}
               referenceBay={bayRef}
-              description={bayRef.npc.description || ''}
+              description={
+                bayRef.npc.content?.find((b) => !b.type || b.type === 'paragraph')?.value || ''
+              }
               maxHP={bayRef.npc.hitPoints || 0}
               onUpdateChoice={readOnly ? undefined : handleUpdateChoice}
               onUpdateBay={readOnly ? undefined : handleUpdateNPC}

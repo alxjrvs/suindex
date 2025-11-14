@@ -52,7 +52,9 @@ export function EntityChassisPattern({ pattern }: EntityChassisPatternProps) {
         </Box>
       )}
 
-      <SheetDisplay compact={false}>{pattern.description}</SheetDisplay>
+      <SheetDisplay compact={false}>
+        {pattern.content?.find((b) => !b.type || b.type === 'paragraph')?.value}
+      </SheetDisplay>
 
       <VStack gap={4} alignItems="stretch">
         {systems.length > 0 && (

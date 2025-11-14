@@ -3,6 +3,7 @@ import { VStack, HStack, Box } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
+
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 import { useManageEntityChoices } from '../../hooks/suentity'
 import { useParseTraitReferences } from '../../utils/parseTraitReferences'
@@ -39,11 +40,13 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
   const [isAbilitiesExpanded, setIsAbilitiesExpanded] = useState(false)
   const handleUpdateChoice = useManageEntityChoices(bayEntityId)
 
-  if (!bayRef.description && (!bayRef.actions || bayRef.actions.length === 0)) {
+  const description = bayRef.content?.find((b) => !b.type || b.type === 'paragraph')?.value
+
+  if (!description && (!bayRef.actions || bayRef.actions.length === 0)) {
     return null
   }
 
-  const hasFunction = !!bayRef.description
+  const hasFunction = !!description
   const hasAbilities =
     !!(bayRef.actions && bayRef.actions.length > 0) ||
     (!!bayRef.techLevelEffects && bayRef.techLevelEffects.length > 0)
@@ -97,7 +100,7 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
       {isFunctionExpanded && hasFunction && (
         <SheetDisplay label="Function">
           <Box lineHeight="relaxed" color="su.black">
-            {bayRef.description}
+            {description}
           </Box>
         </SheetDisplay>
       )}
@@ -105,7 +108,11 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
       {isAbilitiesExpanded && hasAbilities && (
         <VStack gap={3} alignItems="stretch" w="full">
           {bayRef.actions!.map((ability, idx) => (
-            <AbilityDisplay key={idx} name={ability.name} description={ability.description} />
+            <AbilityDisplay
+              key={idx}
+              name={ability.name}
+              description={ability.content?.find((b) => !b.type || b.type === 'paragraph')?.value}
+            />
           ))}
           {techLevelEffects?.map((effect, idx) =>
             effect.effects.map((eff, effIdx) => (
