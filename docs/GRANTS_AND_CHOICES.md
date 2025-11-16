@@ -43,8 +43,8 @@ The `grants` property is defined in the `salvageunion-reference` package schema 
 ```typescript
 // packages/salvageunion-reference/lib/types/objects.ts
 export interface SURefMetaGrant {
-  schema: SURefSchemaName | 'choice'
-  name: SURefName
+  schema: SURefSchemaName | "choice";
+  name: SURefName;
 }
 ```
 
@@ -71,32 +71,37 @@ When a player adds an entity (ability, equipment, etc.) to their sheet:
 
 ```typescript
 onSuccess: async (newEntity) => {
-  const ref = newEntity.ref
-  if (ref && 'grants' in ref && Array.isArray(ref.grants) && ref.grants.length > 0) {
+  const ref = newEntity.ref;
+  if (
+    ref &&
+    "grants" in ref &&
+    Array.isArray(ref.grants) &&
+    ref.grants.length > 0
+  ) {
     for (const grant of ref.grants) {
-      const grantSchema = grant.schema as SURefSchemaName
-      const grantName = grant.name as string
+      const grantSchema = grant.schema as SURefSchemaName;
+      const grantName = grant.name as string;
 
       const grantedItem = SalvageUnionReference.findIn(
         grantSchema,
         (item) => item.name === grantName
-      )
+      );
 
       if (grantedItem) {
-        const grantedEntityData: TablesInsert<'suentities'> = {
+        const grantedEntityData: TablesInsert<"suentities"> = {
           pilot_id: newEntity.pilot_id,
           mech_id: newEntity.mech_id,
           crawler_id: newEntity.crawler_id,
-          parent_entity_id: newEntity.id,  // Links to granting entity
+          parent_entity_id: newEntity.id, // Links to granting entity
           schema_name: grantSchema,
           schema_ref_id: grantedItem.id,
           metadata: null,
-        }
-        await createNormalizedEntity(grantedEntityData)
+        };
+        await createNormalizedEntity(grantedEntityData);
       }
     }
   }
-}
+};
 ```
 
 ### Example: Auto-Turret Ability
@@ -124,6 +129,7 @@ onSuccess: async (newEntity) => {
 When a player selects the "Auto-Turret" ability:
 
 1. **Ability Entity Created**:
+
    ```sql
    INSERT INTO suentities (
      pilot_id,
@@ -186,21 +192,21 @@ The `choices` property is defined in the `salvageunion-reference` package and ap
 ```typescript
 // packages/salvageunion-reference/lib/types/objects.ts
 export interface SURefMetaChoice {
-  id: SURefId
-  name: SURefName
-  content?: SURefMetaContent
-  rollTable?: string
-  schemaEntities?: string[]
-  schema?: SURefSchemaName[]
-  customSystemOptions?: SURefMetaSystemModule[]
+  id: SURefId;
+  name: SURefName;
+  content?: SURefMetaContent;
+  rollTable?: string;
+  schemaEntities?: string[];
+  schema?: SURefSchemaName[];
+  customSystemOptions?: SURefMetaSystemModule[];
   constraints?: {
-    field?: string
-    min?: SURefNonNegativeInteger
-    max?: SURefNonNegativeInteger
-  }
+    field?: string;
+    min?: SURefNonNegativeInteger;
+    max?: SURefNonNegativeInteger;
+  };
 }
 
-export type SURefMetaChoices = SURefMetaChoice[]
+export type SURefMetaChoices = SURefMetaChoice[];
 ```
 
 ### Package Location
@@ -237,17 +243,19 @@ export function SheetEntityChoiceDisplay({
   onUpdateChoice,
   entityId,
 }: {
-  choice: SURefMetaChoice
-  onUpdateChoice?: (choiceId: string, value: string | undefined) => void
-  entityId: string | undefined
+  choice: SURefMetaChoice;
+  onUpdateChoice?: (choiceId: string, value: string | undefined) => void;
+  entityId: string | undefined;
 }) {
-  const { data: playerChoices } = usePlayerChoices(entityId)
-  
+  const { data: playerChoices } = usePlayerChoices(entityId);
+
   const selectedValue = useMemo(() => {
-    const playerChoice = playerChoices?.find((pc) => pc.choice_ref_id === choice.id)
-    return playerChoice?.value || null
-  }, [playerChoices, choice.id])
-  
+    const playerChoice = playerChoices?.find(
+      (pc) => pc.choice_ref_id === choice.id
+    );
+    return playerChoice?.value || null;
+  }, [playerChoices, choice.id]);
+
   // Renders choice UI and handles selection
 }
 ```
@@ -260,18 +268,18 @@ export function useManageEntityChoices(entityId: string | undefined) {
     (choiceRefId: string, value: string | undefined) => {
       if (value === undefined) {
         // Delete choice
-        deleteChoice.mutate({ id: existingChoice.id, entityId })
+        deleteChoice.mutate({ id: existingChoice.id, entityId });
       } else {
         // Create/update choice
         upsertChoice.mutate({
           entity_id: entityId,
           choice_ref_id: choiceRefId,
           value,
-        })
+        });
       }
     },
     [entityId, upsertChoice, deleteChoice]
-  )
+  );
 }
 ```
 
@@ -381,6 +389,7 @@ CREATE TABLE suentities (
 ### Purpose
 
 The `suentities` table stores all game entities associated with player sheets:
+
 - **Abilities** on pilots
 - **Equipment** on pilots
 - **Systems** on mechs
@@ -408,11 +417,12 @@ The `suentities` table stores all game entities associated with player sheets:
   "schema_name": "equipment",
   "schema_ref_id": "f5f04072-9e81-4c9d-a835-b71f45120d66",
   "metadata": null,
-  "parent_entity_id": "da12be45-d7eb-48c7-b79c-3834d59a2864"  // Granted by ability
+  "parent_entity_id": "da12be45-d7eb-48c7-b79c-3834d59a2864" // Granted by ability
 }
 ```
 
 This record represents:
+
 - Equipment entity on a pilot
 - Granted by the ability entity with ID `da12be45-d7eb-48c7-b79c-3834d59a2864`
 - Reference: `equipment::f5f04072-9e81-4c9d-a835-b71f45120d66`
@@ -452,6 +462,7 @@ CREATE TABLE player_choices (
 ### Purpose
 
 The `player_choices` table stores player selections for entity customization:
+
 - **Entity Choices**: Selections for choices defined on entities
 - **Nested Choices**: Selections for choices defined on previously selected entities
 
@@ -474,6 +485,7 @@ The `value` field stores different formats depending on choice type:
 Nested choices enable selection chains:
 
 **Example Flow**:
+
 1. Player selects ability "Bionic Senses" → creates entity
 2. Ability has choice "Choose Enhancement" → player selects "systems::thermal-optics"
 3. Selected system has choice "Choose Module" → player selects "modules::zoom-lens"
@@ -501,31 +513,37 @@ VALUES ('level-2-choice-id', 'name-choice-id', 'Eagle Eye');
 
 ```typescript
 // Fetch choices for an entity
-export async function fetchChoicesForEntity(entityId: string): Promise<Tables<'player_choices'>[]>
+export async function fetchChoicesForEntity(
+  entityId: string
+): Promise<Tables<"player_choices">[]>;
 
 // Fetch nested choices for a choice
-export async function fetchChoicesForChoice(choiceId: string): Promise<Tables<'player_choices'>[]>
+export async function fetchChoicesForChoice(
+  choiceId: string
+): Promise<Tables<"player_choices">[]>;
 
 // Upsert a choice (creates or updates)
-export async function upsertPlayerChoice(data: TablesInsert<'player_choices'>): Promise<Tables<'player_choices'>>
+export async function upsertPlayerChoice(
+  data: TablesInsert<"player_choices">
+): Promise<Tables<"player_choices">>;
 ```
 
 **Hooks**: `apps/suref-web/src/hooks/suentity/usePlayerChoices.ts`
 
 ```typescript
 // Fetch choices for entity
-const { data: choices } = usePlayerChoices(entityId)
+const { data: choices } = usePlayerChoices(entityId);
 
 // Fetch nested choices
-const { data: nestedChoices } = useNestedChoices(choiceId)
+const { data: nestedChoices } = useNestedChoices(choiceId);
 
 // Upsert choice
-const upsertChoice = useUpsertPlayerChoice()
+const upsertChoice = useUpsertPlayerChoice();
 upsertChoice.mutate({
   entity_id: entityId,
-  choice_ref_id: 'choice-id',
-  value: 'systems::laser-rifle'
-})
+  choice_ref_id: "choice-id",
+  value: "systems::laser-rifle",
+});
 ```
 
 ---
@@ -535,6 +553,7 @@ upsertChoice.mutate({
 ### Complete Example: Ability with Grants and Choices
 
 **Scenario**: Player selects "Bionic Senses" ability which:
+
 1. Grants "Integrated Optics" equipment (via `grants`)
 2. Has a choice "Choose Enhancement" (via `choices`)
 
@@ -622,6 +641,7 @@ Pilot/Mech/Crawler
 **Component**: `apps/suref-web/src/components/CrawlerLiveSheet/SheetEntityChoiceDisplay.tsx`
 
 The live sheet components:
+
 1. Fetch entities for the sheet (pilot/mech/crawler)
 2. Hydrate entities with reference data (`HydratedEntity`)
 3. Fetch player choices for each entity
@@ -631,11 +651,11 @@ The live sheet components:
 **Hydrated Entity Type**: `apps/suref-web/src/types/hydrated.ts`
 
 ```typescript
-export type HydratedEntity = Tables<'suentities'> & {
-  ref: SURefEntity  // Reference data from package
-  choices: Tables<'player_choices'>[]  // Player's selections
-  parentEntity?: HydratedEntity  // If granted, link to grantor
-}
+export type HydratedEntity = Tables<"suentities"> & {
+  ref: SURefEntity; // Reference data from package
+  choices: Tables<"player_choices">[]; // Player's selections
+  parentEntity?: HydratedEntity; // If granted, link to grantor
+};
 ```
 
 ---
@@ -811,6 +831,7 @@ player_choices: {
 **Location**: `apps/suref-web/src/hooks/suentity/useSUEntities.ts`
 
 **Flow**:
+
 1. Entity created via `useCreateEntity()`
 2. `onSuccess` callback triggered
 3. Check if entity reference has `grants` array
@@ -822,27 +843,32 @@ player_choices: {
 **Key Code**:
 
 ```typescript
-if (ref && 'grants' in ref && Array.isArray(ref.grants) && ref.grants.length > 0) {
+if (
+  ref &&
+  "grants" in ref &&
+  Array.isArray(ref.grants) &&
+  ref.grants.length > 0
+) {
   for (const grant of ref.grants) {
-    const grantSchema = grant.schema as SURefSchemaName
-    const grantName = grant.name as string
-    
+    const grantSchema = grant.schema as SURefSchemaName;
+    const grantName = grant.name as string;
+
     const grantedItem = SalvageUnionReference.findIn(
       grantSchema,
       (item) => item.name === grantName
-    )
-    
+    );
+
     if (grantedItem) {
-      const grantedEntityData: TablesInsert<'suentities'> = {
+      const grantedEntityData: TablesInsert<"suentities"> = {
         pilot_id: newEntity.pilot_id,
         mech_id: newEntity.mech_id,
         crawler_id: newEntity.crawler_id,
-        parent_entity_id: newEntity.id,  // Links to grantor
+        parent_entity_id: newEntity.id, // Links to grantor
         schema_name: grantSchema,
         schema_ref_id: grantedItem.id,
         metadata: null,
-      }
-      await createNormalizedEntity(grantedEntityData)
+      };
+      await createNormalizedEntity(grantedEntityData);
     }
   }
 }
@@ -853,6 +879,7 @@ if (ref && 'grants' in ref && Array.isArray(ref.grants) && ref.grants.length > 0
 **Location**: `apps/suref-web/src/hooks/suentity/useManageEntityChoices.ts`
 
 **Flow**:
+
 1. Component calls `useManageEntityChoices(entityId)`
 2. Returns callback `(choiceRefId, value) => void`
 3. If `value` is `undefined`: delete choice
@@ -863,21 +890,23 @@ if (ref && 'grants' in ref && Array.isArray(ref.grants) && ref.grants.length > 0
 
 ```typescript
 export function useManageEntityChoices(entityId: string | undefined) {
-  const upsertChoice = useUpsertPlayerChoice()
-  const deleteChoice = useDeletePlayerChoice()
-  
+  const upsertChoice = useUpsertPlayerChoice();
+  const deleteChoice = useDeletePlayerChoice();
+
   return useCallback(
     (choiceRefId: string, value: string | undefined) => {
-      if (!entityId) return
-      
+      if (!entityId) return;
+
       if (value === undefined) {
         // Delete choice
-        const choices = queryClient.getQueryData<Tables<'player_choices'>[]>(
+        const choices = queryClient.getQueryData<Tables<"player_choices">[]>(
           playerChoicesKeys.forEntity(entityId)
-        )
-        const existingChoice = choices?.find((c) => c.choice_ref_id === choiceRefId)
+        );
+        const existingChoice = choices?.find(
+          (c) => c.choice_ref_id === choiceRefId
+        );
         if (existingChoice) {
-          deleteChoice.mutate({ id: existingChoice.id, entityId })
+          deleteChoice.mutate({ id: existingChoice.id, entityId });
         }
       } else {
         // Upsert choice
@@ -885,11 +914,11 @@ export function useManageEntityChoices(entityId: string | undefined) {
           entity_id: entityId,
           choice_ref_id: choiceRefId,
           value,
-        })
+        });
       }
     },
     [entityId, queryClient, upsertChoice, deleteChoice]
-  )
+  );
 }
 ```
 
@@ -898,6 +927,7 @@ export function useManageEntityChoices(entityId: string | undefined) {
 **Migration**: `apps/suref-web/supabase/migrations/20250131_nested_choices.sql`
 
 **Key Features**:
+
 - `player_choice_id` column added to `player_choices`
 - `entity_id` made nullable
 - Constraint ensures exactly one parent (entity OR choice)
@@ -910,16 +940,16 @@ export function useManageEntityChoices(entityId: string | undefined) {
 // Entity choice
 upsertChoice.mutate({
   entity_id: entityId,
-  choice_ref_id: 'choice-id',
-  value: 'systems::laser-rifle'
-})
+  choice_ref_id: "choice-id",
+  value: "systems::laser-rifle",
+});
 
 // Nested choice (belongs to another choice)
 upsertChoice.mutate({
   player_choice_id: parentChoiceId,
-  choice_ref_id: 'nested-choice-id',
-  value: 'modules::targeting-computer'
-})
+  choice_ref_id: "nested-choice-id",
+  value: "modules::targeting-computer",
+});
 ```
 
 ### Hydrated Entities
@@ -933,22 +963,24 @@ upsertChoice.mutate({
 ```typescript
 const entity: HydratedEntity = {
   // Database row
-  id: 'entity-uuid',
-  pilot_id: 'pilot-uuid',
-  schema_name: 'abilities',
-  schema_ref_id: 'ability-id',
-  
+  id: "entity-uuid",
+  pilot_id: "pilot-uuid",
+  schema_name: "abilities",
+  schema_ref_id: "ability-id",
+
   // Hydrated data
-  ref: abilityReferenceData,  // From SalvageUnionReference.get()
-  choices: [/* player choices */],
-  parentEntity: parentEntity  // If granted
-}
+  ref: abilityReferenceData, // From SalvageUnionReference.get()
+  choices: [
+    /* player choices */
+  ],
+  parentEntity: parentEntity, // If granted
+};
 
 // Access in component
-entity.ref.name  // "Auto-Turret"
-entity.ref.grants  // [{ name: "Auto-Turret", schema: "equipment" }]
-entity.ref.choices  // [{ id: "...", name: "Personality" }]
-entity.choices  // Player's selections
+entity.ref.name; // "Auto-Turret"
+entity.ref.grants; // [{ name: "Auto-Turret", schema: "equipment" }]
+entity.ref.choices; // [{ id: "...", name: "Personality" }]
+entity.choices; // Player's selections
 ```
 
 ---
@@ -956,31 +988,35 @@ entity.choices  // Player's selections
 ## Summary
 
 ### Grants
+
 - **Purpose**: Automatically create entities when parent entity is selected
 - **Location**: `grants` property on reference entities
 - **Implementation**: Processed in `useCreateEntity` `onSuccess` callback
 - **Result**: New `suentities` row with `parent_entity_id` linking to grantor
 
 ### Choices
+
 - **Purpose**: Allow players to customize entities through selections
 - **Location**: `choices` property on reference entities (and actions)
 - **Implementation**: Stored in `player_choices` table, managed via hooks
 - **Result**: `player_choices` rows linking to entities or other choices
 
 ### GameEntities (suentities)
+
 - **Purpose**: Link reference data to player sheets
 - **Structure**: One row per entity instance on a sheet
 - **Relationships**: Links to pilot/mech/crawler, reference data, and parent entities
 
 ### PlayerChoices (player_choices)
+
 - **Purpose**: Store player selections for entity customization
 - **Structure**: One row per choice selection
 - **Relationships**: Links to entities or other choices (nested)
 
 ### Integration
+
 - Grants create entities automatically
 - Choices customize entities through selections
 - Nested choices enable complex selection chains
 - All data flows through normalized database schema
 - Live sheets hydrate entities with reference data and choices
-
