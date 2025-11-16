@@ -23,15 +23,6 @@ export function getActivationCurrency(
   return 'AP'
 }
 
-/**
- * Extract level (for abilities)
- */
-export function extractLevel(
-  data: SURefMetaEntity | SURefMetaBonusPerTechLevel
-): string | number | undefined {
-  return 'level' in data ? data.level : undefined
-}
-
 export function extractName(
   data: SURefMetaEntity | SURefMetaBonusPerTechLevel,
   schemaName: SURefSchemaName
