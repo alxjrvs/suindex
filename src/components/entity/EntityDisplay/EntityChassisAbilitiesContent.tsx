@@ -5,7 +5,7 @@ import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { NestedActionDisplay } from '../NestedActionDisplay'
 
 export function EntityChassisAbilitiesContent() {
-  const { data, spacing, compact, hideActions } = useEntityDisplayContext()
+  const { data, spacing, compact } = useEntityDisplayContext()
 
   const chassisAbilities = getChassisAbilities(data)
   if (!chassisAbilities || chassisAbilities.length === 0) return null

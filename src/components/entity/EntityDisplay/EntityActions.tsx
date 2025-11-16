@@ -1,11 +1,10 @@
 import { VStack } from '@chakra-ui/react'
-import { Text } from '../../base/Text'
 import { hasActions, extractActions } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { NestedActionDisplay } from '../NestedActionDisplay'
 
 export function EntityActions() {
-  const { data, schemaName, spacing, compact, hideActions } = useEntityDisplayContext()
+  const { data, schemaName, spacing, compact } = useEntityDisplayContext()
 
   // Chassis now use chassisAbilities instead of actions
   if (schemaName === 'chassis') return null
@@ -22,11 +21,6 @@ export function EntityActions() {
 
   return (
     <VStack gap={spacing.smallGap} alignItems="stretch" borderRadius="md">
-      {!compact && (
-        <Text fontSize="xl" variant="pseudoheader">
-          Actions
-        </Text>
-      )}
       {actions.map((action, index) => {
         return (
           <NestedActionDisplay
