@@ -40,4 +40,15 @@ The build process:
 1. Installs all dependencies (including workspace packages)
 2. Builds the `salvageunion-reference` package (generates types and dist)
 3. Builds the `suref-web` app
-4. Publishes from `apps/suref-web/dist/client`
+4. Copies Netlify functions from `apps/suref-web/.netlify/v1/functions/` to `netlify/functions/` and fixes import paths
+5. Publishes from `apps/suref-web/dist/client`
+
+## Functions Directory
+
+The `@netlify/vite-plugin-tanstack-start` plugin generates functions in `apps/suref-web/.netlify/v1/functions/`, but Netlify expects them at the root `netlify/functions/` directory.
+
+A post-build script (`apps/suref-web/scripts/copy-netlify-functions.sh`) automatically:
+
+- Copies functions to the root `netlify/functions/` directory
+- Updates import paths to work from the new location
+- This is handled automatically in the build command in `netlify.toml`

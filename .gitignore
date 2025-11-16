@@ -40,3 +40,4 @@ core
 .netlify
 # App-specific env files
 apps/suref-web/.env.local
+netlify/functions
