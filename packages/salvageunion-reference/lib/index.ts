@@ -37,7 +37,7 @@ import type {
   SURefSchemaName,
 } from './types/index.js'
 
-export { BaseModel } from './BaseModel.js'
+export { BaseModel, type ModelWithMetadata } from './BaseModel.js'
 
 export {
   getDataMaps,
@@ -49,6 +49,9 @@ export { resultForTable, type TableRollResult } from './utils/resultForTable.js'
 
 // Export utility functions (type guards and property extractors)
 export * from './utilities.js'
+
+// Export helper functions for common operations
+export * from './helpers.js'
 
 export {
   search,
@@ -71,80 +74,80 @@ export type * from './types/index.js'
 
 // Type mapping from schema names to entity types
 type SchemaToEntityMap = {
-  abilities: SURefAbility
+  'abilities': SURefAbility
   'ability-tree-requirements': SURefAbilityTreeRequirement
   'bio-titans': SURefBioTitan
-  chassis: SURefChassis
+  'chassis': SURefChassis
   'classes.advanced': SURefAdvancedClass
   'classes.core': SURefCoreClass
   'crawler-bays': SURefCrawlerBay
   'crawler-tech-levels': SURefCrawlerTechLevel
-  crawlers: SURefCrawler
-  creatures: SURefCreature
-  distances: SURefDistance
-  drones: SURefDrone
-  equipment: SURefEquipment
-  keywords: SURefKeyword
-  meld: SURefMeld
-  modules: SURefModule
-  npcs: SURefNPC
+  'crawlers': SURefCrawler
+  'creatures': SURefCreature
+  'distances': SURefDistance
+  'drones': SURefDrone
+  'equipment': SURefEquipment
+  'keywords': SURefKeyword
+  'meld': SURefMeld
+  'modules': SURefModule
+  'npcs': SURefNPC
   'roll-tables': SURefRollTable
-  squads: SURefSquad
-  systems: SURefSystem
-  traits: SURefTrait
-  vehicles: SURefVehicle
+  'squads': SURefSquad
+  'systems': SURefSystem
+  'traits': SURefTrait
+  'vehicles': SURefVehicle
 }
 
 // Runtime mapping from schema names to model property names
-const SchemaToModelMap = {
-  abilities: 'Abilities',
+export const SchemaToModelMap = {
+  'abilities': 'Abilities',
   'ability-tree-requirements': 'AbilityTreeRequirements',
   'bio-titans': 'BioTitans',
-  chassis: 'Chassis',
+  'chassis': 'Chassis',
   'classes.advanced': 'AdvancedClasses',
   'classes.core': 'CoreClasses',
   'crawler-bays': 'CrawlerBays',
   'crawler-tech-levels': 'CrawlerTechLevels',
-  crawlers: 'Crawlers',
-  creatures: 'Creatures',
-  distances: 'Distances',
-  drones: 'Drones',
-  equipment: 'Equipment',
-  keywords: 'Keywords',
-  meld: 'Meld',
-  modules: 'Modules',
-  npcs: 'NPCs',
+  'crawlers': 'Crawlers',
+  'creatures': 'Creatures',
+  'distances': 'Distances',
+  'drones': 'Drones',
+  'equipment': 'Equipment',
+  'keywords': 'Keywords',
+  'meld': 'Meld',
+  'modules': 'Modules',
+  'npcs': 'NPCs',
   'roll-tables': 'RollTables',
-  squads: 'Squads',
-  systems: 'Systems',
-  traits: 'Traits',
-  vehicles: 'Vehicles',
+  'squads': 'Squads',
+  'systems': 'Systems',
+  'traits': 'Traits',
+  'vehicles': 'Vehicles',
 } as const
 
 // Runtime mapping from schema names to display names
 export const SchemaToDisplayName = {
-  abilities: 'Abilities',
+  'abilities': 'Abilities',
   'ability-tree-requirements': 'Ability Tree Requirements',
   'bio-titans': 'Bio-Titans',
-  chassis: 'Chassis',
+  'chassis': 'Chassis',
   'classes.advanced': 'Advanced Classes',
   'classes.core': 'Core Classes',
   'crawler-bays': 'Crawler Bays',
   'crawler-tech-levels': 'Crawler Tech Levels',
-  crawlers: 'Crawlers',
-  creatures: 'Creatures',
-  distances: 'Distances',
-  drones: 'Drones',
-  equipment: 'Equipment',
-  keywords: 'Keywords',
-  meld: 'Meld',
-  modules: 'Modules',
-  npcs: 'NPCs',
+  'crawlers': 'Crawlers',
+  'creatures': 'Creatures',
+  'distances': 'Distances',
+  'drones': 'Drones',
+  'equipment': 'Equipment',
+  'keywords': 'Keywords',
+  'meld': 'Meld',
+  'modules': 'Modules',
+  'npcs': 'NPCs',
   'roll-tables': 'Roll Tables',
-  squads: 'Squads',
-  systems: 'Systems',
-  traits: 'Traits',
-  vehicles: 'Vehicles',
+  'squads': 'Squads',
+  'systems': 'Systems',
+  'traits': 'Traits',
+  'vehicles': 'Vehicles',
 } as const
 
 // Auto-generate models from schema catalog (synchronous)
@@ -158,10 +161,9 @@ export class SalvageUnionReference {
   static Abilities = models.Abilities as ModelWithMetadata<
     SchemaToEntityMap['abilities']
   >
-  static AbilityTreeRequirements =
-    models.AbilityTreeRequirements as ModelWithMetadata<
-      SchemaToEntityMap['ability-tree-requirements']
-    >
+  static AbilityTreeRequirements = models.AbilityTreeRequirements as ModelWithMetadata<
+    SchemaToEntityMap['ability-tree-requirements']
+  >
   static BioTitans = models.BioTitans as ModelWithMetadata<
     SchemaToEntityMap['bio-titans']
   >
@@ -198,11 +200,15 @@ export class SalvageUnionReference {
   static Keywords = models.Keywords as ModelWithMetadata<
     SchemaToEntityMap['keywords']
   >
-  static Meld = models.Meld as ModelWithMetadata<SchemaToEntityMap['meld']>
+  static Meld = models.Meld as ModelWithMetadata<
+    SchemaToEntityMap['meld']
+  >
   static Modules = models.Modules as ModelWithMetadata<
     SchemaToEntityMap['modules']
   >
-  static NPCs = models.NPCs as ModelWithMetadata<SchemaToEntityMap['npcs']>
+  static NPCs = models.NPCs as ModelWithMetadata<
+    SchemaToEntityMap['npcs']
+  >
   static RollTables = models.RollTables as ModelWithMetadata<
     SchemaToEntityMap['roll-tables']
   >

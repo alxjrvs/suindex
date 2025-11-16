@@ -12,7 +12,7 @@ import { BaseModel, type ModelWithMetadata } from './BaseModel.js'
 import { generateModels } from './ModelFactory.js'
 // INJECT:TYPE_IMPORTS
 
-export { BaseModel } from './BaseModel.js'
+export { BaseModel, type ModelWithMetadata } from './BaseModel.js'
 
 export {
   getDataMaps,
@@ -24,6 +24,9 @@ export { resultForTable, type TableRollResult } from './utils/resultForTable.js'
 
 // Export utility functions (type guards and property extractors)
 export * from './utilities.js'
+
+// Export helper functions for common operations
+export * from './helpers.js'
 
 export {
   search,

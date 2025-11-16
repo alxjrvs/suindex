@@ -9,9 +9,10 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "bun --filter suref-web dev",
+    "dev": "bun run build:package:quick && bun --filter suref-web dev",
     "build": "bun run build:package && bun --filter suref-web build",
     "build:package": "cd packages/salvageunion-reference && bun install && bun run build || echo 'Package build completed (lint may have failed)'",
+    "build:package:quick": "cd packages/salvageunion-reference && bun run generate && tsc --project tsconfig.build.json",
     "typecheck": "bun --filter suref-web typecheck",
     "lint": "bun --filter suref-web lint",
     "format": "bun --filter suref-web format",

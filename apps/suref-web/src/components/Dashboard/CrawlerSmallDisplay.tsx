@@ -1,7 +1,7 @@
 import { VStack } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
-import { findCrawlerTechLevel } from '../../utils/referenceDataHelpers'
+import { findCrawlerTechLevel } from 'salvageunion-reference'
 import { ValueDisplay } from '../shared/ValueDisplay'
 import { useNavigate } from '@tanstack/react-router'
 import { useHydratedCrawler } from '../../hooks/crawler'

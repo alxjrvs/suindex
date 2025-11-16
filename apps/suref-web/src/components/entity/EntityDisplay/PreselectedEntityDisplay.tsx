@@ -1,5 +1,5 @@
 import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
-import { getModel } from '../../../utils/modelMap'
+import { getModel } from 'salvageunion-reference'
 import { EntityDisplay } from './index'
 
 export interface PreselectedEntityDisplayProps {

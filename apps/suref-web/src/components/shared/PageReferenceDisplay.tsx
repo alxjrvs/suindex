@@ -1,12 +1,12 @@
 import { Flex } from '@chakra-ui/react'
-import { getSchemaDisplayName } from '../entity/entityDisplayHelpers'
+import { getDisplayName } from 'salvageunion-reference'
 import { Text } from '../base/Text'
 import { useEntityDisplayContext } from '../entity/EntityDisplay/useEntityDisplayContext'
 
 export function PageReferenceDisplay({ bg }: { bg?: string }) {
   const { data, schemaName, spacing, compact } = useEntityDisplayContext()
   if (!('page' in data) || !data.page) return null
-  const displayName = getSchemaDisplayName(schemaName)
+  const displayName = getDisplayName(schemaName)
 
   const fontWeightBold = compact ? 'semibold' : 'bold'
   const fontWeightSemibold = 'semibold'

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getModel } from '../../utils/modelMap'
+import { getModel } from 'salvageunion-reference'
 import type { SURefEntity } from 'salvageunion-reference'
 
 interface UseSchemaDataResult {

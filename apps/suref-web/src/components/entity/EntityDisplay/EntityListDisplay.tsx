@@ -1,7 +1,7 @@
 import { VStack } from '@chakra-ui/react'
 import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
 import type { ButtonProps } from '@chakra-ui/react'
-import { getModel } from '../../../utils/modelMap'
+import { getModel } from 'salvageunion-reference'
 import { EntityDisplay } from './index'
 import { NestedActionDisplay } from '../NestedActionDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
@@ -35,9 +35,9 @@ export function EntityListDisplay({
           const model = getModel(schema.toLowerCase())
           if (!model) return null
 
-          return model.find((e) => e.name === entityName)
+          return model.find((e) => e.name === entityName) ?? null
         })
-        .filter((e) => e !== null && e !== undefined)
+        .filter((e): e is NonNullable<typeof e> => e !== null && e !== undefined)
     : choice.customSystemOptions || []
 
   const visibleEntities = selectedChoice

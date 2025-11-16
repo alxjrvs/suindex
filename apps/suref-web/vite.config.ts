@@ -33,8 +33,12 @@ export default defineConfig({
   ],
   resolve: {
     // Ensure Vite resolves the workspace package correctly
+    // In development, use source files; in production, use built files
     alias: {
-      'salvageunion-reference': path.resolve(__dirname, '../../packages/salvageunion-reference'),
+      'salvageunion-reference': path.resolve(
+        __dirname,
+        '../../packages/salvageunion-reference/lib/index.ts'
+      ),
     },
   },
   optimizeDeps: {

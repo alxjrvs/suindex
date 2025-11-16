@@ -85,7 +85,7 @@ ${schemaToEntityEntries}
   template = template.replace(
     '// INJECT:SCHEMA_TO_MODEL_MAP',
     `// Runtime mapping from schema names to model property names
-const SchemaToModelMap = {
+export const SchemaToModelMap = {
 ${schemaToModelEntries},
 } as const`
   )

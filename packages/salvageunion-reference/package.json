@@ -3,12 +3,13 @@
   "version": "2.0.6",
   "description": "Comprehensive, schema-validated JSON dataset and TypeScript ORM for the Salvage Union tabletop RPG",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./lib/index.ts",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./lib/index.ts",
+      "default": "./dist/index.js"
     },
     "./data/*": "./data/*",
     "./schemas/*": "./schemas/*"
@@ -23,6 +24,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist && bun test && bun run docs && bun run generate && tsc --project tsconfig.build.json && bun run format && bun run lint",
+    "prepare": "bun run generate && tsc --project tsconfig.build.json",
     "prepublishOnly": "npm run build && npm run typecheck",
     "validate:ids": "tsx tools/checkUniqueIds.ts",
     "fix:ids": "tsx tools/generateMissingIds.ts",

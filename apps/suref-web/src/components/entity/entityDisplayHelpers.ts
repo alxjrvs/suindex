@@ -3,23 +3,11 @@ import type {
   SURefSchemaName,
   SURefMetaBonusPerTechLevel,
 } from 'salvageunion-reference'
-import { getSchemaCatalog } from 'salvageunion-reference'
 
 /**
  * Local type that extends SURefSchemaName to include meta schemas like 'actions'
  */
 type SURefMetaSchemaName = SURefSchemaName | 'actions'
-
-const schemaCatalog = getSchemaCatalog()
-const schemaDisplayNameMap = new Map(schemaCatalog.schemas.map((s) => [s.id, s.displayName]))
-
-/**
- * Get display name for schema (for page references, headers, etc.)
- * Uses package metadata for display names
- */
-export function getSchemaDisplayName(schemaName: SURefSchemaName): string {
-  return schemaDisplayNameMap.get(schemaName) || schemaName
-}
 
 /**
  * Get activation currency based on schema name

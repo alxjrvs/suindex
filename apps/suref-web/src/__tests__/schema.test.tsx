@@ -2,7 +2,7 @@ import { describe, test, expect } from 'bun:test'
 import { render, waitFor } from '../test/render'
 import { EntityDisplay } from '../components/entity/EntityDisplay'
 import { getSchemaCatalog } from 'salvageunion-reference'
-import { getModel } from '../utils/modelMap'
+import { getModel } from 'salvageunion-reference'
 import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
 import { act } from '@testing-library/react'
 
