@@ -1,0 +1,518 @@
+[
+  {
+    "id": "ceda0aba-bd8e-4123-ad96-83f68acdac48",
+    "source": "Salvage Union Workshop Manual",
+    "name": "amphibious",
+    "page": 118,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Anything with this Trait can move, function and survive underwater and on land."
+      }
+    ]
+  },
+  {
+    "id": "3a6786eb-4b7c-4fb9-92e6-545db7d057dc",
+    "source": "Salvage Union Workshop Manual",
+    "name": "anti-organic",
+    "page": 318,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "An anti-organic weapon deals 2× damage to People, creatures, and Bio-Titans."
+      }
+    ]
+  },
+  {
+    "id": "2d354aff-cd3e-4d97-9d74-7ad653181ec0",
+    "source": "Salvage Union Workshop Manual",
+    "name": "anti-shielding",
+    "page": 183,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A System, Module, or Ability with this Trait ignores the effects of anything with the [[Shield]] Trait."
+      }
+    ]
+  },
+  {
+    "id": "71cbd2ee-97aa-450c-95e4-25df9fecf30d",
+    "source": "Salvage Union Workshop Manual",
+    "name": "armour",
+    "page": 79,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Pilot Equipment designed to protect its wearer from harm. A Pilot may only wear and benefit from one piece of Armour."
+      }
+    ]
+  },
+  {
+    "id": "9865c68d-54df-4da5-8331-11771e732cd3",
+    "source": "Salvage Union Workshop Manual",
+    "name": "ballistic",
+    "page": 84,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A weapon that fires tangible projectiles such as bullets that are typically unpowered and unguided."
+      }
+    ]
+  },
+  {
+    "id": "5d7649ac-29a2-423e-8669-9a545f01390f",
+    "source": "Salvage Union Workshop Manual",
+    "name": "burn",
+    "page": 184,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A weapon or attack with the Burn Trait deals the value in brackets to a target hit by the attack at the end of their turn. This damage is of the same type as the weapon that made the attack. For example, a Burn (2) weapon deals 2 damage to the target at the end of their turn."
+      }
+    ]
+  },
+  {
+    "id": "7e436f25-4790-466c-8ed5-bd1fe4af92ec",
+    "source": "Salvage Union Workshop Manual",
+    "name": "burrower",
+    "page": 278,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "This Trait allows for movement underneath the ground. Something with this Trait can burrow into the ground as a Turn Action and unburrow as a Free Action. Whilst burrowed, it cannot be directly seen or targeted by anything on the ground, but may be spotted by other signs such as mounds of earth."
+      }
+    ]
+  },
+  {
+    "id": "71cc1219-2b34-41e8-a554-17be32e40cd5",
+    "source": "Salvage Union Workshop Manual",
+    "name": "climbing",
+    "page": 84,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If something has the Climbing Trait they can effortlessly climb sheer and vertical surfaces such as buildings, cliff faces, and walls."
+      }
+    ]
+  },
+  {
+    "id": "0d628fd3-9a72-408c-b25d-46943cadfdd2",
+    "source": "Salvage Union Workshop Manual",
+    "name": "communicator",
+    "page": 190,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "The Communicator Trait allows you to communicate with anyone or anything else that also has the Communicator Trait. This is typically given to the likes of Comms Modules and such."
+      }
+    ]
+  },
+  {
+    "id": "c638ecbe-974a-4812-912c-150c572a6d7a",
+    "source": "Salvage Union Workshop Manual",
+    "name": "deadly",
+    "page": 181,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A weapon with the Deadly Trait destroys or kills its target on the roll of a ‘Nailed It’ (20) result to hit."
+      }
+    ]
+  },
+  {
+    "id": "bfc6dad6-c865-42bb-8023-7b59e2d53d1e",
+    "source": "Salvage Union Workshop Manual",
+    "name": "energy",
+    "page": 87,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "An energy weapon is one that fires a directed beam of superheated light at the target in order to cause damage. This includes a wide range of laser, beam, and plasma-based weapons such as the Red Laser, Experimental Particle Beam Cannon, and Plasma Cannon."
+      }
+    ]
+  },
+  {
+    "id": "ae973176-f8eb-4478-81af-72c0491004c8",
+    "source": "Salvage Union Workshop Manual",
+    "name": "escape",
+    "page": 129,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If System, Module, or Ability has the Escape Trait, it can be used by a Pilot to attempt to escape from their Mech or Vehicle in the event it is destroyed or put in significant danger."
+      }
+    ]
+  },
+  {
+    "id": "b8a8d099-a944-449f-9d2f-cb53774d9003",
+    "source": "Salvage Union Workshop Manual",
+    "name": "explosive",
+    "page": 78,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When something with the Explosive Trait hits a target it deals damage equal to the value in brackets to all other targets within Close Range of the main target. This damage is of the same type as the main attack."
+      }
+    ]
+  },
+  {
+    "id": "af11316a-93b7-48a6-aa8f-4c5989793ffc",
+    "source": "Salvage Union Workshop Manual",
+    "name": "fast",
+    "page": 114,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If something has the Fast Trait it can move an additional Range band on its turn as a Free Action. In addition, it moves twice as fast across the Campaign, Area, and Region Maps."
+      }
+    ]
+  },
+  {
+    "id": "8644a0fd-becd-4535-90d6-0cd7a5464df6",
+    "source": "Salvage Union Workshop Manual",
+    "name": "flashy",
+    "page": 142,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If something has the Flashy Trait, it is particularly fancy, beautiful, stunning, or intricately designed and evokes awe, jealousy, and gasps of astonishment in equal measure."
+      }
+    ]
+  },
+  {
+    "id": "734e3d6b-439a-4c77-8b40-68cf22c9a816",
+    "source": "Salvage Union Workshop Manual",
+    "name": "fly",
+    "page": 280,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Anything with this Trait can fly, allowing them to move in the air over obstacles and terrain. Anything attacking a target with this Trait treats it as though it is in Long Range unless it also has the Fly or [[Hover]] Trait."
+      }
+    ]
+  },
+  {
+    "id": "e0901d04-2d45-4e51-89fe-cc10f73f2bb3",
+    "source": "Salvage Union Workshop Manual",
+    "name": "guided",
+    "page": 180,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Weapons with this trait hone in on the target, careening around terrain and other obstacles. You do not need to see the target to be able to make an attack against them with a weapon that has the Guided Trait."
+      }
+    ]
+  },
+  {
+    "id": "df0e3e29-7657-4d7b-8e33-95640f747f17",
+    "source": "Salvage Union Workshop Manual",
+    "name": "hacking",
+    "page": 34,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A System, Module, or Ability with this Trait is designed to take control or hack into a Mech, electronics, or computer systems in order to damage it, extract information, or have some other malicious effect. This includes the likes of Eggs Mayhem, Reactor Overload, and many of the Hacker Class Abilities."
+      }
+    ]
+  },
+  {
+    "id": "74615835-b334-4537-a305-26456f312656",
+    "source": "Salvage Union Workshop Manual",
+    "name": "heat spike",
+    "page": 193,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a Mech attacks with or activates a System, Module, or Ability with this Trait it must make a Heat Check. For example, when making an attack with the Experimental Particle Beam Cannon the attacker must make a Heat Check. Make this check after the attack or Ability itself has been resolved."
+      }
+    ]
+  },
+  {
+    "id": "82aa71fd-17c6-4c68-844f-d6393b2f6800",
+    "source": "Salvage Union Workshop Manual",
+    "name": "heavy",
+    "page": 78,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Pilot Equipment with the Heavy Trait is particularly large and cumbersome and takes up 2 Inventory Slots instead of 1."
+      }
+    ]
+  },
+  {
+    "id": "6bb3c201-c568-4a5d-8756-ca1e4cf2bad5",
+    "source": "Salvage Union Workshop Manual",
+    "name": "hot",
+    "page": 47,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a System, Module, or Ability has the Hot Trait, when it is activated or attacked with, the Mech doing so gains a number of Heat equal to the number in brackets. In addition, the Mediator can apply Heat when using the weapon as a consequence or Tough Choice."
+      }
+    ]
+  },
+  {
+    "id": "5a406632-9db7-46ee-8cbc-961f67e96d72",
+    "source": "Salvage Union Workshop Manual",
+    "name": "hover",
+    "page": 102,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If something has the Hover Trait it can move effortlessly over difficult and dangerous terrain as well as over obstacles such as walls or Mechs and is never slowed down by any of this. The likes of Hover Drones have this Trait."
+      }
+    ]
+  },
+  {
+    "id": "ec4467e2-9547-4ade-85bf-274620dc3f4b",
+    "source": "Salvage Union Workshop Manual",
+    "name": "immobile",
+    "page": 319,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If something is Immobile, it cannot move in any way. A Mech without any Locomotion System is Immobile and things like static gun turrets are also Immobile."
+      }
+    ]
+  },
+  {
+    "id": "88f6c323-7eb7-4528-92fa-8b9f3115e4a2",
+    "source": "Salvage Union Workshop Manual",
+    "name": "ion",
+    "page": 183,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a weapon with this Trait hits a target, even if it does not deal damage, the target cannot use any Systems, Modules, or Abilities that have an EP cost on their next turn."
+      }
+    ]
+  },
+  {
+    "id": "a9ddd682-e6a8-4cde-8c99-759ac643536d",
+    "source": "Salvage Union Workshop Manual",
+    "name": "jamming",
+    "page": 164,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Weapons with this Trait have a tendency to jam. The Mediator can apply this as a Setback, Tough Choice, or as appropriate when someone uses a weapon with this Trait. A weapon that is jammed cannot be used until a Turn Action (1 minute) is taken to unjam it."
+      }
+    ]
+  },
+  {
+    "id": "9fe62537-f7d5-40bc-b38a-49b61226c739",
+    "source": "Salvage Union Workshop Manual",
+    "name": "melee",
+    "page": 59,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A weapon with the Melee Trait is used in hand-to-hand combat such as Monomolecular Swords, Mech Close Combat Armaments, and Heavy Duty Mining Rigs. If something specifies Ranged Weapons then weapons with this Trait are not counted."
+      }
+    ]
+  },
+  {
+    "id": "d9cb544c-85ce-46a0-a213-8390116fdbb9",
+    "source": "Salvage Union Workshop Manual",
+    "name": "missile",
+    "page": 55,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A weapon with this Trait typically attacks with some kind of self propelled ordnance or explosive projectile that it launches at a target."
+      }
+    ]
+  },
+  {
+    "id": "e40d514e-a737-4e1f-93e7-6b52d6e2b83e",
+    "source": "Salvage Union Workshop Manual",
+    "name": "multi-attack",
+    "page": 176,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A weapon or NPC with this Trait can attack a number of times equal to the Multi-Attack value as a single Turn Action. For example, the 120mm Heavy Auto-cannon is Multi-Attack (3) so can make 3 attacks in a turn as a Turn Action. Resolve each attack separately."
+      }
+    ]
+  },
+  {
+    "id": "7323dcff-687b-49ae-a81a-b8a7f0786147",
+    "source": "Salvage Union Workshop Manual",
+    "name": "optics",
+    "page": 33,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If something has the Optics Trait it is used to enhance vision in some way via technological means."
+      }
+    ]
+  },
+  {
+    "id": "8f8ba32b-6cb6-452a-b884-c07f1bc3bbe5",
+    "source": "Salvage Union Workshop Manual",
+    "name": "overheat",
+    "page": 103,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a target is hit by a weapon with the Overheat Trait it cannot use any Systems, Modules, or Abilities that would generate Heat on its next turn. For example, it cannot attack with any weapons that have the [[Hot]] Trait nor can it Push."
+      }
+    ]
+  },
+  {
+    "id": "8cfa3588-b2a8-4fe1-8f0a-4d47ed7f7f02",
+    "source": "Salvage Union Workshop Manual",
+    "name": "personnel capacity",
+    "page": 171,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Denotes how many individual People a Mech or Vehicle can safely transport. A Squad takes up 6 Personnel Capacity."
+      }
+    ]
+  },
+  {
+    "id": "c6ba1dd7-7ab4-4500-9f9e-a12e5bc2d7b3",
+    "source": "Salvage Union Workshop Manual",
+    "name": "pinning",
+    "page": 164,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a weapon with the Pinning Trait hits a creature it cannot move on its next turn. This represents it hitting the dirt to avoid the incoming fire. This does not affect Bio-Titans, Mechs, Vehicles or Meld."
+      }
+    ]
+  },
+  {
+    "id": "a5f76ad6-13da-4ddb-9beb-1d70bda36832",
+    "source": "Salvage Union Workshop Manual",
+    "name": "poison",
+    "page": 296,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A creature hit by a poison weapon suffers a Major Injury."
+      }
+    ]
+  },
+  {
+    "id": "7ac7e22a-1c17-4c7a-ab33-76df7cd9bdde",
+    "source": "Salvage Union Workshop Manual",
+    "name": "rigging",
+    "page": 145,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a System, Module, Ability, or Pilot Equipment has the Rigging Trait, this allows it to perform the ‘Load’ Action letting it pick up and carry Scrap and salvage. It also allows use of the ‘Mount/Dismount’ Action allowing you to attach a System or Module onto a Mech."
+      }
+    ]
+  },
+  {
+    "id": "04c1c5f7-df56-41ea-a2de-c390309250eb",
+    "source": "Salvage Union Workshop Manual",
+    "name": "salvaging",
+    "page": 40,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "This Trait allows you to perform a wide range of Salvaging Abilities including Area Salvage, Mech Salvage, and Scrap."
+      }
+    ]
+  },
+  {
+    "id": "275d62e5-370c-4938-8fbf-e7ecf30b03db",
+    "source": "Salvage Union Workshop Manual",
+    "name": "scanner",
+    "page": 106,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If something has the Scanner Trait, it is used to scan, detect, or electronically probe an area or object in some way."
+      }
+    ]
+  },
+  {
+    "id": "c62a9197-5b56-4828-8900-d3eda9a97c49",
+    "source": "Salvage Union Workshop Manual",
+    "name": "shield",
+    "page": 85,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a System, Module, Chassis, or Ability has the Shield Trait, it typically produces some kind of protective field or barrier when activated that protects the user from harm."
+      }
+    ]
+  },
+  {
+    "id": "ce30ec24-4cb3-42d7-8900-752f727e99b1",
+    "source": "Salvage Union Workshop Manual",
+    "name": "silent",
+    "page": 81,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a System, Module, or Pilot Equipment has the Silent Trait, it makes no noise when it is used or when an attack is made with it."
+      }
+    ]
+  },
+  {
+    "id": "bf223567-5d86-4771-bd4a-8b31b882e353",
+    "source": "Salvage Union Workshop Manual",
+    "name": "targeter",
+    "page": 180,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Systems, Modules, and Abilities with the Targeter Trait have some means to automatically, electronically track targets enabling a range of effects from automatically hitting to being able to fire at multiple different targets."
+      }
+    ]
+  },
+  {
+    "id": "a94d606e-d2f1-4df5-8b30-06c2fcc852ff",
+    "source": "Salvage Union Workshop Manual",
+    "name": "uses",
+    "page": 30,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If something has the Uses Trait, it can be used a number of times as indicated by the number in brackets. For example, uses (3) would indicate it can be used 3 times. Once this amount is reduced to 0 it can no longer be used. Things with Uses recharge all of their uses following a week of Downtime."
+      }
+    ]
+  },
+  {
+    "id": "8163a225-0b5a-4759-a853-4e30edcdeb8d",
+    "source": "Salvage Union Workshop Manual",
+    "name": "unwieldy",
+    "page": 29,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Systems and Modules with the Unwieldy Trait will sometimes get stuck, malfunction, become damaged during use, or leave the attacker exposed. The Mediator may impose these as a Setback when rolling Tough Choices or failures with the weapon."
+      }
+    ]
+  },
+  {
+    "id": "a032ceef-d399-4b5a-a95b-39987cea61db",
+    "source": "Salvage Union Workshop Manual",
+    "name": "vulnerable",
+    "page": 326,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If a Mech, Creature, or Vehicle gains the Vulnerable Trait, it takes 2× damage from attacks that hit it."
+      }
+    ]
+  },
+  {
+    "id": "40cb28ae-6474-4657-b443-e568bec769bd",
+    "source": "Salvage Union Workshop Manual",
+    "name": "wield",
+    "page": 65,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A System with the Wield Trait requires your Mech to have a System with the [[Rigging]] Trait to use it; as it must be held. This applies for each System with this Trait, for example to use an Armoured Shield and a Mech Melee Armament you need two Systems with the [[Rigging]] Trait."
+      }
+    ]
+  }
+]

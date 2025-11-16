@@ -1,24 +1,81 @@
-# Salvage Union Index
+# SURef Monorepo
 
-A dynamic web application for viewing and exploring Salvage Union game data.
+A Bun monorepo containing the SURef web application and the Salvage Union Reference package.
 
-## Features
+## Structure
 
-- **Dynamic Schema Loading**: Automatically reads all schemas from the `schemas/index.json` file
-- **Auto-Discovery**: No code changes needed when new data files are added
+```
+.
+├── apps/
+│   └── suref-web/          # Main web application
+├── packages/
+│   └── salvageunion-reference/  # Salvage Union game data package
+└── package.json          # Root workspace configuration
+```
+
+## Getting Started
+
+### Install Dependencies
+
+```bash
+bun install
+```
+
+### Development
+
+Run the development server from the root:
+
+```bash
+bun run dev
+```
+
+Or from the app directory:
+
+```bash
+cd apps/suref-web
+bun run dev
+```
+
+### Build
+
+Build the reference package and app:
+
+```bash
+bun run build
+```
+
+This will:
+1. Build the `salvageunion-reference` package
+2. Build the `suref-web` app
+
+## Workspace Scripts
+
+From the root, you can run scripts for any workspace:
+
+```bash
+# Run scripts in suref-web app
+bun --filter suref-web <script>
+
+# Run scripts in salvageunion-reference package
+bun --filter salvageunion-reference <script>
+```
+
+## Apps
+
+### suref-web
+
+The main web application for viewing and exploring Salvage Union game data.
+
+- **Dynamic Schema Loading**: Automatically reads all schemas from the reference package
 - **Search**: Search items by name or description
 - **Filtering**: Filter data by any field with multiple values
 - **Sorting**: Click column headers to sort data
 - **Detail View**: Click "View Details" to see all fields for any item
-- **Responsive Design**: Clean, modern UI built with Tailwind CSS
 
-## Getting Started
+## Packages
 
-The app is available at `http://localhost:5173/` when running `npm run dev`.
+### salvageunion-reference
 
-## How It Works
+Comprehensive, schema-validated JSON dataset and TypeScript ORM for the Salvage Union tabletop RPG.
 
-The app uses symlinks in `public/` to access data and schemas from the parent directory.
-It dynamically loads all schemas from `schemas/index.json` and generates the UI automatically.
-
-When you add new data files, just update `schemas/index.json` and the app will pick them up automatically!
+See [packages/salvageunion-reference/README.md](./packages/salvageunion-reference/README.md) for details.

@@ -1,0 +1,309 @@
+[
+  {
+    "id": "8bffb508-8c8f-418d-b6ce-f24f7266e41b",
+    "name": "Augmented",
+    "source": "Salvage Union Workshop Manual",
+    "npc": {
+      "position": "Union Crawler A.I.",
+      "hitPoints": 0,
+      "choices": [
+        {
+          "id": "c7e2b66a-6b62-446d-90ff-11873089bfe0",
+          "name": "A.I. Personality",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "Roll on the A.I. Personality Table for their personality."
+            }
+          ]
+        }
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "Your Union Crawler has an advanced, intelligent A.I. on board which controls its core functions. The A.I. is jacked into the Corpo Net, once per Downtime you can ask them two questions about any topic and they will answer you truthfully. Name your A.I. and roll on the A.I. Personality Table for their personality."
+        }
+      ]
+    },
+    "actions": [
+      {
+        "name": "Crawler Wide Augments",
+        "id": "8d09b52e-0bd9-4d26-bbd9-40c9f29abdc5",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Every Pilot on the Union Crawler may train any Pilot Ability from the Augment Ability Tree in addition to their other abilities. When you choose this Crawler Type during character creation all Pilots gain an additional Training Point which they may only spend on the Augment Ability Tree."
+          }
+        ]
+      }
+    ],
+    "page": 216,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Nearly everyone on your Union Crawler is augmented in some way and your medical technicians are able to implement a variety of body modifications with ease."
+      }
+    ]
+  },
+  {
+    "id": "3d1d9f79-9c56-43fa-a4c9-6dfe10b9aac9",
+    "name": "Battle",
+    "source": "Salvage Union Workshop Manual",
+    "npc": {
+      "position": "Grizzled Veteran",
+      "choices": [
+        {
+          "id": "94e8204d-652c-47f4-93ca-271cebb16459",
+          "name": "Keepsake",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "A Keepsake is a personal item that represents something important to the NPC. It could be a memento from their past, a family heirloom, or something they have worked hard to acquire. The Keepsake is a reminder of the NPC's history and personality."
+            }
+          ]
+        },
+        {
+          "id": "b103d074-5b3c-40af-99ee-805c92814199",
+          "name": "Motto",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "A Motto is a personal saying or phrase that represents the NPC's personality or beliefs. It could be something they live by, or something they are trying to achieve. The Motto is a reminder of the NPC's personality and goals."
+            }
+          ]
+        }
+      ],
+      "hitPoints": 10,
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "A Grizzled Veteran is part of your Union Crawler. Name them and give them a Keepsake and Motto. They have 10 HP."
+        },
+        {
+          "type": "paragraph",
+          "value": "The Grizzled Veteran helps to keep the Union Crawler Armoury well stocked. Pilots may take two pieces of Pilot Equipment from the Armoury instead of one per Downtime. In addition, once per Downtime they may answer a question relating to combat, military, strategy, and tactics. They must provide a true answer to the question."
+        },
+        {
+          "type": "paragraph",
+          "value": "When defending the Union Crawler, the Grizzled Veteran will fight alongside a Rifle Squad they have trained. They may also pilot a Mech in the defence of the Crawler, though they will not venture out into the wastes for those days are behind them."
+        }
+      ]
+    },
+    "actions": [
+      {
+        "name": "Improved Armour and Armaments",
+        "choices": [
+          {
+            "id": "49dbf700-b4b4-4718-8847-5f24dbf033a2",
+            "name": "Additional Armament Bay Weapons System",
+            "schema": ["systems"],
+            "content": [
+              {
+                "type": "paragraph",
+                "value": "Choose a Weapons System to mount in the Armament Bay."
+              }
+            ]
+          }
+        ],
+        "id": "a884c78d-f5a9-49b0-ad61-41f375132848",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Your Union Crawler may mount two Weapons Systems in its Armament Bay instead of the usual one and make two attacks on its turn. In addition, the Crawler increases its Max SP by 5."
+          }
+        ]
+      }
+    ],
+    "page": 216,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Your Crawler is equipped to better defend itself in the wastelands. It bristles with armour and armaments and many on board are highly trained and effective fighters"
+      }
+    ]
+  },
+  {
+    "id": "4e317382-046b-4a35-bce8-065c6d659a7b",
+    "name": "Engineering",
+    "source": "Salvage Union Workshop Manual",
+    "npc": {
+      "position": "Research Engineer",
+      "hitPoints": 4,
+      "choices": [
+        {
+          "id": "60ba7d94-db45-4af2-bbc2-1032e7796a96",
+          "name": "Keepsake",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "A Keepsake is a personal item that represents something important to the NPC. It could be a memento from their past, a family heirloom, or something they have worked hard to acquire. The Keepsake is a reminder of the NPC's history and personality."
+            }
+          ]
+        },
+        {
+          "id": "c7b714c8-9cfd-4a43-980f-b995491002bc",
+          "name": "Motto",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "A Motto is a personal saying or phrase that represents the NPC's personality or beliefs. It could be something they live by, or something they are trying to achieve. The Motto is a reminder of the NPC's personality and goals."
+            }
+          ]
+        }
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "An engineer who is one step ahead of their peers has joined your Union Crawler. Name them and give them a Keepsake and Motto. They have 4 HP."
+        },
+        {
+          "type": "paragraph",
+          "value": "Once per Downtime, the Research Engineer can be asked to craft a single Mech Chassis, System, or Module. This can be of a Tech Level one higher than the current Tech Level of your Union Crawler. For example, the Research Engineer could craft you a Tech 3 System if you were in a Tech 2 Union Crawler. You must provide them the correct amount of Scrap to do this and it follows all the normal crafting rules."
+        }
+      ]
+    },
+    "actions": [
+      {
+        "name": "Exceptional Engineering",
+        "id": "990cb58d-c58d-4e4e-a422-466c108a7f3c",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Your Union Crawler reduces its upkeep cost by 2 Scrap of its Tech Level. In addition add 2 free Scrap of it’s Tech Level to its Upgrade Pool at the start of each Downtime."
+          }
+        ]
+      }
+    ],
+    "page": 216,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Your Crawler is designed for maximum efficiency, functioning with the bare minimum of scrap expenditure thanks to the efforts of your well-oiled engineering team. "
+      }
+    ]
+  },
+  {
+    "id": "d850cd93-f1cc-462b-bfa4-babfb0b2812e",
+    "name": "Exploratory",
+    "source": "Salvage Union Workshop Manual",
+    "npc": {
+      "position": "Wasteland Explorer",
+      "hitPoints": 4,
+      "choices": [
+        {
+          "id": "235a2a03-b2f2-4fb3-8afb-a1e87155b4c6",
+          "name": "Keepsake",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "A Keepsake is a personal item that represents something important to the NPC. It could be a memento from their past, a family heirloom, or something they have worked hard to acquire. The Keepsake is a reminder of the NPC's history and personality."
+            }
+          ]
+        },
+        {
+          "id": "f0aa1340-f2a2-41a3-96b1-865afd27f25a",
+          "name": "Motto",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "A Motto is a personal saying or phrase that represents the NPC's personality or beliefs. It could be something they live by, or something they are trying to achieve. The Motto is a reminder of the NPC's personality and goals."
+            }
+          ]
+        }
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "A Wasteland Explorer is part of your Union Crawler. Name them and if you wish, give them a Keepsake and Motto. They have 4 HP."
+        }
+      ]
+    },
+    "actions": [
+      {
+        "name": "All Terrain Locomotion",
+        "id": "361d894d-a5dc-451f-9a93-860e71e94ff9",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Your Union Crawler has the ability to easily traverse over a vast range of terrain types from mountain ranges and ash-filled plains to dense forests and muddy swamplands. It is never slowed down by Difficult Terrain. It can also safely cross bodies of water amphibiously."
+          }
+        ]
+      }
+    ],
+    "page": 217,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Exploratory Crawlers are designed to get to the hardest to reach places in the wasteland. They have unique and even bizarre locomotion systems that let them travel over terrain that range from spider-like legs and multiple articulated tracks to tunnelling maws and complex hover systems."
+      }
+    ]
+  },
+  {
+    "id": "46e44f56-be78-49d8-bfe4-32628ad4b8ef",
+    "name": "Trade Caravan",
+    "source": "Salvage Union Workshop Manual",
+    "npc": {
+      "position": "Savvy Trader",
+      "hitPoints": 4,
+      "choices": [
+        {
+          "id": "53bc208d-ca95-4e7c-9b0c-c8797d4a79f1",
+          "name": "Keepsake",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "A Keepsake is a personal item that represents something important to the NPC. It could be a memento from their past, a family heirloom, or something they have worked hard to acquire. The Keepsake is a reminder of the NPC's history and personality."
+            }
+          ]
+        },
+        {
+          "id": "726f68cb-93ee-4f0d-ac45-9f18bebdfd36",
+          "name": "Motto",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "A Motto is a personal saying or phrase that represents the NPC's personality or beliefs. It could be something they live by, or something they are trying to achieve. The Motto is a reminder of the NPC's personality and goals."
+            }
+          ]
+        }
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "value": "A Savvy Trader is part of your Union Crawler. Name them and give them a Keepsake and Motto. They have 4 HP."
+        },
+        {
+          "type": "paragraph",
+          "value": "The Savvy Trader reduces the cost of any Mech Chassis, System, or Module available in the Improved Trading Bay by 1 Scrap to a minimum of one."
+        }
+      ]
+    },
+    "actions": [
+      {
+        "name": "Improved Trading Bay",
+        "table": {
+          "1": "Re-roll on this table. If a 1 is rolled again nothing is available for trade this Downtime.",
+          "20": " An Intact Mech Chassis, System, and Module are all available for trade.",
+          "11-19": " An Intact Mech Chassis and an Intact System are available for trade.",
+          "6-10": " An Intact Mech Chassis and an Intact Module are available for trade. ",
+          "2-5": "An Intact System and an Intact Module are available for trade. ",
+          "type": "standard"
+        },
+        "id": "ec078d5c-c5a5-4be1-a617-665b8ecfc383",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "When you roll to see what is available in the Trading Bay use this table instead. Trade available is always one Tech Level higher than your Union Crawler and can be purchased for its Salvage Value as per the normal trading rules. Chassis, Systems, and Modules available for trade are determined randomly or by the Mediator."
+          }
+        ]
+      }
+    ],
+    "page": 217,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Your Crawler is geared towards trade in the wastelands, giving you better deals and attracting more folk willing to trade better quality goods"
+      }
+    ]
+  }
+]

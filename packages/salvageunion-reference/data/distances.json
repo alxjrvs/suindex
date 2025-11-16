@@ -1,0 +1,66 @@
+[
+  {
+    "id": "d1a2b3c4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Close",
+    "page": 237,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You are a few good strides from the target and can see it clearly and identifiably, and are able to circle it."
+      },
+      {
+        "type": "paragraph",
+        "value": "You are able to launch into a melee attack at this Range, and are in Range to attack with weapons such as the .50 Cal Machine Gun, Red Laser, and Monomolecular Blade."
+      }
+    ]
+  },
+  {
+    "id": "e2b3c4d5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Medium",
+    "page": 237,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You are able to clearly see and identify your target at this Range"
+      },
+      {
+        "type": "paragraph",
+        "value": " You are in Range to fire many standard weapons such as the 30mm Autocannon or Green Laser."
+      }
+    ]
+  },
+  {
+    "id": "f3c4d5e6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Long",
+    "page": 237,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You are able to see a rough outline of a target at this Range. The target is visible with the naked eye, but to get a clearer view you would need a scope. "
+      },
+      {
+        "type": "paragraph",
+        "value": "You are within Range to fire weapons such as Missile Pod and Blue Mining Lasers."
+      }
+    ]
+  },
+  {
+    "id": "a4d5e6f7-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Far",
+    "page": 237,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "This Range represents a loose point towards the horizon. You are able to see a small silhouette of your target, but would need a scope to see more detail."
+      },
+      {
+        "type": "paragraph",
+        "value": "Only incredibly powerful or esoteric weapons such as Rail Rifles or the N15 Fat Boy can fire at this Range and hit a target."
+      }
+    ]
+  }
+]

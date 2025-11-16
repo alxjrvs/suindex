@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/chassis.schema.json",
+  "title": "chassis",
+  "description": "Mech chassis definitions in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "chassisAbilities",
+      "patterns",
+      "structurePoints",
+      "energyPoints",
+      "heatCapacity",
+      "systemSlots",
+      "moduleSlots",
+      "cargoCapacity",
+      "techLevel",
+      "salvageValue"
+    ],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      },
+      {
+        "$ref": "shared/objects.schema.json#/definitions/chassisStats"
+      }
+    ],
+    "properties": {
+      "chassisAbilities": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/action"
+        }
+      },
+      "patterns": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/pattern"
+        }
+      },
+      "npc": {
+        "$ref": "shared/objects.schema.json#/definitions/npc"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

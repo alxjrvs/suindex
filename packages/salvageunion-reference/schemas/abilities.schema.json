@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/abilities.schema.json",
+  "title": "abilities",
+  "description": "Pilot abilities and skills in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["tree", "level"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "description": {
+        "type": "string"
+      },
+      "tree": {
+        "$ref": "shared/enums.schema.json#/definitions/tree"
+      },
+      "level": {
+        "oneOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          {
+            "type": "string",
+            "const": "L"
+          },
+          {
+            "type": "string",
+            "const": "G"
+          }
+        ]
+      },
+      "mechActionType": {
+        "$ref": "shared/enums.schema.json#/definitions/actionType"
+      },
+      "grants": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/grant"
+        }
+      },
+      "activationCurrency": {
+        "type": "string",
+        "enum": ["Variable"]
+      },
+      "actions": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/action"
+        }
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

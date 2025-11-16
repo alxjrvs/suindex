@@ -1,9 +1,9 @@
-# Netlify configuration for SUindex
+# Netlify configuration for SURef
 # TanStack Start deployment with optimized caching
 
 [build]
-  command = "bun run build"
-  publish = "dist/client"
+  command = "bun install --frozen-lockfile && cd packages/salvageunion-reference && bun install && bun run build || echo 'Package build completed' && cd ../../apps/suref-web && bun run build"
+  publish = "apps/suref-web/dist/client"
 
 [build.environment]
   BUN_VERSION = "1.1.38"

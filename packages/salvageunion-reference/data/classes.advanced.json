@@ -1,0 +1,162 @@
+[
+  {
+    "id": "886b889c-3f12-4ae7-8104-e04ab01f4b54",
+    "type": "Advanced",
+    "name": "Advanced Engineer",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/engineer.jpg",
+    "advancedTree": "Advanced Engineer",
+    "legendaryTree": "Legendary Engineer",
+    "page": 26,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Engineers form an integral component of the Union, the grease that keeps our Mechs and Crawlers trundling across the great wastelands. They can take apart and put back together a Mech Chassis in the blink of an eye, and keep their salvage crew operational out in the wastes. Choose an Engineer if you want a character with a breadth of engineering and mechanical knowledge; who can repair and support you and your allies' Mechs, mount Mech parts significantly faster, and allow you to craft Mech parts in the field."
+      }
+    ]
+  },
+  {
+    "id": "d7baf9cf-414c-4ebd-9e9b-a38aeb095740",
+    "type": "Advanced",
+    "name": "Advanced Hacker",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/hacker.jpg",
+    "advancedTree": "Advanced Hacking",
+    "legendaryTree": "Legendary Hacker",
+    "page": 32,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Electronic warfare is a reality of the world we live in, and Hackers are at the forefront, delving into the cybersphere to discover new and ingenious ways to hack into Mech infrastructure, tap into corpo networks, and use corpo tech against their owners. Hackers are constantly experimenting with new ways to craft Mech components, and many augment their bodies with a range of modifications, finding their flesh as dull as a long system update. Choose a Hacker if you want access to specialised hacking Abilities, to play a character with a wide range of knowledge about technology, or are interested in augmenting your character beyond the flesh."
+      }
+    ]
+  },
+  {
+    "id": "24c63037-5322-4205-84ad-fdb35fcd1734",
+    "type": "Advanced",
+    "name": "Advanced Hauler",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/hauler.jpg",
+    "advancedTree": "Advanced Hauler",
+    "legendaryTree": "Legendary Hauler",
+    "page": 38,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If you need a job done in the Union, no matter how dirty, you call a Hauler. There is never a job too big, or a deal too messy, that they won’t shake your hand with a smile to do. Whether it is hauling a leaky reactor through a hot zone or salvaging from a buried arco in a toxic waste dump. This can-do attitude makes them a shoo-in for leadership roles, as other salvagers look up to them for their sheer tenacity. Play a Hauler if you want to play a hardy character who can haul large amounts of cargo, make tough deals, and protect and inspire their allies."
+      }
+    ]
+  },
+  {
+    "id": "d417c1d1-802e-4b65-802f-4c77fcd21470",
+    "type": "Advanced",
+    "name": "Advanced Scout",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/scout.jpg",
+    "advancedTree": "Advanced Scout",
+    "legendaryTree": "Legendary Scout",
+    "page": 46,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "The wasteland is a vast, hostile, and unforgiving expanse; and the Scout knows that land from end to end. Without their guidance, our Mechs and Crawlers would be lost in the wastes, prey to raider ambushes, rad storms, and mutated beast attacks. A Scout's knowledge of the wastes extends beyond the natural, allowing them to infiltrate wasteland sites and corpo settlements and bases. Play a Scout if you want Abilities that allow you to snipe at your enemies, perform tracking and reconnaissance in the wastes, and infiltrate protected areas."
+      }
+    ]
+  },
+  {
+    "id": "f335a8fa-1151-4bc8-9a11-a7460e0eab4a",
+    "type": "Advanced",
+    "name": "Advanced Soldier",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/soldier.jpg",
+    "advancedTree": "Advanced Soldier",
+    "legendaryTree": "Legendary Soldier",
+    "page": 52,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "War and conflict is an ever present factor in the wastelands and whether fighting with sharpened sticks or plasma cannons, soldiers have always been at the forefront of a conflict throughout human history. Union Soldiers join from many avenues of life. Some are veterans of past wars, some are wastelanders who have earned their stripes by simply surviving out there, others defect from corpo merc life to the better one the Unions can provide. What they all have in common is a desire to fight for the Salvage Union which has provided them and their community with so much. Play a Soldier if you want to play a combat focused character who can blow things up, engage in brutal melee combat, and survive out in the hostile wastes."
+      }
+    ]
+  },
+  {
+    "id": "5fb0f656-b454-45ea-8367-b529e68c9b9e",
+    "type": "Hybrid",
+    "name": "Fabricator",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/fabricator.jpg",
+    "advancedTree": "Fabricator",
+    "legendaryTree": "Legendary Fabricator",
+    "page": 62,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You have chosen the path of the Fabricator. Technology is an extension of yourself which you can toy and tinker with to your steel heart's content. What beautiful creations will you form?"
+      }
+    ]
+  },
+  {
+    "id": "44dad652-e1d3-4687-b088-1f104bfbe1ab",
+    "type": "Hybrid",
+    "name": "Cyborg",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/cyborg.jpg",
+    "advancedTree": "Cyborg",
+    "legendaryTree": "Legendary Cyborg",
+    "page": 58,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You have chosen the path of the Cyborg. Augmenting your body with mechanical and electronic parts to give you powers beyond the frailty of flesh. Some Cyborgs find themselves losing grip of their humanity, others find a duality between their flesh and mechanical forms. All are welcomed by the Salvage Unions who find Cyborgs an invaluable part of the crew. How will you adapt to your cybernetic form?"
+      }
+    ]
+  },
+  {
+    "id": "6ec4d177-fed2-4fed-8f2f-74ee74fdf48b",
+    "type": "Hybrid",
+    "name": "Union Rep",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/union%20rep.jpg",
+    "advancedTree": "Union Rep",
+    "legendaryTree": "Legendary Union Rep",
+    "page": 74,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You have chosen the path of the Union Rep. You are the prime representative of your Union Crawler on any diplomatic mission, able to rub shoulders with corpos or share drinks with Union Reps from other Union Crawlers as you negotiate for the best terms possible for you and your crew. What will your leadership bring to the table? "
+      }
+    ]
+  },
+  {
+    "id": "35b915bb-bb7b-418b-8f66-ca5908ee4a6c",
+    "type": "Hybrid",
+    "name": "Smuggler",
+    "source": "Salvage Union Workshop Manual",
+    "advancedTree": "Smuggler",
+    "legendaryTree": "Legendary Smuggler",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/smuggler.jpg",
+    "page": 70,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You have chosen the path of the Smuggler. Your cargo hides contraband goods, your comms unit whispers dark deals, and nothing is beyond your reach. What escapades will you find yourself in?"
+      }
+    ]
+  },
+  {
+    "id": "4570fb02-10c4-4f53-8575-e54bd08d47d3",
+    "type": "Hybrid",
+    "name": "Ranger",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/ranger.jpg",
+    "advancedTree": "Ranger",
+    "legendaryTree": "Legendary Ranger",
+    "page": 66,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You have chosen the path of the Ranger. You have become one with the wastes, able to survive on vast treks, shrugging off danger, and picking off targets with ease. What challenges will you overcome?"
+      }
+    ]
+  }
+]

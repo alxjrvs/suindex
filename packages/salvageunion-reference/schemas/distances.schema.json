@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/distances.schema.json",
+  "title": "distances",
+  "description": "Distances in Salvage Union are abstracted into the following Range categories. Both Pilots and Mechs use these Range categories for their movement as well as the effective distances for their weapons and other Abilities. The Mediator can factor in any other difference between the speed and distance of Pilots and Mechs based on the narrative and the situation.",
+  "$comment": "For example, they may rule that a Pilot standing in front of a door would open it before a Mech in Close Range could reach them.\n When activating a System, Module, or Ability with a Range band, you may choose any Range within the band. For example, a Medium Range Module could be activated to affect targets within Close Range or Medium Range.",
+  "type": "array",
+  "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/distances.jpg",
+  "items": {
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "content": {
+        "$ref": "shared/objects.schema.json#/definitions/content"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

@@ -1,6 +1,6 @@
 # MCP Server Setup Guide
 
-This guide explains how to configure the Model Context Protocol (MCP) servers for the Salvage Union Index project.
+This guide explains how to configure the Model Context Protocol (MCP) servers for the SURef project.
 
 ## Overview
 

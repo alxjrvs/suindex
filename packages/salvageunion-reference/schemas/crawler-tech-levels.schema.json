@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/crawler-tech-levels.schema.json",
+  "title": "crawler-tech-levels",
+  "description": "Tech levels for Union Crawlers in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "description": "A crawler tech level",
+    "required": [
+      "techLevel",
+      "structurePoints",
+      "populationMin",
+      "populationMax"
+    ],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "techLevel": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 6,
+        "description": "Tech level (1-6)"
+      },
+      "structurePoints": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Structure points for this tech level"
+      },
+      "populationMin": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Minimum approximate population"
+      },
+      "populationMax": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Maximum approximate population (0 means unlimited/25,000+)"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

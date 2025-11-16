@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/squads.schema.json",
+  "title": "squads",
+  "description": "NPC squads and groups in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["actions"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "hitPoints": {
+        "$ref": "shared/common.schema.json#/definitions/hitPoints"
+      },
+      "actions": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/action"
+        }
+      },
+      "traits": {
+        "type": "array",
+        "description": "Special traits and properties of items, systems, or abilities",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/trait"
+        }
+      },
+      "damageType": {
+        "$ref": "shared/enums.schema.json#/definitions/damageType"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

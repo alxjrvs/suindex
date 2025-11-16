@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/roll-tables.schema.json",
+  "title": "roll-tables",
+  "description": "Random tables and roll tables in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["section", "table"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "section": {
+        "type": "string",
+        "description": "Section or category of the roll table"
+      },
+      "table": {
+        "$ref": "shared/objects.schema.json#/definitions/table"
+      },
+      "content": {
+        "$ref": "shared/objects.schema.json#/definitions/content"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

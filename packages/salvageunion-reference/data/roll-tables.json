@@ -1,0 +1,518 @@
+[
+  {
+    "id": "fa9860bb-83c2-4d8c-b100-40708948257d",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Core Mechanic",
+    "section": "core",
+    "table": {
+      "1": "Cascade Failure: Something has gone terribly wrong. You suffer a severe consequence of the Mediator’s choice. When attacking, you miss the target and suffer a Setback chosen by the Mediator.",
+      "20": "Nailed it: You have overcome the odds and managed an outstanding success. You may achieve an additional bonus of your choice to the action. When dealing damage, you can choose to double it or pick another appropriate bonus effect.",
+      "11-19": "Success: You have achieved your goal without any compromises. When attacking, you hit the target and deal standard damage.",
+      "6-10": "Tough Choice: You succeed in your action, but at a cost. The Mediator gives you a Tough Choice with some kind of Setback attached. When attacking, you hit, but must make a Tough Choice.",
+      "2-5": "Failure: You have failed at what you were attempting to do. You face a Setback of the Mediator’s choice. When attacking, you miss the target.",
+      "type": "standard"
+    },
+    "page": 2,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When a player declares an action within the game that has an uncertain, risky, or potentially inter- esting outcome, they roll a 20-sided die. This is referred to as a d20, or ‘the die’. Salvage Union only uses this one die, and it is all you need to resolve situations in the game."
+      }
+    ]
+  },
+  {
+    "id": "cdbc20d9-ff63-4272-805b-f148f0c01752",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Group Initiative",
+    "section": "action scene",
+    "table": {
+      "1": "Ambush: Two NPCs chosen by the Mediator act first. Play then passes to the player group and one Pilot is chosen by the players to act next.",
+      "20": "You Shot First: Two Pilots chosen by the players act first. Play then passes to the NPC group and one NPC chosen by the Mediator acts next.",
+      "11-19": "Quickdraw: One Pilot chosen by the players acts first. Play then passes to the NPC group and one NPC chosen by the Mediator acts.",
+      "6-10": "Wait and See: One NPC chosen by the players acts first. Play then passes to the player group and one Pilot chosen by the players acts.",
+      "2-5": "Fumble: One NPC chosen by the Mediator acts first. Play then passes to the player group and one Pilot chosen by the players acts.",
+      "type": "standard"
+    },
+    "page": 330,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When the group finds themselves in a combat or similar tense situation, the Mediator can decide which group in the action scene acts first.  If in doubt, one of the Pilots in the group can roll the die. This roll can be Pushed as normal. The Pilot can be chosen by the Mediator, or is whoever in the group initiated the altercation. Then check the table below to see who acts first and also determine the Group Initiative Order."
+      }
+    ]
+  },
+  {
+    "id": "dcd888a2-dc2d-4f45-94eb-ae6138761931",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Critical Injury",
+    "section": "damage",
+    "table": {
+      "1": "Fatal Injury: Your Pilot suffers a fatal injury and dies.",
+      "20": "Miraculous Survival: You survive against the odds. You have 1 HP, remain conscious and can act normally.",
+      "11-19": "Unconscious: You are stable at 0 HP, but unconscious and cannot move or take actions until you gain at least 1 HP. You will regain consciousness naturally in 1 hour and get back up with 1 HP.",
+      "6-10": "Minor Injury: You suffer a Minor Injury such as a sprain, burns, or minor concussion. Your Max HP is reduced by 1 until healed in a Tech 3-4 Med Bay. In addition, you are Unconscious. Apply the result of 11-19.",
+      "2-5": "Major Injury: You suffer a Major Injury such as permanent scarring, broken ribs, or internal injuries. Your Max HP is reduced by 2 until healed in a Tech 5-6 Med Bay. In addition, you are Unconscious. Apply the result of 11-19.",
+      "type": "standard"
+    },
+    "page": 323,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "This table determines what happens to your Pilot when they are reduced to 0 Hit Points or suffer a severe injury during play."
+      }
+    ]
+  },
+  {
+    "id": "aa54dcd4-efd0-4cbb-83dc-4cf6f0411066",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Critical Damage",
+    "section": "damage",
+    "table": {
+      "1": "Catastrophic Damage: The Mech, as well as any mounted Systems and Modules as well as all Cargo, is destroyed. Your Pilot dies unless they have a means to escape the Mech.",
+      "20": "Miraculous Survival: Your Mech is somehow Intact. It has 1 SP and is still fully operational. Your Pilot is unharmed.",
+      "11-19": "Core Damage: Your Mech Chassis is damaged and inoperable until repaired. All mounted Systems and Modules remain Intact. Your Pilot is reduced to 0 HP unless they have some means to escape the Mech.",
+      "6-10": "Module Destruction: A Module mounted on your Mech is destroyed. This is chosen by the Mediator or at random. Your Mech Chassis is damaged and inoperable until repaired. Your Pilot is unharmed.",
+      "2-5": "System Destruction: A System mounted on your Mech is destroyed. This is chosen by the Mediator or at random. Your Mech Chassis is damaged and inoperable until repaired. Your Pilot is unharmed.",
+      "type": "standard"
+    },
+    "page": 338,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Roll on this table when your Mech reaches 0 Structure Points. In addition, you can roll on this table to see what happens if a Mech suffers significant critical damage within a narrative situation in game."
+      }
+    ]
+  },
+  {
+    "id": "0050af76-7d88-43e7-b098-1a6af7656353",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Reactor Overload",
+    "section": "heat",
+    "table": {
+      "1": "Reactor Overload: Your Mech’s reactor goes into full meltdown and explodes. Your Mech, as well as any mounted Systems, Modules, and all Cargo, is destroyed in the explosion. Everything in Close Range of your Mech takes SP damage equal to your Mech’s Maximum Heat Capacity. They may take any Turn Action or Reaction in response to try to avoid this. Your Pilot dies unless they have a means to escape. The area your Mech was in becomes Irradiated",
+      "20": "Reactor Overdrive: Your Mech’s reactor goes into overdrive. Your Mech can take any additional action this turn or Push their next roll within 10 minutes for free.",
+      "11-19": "Reactor Overheat: Your Mech’s reactor has overheated. Your Mech shuts down and gains the [[Vulnerable]] Trait. Your Mech will re-activate at the end of your next turn. In addition, your Mech takes an amount of SP damage equal to your current Heat.",
+      "6-10": "Module Overload: One of your Mech’s Modules chosen at random or by the Mediator is destroyed.",
+      "2-5": "System Overload: One of your Mech’s Systems chosen at random or by the Mediator is destroyed.",
+      "type": "standard"
+    },
+    "page": 235
+  },
+  {
+    "id": "abca780b-da93-47b0-91e6-290da910e2fd",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Area Salvage",
+    "section": "salvaging",
+    "table": {
+      "1": "Nothing: You find nothing in this area.",
+      "20": "Jackpot!: You find a Mech Chassis, System, or Module at the Tech Level of the area. It is in the Damaged Condition. This can be randomised or chosen by the Mediator.",
+      "11-19": "Winning: You find 3 Scrap of the Tech Level of the area.",
+      "6-10": "Not Bad: You find 2 Scrap of the Tech Level of the area.",
+      "2-5": "Better than Nothing: You find 1 Scrap of the Tech Level of the area.",
+      "type": "standard"
+    },
+    "page": 248
+  },
+  {
+    "id": "acdc85ee-056c-4edc-95be-e25f0ab9b319",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Mech Salvage",
+    "section": "salvaging",
+    "table": {
+      "1": "Ashes and Dust: The Mech is unsalvageable: its Chassis, Systems and Modules are all considered destroyed.",
+      "20": "Lions Share: You salvage the Mech Chassis, a System and a Module of your choice mounted on it. They both have the Damaged Condition. Anything else is considered destroyed.",
+      "11-19": "Meat and Potatoes: You salvage the Mech Chassis or a System or Module of your choice mounted on it. It has the Damaged Condition. Anything else is considered destroyed.",
+      "6-10": "Bits and Pieces: You salvage a System or Module of your choice mounted on the Mech. It has the Damaged Condition. Anything else is considered destroyed.",
+      "2-5": "Nuts and Bolts: You salvage half of the Salvage Value of the Mech Chassis in Scrap of its Tech Level, to a minimum of 1. Everything else is considered destroyed.",
+      "type": "standard"
+    },
+    "page": 2
+  },
+  {
+    "id": "2bdb98de-31a2-4eb1-b8f5-cf42f44ff618",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Reaction Roll",
+    "section": "npc tables",
+    "table": {
+      "1": "Actively Hostile: The NPCs will launch an attack on the group if appropriate or flee from them, barricade themselves in, and avoid contact as though they were hostile.",
+      "20": "Actively Helpful and Friendly: The NPCs are incredibly friendly and positive towards the group and will actively help them in any reasonable way they can.",
+      "11-19": "Friendly: The NPCs are friendly and willing to talk, trade, and offer information to the group; however, they will still ask for their fair share in return.",
+      "6-10": "Unfriendly: The NPCs react in an unfriendly manner to the group; they are difficult to talk or trade with and reluctant to offer any help to the Pilots.",
+      "2-5": "Hostile: The NPCs are actively hostile to the group. They will defend their area, make motions to attack, gesture and threaten, and be unwilling to help in any way.",
+      "type": "standard"
+    },
+    "page": 268,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Roll a d20 on this table when your Pilots meet a group of NPCs to determine how they react to them.  This sets the initial Reaction, and the rest of the scene can be roleplayed out from that point."
+      }
+    ]
+  },
+  {
+    "id": "3b30af52-8e82-4b55-bda8-e46e64bf141f",
+    "source": "Salvage Union Workshop Manual",
+    "name": "NPC Action",
+    "section": "npc tables",
+    "table": {
+      "1": "Cascade Failure: The NPC has catastrophically failed at their action. They suffer a Severe Setback of the player’s choice. A weapon attack misses, with a Severe Setback chosen by the players.",
+      "20": "Nailed It: The NPC succeeds spectacularly at their action. They get an additional bonus of the Mediator’s choice. If they are making an attack, they hit, and do double damage or get another bonus of the Mediator’s choice.",
+      "11-19": "Success: The NPC achieves their action successfully. An attack hits and deals standard damage.",
+      "6-10": "Tough Choice: The NPC is successful, but faces a Tough Choice. The players give the Mediator a choice between two Setbacks. In combat, a weapon attack hits, but with a choice of Setback chosen by the players.",
+      "2-5": "Failure: The NPC has failed at their action. The players choose an appropriate Setback for failure. In combat, a weapon attack misses.",
+      "type": "standard"
+    },
+    "page": 336,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When an NPC takes an action in the game, the Mediator rolls on their own table below. This table is similar to the player table, but reframes many of the options."
+      }
+    ]
+  },
+  {
+    "id": "30b5379a-45d5-4e7b-9dfa-45b2ecead926",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Morale",
+    "section": "npc tables",
+    "table": {
+      "1": "Surrender: The NPCs surrender to whoever is attacking them. If there is nobody to surrender to, they will recklessly flee.",
+      "20": "Fight to the Death: The NPCs see this one through to the end. They hunker down and will not retreat from this fight under any circumstance.",
+      "11-19": "Keep Fighting: The NPCs continue to fight this one out for now.",
+      "6-10": "Fighting Retreat: The NPCs retreat, but do so whilst continuing to fight. They will fight for one more round and then retreat.",
+      "2-5": "Retreat: The NPCs flee the fight as quickly and safely as possible.",
+      "type": "standard"
+    },
+    "page": 167,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "These rules cover whether or not NPCs in the game choose to retreat. The Pilots never roll Morale, and it is always the player’s choice whether their Pilots retreat or not. NPCs include both those the Pilots are actively fighting as well as any allied NPCs they may have with them.  • When an NPC Mech is reduced to 50% or less of its Structure Points, make a Morale check to determine if it stays in the fight.  • When a Creature is reduced to 50% or less of its Hit Points, make a Morale check to determine if it stays in the fight. You can also apply this to an entire group rather than individual creatures or Mechs.  • When a group of NPCs suffers 50% or more overall deaths or the destruction of 50% or more Mechs, make a Morale check to determine if the entire group stays in the fight."
+      }
+    ]
+  },
+  {
+    "id": "70f6e979-f511-4407-a276-11b3e63f6758",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Retreat",
+    "section": "npc tables",
+    "table": {
+      "1": "Disastrous Escape: The group retreat to an adjacent location of their choice within the Region Map, but at a severe cost. They suffer a Severe Setback and may be pursued.",
+      "20": "Perfect Escape: The group makes a perfect escape from the situation to any location of their choice within the Region Map and cannot be pursued.",
+      "11-19": "Escape: The group makes a safe escape from the situation to any adjacent location of their choice within the Map and cannot be pursued.",
+      "6-10": "Dangerous Escape: The group escapes to any adjacent location of their choice within the Region Map, but at a cost. They must make a Tough Choice related to the situation.",
+      "2-5": "Failed Escape: The group fails to retreat from the situation and are pinned down. They cannot retreat and must fight it out to the end.",
+      "type": "standard"
+    },
+    "page": 42,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Sometimes things go wrong and retreat becomes the only option. If the Pilots or a Group of NPCs choose to retreat, roll the die on the table below to find out what happens. If using Group Initiative, retreat may be chosen at the start of anyone in the group’s turn. The entire group must agree to retreat."
+      }
+    ]
+  },
+  {
+    "id": "044f3890-2d62-4bbe-b851-cc978a68ae8e",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Crawler Deterioration",
+    "section": "crawler",
+    "table": {
+      "1": "Your Union Crawler loses 5 Structure Points and a Bay chosen at random is Damaged until repaired to the Intact Condition.",
+      "20": "Your Union Crawler chugs along for now.",
+      "11-19": "11-19 Your Union Crawler loses 5 Structure Points.",
+      "6-10": "Choose a Bay on your Union Crawler. It becomes Damaged and inoperable. You no longer benefit from any of its functions until it is repaired to the Intact Condition.",
+      "2-5": "A Bay chosen at random on your Union Crawler is Damaged and inoperable. You no longer benefit from any of its functions until it is repaired to the Intact Condition.",
+      "type": "standard"
+    },
+    "page": 7,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When you fail to pay upkeep, roll on this table."
+      }
+    ]
+  },
+  {
+    "id": "f4e866be-1092-4760-896c-fa3571b983d6",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Crawler Damage",
+    "section": "crawler",
+    "table": {
+      "1": "Your Union Crawler is Destroyed as a mass series of malfunctions causes it to entirely collapse. Roll on the Union Crawler Destruction Table.",
+      "20": "20 Your Union Crawler survives any significant damage this time. ",
+      "11-19": "Your Union Crawler is inoperable and grounded. Its Bays are Intact, but inoperable.  You must pay your Union Crawler’s Upkeep Cost in order to repair it to be fully functioning again. Around 10% of your Union Crawler’s population are severely injured or killed.",
+      "6-10": "Choose a Bay on your Union Crawler. It is Damaged and inoperable. You no longer benefit from any of its functions until it is repaired to the Intact Condition. Around 5% of your Union Crawler’s population are severely injured or killed.",
+      "2-5": "A Bay chosen at random on your Union Crawler is Damaged and inoperable. You no longer benefit from any of its functions until it is repaired to the Intact Condition.",
+      "type": "standard"
+    },
+    "page": 219,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Your Union Crawler can suffer damage from being attacked as well as through deterioration when you fail to pay its upkeep. When your Crawler reaches 0 Structure Points roll on this table."
+      }
+    ]
+  },
+  {
+    "id": "50f0dcca-d2ac-408d-a916-55027485299b",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Crawler Destruction",
+    "section": "crawler",
+    "table": {
+      "1": "The Union Crawler suffers critical damage, goes into a reactor meltdown, and explodes. The Union Crawler is destroyed beyond all recognition. It cannot be rebuilt.  Everyone and everything on board and within Medium Range takes 50 Structure Points of damage, and can be assumed destroyed or killed outright.",
+      "20": "There is hope. Everyone on board is somewhat battered and bruised, but manages to escape the Union Crawler safely. Your Union Crawler can be rebuilt from the wreckage for its current Upgrade Cost in Scrap of its Tech Level or higher.",
+      "11-19": "The Union Crawler is torn apart. All of its Bays are damaged. Around 25% of the Union Crawler’s population are severely injured or killed. Any Salvager Pilots on board must roll on the Critical Injury Table. The Union Crawler can be rebuilt for its current Upgrade Cost in Scrap of its Tech Level or higher.",
+      "6-10": "You must choose between saving the Union Crawler population and saving the Union Crawler itself. If you choose the population, the Union Crawler is entirely destroyed and cannot be rebuilt. If you choose the Union Crawler, assume all Bays are damaged.  It can be rebuilt for its current Upgrade Cost in Scrap of its Tech Level or higher, but you have to find new people to join it in the wastelands.",
+      "2-5": "The Union Crawler is destroyed, and the majority of its population are killed or severely injured. The Salvager Pilots must roll on the Critical Injury Table. Any survivors must find a way to rebuild.",
+      "type": "standard"
+    },
+    "page": 220,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If your Union Crawler is destroyed, roll on this table to find out what happens."
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-e5f6-47a8-b9c0-d1e2f3a4b5c6",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Keepsake",
+    "section": "character",
+    "table": {
+      "1": "Stuffed Toy",
+      "2": "Pre-War Handheld Console",
+      "3": "Dog Tags",
+      "4": "Snowglobe",
+      "5": "Bobblehead",
+      "6": "Polaroid Picture",
+      "7": "Walkman",
+      "8": "Scuffed Book",
+      "9": "Butterfly Earrings",
+      "10": "Lucky Tooth",
+      "11": "Leatherbound Journal",
+      "12": "Branded Cup",
+      "13": "Set of novelty dice",
+      "14": "Silver Pendant",
+      "15": "Heart-shaped Purse",
+      "16": "Cloth Patch",
+      "17": "22-year-old bottle of Whiskey",
+      "18": "Harmonica",
+      "19": "Pack of Smokes",
+      "20": "Peach Lipstick",
+      "type": "flat"
+    },
+    "page": 24
+  },
+  {
+    "id": "e5317ec5-241c-4bed-97cc-b8d9764e011f",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Motto",
+    "section": "character",
+    "table": {
+      "1": "Live and let live.",
+      "2": "The early bird gets the worm.",
+      "3": "Knowledge is power, France is Bacon.",
+      "4": "From each according to their ability, to each according to their needs.",
+      "5": "Hope for the best and prepare for the worst.",
+      "6": "Success is the best revenge.",
+      "7": "An ounce of prevention is worth a pound of cure.",
+      "8": "Do your best!",
+      "9": "Everything is impossible until it is done.",
+      "10": "Those who have a why can bear any how.",
+      "11": "Mechs are not built in a day.",
+      "12": "No job too big.",
+      "13": "Failure is the mother of success.",
+      "14": "Be kind, for everyone you meet is fighting a hard battle.",
+      "15": "It is not a bug, it is a feature.",
+      "16": "Call me, or screw it up yourself.",
+      "17": "Salvagers know nothing is truly lost.",
+      "18": "Carpe diem.",
+      "19": "The grass is greener where you water it.",
+      "20": "Feel the fear and do it anyway.",
+      "type": "flat"
+    },
+    "page": 24
+  },
+  {
+    "id": "d07e8fbf-0750-45ad-9cb8-faa95d8cbaf3",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Pilot Appearance",
+    "section": "character",
+    "table": {
+      "1": "Stocky",
+      "2": "Alluring",
+      "3": "Intimidating",
+      "4": "Fancy",
+      "5": "Sloppy",
+      "6": "Lanky",
+      "7": "Slender",
+      "8": "Muscular",
+      "9": "Quirky",
+      "10": "Plump",
+      "11": "Tattooed",
+      "12": "Wiry",
+      "13": "Thick",
+      "14": "Graceful",
+      "15": "Squat",
+      "16": "Rosy",
+      "17": "Petite",
+      "18": "Colourful",
+      "19": "Cute",
+      "20": "Quaint",
+      "type": "flat"
+    },
+    "page": 332
+  },
+  {
+    "id": "d65de78f-3131-40fd-bd40-018e858c723b",
+    "source": "Salvage Union Workshop Manual",
+    "name": "A.I. Personality",
+    "section": "character",
+    "table": {
+      "1": "Megalomaniacal to a fault.",
+      "2": "Asks far too many questions.",
+      "3": "Views humans as lost puppies to protect.",
+      "4": "Sees humans as dull witted meat to conquer.",
+      "5": "Utterly paranoid about losing its sentience.",
+      "6": "Anxiously questions its own morality.",
+      "7": "Dangerously pragmatic.",
+      "8": "Changes its mind constantly.",
+      "9": "Dangerously optimistic.",
+      "10": "Easily angered.",
+      "11": "Irreverent and quirky.",
+      "12": "Annoyingly sarcastic.",
+      "13": "Gloomy and miserable.",
+      "14": "Blindly obedient.",
+      "15": "Dangerously direct and honest.",
+      "16": "Ruggedly individualistic.",
+      "17": "Shrewd and conniving.",
+      "18": "Surprisingly well rounded.",
+      "19": "Loving and thoughtful.",
+      "20": "Hopeful and idealistic.",
+      "type": "flat"
+    },
+    "page": 208
+  },
+  {
+    "id": "3ba3c58c-4f75-454f-be16-6bd3236b79d8",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Quirks",
+    "section": "mech",
+    "table": {
+      "1": "Flashing RGB lights",
+      "2": "Fumes smoke",
+      "3": "Incredibly loud, grinding gears",
+      "4": "Makes a 'pew pew' sound when used",
+      "5": "Inexplicably always sticky",
+      "6": "Vestigial parts attached",
+      "7": "Rudimentary AI personality",
+      "8": "Drips coolant and oil",
+      "9": "Cockpit has far, far too many buttons",
+      "10": "Creaking and stiff joints",
+      "11": "Occasionally sparks electricity",
+      "12": "Secretly emits radio waves",
+      "13": "Vibrates frequently and intensely",
+      "14": "Exterior fluctuates in colour",
+      "15": "Small organic growths",
+      "16": "Smells like a wet dog",
+      "17": "Reactor emits a green glow",
+      "18": "Unusual cockpit location",
+      "19": "'Falcon Wing' door design",
+      "20": "Hydropneumatic suspension system for a smooth ride",
+      "type": "flat"
+    },
+    "page": 208
+  },
+  {
+    "id": "f6a7b8c9-daeb-4cfd-a4b5-c6d7e8f9a0b1",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Mech Appearance",
+    "section": "mech",
+    "table": {
+      "1": "Flashy, bright, vibrant, paint job",
+      "2": "Grizzly, bloody markings",
+      "3": "Rusty and dilapidated",
+      "4": "Misshapen and lumpy",
+      "5": "Garish paint job with spinning gears",
+      "6": "Furry exterior",
+      "7": "Fantastical, glowing carved runes",
+      "8": "Luminous paint job",
+      "9": "Draped in cables",
+      "10": "Covered in camo and foliage",
+      "11": "Spiky bits",
+      "12": "Grizzly, covered in skulls and viscera",
+      "13": "Covered in stylised graffiti",
+      "14": "Overgrown with plants and vines",
+      "15": "Industrial and utilitarian",
+      "16": "Animalistic with fangs, claws and wings",
+      "17": "'Steampunk', whirring gears, bronze parts",
+      "18": "Super sleek with neon lights",
+      "19": "Radioactive green exterior",
+      "20": "The Meld, sleek, oily black",
+      "type": "flat"
+    },
+    "page": 94
+  },
+  {
+    "id": "a7b8c9da-ebfc-4dfe-b5c6-d7e8f9a0b1c2",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Mech Pattern Names",
+    "section": "mech",
+    "table": {
+      "1": "Bullseye",
+      "2": "Moonbeam",
+      "3": "Reaper",
+      "4": "Manticore",
+      "5": "Big Daddy",
+      "6": "Hog",
+      "7": "Harlequin",
+      "8": "Blossom",
+      "9": "Giggle Bot",
+      "10": "Banana Split",
+      "11": "Reaver",
+      "12": "Warhammer",
+      "13": "Ironclad",
+      "14": "Disco Inferno",
+      "15": "Tickle Monster",
+      "16": "Hoopster",
+      "17": "Diva",
+      "18": "Ladybug",
+      "19": "Technicolour Dream Warrior",
+      "20": "Queen Bee",
+      "type": "flat"
+    },
+    "page": 209
+  },
+  {
+    "id": "ea4227a6-8c57-4018-86b0-338bbf5a151f",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Crawler Name",
+    "section": "crawler",
+    "table": {
+      "1": "Big Smoke",
+      "2": "Juggernaut",
+      "3": "Calypso",
+      "4": "Archipelago",
+      "5": "Tin Lizzy",
+      "6": "Sanctuary",
+      "7": "Lean Viper",
+      "8": "Tranquillity",
+      "9": "New Apollo",
+      "10": "Tenacity",
+      "11": "Phobos",
+      "12": "Waste Grinder",
+      "13": "Dumpy",
+      "14": "Fat Turtle",
+      "15": "Wanderer",
+      "16": "Moocher",
+      "17": "Slogger",
+      "18": "Bastion",
+      "19": "Perseverance",
+      "20": "Junker",
+      "type": "flat"
+    },
+    "page": 226
+  }
+]

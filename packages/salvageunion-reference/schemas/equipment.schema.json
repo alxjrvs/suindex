@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/equipment.schema.json",
+  "title": "equipment",
+  "description": "Pilot equipment and gear in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["techLevel", "actions"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      },
+      {
+        "$ref": "shared/objects.schema.json#/definitions/stats"
+      }
+    ],
+    "properties": {
+      "bonusPerTechLevel": {
+        "$ref": "shared/objects.schema.json#/definitions/bonusPerTechLevel"
+      },
+      "choices": {
+        "$ref": "shared/objects.schema.json#/definitions/choices"
+      },
+      "actions": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/action"
+        }
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

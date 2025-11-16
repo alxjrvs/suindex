@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/traits.schema.json",
+  "title": "traits",
+  "description": "Traits and special properties in Salvage Union",
+  "type": "array",
+  "items": {
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "content": {
+        "$ref": "shared/objects.schema.json#/definitions/content"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

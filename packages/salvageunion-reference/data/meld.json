@@ -1,0 +1,257 @@
+[
+  {
+    "id": "f04d6f2a-723a-45ec-91be-23be3b8275fa",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Meld Drone",
+    "actions": [
+      {
+        "name": "Bite",
+        "range": ["Close"],
+        "damage": {
+          "amount": 2,
+          "damageType": "HP"
+        },
+        "traits": [
+          {
+            "type": "melee"
+          },
+          {
+            "type": "meld infection"
+          }
+        ],
+        "id": "5db10ab3-6099-4c8e-82df-fc4f9b18eb18",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "The Meld Drone mindlessly attacks the target with teeth and claw."
+          }
+        ]
+      }
+    ],
+    "salvageValue": 1,
+    "hitPoints": 3,
+    "page": 289,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Meld when they take over a biological organism, around the size of a human. The brain is sludged, only the stem remains, they become a peon of the swarm."
+      }
+    ]
+  },
+  {
+    "id": "7b76574d-3eb3-4ed0-b658-b1a356fd4c7f",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Meld Drone Swarm",
+    "actions": [
+      {
+        "name": "Devour",
+        "range": ["Close"],
+        "damage": {
+          "amount": 3,
+          "damageType": "HP"
+        },
+        "traits": [
+          {
+            "type": "melee"
+          },
+          {
+            "type": "meld infection"
+          },
+          {
+            "type": "multi-attack",
+            "amount": 3
+          }
+        ],
+        "id": "5ff0cbf4-4604-4072-a37c-065b45b3416c",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "The Meld Drones bite and claw at a target with all their multitude limbs and maws."
+          }
+        ]
+      }
+    ],
+    "salvageValue": 3,
+    "hitPoints": 6,
+    "page": 289,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A swarm of multiple zombie-like Meld Drones"
+      }
+    ]
+  },
+  {
+    "id": "f561bfeb-a9d5-4a9e-bc50-ddad52513684",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Meld Nanoid",
+    "traits": [
+      {
+        "type": "fast"
+      }
+    ],
+    "actions": [
+      {
+        "name": "Nanoid Tendrils",
+        "range": ["Close"],
+        "damage": {
+          "amount": 3,
+          "damageType": "SP"
+        },
+        "traits": [
+          {
+            "type": "melee"
+          },
+          {
+            "type": "meld infection"
+          }
+        ],
+        "id": "f00aff83-c0a0-4a86-886d-fe22c2302d4c",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "The nanoid lashes out with it's tendrils"
+          }
+        ]
+      }
+    ],
+    "structurePoints": 5,
+    "salvageValue": 5,
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/meld/meld%20nanoid.jpg",
+    "page": 289,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Meld in a small, swift form, about the size of a large wolf with lashing tendrils."
+      }
+    ]
+  },
+  {
+    "id": "e1286046-f761-4c74-ab76-2afb8da1aab7",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Meld Splitter",
+    "actions": [
+      {
+        "name": "Splitter Tendrils",
+        "range": ["Medium"],
+        "damage": {
+          "amount": 4,
+          "damageType": "SP"
+        },
+        "traits": [
+          {
+            "type": "melee"
+          },
+          {
+            "type": "meld infection"
+          },
+          {
+            "type": "multi-attack",
+            "amount": 2
+          }
+        ],
+        "id": "9c894b18-09df-417d-b644-282298a1883b",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Huge tendrils lash out at anything nearby."
+          }
+        ]
+      },
+      {
+        "name": "Split",
+        "id": "68b99a49-990f-4afb-a932-054026608c0f",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "When a Meld Splitter is reduced to 0 SP it turns into 2 Meld Nanoids. These act at the start of the next round."
+          }
+        ]
+      }
+    ],
+    "structurePoints": 10,
+    "salvageValue": 10,
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/meld/meld%20splitter.jpg",
+    "page": 270,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Formless inky darkness, Meld Splitters are around the height of a Mech and made of boundless swarms of coagulated meld."
+      }
+    ]
+  },
+  {
+    "id": "e13f967e-a2af-4c30-a3c0-153a14ec9fdf",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Meld Behemoth",
+    "actions": [
+      {
+        "name": "Behemoth Tendrils",
+        "actionType": "Turn",
+        "range": ["Medium"],
+        "damage": {
+          "amount": 6,
+          "damageType": "SP"
+        },
+        "traits": [
+          {
+            "type": "melee"
+          },
+          {
+            "type": "multi-attack",
+            "amount": 2
+          }
+        ],
+        "id": "c51d7aad-9fec-4767-bbe3-e90fb0010c9e",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Long reaching tendrils whip around to grab all within reach, either crushing them or drawing them nearer to be assimilated."
+          }
+        ]
+      },
+      {
+        "name": "Assimilation",
+        "actionType": "Turn",
+        "id": "06fa1e74-ae4a-4478-b84d-02530dfd1053",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "A Meld Behemoth does not infect, instead it absorbs everything it destroys into its mammoth, ever expanding form."
+          }
+        ]
+      },
+      {
+        "name": "Titanic Actions",
+        "id": "e73ec1f7-42d4-4ebd-8c5e-89feaa8aa783",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "The Meld Behemoth can take three Titanic Actions, choosing from the options below. Only one Titanic Action may be chosen at a time and only at the end of another Pilot's or NPC's turn. Meld Behemoth regains spent Titanic Actions at the start of their turn."
+          },
+          {
+            "type": "list-item",
+            "value": "The Meld Behemoth moves one Range Band."
+          },
+          {
+            "type": "list-item",
+            "value": "The Meld Behemoth makes a single Behemoth Tendrils Attack. This does not have the [[Multi-Attack]] Trait."
+          },
+          {
+            "type": "list-item",
+            "value": "The Meld Behemoth uses the Behemoth Assimilation Ability."
+          }
+        ]
+      }
+    ],
+    "structurePoints": 60,
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/meld/meld%20behemoth.jpg",
+    "page": 290,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "The apex Meld, the size of a high rise building. Having assimilated vast quantities of mechanical and biological entities, it becomes a force even the toughest of Mechs struggle to reckon with."
+      }
+    ]
+  }
+]
