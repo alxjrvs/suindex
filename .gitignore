@@ -41,3 +41,5 @@ core
 # App-specific env files
 apps/suref-web/.env.local
 netlify/functions
+
+.rules
