@@ -44,7 +44,7 @@ export function NestedActionDisplay({
   const details = extractActionDetails(data)
 
   const fontSize = compact ? 'sm' : 'md'
-  const titleFontSize = compact ? 'md' : 'lg'
+  const titleFontSize = compact ? 'lg' : 'xl'
   const spacing = compact ? 1 : 2
 
   const hasContent = !!description
@@ -55,7 +55,7 @@ export function NestedActionDisplay({
         <Box position="absolute" bottom={0} left="10%" width="80%" height="2px" bg="gray.300" />
       )}
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
-        <Text fontSize={titleFontSize} variant="pseudoheader" width="fit-content">
+        <Text fontSize={titleFontSize} variant="pseudoheader" width="fit-content" px={1} py={0.5}>
           {data.name}
         </Text>
       </Flex>

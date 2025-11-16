@@ -45,7 +45,7 @@ export function JoinGame() {
       form.setFieldValue('code', urlCode)
       form.handleSubmit()
     }
-  }, [search])
+  }, [search, form])
 
   return (
     <Box p={8} maxW="xl" mx="auto">
