@@ -1,10 +1,11 @@
 import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
 
-export default [
-  {
-    ignores: ['dist/**', 'node_modules/**', '**/*.d.ts', 'lib/*.template.ts'],
-  },
+/**
+ * Base ESLint configuration shared across all packages
+ * Extend this config in package-specific eslint.config.js files
+ */
+export const baseConfig = [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -15,3 +16,4 @@ export default [
     },
   },
 ]
+

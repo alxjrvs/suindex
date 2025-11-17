@@ -20,7 +20,16 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build salvageunion-reference package
-        run: cd packages/salvageunion-reference && bun install && bun run build || echo "Package build completed (lint may have failed)"
+        run: bun run build:package
+
+      - name: Validate package IDs
+        run: bun --filter salvageunion-reference validate:ids
+
+      - name: Validate package generated files
+        run: bun --filter salvageunion-reference validate:generated
+
+      - name: Validate package cross-references
+        run: bun --filter salvageunion-reference validate:references
 
       - name: Lint
         run: bun run lint

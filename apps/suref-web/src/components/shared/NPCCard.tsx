@@ -89,24 +89,11 @@ export function NPCCard({
   }, [description])
 
   // Only calculate rotation on client to avoid hydration mismatch
-  const [descriptionRotation, setDescriptionRotation] = useState(0)
-  const [hpRotation, setHpRotation] = useState(0)
-  const [nameRotation, setNameRotation] = useState(0)
-  const [notesRotation, setNotesRotation] = useState(0)
-
-  useEffect(() => {
-    if (tilted) {
-      setDescriptionRotation(getTiltRotation())
-      setHpRotation(getTiltRotation())
-      setNameRotation(getTiltRotation())
-      setNotesRotation(getTiltRotation())
-    } else {
-      setDescriptionRotation(0)
-      setHpRotation(0)
-      setNameRotation(0)
-      setNotesRotation(0)
-    }
-  }, [tilted])
+  const rotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
+  const descriptionRotation = rotation
+  const hpRotation = rotation
+  const nameRotation = rotation
+  const notesRotation = rotation
 
   return (
     <VStack gap={2} alignItems="stretch" mt={2} w="full">
