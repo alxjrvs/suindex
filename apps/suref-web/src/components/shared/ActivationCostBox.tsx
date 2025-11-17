@@ -29,7 +29,7 @@ export function ActivationCostBox({
         alignItems="center"
         justifyContent="center"
         whiteSpace="nowrap"
-        fontSize={compact ? 'xs' : 'sm'}
+        fontSize={compact ? 'xs' : 'md'}
         px={0.5}
         lineHeight={1}
         display="inline-flex"

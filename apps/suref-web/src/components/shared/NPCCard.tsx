@@ -88,10 +88,25 @@ export function NPCCard({
     return () => window.removeEventListener('resize', adjustFontSize)
   }, [description])
 
-  const descriptionRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
-  const hpRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
-  const nameRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
-  const notesRotation = useMemo(() => (tilted ? getTiltRotation() : 0), [tilted])
+  // Only calculate rotation on client to avoid hydration mismatch
+  const [descriptionRotation, setDescriptionRotation] = useState(0)
+  const [hpRotation, setHpRotation] = useState(0)
+  const [nameRotation, setNameRotation] = useState(0)
+  const [notesRotation, setNotesRotation] = useState(0)
+
+  useEffect(() => {
+    if (tilted) {
+      setDescriptionRotation(getTiltRotation())
+      setHpRotation(getTiltRotation())
+      setNameRotation(getTiltRotation())
+      setNotesRotation(getTiltRotation())
+    } else {
+      setDescriptionRotation(0)
+      setHpRotation(0)
+      setNameRotation(0)
+      setNotesRotation(0)
+    }
+  }, [tilted])
 
   return (
     <VStack gap={2} alignItems="stretch" mt={2} w="full">

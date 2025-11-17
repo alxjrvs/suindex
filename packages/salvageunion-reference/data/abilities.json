@@ -1572,21 +1572,6 @@
     "page": 50,
     "actions": [
       {
-        "name": "Custom Sniper Rifle",
-        "damage": {
-          "damageType": "SP",
-          "amount": 2
-        },
-        "range": ["Long"],
-        "id": "f397e885-771b-4c10-bfca-28403060187f",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Attack with your custom sniper rifle. Base damage is 2 SP at Tech 1, increasing by 1 SP per Tech Level."
-          }
-        ]
-      },
-      {
         "id": "27b22a70-8952-49bb-9dc7-35ecdd8ccd6e",
         "traits": [
           {
