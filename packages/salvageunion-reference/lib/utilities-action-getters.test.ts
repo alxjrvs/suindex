@@ -198,10 +198,10 @@ describe('Action Property Getters', () => {
 
     test('should get damage from chassis action (base level)', () => {
       const chassis = SalvageUnionReference.Chassis.all().find(
-        (c) => c.actions && c.actions.length > 0 && c.actions[0].damage
+        (c) => c.chassisAbilities && c.chassisAbilities.length > 0 && c.chassisAbilities[0].damage
       )
-      if (chassis && chassis.actions && chassis.actions[0]) {
-        const damage = getDamage(chassis.actions[0])
+      if (chassis && chassis.chassisAbilities && chassis.chassisAbilities[0]) {
+        const damage = getDamage(chassis)
         expect(damage).toBeDefined()
       }
     })

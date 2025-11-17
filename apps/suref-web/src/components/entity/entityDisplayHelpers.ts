@@ -49,7 +49,13 @@ export function calculateBackgroundColor(
   techLevelColors: Record<number, string>
 ): string {
   // Check for Black Market items first - they get dark grey background
-  if (getBlackMarket(data) === true) {
+  if (
+    'id' in data &&
+    'name' in data &&
+    'source' in data &&
+    'page' in data &&
+    getBlackMarket(data) === true
+  ) {
     return 'su.darkGrey'
   }
 

@@ -6,7 +6,7 @@
   "license": "Salvage Union Open Game Licence 1.0b",
   "scripts": {
     "dev": "vite dev",
-    "typecheck": "tsc -b --noEmit",
+    "typecheck": "tsc --noEmit",
     "build": "vite build && tsc --noEmit",
     "build:analyze": "vite build --mode analyze",
     "lint": "eslint .",

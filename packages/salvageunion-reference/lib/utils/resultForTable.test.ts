@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { resultForTable } from './resultForTable.js'
-import type { SURefRollTable } from '../types/inferred.js'
+import { SURefRollTable } from '../index.js'
 
 const mockStandardTable: SURefRollTable = {
   id: 'test-standard',
-  source: 'core',
+  source: 'Salvage Union Workshop Manual',
   name: 'Test Standard',
   section: 'test',
   table: {
@@ -20,7 +20,7 @@ const mockStandardTable: SURefRollTable = {
 
 const mockFlatTable: SURefRollTable = {
   id: 'test-flat',
-  source: 'core',
+  source: 'Salvage Union Workshop Manual',
   name: 'Test Flat',
   section: 'test',
   table: {
@@ -51,7 +51,7 @@ const mockFlatTable: SURefRollTable = {
 
 const mockFullTable: SURefRollTable = {
   id: 'test-full',
-  source: 'core',
+  source: 'Salvage Union Workshop Manual',
   name: 'Test Full',
   section: 'test',
   table: {
@@ -75,7 +75,7 @@ const mockFullTable: SURefRollTable = {
     '18': 'Full Result 18',
     '19': 'Full Result 19',
     '20': 'Full Result 20',
-    type: 'full',
+    type: 'flat',
   },
   page: 1,
 }

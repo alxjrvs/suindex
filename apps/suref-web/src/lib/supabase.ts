@@ -7,11 +7,16 @@ const supabaseAnonKey = isTest
   ? process.env.VITE_SUPABASE_ANON_KEY
   : import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
+// In test environments, provide default mock values if not set
+// This follows Supabase testing best practices for handling missing env vars
+const finalSupabaseUrl = isTest && !supabaseUrl ? 'https://test.supabase.co' : supabaseUrl
+const finalSupabaseAnonKey = isTest && !supabaseAnonKey ? 'test-anon-key' : supabaseAnonKey
+
+if (!finalSupabaseUrl || !finalSupabaseAnonKey) {
   throw new Error('Missing Supabase environment variables')
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient<Database>(finalSupabaseUrl, finalSupabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,

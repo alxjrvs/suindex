@@ -10,8 +10,10 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "bun-types"]
+    "types": ["node", "bun-types"],
+    "declaration": true,
+    "declarationMap": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist", "tools"]
+  "exclude": ["node_modules", "dist", "tools", "**/*.template.ts"]
 }

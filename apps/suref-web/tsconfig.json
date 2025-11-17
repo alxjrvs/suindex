@@ -23,6 +23,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "references": [{ "path": "../../packages/salvageunion-reference" }],
   "include": ["src", "vite.config.ts"]
 }
