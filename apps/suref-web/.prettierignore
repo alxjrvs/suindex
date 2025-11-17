@@ -7,6 +7,7 @@ src/types/database-generated.zod.ts
 dist/
 node_modules/
 *.tsbuildinfo
+.vite/
 
 # Package files (may have specific formatting requirements)
 package.json
