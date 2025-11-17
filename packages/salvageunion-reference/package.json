@@ -1,6 +1,6 @@
 {
   "name": "salvageunion-reference",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "description": "Comprehensive, schema-validated JSON dataset and TypeScript ORM for the Salvage Union tabletop RPG",
   "type": "module",
   "main": "./lib/index.ts",
@@ -25,7 +25,7 @@
   "scripts": {
     "build": "rm -rf dist && bun test && bun run docs && bun run generate && tsc --project tsconfig.build.json && bun run format && bun run lint",
     "prepare": "bun run generate && tsc --project tsconfig.build.json",
-    "prepublishOnly": "npm run build && npm run typecheck",
+    "prepublishOnly": "bun run build && bun run typecheck",
     "validate:ids": "tsx tools/checkUniqueIds.ts",
     "fix:ids": "tsx tools/generateMissingIds.ts",
     "docs": "tsx tools/generateDocs.ts",
@@ -43,7 +43,7 @@
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "lint": "eslint .",
+    "lint": "bunx eslint .",
     "sanity": "bun run lint -- --fix && bun run format && bun run typecheck",
     "format": "prettier --write ."
   },

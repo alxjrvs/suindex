@@ -18,7 +18,8 @@
     "format": "bun --filter suref-web format",
     "format:check": "bun --filter suref-web format:check",
     "test": "bun --filter suref-web test",
-    "sanity": "bun --filter suref-web sanity"
+    "sanity": "bun --filter suref-web sanity",
+    "publish:package": "cd packages/salvageunion-reference && bun publish"
   },
   "devDependencies": {
     "prettier": "^3.6.2"
