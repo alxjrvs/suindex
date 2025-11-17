@@ -85,14 +85,29 @@ export interface SURefMetaEquipmentStats {
 }
 
 /**
+ * A data value with label, optional value, and optional type
+ */
+export interface SURefMetaDataValue {
+  /**
+   * The label for this data value
+   */
+  label: (string | number)
+  /**
+   * Optional value for this data value
+   */
+  value?: (string | number)
+  /**
+   * Optional type for this data value (e.g., 'cost', 'keyword', 'trait', 'meta')
+   */
+  type?: string
+}
+
+/**
  * Block of structured content for rendering (paragraph, heading, list item, etc.)
  */
 export interface SURefMetaContentBlock {
   type?: SURefContentType
-  /**
-   * The text content of this block
-   */
-  value: string
+  value?: (string | SURefMetaDataValue[])
   /**
    * Optional label for this content block (e.g., for labeled sections)
    */

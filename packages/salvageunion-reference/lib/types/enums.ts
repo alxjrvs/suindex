@@ -32,6 +32,7 @@ export type SURefContentType =
   | 'list-item'
   | 'list-item-naked'
   | 'label'
+  | 'datavalues'
 
 /**
  * Type of damage

@@ -421,6 +421,7 @@ async function generateObjectTypes() {
     'stats',
     'chassisStats',
     'equipmentStats',
+    'dataValue',
     'contentBlock',
     'combatEntity',
     'mechanicalEntity',

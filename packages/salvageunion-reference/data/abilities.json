@@ -1578,7 +1578,28 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Custom Sniper Rifle that only you can use. Choose if it is a Ballistic or Energy weapon and it gains the respective Energy or [[Ballistic]] Trait. At each Tech Level you may choose an additional modification for your Custom Sniper Rifle. In addition, its damage increases by 1 SP per Tech Level after the first, e.g. a Tech 3 Custom Sniper Rifle would deal 4 SP damage and you would be able to choose three modifications for it."
+            "value": "You acquire and train in the use of a Custom Sniper Rifle that only you can use."
+          },
+          {
+            "type": "datavalues",
+            "value": [
+              {
+                "label": "Damage",
+                "type": "keyword",
+                "value": 2
+              },
+              {
+                "label": "Range",
+                "type": "keyword",
+                "value": "Long"
+              }
+            ]
+          },
+          {
+            "type": "list-item",
+            "value": "Choose if it is a [[Ballistic]] or [[Energy]] weapon and it gains the respective [[Energy]] or [[Ballistic]] Trait.",
+
+            "label": "Weapon Type"
           },
           {
             "type": "list-item",

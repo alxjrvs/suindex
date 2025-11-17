@@ -71,6 +71,7 @@ export type {
   SURefMetaStats,
   SURefMetaChassisStats,
   SURefMetaEquipmentStats,
+  SURefMetaDataValue,
   SURefMetaChoice,
   SURefMetaNpc,
   SURefMetaSystemModule,
