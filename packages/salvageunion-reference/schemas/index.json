@@ -1,0 +1,256 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Salvage Union Data Schema Catalog",
+  "description": "Catalog of all available schemas in the salvageunion-data repository",
+  "version": "2.0.6",
+  "generated": "2025-11-16T20:26:30.939Z",
+  "schemas": [
+    {
+      "id": "abilities",
+      "title": "abilities",
+      "description": "Pilot abilities and skills in Salvage Union",
+      "dataFile": "data/abilities.json",
+      "schemaFile": "schemas/abilities.schema.json",
+      "itemCount": 103,
+      "requiredFields": ["tree", "level"],
+      "displayName": "Abilities"
+    },
+    {
+      "id": "ability-tree-requirements",
+      "title": "ability-tree-requirements",
+      "description": "Requirements for ability trees in Salvage Union",
+      "dataFile": "data/ability-tree-requirements.json",
+      "schemaFile": "schemas/ability-tree-requirements.schema.json",
+      "itemCount": 20,
+      "requiredFields": ["requirement"],
+      "displayName": "Ability Tree Requirements"
+    },
+    {
+      "id": "bio-titans",
+      "title": "bio-titans",
+      "description": "Massive bio-engineered titan creatures in Salvage Union",
+      "dataFile": "data/bio-titans.json",
+      "schemaFile": "schemas/bio-titans.schema.json",
+      "itemCount": 6,
+      "requiredFields": ["structurePoints", "actions"],
+      "displayName": "Bio-Titans"
+    },
+    {
+      "id": "chassis",
+      "title": "chassis",
+      "description": "Mech chassis definitions in Salvage Union",
+      "dataFile": "data/chassis.json",
+      "schemaFile": "schemas/chassis.schema.json",
+      "itemCount": 31,
+      "requiredFields": [
+        "chassisAbilities",
+        "patterns",
+        "structurePoints",
+        "energyPoints",
+        "heatCapacity",
+        "systemSlots",
+        "moduleSlots",
+        "cargoCapacity",
+        "techLevel",
+        "salvageValue"
+      ],
+      "displayName": "Chassis"
+    },
+    {
+      "id": "classes.advanced",
+      "title": "classes.advanced",
+      "description": "Advanced and Hybrid character classes in Salvage Union",
+      "dataFile": "data/classes.advanced.json",
+      "schemaFile": "schemas/classes.advanced.schema.json",
+      "itemCount": 10,
+      "requiredFields": [],
+      "displayName": "Advanced Classes"
+    },
+    {
+      "id": "classes.core",
+      "title": "classes.core",
+      "description": "Core character classes in Salvage Union",
+      "dataFile": "data/classes.core.json",
+      "schemaFile": "schemas/classes.core.schema.json",
+      "itemCount": 6,
+      "requiredFields": ["maxAbilities", "advanceable", "coreTrees"],
+      "displayName": "Core Classes"
+    },
+    {
+      "id": "crawler-bays",
+      "title": "crawler-bays",
+      "description": "Bays and facilities on Union Crawlers in Salvage Union",
+      "dataFile": "data/crawler-bays.json",
+      "schemaFile": "schemas/crawler-bays.schema.json",
+      "itemCount": 10,
+      "requiredFields": ["damagedEffect", "npc", "actions", "techLevelEffects"],
+      "displayName": "Crawler Bays"
+    },
+    {
+      "id": "crawler-tech-levels",
+      "title": "crawler-tech-levels",
+      "description": "Tech levels for Union Crawlers in Salvage Union",
+      "dataFile": "data/crawler-tech-levels.json",
+      "schemaFile": "schemas/crawler-tech-levels.schema.json",
+      "itemCount": 6,
+      "requiredFields": [
+        "techLevel",
+        "structurePoints",
+        "populationMin",
+        "populationMax"
+      ],
+      "displayName": "Crawler Tech Levels"
+    },
+    {
+      "id": "crawlers",
+      "title": "crawlers",
+      "description": "Crawler vehicles in Salvage Union",
+      "dataFile": "data/crawlers.json",
+      "schemaFile": "schemas/crawlers.schema.json",
+      "itemCount": 5,
+      "requiredFields": ["npc", "actions"],
+      "displayName": "Crawlers"
+    },
+    {
+      "id": "creatures",
+      "title": "creatures",
+      "description": "Creatures and wildlife in Salvage Union",
+      "dataFile": "data/creatures.json",
+      "schemaFile": "schemas/creatures.schema.json",
+      "itemCount": 6,
+      "requiredFields": ["hitPoints", "actions"],
+      "displayName": "Creatures"
+    },
+    {
+      "id": "distances",
+      "title": "distances",
+      "description": "Distances in Salvage Union are abstracted into the following Range categories. Both Pilots and Mechs use these Range categories for their movement as well as the effective distances for their weapons and other Abilities. The Mediator can factor in any other difference between the speed and distance of Pilots and Mechs based on the narrative and the situation.",
+      "dataFile": "data/distances.json",
+      "schemaFile": "schemas/distances.schema.json",
+      "itemCount": 4,
+      "requiredFields": [],
+      "displayName": "Distances",
+      "comment": "For example, they may rule that a Pilot standing in front of a door would open it before a Mech in Close Range could reach them.\n When activating a System, Module, or Ability with a Range band, you may choose any Range within the band. For example, a Medium Range Module could be activated to affect targets within Close Range or Medium Range."
+    },
+    {
+      "id": "drones",
+      "title": "drones",
+      "description": "Autonomous drones in Salvage Union",
+      "dataFile": "data/drones.json",
+      "schemaFile": "schemas/drones.schema.json",
+      "itemCount": 9,
+      "requiredFields": [
+        "structurePoints",
+        "techLevel",
+        "salvageValue",
+        "systems"
+      ],
+      "displayName": "Drones"
+    },
+    {
+      "id": "equipment",
+      "title": "equipment",
+      "description": "Pilot equipment and gear in Salvage Union",
+      "dataFile": "data/equipment.json",
+      "schemaFile": "schemas/equipment.schema.json",
+      "itemCount": 47,
+      "requiredFields": ["techLevel", "actions"],
+      "displayName": "Equipment"
+    },
+    {
+      "id": "keywords",
+      "title": "keywords",
+      "description": "Game keywords and terminology in Salvage Union",
+      "dataFile": "data/keywords.json",
+      "schemaFile": "schemas/keywords.schema.json",
+      "itemCount": 73,
+      "requiredFields": ["name", "source", "page"],
+      "displayName": "Keywords"
+    },
+    {
+      "id": "meld",
+      "title": "meld",
+      "description": "Meld-infected creatures in Salvage Union",
+      "dataFile": "data/meld.json",
+      "schemaFile": "schemas/meld.schema.json",
+      "itemCount": 5,
+      "requiredFields": ["actions"],
+      "displayName": "Meld"
+    },
+    {
+      "id": "modules",
+      "title": "modules",
+      "description": "Mech modules in Salvage Union",
+      "dataFile": "data/modules.json",
+      "schemaFile": "schemas/modules.schema.json",
+      "itemCount": 61,
+      "requiredFields": ["name", "page"],
+      "displayName": "Modules"
+    },
+    {
+      "id": "npcs",
+      "title": "npcs",
+      "description": "Non-player characters and people in Salvage Union",
+      "dataFile": "data/npcs.json",
+      "schemaFile": "schemas/npcs.schema.json",
+      "itemCount": 6,
+      "requiredFields": ["hitPoints", "actions"],
+      "displayName": "NPCs"
+    },
+    {
+      "id": "roll-tables",
+      "title": "roll-tables",
+      "description": "Random tables and roll tables in Salvage Union",
+      "dataFile": "data/roll-tables.json",
+      "schemaFile": "schemas/roll-tables.schema.json",
+      "itemCount": 22,
+      "requiredFields": ["section", "table"],
+      "displayName": "Roll Tables"
+    },
+    {
+      "id": "squads",
+      "title": "squads",
+      "description": "NPC squads and groups in Salvage Union",
+      "dataFile": "data/squads.json",
+      "schemaFile": "schemas/squads.schema.json",
+      "itemCount": 9,
+      "requiredFields": ["actions"],
+      "displayName": "Squads"
+    },
+    {
+      "id": "systems",
+      "title": "systems",
+      "description": "Mech systems in Salvage Union",
+      "dataFile": "data/systems.json",
+      "schemaFile": "schemas/systems.schema.json",
+      "itemCount": 96,
+      "requiredFields": ["name", "page"],
+      "displayName": "Systems"
+    },
+    {
+      "id": "traits",
+      "title": "traits",
+      "description": "Traits and special properties in Salvage Union",
+      "dataFile": "data/traits.json",
+      "schemaFile": "schemas/traits.schema.json",
+      "itemCount": 43,
+      "requiredFields": ["name", "source", "page"],
+      "displayName": "Traits"
+    },
+    {
+      "id": "vehicles",
+      "title": "vehicles",
+      "description": "Conventional vehicles in Salvage Union",
+      "dataFile": "data/vehicles.json",
+      "schemaFile": "schemas/vehicles.schema.json",
+      "itemCount": 7,
+      "requiredFields": [
+        "structurePoints",
+        "techLevel",
+        "salvageValue",
+        "systems"
+      ],
+      "displayName": "Vehicles"
+    }
+  ]
+}

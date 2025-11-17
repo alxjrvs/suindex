@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/ability-tree-requirements.schema.json",
+  "title": "ability-tree-requirements",
+  "description": "Requirements for ability trees in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "description": "Requirements for an ability tree",
+    "required": ["requirement"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "requirement": {
+        "type": "array",
+        "description": "List of ability tree names required to access this tree",
+        "items": {
+          "$ref": "shared/enums.schema.json#/definitions/tree"
+        }
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

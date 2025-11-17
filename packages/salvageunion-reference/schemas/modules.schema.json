@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/modules.schema.json",
+  "title": "modules",
+  "description": "Mech modules in Salvage Union",
+  "type": "array",
+  "items": {
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/systemModule"
+      },
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ]
+  }
+}

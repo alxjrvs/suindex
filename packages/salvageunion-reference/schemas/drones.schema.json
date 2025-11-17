@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/drones.schema.json",
+  "title": "drones",
+  "description": "Autonomous drones in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["structurePoints", "techLevel", "salvageValue", "systems"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      },
+      {
+        "$ref": "shared/objects.schema.json#/definitions/mechanicalEntity"
+      }
+    ],
+    "properties": {},
+    "unevaluatedProperties": false
+  }
+}

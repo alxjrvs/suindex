@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/meld.schema.json",
+  "title": "meld",
+  "description": "Meld-infected creatures in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["actions"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "actions": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/action"
+        }
+      },
+      "traits": {
+        "type": "array",
+        "description": "Special traits and properties of items, systems, or abilities",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/trait"
+        }
+      },
+      "salvageValue": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Salvage value of the meld creature"
+      },
+      "hitPoints": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Hit points of the meld creature"
+      },
+      "structurePoints": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Structure points of the meld creature"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

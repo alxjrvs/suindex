@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/crawlers.schema.json",
+  "title": "crawlers",
+  "description": "Crawler vehicles in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["npc", "actions"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "npc": {
+        "$ref": "shared/objects.schema.json#/definitions/npc"
+      },
+      "actions": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/action"
+        }
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

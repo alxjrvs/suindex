@@ -1,0 +1,801 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/shared/objects.schema.json",
+  "title": "Salvage Union Object Definitions",
+  "description": "Shared complex object definitions for Salvage Union game data",
+  "definitions": {
+    "trait": {
+      "type": "object",
+      "description": "Special traits and properties of items, systems, or abilities",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "amount": {
+          "oneOf": [
+            {
+              "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+            },
+            {
+              "type": "string",
+              "description": "Variable value"
+            }
+          ]
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "description": "Statistics for mechs, chassis, and vehicles",
+      "properties": {
+        "structurePoints": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "energyPoints": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "heatCapacity": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "systemSlots": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "moduleSlots": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "cargoCapacity": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "techLevel": {
+          "$ref": "common.schema.json#/definitions/techLevel"
+        },
+        "salvageValue": {
+          "$ref": "common.schema.json#/definitions/salvageValue"
+        }
+      }
+    },
+    "chassisStats": {
+      "type": "object",
+      "description": "Statistics specific to chassis",
+      "properties": {
+        "structurePoints": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "energyPoints": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "heatCapacity": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "systemSlots": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "moduleSlots": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "cargoCapacity": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "techLevel": {
+          "$ref": "common.schema.json#/definitions/techLevel"
+        },
+        "salvageValue": {
+          "$ref": "common.schema.json#/definitions/salvageValue"
+        }
+      }
+    },
+    "equipmentStats": {
+      "type": "object",
+      "description": "Statistics for equipment (systems and modules)",
+      "properties": {
+        "techLevel": {
+          "$ref": "common.schema.json#/definitions/techLevel"
+        },
+        "salvageValue": {
+          "$ref": "common.schema.json#/definitions/salvageValue"
+        }
+      }
+    },
+    "combatEntity": {
+      "type": "object",
+      "description": "Entity that can perform actions and has traits",
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/action"
+          }
+        },
+        "traits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/trait"
+          }
+        }
+      }
+    },
+    "mechanicalEntity": {
+      "type": "object",
+      "description": "Mechanical entity with structure points and equipment stats",
+      "properties": {
+        "structurePoints": {
+          "$ref": "common.schema.json#/definitions/positiveInteger"
+        },
+        "techLevel": {
+          "$ref": "common.schema.json#/definitions/techLevel"
+        },
+        "salvageValue": {
+          "$ref": "common.schema.json#/definitions/salvageValue"
+        },
+        "systems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "traits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/trait"
+          }
+        }
+      }
+    },
+    "npc": {
+      "type": "object",
+      "description": "NPC associated with an entity",
+      "additionalProperties": false,
+      "required": ["position", "hitPoints"],
+      "properties": {
+        "position": {
+          "$ref": "common.schema.json#/definitions/name"
+        },
+        "content": {
+          "$ref": "#/definitions/content"
+        },
+        "hitPoints": {
+          "$ref": "common.schema.json#/definitions/hitPoints"
+        },
+        "choices": {
+          "$ref": "#/definitions/choices"
+        }
+      }
+    },
+    "patternSystemModule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "$ref": "common.schema.json#/definitions/name"
+        },
+        "count": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "preselectedChoices": {
+          "type": "object",
+          "description": "Preselected choices for this system or module, keyed by choice ID",
+          "additionalProperties": {
+            "$ref": "common.schema.json#/definitions/name"
+          }
+        }
+      }
+    },
+    "techLevelEffect": {
+      "type": "object",
+      "description": "Effect that scales with tech level",
+      "additionalProperties": false,
+      "required": ["techLevelMin", "techLevelMax", "effects"],
+      "properties": {
+        "techLevelMin": {
+          "$ref": "common.schema.json#/definitions/positiveInteger"
+        },
+        "techLevelMax": {
+          "$ref": "common.schema.json#/definitions/positiveInteger"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "Related entry or reference",
+            "additionalProperties": false,
+            "required": ["value"],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/definitions/id"
+        },
+        "name": {
+          "$ref": "common.schema.json#/definitions/name"
+        },
+        "content": {
+          "$ref": "#/definitions/content"
+        },
+        "rollTable": {
+          "type": "string"
+        },
+        "schemaEntities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "enums.schema.json#/definitions/schemaName"
+          }
+        },
+        "customSystemOptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/systemModule"
+          }
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "min": {
+              "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+            },
+            "max": {
+              "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+            }
+          }
+        }
+      }
+    },
+    "systemModule": {
+      "description": "A system or module that can be installed on a mech",
+      "type": "object",
+      "required": ["actions", "salvageValue", "slotsRequired", "techLevel"],
+      "allOf": [
+        {
+          "$ref": "#/definitions/stats"
+        }
+      ],
+      "properties": {
+        "techLevel": {
+          "$ref": "common.schema.json#/definitions/techLevel"
+        },
+        "slotsRequired": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "salvageValue": {
+          "$ref": "common.schema.json#/definitions/salvageValue"
+        },
+        "recommended": {
+          "type": "boolean"
+        },
+        "count": {
+          "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/action"
+          }
+        }
+      }
+    },
+    "table": {
+      "description": "Roll table for random outcomes based on d20 rolls",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "Standard roll table with 5 outcome ranges",
+          "additionalProperties": false,
+          "required": ["type", "1", "20", "11-19", "6-10", "2-5"],
+          "properties": {
+            "1": {
+              "type": "string",
+              "description": "Critical failure outcome"
+            },
+            "20": {
+              "type": "string",
+              "description": "Critical success outcome"
+            },
+            "type": {
+              "type": "string",
+              "const": "standard"
+            },
+            "11-19": {
+              "type": "string",
+              "description": "High success outcome"
+            },
+            "6-10": {
+              "type": "string",
+              "description": "Moderate outcome"
+            },
+            "2-5": {
+              "type": "string",
+              "description": "Low outcome"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "description": "Alternative standard roll table with different ranges",
+          "additionalProperties": false,
+          "required": ["type", "1", "19-20", "11-18", "6-10", "2-5"],
+          "properties": {
+            "1": {
+              "type": "string",
+              "description": "Critical failure outcome"
+            },
+            "type": {
+              "type": "string",
+              "const": "alternate"
+            },
+            "19-20": {
+              "type": "string",
+              "description": "Critical success outcome"
+            },
+            "11-18": {
+              "type": "string",
+              "description": "High success outcome"
+            },
+            "6-10": {
+              "type": "string",
+              "description": "Moderate outcome"
+            },
+            "2-5": {
+              "type": "string",
+              "description": "Low outcome"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "description": "Flat roll table with individual outcomes for each numeric result",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20"
+          ],
+          "properties": {
+            "1": {
+              "type": "string"
+            },
+            "2": {
+              "type": "string"
+            },
+            "3": {
+              "type": "string"
+            },
+            "4": {
+              "type": "string"
+            },
+            "5": {
+              "type": "string"
+            },
+            "6": {
+              "type": "string"
+            },
+            "7": {
+              "type": "string"
+            },
+            "8": {
+              "type": "string"
+            },
+            "9": {
+              "type": "string"
+            },
+            "10": {
+              "type": "string"
+            },
+            "11": {
+              "type": "string"
+            },
+            "12": {
+              "type": "string"
+            },
+            "13": {
+              "type": "string"
+            },
+            "14": {
+              "type": "string"
+            },
+            "15": {
+              "type": "string"
+            },
+            "16": {
+              "type": "string"
+            },
+            "17": {
+              "type": "string"
+            },
+            "18": {
+              "type": "string"
+            },
+            "19": {
+              "type": "string"
+            },
+            "20": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "flat"
+            }
+          }
+        }
+      ]
+    },
+    "baseEntity": {
+      "type": "object",
+      "description": "Basic entity with name, content, source, and page reference",
+      "required": ["id", "name", "page", "source"],
+      "properties": {
+        "asset_url": {
+          "$ref": "common.schema.json#/definitions/asset_url"
+        },
+        "content": {
+          "$ref": "#/definitions/content"
+        },
+        "id": {
+          "$ref": "common.schema.json#/definitions/id"
+        },
+        "indexable": {
+          "type": "boolean",
+          "default": true
+        },
+        "name": {
+          "$ref": "common.schema.json#/definitions/name"
+        },
+        "source": {
+          "$ref": "enums.schema.json#/definitions/source"
+        },
+        "page": {
+          "$ref": "common.schema.json#/definitions/positiveInteger"
+        }
+      }
+    },
+    "bonusPerTechLevel": {
+      "type": "object",
+      "description": "Bonus values that increase with tech level",
+      "allOf": [
+        {
+          "$ref": "#/definitions/stats"
+        }
+      ]
+    },
+    "advancedClass": {
+      "type": "object",
+      "description": "Advanced or hybrid character class",
+      "required": ["type", "advancedTree", "legendaryTree"],
+      "allOf": [
+        {
+          "$ref": "#/definitions/baseEntity"
+        }
+      ],
+      "properties": {
+        "type": {
+          "$ref": "enums.schema.json#/definitions/classType"
+        },
+        "advancedTree": {
+          "$ref": "enums.schema.json#/definitions/tree"
+        },
+        "legendaryTree": {
+          "$ref": "enums.schema.json#/definitions/tree"
+        },
+        "content": {
+          "$ref": "#/definitions/content"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "contentBlock": {
+      "type": "object",
+      "description": "Block of structured content for rendering (paragraph, heading, list item, etc.)",
+      "additionalProperties": false,
+      "required": ["value"],
+      "properties": {
+        "type": {
+          "$ref": "enums.schema.json#/definitions/contentType",
+          "default": "paragraph"
+        },
+        "value": {
+          "type": "string",
+          "description": "The text content of this block"
+        },
+        "label": {
+          "type": "string",
+          "description": "Optional label for this content block (e.g., for labeled sections)"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6,
+          "description": "Heading level (1-6) when type is 'heading'"
+        },
+        "items": {
+          "type": "array",
+          "description": "Nested content blocks (e.g., list items within a list)",
+          "items": {
+            "$ref": "#/definitions/contentBlock"
+          }
+        }
+      }
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/contentBlock"
+      }
+    },
+    "grant": {
+      "type": "object",
+      "description": "Grantable entity with a name and description",
+      "additionalProperties": false,
+      "required": ["name", "schema"],
+      "properties": {
+        "schema": {
+          "oneOf": [
+            {
+              "$ref": "enums.schema.json#/definitions/schemaName"
+            },
+            {
+              "type": "string",
+              "description": "Name of the schema",
+              "const": "choice"
+            }
+          ]
+        },
+        "name": {
+          "$ref": "common.schema.json#/definitions/name"
+        }
+      }
+    },
+    "traits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/trait"
+      }
+    },
+    "action": {
+      "type": "object",
+      "description": "An action, ability, or attack that can be performed",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/definitions/id"
+        },
+        "content": {
+          "$ref": "#/definitions/content"
+        },
+        "structurePoints": {
+          "type": "number"
+        },
+        "energyPoints": {
+          "type": "number"
+        },
+        "heatCapacity": {
+          "type": "number"
+        },
+        "systemSlots": {
+          "type": "number"
+        },
+        "moduleSlots": {
+          "type": "number"
+        },
+        "cargoCapacity": {
+          "type": "number"
+        },
+        "techLevel": {
+          "$ref": "common.schema.json#/definitions/techLevel"
+        },
+        "salvageValue": {
+          "type": "number"
+        },
+        "name": {
+          "$ref": "common.schema.json#/definitions/name"
+        },
+        "activationCost": {
+          "$ref": "common.schema.json#/definitions/activationCost"
+        },
+        "range": {
+          "$ref": "enums.schema.json#/definitions/range"
+        },
+        "actionType": {
+          "$ref": "enums.schema.json#/definitions/actionType"
+        },
+        "traits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/trait"
+          }
+        },
+        "damage": {
+          "description": "Damage dealt by an attack or ability",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["damageType", "amount"],
+          "properties": {
+            "damageType": {
+              "$ref": "enums.schema.json#/definitions/damageType"
+            },
+            "amount": {
+              "oneOf": [
+                {
+                  "$ref": "common.schema.json#/definitions/nonNegativeInteger"
+                },
+                {
+                  "type": "string",
+                  "description": "Variable damage formula"
+                }
+              ]
+            }
+          }
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/choice"
+          }
+        },
+        "table": {
+          "$ref": "#/definitions/table"
+        }
+      }
+    },
+    "choices": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/choice"
+      }
+    },
+    "schemaEntities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "schemaName": {
+      "oneOf": [
+        {
+          "$ref": "enums.schema.json#/definitions/schemaName"
+        },
+        {
+          "type": "string",
+          "const": "actions"
+        }
+      ]
+    },
+    "schemaNames": {
+      "type": "array",
+      "items": {
+        "$ref": "enums.schema.json#/definitions/schemaName"
+      }
+    },
+    "systems": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "customSystemOptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/systemModule"
+      }
+    },
+    "actionOptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["value", "label"],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pattern": {
+      "type": "object",
+      "description": "Mech chassis pattern configuration",
+      "additionalProperties": false,
+      "required": ["name", "systems", "modules"],
+      "properties": {
+        "name": {
+          "$ref": "common.schema.json#/definitions/name"
+        },
+        "content": {
+          "$ref": "#/definitions/content"
+        },
+        "legalStarting": {
+          "type": "boolean"
+        },
+        "systems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/patternSystemModule"
+          }
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/patternSystemModule"
+          }
+        },
+        "drone": {
+          "type": "object",
+          "description": "Optional drone configuration",
+          "additionalProperties": false,
+          "required": ["systems", "modules"],
+          "properties": {
+            "systems": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modules": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "techLevelEffects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/techLevelEffect"
+      }
+    }
+  }
+}

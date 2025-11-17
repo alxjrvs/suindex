@@ -1,0 +1,200 @@
+[
+  {
+    "id": "c6bfc845-b1dc-43e9-8f79-fd4854842949",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Wastelander",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/npcs/wastelander.jpg",
+    "actions": [
+      {
+        "name": "Improvised Melee Weapon",
+        "range": ["Close"],
+        "damage": {
+          "amount": 2,
+          "damageType": "HP"
+        },
+        "traits": [
+          {
+            "type": "melee"
+          }
+        ],
+        "id": "481f14da-1d3a-49c1-a973-68051980c042"
+      },
+      {
+        "name": "Salvaging Tools",
+        "id": "28704d5b-7842-4bdd-b1ce-5373822dfaaf"
+      }
+    ],
+    "hitPoints": 2,
+    "page": 298,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Represents the myriad of common denizens of the wastelands."
+      }
+    ]
+  },
+  {
+    "id": "bb1b8558-1bca-4db8-8d13-f02fc344d327",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Raider",
+    "actions": [
+      {
+        "name": "Improvised Firearm",
+        "range": ["Close"],
+        "damage": {
+          "amount": 3,
+          "damageType": "HP"
+        },
+        "traits": [
+          {
+            "type": "ballistic"
+          },
+          {
+            "type": "unwieldy"
+          }
+        ],
+        "id": "cc732598-c273-481d-a37a-ce107cf1312c"
+      }
+    ],
+    "hitPoints": 3,
+    "page": 298,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Wastelanders who take what they need by force."
+      }
+    ]
+  },
+  {
+    "id": "28015ce1-8440-471c-b97e-bb4ff114a667",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Trooper",
+    "actions": [
+      {
+        "name": "Rifle",
+        "range": ["Medium"],
+        "damage": {
+          "amount": 5,
+          "damageType": "HP"
+        },
+        "traits": [
+          {
+            "type": "ballistic"
+          }
+        ],
+        "id": "780c8a12-89f2-4ea7-933f-67e356953ac8"
+      },
+      {
+        "name": "Portable Comms Unit",
+        "id": "8110d372-9910-4ee7-b421-8ac2061eb997"
+      }
+    ],
+    "hitPoints": 5,
+    "page": 274,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Combat trained troops deployed in a wide range of roles."
+      }
+    ]
+  },
+  {
+    "id": "5b1e5b18-c023-4e7c-a6b9-c6a22cb6e48d",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Veteran",
+    "actions": [
+      {
+        "name": "Green Laser Rifle",
+        "range": ["Medium"],
+        "damage": {
+          "amount": 5,
+          "damageType": "HP"
+        },
+        "traits": [
+          {
+            "type": "energy"
+          }
+        ],
+        "id": "91a2fd03-ded5-4e51-970c-fdf246b5ede2"
+      },
+      {
+        "name": "Portable Comms Unit",
+        "id": "d33ed41a-7cf7-416e-bece-5772673a82c8"
+      }
+    ],
+    "hitPoints": 9,
+    "page": 298,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A well trained and seasoned soldier deployed on difficult operations."
+      }
+    ]
+  },
+  {
+    "id": "ad0a3127-2fb2-4d38-af8e-7fc76d9d05d9",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Combat Pilot",
+    "actions": [
+      {
+        "name": "Pistol",
+        "range": ["Close"],
+        "damage": {
+          "amount": 3,
+          "damageType": "HP"
+        },
+        "traits": [
+          {
+            "type": "ballistic"
+          }
+        ],
+        "id": "7feff15d-e417-4d08-b02d-d64c94893542"
+      },
+      {
+        "name": "Portable Comms Unit",
+        "id": "44a3b141-a50c-4eb1-b5ca-4e9c14ac2271"
+      }
+    ],
+    "hitPoints": 10,
+    "page": 298,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A combat trained Mech Pilot, such as a Union Salvager."
+      }
+    ]
+  },
+  {
+    "id": "15ff8ca3-a759-4c39-a546-1cac319ffc4e",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Ace",
+    "actions": [
+      {
+        "name": "Sniper Rifle",
+        "range": ["Long"],
+        "damage": {
+          "amount": 6,
+          "damageType": "HP"
+        },
+        "traits": [
+          {
+            "type": "ballistic"
+          }
+        ],
+        "id": "d59c2720-ab52-4999-a830-da2525ce2dea"
+      },
+      {
+        "name": "Portable Comms Unit",
+        "id": "30348f5b-ec98-4ed3-a1e0-fc2b5a2e97b4"
+      }
+    ],
+    "hitPoints": 16,
+    "page": 298,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "A veteran Mech Pilot, usually with Corpo training."
+      }
+    ]
+  }
+]

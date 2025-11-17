@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/creatures.schema.json",
+  "title": "creatures",
+  "description": "Creatures and wildlife in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["hitPoints", "actions"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      },
+      {
+        "$ref": "shared/objects.schema.json#/definitions/combatEntity"
+      }
+    ],
+    "properties": {
+      "hitPoints": {
+        "$ref": "shared/common.schema.json#/definitions/hitPoints"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}

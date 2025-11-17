@@ -8,9 +8,14 @@ pnpm-debug.log*
 lerna-debug.log*
 .legacy/
 
+# Dependencies
 node_modules
+**/node_modules
+
+# Build outputs
 dist
 dist-ssr
+**/dist
 *.local
 *.tsbuildinfo
 core
@@ -33,3 +38,8 @@ core
 
 # Local Netlify folder
 .netlify
+# App-specific env files
+apps/suref-web/.env.local
+netlify/functions
+
+.rules

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/crawler-bays.schema.json",
+  "title": "crawler-bays",
+  "description": "Bays and facilities on Union Crawlers in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["damagedEffect", "npc", "actions", "techLevelEffects"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+      }
+    ],
+    "properties": {
+      "damagedEffect": {
+        "type": "string",
+        "description": "Effect when this bay is damaged"
+      },
+      "npc": {
+        "$ref": "shared/objects.schema.json#/definitions/npc"
+      },
+      "choices": {
+        "type": "array",
+        "description": "Choices available to the player when interacting with the NPC",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/choice"
+        }
+      },
+      "actions": {
+        "type": "array",
+        "items": {
+          "$ref": "shared/objects.schema.json#/definitions/action"
+        }
+      },
+      "techLevelEffects": {
+        "$ref": "shared/objects.schema.json#/definitions/techLevelEffects"
+      },
+      "table": {
+        "$ref": "shared/objects.schema.json#/definitions/table"
+      }
+    },
+    "unevaluatedProperties": false
+  }
+}
