@@ -28,6 +28,10 @@ export function ReferenceHeader({ title, children, ...boxProps }: ReferenceHeade
           textAlign="center"
           alignSelf="center"
           bg={typeof title === 'string' ? undefined : 'transparent'}
+          mx="auto"
+          display="flex"
+          justifyContent="center"
+          width="100%"
         >
           {title}
         </Heading>

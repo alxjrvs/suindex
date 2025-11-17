@@ -17,7 +17,8 @@ export const headingRecipe = defineRecipe({
         px: 2,
         py: 0.5,
         lineHeight: 1,
-        display: 'inline',
+        display: 'inline-block',
+        width: 'fit-content',
       },
       h2: {
         color: 'su.white',
