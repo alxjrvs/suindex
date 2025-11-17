@@ -1622,7 +1622,7 @@
         ],
         "modules": [
           {
-            "name": "Barometric Weather Sensor"
+            "name": "Barometric Sensor"
           },
           {
             "name": "Comms Module"
