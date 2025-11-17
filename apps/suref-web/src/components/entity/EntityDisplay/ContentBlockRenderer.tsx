@@ -79,6 +79,18 @@ function ContentBlock({
       )
 
     case 'list-item':
+      // If list item has a label, render as dot-less list item with bold label: value
+      if (block.label) {
+        return (
+          <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize} pl={4}>
+            <Text as="span" fontWeight="bold">
+              {block.label}:
+            </Text>{' '}
+            {parsedValue}
+          </Box>
+        )
+      }
+      // Otherwise render as regular bulleted list item
       return (
         <List.Root as="ul" pl={4}>
           <List.Item>
