@@ -165,19 +165,33 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       <Flex flex="1" alignItems="center" justifyContent="center" w="full">
         <ReferenceHeader
           title={
-            <>
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+              gap={2}
+              width="100%"
+            >
               <Text as="span" variant="pseudoheader" fontSize="2xl">
                 Salvage Union
-              </Text>{' '}
-              <Text as="span" fontSize="2xl" color="su.brick" fontWeight="bold">
-                SRD
               </Text>
-            </>
+              <Text as="span" fontSize="2xl" color="su.brick" fontWeight="medium" bg="transparent">
+                System Reference Document
+              </Text>
+            </Box>
           }
         >
-          <Box position="relative" maxW="2xl" w="full">
+          <Box
+            position="relative"
+            w="full"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+          >
             <Text fontSize="sm" color="su.brick" mb={3} textAlign="center">
-              An Online SRD for the{' '}
+              An SRD for the{' '}
               <Link
                 href="https://leyline.press/collections/salvage-union"
                 target="_blank"
@@ -205,6 +219,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
               bg="su.white"
               borderWidth="2px"
               borderColor="su.lightBlue"
+              w="50vw"
               _focus={{
                 borderColor: 'su.orange',
                 outline: 'none',
@@ -219,8 +234,9 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                 ref={containerRef}
                 position="absolute"
                 top="100%"
-                left={0}
-                right={0}
+                left="50%"
+                transform="translateX(-50%)"
+                w="50vw"
                 mt={2}
                 bg="su.white"
                 borderWidth="2px"
