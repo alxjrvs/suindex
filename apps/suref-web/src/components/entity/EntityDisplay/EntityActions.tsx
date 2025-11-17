@@ -28,7 +28,6 @@ export function EntityActions() {
             key={index}
             data={action}
             isLast={index === actions.length - 1}
-            hideContent={compact}
           />
         )
       })}

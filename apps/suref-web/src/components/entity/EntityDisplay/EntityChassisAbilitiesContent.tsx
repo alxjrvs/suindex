@@ -24,7 +24,6 @@ export function EntityChassisAbilitiesContent() {
             key={index}
             data={ability}
             isLast={index === chassisAbilities.length - 1}
-            hideContent={compact}
           />
         )
       })}

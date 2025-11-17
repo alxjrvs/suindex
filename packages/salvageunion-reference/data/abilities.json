@@ -1212,6 +1212,12 @@
     "tree": "Advanced Hauler",
     "level": 2,
     "page": 42,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "You have become a master of the sacred art of scrap flinging, making you highly versed at using the Mechapult System."
+      }
+    ],
     "actions": [
       {
         "name": "Let me double check that",
@@ -1236,18 +1242,6 @@
             "value": "When you activate this Ability you may attack twice with the Mechapult System on your turn. Make each attack separately. You may only activate this Ability once per turn. This follows all other normal rules for using the Mechapult."
           }
         ]
-      },
-      {
-        "id": "3b744aa7-a085-4a79-bf41-18831bdaf00d",
-        "activationCost": 1,
-        "actionType": "Free",
-        "name": "Mechapult Master",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "You have become a master of the sacred art of scrap flinging, making you highly versed at using the Mechapult System (see p. 166)."
-          }
-        ]
       }
     ],
     "description": "Improve your ability with the Mechapult System."
@@ -1261,38 +1255,6 @@
     "page": 328,
     "actions": [
       {
-        "name": "Cargo Charge (Pilot)",
-        "range": ["Medium"],
-        "traits": [
-          {
-            "type": "melee"
-          }
-        ],
-        "id": "e8cbf548-106a-4a63-a84a-2012c02e8a81",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Make a special charge attack against a target in Range. Roll to hit as normal. On a hit, this deals HP damage equal to the amount of Inventory Slots your Pilot has filled. Non-Bio-Titan or Meld creatures hit by this attack are knocked Prone and gain the [[Vulnerable]] Trait."
-          }
-        ]
-      },
-      {
-        "name": "Cargo Charge (Mech)",
-        "range": ["Medium"],
-        "traits": [
-          {
-            "type": "melee"
-          }
-        ],
-        "id": "3d79368c-15f5-4a52-be36-889d4edd103f",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Make a special charge attack against a target in Range while piloting a Mech. Roll to hit as normal. On a hit, this deals SP damage equal to the amount of Cargo Slots you currently have filled on your Mech. Any target hit by this attack is knocked Prone and gains the [[Vulnerable]] Trait."
-          }
-        ]
-      },
-      {
         "id": "f286ad7a-ceee-4e73-92e7-d21d54335d16",
         "activationCost": 3,
         "range": ["Medium"],
@@ -1302,6 +1264,18 @@
           {
             "type": "paragraph",
             "value": "You have learned to use the momentum and bulk of the vast weight of cargo you can carry to crush your enemies and see them driven before you. When you activate this Ability, choose a target in Range. You make a special charge attack against the target. Roll to hit as normal. On a hit, this deals HP damage equal to the amount of Inventory Slots your Pilot has filled, for example, if you have 6 Inventory Slots filled, it deals 6 HP damage. Non-Bio-Titan or Meld creatures hit by this attack are knocked Prone and gain the [[Vulnerable]] Trait. If you use this Ability whilst piloting a Mech, it deals SP damage equal to the amount of Cargo Slots you currently have filled on your Mech, for example, if you have 10 Cargo Slots filled, the attack deals 10 SP damage. Any target hit by this attack is knocked Prone and gains the [[Vulnerable]] Trait."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate this Ability, choose a target in Range."
+          },
+          {
+            "type": "paragraph",
+            "value": "You make a special charge attack against the target. Roll to hit as normal. On a hit, this deals HP damage equal to the amount of Inventory Slots your Pilot has filled, for example, if you have 6 Inventory Slots filled, it deals 6 HP damage. Non-Bio-Titan or Meld creatures hit by this attack are knocked Prone and gain the Vulnerable Trait."
+          },
+          {
+            "type": "paragraph",
+            "value": "If you use this Ability whilst piloting a Mech, it deals SP damage equal to the amount of Cargo Slots you currently have filled on your Mech, for example, if you have 10 Cargo Slots filled, the attack deals 10 SP damage. Any target hit by this attack is knocked Prone and gains the Vulnerable Trait."
           }
         ]
       }
