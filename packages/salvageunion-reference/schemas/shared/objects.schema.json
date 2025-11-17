@@ -249,6 +249,9 @@
             "$ref": "#/definitions/systemModule"
           }
         },
+        "setIndexable": {
+          "type": "boolean"
+        },
         "constraints": {
           "type": "object",
           "additionalProperties": false,

@@ -26,13 +26,14 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
 
   const isSchemaPageMode = onChoiceSelection === undefined
   const hasLimitedChoices = hasSchemaEntities || hasCustomSystemOptions
+  const isSetIndexable = 'setIndexable' in choice && choice.setIndexable === true
 
   return (
     <Box>
       {!isSimpleChoice && (
         <HStack mb={2} gap={2}>
           <EntitySubheader disabled={isSchemaPageMode} label={choice.name} />
-          {hasLimitedChoices && !selectedChoice && (
+          {hasLimitedChoices && !selectedChoice && !isSetIndexable && (
             <Text fontSize={fontSize.sm} color="su.black" opacity={0.7}>
               (choose one)
             </Text>
