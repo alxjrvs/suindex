@@ -11,15 +11,20 @@
   "scripts": {
     "dev": "bun run build:package:quick && bun --filter suref-web dev",
     "build": "bun run build:package && bun --filter suref-web build",
-    "build:package": "cd packages/salvageunion-reference && bun install && bun run build || echo 'Package build completed (lint may have failed)'",
-    "build:package:quick": "cd packages/salvageunion-reference && bun run generate && tsc --project tsconfig.build.json",
+    "build:package": "bun --filter salvageunion-reference build",
+    "build:package:quick": "bun --filter salvageunion-reference build:quick",
     "typecheck": "bun --filter suref-web typecheck",
     "lint": "bun --filter suref-web lint",
+    "lint:all": "bun --filter \"*\" lint",
     "format": "bun --filter suref-web format",
+    "format:all": "bun --filter \"*\" format",
     "format:check": "bun --filter suref-web format:check",
+    "format:check:all": "bun --filter \"*\" format:check",
     "test": "bun --filter suref-web test",
+    "test:all": "bun --filter \"*\" test",
     "sanity": "bun --filter suref-web sanity",
-    "publish:package": "cd packages/salvageunion-reference && bun publish"
+    "sanity:all": "bun --filter \"*\" sanity",
+    "publish:package": "bun --filter salvageunion-reference publish"
   },
   "devDependencies": {
     "prettier": "^3.6.2"

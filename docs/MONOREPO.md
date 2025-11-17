@@ -66,10 +66,7 @@ This ensures that:
 bun install
 
 # Build the reference package (required for types and runtime)
-cd packages/salvageunion-reference
-bun install
-bun run build
-cd ../..
+bun run build:package
 ```
 
 ### Daily Development
@@ -86,7 +83,12 @@ bun run dev
 ### Making Changes to salvageunion-reference
 
 1. Edit files in `packages/salvageunion-reference/lib/` or `packages/salvageunion-reference/data/`
-2. Rebuild the package: `cd packages/salvageunion-reference && bun run build`
+2. Rebuild the package:
+   ```bash
+   bun run build:package:quick  # Quick rebuild (dev mode)
+   # or
+   bun run build:package        # Full rebuild (includes tests/lint)
+   ```
 3. Changes are immediately available to `suref-web` via workspace linking
 4. No need to reinstall or relink - the symlink persists
 
@@ -119,12 +121,15 @@ The CI workflow:
 
 **Solution**: Build the package first:
 ```bash
-cd packages/salvageunion-reference && bun run build
+bun run build:package:quick
 ```
 
 ### Build fails on lint
 
-The package build includes linting, which may fail if eslint isn't available. This is handled gracefully in CI/CD, but for local development you may need to install eslint in the package directory.
+The package build includes linting. Fix lint errors or use quick build:
+```bash
+bun run build:package:quick  # Skips lint
+```
 
 ### Workspace not linking
 

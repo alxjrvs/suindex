@@ -34,6 +34,7 @@ export default [
       ...reactHooks.configs.recommended.rules,
       ...reactRefresh.configs.recommended.rules,
       semi: ['error', 'never'],
+      'no-extra-semi': 'error',
     },
   },
   prettier,

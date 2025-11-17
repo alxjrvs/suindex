@@ -141,6 +141,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: searchResults.length,
     getScrollElement: () => containerRef.current,

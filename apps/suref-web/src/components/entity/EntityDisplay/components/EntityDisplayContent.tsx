@@ -34,7 +34,6 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
     isExpanded,
     collapsible,
     hideActions,
-    hideLevel,
     rightLabel,
     disabled,
     buttonConfig,

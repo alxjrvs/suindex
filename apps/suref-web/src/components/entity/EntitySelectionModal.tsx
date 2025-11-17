@@ -130,6 +130,7 @@ export function EntitySelectionModal({
 
   const parentRef = useRef<HTMLDivElement>(null)
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: filteredEntities.length,
     getScrollElement: () => parentRef.current,

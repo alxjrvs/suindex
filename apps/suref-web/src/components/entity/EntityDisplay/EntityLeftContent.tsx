@@ -6,12 +6,11 @@ import { useEntityDisplayContext } from './useEntityDisplayContext'
 export function EntityLeftContent() {
   const { techLevel, compact, data, hideLevel } = useEntityDisplayContext()
   const level = 'level' in data ? data.level : undefined
-  
+
   const hasTechLevel = !!techLevel
   const hasLevel = !!level && !hideLevel
-  
+
   if (!hasTechLevel && !hasLevel) return null
-  
   return (
     <Flex alignItems="center" gap={compact ? 1 : 2}>
       {hasLevel && <LevelDisplay level={level!} compact={compact} inline />}

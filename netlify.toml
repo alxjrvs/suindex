@@ -2,7 +2,7 @@
 # TanStack Start deployment with optimized caching
 
 [build]
-  command = "bun install --frozen-lockfile && cd packages/salvageunion-reference && bun install && bun run build || echo 'Package build completed' && cd ../../apps/suref-web && bun run build && ./scripts/copy-netlify-functions.sh"
+  command = "bun install --frozen-lockfile && bun run build:package && bun --filter suref-web build && cd apps/suref-web && ./scripts/copy-netlify-functions.sh"
   publish = "apps/suref-web/dist/client"
   functions = "netlify/functions"
 
