@@ -51,7 +51,7 @@ async function createCrawlerBays(crawlerId: string, queryClient: QueryClient): P
         metadata: {
           damaged: false,
           npc: {
-            name: '',
+            name: '', // Name is now stored in player_choices, but kept here for type compatibility
             notes: '',
             hitPoints: bay.npc.hitPoints,
             damage: 0,
@@ -73,7 +73,7 @@ async function createCrawlerBays(crawlerId: string, queryClient: QueryClient): P
           metadata: {
             damaged: false,
             npc: {
-              name: '',
+              name: '', // Name is now stored in player_choices, but kept here for type compatibility
               notes: '',
               hitPoints: bay.npc.hitPoints,
               damage: 0,

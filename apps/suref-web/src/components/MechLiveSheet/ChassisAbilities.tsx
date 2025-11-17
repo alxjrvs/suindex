@@ -32,18 +32,21 @@ export function ChassisAbilities({
             bottomLabel="Slots"
             value={chassis ? (getSystemSlots(chassis) ?? 0) : 0}
             disabled={disabled}
+            hoverText="Each System has a System Slot value which represents how much space it takes up on a Mech, conversely a Mechs System Slot value represents how many Systems it can mount. This is an abstract value that covers not only size, but energy requirements, ammo storage and a host of other factors."
           />
           <StatDisplay
             label="Mod."
             bottomLabel="Slots"
             value={chassis ? (getModuleSlots(chassis) ?? 0) : 0}
             disabled={disabled}
+            hoverText="Each Module has a Module Slot value which represents how much space it takes up on a Mech, conversely a Mech's Module Slot value represents how many Modules it can mount."
           />
           <StatDisplay
             label="Cargo"
             bottomLabel="Cap"
             value={chassis ? (getCargoCapacity(chassis) ?? 0) : 0}
             disabled={disabled}
+            hoverText="A Mech's Cargo Slots represents how much it can carry. By default a Mech has 6 Cargo Slots. Cargo Capacity can be increased by installing Systems such as Transport Holds or Cargo Bays into your Mech, as well as from some unique Chassis and Pilot Abilities."
           />
           <StatDisplay
             label="Cargo"

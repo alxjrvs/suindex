@@ -18,7 +18,7 @@ interface useCreateEntityResult {
 }
 
 const initialNPC: CrawlerNPC = {
-  name: '',
+  name: '', // Name is now stored in player_choices, but kept here for type compatibility
   notes: '',
   hitPoints: 0,
   damage: 0,

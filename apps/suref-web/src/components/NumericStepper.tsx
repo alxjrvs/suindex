@@ -12,6 +12,7 @@ interface NumericStepperProps {
   disabled?: boolean
   disableIncrement?: boolean
   flash?: boolean
+  hoverText?: string
 }
 
 export default function NumericStepper({
@@ -24,6 +25,7 @@ export default function NumericStepper({
   disabled = false,
   disableIncrement = false,
   flash = false,
+  hoverText,
 }: NumericStepperProps) {
   const handleIncrement = useCallback(() => {
     onChange(value + step)
@@ -52,6 +54,7 @@ export default function NumericStepper({
         labelId={labelId}
         flash={flash}
         isOverMax={isOverMax}
+        hoverText={hoverText}
       />
       <VStack h="full" justifyContent="center" gap={1} ml={-0.5}>
         <IconButton

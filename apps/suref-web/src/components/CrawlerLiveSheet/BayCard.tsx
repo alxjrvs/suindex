@@ -58,12 +58,18 @@ export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProp
         damaged: false,
         npc: { name: '', notes: '', hitPoints: null, damage: 0 },
       }
+      // Only update notes and damage - name is stored in player_choices
+      const { name, ...npcWithoutName } = updates.npc
       updateEntity.mutate({
         id: bay.id,
         updates: {
           metadata: {
             ...currentMetadata,
-            npc: updates.npc,
+            npc: {
+              ...currentMetadata.npc,
+              ...npcWithoutName,
+              name: currentMetadata.npc.name, // Preserve existing name (will be migrated to choices)
+            },
           },
         },
       })

@@ -622,6 +622,12 @@
     "tree": "Electronics",
     "level": 3,
     "page": 35,
+    "grants": [
+      {
+        "name": "Holo Companion",
+        "schema": "equipment"
+      }
+    ],
     "actions": [
       {
         "id": "308c2b41-23fa-423f-afbb-8f8faaf80af3",

@@ -8,6 +8,16 @@
       "hitPoints": 0,
       "choices": [
         {
+          "id": "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
+        {
           "id": "c7e2b66a-6b62-446d-90ff-11873089bfe0",
           "name": "A.I. Personality",
           "content": [
@@ -52,6 +62,16 @@
     "npc": {
       "position": "Grizzled Veteran",
       "choices": [
+        {
+          "id": "f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6c",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
         {
           "id": "94e8204d-652c-47f4-93ca-271cebb16459",
           "name": "Keepsake",
@@ -131,6 +151,16 @@
       "hitPoints": 4,
       "choices": [
         {
+          "id": "a3b4c5d6-e7f8-4a9b-0c1d-2e3f4a5b6c7d",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
+        {
           "id": "60ba7d94-db45-4af2-bbc2-1032e7796a96",
           "name": "Keepsake",
           "content": [
@@ -191,6 +221,16 @@
       "hitPoints": 4,
       "choices": [
         {
+          "id": "b4c5d6e7-f8a9-4b0c-1d2e-3f4a5b6c7d8e",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
+        {
           "id": "235a2a03-b2f2-4fb3-8afb-a1e87155b4c6",
           "name": "Keepsake",
           "content": [
@@ -246,6 +286,16 @@
       "position": "Savvy Trader",
       "hitPoints": 4,
       "choices": [
+        {
+          "id": "c5d6e7f8-a9b0-4c1d-2e3f-4a5b6c7d8e9f",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
         {
           "id": "53bc208d-ca95-4e7c-9b0c-c8797d4a79f1",
           "name": "Keepsake",

@@ -86,6 +86,11 @@ export function MechEntityList({
               value={usedSlots}
               outOfMax={totalSlots}
               disabled={disabled}
+              hoverText={
+                schemaName === 'systems'
+                  ? "Each System has a System Slot value which represents how much space it takes up on a Mech, conversely a Mechs System Slot value represents how many Systems it can mount. This is an abstract value that covers not only size, but energy requirements, ammo storage and a host of other factors."
+                  : "Each Module has a Module Slot value which represents how much space it takes up on a Mech, conversely a Mech's Module Slot value represents how many Modules it can mount."
+              }
             />
           </Flex>
         }

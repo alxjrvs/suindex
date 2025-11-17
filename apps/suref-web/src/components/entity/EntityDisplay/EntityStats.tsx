@@ -34,6 +34,7 @@ export function EntityStats({ data, label = '', prefix = '' }: EntityStatsProps)
             bottomLabel={compact ? config.compactBottomLabel : config.normalBottomLabel}
             value={displayValue}
             compact={compact}
+            hoverText={config.tooltip}
           />
         )
       })}

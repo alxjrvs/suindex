@@ -33,9 +33,20 @@ export function CrawlerNPC({
   const handleUpdateNPC = useCallback(
     (updates: Partial<{ npc: CrawlerNPCType }>) => {
       if (!updates.npc) return
-      updateCrawler.mutate({ id, updates: { npc: updates.npc as unknown as Json } })
+      // Only update notes and damage - name is stored in player_choices
+      const { name, ...npcWithoutName } = updates.npc
+      updateCrawler.mutate({ 
+        id, 
+        updates: { 
+          npc: {
+            ...npc,
+            ...npcWithoutName,
+            name: npc.name, // Preserve existing name (will be migrated to choices)
+          } as unknown as Json 
+        } 
+      })
     },
-    [id, updateCrawler]
+    [id, updateCrawler, npc]
   )
 
   return (
