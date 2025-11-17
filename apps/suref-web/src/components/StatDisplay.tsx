@@ -1,6 +1,7 @@
 import { Box, Button, VStack } from '@chakra-ui/react'
 import { Text } from './base/Text'
 import { useState, useEffect } from 'react'
+import { Tooltip } from './ui/tooltip'
 
 interface StatDisplayProps {
   label: string
@@ -18,6 +19,7 @@ interface StatDisplayProps {
   flash?: boolean
   inverse?: boolean
   isOverMax?: boolean
+  hoverText?: string
 }
 
 export function StatDisplay({
@@ -36,6 +38,7 @@ export function StatDisplay({
   flash = false,
   inverse = false,
   isOverMax = false,
+  hoverText,
 }: StatDisplayProps) {
   const [isFlashing, setIsFlashing] = useState(false)
   const WrapperComponent = onClick ? Button : Box
@@ -88,7 +91,7 @@ export function StatDisplay({
       }
     : commonProps
 
-  return (
+  const content = (
     <VStack gap={0} alignItems="center" aria-label={combinedAriaLabel}>
       <style>
         {`
@@ -140,4 +143,10 @@ export function StatDisplay({
       </Text>
     </VStack>
   )
+
+  if (hoverText) {
+    return <Tooltip content={hoverText}>{content}</Tooltip>
+  }
+
+  return content
 }

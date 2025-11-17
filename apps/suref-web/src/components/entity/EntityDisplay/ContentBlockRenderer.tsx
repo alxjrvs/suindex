@@ -60,7 +60,6 @@ function ContentBlock({
           color="su.black"
           fontWeight="medium"
           lineHeight="relaxed"
-          fontStyle="italic"
           wordBreak="break-word"
           overflowWrap="break-word"
           whiteSpace="normal"
@@ -114,13 +113,7 @@ function ContentBlock({
     default:
       // Fallback for unknown types - render as paragraph
       return (
-        <Box
-          color="su.black"
-          fontWeight="medium"
-          lineHeight="relaxed"
-          fontStyle="italic"
-          fontSize={fontSize}
-        >
+        <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize}>
           {parsedValue}
         </Box>
       )

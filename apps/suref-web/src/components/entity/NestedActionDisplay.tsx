@@ -80,7 +80,6 @@ export function NestedActionDisplay({
               color="su.black"
               fontWeight="normal"
               lineHeight="relaxed"
-              fontStyle="italic"
               fontSize={fontSize}
             >
               {parsedDescription}

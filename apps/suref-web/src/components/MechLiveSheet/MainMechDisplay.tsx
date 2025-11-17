@@ -1,10 +1,6 @@
-import { VStack, Flex } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/react'
 import {
   getTechLevel,
-  getSystemSlots,
-  getModuleSlots,
-  getCargoCapacity,
-  getSalvageValue,
   type SURefChassis,
 } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
@@ -33,34 +29,6 @@ export function MainMechDisplay({ id, isEditable }: { id: string; isEditable: bo
             value={chassisRef ? (getTechLevel(chassisRef) ?? 0) : 0}
             disabled={!selectedChassis}
           />
-        }
-        rightContent={
-          <Flex flexDirection="row" justifyContent="flex-end" gap={4}>
-            <StatDisplay
-              label="Sys."
-              bottomLabel="Slots"
-              value={chassisRef ? (getSystemSlots(chassisRef) ?? 0) : 0}
-              disabled={!selectedChassis}
-            />
-            <StatDisplay
-              label="Mod."
-              bottomLabel="Slots"
-              value={chassisRef ? (getModuleSlots(chassisRef) ?? 0) : 0}
-              disabled={!selectedChassis}
-            />
-            <StatDisplay
-              label="Cargo"
-              bottomLabel="Cap"
-              value={chassisRef ? (getCargoCapacity(chassisRef) ?? 0) : 0}
-              disabled={!selectedChassis}
-            />
-            <StatDisplay
-              label="Salvage"
-              bottomLabel="Value"
-              value={chassisRef ? (getSalvageValue(chassisRef) ?? 0) : 0}
-              disabled={!selectedChassis}
-            />
-          </Flex>
         }
         title={title}
         subTitleContent={<Text variant="pseudoheader">{subtitle}</Text>}
