@@ -3,7 +3,7 @@
  * Manually defined type guards and property extractors
  */
 
-import type { SURefMetaEntity, SURefMetaAction } from './types/index.js'
+import type { SURefMetaEntity, SURefMetaAction, SURefMetaGrant } from './types/index.js'
 import type {
   SURefAbility,
   SURefAdvancedClass,
@@ -697,7 +697,7 @@ export function getOptions(entity: SURefMetaEntity):
 
 /**
  * Get choices from an entity
- * Checks both base level and nested action property
+ * Checks single action choices first (if entity has exactly 1 action), then root-level choices
  * @param entity - The entity to extract choices from
  * @returns The choices array or undefined if not present
  */
@@ -709,21 +709,11 @@ export function getChoices(entity: SURefMetaEntity):
       [key: string]: unknown
     }>
   | undefined {
-  // Check base level first
-  if ('choices' in entity && Array.isArray(entity.choices)) {
-    return entity.choices as Array<{
-      id: string
-      name: string
-      description?: string
-      [key: string]: unknown
-    }>
-  }
-
-  // Check actions[0] property
+  // Check if entity has a single action with choices - use those first
   if (
     'actions' in entity &&
     Array.isArray(entity.actions) &&
-    entity.actions.length > 0 &&
+    entity.actions.length === 1 &&
     entity.actions[0] !== null &&
     typeof entity.actions[0] === 'object' &&
     'choices' in entity.actions[0] &&
@@ -735,6 +725,29 @@ export function getChoices(entity: SURefMetaEntity):
       description?: string
       [key: string]: unknown
     }>
+  }
+
+  // Fall back to root-level choices
+  if ('choices' in entity && Array.isArray(entity.choices)) {
+    return entity.choices as Array<{
+      id: string
+      name: string
+      description?: string
+      [key: string]: unknown
+    }>
+  }
+
+  return undefined
+}
+
+/**
+ * Get grants from an entity
+ * @param entity - The entity to extract grants from
+ * @returns The grants array or undefined if not present
+ */
+export function getGrants(entity: SURefMetaEntity): SURefMetaGrant[] | undefined {
+  if ('grants' in entity && Array.isArray(entity.grants)) {
+    return entity.grants as SURefMetaGrant[]
   }
 
   return undefined

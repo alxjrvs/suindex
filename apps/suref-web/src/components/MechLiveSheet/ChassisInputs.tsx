@@ -28,6 +28,7 @@ export function ChassisInputs({ id, isEditable }: ChassisInputsProps) {
         allChassis={allChassis}
         onChange={onChassisChange}
         disabled={!isEditable}
+        isOwner={isEditable}
       />
       <PatternSelector
         pattern={pattern}

@@ -26,6 +26,7 @@ interface EntityDisplayProviderProps {
   dimHeader: boolean
   disabled: boolean
   hideActions: boolean
+  hidePatterns: boolean
   collapsible: boolean
   defaultExpanded: boolean
   onClick?: () => void
@@ -47,6 +48,7 @@ export function EntityDisplayProvider({
   dimHeader,
   disabled,
   hideActions,
+  hidePatterns,
   collapsible,
   expanded,
   defaultExpanded,
@@ -108,6 +110,7 @@ export function EntityDisplayProvider({
     isExpanded,
     collapsible,
     hideActions,
+    hidePatterns,
     hideLevel,
     rightLabel,
     disabled,

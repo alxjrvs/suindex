@@ -13,6 +13,7 @@ import { EntityOptions } from '../EntityOptions'
 import { EntityTopMatter } from '../EntityTopMatter'
 import { EntityRequirementDisplay } from '../EntityRequirementDisplay'
 import { EntityChoices } from '../EntityChoices'
+import { EntityGrants } from '../EntityGrants'
 import { ClassAbilitiesList } from '../../../PilotLiveSheet/ClassAbilitiesList'
 import { EntityBonusPerTechLevel } from '../EntityBonusPerTechLevel'
 import { useEntityDisplayContext } from '../useEntityDisplayContext'
@@ -34,6 +35,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
     isExpanded,
     collapsible,
     hideActions,
+    hidePatterns,
     rightLabel,
     disabled,
     buttonConfig,
@@ -93,7 +95,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
           <EntityRequirementDisplay />
           {shouldShowExtraContent && (
             <>
-              <EntityChassisPatterns />
+              {!hidePatterns && <EntityChassisPatterns />}
               <EntityOptions />
               {getTable(data) && (
                 <Box p={spacing.contentPadding} borderRadius="md" position="relative" zIndex={10}>
@@ -125,7 +127,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
                   }
                 />
               )}
-              <EntityChoices userChoices={userChoices} onChoiceSelection={onChoiceSelection} />
+              <EntityGrants />
               {children && (
                 <Box mt="3" p={spacing.contentPadding}>
                   {children}
@@ -148,6 +150,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
               )}
             </>
           )}
+          <EntityChoices userChoices={userChoices} onChoiceSelection={onChoiceSelection} />
           {!hideActions && <PageReferenceDisplay bg={headerBg} />}
         </VStack>
       )}
