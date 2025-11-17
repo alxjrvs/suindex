@@ -985,6 +985,126 @@ entity.choices; // Player's selections
 
 ---
 
+## New Patterns Discovered During Audit
+
+### New Grants Patterns
+
+#### Pattern: Ability Grants Equipment (Extended)
+
+**Existing Pattern**: Abilities that grant equipment automatically (Auto-Turret, Custom Sniper Rifle)
+
+**New Discovery**: Holo Companion ability should grant Holo Companion equipment
+
+- **Entity**: Holo Companion (Ability)
+- **ID**: `3364cc4f-227f-4f88-8b73-a09309e293f0`
+- **Rule Reference**: Page 35 - "You have created an intelligent, holographic, A.I. companion... Add this to your Pilot Inventory."
+- **Recommendation**: Add `grants: [{ name: "Holo Companion", schema: "equipment" }]`
+- **Rationale**: The ability explicitly states to add the companion to inventory, indicating it should be granted equipment
+
+**Summary**: 
+- Total abilities with grants: 3 (Auto-Turret, Custom Sniper Rifle, Holo Companion)
+- Pattern: Abilities that create/acquire equipment grant that equipment automatically
+
+### New Choices Patterns
+
+#### Pattern: Equipment Customization Choices
+
+**New Discovery**: Equipment that requires player customization should have choices arrays
+
+1. **Custom Sniper Rifle** (Equipment)
+   - **ID**: `fc761f88-48ef-4925-8335-b7a6908a27f3`
+   - **Rule Reference**: Page 50 - "Choose if it is a Ballistic or Energy weapon... At each Tech Level you may choose an additional modification"
+   - **Recommendation**: Add choices for:
+     - Weapon type (Ballistic or Energy) - schema-based or custom text
+     - Modifications (Rangefinder, Laser Guidance, etc.) - schema-based with constraints
+   - **Rationale**: Rules explicitly require player choices for weapon type and modifications
+
+2. **Holo Companion** (Equipment)
+   - **ID**: `dd96f7c0-3760-4b71-9451-77ced25a3b09`
+   - **Rule Reference**: Page 35 - "Describe your Companion's appearance, and name them."
+   - **Recommendation**: Add choices for:
+     - Name (custom text)
+     - Appearance description (optional, could be notes)
+   - **Rationale**: Rules require naming the companion
+
+**Summary**: Equipment that represents customizable entities (companions, custom weapons) should have choices for player customization.
+
+#### Pattern: NPC Name Choices
+
+**New Discovery**: All NPCs should have Name choices, not just metadata storage
+
+**Affected Entities**:
+- **Crawler NPCs** (5 entities): Augmented, Battle, Engineering, Exploratory, Trade Caravan
+- **Crawler Bay NPCs** (10 entities): All bay types (Command, Mech, Storage, Armament, Crafting, Trading, Med, Pilot, Armoury, Cantina)
+
+**Rule Reference**: 
+- Crawlers: Page 216-217 - "Name them and give them a Keepsake and Motto"
+- Bays: Standard NPC pattern - all NPCs should be named
+
+**Recommendation**: Add `Name` choice to `npc.choices` array for all crawler and bay NPCs
+
+**Rationale**: 
+- Names are player customization choices, not game state
+- Names should be stored in `player_choices`, not `metadata.npc.name` or `crawlers.npc.name`
+- Migration planned in Phase 4 to move names from metadata to choices
+
+**Pattern**: NPCs consistently have Name, Keepsake, and Motto choices (where applicable)
+
+#### Pattern: Module A.I. Personality Choices
+
+**New Discovery**: Modules that represent A.I. entities should have personality choices
+
+**Entity**: Auto-Repair Droid (Module)
+- **Rule Reference**: Modules with A.I. should allow personality selection
+- **Recommendation**: Add A.I. Personality choice (roll table)
+- **Rationale**: Consistent with other A.I. entities (Auto-Turret, crawler A.I.)
+
+**Summary**: A.I. entities (equipment, modules, crawlers) should have A.I. Personality choices using roll tables.
+
+### Patterns Confirmed as Correct
+
+#### Pattern: Stat Blocks Don't Need Grants/Choices
+
+**Confirmed**: Reference data that represents stat blocks (not player-selectable entities) correctly don't have grants/choices:
+- Creatures, Bio-titans, Meld, Squads, NPCs (templates)
+- Vehicles, Distances, Roll Tables
+- Ability Tree Requirements, Crawler Tech Levels
+
+**Rationale**: These are lookup/reference data, not entities players add to their sheets.
+
+#### Pattern: Classes Don't Need Grants/Choices
+
+**Confirmed**: Core and Advanced classes correctly don't have grants/choices arrays.
+
+**Rationale**: Classes are selected at character creation/advancement, not via the grants/choices system. Ability tree requirements handle class prerequisites.
+
+#### Pattern: Chassis Don't Need Grants/Choices
+
+**Confirmed**: Chassis correctly don't have grants/choices arrays.
+
+**Rationale**: Chassis are selected at character creation. Patterns (starting configurations) are reference data, not grants. Chassis abilities are part of the chassis definition.
+
+### Implementation Status
+
+**Completed**:
+- ✅ Audit of all 22 data files
+- ✅ Identification of missing grants/choices
+- ✅ Documentation of patterns and rationale
+
+**Pending Implementation**:
+- ⚠️ Add grants to Holo Companion ability
+- ⚠️ Add choices to Custom Sniper Rifle equipment
+- ⚠️ Add choices to Holo Companion equipment
+- ⚠️ Add Name choices to all crawler NPCs (5 entities)
+- ⚠️ Add Name choices to all crawler bay NPCs (10 entities)
+- ⚠️ Add A.I. Personality choice to Auto-Repair Droid module
+
+**Total Entities Needing Updates**: 19
+- 1 grant addition
+- 18 choices additions
+
+---
+
 ## Summary
 
 ### Grants
@@ -993,6 +1113,7 @@ entity.choices; // Player's selections
 - **Location**: `grants` property on reference entities
 - **Implementation**: Processed in `useCreateEntity` `onSuccess` callback
 - **Result**: New `suentities` row with `parent_entity_id` linking to grantor
+- **Common Pattern**: Abilities that create/acquire equipment grant that equipment automatically
 
 ### Choices
 
@@ -1000,6 +1121,10 @@ entity.choices; // Player's selections
 - **Location**: `choices` property on reference entities (and actions)
 - **Implementation**: Stored in `player_choices` table, managed via hooks
 - **Result**: `player_choices` rows linking to entities or other choices
+- **Common Patterns**:
+  - NPCs: Name, Keepsake, Motto, A.I. Personality
+  - Equipment: Name, weapon type, modifications
+  - Systems/Modules: Chassis selection, module selection, A.I. Personality
 
 ### GameEntities (suentities)
 
@@ -1020,3 +1145,20 @@ entity.choices; // Player's selections
 - Nested choices enable complex selection chains
 - All data flows through normalized database schema
 - Live sheets hydrate entities with reference data and choices
+
+### Reference Guide for Future Additions
+
+**When to Add Grants**:
+- Entity automatically provides another entity when selected
+- Game rules say "grants", "gives", "provides", or "add to inventory"
+- Example: Ability that creates equipment grants that equipment
+
+**When to Add Choices**:
+- Entity requires player selection/customization
+- Game rules say "choose", "select", "name", "roll", or require player input
+- Examples: Name NPC, choose weapon type, roll for personality, select modification
+
+**When NOT to Add Grants/Choices**:
+- Entity is a stat block or reference data (creatures, vehicles, NPC templates)
+- Entity is selected at character creation (classes, chassis)
+- Entity is metadata or lookup data (distances, roll tables, ability tree requirements)

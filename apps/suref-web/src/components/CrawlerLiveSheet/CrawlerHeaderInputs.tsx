@@ -148,6 +148,7 @@ export function CrawlerHeaderInputs({
             valueColor="su.white"
             ariaLabel={`Upgrade to Tech Level ${currentTechLevel + 1}`}
             flash={flashTL}
+            hoverText="If you pay the Upkeep on your Union Crawler in full, the amount of Upkeep you spend goes towards your Upgrade Pool. When the Upgrade Pool reaches the Upgrade Value of your Union Crawler, you may choose to upgrade it. When upgraded, it will boost the Tech Level of Union Crawler to the next Tech Level, and give it all of the new statistics."
           />
         ) : (
           <StatDisplay
@@ -157,12 +158,19 @@ export function CrawlerHeaderInputs({
             value={currentTechLevel}
             disabled={disabled}
             flash={flashTL}
+            hoverText="How advanced the Union Crawler and the facilities are within it, as well as its size. A Union Crawler starts at Tech Level 1."
           />
         )
       }
       rightContent={
         <Flex gap="2">
-          <StatDisplay disabled={disabled} label="UPKEEP" value={upkeep} flash={flashUpkeep} />
+          <StatDisplay
+            disabled={disabled}
+            label="UPKEEP"
+            value={upkeep}
+            flash={flashUpkeep}
+            hoverText="Your Union Crawler requires a constant influx of Scrap to maintain it. This is represented by its Upkeep Cost. This must be paid once per week, but for simplicity in play, this is resolved during Downtime. By default, the Upkeep Cost is 5 Scrap of the Tech Level of the Union Crawler. The Upkeep you pay will also add to your Union Crawler Upgrade Pool."
+          />
           <NumericStepper
             label="UPGRADE"
             value={currentUpgrade}
@@ -172,6 +180,7 @@ export function CrawlerHeaderInputs({
             disabled={disabled}
             disableIncrement={!canIncrementUpgrade}
             flash={flashUpgradeDisplay}
+            hoverText="If you pay the Upkeep on your Union Crawler in full, the amount of Upkeep you spend goes towards your Upgrade Pool. When the Upgrade Pool reaches the Upgrade Value of your Union Crawler, you may choose to upgrade it. When upgraded, it will boost the Tech Level of Union Crawler to the next Tech Level, and give it all of the new statistics."
           />
           <NumericStepper
             label="SP"
@@ -183,6 +192,7 @@ export function CrawlerHeaderInputs({
             min={0}
             disabled={disabled}
             flash={flashSP}
+            hoverText="Structure Points represent how tough and sturdy your Mech is, and how much damage it can take. This is an abstract measure representing a broad range of factors ranging from sheer bulk and armour to wider defensive capabilities."
           />
         </Flex>
       }

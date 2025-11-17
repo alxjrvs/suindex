@@ -80,6 +80,7 @@ export function PilotInventory({ id, disabled = false, readOnly = false }: Pilot
               value={equipment.length}
               outOfMax={MAX_SLOTS}
               disabled={disabled}
+              hoverText="This is the amount of Pilot Equipment, as well as other miscellaneous things found in the wastes, a Pilot can carry. This includes weapons such as the Pistol or Rifle as well as utility items such as a Portable Comms Unit, a First Aid Kit, and more. Each Pilot starts with 6 Inventory Slots."
             />
           </Flex>
         }

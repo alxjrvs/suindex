@@ -34,7 +34,13 @@ export function CargoList({ id, disabled = false, readOnly = false }: CargoListP
         title="Cargo"
         disabled={disabled}
         rightContent={
-          <StatDisplay label="Cargo" value={totalCargo} outOfMax={maxCargo} disabled={disabled} />
+          <StatDisplay
+            label="Cargo"
+            value={totalCargo}
+            outOfMax={maxCargo}
+            disabled={disabled}
+            hoverText="A Mech's Cargo Slots represents how much it can carry. By default a Mech has 6 Cargo Slots. Cargo Capacity can be increased by installing Systems such as Transport Holds or Cargo Bays into your Mech, as well as from some unique Chassis and Pilot Abilities."
+          />
         }
       >
         <DynamicBay

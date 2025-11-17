@@ -6,7 +6,7 @@ import type { Json } from '../../types/database-generated.types'
 import { NPCCard } from '../shared/NPCCard'
 import { useHydratedCrawler, useUpdateCrawler } from '../../hooks/crawler'
 import { useManageEntityChoices } from '../../hooks/suentity'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 export function CrawlerNPC({
   id,
@@ -23,19 +23,35 @@ export function CrawlerNPC({
 
   const crawlerTypeRef = selectedCrawlerType?.ref as SURefCrawler | undefined
 
-  const npc: CrawlerNPCType = (crawler?.npc as unknown as CrawlerNPCType) || {
-    name: '',
-    notes: '',
-    hitPoints: null,
-    damage: 0,
-  }
+  const npc: CrawlerNPCType = useMemo(
+    () =>
+      (crawler?.npc as unknown as CrawlerNPCType) || {
+        name: '',
+        notes: '',
+        hitPoints: null,
+        damage: 0,
+      },
+    [crawler?.npc]
+  )
 
   const handleUpdateNPC = useCallback(
     (updates: Partial<{ npc: CrawlerNPCType }>) => {
       if (!updates.npc) return
-      updateCrawler.mutate({ id, updates: { npc: updates.npc as unknown as Json } })
+      // Only update notes and damage - name is stored in player_choices
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { name: _name, ...npcWithoutName } = updates.npc
+      updateCrawler.mutate({
+        id,
+        updates: {
+          npc: {
+            ...npc,
+            ...npcWithoutName,
+            name: npc.name, // Preserve existing name (will be migrated to choices)
+          } as unknown as Json,
+        },
+      })
     },
-    [id, updateCrawler]
+    [id, updateCrawler, npc]
   )
 
   return (

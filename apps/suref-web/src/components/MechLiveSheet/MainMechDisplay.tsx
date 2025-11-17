@@ -1,12 +1,5 @@
-import { VStack, Flex } from '@chakra-ui/react'
-import {
-  getTechLevel,
-  getSystemSlots,
-  getModuleSlots,
-  getCargoCapacity,
-  getSalvageValue,
-  type SURefChassis,
-} from 'salvageunion-reference'
+import { VStack } from '@chakra-ui/react'
+import { getTechLevel, type SURefChassis } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
 import { ChassisInputs } from './ChassisInputs'
@@ -32,35 +25,8 @@ export function MainMechDisplay({ id, isEditable }: { id: string; isEditable: bo
             bottomLabel="Level"
             value={chassisRef ? (getTechLevel(chassisRef) ?? 0) : 0}
             disabled={!selectedChassis}
+            hoverText="A Mech's Tech Level broadly represents how advanced it is. There are 6 Tech Levels, and Mechs of higher Tech Levels tend to be more powerful with higher statistics in one or multiple areas. Consequently, higher Tech Mechs are more expensive to build, upkeep, and repair."
           />
-        }
-        rightContent={
-          <Flex flexDirection="row" justifyContent="flex-end" gap={4}>
-            <StatDisplay
-              label="Sys."
-              bottomLabel="Slots"
-              value={chassisRef ? (getSystemSlots(chassisRef) ?? 0) : 0}
-              disabled={!selectedChassis}
-            />
-            <StatDisplay
-              label="Mod."
-              bottomLabel="Slots"
-              value={chassisRef ? (getModuleSlots(chassisRef) ?? 0) : 0}
-              disabled={!selectedChassis}
-            />
-            <StatDisplay
-              label="Cargo"
-              bottomLabel="Cap"
-              value={chassisRef ? (getCargoCapacity(chassisRef) ?? 0) : 0}
-              disabled={!selectedChassis}
-            />
-            <StatDisplay
-              label="Salvage"
-              bottomLabel="Value"
-              value={chassisRef ? (getSalvageValue(chassisRef) ?? 0) : 0}
-              disabled={!selectedChassis}
-            />
-          </Flex>
         }
         title={title}
         subTitleContent={<Text variant="pseudoheader">{subtitle}</Text>}

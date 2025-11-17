@@ -77,6 +77,7 @@ export function CrawlerResourceSteppers({
             bottomLabel="TL1"
             value={totalInTl1}
             disabled={incomplete}
+            hoverText="Total Scrap converted to Tech Level 1 equivalent. Higher Tech Level Scrap is worth more: TL2 = 2× TL1, TL3 = 3× TL1, etc."
           />
         }
       >

@@ -37,7 +37,6 @@ export function NPCCard({
   const containerRef = useRef<HTMLDivElement>(null)
   const [fontSize, setFontSize] = useState(16)
   const onUpdateDamage = (value: number) => onUpdateBay?.({ npc: { ...npc!, damage: value } })
-  const onUpdateName = (value: string) => onUpdateBay?.({ npc: { ...npc!, name: value } })
   const onUpdateNotes = (value: string) => onUpdateBay?.({ npc: { ...npc!, notes: value } })
 
   const choiceDefinitions = useMemo(() => {
@@ -133,40 +132,36 @@ export function NPCCard({
         )}
       </Flex>
 
-      <Box
-        transform={tilted ? `rotate(${nameRotation}deg)` : undefined}
-        transition="transform 0.3s ease"
-      >
-        <SheetInput
-          value={npc.name}
-          onChange={(value) => onUpdateName(value)}
-          placeholder={`Enter ${position} name...`}
-          suffixText={`the ${position}`}
-          disabled={disabled}
-        />
-      </Box>
       {choiceDefinitions.map((choice) => (
-        <SheetInput
+        <Box
           key={choice.id}
-          label={choice.name}
-          placeholder={
-            choice.content?.find((b) => !b.type || b.type === 'paragraph')?.value ||
-            'Enter value...'
-          }
-          onDiceRoll={
-            onUpdateChoice
-              ? () => {
-                  const {
-                    result: { label },
-                  } = rollTable(choice.name)
-                  onUpdateChoice(choice.id, label)
-                }
-              : undefined
-          }
-          value={choicesMap[choice.id] || ''}
-          onChange={onUpdateChoice ? (value) => onUpdateChoice(choice.id, value) : undefined}
-          disabled={disabled || !onUpdateChoice}
-        />
+          transform={tilted && choice.name === 'Name' ? `rotate(${nameRotation}deg)` : undefined}
+          transition="transform 0.3s ease"
+        >
+          <SheetInput
+            label={choice.name === 'Name' ? undefined : choice.name}
+            placeholder={
+              choice.name === 'Name'
+                ? `Enter ${position} name...`
+                : choice.content?.find((b) => !b.type || b.type === 'paragraph')?.value ||
+                  'Enter value...'
+            }
+            suffixText={choice.name === 'Name' ? `the ${position}` : undefined}
+            onDiceRoll={
+              onUpdateChoice
+                ? () => {
+                    const {
+                      result: { label },
+                    } = rollTable(choice.name)
+                    onUpdateChoice(choice.id, label)
+                  }
+                : undefined
+            }
+            value={choicesMap[choice.id] || ''}
+            onChange={onUpdateChoice ? (value) => onUpdateChoice(choice.id, value) : undefined}
+            disabled={disabled || !onUpdateChoice}
+          />
+        </Box>
       ))}
 
       <Box

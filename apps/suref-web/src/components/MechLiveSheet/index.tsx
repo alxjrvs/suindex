@@ -133,7 +133,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
 
       <Tabs.Root defaultValue="abilities">
         <Tabs.List>
-          <Tabs.Trigger value="abilities">Abilities</Tabs.Trigger>
+          <Tabs.Trigger value="abilities">Chassis Abilities</Tabs.Trigger>
           <Tabs.Trigger value="systems-modules">Systems & Modules</Tabs.Trigger>
           <Tabs.Trigger value="storage">Storage</Tabs.Trigger>
           <Tabs.Trigger value="notes">Notes</Tabs.Trigger>

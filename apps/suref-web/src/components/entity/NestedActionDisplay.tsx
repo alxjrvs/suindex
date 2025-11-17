@@ -76,13 +76,7 @@ export function NestedActionDisplay({
           alignItems="stretch"
         >
           {description && (
-            <Box
-              color="su.black"
-              fontWeight="normal"
-              lineHeight="relaxed"
-              fontStyle="italic"
-              fontSize={fontSize}
-            >
+            <Box color="su.black" fontWeight="normal" lineHeight="relaxed" fontSize={fontSize}>
               {parsedDescription}
             </Box>
           )}

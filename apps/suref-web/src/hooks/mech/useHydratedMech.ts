@@ -16,7 +16,7 @@ import { useEntitiesFor } from '../suentity/useSUEntities'
 import { useCargo } from '../cargo/useCargo'
 import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
 import type { Tables } from '../../types/database-generated.types'
-import { getSlotsRequired, getSalvageValue, getTechLevel } from 'salvageunion-reference'
+import { getSlotsRequired, getSalvageValue } from 'salvageunion-reference'
 import { isLocalId } from '../../lib/cacheHelpers'
 
 export interface HydratedMech {
@@ -104,14 +104,12 @@ export function useHydratedMech(id: string | undefined): HydratedMech {
   const totalSalvageValue = useMemo(() => {
     const systemValue = systems.reduce((sum, entity) => {
       const salvageValue = getSalvageValue(entity.ref) ?? 0
-      const techLevel = getTechLevel(entity.ref) ?? 1
-      return sum + salvageValue * techLevel
+      return sum + salvageValue
     }, 0)
 
     const moduleValue = modules.reduce((sum, entity) => {
       const salvageValue = getSalvageValue(entity.ref) ?? 0
-      const techLevel = getTechLevel(entity.ref) ?? 1
-      return sum + salvageValue * techLevel
+      return sum + salvageValue
     }, 0)
 
     const chassisValue = selectedChassis?.ref ? (getSalvageValue(selectedChassis.ref) ?? 0) : 0

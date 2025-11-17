@@ -23,6 +23,16 @@
       "hitPoints": 4,
       "choices": [
         {
+          "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
+        {
           "id": "f99d2c89-3bd5-4573-a7d0-1b608f93467b",
           "name": "Keepsake",
           "content": [
@@ -101,6 +111,16 @@
       "hitPoints": 4,
       "choices": [
         {
+          "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
+        {
           "id": "f94dcbf5-5fa4-4a77-9fe1-1c96ff4a4a32",
           "name": "Keepsake",
           "content": [
@@ -147,6 +167,16 @@
       "position": "Bullwhacker",
       "hitPoints": 4,
       "choices": [
+        {
+          "id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
         {
           "id": "0d51ae6a-e98d-4696-bb17-52b220e4459b",
           "name": "Keepsake",
@@ -208,6 +238,16 @@
       "hitPoints": 4,
       "choices": [
         {
+          "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
+        {
           "id": "937d3b47-62ce-4325-8ec8-6c17d87214d6",
           "name": "Keepsake",
           "content": [
@@ -254,6 +294,16 @@
       "position": "Forger",
       "hitPoints": 4,
       "choices": [
+        {
+          "id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
         {
           "id": "1c5d1210-e24e-4a59-8fd9-959ead68ecfc",
           "name": "Keepsake",
@@ -331,6 +381,16 @@
       "hitPoints": 4,
       "choices": [
         {
+          "id": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
+        {
           "id": "b2c50eed-15b2-461a-8bbe-0e88a8064a30",
           "name": "Keepsake",
           "content": [
@@ -405,6 +465,16 @@
       "position": "Doc",
       "hitPoints": 4,
       "choices": [
+        {
+          "id": "a7b8c9d0-e1f2-4a3b-4c5d-6e7f8a9b0c1d",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
         {
           "id": "996ccad4-076e-4fba-948d-012fa1e3ae12",
           "name": "Keepsake",
@@ -535,6 +605,16 @@
       "hitPoints": 4,
       "choices": [
         {
+          "id": "b8c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
+        {
           "id": "4f0b6a75-252e-474a-a253-8f06b0e48c19",
           "name": "Keepsake",
           "content": [
@@ -581,6 +661,16 @@
       "position": "Smith",
       "hitPoints": 4,
       "choices": [
+        {
+          "id": "c9d0e1f2-a3b4-4c5d-6e7f-8a9b0c1d2e3f",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
         {
           "id": "9781ac99-9355-4bf8-b4f7-31180175518b",
           "name": "Keepsake",
@@ -639,6 +729,16 @@
       "position": "Chef",
       "hitPoints": 4,
       "choices": [
+        {
+          "id": "d0e1f2a3-b4c5-4d6e-7f8a-9b0c1d2e3f4a",
+          "name": "Name",
+          "content": [
+            {
+              "type": "paragraph",
+              "value": "The name of the NPC."
+            }
+          ]
+        },
         {
           "id": "f20e995b-a503-4689-b64c-49c26f5bbadd",
           "name": "Keepsake",
