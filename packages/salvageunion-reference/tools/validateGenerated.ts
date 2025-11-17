@@ -1,44 +1,28 @@
 /**
  * Validate that generated files are up-to-date with schema files
- * Compares timestamps to detect stale generated code
+ * Compares actual file content to detect stale generated code
+ * This is more reliable than timestamp comparison, especially in CI environments
  */
 
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { createHash } from 'crypto'
+import { spawnSync } from 'child_process'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-interface FileTimestamp {
-  path: string
-  mtime: number
-}
-
 /**
- * Get modification time of a file
+ * Get file content hash for comparison
  */
-function getFileTimestamp(filePath: string): FileTimestamp | null {
+function getFileHash(filePath: string): string | null {
   try {
-    const stats = fs.statSync(filePath)
-    return {
-      path: filePath,
-      mtime: stats.mtimeMs,
-    }
+    const content = fs.readFileSync(filePath, 'utf-8')
+    return createHash('sha256').update(content).digest('hex')
   } catch {
     return null
   }
-}
-
-/**
- * Get all schema files
- */
-function getSchemaFiles(): string[] {
-  const schemasDir = path.join(__dirname, '../schemas')
-  const files = fs.readdirSync(schemasDir)
-  return files
-    .filter((f) => f.endsWith('.schema.json'))
-    .map((f) => path.join(schemasDir, f))
 }
 
 /**
@@ -56,58 +40,122 @@ function getGeneratedFiles(): string[] {
 }
 
 /**
- * Validate that generated files are newer than schema files
+ * Generate files and return their content hashes
+ * This temporarily overwrites the existing files, so we need to restore them
+ */
+function generateAndGetHashes(originalHashes: Map<string, string>): Map<string, string> {
+  const packageDir = path.join(__dirname, '..')
+  const generatedFiles = getGeneratedFiles()
+
+  // Run generation (this will overwrite existing files)
+  const generateScripts = [
+    'generate:enums',
+    'generate:common',
+    'generate:objects',
+    'generate:schemas',
+    'generate:index',
+  ]
+
+  for (const script of generateScripts) {
+    const result = spawnSync('npm', ['run', script], {
+      cwd: packageDir,
+      stdio: 'pipe',
+      shell: true,
+    })
+
+    if (result.status !== 0) {
+      console.error(`❌ Failed to generate ${script}`)
+      console.error(result.stderr?.toString() || result.stdout?.toString())
+      throw new Error(`Generation failed for ${script}`)
+    }
+  }
+
+  // Get hashes of newly generated files
+  const newHashes = new Map<string, string>()
+  for (const file of generatedFiles) {
+    const hash = getFileHash(file)
+    if (hash) {
+      newHashes.set(file, hash)
+    }
+  }
+
+  return newHashes
+}
+
+/**
+ * Validate that generated files match what would be generated from current schemas
  */
 function validateGenerated(): boolean {
   console.log('🔍 Validating generated files...\n')
 
-  const schemaFiles = getSchemaFiles()
   const generatedFiles = getGeneratedFiles()
 
-  // Get timestamps for all schema files
-  const schemaTimestamps = schemaFiles
-    .map(getFileTimestamp)
-    .filter((t): t is FileTimestamp => t !== null)
+  // Check that all files exist
+  for (const file of generatedFiles) {
+    if (!fs.existsSync(file)) {
+      console.error(`❌ Generated file not found: ${path.basename(file)}`)
+      return false
+    }
+  }
 
-  if (schemaTimestamps.length === 0) {
-    console.error('❌ No schema files found!')
+  // Save original file contents
+  const originalContents = new Map<string, string>()
+  for (const file of generatedFiles) {
+    try {
+      originalContents.set(file, fs.readFileSync(file, 'utf-8'))
+    } catch {
+      console.error(`❌ Could not read file: ${path.basename(file)}`)
+      return false
+    }
+  }
+
+  // Get original hashes
+  const originalHashes = new Map<string, string>()
+  for (const [file, content] of originalContents) {
+    originalHashes.set(file, createHash('sha256').update(content).digest('hex'))
+  }
+
+  // Generate fresh files and get their hashes
+  let newHashes: Map<string, string>
+  try {
+    newHashes = generateAndGetHashes(originalHashes)
+  } catch (error) {
+    // Restore original files on error
+    for (const [file, content] of originalContents) {
+      fs.writeFileSync(file, content, 'utf-8')
+    }
+    console.error('❌ Failed to generate comparison files')
     return false
   }
 
-  // Find the most recently modified schema file
-  const newestSchema = schemaTimestamps.reduce((newest, current) =>
-    current.mtime > newest.mtime ? current : newest
-  )
-
-  console.log(
-    `📄 Newest schema: ${path.basename(newestSchema.path)} (${new Date(newestSchema.mtime).toISOString()})`
-  )
-
-  // Check each generated file
+  // Compare hashes
   let allValid = true
   const staleFiles: string[] = []
 
-  for (const genFile of generatedFiles) {
-    const genTimestamp = getFileTimestamp(genFile)
+  for (const file of generatedFiles) {
+    const originalHash = originalHashes.get(file)
+    const newHash = newHashes.get(file)
 
-    if (!genTimestamp) {
-      console.error(`❌ Generated file not found: ${path.basename(genFile)}`)
+    if (!originalHash || !newHash) {
+      console.error(`❌ Could not hash file: ${path.basename(file)}`)
       allValid = false
-      staleFiles.push(genFile)
+      staleFiles.push(file)
       continue
     }
 
-    if (genTimestamp.mtime < newestSchema.mtime) {
-      console.error(
-        `❌ Stale: ${path.basename(genFile)} (${new Date(genTimestamp.mtime).toISOString()})`
-      )
+    if (originalHash !== newHash) {
+      console.error(`❌ Stale: ${path.basename(file)}`)
       allValid = false
-      staleFiles.push(genFile)
+      staleFiles.push(file)
     } else {
-      console.log(
-        `✅ Fresh: ${path.basename(genFile)} (${new Date(genTimestamp.mtime).toISOString()})`
-      )
+      console.log(`✅ Fresh: ${path.basename(file)}`)
     }
+  }
+
+  // Restore original files (always restore, even if validation passes,
+  // to avoid modifying files during validation)
+  for (const [file, content] of originalContents) {
+    fs.writeFileSync(file, content, 'utf-8')
   }
 
   console.log()
@@ -116,9 +164,7 @@ function validateGenerated(): boolean {
     console.error('❌ Some generated files are stale!')
     console.error('\n💡 Run `npm run generate` to update generated files\n')
     console.error('Stale files:')
-    staleFiles.forEach((f) =>
-      console.error(`  - ${path.relative(process.cwd(), f)}`)
-    )
+    staleFiles.forEach((f) => console.error(`  - ${path.relative(process.cwd(), f)}`))
     return false
   }
 
