@@ -57,15 +57,20 @@ function generateAndGetHashes(): Map<string, string> {
   ]
 
   for (const script of generateScripts) {
-    const result = spawnSync('npm', ['run', script], {
+    // Use bun run for consistency and better compatibility in CI
+    const result = spawnSync('bun', ['run', script], {
       cwd: packageDir,
       stdio: 'pipe',
-      shell: true,
+      shell: false,
+      env: { ...process.env },
     })
 
     if (result.status !== 0) {
       console.error(`❌ Failed to generate ${script}`)
-      console.error(result.stderr?.toString() || result.stdout?.toString())
+      const stderr = result.stderr?.toString() || ''
+      const stdout = result.stdout?.toString() || ''
+      if (stderr) console.error('STDERR:', stderr)
+      if (stdout) console.error('STDOUT:', stdout)
       throw new Error(`Generation failed for ${script}`)
     }
   }
@@ -162,7 +167,7 @@ function validateGenerated(): boolean {
 
   if (!allValid) {
     console.error('❌ Some generated files are stale!')
-    console.error('\n💡 Run `npm run generate` to update generated files\n')
+    console.error('\n💡 Run `bun run generate` to update generated files\n')
     console.error('Stale files:')
     staleFiles.forEach((f) => console.error(`  - ${path.relative(process.cwd(), f)}`))
     return false
