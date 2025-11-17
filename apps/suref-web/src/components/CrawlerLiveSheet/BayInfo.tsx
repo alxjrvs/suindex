@@ -7,6 +7,7 @@ import type { SURefCrawlerBay } from 'salvageunion-reference'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 import { useManageEntityChoices } from '../../hooks/suentity'
 import { useParseTraitReferences } from '../../utils/parseTraitReferences'
+import { getParagraphString } from '../../lib/contentBlockHelpers'
 
 interface BayInfoProps {
   bayRef: SURefCrawlerBay
@@ -40,7 +41,8 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
   const [isAbilitiesExpanded, setIsAbilitiesExpanded] = useState(false)
   const handleUpdateChoice = useManageEntityChoices(bayEntityId)
 
-  const description = bayRef.content?.find((b) => !b.type || b.type === 'paragraph')?.value
+  const description = getParagraphString(bayRef.content)
+  const parsedDescription = useParseTraitReferences(description || '')
 
   if (!description && (!bayRef.actions || bayRef.actions.length === 0)) {
     return null
@@ -97,10 +99,10 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
         )}
       </HStack>
 
-      {isFunctionExpanded && hasFunction && (
+      {isFunctionExpanded && hasFunction && parsedDescription && (
         <SheetDisplay label="Function">
           <Box lineHeight="relaxed" color="su.black">
-            {description}
+            {parsedDescription}
           </Box>
         </SheetDisplay>
       )}
@@ -111,7 +113,7 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
             <AbilityDisplay
               key={idx}
               name={ability.name}
-              description={ability.content?.find((b) => !b.type || b.type === 'paragraph')?.value}
+              description={getParagraphString(ability.content)}
             />
           ))}
           {techLevelEffects?.map((effect, idx) =>

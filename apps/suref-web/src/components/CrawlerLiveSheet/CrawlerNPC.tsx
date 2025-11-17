@@ -6,6 +6,7 @@ import type { Json } from '../../types/database-generated.types'
 import { NPCCard } from '../shared/NPCCard'
 import { useHydratedCrawler, useUpdateCrawler } from '../../hooks/crawler'
 import { useManageEntityChoices } from '../../hooks/suentity'
+import { getParagraphString } from '../../lib/contentBlockHelpers'
 import { useCallback, useMemo } from 'react'
 
 export function CrawlerNPC({
@@ -66,9 +67,7 @@ export function CrawlerNPC({
       <NPCCard
         npc={npc}
         choices={selectedCrawlerType?.choices || []}
-        description={
-          crawlerTypeRef?.npc.content?.find((b) => !b.type || b.type === 'paragraph')?.value || ''
-        }
+        description={getParagraphString(crawlerTypeRef?.npc.content) || ''}
         maxHP={crawlerTypeRef?.npc.hitPoints || 0}
         referenceBay={crawlerTypeRef}
         onUpdateBay={readOnly ? undefined : handleUpdateNPC}

@@ -13,7 +13,7 @@
     "build": "bun run build:package && bun --filter suref-web build",
     "build:package": "bun --filter salvageunion-reference build",
     "build:package:quick": "bun --filter salvageunion-reference build:quick",
-    "typecheck": "bun --filter suref-web typecheck",
+    "typecheck": "bun --filter \"*\" typecheck",
     "lint": "bun --filter suref-web lint",
     "lint:all": "bun --filter \"*\" lint",
     "format": "bun --filter suref-web format",

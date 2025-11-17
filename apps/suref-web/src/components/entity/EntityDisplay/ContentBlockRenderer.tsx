@@ -57,6 +57,10 @@ function ContentBlock({
   const type = block.type || 'paragraph'
   const blockValue = block.value
 
+  // Parse strings non-conditionally
+  const stringValue = typeof blockValue === 'string' ? blockValue : ''
+  const parsedValue = useParseTraitReferences(stringValue)
+
   // Handle datavalues type - value is an array of dataValue objects
   if (type === 'datavalues') {
     if (!Array.isArray(blockValue) || blockValue.length === 0) {
@@ -70,10 +74,6 @@ function ContentBlock({
       </Flex>
     )
   }
-
-  // For other types, value is a string
-  const stringValue = typeof blockValue === 'string' ? blockValue : ''
-  const parsedValue = useParseTraitReferences(stringValue)
 
   switch (type) {
     case 'paragraph':
@@ -121,13 +121,6 @@ function ContentBlock({
             </Box>
           </List.Item>
         </List.Root>
-      )
-
-    case 'list-item-naked':
-      return (
-        <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize} pl={4}>
-          {parsedValue}
-        </Box>
       )
 
     case 'label':

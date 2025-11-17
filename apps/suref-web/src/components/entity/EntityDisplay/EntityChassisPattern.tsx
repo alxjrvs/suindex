@@ -4,6 +4,7 @@ import type { SURefChassis, SURefModule, SURefSystem } from 'salvageunion-refere
 import { Text } from '../../base/Text'
 import { SheetDisplay } from '../../shared/SheetDisplay'
 import { EntityDisplay } from './index'
+import { getParagraphString } from '../../../lib/contentBlockHelpers'
 
 interface EntityChassisPatternProps {
   pattern: SURefChassis['patterns'][0]
@@ -52,9 +53,7 @@ export function EntityChassisPattern({ pattern }: EntityChassisPatternProps) {
         </Box>
       )}
 
-      <SheetDisplay compact={false}>
-        {pattern.content?.find((b) => !b.type || b.type === 'paragraph')?.value}
-      </SheetDisplay>
+      <SheetDisplay compact={false}>{getParagraphString(pattern.content)}</SheetDisplay>
 
       <VStack gap={4} alignItems="stretch">
         {systems.length > 0 && (

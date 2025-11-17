@@ -10,6 +10,7 @@ import { StatDisplay } from '../StatDisplay'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import { getTiltRotation } from '../../utils/tiltUtils'
 import { useUpdateEntity, useManageEntityChoices } from '../../hooks/suentity'
+import { getParagraphString } from '../../lib/contentBlockHelpers'
 
 interface BayCardProps {
   bay: HydratedBay
@@ -121,9 +122,7 @@ export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProp
               npc={metadata.npc}
               choices={bay.choices}
               referenceBay={bayRef}
-              description={
-                bayRef.npc.content?.find((b) => !b.type || b.type === 'paragraph')?.value || ''
-              }
+              description={getParagraphString(bayRef.npc.content) || ''}
               maxHP={bayRef.npc.hitPoints || 0}
               onUpdateChoice={readOnly ? undefined : handleUpdateChoice}
               onUpdateBay={readOnly ? undefined : handleUpdateNPC}

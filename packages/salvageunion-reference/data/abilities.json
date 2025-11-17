@@ -1596,10 +1596,12 @@
             ]
           },
           {
-            "type": "list-item",
-            "value": "Choose if it is a [[Ballistic]] or [[Energy]] weapon and it gains the respective [[Energy]] or [[Ballistic]] Trait.",
-
-            "label": "Weapon Type"
+            "type": "paragraph",
+            "value": "Choose if it is a [[Ballistic]] or [[Energy]] weapon and it gains the respective [[Energy]] or [[Ballistic]] Trait."
+          },
+          {
+            "type": "paragraph",
+            "value": " In addition, choose a modification from the list below."
           },
           {
             "type": "list-item",
@@ -1645,6 +1647,10 @@
             "type": "list-item",
             "value": "The Custom Sniper Rifle is designed to fold down into a briefcase, making it easily concealable.",
             "label": "Compact Design"
+          },
+          {
+            "type": "paragraph",
+            "value": "At each Tech Level you may choose an additional modification for your Custom Sniper Rifle. In addition, its damage increases by 1 SP per Tech Level after the first, e.g. a Tech 3 Custom Sniper Rifle would deal 4 SP damage and you would be able to choose three modi- fications for it."
           }
         ]
       }
