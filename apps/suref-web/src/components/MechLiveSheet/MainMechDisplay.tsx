@@ -1,8 +1,5 @@
 import { VStack } from '@chakra-ui/react'
-import {
-  getTechLevel,
-  type SURefChassis,
-} from 'salvageunion-reference'
+import { getTechLevel, type SURefChassis } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
 import { ChassisInputs } from './ChassisInputs'

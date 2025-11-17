@@ -1,6 +1,11 @@
 import { VStack, Flex } from '@chakra-ui/react'
 import type { SURefChassis } from 'salvageunion-reference'
-import { getChassisAbilities, getSystemSlots, getModuleSlots, getCargoCapacity } from 'salvageunion-reference'
+import {
+  getChassisAbilities,
+  getSystemSlots,
+  getModuleSlots,
+  getCargoCapacity,
+} from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
 import { NestedActionDisplay } from '../entity/NestedActionDisplay'
