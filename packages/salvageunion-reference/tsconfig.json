@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
+    "incremental": true,
     "target": "ES2020",
     "module": "nodenext",
     "lib": ["ES2020"],
@@ -12,5 +13,5 @@
     "types": ["node", "bun-types"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "tools"]
 }

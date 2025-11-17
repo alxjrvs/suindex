@@ -1,0 +1,89 @@
+---
+description: TanStack Query hook patterns and conventions
+globs:
+  - 'apps/suref-web/src/hooks/**/*.ts'
+  - 'apps/suref-web/src/hooks/**/*.tsx'
+alwaysApply: false
+---
+
+# TanStack Query Hook Patterns
+
+## Hook Structure
+
+All data fetching hooks follow this pattern:
+
+1. Query key factory at the top
+2. `useQuery` hooks for fetching
+3. `useMutation` hooks for updates
+4. Support for both API-backed and local (cache-only) data
+
+## Query Key Factories
+
+- Export a query key factory object (e.g., `pilotsKeys`, `mechsKeys`)
+- Use hierarchical keys: `['resource', 'subresource', id]`
+- Example: `pilotsKeys.all`, `pilotsKeys.detail(id)`, `pilotsKeys.forCrawler(crawlerId)`
+
+## Hook Naming
+
+- `use*` for queries (e.g., `usePilot`, `usePilots`)
+- `useHydrated*` for hydrated entities with related data (e.g., `useHydratedPilot`)
+- `useUpdate*`, `useCreate*`, `useDelete*` for mutations
+- `use*Keys` for query key factories (exported, not hooks)
+
+## Local Data Support
+
+- Use `LOCAL_ID` constant for cache-only data that doesn't persist
+- Check `isLocalId(id)` before making API calls
+- Use `generateLocalId()` for new local entities
+- Use `addToCache()`, `updateInCache()`, `removeFromCache()` helpers
+
+## Mutation Patterns
+
+- Always invalidate related query keys on success
+- Use optimistic updates when possible
+- Handle errors appropriately (don't swallow them)
+
+## Examples
+
+```ts
+// Query key factory
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import type { Tables, TablesUpdate } from '@/types/database-generated.types'
+import { fetchEntity, updateEntity } from '@/lib/api'
+import { isLocalId } from '@/lib/cacheHelpers'
+
+export const pilotsKeys = {
+  all: ['pilots'] as const,
+  detail: (id: string) => [...pilotsKeys.all, id] as const,
+  forCrawler: (crawlerId: string) => [...pilotsKeys.all, 'crawler', crawlerId] as const,
+}
+
+// Query hook
+export function usePilot(id: string | undefined) {
+  return useQuery({
+    queryKey: pilotsKeys.detail(id!),
+    queryFn: () => fetchEntity<Tables<'pilots'>>('pilots', id!),
+    enabled: !!id && !isLocalId(id),
+  })
+}
+
+// Mutation hook
+export function useUpdatePilot() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: TablesUpdate<'pilots'> }) =>
+      updateEntity('pilots', id, updates),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: pilotsKeys.detail(id) })
+    },
+  })
+}
+```
+
+## Hydrated Hooks
+
+Hydrated hooks combine entity data with related data (choices, references):
+
+- Return a custom interface (e.g., `HydratedPilot`, `HydratedMech`)
+- Include the base entity plus hydrated relationships
+- Use `useQuery` to fetch base entity, then hydrate with related data

@@ -3,14 +3,30 @@
  *
  * Centralized constants for Salvage Union game rules and mechanics.
  * These values should be used throughout the application instead of hardcoded magic numbers.
+ *
+ * Note: Tech level constants and game rule defaults are imported from salvageunion-reference package
+ * to ensure a single source of truth.
  */
+
+import {
+  getTechLevels,
+  MIN_TECH_LEVEL,
+  getMaxTechLevel,
+  getScrapConversionRates,
+  PILOT_DEFAULTS,
+  CRAWLER_DEFAULTS,
+  MECH_DEFAULTS,
+} from 'salvageunion-reference'
 
 /**
  * Tech Level Constants
+ * Derived from crawler-tech-levels data in the package
  */
-export const TECH_LEVELS = [1, 2, 3, 4, 5, 6] as const
-export const MIN_TECH_LEVEL = 1
-export const MAX_TECH_LEVEL = 6
+export const TECH_LEVELS = getTechLevels() as readonly [1, 2, 3, 4, 5, 6]
+export { MIN_TECH_LEVEL, getMaxTechLevel }
+
+// For backward compatibility, export MAX_TECH_LEVEL as a value
+export const MAX_TECH_LEVEL = getMaxTechLevel()
 
 export type TechLevel = (typeof TECH_LEVELS)[number]
 
@@ -50,29 +66,9 @@ export function getCargoGridConfig(maxCapacity: number): {
 
 /**
  * Pilot Default Values
+ * Imported from package for consistency
  */
-export const PILOT_DEFAULTS = {
-  maxHP: 10,
-  maxAP: 5,
-  startingTP: 0,
-} as const
-
-/**
- * Crawler Default Values
- */
-export const CRAWLER_DEFAULTS = {
-  initialTechLevel: 1,
-  baseStructurePoints: 20,
-  baseUpgrade: 0,
-} as const
-
-/**
- * Mech Default Values
- */
-export const MECH_DEFAULTS = {
-  startingDamage: 0,
-  startingHeat: 0,
-} as const
+export { PILOT_DEFAULTS, CRAWLER_DEFAULTS, MECH_DEFAULTS }
 
 /**
  * Debounce Timings (in milliseconds)
@@ -109,15 +105,12 @@ export const ACTIVATION_CURRENCIES = {
 /**
  * Scrap Conversion Rates
  * Each tech level is worth this many TL1 scrap
+ * Derived from package data
  */
-export const SCRAP_CONVERSION_RATES: Record<TechLevel, number> = {
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-} as const
+export const SCRAP_CONVERSION_RATES: Record<TechLevel, number> = getScrapConversionRates() as Record<
+  TechLevel,
+  number
+>
 
 /**
  * Legendary Ability Cost

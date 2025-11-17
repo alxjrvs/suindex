@@ -12,7 +12,8 @@ export interface SearchOptions {
   caseSensitive?: boolean
 }
 
-// Cache for search results
+// Cache for search results with size limit
+const MAX_CACHE_SIZE = 100
 const searchCache = new Map<string, SearchResult[]>()
 
 /**
@@ -20,6 +21,38 @@ const searchCache = new Map<string, SearchResult[]>()
  */
 export function clearSearchCache(): void {
   searchCache.clear()
+}
+
+/**
+ * Get cache size
+ */
+export function getCacheSize(): number {
+  return searchCache.size
+}
+
+/**
+ * Trim cache if it exceeds max size (LRU eviction)
+ */
+function trimCache(): void {
+  if (searchCache.size > MAX_CACHE_SIZE) {
+    // Remove oldest entries (first in map)
+    const keysToRemove: string[] = []
+    let count = 0
+    const toRemove = searchCache.size - MAX_CACHE_SIZE
+
+    for (const key of searchCache.keys()) {
+      if (count < toRemove) {
+        keysToRemove.push(key)
+        count++
+      } else {
+        break
+      }
+    }
+
+    for (const key of keysToRemove) {
+      searchCache.delete(key)
+    }
+  }
 }
 
 export interface SearchResult {
@@ -228,8 +261,9 @@ export function search(options: SearchOptions): SearchResult[] {
   // Apply limit after sorting
   const finalResults = limit && results.length > limit ? results.slice(0, limit) : results
 
-  // Cache the results
+  // Cache the results (with size management)
   searchCache.set(cacheKey, finalResults)
+  trimCache()
 
   return finalResults
 }

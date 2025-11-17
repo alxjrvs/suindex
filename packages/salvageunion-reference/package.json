@@ -8,12 +8,24 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./lib/index.ts",
+      "development": "./lib/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./data/*": "./data/*",
-    "./schemas/*": "./schemas/*"
+    "./data/*": {
+      "types": "./data/*.d.ts",
+      "import": "./data/*.json",
+      "default": "./data/*.json"
+    },
+    "./schemas/*": {
+      "types": "./schemas/*.d.ts",
+      "import": "./schemas/*.json",
+      "default": "./schemas/*.json"
+    },
+    "./package.json": "./package.json"
   },
+  "sideEffects": false,
   "files": [
     "dist",
     "lib",
@@ -23,8 +35,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "rm -rf dist && bun test && bun run docs && bun run generate && tsc --project tsconfig.build.json && bun run format && bun run lint",
+    "build": "rm -rf dist && bun test && npm-run-all --parallel docs generate && tsc --project tsconfig.build.json && npm-run-all --parallel format lint",
     "build:quick": "bun run generate && tsc --project tsconfig.build.json",
+    "build:incremental": "bun run generate && tsc --project tsconfig.build.json --incremental",
+    "watch": "bun run generate && tsc --project tsconfig.build.json --watch",
+    "watch:quick": "tsc --project tsconfig.build.json --watch",
     "prepare": "bun run generate && tsc --project tsconfig.build.json",
     "prepublishOnly": "bun run build && bun run typecheck",
     "validate:ids": "tsx tools/checkUniqueIds.ts",
@@ -61,7 +76,11 @@
     "orm",
     "typescript",
     "mech",
-    "post-apocalyptic"
+    "post-apocalyptic",
+    "reference-data",
+    "game-mechanics",
+    "schema-validation",
+    "type-safe"
   ],
   "author": "Alex Jarvis",
   "license": "Salvage Union Open Game Licence 1.0b",
