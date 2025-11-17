@@ -171,18 +171,16 @@ function validateGenerated(): boolean {
       const newContent = fs.readFileSync(file, 'utf-8')
       const originalNormalized = normalizeContent(originalContent)
       const newNormalized = normalizeContent(newContent)
-      
+
       if (originalNormalized !== newNormalized) {
         // Find first difference
         const originalLines = originalNormalized.split('\n')
         const newLines = newNormalized.split('\n')
         const maxLines = Math.max(originalLines.length, newLines.length)
-        
+
         for (let i = 0; i < Math.min(maxLines, 10); i++) {
           if (originalLines[i] !== newLines[i]) {
-            console.error(
-              `   First difference at line ${i + 1}:`
-            )
+            console.error(`   First difference at line ${i + 1}:`)
             if (originalLines[i] !== undefined) {
               console.error(`   Original: ${JSON.stringify(originalLines[i].substring(0, 100))}`)
             }
@@ -193,7 +191,7 @@ function validateGenerated(): boolean {
           }
         }
       }
-      
+
       allValid = false
       staleFiles.push(file)
     } else {
