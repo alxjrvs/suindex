@@ -1811,23 +1811,24 @@
         "name": "Auto-Turret",
         "content": [
           {
-            "type": "paragraph",
-            "value": "An Auto-Turret uses the same rules as Mechs for attaching Systems and Modules; taking damage and being repaired; as well as Heat Advanced Engineer Tree and Heat Checks. Your Auto-Turret cannot Push"
+            "value": "You construct an immobile Auto-Turret and train yourself in using it. Only you may use the Auto-Turret. It is powered by a simple reactor and controlled by a rudimentary A.I. It can be used to defend an area and obey simple commands. It acts independently of you, and has its own turn in the round.",
+            "type": "paragraph"
           },
           {
-            "type": "list-item",
+            "value": "An Auto-Turret uses the same rules as Mechs for attaching Systems and Modules; taking damage and being repaired; as well as Heat and Heat Checks. Your Auto-Turret cannot Push.",
+            "type": "paragraph"
+          },
+          {
             "value": "You may deploy your Auto-Turret in a location you are in as a Turn Action.",
-            "label": "Deploy"
+            "type": "paragraph"
           },
           {
-            "type": "list-item",
-            "value": "Your Auto-Turret has a Tech Level equal to your Union Crawler. Your Auto-Turret is upgraded along with your Union Crawler, it gains addi- tional stats as shown for each Tech level above the first. ",
-            "label": "Upgrades"
+            "value": "Your Auto-Turret has a unique personality.  Choose this or roll on the A.I. Personality Table p. 91. Name your Auto-Turret if you want to get especially attached.",
+            "type": "paragraph"
           },
           {
-            "type": "list-item",
-            "value": "If your Auto-Turret becomes destroyed or is misplaced you can acquire a new one during Downtime. You may only ever have one Auto-Turret at a time.  ",
-            "label": "Customisation"
+            "value": "Your Auto-Turret has a Tech Level equal to your Union Crawler. Your Auto-Turret is upgraded along with your Union Crawler, it gains additional stats as shown for each Tech level above the first.",
+            "type": "paragraph"
           }
         ]
       }

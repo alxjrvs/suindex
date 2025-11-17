@@ -39,7 +39,7 @@ export function EntityGrants() {
   return (
     <VStack gap={spacing.smallGap} alignItems="stretch" px="2">
       <Box mb={spacing.minimalGap}>
-        <EntitySubheader disabled={true} label="Selecting this grants:" />
+        <EntitySubheader disabled={true} label="Grants:" />
       </Box>
       <VStack gap={spacing.contentPadding} alignItems="start">
         {grantedEntities.map(({ entity, schemaName }, idx) => (

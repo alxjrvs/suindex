@@ -107,10 +107,8 @@ export const ACTIVATION_CURRENCIES = {
  * Each tech level is worth this many TL1 scrap
  * Derived from package data
  */
-export const SCRAP_CONVERSION_RATES: Record<TechLevel, number> = getScrapConversionRates() as Record<
-  TechLevel,
-  number
->
+export const SCRAP_CONVERSION_RATES: Record<TechLevel, number> =
+  getScrapConversionRates() as Record<TechLevel, number>
 
 /**
  * Legendary Ability Cost

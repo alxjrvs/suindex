@@ -5,8 +5,6 @@
  * Type guards and property extractors generated from JSON schemas
  */
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import type { SURefMetaEntity } from './types/index.js'
 // ============================================================================
 // TYPE GUARDS

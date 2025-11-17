@@ -1,97 +1,97 @@
 {
-  "hash": "3c4161b3",
+  "hash": "8d413d25",
   "configHash": "2aa93887",
-  "lockfileHash": "413530c8",
-  "browserHash": "2e40afa5",
+  "lockfileHash": "eacc6fb6",
+  "browserHash": "03966064",
   "optimized": {
     "react": {
       "src": "../../../../node_modules/.bun/react@19.2.0/node_modules/react/index.js",
       "file": "react.js",
-      "fileHash": "fd7ba83c",
+      "fileHash": "a346dff8",
       "needsInterop": true
     },
     "react-dom": {
       "src": "../../../../node_modules/.bun/react-dom@19.2.0+2f44e903108183df/node_modules/react-dom/index.js",
       "file": "react-dom.js",
-      "fileHash": "538718a9",
+      "fileHash": "4d18ff7f",
       "needsInterop": true
     },
     "@tanstack/react-router": {
       "src": "../../../../node_modules/.bun/@tanstack+react-router@1.136.1+2b5434204782a989/node_modules/@tanstack/react-router/dist/esm/index.js",
       "file": "@tanstack_react-router.js",
-      "fileHash": "eec3e5ff",
+      "fileHash": "2ce01453",
       "needsInterop": false
     },
     "@tanstack/react-query": {
       "src": "../../../../node_modules/.bun/@tanstack+react-query@5.90.9+2f44e903108183df/node_modules/@tanstack/react-query/build/modern/index.js",
       "file": "@tanstack_react-query.js",
-      "fileHash": "741bb4fe",
+      "fileHash": "72fe5c43",
       "needsInterop": false
     },
     "@supabase/supabase-js": {
       "src": "../../../../node_modules/.bun/@supabase+supabase-js@2.81.1/node_modules/@supabase/supabase-js/dist/module/index.js",
       "file": "@supabase_supabase-js.js",
-      "fileHash": "36ba1884",
+      "fileHash": "51964590",
       "needsInterop": false
     },
     "react/jsx-dev-runtime": {
       "src": "../../../../node_modules/.bun/react@19.2.0/node_modules/react/jsx-dev-runtime.js",
       "file": "react_jsx-dev-runtime.js",
-      "fileHash": "7c93e46d",
+      "fileHash": "92836a2e",
       "needsInterop": true
     },
     "react/jsx-runtime": {
       "src": "../../../../node_modules/.bun/react@19.2.0/node_modules/react/jsx-runtime.js",
       "file": "react_jsx-runtime.js",
-      "fileHash": "6de008d2",
+      "fileHash": "0c60a762",
       "needsInterop": true
     },
     "react-dom/client": {
       "src": "../../../../node_modules/.bun/react-dom@19.2.0+2f44e903108183df/node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "b98246d6",
+      "fileHash": "faf659f7",
       "needsInterop": true
     },
     "@tanstack/react-router > @tanstack/react-store": {
       "src": "../../../../node_modules/.bun/@tanstack+react-store@0.8.0+2b5434204782a989/node_modules/@tanstack/react-store/dist/esm/index.js",
       "file": "@tanstack_react-router___@tanstack_react-store.js",
-      "fileHash": "2acc251e",
+      "fileHash": "330f9df5",
       "needsInterop": false
     },
     "@chakra-ui/react": {
       "src": "../../../../node_modules/.bun/@chakra-ui+react@3.29.0+dfa7eb8500303908/node_modules/@chakra-ui/react/dist/esm/index.js",
       "file": "@chakra-ui_react.js",
-      "fileHash": "7cd5c64a",
+      "fileHash": "29cdeae6",
       "needsInterop": false
     },
     "@randsum/roller": {
       "src": "../../../../node_modules/.bun/@randsum+roller@0.27.0/node_modules/@randsum/roller/dist/index.js",
       "file": "@randsum_roller.js",
-      "fileHash": "d7262dcc",
+      "fileHash": "11efce5c",
       "needsInterop": false
     },
     "@randsum/salvageunion": {
       "src": "../../../../node_modules/.bun/@randsum+salvageunion@0.37.0/node_modules/@randsum/salvageunion/dist/index.js",
       "file": "@randsum_salvageunion.js",
-      "fileHash": "c27e7447",
+      "fileHash": "c4e5189a",
       "needsInterop": false
     },
     "@tanstack/react-form": {
       "src": "../../../../node_modules/.bun/@tanstack+react-form@1.25.0+2b5434204782a989/node_modules/@tanstack/react-form/dist/esm/index.js",
       "file": "@tanstack_react-form.js",
-      "fileHash": "d8de1cc0",
+      "fileHash": "8e00ac23",
       "needsInterop": false
     },
     "@tanstack/react-virtual": {
       "src": "../../../../node_modules/.bun/@tanstack+react-virtual@3.13.12+2b5434204782a989/node_modules/@tanstack/react-virtual/dist/esm/index.js",
       "file": "@tanstack_react-virtual.js",
-      "fileHash": "13451b82",
+      "fileHash": "d7d92fca",
       "needsInterop": false
     },
     "zod": {
       "src": "../../../../node_modules/.bun/zod@3.25.76/node_modules/zod/index.js",
       "file": "zod.js",
-      "fileHash": "dd50b93b",
+      "fileHash": "077aa1f2",
       "needsInterop": false
     }
   },

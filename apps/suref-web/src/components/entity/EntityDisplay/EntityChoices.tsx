@@ -35,7 +35,7 @@ export function EntityChoices({ userChoices, onChoiceSelection }: EntityChoicesP
   }
 
   return (
-    <VStack gap={spacing.smallGap} alignItems="stretch" px="2" pb={spacing.contentPadding}>
+    <VStack gap={spacing.smallGap} alignItems="stretch" px="2" pb={spacing.contentPadding * 2}>
       {entityChoices.map((choice) => {
         return (
           <EntityChoice

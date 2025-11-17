@@ -4991,7 +4991,7 @@ function createScope(props45) {
 }
 
 // ../../node_modules/.bun/@ark-ui+react@5.27.1+2b5434204782a989/node_modules/@ark-ui/react/dist/components/factory.js
-var import_react13 = __toESM(require_react());
+var import_react13 = __toESM(require_react(), 1);
 
 // ../../node_modules/.bun/@ark-ui+react@5.27.1+2b5434204782a989/node_modules/@ark-ui/react/dist/utils/compose-refs.js
 function composeRefs(...refs) {
