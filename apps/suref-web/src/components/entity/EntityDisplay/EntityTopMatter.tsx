@@ -48,7 +48,7 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
         h="full"
         minW="0"
       >
-        {showContent && <ContentBlockRenderer content={contentBlocks!} fontSize={fontSize.sm} />}
+        {showContent && <ContentBlockRenderer content={contentBlocks!} fontSize={fontSize.sm} compact={compact} />}
         {schemaName === 'chassis' && getChassisAbilities(data) && (!hideActions || compact) && (
           <EntityChassisAbilitiesContent />
         )}
