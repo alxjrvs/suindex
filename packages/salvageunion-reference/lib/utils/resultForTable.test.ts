@@ -51,7 +51,7 @@ const mockFlatTable: SURefRollTable = {
 
 const mockFullTable: SURefRollTable = {
   id: 'test-full',
-  source: 'Salvage Union Workshop Manual',
+  source: 'core',
   name: 'Test Full',
   section: 'test',
   table: {
@@ -75,7 +75,7 @@ const mockFullTable: SURefRollTable = {
     '18': 'Full Result 18',
     '19': 'Full Result 19',
     '20': 'Full Result 20',
-    type: 'flat',
+    type: 'full',
   },
   page: 1,
 }
