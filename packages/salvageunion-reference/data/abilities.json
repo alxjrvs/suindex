@@ -2581,7 +2581,31 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are able to trade for various contraband and illegally acquired goods on the Black Market. All of these things, even in the wasteland, are blacklisted from use and often considered cruel and unusual. Your Union Crawler gains permanent access to a Black Market. In addition, when you are in a settlement in the wastelands you can find a Black Market contact to trade with. You can purchase any of the below items from the Black Market for an amount of Scrap equal to their Salvage Value of their Tech Level or higher. The Mediator may also offer you additional Black Market items as they see fit."
+            "value": "You are able to trade for various contraband and illegally acquired goods on the Black Market. All of these things, even in the wasteland, are blacklisted from use and often considered cruel and unusual. Your Union Crawler gains permanent access to a Black Market. In addition, when you are in a settlement in the wastelands you can find a Black Market contact to trade with."
+          },
+          {
+            "type": "paragraph",
+            "value": "You can purchase any of the below items from the Black Market for an amount of Scrap equal to their Salvage Value of their Tech Level or higher. The Mediator may also offer you additional Black Market items as they see fit."
+          }
+        ],
+        "choices": [
+          {
+            "id": "64c7bec9-fe16-4c57-af5c-5441e6fc961d",
+            "name": "Black Market Modules",
+            "schema": ["modules"],
+            "schemaEntities": ["Goflow Plant Growing System", "Corrupted Neuralink Module"]
+          },
+          {
+            "id": "ae51286a-64c8-416f-a052-81ef0869d4cc",
+            "name": "Black Market Systems",
+            "schema": ["systems"],
+            "schemaEntities": ["Napalm Launcher", "Rad Wave Generator"]
+          },
+          {
+            "id": "3df10ce5-ef5d-44a5-8a64-949a6e56bed6",
+            "name": "Black Market Pilot Equipment",
+            "schema": ["equipment"],
+            "schemaEntities": ["Blinding Blue Laser Rifle"]
           }
         ]
       }

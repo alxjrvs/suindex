@@ -1,0 +1,87 @@
+---
+description: React component patterns and conventions for suref-web
+globs:
+  - "apps/suref-web/src/components/**/*.tsx"
+  - "apps/suref-web/src/routes/**/*.tsx"
+alwaysApply: false
+---
+
+# React Component Patterns
+
+## Component Structure
+
+- Use functional components with TypeScript
+- Define props interfaces at the top of the file
+- Use named exports for components (not default exports, except for route components)
+- Route components in `src/routes/` can use default exports for TanStack Router
+
+## Component Organization
+
+- **Shared components**: `src/components/shared/` - Reusable UI components
+- **Feature components**: `src/components/{FeatureName}/` - Feature-specific components
+- **Base components**: `src/components/base/` - Typography and foundational components
+- **Entity components**: `src/components/entity/` - Entity display and selection components
+
+## Chakra UI Usage
+
+- Use Chakra UI v3 components from `@chakra-ui/react`
+- Use the theme system defined in `src/theme.ts`
+- Prefer Chakra's `VStack`, `HStack`, `Flex`, `Box` for layout
+- Use theme colors: `su.green`, `su.lightBlue`, `su.mediumGrey`, etc.
+
+## Component Patterns
+
+### Live Sheet Components
+Live sheets (PilotLiveSheet, MechLiveSheet, CrawlerLiveSheet) follow this pattern:
+- Use `LiveSheetLayout` wrapper
+- Use `LiveSheetControlBar` for actions
+- Use `LiveSheetLoadingState`, `LiveSheetNotFoundState`, `LiveSheetErrorState` for states
+- Implement realtime subscriptions via `useLiveSheetSubscriptions`
+
+### Entity Display Components
+- Use `EntityDisplay` for showing reference data
+- Use `EntitySelectionModal` for selecting entities
+- Support pattern selection via URL query params when applicable
+
+## Props and State
+
+- Prefer props over context when possible
+- Use TanStack Query hooks for server state
+- Use React state for local UI state
+- Use `useHydrated*` hooks (e.g., `useHydratedPilot`, `useHydratedMech`) for entity data
+
+## Examples
+
+```tsx
+// Component with props interface
+import { VStack } from '@chakra-ui/react'
+import { useHydratedMech } from '@/hooks/mech'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import type { Tables } from '@/types/database-generated.types'
+
+interface MyComponentProps {
+  id: string
+  isEditable?: boolean
+}
+
+export function MyComponent({ id, isEditable = false }: MyComponentProps) {
+  const { mech } = useHydratedMech(id)
+  // Component implementation
+}
+```
+
+```tsx
+// Route component (default export allowed)
+import { createFileRoute } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { fetchEntity } from '@/lib/api'
+import type { Tables } from '@/types/database-generated.types'
+
+export const Route = createFileRoute('/my-route')({
+  component: MyRoute,
+})
+
+export default function MyRoute() {
+  return <div>Route content</div>
+}
+```

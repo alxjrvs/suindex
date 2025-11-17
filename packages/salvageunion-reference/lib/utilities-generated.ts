@@ -5,48 +5,7 @@
  * Type guards and property extractors generated from JSON schemas
  */
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import type { SURefMetaEntity } from './types/index.js'
-import type {
-  SURefAbility,
-  SURefAbilityTreeRequirement,
-  SURefBioTitan,
-  SURefChassis,
-  SURefAdvancedClass,
-  SURefCoreClass,
-  SURefCrawlerBay,
-  SURefCrawlerTechLevel,
-  SURefCrawler,
-  SURefCreature,
-  SURefDistance,
-  SURefDrone,
-  SURefEquipment,
-  SURefKeyword,
-  SURefMeld,
-  SURefModule,
-  SURefNPC,
-  SURefRollTable,
-  SURefSquad,
-  SURefSystem,
-  SURefTrait,
-  SURefVehicle
-} from './types/index.js'
-import type {
-  SURefMetaAction,
-  SURefMetaContent,
-  SURefMetaNpc,
-  SURefMetaTable,
-  SURefMetaTechLevelEffects,
-  SURefMetaBonusPerTechLevel,
-  SURefMetaTraits,
-  SURefMetaGrant,
-  SURefMetaSystems,
-  SURefMetaModules,
-  SURefMetaChoices,
-  SURefMetaPattern
-} from './types/objects.js'
-
 // ============================================================================
 // TYPE GUARDS
 // ============================================================================
@@ -218,6 +177,24 @@ export function isSquad(entity: SURefMetaEntity): entity is SURefSquad {
   )
 }
 
+
+// Import types used in type guards
+import type {
+  SURefAbility,
+  SURefAbilityTreeRequirement,
+  SURefBioTitan,
+  SURefChassis,
+  SURefCoreClass,
+  SURefCrawler,
+  SURefCrawlerBay,
+  SURefCrawlerTechLevel,
+  SURefCreature,
+  SURefEquipment,
+  SURefMeld,
+  SURefNPC,
+  SURefRollTable,
+  SURefSquad
+} from './types/index.js'
 // ============================================================================
 // PROPERTY EXTRACTORS
 // ============================================================================
@@ -551,3 +528,17 @@ export function getDamageType(entity: SURefMetaEntity): string | undefined {
     : undefined
 }
 
+
+// Import meta types used in property extractors
+import type {
+  SURefMetaAction,
+  SURefMetaBonusPerTechLevel,
+  SURefMetaChoices,
+  SURefMetaContent,
+  SURefMetaGrant,
+  SURefMetaNpc,
+  SURefMetaPattern,
+  SURefMetaTable,
+  SURefMetaTechLevelEffects,
+  SURefMetaTraits
+} from './types/objects.js'

@@ -9,6 +9,7 @@ interface EntityDisplayProps {
   defaultExpanded?: boolean
   onClick?: () => void
   hideActions?: boolean
+  hideChoices?: boolean
 }
 
 /**
@@ -28,6 +29,7 @@ export function createEntityDisplay(
     defaultExpanded = true,
     onClick,
     hideActions = false,
+    hideChoices = false,
   }: EntityDisplayProps) => {
     return (
       <EntityDisplay
@@ -38,6 +40,7 @@ export function createEntityDisplay(
         defaultExpanded={defaultExpanded}
         onClick={onClick}
         hideActions={hideActions}
+        hideChoices={hideChoices}
       />
     )
   }

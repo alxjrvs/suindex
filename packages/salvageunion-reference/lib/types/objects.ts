@@ -35,6 +35,7 @@ export interface SURefMetaBaseEntity {
   content?: SURefMetaContent
   id: SURefId
   indexable?: boolean
+  blackMarket?: boolean
   name: SURefName
   source: SURefSource
   page: SURefPositiveInteger
@@ -346,6 +347,10 @@ export type SURefMetaTable =
       '19': string
       '20': string
       type: 'flat'
+    }
+  | {
+      '20': string
+      type: 'dramatic'
     }
 
 export type SURefMetaActionOptions = {

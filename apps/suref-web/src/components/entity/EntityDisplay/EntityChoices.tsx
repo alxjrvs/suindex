@@ -13,12 +13,17 @@ export interface EntityChoicesProps {
 }
 
 export function EntityChoices({ userChoices, onChoiceSelection }: EntityChoicesProps) {
-  const { data, spacing, fontSize } = useEntityDisplayContext()
+  const { data, spacing, fontSize, hideChoices } = useEntityDisplayContext()
 
   // Get choices using the utility function (checks single action first, then root-level)
   const entityChoices: SURefMetaChoice[] = getChoices(data) || []
 
   if (entityChoices.length === 0) {
+    return null
+  }
+
+  // Don't render choices if hideChoices is true
+  if (hideChoices) {
     return null
   }
 
@@ -35,7 +40,7 @@ export function EntityChoices({ userChoices, onChoiceSelection }: EntityChoicesP
   }
 
   return (
-    <VStack gap={spacing.smallGap} alignItems="stretch" px="2">
+    <VStack gap={spacing.smallGap} alignItems="stretch" px="2" pb={spacing.contentPadding * 2}>
       {entityChoices.map((choice) => {
         return (
           <EntityChoice

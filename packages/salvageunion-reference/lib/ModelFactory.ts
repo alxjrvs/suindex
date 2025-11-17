@@ -1,6 +1,10 @@
 /**
  * Model Factory - Auto-generates models from schema catalog
  * Uses static imports for synchronous data loading
+ *
+ * Note: Current implementation loads all data at import time for synchronous access.
+ * Future optimization: Consider lazy loading schemas on first access for better
+ * code splitting and initial bundle size reduction.
  */
 import { BaseModel } from './BaseModel.js'
 import schemaIndex from '../schemas/index.json' with { type: 'json' }

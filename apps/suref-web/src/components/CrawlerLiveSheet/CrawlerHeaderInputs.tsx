@@ -108,6 +108,7 @@ export function CrawlerHeaderInputs({
       const timer = setTimeout(() => setFlashUpkeep(false), 3100)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [flashUpkeep])
 
   useEffect(() => {
@@ -115,6 +116,7 @@ export function CrawlerHeaderInputs({
       const timer = setTimeout(() => setFlashTL(false), 3100)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [flashTL])
 
   useEffect(() => {
@@ -122,6 +124,7 @@ export function CrawlerHeaderInputs({
       const timer = setTimeout(() => setFlashUpgradeDisplay(false), 3100)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [flashUpgradeDisplay])
 
   useEffect(() => {
@@ -129,6 +132,7 @@ export function CrawlerHeaderInputs({
       const timer = setTimeout(() => setFlashSP(false), 3100)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [flashSP])
 
   return (

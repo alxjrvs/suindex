@@ -1,0 +1,82 @@
+---
+description: Monorepo workspace patterns and conventions
+alwaysApply: true
+---
+
+# Monorepo Patterns
+
+This is a Bun workspace monorepo with the following structure:
+
+- `apps/suref-web/` - Main web application (React + TanStack Start)
+- `packages/salvageunion-reference/` - Reference data package (TypeScript ORM)
+
+## Workspace Conventions
+
+- Use `bun` as the package manager (not npm/yarn)
+- Workspace dependencies use `workspace:*` protocol
+- Root scripts use `bun --filter` to target specific packages
+- Package builds must run before app builds: `bun run build:package && bun --filter suref-web build`
+
+## Development Workflow
+
+- **Quick dev**: `bun run dev` (builds package quickly, then starts app)
+- **Watch mode**: `bun run dev:watch` (watches package changes and app)
+- **Type checking**: `bun run typecheck` (checks all packages)
+- **Linting**: `bun run lint` (app only) or `bun run lint:all` (all packages)
+
+## Package Dependencies
+
+- `salvageunion-reference` is a workspace package imported as `salvageunion-reference`
+- Always build the package before importing in the app during development
+- Package exports: main entry (`./lib/index.ts`), data files (`./data/*.json`), schemas (`./schemas/*.json`)
+
+## File Paths and Imports
+
+- **Use TypeScript path aliases** instead of relative imports when possible
+- Configure path aliases in `tsconfig.json` and `vite.config.ts`
+- Recommended alias: `@/` maps to `src/` directory
+- Workspace packages resolve automatically via Bun workspace protocol
+- Generated files (like `routeTree.gen.ts`, `database-generated.types.ts`) are ignored in linting
+
+### Path Alias Setup
+
+Add to `apps/suref-web/tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+Add to `apps/suref-web/vite.config.ts`:
+
+```ts
+resolve: {
+  alias: {
+    '@': path.resolve(__dirname, './src'),
+    'salvageunion-reference': path.resolve(__dirname, '../../packages/salvageunion-reference'),
+  },
+}
+```
+
+### Import Examples
+
+**Prefer path aliases:**
+
+```ts
+import { useHydratedPilot } from '@/hooks/pilot'
+import type { Tables } from '@/types/database-generated.types'
+import { supabase } from '@/lib/supabase'
+```
+
+**Avoid deep relative imports:**
+
+```ts
+// ❌ Avoid
+import { useHydratedPilot } from '../../../hooks/pilot'
+```

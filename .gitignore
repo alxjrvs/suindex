@@ -20,6 +20,10 @@ dist-ssr
 *.tsbuildinfo
 core
 
+# Vite
+.vite
+apps/suref-web/.vite
+
 # Environment variables
 .env
 .env.local

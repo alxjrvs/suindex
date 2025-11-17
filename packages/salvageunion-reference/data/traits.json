@@ -372,6 +372,18 @@
     ]
   },
   {
+    "id": "74424bf1-fbd1-4d39-88aa-f00761ef678d",
+    "source": "Salvage Union Workshop Manual",
+    "name": "portable",
+    "page": 30,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "This Entity takes up 2 Inventory Slots."
+      }
+    ]
+  },
+  {
     "id": "c6ba1dd7-7ab4-4500-9f9e-a12e5bc2d7b3",
     "source": "Salvage Union Workshop Manual",
     "name": "pinning",

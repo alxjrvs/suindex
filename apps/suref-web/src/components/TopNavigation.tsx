@@ -115,7 +115,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                     h="auto"
                     w={{ base: 'full', lg: 'auto' }}
                   >
-                    Schema
+                    Reference
                   </Button>
                 </Menu.Trigger>
                 <Portal>

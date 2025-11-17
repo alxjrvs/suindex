@@ -1,17 +1,15 @@
-import js from '@eslint/js'
-import tseslint from 'typescript-eslint'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import { baseConfig } from '../../eslint.config.base.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', '**/*.d.ts', 'lib/*.template.ts'],
+    ignores: ['dist/**', 'node_modules/**', '**/*.d.ts', 'lib/*.template.ts', 'tools/**'],
   },
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...baseConfig,
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -19,10 +17,6 @@ export default [
         tsconfigRootDir: __dirname,
         project: ['./tsconfig.json'],
       },
-    },
-    rules: {
-      semi: ['error', 'never'],
-      'no-extra-semi': 'error',
     },
   },
 ]

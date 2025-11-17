@@ -1,19 +1,31 @@
 {
   "name": "salvageunion-reference",
-  "version": "2.1.8",
+  "version": "2.1.10",
   "description": "Comprehensive, schema-validated JSON dataset and TypeScript ORM for the Salvage Union tabletop RPG",
   "type": "module",
   "main": "./lib/index.ts",
-  "types": "./dist/index.d.ts",
+  "types": "./lib/index.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./lib/index.ts",
+      "development": "./lib/index.ts",
       "import": "./lib/index.ts",
-      "default": "./dist/index.js"
+      "require": "./lib/index.ts",
+      "default": "./lib/index.ts"
     },
-    "./data/*": "./data/*",
-    "./schemas/*": "./schemas/*"
+    "./data/*": {
+      "types": "./data/*.d.ts",
+      "import": "./data/*.json",
+      "default": "./data/*.json"
+    },
+    "./schemas/*": {
+      "types": "./schemas/*.d.ts",
+      "import": "./schemas/*.json",
+      "default": "./schemas/*.json"
+    },
+    "./package.json": "./package.json"
   },
+  "sideEffects": false,
   "files": [
     "dist",
     "lib",
@@ -23,8 +35,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "rm -rf dist && bun test && bun run docs && bun run generate && tsc --project tsconfig.build.json && bun run format && bun run lint",
+    "build": "rm -rf dist && bun test && npm-run-all --parallel docs generate && tsc --project tsconfig.build.json && npm-run-all --parallel format lint",
     "build:quick": "bun run generate && tsc --project tsconfig.build.json",
+    "build:incremental": "bun run generate && tsc --project tsconfig.build.json --incremental",
+    "watch": "bun run generate && tsc --project tsconfig.build.json --watch",
+    "watch:quick": "tsc --project tsconfig.build.json --watch",
     "prepare": "bun run generate && tsc --project tsconfig.build.json",
     "prepublishOnly": "bun run build && bun run typecheck",
     "validate:ids": "tsx tools/checkUniqueIds.ts",
@@ -61,7 +76,11 @@
     "orm",
     "typescript",
     "mech",
-    "post-apocalyptic"
+    "post-apocalyptic",
+    "reference-data",
+    "game-mechanics",
+    "schema-validation",
+    "type-safe"
   ],
   "author": "Alex Jarvis",
   "license": "Salvage Union Open Game Licence 1.0b",

@@ -1811,27 +1811,63 @@
         "name": "Auto-Turret",
         "content": [
           {
-            "type": "paragraph",
-            "value": "An Auto-Turret uses the same rules as Mechs for attaching Systems and Modules; taking damage and being repaired; as well as Heat Advanced Engineer Tree and Heat Checks. Your Auto-Turret cannot Push"
+            "value": "You construct an immobile Auto-Turret and train yourself in using it. Only you may use the Auto-Turret. It is powered by a simple reactor and controlled by a rudimentary A.I. It can be used to defend an area and obey simple commands. It acts independently of you, and has its own turn in the round.",
+            "type": "paragraph"
           },
           {
-            "type": "list-item",
+            "value": "An Auto-Turret uses the same rules as Mechs for attaching Systems and Modules; taking damage and being repaired; as well as Heat and Heat Checks. Your Auto-Turret cannot Push.",
+            "type": "paragraph"
+          },
+          {
             "value": "You may deploy your Auto-Turret in a location you are in as a Turn Action.",
-            "label": "Deploy"
+            "type": "paragraph"
           },
           {
-            "type": "list-item",
-            "value": "Your Auto-Turret has a Tech Level equal to your Union Crawler. Your Auto-Turret is upgraded along with your Union Crawler, it gains addi- tional stats as shown for each Tech level above the first. ",
-            "label": "Upgrades"
+            "value": "Your Auto-Turret has a unique personality.  Choose this or roll on the A.I. Personality Table p. 91. Name your Auto-Turret if you want to get especially attached.",
+            "type": "paragraph"
           },
           {
-            "type": "list-item",
-            "value": "If your Auto-Turret becomes destroyed or is misplaced you can acquire a new one during Downtime. You may only ever have one Auto-Turret at a time.  ",
-            "label": "Customisation"
+            "value": "Your Auto-Turret has a Tech Level equal to your Union Crawler. Your Auto-Turret is upgraded along with your Union Crawler, it gains additional stats as shown for each Tech level above the first.",
+            "type": "paragraph"
           }
         ]
       }
     ],
     "id": "f5f04072-9e81-4c9d-a835-b71f45120d66"
+  },
+  {
+    "id": "fbb3002c-24d2-4a1b-a623-9c9eab3ac566",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Blinding Blue Laser Rifle",
+    "techLevel": 3,
+    "indexable": false,
+    "blackMarket": true,
+    "page": 71,
+    "actions": [
+      {
+        "id": "6de946e1-e511-4fb1-9b0a-a57f16ca24f4",
+        "range": ["Close"],
+        "damage": {
+          "damageType": "HP",
+          "amount": 3
+        },
+        "traits": [
+          {
+            "type": "energy"
+          }
+        ],
+        "table": {
+          "type": "dramatic",
+          "20": "The target suffers a Major Injury of permanent blindness."
+        },
+        "name": "Blinding Blue Laser Rifle",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "This portable laser rifle is designed to permanently blind targets shot by it. A creature hit by this weapon suffers the Minor Injury of temporary blindness in addition to the normal damage it inflicts. This costs 1 Tech 3 Scrap to purchase from the Black Market."
+          }
+        ]
+      }
+    ]
   }
 ]

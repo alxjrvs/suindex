@@ -314,3 +314,89 @@ export function getAbilitiesByLevel(level: number): SURefAbility[] {
 export function getEquipment(): SURefEquipment[] {
   return SalvageUnionReference.findAllIn('equipment', () => true)
 }
+
+// ============================================================================
+// TECH LEVEL HELPERS
+// ============================================================================
+
+/**
+ * Get all tech levels as an array of numbers
+ * Derived from crawler-tech-levels data
+ * @returns Array of tech level numbers (1-6)
+ */
+export function getTechLevels(): readonly number[] {
+  const techLevels = SalvageUnionReference.CrawlerTechLevels.all()
+    .map((tl) => tl.techLevel)
+    .sort((a, b) => a - b)
+  return techLevels as readonly number[]
+}
+
+/**
+ * Minimum tech level (always 1)
+ */
+export const MIN_TECH_LEVEL = 1
+
+/**
+ * Maximum tech level
+ * Derived from crawler-tech-levels data
+ */
+export function getMaxTechLevel(): number {
+  const techLevels = getTechLevels()
+  return techLevels[techLevels.length - 1] || 6
+}
+
+/**
+ * Get scrap conversion rate for a tech level
+ * Each tech level is worth its numeric value in TL1 scrap
+ * @param techLevel - The tech level (1-6)
+ * @returns The conversion rate (tech level value)
+ */
+export function getScrapConversionRate(techLevel: number): number {
+  return techLevel
+}
+
+/**
+ * Get all scrap conversion rates as a record
+ * @returns Record mapping tech level to conversion rate
+ */
+export function getScrapConversionRates(): Record<number, number> {
+  const techLevels = getTechLevels()
+  const rates: Record<number, number> = {}
+  for (const tl of techLevels) {
+    rates[tl] = getScrapConversionRate(tl)
+  }
+  return rates
+}
+
+// ============================================================================
+// GAME RULE CONSTANTS
+// ============================================================================
+
+/**
+ * Pilot default values
+ * These are standard starting values for pilots
+ */
+export const PILOT_DEFAULTS = {
+  maxHP: 10,
+  maxAP: 5,
+  startingTP: 0,
+} as const
+
+/**
+ * Crawler default values
+ * Derived from crawler-tech-levels data (TL1 defaults)
+ */
+export const CRAWLER_DEFAULTS = {
+  initialTechLevel: 1,
+  baseStructurePoints: 20, // TL1 structure points
+  baseUpgrade: 0,
+} as const
+
+/**
+ * Mech default values
+ * Standard starting values for mechs
+ */
+export const MECH_DEFAULTS = {
+  startingDamage: 0,
+  startingHeat: 0,
+} as const

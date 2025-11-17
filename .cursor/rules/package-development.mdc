@@ -1,0 +1,79 @@
+---
+description: Patterns for developing the salvageunion-reference package
+globs:
+  - 'packages/salvageunion-reference/**/*.ts'
+alwaysApply: false
+---
+
+# Package Development Patterns
+
+## Package Structure
+
+- `lib/` - Source TypeScript files
+- `data/` - JSON data files (game reference data)
+- `schemas/` - JSON Schema files for validation
+- `tools/` - Code generation and build scripts
+- `dist/` - Compiled output (generated, don't edit)
+
+## Code Generation
+
+The package uses code generation for:
+
+- Type definitions from JSON schemas
+- Utility functions from data patterns
+- Index file exports
+
+**Always run generation after schema/data changes:**
+
+```bash
+bun run generate
+```
+
+## BaseModel Pattern
+
+- All models extend `BaseModel<T>`
+- Models are created via `ModelFactory`
+- Use `SalvageUnionReference` singleton to access models
+- Models provide: `all()`, `find()`, `findAll()` methods
+
+## Testing
+
+- Tests use Bun's built-in test runner
+- Test files: `*.test.ts`
+- Run tests: `bun test`
+- Tests validate schema compliance and data integrity
+
+## Build Process
+
+1. **Generate**: Run code generation (`bun run generate`)
+2. **Type Check**: Compile TypeScript (`tsc --project tsconfig.build.json`)
+3. **Test**: Run test suite (`bun test`)
+4. **Format/Lint**: Format and lint code
+
+**Full build**: `bun run build` (runs all steps)
+
+**Quick build**: `bun run build:quick` (generates and compiles only)
+
+## Schema Validation
+
+- All data files must match their JSON schemas
+- Use `validateGenerated.ts` to check generated code
+- Use `validateReferences.ts` to check cross-references
+
+## Adding New Data
+
+1. Add JSON file to `data/` directory
+2. Add corresponding schema to `schemas/` directory
+3. Update `tools/schemaNameMap.ts` if needed
+4. Run `bun run generate`
+5. Run `bun test` to verify
+
+## Examples
+
+```ts
+// Using the package
+import { SalvageUnionReference, type SURefChassis } from 'salvageunion-reference'
+
+const ref = SalvageUnionReference.instance
+const chassis = ref.chassis.find((c) => c.id === 'some-id')
+```

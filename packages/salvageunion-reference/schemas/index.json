@@ -2,8 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Salvage Union Data Schema Catalog",
   "description": "Catalog of all available schemas in the salvageunion-data repository",
-  "version": "2.1.7",
-  "generated": "2025-11-17T20:18:50.109Z",
+  "version": "2.1.10",
+  "generated": "2025-11-17T22:59:58.094Z",
   "schemas": [
     {
       "id": "abilities",
@@ -143,7 +143,7 @@
       "description": "Pilot equipment and gear in Salvage Union",
       "dataFile": "data/equipment.json",
       "schemaFile": "schemas/equipment.schema.json",
-      "itemCount": 47,
+      "itemCount": 48,
       "requiredFields": ["techLevel", "actions"],
       "displayName": "Equipment"
     },
@@ -173,7 +173,7 @@
       "description": "Mech modules in Salvage Union",
       "dataFile": "data/modules.json",
       "schemaFile": "schemas/modules.schema.json",
-      "itemCount": 61,
+      "itemCount": 63,
       "requiredFields": ["name", "page"],
       "displayName": "Modules"
     },
@@ -213,7 +213,7 @@
       "description": "Mech systems in Salvage Union",
       "dataFile": "data/systems.json",
       "schemaFile": "schemas/systems.schema.json",
-      "itemCount": 96,
+      "itemCount": 98,
       "requiredFields": ["name", "page"],
       "displayName": "Systems"
     },
@@ -223,7 +223,7 @@
       "description": "Traits and special properties in Salvage Union",
       "dataFile": "data/traits.json",
       "schemaFile": "schemas/traits.schema.json",
-      "itemCount": 43,
+      "itemCount": 44,
       "requiredFields": ["name", "source", "page"],
       "displayName": "Traits"
     },

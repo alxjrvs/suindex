@@ -23,9 +23,9 @@ interface Choice {
 interface System {
   id: string
   name: string
-  action: {
+  actions?: Array<{
     choices?: Choice[]
-  }
+  }>
 }
 
 interface PatternItem {
