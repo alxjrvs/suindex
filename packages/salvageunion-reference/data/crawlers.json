@@ -116,7 +116,9 @@
           {
             "id": "49dbf700-b4b4-4718-8847-5f24dbf033a2",
             "name": "Additional Armament Bay Weapons System",
-            "schema": ["systems"],
+            "schema": [
+              "systems"
+            ],
             "content": [
               {
                 "type": "paragraph",
@@ -151,7 +153,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "a3b4c5d6-e7f8-4a9b-0c1d-2e3f4a5b6c7d",
+          "id": "8dce1bee-61a5-4ddf-b6eb-d9095a94b979",
           "name": "Name",
           "content": [
             {
@@ -221,7 +223,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "b4c5d6e7-f8a9-4b0c-1d2e-3f4a5b6c7d8e",
+          "id": "cb48cd4a-9315-4235-8b43-7b69378ccb71",
           "name": "Name",
           "content": [
             {
@@ -287,7 +289,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "c5d6e7f8-a9b0-4c1d-2e3f-4a5b6c7d8e9f",
+          "id": "7dbac16e-ad47-4847-8da1-7aa8b0b03866",
           "name": "Name",
           "content": [
             {

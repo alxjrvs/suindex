@@ -23,7 +23,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+          "id": "b8cee691-8fc9-4f0b-8e37-84c600a529f4",
           "name": "Name",
           "content": [
             {
@@ -168,7 +168,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+          "id": "e02612be-ea88-4a78-95f7-c80473d5dc15",
           "name": "Name",
           "content": [
             {
@@ -223,7 +223,9 @@
       {
         "id": "383de916-bbd6-4e34-9cfc-1b37e12178c8",
         "name": "Armament Bay Weapons System",
-        "schema": ["systems"],
+        "schema": [
+          "systems"
+        ],
         "content": [
           {
             "type": "paragraph",
@@ -238,7 +240,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+          "id": "bc5f243f-d4da-4b5b-adf8-d2644256ebc8",
           "name": "Name",
           "content": [
             {
@@ -295,7 +297,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+          "id": "5f0c5c0e-dbc0-4986-9b5f-15dcfcd449c6",
           "name": "Name",
           "content": [
             {
@@ -381,7 +383,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
+          "id": "bbb0c746-bc4e-437b-b0bd-7e4fcf41db5c",
           "name": "Name",
           "content": [
             {
@@ -466,7 +468,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "a7b8c9d0-e1f2-4a3b-4c5d-6e7f8a9b0c1d",
+          "id": "1037371d-8cb5-405b-9012-002bbbb6b593",
           "name": "Name",
           "content": [
             {
@@ -605,7 +607,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "b8c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e",
+          "id": "f2b3bb80-66a4-40a7-898e-f5277cc3bbc3",
           "name": "Name",
           "content": [
             {
@@ -662,7 +664,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "c9d0e1f2-a3b4-4c5d-6e7f-8a9b0c1d2e3f",
+          "id": "ac8644f0-057e-495f-a2ae-6f7b969a8b96",
           "name": "Name",
           "content": [
             {
@@ -730,7 +732,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "d0e1f2a3-b4c5-4d6e-7f8a-9b0c1d2e3f4a",
+          "id": "fc65d681-22b8-44bc-a72d-cc4cf33d1c0b",
           "name": "Name",
           "content": [
             {
