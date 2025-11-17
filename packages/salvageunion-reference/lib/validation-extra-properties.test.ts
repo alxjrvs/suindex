@@ -47,9 +47,7 @@ beforeAll(() => {
 
   for (const sharedInfo of sharedSchemas) {
     const sharedPath = join(__dirname, '..', sharedInfo.path)
-    const sharedSchema = JSON.parse(
-      readFileSync(sharedPath, 'utf-8')
-    ) as JSONSchemaObject
+    const sharedSchema = JSON.parse(readFileSync(sharedPath, 'utf-8')) as JSONSchemaObject
     ajv.addSchema(sharedSchema, sharedInfo.relativeId)
   }
 })
@@ -60,9 +58,7 @@ describe('Extra Properties Validation', () => {
 
     beforeAll(() => {
       const schemaPath = join(__dirname, '../schemas/abilities.schema.json')
-      const schema = JSON.parse(
-        readFileSync(schemaPath, 'utf-8')
-      ) as JSONSchemaObject
+      const schema = JSON.parse(readFileSync(schemaPath, 'utf-8')) as JSONSchemaObject
       validate = ajv.compile(schema)
     })
 
@@ -126,9 +122,7 @@ describe('Extra Properties Validation', () => {
 
     beforeAll(() => {
       const schemaPath = join(__dirname, '../schemas/chassis.schema.json')
-      const schema = JSON.parse(
-        readFileSync(schemaPath, 'utf-8')
-      ) as JSONSchemaObject
+      const schema = JSON.parse(readFileSync(schemaPath, 'utf-8')) as JSONSchemaObject
       validate = ajv.compile(schema)
     })
 
@@ -168,9 +162,7 @@ describe('Extra Properties Validation', () => {
 
     beforeAll(() => {
       const schemaPath = join(__dirname, '../schemas/equipment.schema.json')
-      const schema = JSON.parse(
-        readFileSync(schemaPath, 'utf-8')
-      ) as JSONSchemaObject
+      const schema = JSON.parse(readFileSync(schemaPath, 'utf-8')) as JSONSchemaObject
       validate = ajv.compile(schema)
     })
 

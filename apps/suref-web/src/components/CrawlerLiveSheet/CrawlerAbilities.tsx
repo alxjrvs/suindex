@@ -6,6 +6,7 @@ import { VStack } from '@chakra-ui/react'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 import { useHydratedCrawler } from '../../hooks/crawler'
 import { useManageEntityChoices } from '../../hooks/suentity'
+import { getParagraphString } from '../../lib/contentBlockHelpers'
 
 export function CrawlerAbilities({
   id,
@@ -63,10 +64,7 @@ function CrawlerAbility({
 
   return (
     <VStack gap={3} alignItems="stretch" w="full">
-      <SheetDisplay
-        label={ability.name}
-        value={ability.content?.find((b) => !b.type || b.type === 'paragraph')?.value}
-      />
+      <SheetDisplay label={ability.name} value={getParagraphString(ability.content)} />
       {wrappedChoice.map((choice, idx) => (
         <SheetEntityChoiceDisplay
           onUpdateChoice={readOnly ? undefined : handleUpdateChoice}

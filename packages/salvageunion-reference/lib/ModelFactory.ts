@@ -161,12 +161,7 @@ function createModel<T>(schemaId: string): BaseModel<T> & {
 
   const displayNameValue = schemaDisplayNames[schemaId]?.plural || schemaId
 
-  const model = new BaseModel<T>(
-    data as T[],
-    schema,
-    schemaId,
-    displayNameValue
-  )
+  const model = new BaseModel<T>(data as T[], schema, schemaId, displayNameValue)
 
   // Add readonly metadata properties directly to the instance
   Object.defineProperties(model, {
@@ -207,40 +202,39 @@ export function generateModels(): Record<string, BaseModel<unknown>> {
 /**
  * Schema display name mappings
  */
-const schemaDisplayNames: Record<string, { singular: string; plural: string }> =
-  {
-    abilities: { singular: 'Ability', plural: 'Abilities' },
-    'ability-tree-requirements': {
-      singular: 'Ability Tree Requirement',
-      plural: 'Ability Tree Requirements',
-    },
-    'bio-titans': { singular: 'Bio-Titan', plural: 'Bio-Titans' },
-    chassis: { singular: 'Chassis', plural: 'Chassis' },
-    'classes.advanced': {
-      singular: 'Advanced Class',
-      plural: 'Advanced Classes',
-    },
-    'classes.core': { singular: 'Core Class', plural: 'Core Classes' },
-    'crawler-bays': { singular: 'Crawler Bay', plural: 'Crawler Bays' },
-    'crawler-tech-levels': {
-      singular: 'Crawler Tech Level',
-      plural: 'Crawler Tech Levels',
-    },
-    crawlers: { singular: 'Crawler', plural: 'Crawlers' },
-    creatures: { singular: 'Creature', plural: 'Creatures' },
-    distances: { singular: 'Distance', plural: 'Distances' },
-    drones: { singular: 'Drone', plural: 'Drones' },
-    equipment: { singular: 'Equipment', plural: 'Equipment' },
-    keywords: { singular: 'Keyword', plural: 'Keywords' },
-    meld: { singular: 'Meld', plural: 'Meld' },
-    modules: { singular: 'Module', plural: 'Modules' },
-    npcs: { singular: 'NPC', plural: 'NPCs' },
-    'roll-tables': { singular: 'Roll Table', plural: 'Roll Tables' },
-    squads: { singular: 'Squad', plural: 'Squads' },
-    systems: { singular: 'System', plural: 'Systems' },
-    traits: { singular: 'Trait', plural: 'Traits' },
-    vehicles: { singular: 'Vehicle', plural: 'Vehicles' },
-  }
+const schemaDisplayNames: Record<string, { singular: string; plural: string }> = {
+  abilities: { singular: 'Ability', plural: 'Abilities' },
+  'ability-tree-requirements': {
+    singular: 'Ability Tree Requirement',
+    plural: 'Ability Tree Requirements',
+  },
+  'bio-titans': { singular: 'Bio-Titan', plural: 'Bio-Titans' },
+  chassis: { singular: 'Chassis', plural: 'Chassis' },
+  'classes.advanced': {
+    singular: 'Advanced Class',
+    plural: 'Advanced Classes',
+  },
+  'classes.core': { singular: 'Core Class', plural: 'Core Classes' },
+  'crawler-bays': { singular: 'Crawler Bay', plural: 'Crawler Bays' },
+  'crawler-tech-levels': {
+    singular: 'Crawler Tech Level',
+    plural: 'Crawler Tech Levels',
+  },
+  crawlers: { singular: 'Crawler', plural: 'Crawlers' },
+  creatures: { singular: 'Creature', plural: 'Creatures' },
+  distances: { singular: 'Distance', plural: 'Distances' },
+  drones: { singular: 'Drone', plural: 'Drones' },
+  equipment: { singular: 'Equipment', plural: 'Equipment' },
+  keywords: { singular: 'Keyword', plural: 'Keywords' },
+  meld: { singular: 'Meld', plural: 'Meld' },
+  modules: { singular: 'Module', plural: 'Modules' },
+  npcs: { singular: 'NPC', plural: 'NPCs' },
+  'roll-tables': { singular: 'Roll Table', plural: 'Roll Tables' },
+  squads: { singular: 'Squad', plural: 'Squads' },
+  systems: { singular: 'System', plural: 'Systems' },
+  traits: { singular: 'Trait', plural: 'Traits' },
+  vehicles: { singular: 'Vehicle', plural: 'Vehicles' },
+}
 
 /**
  * Enhanced schema metadata interface

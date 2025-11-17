@@ -11,7 +11,7 @@
     },
     "contentType": {
       "type": "string",
-      "enum": ["paragraph", "heading", "list-item", "list-item-naked", "label"],
+      "enum": ["paragraph", "heading", "list-item", "label", "datavalues"],
       "description": "Type of content block for rendering structured text"
     },
     "range": {
@@ -25,15 +25,7 @@
     },
     "actionType": {
       "type": "string",
-      "enum": [
-        "Passive",
-        "Free",
-        "Reaction",
-        "Turn",
-        "Short",
-        "Long",
-        "DownTime"
-      ],
+      "enum": ["Passive", "Free", "Reaction", "Turn", "Short", "Long", "DownTime"],
       "description": "Type of action required to use an ability"
     },
     "damageType": {

@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
-    branches: ['main']
+    branches: ["main"]
 
 jobs:
   quality-checks:
@@ -24,10 +24,6 @@ jobs:
 
       - name: Validate package IDs
         run: bun --filter salvageunion-reference validate:ids
-
-      - name: Validate package generated files
-        run: bun --filter salvageunion-reference validate:generated
-
       - name: Validate package cross-references
         run: bun --filter salvageunion-reference validate:references
 

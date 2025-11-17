@@ -28,9 +28,7 @@ describe('Model Metadata', () => {
     })
 
     it('should return correct schema name for AdvancedClasses', () => {
-      expect(SalvageUnionReference.AdvancedClasses.schemaName).toBe(
-        'classes.advanced'
-      )
+      expect(SalvageUnionReference.AdvancedClasses.schemaName).toBe('classes.advanced')
     })
 
     it('should return correct schema name for AbilityTreeRequirements', () => {
@@ -62,9 +60,7 @@ describe('Model Metadata', () => {
     })
 
     it('should return correct display name for AdvancedClasses', () => {
-      expect(SalvageUnionReference.AdvancedClasses.displayName).toBe(
-        'Advanced Classes'
-      )
+      expect(SalvageUnionReference.AdvancedClasses.displayName).toBe('Advanced Classes')
     })
 
     it('should return correct display name for AbilityTreeRequirements', () => {
@@ -104,9 +100,7 @@ describe('Model Metadata', () => {
     })
 
     it('should have correct mapping for ability-tree-requirements', () => {
-      expect(SchemaToDisplayName['ability-tree-requirements']).toBe(
-        'Ability Tree Requirements'
-      )
+      expect(SchemaToDisplayName['ability-tree-requirements']).toBe('Ability Tree Requirements')
     })
 
     it('should have all schema names', () => {
@@ -135,9 +129,7 @@ describe('Model Metadata', () => {
       ]
 
       for (const schema of expectedSchemas) {
-        expect(
-          SchemaToDisplayName[schema as keyof typeof SchemaToDisplayName]
-        ).toBeDefined()
+        expect(SchemaToDisplayName[schema as keyof typeof SchemaToDisplayName]).toBeDefined()
       }
     })
   })
@@ -147,9 +139,7 @@ describe('Model Metadata', () => {
       const schemaName = SalvageUnionReference.Abilities.schemaName
       const displayName = SalvageUnionReference.Abilities.displayName
 
-      expect(
-        SchemaToDisplayName[schemaName as keyof typeof SchemaToDisplayName]
-      ).toBe(displayName)
+      expect(SchemaToDisplayName[schemaName as keyof typeof SchemaToDisplayName]).toBe(displayName)
     })
 
     it('should work for all models', () => {
@@ -169,9 +159,9 @@ describe('Model Metadata', () => {
         const schemaName = model.schemaName
         const displayName = model.displayName
 
-        expect(
-          SchemaToDisplayName[schemaName as keyof typeof SchemaToDisplayName]
-        ).toBe(displayName)
+        expect(SchemaToDisplayName[schemaName as keyof typeof SchemaToDisplayName]).toBe(
+          displayName
+        )
       }
     })
   })

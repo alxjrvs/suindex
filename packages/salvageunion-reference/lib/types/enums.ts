@@ -30,8 +30,8 @@ export type SURefContentType =
   | 'paragraph'
   | 'heading'
   | 'list-item'
-  | 'list-item-naked'
   | 'label'
+  | 'datavalues'
 
 /**
  * Type of damage

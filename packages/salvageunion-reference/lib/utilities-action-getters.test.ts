@@ -31,9 +31,7 @@ describe('Action Property Getters', () => {
 
   describe('getActivationCost', () => {
     test('should get activation cost from ability (action property)', () => {
-      const ability = SalvageUnionReference.Abilities.all().find(
-        (a) => a.name === 'Ace Pilot'
-      )
+      const ability = SalvageUnionReference.Abilities.all().find((a) => a.name === 'Ace Pilot')
       if (ability) {
         const cost = getActivationCost(ability)
         expect(cost).toBeDefined()
@@ -103,8 +101,7 @@ describe('Action Property Getters', () => {
 
     test('should work correctly with real single-action systems', () => {
       const singleActionSystem = SalvageUnionReference.Systems.all().find(
-        (s) =>
-          s.actions && s.actions.length === 1 && s.actions[0].activationCost
+        (s) => s.actions && s.actions.length === 1 && s.actions[0].activationCost
       )
       if (singleActionSystem && singleActionSystem.actions) {
         const cost = getActivationCost(singleActionSystem)
@@ -158,9 +155,7 @@ describe('Action Property Getters', () => {
 
   describe('getRange', () => {
     test('should get range from system (action property)', () => {
-      const system = SalvageUnionReference.Systems.all().find(
-        (s) => s.name === 'Assault Rifle'
-      )
+      const system = SalvageUnionReference.Systems.all().find((s) => s.name === 'Assault Rifle')
       if (system) {
         const range = getRange(system)
         expect(range).toBeDefined()
@@ -192,9 +187,7 @@ describe('Action Property Getters', () => {
 
   describe('getDamage', () => {
     test('should get damage from system (action property)', () => {
-      const system = SalvageUnionReference.Systems.all().find(
-        (s) => s.name === 'Assault Rifle'
-      )
+      const system = SalvageUnionReference.Systems.all().find((s) => s.name === 'Assault Rifle')
       if (system) {
         const damage = getDamage(system)
         expect(damage).toBeDefined()
@@ -277,9 +270,7 @@ describe('Action Property Getters', () => {
       const entity = {
         id: 'test',
         name: 'Test',
-        actions: [
-          { id: 'a1', name: 'A1', traits: [{ type: 'Hot', amount: 2 }] },
-        ],
+        actions: [{ id: 'a1', name: 'A1', traits: [{ type: 'Hot', amount: 2 }] }],
       }
       expect(getTraits(entity as never)).toEqual([{ type: 'Hot', amount: 2 }])
     })

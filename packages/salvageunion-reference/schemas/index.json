@@ -2,8 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Salvage Union Data Schema Catalog",
   "description": "Catalog of all available schemas in the salvageunion-data repository",
-  "version": "2.1.0",
-  "generated": "2025-11-17T01:56:36.905Z",
+  "version": "2.1.4",
+  "generated": "2025-11-17T13:02:53.879Z",
   "schemas": [
     {
       "id": "abilities",
@@ -93,12 +93,7 @@
       "dataFile": "data/crawler-tech-levels.json",
       "schemaFile": "schemas/crawler-tech-levels.schema.json",
       "itemCount": 6,
-      "requiredFields": [
-        "techLevel",
-        "structurePoints",
-        "populationMin",
-        "populationMax"
-      ],
+      "requiredFields": ["techLevel", "structurePoints", "populationMin", "populationMax"],
       "displayName": "Crawler Tech Levels"
     },
     {
@@ -139,12 +134,7 @@
       "dataFile": "data/drones.json",
       "schemaFile": "schemas/drones.schema.json",
       "itemCount": 9,
-      "requiredFields": [
-        "structurePoints",
-        "techLevel",
-        "salvageValue",
-        "systems"
-      ],
+      "requiredFields": ["structurePoints", "techLevel", "salvageValue", "systems"],
       "displayName": "Drones"
     },
     {
@@ -244,12 +234,7 @@
       "dataFile": "data/vehicles.json",
       "schemaFile": "schemas/vehicles.schema.json",
       "itemCount": 7,
-      "requiredFields": [
-        "structurePoints",
-        "techLevel",
-        "salvageValue",
-        "systems"
-      ],
+      "requiredFields": ["structurePoints", "techLevel", "salvageValue", "systems"],
       "displayName": "Vehicles"
     }
   ]

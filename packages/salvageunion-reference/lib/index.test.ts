@@ -15,9 +15,7 @@ import {
 describe('SalvageUnionReference static properties', () => {
   it('should have all model properties defined and returning data', () => {
     // Get all static properties from the class
-    const staticProps = Object.getOwnPropertyNames(
-      SalvageUnionReference
-    ).filter((prop) => {
+    const staticProps = Object.getOwnPropertyNames(SalvageUnionReference).filter((prop) => {
       // Filter out constructor and methods
       const methodNames = [
         'length',
@@ -51,8 +49,7 @@ describe('SalvageUnionReference static properties', () => {
 
     // Test each static property
     for (const propName of staticProps) {
-      const prop =
-        SalvageUnionReference[propName as keyof typeof SalvageUnionReference]
+      const prop = SalvageUnionReference[propName as keyof typeof SalvageUnionReference]
 
       // Check that the property is defined
       expect(prop).toBeDefined()
@@ -90,8 +87,7 @@ describe('SalvageUnionReference static properties', () => {
     ]
 
     for (const modelName of expectedModels) {
-      const model =
-        SalvageUnionReference[modelName as keyof typeof SalvageUnionReference]
+      const model = SalvageUnionReference[modelName as keyof typeof SalvageUnionReference]
       expect(model).toBeDefined()
       expect(model).toBeInstanceOf(BaseModel)
       expect((model as BaseModel<unknown>).all().length).toBeGreaterThan(0)
@@ -110,10 +106,7 @@ describe('SalvageUnionReference.findIn', () => {
   })
 
   it('should find a single system by tech level', () => {
-    const system = SalvageUnionReference.findIn(
-      'systems',
-      (s) => s.techLevel === 1
-    )
+    const system = SalvageUnionReference.findIn('systems', (s) => s.techLevel === 1)
     expect(system).toBeDefined()
     expect(system?.techLevel).toBe(1)
   })
@@ -127,10 +120,7 @@ describe('SalvageUnionReference.findIn', () => {
   })
 
   it('should work with different schema types', () => {
-    const crawler = SalvageUnionReference.findIn(
-      'crawlers',
-      (c) => c.name === 'Augmented'
-    )
+    const crawler = SalvageUnionReference.findIn('crawlers', (c) => c.name === 'Augmented')
     expect(crawler).toBeDefined()
     expect(crawler?.name).toBe('Augmented')
   })
@@ -138,10 +128,7 @@ describe('SalvageUnionReference.findIn', () => {
 
 describe('SalvageUnionReference.findAllIn', () => {
   it('should find all abilities at a specific level', () => {
-    const abilities = SalvageUnionReference.findAllIn(
-      'abilities',
-      (a) => a.level === 1
-    )
+    const abilities = SalvageUnionReference.findAllIn('abilities', (a) => a.level === 1)
     expect(abilities.length).toBeGreaterThan(0)
     expect(abilities.every((a) => a.level === 1)).toBe(true)
   })
@@ -153,34 +140,23 @@ describe('SalvageUnionReference.findAllIn', () => {
     )
     expect(energySystems.length).toBeGreaterThan(0)
     expect(
-      energySystems.every(
-        (s) => s.actions?.[0]?.traits?.some((t) => t.type === 'energy') ?? false
-      )
+      energySystems.every((s) => s.actions?.[0]?.traits?.some((t) => t.type === 'energy') ?? false)
     ).toBe(true)
   })
 
   it('should return empty array when no matches are found', () => {
-    const abilities = SalvageUnionReference.findAllIn(
-      'abilities',
-      (a) => a.level === 999
-    )
+    const abilities = SalvageUnionReference.findAllIn('abilities', (a) => a.level === 999)
     expect(abilities).toEqual([])
   })
 
   it('should work with different schema types', () => {
-    const tech1Modules = SalvageUnionReference.findAllIn(
-      'modules',
-      (m) => m.techLevel === 1
-    )
+    const tech1Modules = SalvageUnionReference.findAllIn('modules', (m) => m.techLevel === 1)
     expect(tech1Modules.length).toBeGreaterThan(0)
     expect(tech1Modules.every((m) => m.techLevel === 1)).toBe(true)
   })
 
   it('should find all core classes', () => {
-    const coreClasses = SalvageUnionReference.findAllIn(
-      'classes.core',
-      () => true
-    )
+    const coreClasses = SalvageUnionReference.findAllIn('classes.core', () => true)
     expect(coreClasses.length).toBeGreaterThan(0)
   })
 })
@@ -389,9 +365,7 @@ describe('Property Extractors', () => {
 describe('SalvageUnionReference.getManyByRef', () => {
   it('should batch fetch entities by reference strings', () => {
     const abilities = SalvageUnionReference.Abilities.all().slice(0, 3)
-    const refs = abilities.map((a) =>
-      SalvageUnionReference.composeRef('abilities', a.id)
-    )
+    const refs = abilities.map((a) => SalvageUnionReference.composeRef('abilities', a.id))
 
     const entities = SalvageUnionReference.getManyByRef(refs)
 

@@ -71,11 +71,7 @@ function extractContentText(content: unknown): string {
  * Calculate a relevance score for a search match
  * Higher scores = better matches
  */
-function calculateScore(
-  entity: SURefEntity,
-  query: string,
-  matchedFields: string[]
-): number {
+function calculateScore(entity: SURefEntity, query: string, matchedFields: string[]): number {
   let score = 0
   const lowerQuery = query.toLowerCase()
 
@@ -126,9 +122,7 @@ function matchesQuery(
 
   // Check description field if it exists
   if ('description' in entity && typeof entity.description === 'string') {
-    const description = caseSensitive
-      ? entity.description
-      : entity.description.toLowerCase()
+    const description = caseSensitive ? entity.description : entity.description.toLowerCase()
     if (description.includes(searchQuery)) {
       matchedFields.push('description')
     }
@@ -145,9 +139,7 @@ function matchesQuery(
   // Check content blocks if they exist
   if ('content' in entity && entity.content) {
     const contentText = extractContentText(entity.content)
-    const searchableContent = caseSensitive
-      ? contentText
-      : contentText.toLowerCase()
+    const searchableContent = caseSensitive ? contentText : contentText.toLowerCase()
     if (searchableContent.includes(searchQuery)) {
       matchedFields.push('content')
     }
@@ -156,11 +148,7 @@ function matchesQuery(
   // Check actions for content blocks
   if ('actions' in entity && Array.isArray(entity.actions)) {
     for (const action of entity.actions) {
-      if (
-        typeof action === 'object' &&
-        action !== null &&
-        'content' in action
-      ) {
+      if (typeof action === 'object' && action !== null && 'content' in action) {
         const actionContentText = extractContentText(action.content)
         const searchableActionContent = caseSensitive
           ? actionContentText
@@ -204,9 +192,7 @@ export function search(options: SearchOptions): SearchResult[] {
 
   // Filter schemas if specified
   const schemasToSearch = schemaFilter
-    ? schemaCatalog.schemas.filter((s) =>
-        schemaFilter.includes(s.id as SURefSchemaName)
-      )
+    ? schemaCatalog.schemas.filter((s) => schemaFilter.includes(s.id as SURefSchemaName))
     : schemaCatalog.schemas
 
   for (const schema of schemasToSearch) {
@@ -218,11 +204,7 @@ export function search(options: SearchOptions): SearchResult[] {
     }
 
     for (const entity of data as SURefEntity[]) {
-      const { matches, matchedFields } = matchesQuery(
-        entity,
-        query,
-        caseSensitive
-      )
+      const { matches, matchedFields } = matchesQuery(entity, query, caseSensitive)
 
       if (matches) {
         const matchScore = calculateScore(entity, query, matchedFields)
@@ -244,8 +226,7 @@ export function search(options: SearchOptions): SearchResult[] {
   results.sort((a, b) => b.matchScore - a.matchScore)
 
   // Apply limit after sorting
-  const finalResults =
-    limit && results.length > limit ? results.slice(0, limit) : results
+  const finalResults = limit && results.length > limit ? results.slice(0, limit) : results
 
   // Cache the results
   searchCache.set(cacheKey, finalResults)

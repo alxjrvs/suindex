@@ -1,8 +1,11 @@
-import { Box, List } from '@chakra-ui/react'
-import type { SURefMetaContentBlock } from 'salvageunion-reference'
+import { Box, Flex, List } from '@chakra-ui/react'
+import type { SURefMetaContentBlock, SURefMetaDataValue } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import { Heading } from '../../base/Heading'
 import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
+import { ValueDisplay } from '../../shared/ValueDisplay'
+import { EntityDetailDisplay } from '../EntityDetailDisplay'
+import { ActivationCostBox } from '../../shared/ActivationCostBox'
 
 interface ContentBlockRendererProps {
   /** Content blocks to render */
@@ -22,6 +25,7 @@ interface ContentBlockRendererProps {
  * - list-item: Bulleted list item
  * - list-item-naked: List item without bullet
  * - label: Labeled content
+ * - datavalues: Array of data values rendered as compact flex row (value is array of dataValue objects)
  */
 export function ContentBlockRenderer({
   content,
@@ -50,8 +54,26 @@ function ContentBlock({
   fontSize: string
   compact: boolean
 }) {
-  const parsedValue = useParseTraitReferences(block.value)
   const type = block.type || 'paragraph'
+  const blockValue = block.value
+
+  // Parse strings non-conditionally
+  const stringValue = typeof blockValue === 'string' ? blockValue : ''
+  const parsedValue = useParseTraitReferences(stringValue)
+
+  // Handle datavalues type - value is an array of dataValue objects
+  if (type === 'datavalues') {
+    if (!Array.isArray(blockValue) || blockValue.length === 0) {
+      return null
+    }
+    return (
+      <Flex gap={1} flexWrap="wrap">
+        {blockValue.map((item, index) => (
+          <DataValueItem key={index} item={item} />
+        ))}
+      </Flex>
+    )
+  }
 
   switch (type) {
     case 'paragraph':
@@ -74,11 +96,23 @@ function ContentBlock({
     case 'heading':
       return (
         <Heading level="h3" fontSize={compact ? 'md' : 'lg'}>
-          {block.value}
+          {stringValue}
         </Heading>
       )
 
     case 'list-item':
+      // If list item has a label, render as dot-less list item with bold label: value
+      if (block.label) {
+        return (
+          <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize} pl={4}>
+            <Text as="span" fontWeight="bold">
+              {block.label}:
+            </Text>{' '}
+            {parsedValue}
+          </Box>
+        )
+      }
+      // Otherwise render as regular bulleted list item
       return (
         <List.Root as="ul" pl={4}>
           <List.Item>
@@ -87,13 +121,6 @@ function ContentBlock({
             </Box>
           </List.Item>
         </List.Root>
-      )
-
-    case 'list-item-naked':
-      return (
-        <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize} pl={4}>
-          {parsedValue}
-        </Box>
       )
 
     case 'label':
@@ -118,4 +145,40 @@ function ContentBlock({
         </Box>
       )
   }
+}
+
+function DataValueItem({ item }: { item: SURefMetaDataValue }) {
+  if (item.type === 'cost') {
+    return <ActivationCostBox cost={String(item.label)} currency="" compact={true} />
+  }
+
+  if (item.type === 'trait') {
+    return (
+      <EntityDetailDisplay
+        label={item.label}
+        value={item.value}
+        compact={true}
+        schemaName="traits"
+        inline={false}
+      />
+    )
+  }
+
+  if (item.type === 'keyword') {
+    return (
+      <EntityDetailDisplay
+        label={item.label}
+        value={item.value}
+        compact={true}
+        schemaName="keywords"
+        inline={false}
+      />
+    )
+  }
+
+  if (item.type === 'meta') {
+    return <ValueDisplay label={item.label} compact={true} inline={false} />
+  }
+
+  return <ValueDisplay label={item.label} value={item.value} compact={true} inline={false} />
 }

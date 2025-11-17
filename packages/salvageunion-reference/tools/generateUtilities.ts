@@ -16,9 +16,7 @@ const schemasDir = join(__dirname, '..', 'schemas')
 const outputFile = join(__dirname, '..', 'lib', 'utilities-generated.ts')
 
 // Load schema index
-const schemaIndex = JSON.parse(
-  readFileSync(join(schemasDir, 'index.json'), 'utf-8')
-)
+const schemaIndex = JSON.parse(readFileSync(join(schemasDir, 'index.json'), 'utf-8'))
 
 interface PropertyInfo {
   name: string
@@ -33,9 +31,7 @@ function resolveTypeFromRef(ref: string, schemasDir: string): string {
     const commonSchema = JSON.parse(
       readFileSync(join(schemasDir, 'shared', 'common.schema.json'), 'utf-8')
     )
-    const def =
-      commonSchema.$defs?.[defName || ''] ||
-      commonSchema.definitions?.[defName || '']
+    const def = commonSchema.$defs?.[defName || ''] || commonSchema.definitions?.[defName || '']
     if (def?.type) {
       // Map integer to number for TypeScript
       const type = String(def.type)
@@ -78,9 +74,7 @@ function extractProperties(schemaFile: string): PropertyInfo[] {
   if (schema.items.allOf) {
     for (const ref of schema.items.allOf) {
       if (ref.$ref) {
-        const refPath = ref.$ref
-          .replace('#/$defs/', '')
-          .replace('#/definitions/', '')
+        const refPath = ref.$ref.replace('#/$defs/', '').replace('#/definitions/', '')
         const refParts = refPath.split('/')
         const defName = refParts[refParts.length - 1]
 
@@ -89,9 +83,7 @@ function extractProperties(schemaFile: string): PropertyInfo[] {
         if (refPath.startsWith('shared/')) {
           const sharedFile = refPath.split('/')[1] + '.schema.json'
           try {
-            refSchema = JSON.parse(
-              readFileSync(join(schemasDir, 'shared', sharedFile), 'utf-8')
-            )
+            refSchema = JSON.parse(readFileSync(join(schemasDir, 'shared', sharedFile), 'utf-8'))
           } catch {
             continue
           }
@@ -150,11 +142,7 @@ function extractProperties(schemaFile: string): PropertyInfo[] {
         type = uniqueTypes[0]
       } else if (uniqueTypes.every((t) => t === 'integer' || t === 'number')) {
         type = 'number'
-      } else if (
-        uniqueTypes.every(
-          (t) => t === 'string' || t === 'number' || t === 'integer'
-        )
-      ) {
+      } else if (uniqueTypes.every((t) => t === 'string' || t === 'number' || t === 'integer')) {
         // Mixed string/number - use 'string | number' union
         type = 'string | number'
       }
@@ -170,11 +158,7 @@ function extractProperties(schemaFile: string): PropertyInfo[] {
   return Array.from(propertyMap.values())
 }
 
-function generateTypeGuard(
-  schemaId: string,
-  typeName: string,
-  properties: PropertyInfo[]
-): string {
+function generateTypeGuard(schemaId: string, typeName: string, properties: PropertyInfo[]): string {
   const requiredProps = properties.filter((p) => p.required)
 
   if (requiredProps.length === 0) return ''
@@ -249,11 +233,7 @@ function generatePropertyExtractor(propName: string, propType: string): string {
     code += `  return '${propName}' in entity && typeof entity.${propName} === 'string'\n`
     code += `    ? entity.${propName}\n`
     code += `    : undefined\n`
-  } else if (
-    propType === 'number' ||
-    propType === 'integer' ||
-    returnType === 'number'
-  ) {
+  } else if (propType === 'number' || propType === 'integer' || returnType === 'number') {
     code += `  return '${propName}' in entity && typeof entity.${propName} === 'number'\n`
     code += `    ? entity.${propName}\n`
     code += `    : undefined\n`
@@ -264,9 +244,7 @@ function generatePropertyExtractor(propName: string, propType: string): string {
   } else if (
     propType === 'array' ||
     returnType.includes('[]') ||
-    (returnType.startsWith('SURefMeta') &&
-      returnType.endsWith('s') &&
-      !returnType.includes('|'))
+    (returnType.startsWith('SURefMeta') && returnType.endsWith('s') && !returnType.includes('|'))
   ) {
     code += `  return '${propName}' in entity && Array.isArray(entity.${propName})\n`
     code += `    ? entity.${propName}\n`
@@ -312,10 +290,7 @@ output += `import type {\n`
 
 // Add imports for all schema types
 const typeImports = schemaIndex.schemas
-  .map(
-    (s: Record<string, unknown>) =>
-      `  SURef${getSingularTypeName(String(s.id), __dirname)}`
-  )
+  .map((s: Record<string, unknown>) => `  SURef${getSingularTypeName(String(s.id), __dirname)}`)
   .join(',\n')
 
 output += typeImports

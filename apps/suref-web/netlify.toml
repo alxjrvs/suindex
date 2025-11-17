@@ -2,8 +2,8 @@
 # TanStack Start deployment with optimized caching
 
 [build]
-  command = "bun install --frozen-lockfile && bun run build:package && bun --filter suref-web build && cd apps/suref-web && ./scripts/copy-netlify-functions.sh"
-  publish = "apps/suref-web/dist/client"
+  command = "cd ../.. && bun install --frozen-lockfile && bun run build:package && bun --filter suref-web build"
+  publish = "dist/client"
   functions = "netlify/functions"
 
 [build.environment]
@@ -53,6 +53,4 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
-
-
 

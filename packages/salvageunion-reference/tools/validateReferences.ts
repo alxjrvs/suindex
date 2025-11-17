@@ -44,9 +44,7 @@ const drones = loadData('drones.json')
 const systemNames = new Set(systems.map((s) => s.name as string))
 const moduleNames = new Set(modules.map((m) => m.name as string))
 
-console.log(
-  `Loaded ${systemNames.size} systems and ${moduleNames.size} modules`
-)
+console.log(`Loaded ${systemNames.size} systems and ${moduleNames.size} modules`)
 
 // Validate chassis patterns
 console.log('\nValidating chassis patterns...')

@@ -9,6 +9,7 @@ import { useRef, useEffect, useState, useMemo } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
 import { rollTable } from '@randsum/salvageunion'
 import type { SURefCrawler, SURefCrawlerBay } from 'salvageunion-reference'
+import { getParagraphString } from '../../lib/contentBlockHelpers'
 
 export function NPCCard({
   position,
@@ -145,8 +146,7 @@ export function NPCCard({
             placeholder={
               choice.name === 'Name'
                 ? `Enter ${position} name...`
-                : choice.content?.find((b) => !b.type || b.type === 'paragraph')?.value ||
-                  'Enter value...'
+                : getParagraphString(choice.content) || 'Enter value...'
             }
             suffixText={choice.name === 'Name' ? `the ${position}` : undefined}
             onDiceRoll={

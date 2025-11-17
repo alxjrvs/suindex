@@ -53,18 +53,14 @@ describe('Preselected Choices Validation', () => {
       if (system.actions?.[0]?.choices) {
         for (const choice of system.actions[0].choices) {
           if (!choice.id) {
-            errors.push(
-              `System "${system.name}" has a choice "${choice.name}" without an ID`
-            )
+            errors.push(`System "${system.name}" has a choice "${choice.name}" without an ID`)
           }
         }
       }
     }
 
     if (errors.length > 0) {
-      throw new Error(
-        `Found ${errors.length} choice(s) without IDs:\n${errors.join('\n')}`
-      )
+      throw new Error(`Found ${errors.length} choice(s) without IDs:\n${errors.join('\n')}`)
     }
 
     expect(errors.length).toBe(0)
@@ -108,9 +104,7 @@ describe('Preselected Choices Validation', () => {
         // Check systems
         for (const system of pattern.systems) {
           if (system.preselectedChoices) {
-            for (const [choiceId, choiceName] of Object.entries(
-              system.preselectedChoices
-            )) {
+            for (const [choiceId, choiceName] of Object.entries(system.preselectedChoices)) {
               if (!validChoiceIds.has(choiceId)) {
                 errors.push(
                   `Chassis "${chassis.name}", pattern "${pattern.name}", system "${system.name}" has preselectedChoice with invalid ID "${choiceId}" (value: "${choiceName}")`
@@ -123,9 +117,7 @@ describe('Preselected Choices Validation', () => {
         // Check modules
         for (const module of pattern.modules) {
           if (module.preselectedChoices) {
-            for (const [choiceId, choiceName] of Object.entries(
-              module.preselectedChoices
-            )) {
+            for (const [choiceId, choiceName] of Object.entries(module.preselectedChoices)) {
               if (!validChoiceIds.has(choiceId)) {
                 errors.push(
                   `Chassis "${chassis.name}", pattern "${pattern.name}", module "${module.name}" has preselectedChoice with invalid ID "${choiceId}" (value: "${choiceName}")`

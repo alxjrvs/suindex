@@ -116,9 +116,7 @@
           {
             "id": "49dbf700-b4b4-4718-8847-5f24dbf033a2",
             "name": "Additional Armament Bay Weapons System",
-            "schema": [
-              "systems"
-            ],
+            "schema": ["systems"],
             "content": [
               {
                 "type": "paragraph",

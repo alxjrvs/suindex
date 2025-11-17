@@ -7,6 +7,7 @@ import { EntitySubheader } from './EntitySubheader'
 import { EntityListDisplay } from './EntityListDisplay'
 import { PreselectedEntityDisplay } from './PreselectedEntityDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
+import { getParagraphString } from '../../../lib/contentBlockHelpers'
 
 interface EntityChoiceProps {
   choice: SURefMetaChoice
@@ -62,10 +63,7 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
           value={userChoices?.[choice.id] || ''}
           onChange={(value) => onChoiceSelection?.(choice.id, value)}
           onDiceRoll={() => {}}
-          placeholder={
-            choice.content?.find((b) => !b.type || b.type === 'paragraph')?.value ||
-            'Enter value...'
-          }
+          placeholder={getParagraphString(choice.content) || 'Enter value...'}
           disabled={onChoiceSelection === undefined}
           diceRollTitle={choice.rollTable}
         />

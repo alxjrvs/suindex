@@ -144,9 +144,7 @@ describe('Additional Type Guards', () => {
 
     it('should return true for hybrid classes', () => {
       // Hybrid classes are now in AdvancedClasses with type: "Hybrid"
-      const hybridClass = SalvageUnionReference.AdvancedClasses.find(
-        (c) => c.type === 'Hybrid'
-      )
+      const hybridClass = SalvageUnionReference.AdvancedClasses.find((c) => c.type === 'Hybrid')
       expect(hybridClass).toBeDefined()
       expect(isClass(hybridClass!)).toBe(true)
     })
@@ -571,9 +569,7 @@ describe('Property Extractors', () => {
 
   describe('getAssetUrl', () => {
     it('should extract asset_url from chassis', () => {
-      const chassis = SalvageUnionReference.Chassis.find(
-        (c) => c.name === 'Mule'
-      )
+      const chassis = SalvageUnionReference.Chassis.find((c) => c.name === 'Mule')
       const assetUrl = getAssetUrl(chassis!)
       expect(assetUrl).toBeDefined()
       expect(typeof assetUrl).toBe('string')
@@ -581,9 +577,7 @@ describe('Property Extractors', () => {
     })
 
     it('should extract asset_url from bio-titans', () => {
-      const bioTitan = SalvageUnionReference.BioTitans.find(
-        (b) => b.name === 'Typhon'
-      )
+      const bioTitan = SalvageUnionReference.BioTitans.find((b) => b.name === 'Typhon')
       const assetUrl = getAssetUrl(bioTitan!)
       expect(assetUrl).toBeDefined()
       expect(typeof assetUrl).toBe('string')
@@ -591,9 +585,7 @@ describe('Property Extractors', () => {
     })
 
     it('should extract asset_url from creatures', () => {
-      const creature = SalvageUnionReference.Creatures.find(
-        (c) => c.name === 'Artl'
-      )
+      const creature = SalvageUnionReference.Creatures.find((c) => c.name === 'Artl')
       const assetUrl = getAssetUrl(creature!)
       expect(assetUrl).toBeDefined()
       expect(typeof assetUrl).toBe('string')
@@ -601,9 +593,7 @@ describe('Property Extractors', () => {
     })
 
     it('should extract asset_url from NPCs', () => {
-      const npc = SalvageUnionReference.NPCs.find(
-        (n) => n.name === 'Wastelander'
-      )
+      const npc = SalvageUnionReference.NPCs.find((n) => n.name === 'Wastelander')
       const assetUrl = getAssetUrl(npc!)
       expect(assetUrl).toBeDefined()
       expect(typeof assetUrl).toBe('string')
@@ -611,9 +601,7 @@ describe('Property Extractors', () => {
     })
 
     it('should extract asset_url from core classes', () => {
-      const coreClass = SalvageUnionReference.CoreClasses.find(
-        (c) => c.name === 'Engineer'
-      )
+      const coreClass = SalvageUnionReference.CoreClasses.find((c) => c.name === 'Engineer')
       const assetUrl = getAssetUrl(coreClass!)
       expect(assetUrl).toBeDefined()
       expect(typeof assetUrl).toBe('string')
@@ -622,9 +610,7 @@ describe('Property Extractors', () => {
 
     it('should extract asset_url from hybrid classes', () => {
       // Hybrid classes are now in AdvancedClasses with type: "Hybrid"
-      const hybridClass = SalvageUnionReference.AdvancedClasses.find(
-        (c) => c.name === 'Cyborg'
-      )
+      const hybridClass = SalvageUnionReference.AdvancedClasses.find((c) => c.name === 'Cyborg')
       const assetUrl = getAssetUrl(hybridClass!)
       expect(assetUrl).toBeDefined()
       expect(typeof assetUrl).toBe('string')

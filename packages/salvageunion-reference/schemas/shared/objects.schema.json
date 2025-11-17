@@ -525,19 +525,64 @@
       },
       "unevaluatedProperties": false
     },
+    "dataValue": {
+      "type": "object",
+      "description": "A data value with label, optional value, and optional type",
+      "additionalProperties": false,
+      "required": ["label"],
+      "properties": {
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "description": "The label for this data value"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "description": "Optional value for this data value"
+        },
+        "type": {
+          "type": "string",
+          "description": "Optional type for this data value (e.g., 'cost', 'keyword', 'trait', 'meta')"
+        }
+      }
+    },
     "contentBlock": {
       "type": "object",
       "description": "Block of structured content for rendering (paragraph, heading, list item, etc.)",
       "additionalProperties": false,
-      "required": ["value"],
+      "required": [],
       "properties": {
         "type": {
           "$ref": "enums.schema.json#/definitions/contentType",
           "default": "paragraph"
         },
         "value": {
-          "type": "string",
-          "description": "The text content of this block"
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "The text content of this block"
+            },
+            {
+              "type": "array",
+              "description": "Array of data values when type is 'datavalues'",
+              "items": {
+                "$ref": "#/definitions/dataValue"
+              }
+            }
+          ]
         },
         "label": {
           "type": "string",

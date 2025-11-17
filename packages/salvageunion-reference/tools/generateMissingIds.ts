@@ -15,8 +15,7 @@ import { join } from 'path'
 import { randomUUID } from 'crypto'
 
 // UUID v4 regex pattern
-const UUID_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 interface Action {
   id?: string
@@ -259,7 +258,5 @@ if (filesModified === 0) {
     `Total changes: ${totalRootIdsAdded + totalRootIdsFixed + totalActionIdsAdded + totalActionIdsFixed + totalChoiceIdsAdded + totalChoiceIdsFixed}`
   )
   console.log('\n✅ All missing and invalid IDs have been generated and fixed!')
-  console.log(
-    '\n💡 Run `npm run validate:ids` to verify all IDs are now valid and unique.'
-  )
+  console.log('\n💡 Run `npm run validate:ids` to verify all IDs are now valid and unique.')
 }

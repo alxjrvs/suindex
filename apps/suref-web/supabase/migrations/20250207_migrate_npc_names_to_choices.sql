@@ -142,3 +142,4 @@ WHERE se.schema_name = 'crawler-bays'
 -- 3. Notes and damage remain in metadata as they are game state, not choices
 -- 4. Future NPC name updates should use the choices system via onUpdateChoice
 
+

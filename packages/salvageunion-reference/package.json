@@ -1,6 +1,6 @@
 {
   "name": "salvageunion-reference",
-  "version": "2.1.0",
+  "version": "2.1.5",
   "description": "Comprehensive, schema-validated JSON dataset and TypeScript ORM for the Salvage Union tabletop RPG",
   "type": "module",
   "main": "./lib/index.ts",
@@ -38,7 +38,7 @@
     "generate:utilities": "tsx tools/generateUtilities.ts",
     "generate:types": "npm-run-all --parallel generate:enums generate:common generate:objects generate:schemas",
     "generate:index": "tsx tools/generateIndexFile.ts",
-    "generate": "npm run generate:types && npm run generate:index && npm run generate:utilities",
+    "generate": "bun run generate:types && bun run generate:index && bun run generate:utilities",
     "validate:generated": "tsx tools/validateGenerated.ts",
     "validate:references": "tsx tools/validateReferences.ts",
     "typecheck": "tsc --project tsconfig.build.json --noEmit",

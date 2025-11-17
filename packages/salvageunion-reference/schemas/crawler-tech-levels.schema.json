@@ -7,12 +7,7 @@
   "items": {
     "type": "object",
     "description": "A crawler tech level",
-    "required": [
-      "techLevel",
-      "structurePoints",
-      "populationMin",
-      "populationMax"
-    ],
+    "required": ["techLevel", "structurePoints", "populationMin", "populationMax"],
     "allOf": [
       {
         "$ref": "shared/objects.schema.json#/definitions/baseEntity"
