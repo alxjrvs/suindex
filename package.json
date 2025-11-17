@@ -27,6 +27,7 @@
     "publish:package": "bun --filter salvageunion-reference publish"
   },
   "devDependencies": {
+    "netlify-cli": "^23.11.0",
     "prettier": "^3.6.2"
   }
 }

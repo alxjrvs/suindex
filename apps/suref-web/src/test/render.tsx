@@ -1,4 +1,4 @@
-import { render as rtlRender } from '@testing-library/react'
+import { render as rtlRender, type RenderResult } from '@testing-library/react'
 import { ChakraProvider } from '@chakra-ui/react'
 import {
   createMemoryHistory,
@@ -31,7 +31,7 @@ function createTestQueryClient() {
   })
 }
 
-export function render(ui: ReactNode) {
+export function render(ui: ReactNode): RenderResult {
   const queryClient = createTestQueryClient()
 
   const rootRoute = createRootRoute({

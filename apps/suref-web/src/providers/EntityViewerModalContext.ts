@@ -1,7 +1,7 @@
 import { createContext } from 'react'
 import type { SURefSchemaName } from 'salvageunion-reference'
 
-interface EntityViewerModalContextValue {
+export interface EntityViewerModalContextValue {
   openEntityModal: (schemaName: SURefSchemaName, entityId: string) => void
   closeEntityModal: () => void
 }
