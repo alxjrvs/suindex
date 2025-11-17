@@ -49,7 +49,7 @@ export function NestedActionDisplay({
   return (
     <Box bg="su.lightBlue" overflow="hidden" pb={isLast ? 0 : spacing} position="relative">
       {!isLast && (
-        <Box position="absolute" bottom={0} left="10%" width="80%" height="2px" bg="gray.300" />
+        <Box position="absolute" bottom={0} left="10%" width="80%" height="2px" bg="su.black" />
       )}
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
         <Text fontSize={titleFontSize} variant="pseudoheader" width="fit-content" {...headerPadding}>
