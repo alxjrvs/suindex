@@ -67,9 +67,9 @@ function ContentBlock({
       return null
     }
     return (
-      <Flex gap={compact ? 1 : 2} flexWrap="wrap">
+      <Flex gap={1} flexWrap="wrap">
         {blockValue.map((item, index) => (
-          <DataValueItem key={index} item={item} compact={compact} />
+          <DataValueItem key={index} item={item} />
         ))}
       </Flex>
     )
@@ -147,9 +147,9 @@ function ContentBlock({
   }
 }
 
-function DataValueItem({ item, compact }: { item: SURefMetaDataValue; compact: boolean }) {
+function DataValueItem({ item }: { item: SURefMetaDataValue }) {
   if (item.type === 'cost') {
-    return <ActivationCostBox cost={String(item.label)} currency="" compact={compact} />
+    return <ActivationCostBox cost={String(item.label)} currency="" compact={true} />
   }
 
   if (item.type === 'trait') {
@@ -157,7 +157,7 @@ function DataValueItem({ item, compact }: { item: SURefMetaDataValue; compact: b
       <EntityDetailDisplay
         label={item.label}
         value={item.value}
-        compact={compact}
+        compact={true}
         schemaName="traits"
         inline={false}
       />
@@ -169,7 +169,7 @@ function DataValueItem({ item, compact }: { item: SURefMetaDataValue; compact: b
       <EntityDetailDisplay
         label={item.label}
         value={item.value}
-        compact={compact}
+        compact={true}
         schemaName="keywords"
         inline={false}
       />
@@ -177,8 +177,8 @@ function DataValueItem({ item, compact }: { item: SURefMetaDataValue; compact: b
   }
 
   if (item.type === 'meta') {
-    return <ValueDisplay label={item.label} compact={compact} inline={false} />
+    return <ValueDisplay label={item.label} compact={true} inline={false} />
   }
 
-  return <ValueDisplay label={item.label} value={item.value} compact={compact} inline={false} />
+  return <ValueDisplay label={item.label} value={item.value} compact={true} inline={false} />
 }
