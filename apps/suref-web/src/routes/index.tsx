@@ -25,21 +25,21 @@ export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
       {
-        title: 'Salvage Union Reference & Tools',
+        title: 'Salvage Union System Reference Document',
       },
       {
         name: 'description',
         content:
-          'Complete reference guide and interactive tools for Salvage Union TTRPG. Browse chassis, systems, modules, abilities, and more.',
+          'System Reference Document (SRD) for the Salvage Union TTRPG. Complete reference guide with chassis, systems, modules, abilities, and more.',
       },
       {
         property: 'og:title',
-        content: 'Salvage Union Reference & Tools',
+        content: 'Salvage Union System Reference Document',
       },
       {
         property: 'og:description',
         content:
-          'Complete reference guide and interactive tools for Salvage Union TTRPG. Browse chassis, systems, modules, abilities, and more.',
+          'System Reference Document (SRD) for the Salvage Union TTRPG. Complete reference guide with chassis, systems, modules, abilities, and more.',
       },
       {
         property: 'og:type',

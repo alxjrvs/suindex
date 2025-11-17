@@ -8,7 +8,7 @@ export const Route = createFileRoute('/dashboard')({
   head: () => ({
     meta: [
       {
-        title: 'Dashboard - Salvage Union Reference',
+        title: 'Dashboard - Salvage Union System Reference Document',
       },
       {
         name: 'description',

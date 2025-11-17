@@ -66,7 +66,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Salvage Union Reference</title>
+        <title>Salvage Union System Reference Document</title>
         <HeadContent />
       </head>
       <body>

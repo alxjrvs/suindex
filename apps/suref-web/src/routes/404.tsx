@@ -12,7 +12,7 @@ export const Route = createFileRoute('/404')({
   head: () => ({
     meta: [
       {
-        title: '404 - Page Not Found - Salvage Union Reference',
+        title: '404 - Page Not Found - Salvage Union System Reference Document',
       },
       {
         name: 'description',

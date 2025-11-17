@@ -2,8 +2,8 @@ import { Box, type BoxProps } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
 import type { ReactNode } from 'react'
 
-interface ReferenceHeaderProps extends BoxProps {
-  title?: string
+interface ReferenceHeaderProps extends Omit<BoxProps, 'title'> {
+  title?: string | ReactNode
   children?: ReactNode
 }
 
