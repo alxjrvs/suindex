@@ -1,6 +1,6 @@
 import { RoundedBox } from '../shared/RoundedBox'
 import { DynamicBay } from '../shared/DynamicBay'
-import { useMemo, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getTiltRotation } from '../../utils/tiltUtils'
 import { CargoModal } from '../shared/CargoModal'
 import { useManageCrawlerCargo } from '../../hooks/crawler/useManageCrawlerCargo'
@@ -13,7 +13,12 @@ interface CargoBayProps {
 }
 
 export function StorageCargoBay({ disabled = false, readOnly = false, id }: CargoBayProps) {
-  const titleRotation = useMemo(() => getTiltRotation(), [])
+  // Only calculate rotation on client to avoid hydration mismatch
+  const [titleRotation, setTitleRotation] = useState(0)
+  
+  useEffect(() => {
+    setTitleRotation(getTiltRotation())
+  }, [])
   const [isCargoModalOpen, setIsCargoModalOpen] = useState(false)
   const [cargoPosition, setCargoPosition] = useState<{ row: number; col: number } | null>(null)
   const { storageBay, cargo, totalCargo } = useHydratedCrawler(id)

@@ -4,7 +4,6 @@ import { getEffects, getTable } from 'salvageunion-reference'
 import { PageReferenceDisplay } from '../../../shared/PageReferenceDisplay'
 import { RollTable } from '../../../shared/RollTable'
 import { RoundedBox } from '../../../shared/RoundedBox'
-import { EntityAbsoluteContent } from '../EntityAbsoluteContent'
 import { EntitySubTitleElement } from '../EntitySubTitleContent'
 import { EntityLeftContent } from '../EntityLeftContent'
 import { EntityRightHeaderContent } from '../EntityRightHeaderContent'
@@ -51,7 +50,6 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
       headerBg={headerBg}
       headerOpacity={opacity.header}
       bottomHeaderBorder
-      absoluteElements={<EntityAbsoluteContent hideLevel={hideLevel} />}
       leftContent={<EntityLeftContent />}
       subTitleContent={<EntitySubTitleElement />}
       rightContent={

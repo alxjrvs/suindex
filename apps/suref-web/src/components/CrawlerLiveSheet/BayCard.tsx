@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useMemo, useCallback, useState, useEffect } from 'react'
 import { Box, VStack } from '@chakra-ui/react'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
 
@@ -32,8 +32,14 @@ export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProp
     )
   }, [bay.metadata])
 
-  const titleRotation = useMemo(() => getTiltRotation(), [])
-  const bayInfoRotation = useMemo(() => getTiltRotation(), [])
+  // Only calculate rotation on client to avoid hydration mismatch
+  const [titleRotation, setTitleRotation] = useState(0)
+  const [bayInfoRotation, setBayInfoRotation] = useState(0)
+
+  useEffect(() => {
+    setTitleRotation(getTiltRotation())
+    setBayInfoRotation(getTiltRotation())
+  }, [])
 
   const handleToggleDamaged = useCallback(() => {
     const currentMetadata = bay.metadata || {

@@ -4,7 +4,7 @@ import { Text } from '../base/Text'
 import { ActivationCostBox } from '../shared/ActivationCostBox'
 import { ValueDisplay } from '../shared/ValueDisplay'
 import { EntityDetailDisplay } from './EntityDetailDisplay'
-import { useParseTraitReferences } from '../../utils/parseTraitReferences'
+import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
 import type { DataValue } from '../../types/common'
 
 interface NestedActionDisplayProps {
@@ -36,18 +36,13 @@ export function NestedActionDisplay({
   isLast = false,
   hideContent = false,
 }: NestedActionDisplayProps) {
-  // Extract description from content blocks
-  const descriptionBlock = data.content?.find((block) => !block.type || block.type === 'paragraph')
-  const description = descriptionBlock?.value
-  const parsedDescription = useParseTraitReferences(description)
-
   const details = extractActionDetails(data)
 
   const fontSize = compact ? 'sm' : 'md'
   const titleFontSize = compact ? 'lg' : 'xl'
   const spacing = compact ? 1 : 2
 
-  const hasContent = !!description
+  const hasContent = data.content && data.content.length > 0
 
   return (
     <Box bg="su.lightBlue" overflow="hidden" pb={isLast ? 0 : spacing} position="relative">
@@ -75,11 +70,7 @@ export function NestedActionDisplay({
           pt={details.length > 0 ? 0 : spacing}
           alignItems="stretch"
         >
-          {description && (
-            <Box color="su.black" fontWeight="normal" lineHeight="relaxed" fontSize={fontSize}>
-              {parsedDescription}
-            </Box>
-          )}
+          <ContentBlockRenderer content={data.content!} fontSize={fontSize} compact={compact} />
         </VStack>
       )}
     </Box>
