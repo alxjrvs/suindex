@@ -1836,16 +1836,12 @@
             "value": "The next attack you make against that target automatically hits counting as an (11-19) result."
           }
         ]
-      },
+      }
+    ],
+    "content": [
       {
-        "id": "3807f7a1-4640-4801-a27d-b342d38b94a3",
-        "name": "Adv. Targeting Array",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "This mil-tech Module combines Laser Guidance, Pinpoint Targeter, and Multi-Targeter into one Module. You may activate each separately."
-          }
-        ]
+        "type": "paragraph",
+        "value": "This mil-tech Module combines Laser Guidance, Pinpoint Targeter, and Multi-Targeter into one Module. You may activate each separately."
       }
     ],
     "page": 205

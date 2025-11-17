@@ -1,6 +1,6 @@
 {
   "name": "salvageunion-reference",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Comprehensive, schema-validated JSON dataset and TypeScript ORM for the Salvage Union tabletop RPG",
   "type": "module",
   "main": "./lib/index.ts",
