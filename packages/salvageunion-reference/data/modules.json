@@ -2088,5 +2088,57 @@
         ]
       }
     ]
+  },
+  {
+    "id": "171ea7fb-0ccd-4265-be82-48a194cff13c",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Goflow Plant Growing System",
+    "techLevel": 4,
+    "slotsRequired": 1,
+    "salvageValue": 2,
+    "indexable": false,
+    "blackMarket": true,
+    "page": 71,
+    "actions": [
+      {
+        "id": "d80b716d-fc9e-449c-847d-1399bfb0ad4d",
+        "actionType": "Passive",
+        "name": "Goflow Plant Growing System",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "With all known plant genomes corpo patented, the growing of any plant from a patented seed without permission or proof of purchase is considered intellectual theft and punishable by ten years of re-education."
+          },
+          {
+            "type": "paragraph",
+            "value": "This particular plant growing System is designed to be installed in a Mech for transportation and use in the field. It provides the Pilot and their companion with a regular supply of (illegal) fresh fruit and vegetables."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "3910cacd-208a-40aa-86ff-891269ebb0a9",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Corrupted Neuralink Module",
+    "techLevel": 5,
+    "slotsRequired": 1,
+    "salvageValue": 2,
+    "indexable": false,
+    "blackMarket": true,
+    "page": 71,
+    "actions": [
+      {
+        "id": "914600a9-747d-4688-9625-b64b55656cee",
+        "actionType": "Passive",
+        "name": "Corrupted Neuralink Module",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "This thin array of harmless looking mesh is effectively identical to neuralinks found in certain Mechs that allow for one-to-one Pilot to Mech interfacing. It happens to be one of the most grievous torture devices ever invented and it does not leave a mark. When hooked up to a Pilot via a Mech, it can simulate pain beyond their imagination."
+          }
+        ]
+      }
+    ]
   }
 ]

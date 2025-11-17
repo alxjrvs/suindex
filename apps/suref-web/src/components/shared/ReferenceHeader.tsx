@@ -29,9 +29,9 @@ export function ReferenceHeader({ title, children, ...boxProps }: ReferenceHeade
           alignSelf="center"
           bg={typeof title === 'string' ? undefined : 'transparent'}
           mx="auto"
-          display="flex"
+          display={typeof title === 'string' ? 'inline-block' : 'flex'}
           justifyContent="center"
-          width="100%"
+          width={typeof title === 'string' ? 'fit-content' : '100%'}
         >
           {title}
         </Heading>

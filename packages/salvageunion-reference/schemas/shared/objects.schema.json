@@ -459,6 +459,21 @@
               "const": "flat"
             }
           }
+        },
+        {
+          "type": "object",
+          "description": "Dramatic roll table with only one outcome",
+          "additionalProperties": false,
+          "required": ["type", "20"],
+          "properties": {
+            "20": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "dramatic"
+            }
+          }
         }
       ]
     },
@@ -479,6 +494,10 @@
         "indexable": {
           "type": "boolean",
           "default": true
+        },
+        "blackMarket": {
+          "type": "boolean",
+          "default": false
         },
         "name": {
           "$ref": "common.schema.json#/definitions/name"

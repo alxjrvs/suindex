@@ -213,7 +213,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
               }
             >
               <Suspense fallback={<Box h="200px" bg="su.lightBlue" borderRadius="md" />}>
-                <DisplayComponent hideActions data={item} compact={true} collapsible={false} />
+                <DisplayComponent hideActions hideChoices data={item} compact={true} collapsible={false} />
               </Suspense>
             </Box>
           ))}

@@ -1834,5 +1834,40 @@
       }
     ],
     "id": "f5f04072-9e81-4c9d-a835-b71f45120d66"
+  },
+  {
+    "id": "fbb3002c-24d2-4a1b-a623-9c9eab3ac566",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Blinding Blue Laser Rifle",
+    "techLevel": 3,
+    "indexable": false,
+    "blackMarket": true,
+    "page": 71,
+    "actions": [
+      {
+        "id": "6de946e1-e511-4fb1-9b0a-a57f16ca24f4",
+        "range": ["Close"],
+        "damage": {
+          "damageType": "HP",
+          "amount": 3
+        },
+        "traits": [
+          {
+            "type": "energy"
+          }
+        ],
+        "table": {
+          "type": "dramatic",
+          "20": "The target suffers a Major Injury of permanent blindness."
+        },
+        "name": "Blinding Blue Laser Rifle",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "This portable laser rifle is designed to permanently blind targets shot by it. A creature hit by this weapon suffers the Minor Injury of temporary blindness in addition to the normal damage it inflicts. This costs 1 Tech 3 Scrap to purchase from the Black Market."
+          }
+        ]
+      }
+    ]
   }
 ]

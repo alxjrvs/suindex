@@ -5,6 +5,7 @@ import type { SURefEntity } from 'salvageunion-reference'
 export interface DisplayComponentProps {
   data: SURefEntity
   hideActions?: boolean
+  hideChoices?: boolean
   compact?: boolean
   collapsible?: boolean
   defaultExpanded?: boolean

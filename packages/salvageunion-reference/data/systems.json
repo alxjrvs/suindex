@@ -3617,5 +3617,78 @@
         ]
       }
     ]
+  },
+  {
+    "id": "d005a2fb-3186-40ef-a299-2a923a6d2c5f",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Napalm Launcher",
+    "techLevel": 3,
+    "slotsRequired": 6,
+    "salvageValue": 3,
+    "indexable": false,
+    "blackMarket": true,
+    "page": 71,
+    "actions": [
+      {
+        "id": "65f25a6f-3aac-45d6-ba7c-3cbaa6d098d8",
+        "range": ["Medium"],
+        "damage": {
+          "damageType": "SP",
+          "amount": 4
+        },
+        "traits": [
+          {
+            "type": "anti-organic"
+          },
+          {
+            "type": "burn",
+            "amount": 2
+          },
+          {
+            "type": "explosive",
+            "amount": 2
+          },
+          {
+            "type": "overheat"
+          }
+        ],
+        "name": "Napalm Launcher",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Fires superheated napalm that sticks to a target causing agonising pain. Used extensively by Contour Aerospace in the purging of the primordials, which saw much of the world's forests turn to ash."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "6410257e-4fe9-4536-b6e1-ea9b822bb2c4",
+    "source": "Salvage Union Workshop Manual",
+    "name": "Rad Wave Generator",
+    "techLevel": 3,
+    "slotsRequired": 5,
+    "salvageValue": 4,
+    "indexable": false,
+    "blackMarket": true,
+    "page": 71,
+    "actions": [
+      {
+        "id": "78fa4b82-b7df-44d2-993b-f41f756cdde7",
+        "range": ["Medium"],
+        "traits": [
+          {
+            "type": "overheat"
+          }
+        ],
+        "name": "Rad Wave Generator",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "This weapon fires an intense wave of radiation at a target. An organic target hit suffers an agonising death from acute radiation poisoning. They will suffer a Major Injury every day which reduces their Max HP by 2 each time. This attack can target Pilots inside their Mechs, unless they have Radiation Sealing or equivalent."
+          }
+        ]
+      }
+    ]
   }
 ]

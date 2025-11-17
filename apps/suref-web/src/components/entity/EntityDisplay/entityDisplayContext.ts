@@ -62,6 +62,8 @@ export interface EntityDisplayContextValue {
   hideActions: boolean
   /** Whether to hide chassis patterns */
   hidePatterns: boolean
+  /** Whether to hide choices */
+  hideChoices: boolean
   /** Whether to hide tech level */
   hideLevel: boolean
   /** Right label for header */

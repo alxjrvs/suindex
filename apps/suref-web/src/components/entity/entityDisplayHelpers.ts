@@ -3,6 +3,7 @@ import type {
   SURefSchemaName,
   SURefMetaBonusPerTechLevel,
 } from 'salvageunion-reference'
+import { getBlackMarket } from 'salvageunion-reference'
 
 /**
  * Local type that extends SURefSchemaName to include meta schemas like 'actions'
@@ -47,6 +48,11 @@ export function calculateBackgroundColor(
   data: SURefMetaEntity | SURefMetaBonusPerTechLevel,
   techLevelColors: Record<number, string>
 ): string {
+  // Check for Black Market items first - they get dark grey background
+  if (getBlackMarket(data) === true) {
+    return 'su.darkGrey'
+  }
+
   if (schemaName === 'chassis') return 'su.green'
   if (schemaName === 'crawlers') return headerColor || 'su.pink'
   if (schemaName === 'crawler-tech-levels') return headerColor || 'su.pink'

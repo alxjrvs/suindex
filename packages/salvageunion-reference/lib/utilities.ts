@@ -220,6 +220,17 @@ export function getAssetUrl(entity: SURefMetaEntity): string | undefined {
     : undefined
 }
 
+/**
+ * Extract blackMarket flag from an entity
+ * @param entity - The entity to extract from
+ * @returns True if the entity is from the Black Market, false if not, undefined if not present
+ */
+export function getBlackMarket(entity: SURefMetaEntity): boolean | undefined {
+  return 'blackMarket' in entity && typeof entity.blackMarket === 'boolean'
+    ? entity.blackMarket
+    : undefined
+}
+
 // ============================================================================
 // TYPE GUARDS - Property-based
 // ============================================================================
