@@ -67,14 +67,6 @@ export function EntitySelectionModal({
     }
   }, [searchTerm])
 
-  // Reset search when modal closes
-  useEffect(() => {
-    if (!isOpen) {
-      setSearchTerm('')
-      setFilterSearchTerm('')
-    }
-  }, [isOpen])
-
   const allEntities = useMemo(() => {
     const entities: Array<{ entity: SURefEntity; schemaName: SURefSchemaName }> = []
 
@@ -166,7 +158,7 @@ export function EntitySelectionModal({
   const isFiltering = searchTerm !== filterSearchTerm
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title}>
+    <Modal key={isOpen ? 'open' : 'closed'} isOpen={isOpen} onClose={onClose} title={title}>
       <VStack gap={0} alignItems="stretch" h="80vh" overflow="hidden">
         <VStack
           gap={4}
@@ -350,9 +342,7 @@ export function EntitySelectionModal({
                         },
                         disabled: isDisabled,
                         onClick: () => handleSelect(entityId, schemaName),
-                        children: isSelected
-                          ? `Selected: ${entityName}`
-                          : buttonText,
+                        children: isSelected ? `Selected: ${entityName}` : buttonText,
                       }}
                     />
                   </Box>

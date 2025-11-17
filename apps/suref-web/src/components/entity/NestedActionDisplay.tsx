@@ -55,7 +55,12 @@ export function NestedActionDisplay({
         <Box position="absolute" bottom={0} left="10%" width="80%" height="2px" bg="su.black" />
       )}
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
-        <Text fontSize={titleFontSize} variant="pseudoheader" width="fit-content" {...headerPadding}>
+        <Text
+          fontSize={titleFontSize}
+          variant="pseudoheader"
+          width="fit-content"
+          {...headerPadding}
+        >
           {data.name}
         </Text>
       </Flex>

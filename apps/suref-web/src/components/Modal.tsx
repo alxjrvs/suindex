@@ -53,12 +53,7 @@ export default function Modal({
             justifyContent="space-between"
             alignItems="center"
           >
-            <Text
-              variant="pseudoheader"
-              fontSize="4xl"
-              textTransform="uppercase"
-              mt="2"
-            >
+            <Text variant="pseudoheader" fontSize="4xl" textTransform="uppercase" mt="2">
               {title}
             </Text>
             <DialogCloseTrigger
