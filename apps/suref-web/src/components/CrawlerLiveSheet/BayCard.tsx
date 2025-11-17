@@ -59,7 +59,8 @@ export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProp
         npc: { name: '', notes: '', hitPoints: null, damage: 0 },
       }
       // Only update notes and damage - name is stored in player_choices
-      const { name, ...npcWithoutName } = updates.npc
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { name: _name, ...npcWithoutName } = updates.npc
       updateEntity.mutate({
         id: bay.id,
         updates: {
