@@ -43,7 +43,6 @@
     "validate:references": "tsx tools/validateReferences.ts",
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "test": "bun test",
-    "test:watch": "bun test --watch",
     "lint": "eslint .",
     "sanity": "bun run lint -- --fix && bun run format && bun run typecheck",
     "format": "prettier --write ."
