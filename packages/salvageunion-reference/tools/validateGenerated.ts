@@ -43,7 +43,7 @@ function getGeneratedFiles(): string[] {
  * Generate files and return their content hashes
  * This temporarily overwrites the existing files, so we need to restore them
  */
-function generateAndGetHashes(originalHashes: Map<string, string>): Map<string, string> {
+function generateAndGetHashes(): Map<string, string> {
   const packageDir = path.join(__dirname, '..')
   const generatedFiles = getGeneratedFiles()
 
@@ -118,8 +118,8 @@ function validateGenerated(): boolean {
   // Generate fresh files and get their hashes
   let newHashes: Map<string, string>
   try {
-    newHashes = generateAndGetHashes(originalHashes)
-  } catch (error) {
+    newHashes = generateAndGetHashes()
+  } catch {
     // Restore original files on error
     for (const [file, content] of originalContents) {
       fs.writeFileSync(file, content, 'utf-8')

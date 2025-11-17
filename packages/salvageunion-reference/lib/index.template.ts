@@ -14,11 +14,7 @@ import { generateModels } from './ModelFactory.js'
 
 export { BaseModel, type ModelWithMetadata } from './BaseModel.js'
 
-export {
-  getDataMaps,
-  getSchemaCatalog,
-  type EnhancedSchemaMetadata,
-} from './ModelFactory.js'
+export { getDataMaps, getSchemaCatalog, type EnhancedSchemaMetadata } from './ModelFactory.js'
 
 export { resultForTable, type TableRollResult } from './utils/resultForTable.js'
 
@@ -125,10 +121,7 @@ export class SalvageUnionReference {
     }
 
     // Find entity
-    const entity = this.findIn(
-      schemaName,
-      (e: SchemaToEntityMap[T]) => e.id === id
-    )
+    const entity = this.findIn(schemaName, (e: SchemaToEntityMap[T]) => e.id === id)
 
     // Cache if found
     if (entity) {
@@ -148,10 +141,7 @@ export class SalvageUnionReference {
    * @example
    * if (SalvageUnionReference.exists('abilities', 'bionic-senses')) { ... }
    */
-  public static exists<T extends keyof SchemaToEntityMap>(
-    schemaName: T,
-    id: string
-  ): boolean {
+  public static exists<T extends keyof SchemaToEntityMap>(schemaName: T, id: string): boolean {
     return this.get(schemaName, id) !== undefined
   }
 
@@ -184,10 +174,7 @@ export class SalvageUnionReference {
    * const ref = SalvageUnionReference.composeRef('abilities', 'bionic-senses')
    * // => 'abilities::bionic-senses'
    */
-  public static composeRef<T extends keyof SchemaToEntityMap>(
-    schemaName: T,
-    id: string
-  ): string {
+  public static composeRef<T extends keyof SchemaToEntityMap>(schemaName: T, id: string): string {
     return `${schemaName}::${id}`
   }
 
@@ -241,9 +228,7 @@ export class SalvageUnionReference {
    *   'systems::energy-shield'
    * ])
    */
-  public static getManyByRef(
-    refs: string[]
-  ): Map<string, SURefEntity | undefined> {
+  public static getManyByRef(refs: string[]): Map<string, SURefEntity | undefined> {
     const result = new Map<string, SURefEntity | undefined>()
     for (const ref of refs) {
       result.set(ref, this.getByRef(ref))

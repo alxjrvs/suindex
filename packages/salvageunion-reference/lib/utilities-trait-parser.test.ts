@@ -88,9 +88,7 @@ describe('parseTraitReferences', () => {
 
     expect(refs[0].startIndex).toBe(13)
     expect(refs[0].endIndex).toBe(23)
-    expect(text.substring(refs[0].startIndex, refs[0].endIndex)).toBe(
-      '[[Shield]]'
-    )
+    expect(text.substring(refs[0].startIndex, refs[0].endIndex)).toBe('[[Shield]]')
   })
 
   test('should handle empty text', () => {
@@ -105,8 +103,7 @@ describe('parseTraitReferences', () => {
   })
 
   test('should sort references by start index', () => {
-    const text =
-      'First [[Shield]] then [[[Hot] (3)]] and finally [[Vulnerable]]'
+    const text = 'First [[Shield]] then [[[Hot] (3)]] and finally [[Vulnerable]]'
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(3)

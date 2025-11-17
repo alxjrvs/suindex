@@ -25,8 +25,7 @@ bun add salvageunion-data
 ```typescript
 import { SalvageUnionReference } from 'salvageunion-data'
 
-const { Abilities, Chassis, Equipment, Systems, Modules } =
-  SalvageUnionReference
+const { Abilities, Chassis, Equipment, Systems, Modules } = SalvageUnionReference
 
 // Get all chassis
 const allChassis = Chassis.all()
@@ -43,9 +42,7 @@ const t3Equipment = Equipment.findAll((e) => e.techLevel === 3)
 
 // Get weapons
 const weapons = Systems.findAll((s) =>
-  s.traits?.some((t) =>
-    ['melee', 'ballistic', 'energy', 'missile'].includes(t.type)
-  )
+  s.traits?.some((t) => ['melee', 'ballistic', 'energy', 'missile'].includes(t.type))
 )
 
 // Advanced queries
@@ -136,31 +133,24 @@ const atlas = Chassis.find((c) => c.name === 'Atlas')
 const t3Equipment = Equipment.findAll((e) => e.techLevel === 3)
 
 // Find by trait
-const armorItems = Equipment.findAll((e) =>
-  e.traits?.some((t) => t.type === 'armor')
-)
+const armorItems = Equipment.findAll((e) => e.traits?.some((t) => t.type === 'armor'))
 
 // Find weapons
 const weapons = Systems.findAll((s) =>
-  s.traits?.some((t) =>
-    ['melee', 'ballistic', 'energy', 'missile'].includes(t.type)
-  )
+  s.traits?.some((t) => ['melee', 'ballistic', 'energy', 'missile'].includes(t.type))
 )
 
 // Find by level
 const level1Abilities = Abilities.findAll((a) => a.level === 1)
 
 // Find by tree
-const mechanicalAbilities = Abilities.findAll(
-  (a) => a.tree === 'Mechanical Knowledge'
-)
+const mechanicalAbilities = Abilities.findAll((a) => a.tree === 'Mechanical Knowledge')
 
 // Complex queries
 const heavyWeapons = Systems.findAll(
   (s) =>
-    s.traits?.some((t) =>
-      ['melee', 'ballistic', 'energy', 'missile'].includes(t.type)
-    ) && (s.techLevel ?? 0) >= 3
+    s.traits?.some((t) => ['melee', 'ballistic', 'energy', 'missile'].includes(t.type)) &&
+    (s.techLevel ?? 0) >= 3
 )
 ```
 
@@ -198,11 +188,7 @@ Full TypeScript support with inferred types from JSON data:
 
 ```typescript
 import { SalvageUnionReference } from 'salvageunion-data'
-import type {
-  SURefChassis,
-  SURefEquipment,
-  SURefSystem,
-} from 'salvageunion-data'
+import type { SURefChassis, SURefEquipment, SURefSystem } from 'salvageunion-data'
 
 const { Chassis, Equipment } = SalvageUnionReference
 
@@ -210,9 +196,7 @@ const { Chassis, Equipment } = SalvageUnionReference
 const atlas: SURefChassis | undefined = Chassis.find((c) => c.name === 'Atlas')
 
 // Type-safe queries
-const heavyEquipment: SURefEquipment[] = Equipment.findAll(
-  (e) => (e.techLevel ?? 0) >= 3
-)
+const heavyEquipment: SURefEquipment[] = Equipment.findAll((e) => (e.techLevel ?? 0) >= 3)
 ```
 
 ## 🛠️ Development Scripts

@@ -52,9 +52,10 @@ export function extractProperty<K extends SURefMetaEntityKeys>(
   propertyName: K
 ): PropertyType<SURefMetaEntity, K> | undefined {
   if (entity !== null && typeof entity === 'object' && propertyName in entity) {
-    return (entity as unknown as Record<string, unknown>)[
-      propertyName as string
-    ] as PropertyType<SURefMetaEntity, K>
+    return (entity as unknown as Record<string, unknown>)[propertyName as string] as PropertyType<
+      SURefMetaEntity,
+      K
+    >
   }
   return undefined
 }
@@ -107,9 +108,7 @@ export function getRequiredSlots(entity: SURefMetaEntity): number | undefined {
  * @returns The page number or undefined
  */
 export function getPageReference(entity: SURefMetaEntity): number | undefined {
-  return 'page' in entity && typeof entity.page === 'number'
-    ? entity.page
-    : undefined
+  return 'page' in entity && typeof entity.page === 'number' ? entity.page : undefined
 }
 
 /**
@@ -117,12 +116,8 @@ export function getPageReference(entity: SURefMetaEntity): number | undefined {
  * @param entity - The entity to extract from
  * @returns The actions array or undefined
  */
-export function extractActions(
-  entity: SURefMetaEntity
-): SURefMetaAction[] | undefined {
-  return 'actions' in entity && Array.isArray(entity.actions)
-    ? entity.actions
-    : undefined
+export function extractActions(entity: SURefMetaEntity): SURefMetaAction[] | undefined {
+  return 'actions' in entity && Array.isArray(entity.actions) ? entity.actions : undefined
 }
 
 /**
@@ -130,9 +125,7 @@ export function extractActions(
  * @param entity - The entity to extract from
  * @returns The chassis abilities array or undefined
  */
-export function getChassisAbilities(
-  entity: SURefMetaEntity
-): SURefMetaAction[] | undefined {
+export function getChassisAbilities(entity: SURefMetaEntity): SURefMetaAction[] | undefined {
   return 'chassisAbilities' in entity && Array.isArray(entity.chassisAbilities)
     ? entity.chassisAbilities
     : undefined
@@ -143,11 +136,8 @@ export function getChassisAbilities(
  * @param entity - The entity to extract from
  * @returns The structure points or undefined
  */
-export function getStructurePoints(
-  entity: SURefMetaEntity
-): number | undefined {
-  return 'structurePoints' in entity &&
-    typeof entity.structurePoints === 'number'
+export function getStructurePoints(entity: SURefMetaEntity): number | undefined {
+  return 'structurePoints' in entity && typeof entity.structurePoints === 'number'
     ? entity.structurePoints
     : undefined
 }
@@ -288,8 +278,7 @@ export function hasTraits(
 ): entity is SURefMetaEntity & { traits?: unknown[] } {
   // Check if traits exists at base level
   const hasBaseTraits =
-    'traits' in entity &&
-    (entity.traits === undefined || Array.isArray(entity.traits))
+    'traits' in entity && (entity.traits === undefined || Array.isArray(entity.traits))
 
   // Check if traits exists in actions[0] property
   const hasActionTraits =
@@ -299,8 +288,7 @@ export function hasTraits(
     entity.actions[0] !== null &&
     typeof entity.actions[0] === 'object' &&
     'traits' in entity.actions[0] &&
-    (entity.actions[0].traits === undefined ||
-      Array.isArray(entity.actions[0].traits))
+    (entity.actions[0].traits === undefined || Array.isArray(entity.actions[0].traits))
 
   return hasBaseTraits || hasActionTraits
 }
@@ -315,12 +303,7 @@ export function hasTraits(
  * @returns True if the entity is an Ability
  */
 export function isAbility(entity: SURefMetaEntity): entity is SURefAbility {
-  return (
-    entity !== null &&
-    typeof entity === 'object' &&
-    'tree' in entity &&
-    'level' in entity
-  )
+  return entity !== null && typeof entity === 'object' && 'tree' in entity && 'level' in entity
 }
 
 /**
@@ -395,9 +378,7 @@ export function isCoreClass(entity: SURefMetaEntity): entity is SURefCoreClass {
  * @param entity - The entity to check
  * @returns True if the entity is an Advanced Class
  */
-export function isBaseAdvancedClass(
-  entity: SURefMetaEntity
-): entity is SURefAdvancedClass {
+export function isBaseAdvancedClass(entity: SURefMetaEntity): entity is SURefAdvancedClass {
   return (
     entity !== null &&
     typeof entity === 'object' &&
@@ -411,9 +392,7 @@ export function isBaseAdvancedClass(
  * @param entity - The entity to check
  * @returns True if the entity is an Advanced Class
  */
-export function isAdvancedClass(
-  entity: SURefMetaEntity
-): entity is SURefAdvancedClass {
+export function isAdvancedClass(entity: SURefMetaEntity): entity is SURefAdvancedClass {
   return isBaseAdvancedClass(entity) && entity.type === 'Advanced'
 }
 
@@ -422,9 +401,7 @@ export function isAdvancedClass(
  * @param entity - The entity to check
  * @returns True if the entity is a Hybrid Class
  */
-export function isHybridClass(
-  entity: SURefMetaEntity
-): entity is SURefAdvancedClass {
+export function isHybridClass(entity: SURefMetaEntity): entity is SURefAdvancedClass {
   return isBaseAdvancedClass(entity) && entity.type === 'Hybrid'
 }
 
@@ -433,9 +410,7 @@ export function isHybridClass(
  * @param entity - The entity to check
  * @returns True if the entity is a Core, Advanced, or Hybrid class
  */
-export function isClass(
-  entity: SURefMetaEntity
-): entity is SURefCoreClass | SURefAdvancedClass {
+export function isClass(entity: SURefMetaEntity): entity is SURefCoreClass | SURefAdvancedClass {
   return isCoreClass(entity) || isAdvancedClass(entity) || isHybridClass(entity)
 }
 
@@ -444,9 +419,7 @@ export function isClass(
  * @param entity - The entity to check
  * @returns True if the entity is a System or Module
  */
-export function isSystemOrModule(
-  entity: SURefMetaEntity
-): entity is SURefSystem | SURefModule {
+export function isSystemOrModule(entity: SURefMetaEntity): entity is SURefSystem | SURefModule {
   return isSystem(entity) || isModule(entity)
 }
 
@@ -474,14 +447,11 @@ export function getDescription(entity: SURefMetaEntity): string | undefined {
  * @param entity - The entity to extract activation cost from
  * @returns The activation cost or undefined if not present
  */
-export function getActivationCost(
-  entity: SURefMetaEntity
-): number | string | undefined {
+export function getActivationCost(entity: SURefMetaEntity): number | string | undefined {
   // Check base level first
   if (
     'activationCost' in entity &&
-    (typeof entity.activationCost === 'number' ||
-      typeof entity.activationCost === 'string')
+    (typeof entity.activationCost === 'number' || typeof entity.activationCost === 'string')
   ) {
     return entity.activationCost
   }
@@ -572,11 +542,7 @@ export function getDamage(entity: SURefMetaEntity):
     }
   | undefined {
   // Check base level first
-  if (
-    'damage' in entity &&
-    entity.damage !== null &&
-    typeof entity.damage === 'object'
-  ) {
+  if ('damage' in entity && entity.damage !== null && typeof entity.damage === 'object') {
     return entity.damage as { damageType: string; amount: number | string }
   }
 
@@ -669,11 +635,7 @@ export function getTable(entity: SURefMetaEntity):
     }
   | undefined {
   // Check base level first
-  if (
-    'table' in entity &&
-    entity.table !== null &&
-    typeof entity.table === 'object'
-  ) {
+  if ('table' in entity && entity.table !== null && typeof entity.table === 'object') {
     return entity.table as {
       type: 'standard' | 'alternate' | 'flat' | 'full'
       [key: string]: string
@@ -812,8 +774,7 @@ export function parseTraitReferences(text: string): ParsedTraitReference[] {
   const references: ParsedTraitReference[] = []
 
   // Pattern for parameterized traits: [[[TraitName] (param)]]
-  const paramPattern =
-    /\[\[\[([A-Z][A-Za-z-]+(?:\s+[A-Z][A-Za-z-]+)*)\]\s+\(([^)]+)\)\]\]/g
+  const paramPattern = /\[\[\[([A-Z][A-Za-z-]+(?:\s+[A-Z][A-Za-z-]+)*)\]\s+\(([^)]+)\)\]\]/g
 
   // Pattern for simple traits: [[TraitName]]
   const simplePattern = /\[\[([A-Z][A-Za-z-]+(?:\s+[A-Z][A-Za-z-]+)*)\]\]/g

@@ -19,9 +19,7 @@ describe('Search API', () => {
       expect(results.length).toBeGreaterThan(0)
       // Should find various laser systems
       const laserNames = results.map((r) => r.entityName)
-      expect(
-        laserNames.some((name) => name.toLowerCase().includes('laser'))
-      ).toBe(true)
+      expect(laserNames.some((name) => name.toLowerCase().includes('laser'))).toBe(true)
     })
 
     test('should find entities by description match', () => {
@@ -29,9 +27,7 @@ describe('Search API', () => {
 
       expect(results.length).toBeGreaterThan(0)
       // Should find entities with "damage" in description
-      const hasDescriptionMatch = results.some((r) =>
-        r.matchedFields.includes('description')
-      )
+      const hasDescriptionMatch = results.some((r) => r.matchedFields.includes('description'))
       expect(hasDescriptionMatch).toBe(true)
     })
 
@@ -64,11 +60,9 @@ describe('Search API', () => {
 
       expect(results.length).toBeGreaterThan(0)
       // All results should be from systems or modules
-      expect(
-        results.every(
-          (r) => r.schemaName === 'systems' || r.schemaName === 'modules'
-        )
-      ).toBe(true)
+      expect(results.every((r) => r.schemaName === 'systems' || r.schemaName === 'modules')).toBe(
+        true
+      )
     })
 
     test('should respect limit option', () => {
@@ -85,9 +79,7 @@ describe('Search API', () => {
 
       // Scores should be in descending order
       for (let i = 1; i < results.length; i++) {
-        expect(results[i - 1].matchScore).toBeGreaterThanOrEqual(
-          results[i].matchScore
-        )
+        expect(results[i - 1].matchScore).toBeGreaterThanOrEqual(results[i].matchScore)
       }
     })
 
@@ -204,9 +196,7 @@ describe('Search API', () => {
       const suggestions = getSuggestions('laser')
 
       // Should include laser-related names
-      expect(suggestions.some((s) => s.toLowerCase().includes('laser'))).toBe(
-        true
-      )
+      expect(suggestions.some((s) => s.toLowerCase().includes('laser'))).toBe(true)
     })
   })
 

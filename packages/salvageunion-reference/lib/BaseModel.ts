@@ -16,12 +16,7 @@ export class BaseModel<T> {
   protected _schemaName: string
   protected _displayName: string
 
-  constructor(
-    data: T[],
-    schema: Record<string, unknown>,
-    schemaName: string,
-    displayName: string
-  ) {
+  constructor(data: T[], schema: Record<string, unknown>, schemaName: string, displayName: string) {
     this.data = data
     this.schema = schema
     this._schemaName = schemaName

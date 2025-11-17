@@ -53,9 +53,7 @@ export function loadSchemaIndex(dirname: string): SchemaIndex {
  * Generate schema name map from schema index
  * Derives singular type names from display names
  */
-export function generateSchemaNameMap(
-  schemaIndex: SchemaIndex
-): Record<string, string> {
+export function generateSchemaNameMap(schemaIndex: SchemaIndex): Record<string, string> {
   const map: Record<string, string> = {}
 
   for (const schema of schemaIndex.schemas) {
@@ -104,10 +102,7 @@ export function generateSchemaNameMap(
  */
 let cachedSchemaNameMap: Record<string, string> | null = null
 
-export function getSingularTypeName(
-  schemaId: string,
-  dirname?: string
-): string {
+export function getSingularTypeName(schemaId: string, dirname?: string): string {
   if (!cachedSchemaNameMap) {
     const dir = dirname || getDirname(import.meta.url)
     const schemaIndex = loadSchemaIndex(dir)

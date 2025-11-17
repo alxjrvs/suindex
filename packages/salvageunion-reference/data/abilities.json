@@ -662,11 +662,7 @@
           {
             "id": "0cbc2a80-bf97-4acb-ad26-9e2f8f5ed0d7",
             "name": "Bionic Senses",
-            "schemaEntities": [
-              "Thermal Optics",
-              "Zoom Optics",
-              "IR Night Vision Optics"
-            ],
+            "schemaEntities": ["Thermal Optics", "Zoom Optics", "IR Night Vision Optics"],
             "schema": ["modules"]
           }
         ],

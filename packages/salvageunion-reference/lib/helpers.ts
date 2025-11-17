@@ -3,11 +3,7 @@
  * These functions provide convenient access patterns used by consuming applications
  */
 
-import {
-  SalvageUnionReference,
-  SchemaToDisplayName,
-  SchemaToModelMap,
-} from './index.js'
+import { SalvageUnionReference, SchemaToDisplayName, SchemaToModelMap } from './index.js'
 import type {
   SURefAbility,
   SURefAdvancedClass,
@@ -61,22 +57,16 @@ export function getModel(
   const normalized = normalizeSchemaName(schemaName)
   const modelName = SchemaToModelMap[normalized]
   if (!modelName) return undefined
-  return (
-    SalvageUnionReference as unknown as Record<
-      string,
-      ModelWithMetadata<SURefEntity>
-    >
-  )[modelName]
+  return (SalvageUnionReference as unknown as Record<string, ModelWithMetadata<SURefEntity>>)[
+    modelName
+  ]
 }
 
 /**
  * Get a map of all schema names to their models
  * Useful for dynamic model access
  */
-export function getModelMap(): Record<
-  SURefSchemaName,
-  ModelWithMetadata<SURefEntity>
-> {
+export function getModelMap(): Record<SURefSchemaName, ModelWithMetadata<SURefEntity>> {
   const map = {} as Record<SURefSchemaName, ModelWithMetadata<SURefEntity>>
   for (const schemaName in SchemaToModelMap) {
     const model = getModel(schemaName as SURefSchemaName)
@@ -115,9 +105,7 @@ export function getNameById(
   if (!id) return fallback
   const entity = SalvageUnionReference.get(schemaName, id)
   return (
-    entity && 'name' in entity && typeof entity.name === 'string'
-      ? entity.name
-      : fallback
+    entity && 'name' in entity && typeof entity.name === 'string' ? entity.name : fallback
   ) as string
 }
 
@@ -138,9 +126,7 @@ export function getCoreClasses(): SURefCoreClass[] {
  * @returns Array of hybrid classes
  */
 export function getHybridClasses(): SURefAdvancedClass[] {
-  return SalvageUnionReference.AdvancedClasses.all().filter(
-    (c) => c.type === 'Hybrid'
-  )
+  return SalvageUnionReference.AdvancedClasses.all().filter((c) => c.type === 'Hybrid')
 }
 
 /**
@@ -148,9 +134,7 @@ export function getHybridClasses(): SURefAdvancedClass[] {
  * @returns Array of advanced classes
  */
 export function getAdvancedClasses(): SURefAdvancedClass[] {
-  return SalvageUnionReference.AdvancedClasses.all().filter(
-    (c) => c.type === 'Advanced'
-  )
+  return SalvageUnionReference.AdvancedClasses.all().filter((c) => c.type === 'Advanced')
 }
 
 /**
@@ -159,10 +143,7 @@ export function getAdvancedClasses(): SURefAdvancedClass[] {
  * @returns The core class or undefined if not found
  */
 export function findCoreClass(className: string): SURefCoreClass | undefined {
-  return SalvageUnionReference.findIn(
-    'classes.core',
-    (c) => c.name === className
-  )
+  return SalvageUnionReference.findIn('classes.core', (c) => c.name === className)
 }
 
 /**
@@ -170,9 +151,7 @@ export function findCoreClass(className: string): SURefCoreClass | undefined {
  * @param className - Name of the class to find
  * @returns The hybrid class or undefined if not found
  */
-export function findHybridClass(
-  className: string
-): SURefAdvancedClass | undefined {
+export function findHybridClass(className: string): SURefAdvancedClass | undefined {
   return SalvageUnionReference.findIn(
     'classes.advanced',
     (c) => c.name === className && c.type === 'Hybrid'
@@ -184,9 +163,7 @@ export function findHybridClass(
  * @param className - Name of the class to find
  * @returns The advanced class or undefined if not found
  */
-export function findAdvancedClass(
-  className: string
-): SURefAdvancedClass | undefined {
+export function findAdvancedClass(className: string): SURefAdvancedClass | undefined {
   return SalvageUnionReference.findIn(
     'classes.advanced',
     (c) => c.name === className && c.type === 'Advanced'
@@ -198,15 +175,10 @@ export function findAdvancedClass(
  * @param className - Name of the class to find
  * @returns The class or undefined if not found
  */
-export function findClass(
-  className: string
-): SURefCoreClass | SURefAdvancedClass | undefined {
+export function findClass(className: string): SURefCoreClass | SURefAdvancedClass | undefined {
   return (
     SalvageUnionReference.findIn('classes.core', (c) => c.name === className) ||
-    SalvageUnionReference.findIn(
-      'classes.advanced',
-      (c) => c.name === className
-    )
+    SalvageUnionReference.findIn('classes.advanced', (c) => c.name === className)
   )
 }
 
@@ -227,10 +199,7 @@ export function getChassis(): SURefChassis[] {
  * @returns Array of chassis with patterns
  */
 export function getChassisWithPatterns(): SURefChassis[] {
-  return SalvageUnionReference.findAllIn(
-    'chassis',
-    (c) => c.patterns && c.patterns.length > 0
-  )
+  return SalvageUnionReference.findAllIn('chassis', (c) => c.patterns && c.patterns.length > 0)
 }
 
 /**
@@ -248,10 +217,7 @@ export function findChassisById(chassisId: string): SURefChassis | undefined {
  * @param fallback - Fallback string if chassis not found (default: 'Unknown')
  * @returns The chassis name or fallback
  */
-export function getChassisNameById(
-  chassisId: string | null,
-  fallback = 'Unknown'
-): string {
+export function getChassisNameById(chassisId: string | null, fallback = 'Unknown'): string {
   if (!chassisId) return fallback
   return findChassisById(chassisId)?.name ?? fallback
 }
@@ -291,10 +257,7 @@ export function findCrawlerById(crawlerId: string): SURefCrawler | undefined {
  * @param fallback - Fallback string if crawler not found (default: 'Unknown')
  * @returns The crawler name or fallback
  */
-export function getCrawlerNameById(
-  crawlerId: string | null,
-  fallback = 'Unknown'
-): string {
+export function getCrawlerNameById(crawlerId: string | null, fallback = 'Unknown'): string {
   if (!crawlerId) return fallback
   return findCrawlerById(crawlerId)?.name ?? fallback
 }
@@ -304,12 +267,8 @@ export function getCrawlerNameById(
  * @param techLevel - The tech level number to find
  * @returns The tech level or undefined if not found
  */
-export function findCrawlerTechLevel(
-  techLevel: number
-): SURefCrawlerTechLevel | undefined {
-  return SalvageUnionReference.CrawlerTechLevels.find(
-    (tl) => tl.techLevel === techLevel
-  )
+export function findCrawlerTechLevel(techLevel: number): SURefCrawlerTechLevel | undefined {
+  return SalvageUnionReference.CrawlerTechLevels.find((tl) => tl.techLevel === techLevel)
 }
 
 /**
@@ -318,10 +277,7 @@ export function findCrawlerTechLevel(
  * @param fallback - Fallback number if tech level not found (default: 20)
  * @returns The structure points or fallback
  */
-export function getStructurePointsForTechLevel(
-  techLevel: number | null,
-  fallback = 20
-): number {
+export function getStructurePointsForTechLevel(techLevel: number | null, fallback = 20): number {
   if (techLevel === null) return fallback
   return findCrawlerTechLevel(techLevel)?.structurePoints ?? fallback
 }

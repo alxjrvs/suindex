@@ -104,16 +104,13 @@ function parseSchemaFile(schemaFile: string): SchemaInfo | null {
 
     // Convert to proper display format
     if (displayName === 'abilities') displayName = 'Abilities'
-    else if (displayName === 'ability-tree-requirements')
-      displayName = 'Ability Tree Requirements'
+    else if (displayName === 'ability-tree-requirements') displayName = 'Ability Tree Requirements'
     else if (displayName === 'bio-titans') displayName = 'Bio-Titans'
     else if (displayName === 'chassis') displayName = 'Chassis'
-    else if (displayName === 'classes.advanced')
-      displayName = 'Advanced Classes'
+    else if (displayName === 'classes.advanced') displayName = 'Advanced Classes'
     else if (displayName === 'classes.core') displayName = 'Core Classes'
     else if (displayName === 'crawler-bays') displayName = 'Crawler Bays'
-    else if (displayName === 'crawler-tech-levels')
-      displayName = 'Crawler Tech Levels'
+    else if (displayName === 'crawler-tech-levels') displayName = 'Crawler Tech Levels'
     else if (displayName === 'crawlers') displayName = 'Crawlers'
     else if (displayName === 'creatures') displayName = 'Creatures'
     else if (displayName === 'distances') displayName = 'Distances'
@@ -177,16 +174,13 @@ function generateSchemaIndex(schemas: SchemaInfo[]): void {
   // Read existing index if it exists
   let existingIndex: SchemaIndex | null = null
   if (fs.existsSync(outputPath)) {
-    existingIndex = JSON.parse(
-      fs.readFileSync(outputPath, 'utf-8')
-    ) as SchemaIndex
+    existingIndex = JSON.parse(fs.readFileSync(outputPath, 'utf-8')) as SchemaIndex
   }
 
   const newIndex: SchemaIndex = {
     $schema: 'http://json-schema.org/draft-07/schema#',
     title: 'Salvage Union Data Schema Catalog',
-    description:
-      'Catalog of all available schemas in the salvageunion-data repository',
+    description: 'Catalog of all available schemas in the salvageunion-data repository',
     version: getPackageVersion(),
     generated: new Date().toISOString(),
     schemas: schemas.map((s) => {
@@ -213,13 +207,8 @@ function generateSchemaIndex(schemas: SchemaInfo[]): void {
     const existingWithoutGenerated = { ...existingIndex, generated: undefined }
     const newWithoutGenerated = { ...newIndex, generated: undefined }
 
-    if (
-      JSON.stringify(existingWithoutGenerated) ===
-      JSON.stringify(newWithoutGenerated)
-    ) {
-      console.log(
-        `⏭️  Skipped schemas/index.json (only generated timestamp would change)`
-      )
+    if (JSON.stringify(existingWithoutGenerated) === JSON.stringify(newWithoutGenerated)) {
+      console.log(`⏭️  Skipped schemas/index.json (only generated timestamp would change)`)
       return
     }
   }
@@ -254,9 +243,7 @@ function main() {
   console.log('📝 Generating documentation from schemas...\n')
 
   const schemaFiles = getSchemaFiles()
-  const schemas = schemaFiles
-    .map(parseSchemaFile)
-    .filter((s): s is SchemaInfo => s !== null)
+  const schemas = schemaFiles.map(parseSchemaFile).filter((s): s is SchemaInfo => s !== null)
 
   console.log(`Found ${schemas.length} schema files\n`)
 
@@ -267,9 +254,7 @@ function main() {
   generateVSCodeSettings(schemas)
 
   console.log('\n✨ Documentation generation complete!')
-  console.log(
-    '\n💡 Tip: Use the snippets in .docs-snippets/ to update documentation files'
-  )
+  console.log('\n💡 Tip: Use the snippets in .docs-snippets/ to update documentation files')
 }
 
 main()

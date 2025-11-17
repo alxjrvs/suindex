@@ -13,10 +13,7 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const OBJECTS_SCHEMA_PATH = path.join(
-  __dirname,
-  '../schemas/shared/objects.schema.json'
-)
+const OBJECTS_SCHEMA_PATH = path.join(__dirname, '../schemas/shared/objects.schema.json')
 const OUTPUT_FILE = path.join(__dirname, '../lib/types/objects.ts')
 
 /**
@@ -125,9 +122,7 @@ function generatePropertyType(schema: JSONSchema, depth: number = 0): string {
 
   // Handle oneOf (union types)
   if (schema.oneOf) {
-    const types = schema.oneOf
-      .map((s) => generatePropertyType(s, depth))
-      .filter((t) => t)
+    const types = schema.oneOf.map((s) => generatePropertyType(s, depth)).filter((t) => t)
     if (types.length === 0) return 'unknown'
     return types.length > 1 ? `(${types.join(' | ')})` : types[0]
   }
@@ -138,11 +133,7 @@ function generatePropertyType(schema: JSONSchema, depth: number = 0): string {
     // Don't return inline-object for arrays, expand it
     if (itemType === 'inline-object' && schema.items.properties) {
       // Return the inline object structure for array items
-      const props = generateProperties(
-        schema.items.properties,
-        schema.items.required || [],
-        ''
-      )
+      const props = generateProperties(schema.items.properties, schema.items.required || [], '')
       return `{\n${props.join('\n')}\n}[]`
     }
     return `${itemType}[]`
@@ -232,10 +223,7 @@ function generateProperties(
       )
       lines.push(...nestedProps)
       lines.push(`${indent}}`)
-    } else if (
-      propSchema.type === 'object' &&
-      propSchema.additionalProperties
-    ) {
+    } else if (propSchema.type === 'object' && propSchema.additionalProperties) {
       // Handle Record types
       const propType = generatePropertyType(propSchema)
       lines.push(`${indent}${formattedName}${optional}: ${propType}`)
@@ -368,11 +356,7 @@ function generateArrayType(name: string, schema: JSONSchema): string | null {
     // Handle inline objects in arrays
     if (itemType === 'inline-object' && schema.items.properties) {
       lines.push(`export type ${typeName} = {`)
-      const props = generateProperties(
-        schema.items.properties,
-        schema.items.required || [],
-        '  '
-      )
+      const props = generateProperties(schema.items.properties, schema.items.required || [], '  ')
       lines.push(...props)
       lines.push('}[]')
     } else {
@@ -387,9 +371,7 @@ function generateArrayType(name: string, schema: JSONSchema): string | null {
 }
 
 async function generateObjectTypes() {
-  console.log(
-    '🔧 Generating TypeScript object and array types from objects.schema.json...\n'
-  )
+  console.log('🔧 Generating TypeScript object and array types from objects.schema.json...\n')
 
   // Read schema
   const objectsSchema = JSON.parse(fs.readFileSync(OBJECTS_SCHEMA_PATH, 'utf8'))
@@ -523,12 +505,8 @@ async function generateObjectTypes() {
 
   console.log('\n✅ Object and array types generated successfully!')
   console.log(`📄 Output: ${OUTPUT_FILE}`)
-  console.log(
-    `📊 Generated ${objectOrder.length} object types, ${arrayOrder.length} array types`
-  )
-  console.log(
-    `📦 Imported ${imports.enums.size} enum types, ${imports.common.size} common types`
-  )
+  console.log(`📊 Generated ${objectOrder.length} object types, ${arrayOrder.length} array types`)
+  console.log(`📦 Imported ${imports.enums.size} enum types, ${imports.common.size} common types`)
 }
 
 // Run the generator

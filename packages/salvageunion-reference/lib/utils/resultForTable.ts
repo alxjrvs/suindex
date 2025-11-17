@@ -21,10 +21,7 @@ export type TableRollResult = { success: boolean; result: string; key: string }
  *   console.error(result.error);
  * }
  */
-export function resultForTable(
-  table: SURefMetaTable | undefined,
-  roll: number
-): TableRollResult {
+export function resultForTable(table: SURefMetaTable | undefined, roll: number): TableRollResult {
   if (!table) {
     return {
       success: false,
@@ -42,9 +39,7 @@ export function resultForTable(
   }
 
   const tableData = table as Record<string, unknown>
-  const numericKeys = Object.keys(tableData).filter((k) =>
-    /^\d+(-\d+)?$/.test(k)
-  )
+  const numericKeys = Object.keys(tableData).filter((k) => /^\d+(-\d+)?$/.test(k))
 
   // Detect if this is a flat table (has all 20 individual keys)
   if (numericKeys.length === 20 && numericKeys.every((k) => !k.includes('-'))) {
@@ -71,10 +66,7 @@ export function resultForTable(
  * Finds the result for a given roll in a range-based table
  * Automatically detects the range structure from available keys
  */
-function findRangeResult(
-  rollTable: Record<string, unknown>,
-  roll: number
-): TableRollResult {
+function findRangeResult(rollTable: Record<string, unknown>, roll: number): TableRollResult {
   const exactKey = roll.toString()
   const exactResult = rollTable[exactKey]
   if (exactResult && typeof exactResult === 'string') {

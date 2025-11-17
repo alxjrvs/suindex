@@ -12,8 +12,7 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 
 // UUID v4 regex pattern
-const UUID_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 interface Action {
   id?: string
@@ -202,10 +201,7 @@ function checkAllFiles(): ValidationResult {
   console.log('🔍 Checking all data files for unique UUIDs...\n')
 
   const fileResults: FileResult[] = []
-  const globalIdMap = new Map<
-    string,
-    Array<{ file: string; indices: number[] }>
-  >()
+  const globalIdMap = new Map<string, Array<{ file: string; indices: number[] }>>()
 
   // Check each file
   for (const filename of dataFiles) {
@@ -294,10 +290,7 @@ function checkAllFiles(): ValidationResult {
   // Calculate totals
   const totalIds = fileResults.reduce((sum, r) => sum + r.itemsWithIds, 0)
   const uniqueIds = globalIdMap.size
-  const invalidIds = fileResults.reduce(
-    (sum, r) => sum + r.invalidUUIDs.length,
-    0
-  )
+  const invalidIds = fileResults.reduce((sum, r) => sum + r.invalidUUIDs.length, 0)
   const duplicateIds = globalDuplicates.length
 
   return {
@@ -319,8 +312,7 @@ function printResults(results: ValidationResult): void {
 
   for (const fileResult of results.files) {
     const hasFileIssues =
-      fileResult.invalidUUIDs.length > 0 ||
-      fileResult.duplicatesInFile.length > 0
+      fileResult.invalidUUIDs.length > 0 || fileResult.duplicatesInFile.length > 0
 
     if (hasFileIssues) {
       hasIssues = true
@@ -336,9 +328,7 @@ function printResults(results: ValidationResult): void {
       }
 
       if (fileResult.duplicatesInFile.length > 0) {
-        console.log(
-          `   ⚠️  Duplicate IDs within file: ${fileResult.duplicatesInFile.length}`
-        )
+        console.log(`   ⚠️  Duplicate IDs within file: ${fileResult.duplicatesInFile.length}`)
         fileResult.duplicatesInFile.forEach(({ id, indices }) => {
           console.log(`      - "${id}" at indices: ${indices.join(', ')}`)
         })

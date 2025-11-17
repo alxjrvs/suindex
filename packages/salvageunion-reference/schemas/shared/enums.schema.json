@@ -25,15 +25,7 @@
     },
     "actionType": {
       "type": "string",
-      "enum": [
-        "Passive",
-        "Free",
-        "Reaction",
-        "Turn",
-        "Short",
-        "Long",
-        "DownTime"
-      ],
+      "enum": ["Passive", "Free", "Reaction", "Turn", "Short", "Long", "DownTime"],
       "description": "Type of action required to use an ability"
     },
     "damageType": {

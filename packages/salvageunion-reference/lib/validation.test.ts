@@ -22,14 +22,12 @@ interface ValidationConfig {
 }
 
 // Build validation configs from schema catalog
-const validationConfigs: ValidationConfig[] = schemaIndex.schemas.map(
-  (schema) => ({
-    id: schema.id,
-    title: schema.title,
-    dataFile: schema.dataFile,
-    schemaFile: schema.schemaFile,
-  })
-)
+const validationConfigs: ValidationConfig[] = schemaIndex.schemas.map((schema) => ({
+  id: schema.id,
+  title: schema.title,
+  dataFile: schema.dataFile,
+  schemaFile: schema.schemaFile,
+}))
 
 function loadJson(filePath: string): unknown {
   const fullPath = join(projectRoot, filePath)
@@ -142,9 +140,7 @@ describe('Schema Files', () => {
 
 describe('Schema Catalog Enhancement', () => {
   it('should have display names for all schemas', () => {
-    const catalog = import('../lib/ModelFactory.js').then((m) =>
-      m.getSchemaCatalog()
-    )
+    const catalog = import('../lib/ModelFactory.js').then((m) => m.getSchemaCatalog())
 
     catalog.then((cat) => {
       for (const schema of cat.schemas) {

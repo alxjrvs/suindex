@@ -93,12 +93,7 @@
       "dataFile": "data/crawler-tech-levels.json",
       "schemaFile": "schemas/crawler-tech-levels.schema.json",
       "itemCount": 6,
-      "requiredFields": [
-        "techLevel",
-        "structurePoints",
-        "populationMin",
-        "populationMax"
-      ],
+      "requiredFields": ["techLevel", "structurePoints", "populationMin", "populationMax"],
       "displayName": "Crawler Tech Levels"
     },
     {
@@ -139,12 +134,7 @@
       "dataFile": "data/drones.json",
       "schemaFile": "schemas/drones.schema.json",
       "itemCount": 9,
-      "requiredFields": [
-        "structurePoints",
-        "techLevel",
-        "salvageValue",
-        "systems"
-      ],
+      "requiredFields": ["structurePoints", "techLevel", "salvageValue", "systems"],
       "displayName": "Drones"
     },
     {
@@ -244,12 +234,7 @@
       "dataFile": "data/vehicles.json",
       "schemaFile": "schemas/vehicles.schema.json",
       "itemCount": 7,
-      "requiredFields": [
-        "structurePoints",
-        "techLevel",
-        "salvageValue",
-        "systems"
-      ],
+      "requiredFields": ["structurePoints", "techLevel", "salvageValue", "systems"],
       "displayName": "Vehicles"
     }
   ]

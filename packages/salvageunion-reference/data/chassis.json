@@ -2185,11 +2185,7 @@
           }
         ],
         "drone": {
-          "systems": [
-            "Long Barrelled Green Laser",
-            "High Gain Antenna",
-            "Cargo Pod"
-          ],
+          "systems": ["Long Barrelled Green Laser", "High Gain Antenna", "Cargo Pod"],
           "modules": ["Survey Scanner", "M315 Motion Scanner"]
         },
         "content": [

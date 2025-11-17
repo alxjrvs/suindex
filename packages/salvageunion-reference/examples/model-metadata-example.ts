@@ -31,11 +31,7 @@ console.log('  classes.core →', SchemaToDisplayName['classes.core'])
 console.log()
 
 // Example: Dynamic model selection with metadata
-function printModelInfo(model: {
-  schemaName: string
-  displayName: string
-  all: () => unknown[]
-}) {
+function printModelInfo(model: { schemaName: string; displayName: string; all: () => unknown[] }) {
   console.log(`Model: ${model.displayName}`)
   console.log(`  Schema: ${model.schemaName}`)
   console.log(`  Count: ${model.all().length} items`)

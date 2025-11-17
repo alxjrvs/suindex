@@ -115,9 +115,7 @@ function generatePropertyType(schema: JSONSchema): string {
 
   // Handle oneOf (union types)
   if (schema.oneOf) {
-    const types = schema.oneOf
-      .map((s) => generatePropertyType(s))
-      .filter((t) => t)
+    const types = schema.oneOf.map((s) => generatePropertyType(s)).filter((t) => t)
     if (types.length === 0) return 'unknown'
     return types.length > 1 ? `(${types.join(' | ')})` : types[0]
   }
@@ -208,10 +206,7 @@ function generateProperties(
 /**
  * Generate TypeScript type from schema items definition
  */
-function generateSchemaType(
-  schemaId: string,
-  schema: JSONSchema
-): string | null {
+function generateSchemaType(schemaId: string, schema: JSONSchema): string | null {
   // Use getSingularTypeName for consistent singular naming
   const singularName = getSingularTypeName(schemaId, __dirname)
   if (!singularName) {

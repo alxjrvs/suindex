@@ -223,9 +223,7 @@
       {
         "id": "383de916-bbd6-4e34-9cfc-1b37e12178c8",
         "name": "Armament Bay Weapons System",
-        "schema": [
-          "systems"
-        ],
+        "schema": ["systems"],
         "content": [
           {
             "type": "paragraph",

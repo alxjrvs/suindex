@@ -27,14 +27,9 @@ interface SchemaInfo {
 }
 
 // Load schema index
-const schemaIndex = JSON.parse(
-  readFileSync(join(schemasDir, 'index.json'), 'utf-8')
-)
+const schemaIndex = JSON.parse(readFileSync(join(schemasDir, 'index.json'), 'utf-8'))
 
-function generateFieldTable(
-  properties: Record<string, unknown>,
-  required: string[] = []
-): string {
+function generateFieldTable(properties: Record<string, unknown>, required: string[] = []): string {
   if (!properties) return ''
 
   let table = '| Field | Type | Required | Description |\n'
@@ -79,9 +74,7 @@ function getFieldType(def: Record<string, unknown>): string {
   }
 
   if (def.oneOf) {
-    return (def.oneOf as Record<string, unknown>[])
-      .map((o) => getFieldType(o))
-      .join(' | ')
+    return (def.oneOf as Record<string, unknown>[]).map((o) => getFieldType(o)).join(' | ')
   }
 
   if (def.const) {
@@ -91,12 +84,8 @@ function getFieldType(def: Record<string, unknown>): string {
   return 'unknown'
 }
 
-function generateExampleJson(
-  schema: Record<string, unknown>,
-  data: unknown[]
-): string {
-  if (!data || data.length === 0)
-    return '```json\n// No example data available\n```'
+function generateExampleJson(schema: Record<string, unknown>, data: unknown[]): string {
+  if (!data || data.length === 0) return '```json\n// No example data available\n```'
 
   // Get first item as example
   const example = data[0]
@@ -106,20 +95,14 @@ function generateExampleJson(
 function generateSchemaDoc(schemaInfo: SchemaInfo): string {
   // Load schema
   const schema = JSON.parse(
-    readFileSync(
-      join(schemasDir, schemaInfo.schemaFile.replace('schemas/', '')),
-      'utf-8'
-    )
+    readFileSync(join(schemasDir, schemaInfo.schemaFile.replace('schemas/', '')), 'utf-8')
   )
 
   // Load data for examples
   let data: unknown[] = []
   try {
     data = JSON.parse(
-      readFileSync(
-        join(dataDir, schemaInfo.dataFile.replace('data/', '')),
-        'utf-8'
-      )
+      readFileSync(join(dataDir, schemaInfo.dataFile.replace('data/', '')), 'utf-8')
     )
   } catch {
     console.warn(`Could not load data for ${schemaInfo.id}`)
@@ -138,10 +121,7 @@ function generateSchemaDoc(schemaInfo: SchemaInfo): string {
   // Add field documentation
   if (schema.items?.properties) {
     doc += `## Fields\n\n`
-    doc += generateFieldTable(
-      schema.items.properties,
-      schema.items.required || []
-    )
+    doc += generateFieldTable(schema.items.properties, schema.items.required || [])
     doc += '\n'
   }
 

@@ -44,7 +44,7 @@
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "lint": "eslint .",
+    "lint": "bunx eslint .",
     "sanity": "bun run lint -- --fix && bun run format && bun run typecheck",
     "format": "prettier --write ."
   },
