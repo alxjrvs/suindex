@@ -165,14 +165,14 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       <Flex flex="1" alignItems="center" justifyContent="center" w="full">
         <ReferenceHeader
           title={
-            <>
+            <Box as="span" display="inline-flex" alignItems="center" gap={1}>
               <Text as="span" variant="pseudoheader" fontSize="2xl">
                 Salvage Union
-              </Text>{' '}
-              <Text as="span" fontSize="2xl" color="su.brick" fontWeight="bold">
+              </Text>
+              <Text as="span" fontSize="2xl" color="su.brick" fontWeight="bold" bg="transparent">
                 SRD
               </Text>
-            </>
+            </Box>
           }
         >
           <Box position="relative" maxW="2xl" w="full">
