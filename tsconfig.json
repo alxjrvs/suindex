@@ -1,10 +1,6 @@
 {
-  "files": [],
   "compilerOptions": {
     "composite": false
   },
-  "references": [
-    { "path": "./apps/suref-web" },
-    { "path": "./packages/salvageunion-reference" }
-  ]
+  "references": [{ "path": "./apps/suref-web" }, { "path": "./packages/salvageunion-reference" }]
 }
