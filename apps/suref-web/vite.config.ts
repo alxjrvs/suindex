@@ -6,6 +6,17 @@ import { VitePluginRadar } from 'vite-plugin-radar'
 import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 
+// Sanitize file names to remove invalid characters (colons, null bytes, etc.)
+function sanitizeFileName(name: string): string {
+  return name
+    .replace(/\0/g, '') // Remove null bytes
+    .replace(/:/g, '-') // Replace colons with hyphens
+    .replace(/[<>"|?*]/g, '-') // Replace other invalid characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Collapse multiple hyphens
+    .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [
@@ -92,10 +103,20 @@ export default defineConfig(({ mode }) => ({
                 .pop()
                 ?.replace(/\.[^.]*$/, '')
             : 'chunk'
-          return `assets/${facadeModuleId}-[hash].js`
+          const sanitized = sanitizeFileName(facadeModuleId || 'chunk')
+          return `assets/${sanitized}-[hash].js`
         },
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
+        entryFileNames: (chunkInfo) => {
+          const name = chunkInfo.name || 'entry'
+          const sanitized = sanitizeFileName(name)
+          return `assets/${sanitized}-[hash].js`
+        },
+        assetFileNames: (assetInfo) => {
+          const name = assetInfo.name || 'asset'
+          const sanitized = sanitizeFileName(name)
+          const ext = assetInfo.name?.split('.').pop() || 'bin'
+          return `assets/${sanitized}-[hash].${ext}`
+        },
       },
     },
     // Chunk size warnings
