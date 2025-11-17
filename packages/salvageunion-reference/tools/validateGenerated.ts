@@ -14,12 +14,28 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 /**
+ * Normalize file content for comparison
+ * Handles line endings and trailing whitespace differences
+ */
+function normalizeContent(content: string): string {
+  // Normalize line endings to LF
+  let normalized = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+  // Remove trailing whitespace from each line
+  normalized = normalized
+    .split('\n')
+    .map((line) => line.replace(/\s+$/, ''))
+    .join('\n')
+  return normalized
+}
+
+/**
  * Get file content hash for comparison
  */
 function getFileHash(filePath: string): string | null {
   try {
     const content = fs.readFileSync(filePath, 'utf-8')
-    return createHash('sha256').update(content).digest('hex')
+    const normalized = normalizeContent(content)
+    return createHash('sha256').update(normalized).digest('hex')
   } catch {
     return null
   }
@@ -150,6 +166,34 @@ function validateGenerated(): boolean {
 
     if (originalHash !== newHash) {
       console.error(`❌ Stale: ${path.basename(file)}`)
+      // Show a sample of the difference for debugging
+      const originalContent = originalContents.get(file) || ''
+      const newContent = fs.readFileSync(file, 'utf-8')
+      const originalNormalized = normalizeContent(originalContent)
+      const newNormalized = normalizeContent(newContent)
+      
+      if (originalNormalized !== newNormalized) {
+        // Find first difference
+        const originalLines = originalNormalized.split('\n')
+        const newLines = newNormalized.split('\n')
+        const maxLines = Math.max(originalLines.length, newLines.length)
+        
+        for (let i = 0; i < Math.min(maxLines, 10); i++) {
+          if (originalLines[i] !== newLines[i]) {
+            console.error(
+              `   First difference at line ${i + 1}:`
+            )
+            if (originalLines[i] !== undefined) {
+              console.error(`   Original: ${JSON.stringify(originalLines[i].substring(0, 100))}`)
+            }
+            if (newLines[i] !== undefined) {
+              console.error(`   New:      ${JSON.stringify(newLines[i].substring(0, 100))}`)
+            }
+            break
+          }
+        }
+      }
+      
       allValid = false
       staleFiles.push(file)
     } else {
