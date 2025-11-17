@@ -36,19 +36,19 @@ export const Route = createFileRoute('/schema/$schemaId/')({
     return {
       meta: [
         {
-          title: `${schemaName} - Salvage Union Reference`,
+          title: `${schemaName} - Salvage Union System Reference Document`,
         },
         {
           name: 'description',
-          content: `Browse all ${schemaName} in Salvage Union. Complete reference with stats, abilities, and details.`,
+          content: `Browse all ${schemaName} in the Salvage Union SRD (System Reference Document). Complete reference with stats, abilities, and details.`,
         },
         {
           property: 'og:title',
-          content: `${schemaName} - Salvage Union Reference`,
+          content: `${schemaName} - Salvage Union System Reference Document`,
         },
         {
           property: 'og:description',
-          content: `Browse all ${schemaName} in Salvage Union. Complete reference with stats, abilities, and details.`,
+          content: `Browse all ${schemaName} in the Salvage Union SRD (System Reference Document). Complete reference with stats, abilities, and details.`,
         },
       ],
       scripts: [
@@ -58,12 +58,12 @@ export const Route = createFileRoute('/schema/$schemaId/')({
             '@context': 'https://schema.org',
             '@type': 'Dataset',
             name: schemaName,
-            description: `Salvage Union ${schemaName} reference data`,
+            description: `Salvage Union ${schemaName} System Reference Document (SRD) data`,
             url: `https://suindex.pages.dev/schema/${schemaId}`,
-            keywords: ['Salvage Union', 'TTRPG', 'Reference', schemaName],
+            keywords: ['Salvage Union', 'TTRPG', 'SRD', 'System Reference Document', schemaName],
             creator: {
               '@type': 'Organization',
-              name: 'Salvage Union Reference',
+              name: 'Salvage Union SRD',
             },
           }),
         },

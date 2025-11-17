@@ -57,10 +57,10 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
       headline: itemName,
       description: metaDescription,
       url: `https://suindex.pages.dev/schema/${schemaId}/item/${itemId}`,
-      keywords: ['Salvage Union', 'TTRPG', schemaName, itemName],
+      keywords: ['Salvage Union', 'TTRPG', 'SRD', 'System Reference Document', schemaName, itemName],
       author: {
         '@type': 'Organization',
-        name: 'Salvage Union Reference',
+        name: 'Salvage Union SRD',
       },
     }
 
@@ -90,7 +90,7 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
     return {
       meta: [
         {
-          title: `${itemName} - ${schemaName} - Salvage Union Reference`,
+          title: `${itemName} - ${schemaName} - Salvage Union System Reference Document`,
         },
         {
           name: 'description',
@@ -98,7 +98,7 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
         },
         {
           property: 'og:title',
-          content: `${itemName} - ${schemaName} - Salvage Union Reference`,
+          content: `${itemName} - ${schemaName} - Salvage Union System Reference Document`,
         },
         {
           property: 'og:description',

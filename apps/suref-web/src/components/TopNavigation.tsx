@@ -87,7 +87,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           >
             <Heading level="h2">Salvage Union</Heading>
             <Text fontSize="xs" color="su.brick">
-              Reference
+              SRD
             </Text>
           </Button>
 
@@ -178,6 +178,15 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                   </Menu.Positioner>
                 </Portal>
               </Menu.Root>
+            </Box>
+
+            <Box as="li">
+              <NavigationLink
+                isActive={isActive('/about')}
+                onClick={() => handleNavigate('/about')}
+              >
+                About
+              </NavigationLink>
             </Box>
           </HStack>
         </Flex>

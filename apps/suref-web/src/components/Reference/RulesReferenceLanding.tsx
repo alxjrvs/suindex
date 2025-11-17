@@ -163,7 +163,18 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   return (
     <Flex flexDirection="column" bg="su.lightBlue" h="full" w="full">
       <Flex flex="1" alignItems="center" justifyContent="center" w="full">
-        <ReferenceHeader title="Salvage Union Rules Reference">
+        <ReferenceHeader
+          title={
+            <>
+              <Text as="span" variant="pseudoheader" fontSize="2xl">
+                Salvage Union
+              </Text>{' '}
+              <Text as="span" fontSize="2xl" color="su.brick" fontWeight="bold">
+                SRD
+              </Text>
+            </>
+          }
+        >
           <Box position="relative" maxW="2xl" w="full">
             <Text fontSize="sm" color="su.brick" mb={3} textAlign="center">
               An Online SRD for the{' '}
