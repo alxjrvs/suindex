@@ -12,7 +12,7 @@ import type {
   SURefRange,
   SURefSchemaName,
   SURefSource,
-  SURefTree,
+  SURefTree
 } from './enums.js'
 
 import type {
@@ -24,7 +24,7 @@ import type {
   SURefNonNegativeInteger,
   SURefPositiveInteger,
   SURefSalvageValue,
-  SURefTechLevel,
+  SURefTechLevel
 } from './common.js'
 
 /**
@@ -44,7 +44,7 @@ export interface SURefMetaBaseEntity {
  * Special traits and properties of items, systems, or abilities
  */
 export interface SURefMetaTrait {
-  amount?: SURefNonNegativeInteger | string
+  amount?: (SURefNonNegativeInteger | string)
   type: string
 }
 
@@ -167,9 +167,9 @@ export interface SURefMetaTechLevelEffect {
   techLevelMin: SURefPositiveInteger
   techLevelMax: SURefPositiveInteger
   effects: {
-    label?: string
-    value: string
-  }[]
+label?: string
+value: string
+}[]
 }
 
 /**
@@ -196,7 +196,7 @@ export interface SURefMetaAction {
    */
   damage?: {
     damageType: SURefDamageType
-    amount: SURefNonNegativeInteger | string
+    amount: (SURefNonNegativeInteger | string)
   }
   choices?: SURefMetaChoice[]
   table?: SURefMetaTable
@@ -206,7 +206,7 @@ export interface SURefMetaAction {
  * Grantable entity with a name and description
  */
 export interface SURefMetaGrant {
-  schema: SURefSchemaName | 'choice'
+  schema: (SURefSchemaName | 'choice')
   name: SURefName
 }
 
@@ -255,13 +255,15 @@ export interface SURefMetaAdvancedClass extends SURefMetaBaseEntity {
   content?: SURefMetaContent
 }
 
-export type SURefMetaSchemaName = SURefSchemaName | 'actions'
+export type SURefMetaSchemaName =
+  SURefSchemaName
+  | 'actions'
 
 /**
  * Roll table for random outcomes based on d20 rolls
  */
 export type SURefMetaTable =
-  | {
+  {
       /**
        * Critical failure outcome
        */
