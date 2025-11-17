@@ -19,35 +19,22 @@ export type SURefActionType =
 /**
  * Type of advanced class
  */
-export type SURefClassType =
-  | 'Advanced'
-  | 'Hybrid'
+export type SURefClassType = 'Advanced' | 'Hybrid'
 
 /**
  * Type of content block for rendering structured text
  */
-export type SURefContentType =
-  | 'paragraph'
-  | 'heading'
-  | 'list-item'
-  | 'label'
-  | 'datavalues'
+export type SURefContentType = 'paragraph' | 'heading' | 'list-item' | 'label' | 'datavalues'
 
 /**
  * Type of damage
  */
-export type SURefDamageType =
-  | 'HP'
-  | 'SP'
+export type SURefDamageType = 'HP' | 'SP'
 
 /**
  * Individual range value
  */
-export type SURefRangeItem =
-  | 'Close'
-  | 'Medium'
-  | 'Long'
-  | 'Far'
+export type SURefRangeItem = 'Close' | 'Medium' | 'Long' | 'Far'
 
 /**
  * Range bands for abilities and weapons
@@ -84,9 +71,7 @@ export type SURefSchemaName =
 /**
  * The source book or expansion for this content
  */
-export type SURefSource =
-  | 'Salvage Union Workshop Manual'
-  | 'Mech Monday'
+export type SURefSource = 'Salvage Union Workshop Manual' | 'Mech Monday'
 
 /**
  * Ability tree name
