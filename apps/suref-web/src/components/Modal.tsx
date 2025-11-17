@@ -3,12 +3,12 @@ import {
   DialogRoot,
   DialogContent,
   DialogHeader,
-  DialogTitle,
   DialogBody,
   DialogBackdrop,
   DialogCloseTrigger,
   DialogPositioner,
 } from '@chakra-ui/react'
+import { Text } from './base/Text'
 
 interface ModalProps {
   isOpen: boolean
@@ -53,15 +53,9 @@ export default function Modal({
             justifyContent="space-between"
             alignItems="center"
           >
-            <DialogTitle
-              backgroundColor="su.black"
-              fontSize="4xl"
-              fontWeight="bold"
-              mt="2"
-              color="su.white"
-            >
+            <Text variant="pseudoheader" fontSize="4xl" textTransform="uppercase" mt="2">
               {title}
-            </DialogTitle>
+            </Text>
             <DialogCloseTrigger
               color="su.white"
               _hover={{ color: 'su.lightOrange' }}

@@ -283,8 +283,6 @@
     "actions": [
       {
         "id": "ad96f3fb-0177-4263-8d50-e6f941107ae5",
-        "activationCost": 3,
-        "actionType": "Turn",
         "content": [
           {
             "value": "You construct an immobile Auto-Turret and train yourself in using it. Only you may use the Auto-Turret. It is powered by a simple reactor and controlled by a rudimentary A.I. It can be used to defend an area and obey simple commands. It acts independently of you, and has its own turn in the round.",
@@ -704,17 +702,12 @@
             "value": "Melee attack with your bionic arms, where X is equal to the Tech Level of your Union Crawler."
           }
         ]
-      },
+      }
+    ],
+    "content": [
       {
-        "id": "be8df8b7-b6b6-448c-9beb-c8b87dd26b59",
-        "actionType": "Passive",
-        "name": "Bionic Arms",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "You gain a set of bionic arms, surgically installed to any specification you desire. In addition, you can heal a Minor Injury during Downtime by spending 2 Tech 1 Scrap at any Crafting Bay. You also increase your Pilot's Max HP by 2."
-          }
-        ]
+        "type": "paragraph",
+        "value": "You gain a set of bionic arms, surgically installed to any specification you desire. In addition, you can heal a Minor Injury during Downtime by spending 2 Tech 1 Scrap at any Crafting Bay. You also increase your Pilot's Max HP by 2."
       }
     ],
     "description": "Gain a set of integrated Bionic Arms. Gives an improved base attack."
@@ -1893,33 +1886,6 @@
     "page": 55,
     "actions": [
       {
-        "name": "Custom Missile Launcher",
-        "damage": {
-          "damageType": "SP",
-          "amount": 3
-        },
-        "range": ["Medium"],
-        "traits": [
-          {
-            "type": "missile"
-          },
-          {
-            "type": "explosive",
-            "amount": 1
-          },
-          {
-            "type": "heavy"
-          }
-        ],
-        "id": "a82d9c77-e442-46a7-af6c-e66dde21bc88",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Attack with your custom missile launcher. Base damage is 3 SP at Tech 1, increasing by 1 SP per Tech Level."
-          }
-        ]
-      },
-      {
         "id": "bf8bab9d-191a-49ef-ad82-b28193551ed5",
         "traits": [
           {
@@ -1930,7 +1896,39 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Custom Missile Launcher that only you can use. It can be customised how you desire. Its Tech level is equal to that of your Union Crawler. At each Tech Level you may choose an additional modification for your Custom Missile Launcher. In addition, its damage increases by 1 SP per Tech Level after the first. e.g. a Tech 3 Custom Missile Launcher would deal 5 SP damage and you would be able to choose three modifications for it. If your Custom Missile Launcher is misplaced, damaged, or destroyed you can acquire a new one during Downtime of a Tech Level equal to your Union Crawler. You may only ever have one Custom Missile Launcher at a time."
+            "value": "You acquire and train in the use of a Custom Missile Launcher that only you can use. It can be customised how you desire."
+          },
+          {
+            "type": "datavalues",
+            "value": [
+              {
+                "label": "Damage",
+                "type": "keyword",
+                "value": 3
+              },
+              {
+                "label": "Range",
+                "type": "keyword",
+                "value": "Medium"
+              },
+              {
+                "label": "Missile",
+                "type": "trait"
+              },
+              {
+                "label": "Explosive",
+                "type": "trait",
+                "value": 1
+              },
+              {
+                "label": "Heavy",
+                "type": "trait"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "value": "At each Tech Level you may choose an additional modification for your Custom Missile Launcher."
           },
           {
             "type": "list-item",
@@ -2455,7 +2453,19 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have constructed a mechanical companion. Name and describe your new best friend and choose an A.I. [[Personality]] Trait for them. You may choose your own or roll on the A.I. Personality Table (see p. 91). Your Mecha Companion can look however you wish. It could be a quadrupedal dog-like construction, a chonky mecha-bear, an elongated mechanical snake, or anything else you can imagine. Your Mecha Companion acts independently of you, on its own turn. You can give it any command as a Free Action. Your Mecha Companion uses the same rules as Mechs for attaching Systems and Modules; taking damage and being repaired; as well as Heat and Heat Checks. Your Mecha Companion cannot Push. Your Mecha Companion has a Tech Level equal to your Union Crawler (Tech 3 minimum). If your Union Crawler is upgraded, so is your Mecha Companion, it gains additional stats as shown for each Tech level above the first. If your Mecha Companion becomes destroyed or is misplaced you can acquire a new one during Downtime. You may only ever have one Mecha Companion at a time."
+            "value": "You have constructed a mechanical companion. Name and describe your new best friend and choose an A.I. [[Personality]] Trait for them. You may choose your own or roll on the A.I. Personality Table (see p. 91)."
+          },
+          {
+            "type": "paragraph",
+            "value": "Your Mecha Companion can look however you wish. It could be a quadrupedal dog-like construction, a chonky mecha-bear, an elongated mechanical snake, or anything else you can imagine. Your Mecha Companion acts independently of you, on its own turn. You can give it any command as a Free Action."
+          },
+          {
+            "type": "paragraph",
+            "value": "Your Mecha Companion uses the same rules as Mechs for attaching Systems and Modules; taking damage and being repaired; as well as Heat and Heat Checks. Your Mecha Companion cannot Push."
+          },
+          {
+            "type": "paragraph",
+            "value": "Your Mecha Companion has a Tech Level equal to your Union Crawler (Tech 3 minimum). If your Union Crawler is upgraded, so is your Mecha Companion, it gains additional stats as shown for each Tech level above the first. If your Mecha Companion becomes destroyed or is misplaced you can acquire a new one during Downtime. You may only ever have one Mecha Companion at a time."
           }
         ]
       }

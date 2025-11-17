@@ -1,5 +1,5 @@
-import { useState, useMemo, useRef } from 'react'
-import { Box, Flex, Input, Text, VStack } from '@chakra-ui/react'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { Box, Flex, Input, Text, VStack, Spinner } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import {
   SalvageUnionReference,
@@ -7,7 +7,6 @@ import {
   type SURefEntity,
   type SURefSchemaName,
 } from 'salvageunion-reference'
-import { useVirtualizer } from '@tanstack/react-virtual'
 import Modal from '../Modal'
 import { EntityDisplay } from './EntityDisplay'
 import { TECH_LEVELS } from '../../constants/gameRules'
@@ -25,6 +24,12 @@ interface EntitySelectionModalProps {
   selectButtonTextPrefix?: string
   /** Optional function to determine if an entity should be disabled */
   shouldDisableEntity?: (entity: SURefEntity) => boolean
+  /** Optional selected entity ID (for showing selected state) */
+  selectedEntityId?: string | null
+  /** Optional selected entity schema name (required if selectedEntityId is provided) */
+  selectedEntitySchemaName?: SURefSchemaName
+  /** Whether to hide chassis patterns in entity displays */
+  hidePatterns?: boolean
 }
 
 export function EntitySelectionModal({
@@ -35,10 +40,32 @@ export function EntitySelectionModal({
   title = 'Select Item',
   selectButtonTextPrefix = 'Select',
   shouldDisableEntity,
+  selectedEntityId,
+  selectedEntitySchemaName,
+  hidePatterns = false,
 }: EntitySelectionModalProps) {
   const [searchTerm, setSearchTerm] = useState('')
+  const [filterSearchTerm, setFilterSearchTerm] = useState('')
   const [techLevelFilter, setTechLevelFilter] = useState<number | null>(null)
   const [schemaFilter, setSchemaFilter] = useState<SURefSchemaName | null>(null)
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Update filter search term with debounce, but keep input immediate
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      setFilterSearchTerm(searchTerm)
+    }, 150)
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [searchTerm])
 
   const allEntities = useMemo(() => {
     const entities: Array<{ entity: SURefEntity; schemaName: SURefSchemaName }> = []
@@ -76,13 +103,13 @@ export function EntitySelectionModal({
         const isIndexable = 'indexable' in entity ? entity.indexable !== false : true
 
         const matchesSearch =
-          !searchTerm ||
+          !filterSearchTerm ||
           ('name' in entity &&
             typeof entity.name === 'string' &&
-            entity.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            entity.name.toLowerCase().includes(filterSearchTerm.toLowerCase())) ||
           ('description' in entity &&
             typeof entity.description === 'string' &&
-            entity.description.toLowerCase().includes(searchTerm.toLowerCase()))
+            entity.description.toLowerCase().includes(filterSearchTerm.toLowerCase()))
 
         const entityTechLevel = getEntityTechLevel(entity)
         const matchesTechLevel =
@@ -115,7 +142,7 @@ export function EntitySelectionModal({
         const bName = 'name' in b.entity ? (b.entity.name as string) : ''
         return aName.localeCompare(bName)
       })
-  }, [allEntities, searchTerm, techLevelFilter, schemaFilter, disabledEntities])
+  }, [allEntities, filterSearchTerm, techLevelFilter, schemaFilter, disabledEntities])
 
   const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
     onSelect(entityId, schemaName)
@@ -128,18 +155,10 @@ export function EntitySelectionModal({
     return allEntities.some(({ entity }) => getEntityTechLevel(entity) !== null)
   }, [schemaNames, allEntities])
 
-  const parentRef = useRef<HTMLDivElement>(null)
-
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const virtualizer = useVirtualizer({
-    count: filteredEntities.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 200,
-    overscan: 5,
-  })
+  const isFiltering = searchTerm !== filterSearchTerm
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title}>
+    <Modal key={isOpen ? 'open' : 'closed'} isOpen={isOpen} onClose={onClose} title={title}>
       <VStack gap={0} alignItems="stretch" h="80vh" overflow="hidden">
         <VStack
           gap={4}
@@ -153,20 +172,30 @@ export function EntitySelectionModal({
           bg="su.mediumGrey"
           w="full"
         >
-          <Input
-            type="text"
-            placeholder="Search by name or description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            w="full"
-            px={4}
-            py={2}
-            borderWidth="2px"
-            borderColor="su.black"
-            borderRadius="md"
-            bg="su.white"
-            color="su.black"
-          />
+          <Flex gap={2} alignItems="center" w="full">
+            <Input
+              type="text"
+              placeholder="Search by name or description..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              w="full"
+              px={4}
+              py={2}
+              borderWidth="2px"
+              borderColor="su.black"
+              borderRadius="md"
+              bg="su.white"
+              color="su.black"
+            />
+            {isFiltering && (
+              <Spinner
+                size="sm"
+                color="su.orange"
+                aria-label="Filtering results..."
+                flexShrink={0}
+              />
+            )}
+          </Flex>
 
           <Flex
             gap={4}
@@ -180,7 +209,7 @@ export function EntitySelectionModal({
                 {TECH_LEVELS.map((tl) => (
                   <Button
                     key={tl}
-                    onClick={() => setTechLevelFilter(tl)}
+                    onClick={() => setTechLevelFilter(tl === techLevelFilter ? null : tl)}
                     px={3}
                     py={2}
                     borderRadius="md"
@@ -243,10 +272,11 @@ export function EntitySelectionModal({
         </VStack>
 
         <Box
-          ref={parentRef}
           flex="1"
           minH={0}
           overflowY="auto"
+          px={4}
+          py={4}
           css={{
             '&::-webkit-scrollbar': {
               width: '8px',
@@ -258,6 +288,11 @@ export function EntitySelectionModal({
               background: 'var(--chakra-colors-su-orange)',
               borderRadius: '4px',
             },
+            columnCount: 2,
+            columnGap: '16px',
+            '@media (max-width: 768px)': {
+              columnCount: 1,
+            },
           }}
         >
           {filteredEntities.length === 0 ? (
@@ -265,37 +300,41 @@ export function EntitySelectionModal({
               No items found matching your criteria.
             </Text>
           ) : (
-            <Box position="relative" h={`${virtualizer.getTotalSize()}px`} w="full">
-              {virtualizer.getVirtualItems().map((virtualItem) => {
-                const { entity, schemaName } = filteredEntities[virtualItem.index]
+            <>
+              {filteredEntities.map(({ entity, schemaName }) => {
                 const entityId = 'id' in entity ? (entity.id as string) : ''
                 const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
                 const buttonText = `${selectButtonTextPrefix} ${entityName}`
                 const isDisabled = shouldDisableEntity ? shouldDisableEntity(entity) : false
+                const isSelected =
+                  selectedEntityId !== undefined &&
+                  selectedEntityId !== null &&
+                  selectedEntityId === entityId &&
+                  selectedEntitySchemaName === schemaName
 
                 return (
                   <Box
-                    key={virtualItem.key}
-                    position="absolute"
-                    top={0}
-                    left={0}
-                    w="full"
-                    transform={`translateY(${virtualItem.start}px)`}
-                    px={4}
-                    pb={2}
+                    key={`${schemaName}-${entityId}`}
+                    mb={4}
+                    breakInside="avoid"
+                    css={{
+                      pageBreakInside: 'avoid',
+                      breakInside: 'avoid-column',
+                    }}
                   >
                     <EntityDisplay
                       schemaName={schemaName}
                       compact
+                      hidePatterns={hidePatterns}
                       data={entity}
                       defaultExpanded={true}
                       collapsible={false}
                       disabled={isDisabled}
                       buttonConfig={{
-                        bg: 'su.orange',
+                        bg: isSelected ? 'su.green' : 'su.orange',
                         color: 'su.white',
                         fontWeight: 'bold',
-                        _hover: { bg: 'su.black' },
+                        _hover: { bg: isSelected ? 'su.green' : 'su.black' },
                         _disabled: {
                           opacity: 0.5,
                           cursor: 'not-allowed',
@@ -303,13 +342,13 @@ export function EntitySelectionModal({
                         },
                         disabled: isDisabled,
                         onClick: () => handleSelect(entityId, schemaName),
-                        children: buttonText,
+                        children: isSelected ? `Selected: ${entityName}` : buttonText,
                       }}
                     />
                   </Box>
                 )
               })}
-            </Box>
+            </>
           )}
         </Box>
       </VStack>

@@ -12,9 +12,3 @@
 [build.environment]
   BUN_VERSION = "1.1.38"
 
-[dev]
-  command = "bun run dev"
-  targetPort = 5173
-  # Publish directory for dev (relative to base directory)
-  publish = "apps/suref-web/dist/client"
-

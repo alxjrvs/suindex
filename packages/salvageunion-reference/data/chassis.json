@@ -2471,28 +2471,23 @@
           },
           {
             "type": "list-item",
-            "value": "Security Cameras (Free Action to Command)",
-            "label": " • "
+            "value": "Security Cameras (Free Action to Command)"
           },
           {
             "type": "list-item",
-            "value": "Automated Doors (Free Action to Command)",
-            "label": " • "
+            "value": "Automated Doors (Free Action to Command)"
           },
           {
             "type": "list-item",
-            "value": "Lights (Free Action to Command)",
-            "label": " • "
+            "value": "Lights (Free Action to Command)"
           },
           {
             "type": "list-item",
-            "value": "Defensive Turrets (Turn Action to Command)",
-            "label": " • "
+            "value": "Defensive Turrets (Turn Action to Command)"
           },
           {
             "type": "list-item",
-            "value": "Drones (Turn Action to Command)",
-            "label": " • "
+            "value": "Drones (Turn Action to Command)"
           },
           {
             "type": "list-item",

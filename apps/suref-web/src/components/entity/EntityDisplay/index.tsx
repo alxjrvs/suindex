@@ -37,6 +37,8 @@ type EntityDisplayProps = {
   hideLevel?: boolean
   /** Whether or not to show the actions */
   hideActions?: boolean
+  /** Whether to hide chassis patterns */
+  hidePatterns?: boolean
   /** User choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
   userChoices?: Record<string, string> | null
   /** Callback when a choice is selected - if undefined, we're in schema page mode (not a live sheet) */
@@ -58,6 +60,7 @@ export const EntityDisplay = memo(function EntityDisplay({
   onToggleExpanded,
   buttonConfig,
   hideActions = false,
+  hidePatterns = false,
   schemaName,
   compact = false,
   userChoices,
@@ -76,6 +79,7 @@ export const EntityDisplay = memo(function EntityDisplay({
       dimHeader={dimHeader}
       disabled={disabled}
       hideActions={hideActions}
+      hidePatterns={hidePatterns}
       collapsible={collapsible}
       onClick={onClick}
       hideLevel={hideLevel}

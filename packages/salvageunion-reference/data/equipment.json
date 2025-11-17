@@ -1649,51 +1649,47 @@
     "techLevel": 3,
     "page": 85,
     "id": "fc761f88-48ef-4925-8335-b7a6908a27f3",
-    "actions": [
+    "content": [
       {
-        "id": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
-        "name": "Custom Sniper Rifle",
-        "choices": [
-          {
-            "name": "Weapon Type",
-            "id": "d2e3f4a5-b6c7-4d8e-9f0a-1b2c3d4e5f6a",
-            "content": [
-              {
-                "type": "paragraph",
-                "value": "Choose if your Custom Sniper Rifle is a Ballistic or Energy weapon. It gains the respective Energy or Ballistic Trait."
-              }
-            ],
-            "schemaEntities": ["Ballistic", "Energy"]
-          },
-          {
-            "name": "Modification",
-            "id": "e3f4a5b6-c7d8-4e9f-0a1b-2c3d4e5f6a7b",
-            "content": [
-              {
-                "type": "paragraph",
-                "value": "At each Tech Level you may choose an additional modification for your Custom Sniper Rifle."
-              }
-            ],
-            "schemaEntities": [
-              "Rangefinder",
-              "Laser Guidance",
-              "Pinpoint Targeter",
-              "Dum Dum Rounds",
-              "High Calibre Rounds",
-              "Anti-Matter",
-              "Flashy",
-              "Silencer",
-              "Compact Design"
-            ]
-          }
-        ],
+        "type": "paragraph",
+        "value": "You acquire and train in the use of a Custom Sniper Rifle that only you can use. Choose if it is a Ballistic or Energy weapon and it gains the respective Energy or Ballistic Trait. At each Tech Level you may choose an additional modification for your Custom Sniper Rifle."
+      }
+    ],
+    "choices": [
+      {
+        "name": "Weapon Type",
+        "id": "d2e3f4a5-b6c7-4d8e-9f0a-1b2c3d4e5f6a",
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Custom Sniper Rifle that only you can use. Choose if it is a Ballistic or Energy weapon and it gains the respective Energy or Ballistic Trait. At each Tech Level you may choose an additional modification for your Custom Sniper Rifle."
+            "value": "Choose if your Custom Sniper Rifle is a Ballistic or Energy weapon. It gains the respective Energy or Ballistic Trait."
           }
-        ]
+        ],
+        "schemaEntities": ["Ballistic", "Energy"]
       },
+      {
+        "name": "Modification",
+        "id": "8688eb63-550c-4d06-9b50-e1649c442da6",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "At each Tech Level you may choose an additional modification for your Custom Sniper Rifle."
+          }
+        ],
+        "schemaEntities": [
+          "Rangefinder",
+          "Laser Guidance",
+          "Pinpoint Targeter",
+          "Dum Dum Rounds",
+          "High Calibre Rounds",
+          "Anti-Matter",
+          "Flashy",
+          "Silencer",
+          "Compact Design"
+        ]
+      }
+    ],
+    "actions": [
       {
         "id": "1fc25daa-b959-46f9-8e52-94ef76f0b0b5",
         "traits": [

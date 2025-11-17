@@ -60,6 +60,8 @@ export interface EntityDisplayContextValue {
   collapsible: boolean
   /** Whether to hide actions */
   hideActions: boolean
+  /** Whether to hide chassis patterns */
+  hidePatterns: boolean
   /** Whether to hide tech level */
   hideLevel: boolean
   /** Right label for header */

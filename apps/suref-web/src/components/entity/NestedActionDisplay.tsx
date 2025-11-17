@@ -1,10 +1,11 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
-import type { SURefMetaAction } from 'salvageunion-reference'
+import type { SURefMetaAction, SURefMetaChoice } from 'salvageunion-reference'
 import { Text } from '../base/Text'
 import { ActivationCostBox } from '../shared/ActivationCostBox'
 import { ValueDisplay } from '../shared/ValueDisplay'
 import { EntityDetailDisplay } from './EntityDetailDisplay'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
+import { EntityChoice } from './EntityDisplay/EntityChoice'
 import type { DataValue } from '../../types/common'
 
 interface NestedActionDisplayProps {
@@ -38,19 +39,28 @@ export function NestedActionDisplay({
 }: NestedActionDisplayProps) {
   const details = extractActionDetails(data)
 
-  const fontSize = compact ? 'sm' : 'md'
-  const titleFontSize = compact ? 'lg' : 'xl'
+  // Match EntityDisplay fontSize.sm: compact ? 'xs' : 'sm'
+  const fontSize = compact ? 'xs' : 'sm'
+  const titleFontSize = compact ? 'sm' : 'xl'
   const spacing = compact ? 1 : 2
+  const headerPadding = compact ? { px: 0.5, py: 0.25 } : { px: 1, py: 0.5 }
 
   const hasContent = data.content && data.content.length > 0
+  const actionChoices: SURefMetaChoice[] = data.choices || []
+  const hasChoices = actionChoices.length > 0
 
   return (
     <Box bg="su.lightBlue" overflow="hidden" pb={isLast ? 0 : spacing} position="relative">
       {!isLast && (
-        <Box position="absolute" bottom={0} left="10%" width="80%" height="2px" bg="gray.300" />
+        <Box position="absolute" bottom={0} left="10%" width="80%" height="2px" bg="su.black" />
       )}
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
-        <Text fontSize={titleFontSize} variant="pseudoheader" width="fit-content" px={1} py={0.5}>
+        <Text
+          fontSize={titleFontSize}
+          variant="pseudoheader"
+          width="fit-content"
+          {...headerPadding}
+        >
           {data.name}
         </Text>
       </Flex>
@@ -71,6 +81,24 @@ export function NestedActionDisplay({
           alignItems="stretch"
         >
           <ContentBlockRenderer content={data.content!} fontSize={fontSize} compact={compact} />
+        </VStack>
+      )}
+
+      {hasChoices && (
+        <VStack
+          gap={spacing}
+          p={spacing}
+          pt={hasContent && !hideContent ? 0 : details.length > 0 ? 0 : spacing}
+          alignItems="stretch"
+        >
+          {actionChoices.map((choice) => (
+            <EntityChoice
+              key={choice.id}
+              choice={choice}
+              userChoices={undefined}
+              onChoiceSelection={undefined}
+            />
+          ))}
         </VStack>
       )}
     </Box>
