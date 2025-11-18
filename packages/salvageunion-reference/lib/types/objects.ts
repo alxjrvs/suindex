@@ -127,7 +127,7 @@ export interface SURefMetaContentBlock {
  * Entity that can perform actions and has traits
  */
 export interface SURefMetaCombatEntity {
-  actions?: SURefMetaAction[]
+  actions?: string[]
   traits?: SURefMetaTrait[]
 }
 
@@ -246,7 +246,7 @@ export interface SURefMetaSystemModule extends SURefMetaStats {
   salvageValue: SURefSalvageValue
   recommended?: boolean
   count?: SURefNonNegativeInteger
-  actions: SURefMetaAction[]
+  actions: string[]
 }
 
 /**

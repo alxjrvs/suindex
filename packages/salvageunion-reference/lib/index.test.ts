@@ -133,14 +133,18 @@ describe('SalvageUnionReference.findAllIn', () => {
     expect(abilities.every((a) => a.level === 1)).toBe(true)
   })
 
-  it('should find all systems with a specific trait', () => {
-    const energySystems = SalvageUnionReference.findAllIn(
-      'systems',
-      (s) => s.actions?.[0]?.traits?.some((t) => t.type === 'energy') ?? false
-    )
+  it('should find all systems with a specific trait', async () => {
+    const { extractActions } = await import('./utilities.js')
+    const energySystems = SalvageUnionReference.findAllIn('systems', (s) => {
+      const resolvedActions = extractActions(s)
+      return resolvedActions?.[0]?.traits?.some((t) => t.type === 'energy') ?? false
+    })
     expect(energySystems.length).toBeGreaterThan(0)
     expect(
-      energySystems.every((s) => s.actions?.[0]?.traits?.some((t) => t.type === 'energy') ?? false)
+      energySystems.every((s) => {
+        const resolvedActions = extractActions(s)
+        return resolvedActions?.[0]?.traits?.some((t) => t.type === 'energy') ?? false
+      })
     ).toBe(true)
   })
 

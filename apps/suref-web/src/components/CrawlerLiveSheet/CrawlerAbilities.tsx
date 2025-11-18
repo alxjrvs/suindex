@@ -1,4 +1,5 @@
-import type { SURefCrawler } from 'salvageunion-reference'
+import type { SURefCrawler, SURefMetaAction } from 'salvageunion-reference'
+import { extractActions } from 'salvageunion-reference'
 
 import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
@@ -30,22 +31,24 @@ export function CrawlerAbilities({
       maxW="50%"
       flex="1"
     >
-      {(
-        crawlerTypeRef?.actions || [
+      {(() => {
+        const resolvedActions = crawlerTypeRef ? extractActions(crawlerTypeRef) : undefined
+        const actions = resolvedActions || [
           {
             id: 'no-crawler-type',
             name: '',
-            description: 'No crawler type selected.',
-          },
+            content: [{ type: 'paragraph', value: 'No crawler type selected.' }],
+          } as SURefMetaAction,
         ]
-      ).map((ability, idx) => (
-        <CrawlerAbility
-          readOnly={readOnly}
-          key={idx}
-          ability={ability}
-          crawlerTypeEntityId={selectedCrawlerType?.id}
-        />
-      ))}
+        return actions.map((ability, idx) => (
+          <CrawlerAbility
+            readOnly={readOnly}
+            key={ability.id || idx}
+            ability={ability}
+            crawlerTypeEntityId={selectedCrawlerType?.id}
+          />
+        ))
+      })()}
     </RoundedBox>
   )
 }
@@ -55,12 +58,12 @@ function CrawlerAbility({
   readOnly = false,
   crawlerTypeEntityId,
 }: {
-  ability: SURefCrawler['actions'][0]
+  ability: SURefMetaAction
   readOnly?: boolean
   crawlerTypeEntityId: string | undefined
 }) {
   const handleUpdateChoice = useManageEntityChoices(crawlerTypeEntityId)
-  const wrappedChoice = 'choices' in ability ? (ability.choices ?? []) : []
+  const wrappedChoice = ability.choices ?? []
 
   return (
     <VStack gap={3} alignItems="stretch" w="full">
@@ -68,7 +71,7 @@ function CrawlerAbility({
       {wrappedChoice.map((choice, idx) => (
         <SheetEntityChoiceDisplay
           onUpdateChoice={readOnly ? undefined : handleUpdateChoice}
-          key={idx}
+          key={choice.id || idx}
           choice={choice}
           entityId={crawlerTypeEntityId}
         />

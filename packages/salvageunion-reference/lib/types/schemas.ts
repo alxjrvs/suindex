@@ -45,7 +45,7 @@ export interface SURefAbility extends SURefMetaBaseEntity {
   mechActionType?: SURefActionType
   grants?: SURefMetaGrant[]
   activationCurrency?: 'Variable'
-  actions?: SURefMetaAction[]
+  actions?: string[]
 }
 
 /**
@@ -63,7 +63,7 @@ export interface SURefAbilityTreeRequirement extends SURefMetaBaseEntity {
  */
 export interface SURefBioTitan extends SURefMetaBaseEntity {
   structurePoints: SURefPositiveInteger
-  actions: SURefMetaAction[]
+  actions: string[]
   /**
    * Special traits and properties of items, systems, or abilities
    */
@@ -74,6 +74,12 @@ export interface SURefBioTitan extends SURefMetaBaseEntity {
  * Chassis abilities for mech chassis in Salvage Union
  */
 export type SURefMetaChassisAbility = SURefMetaAction
+
+/**
+ * Actions, abilities, and attacks that can be performed in Salvage Union
+ * Note: SURefMetaAction is defined in objects.ts, this is just an alias for convenience
+ */
+export type SURefAction = SURefMetaAction
 
 /**
  * Mech chassis definitions in Salvage Union
@@ -154,7 +160,7 @@ export interface SURefCrawlerTechLevel extends SURefMetaBaseEntity {
  */
 export interface SURefCrawler extends SURefMetaBaseEntity {
   npc: SURefMetaNpc
-  actions: SURefMetaAction[]
+  actions: string[]
 }
 
 /**
@@ -182,7 +188,7 @@ export type SURefDrone = SURefMetaBaseEntity & SURefMetaMechanicalEntity
 export interface SURefEquipment extends SURefMetaBaseEntity, SURefMetaStats {
   bonusPerTechLevel?: SURefMetaBonusPerTechLevel
   choices?: SURefMetaChoices
-  actions: SURefMetaAction[]
+  actions: string[]
 }
 
 /**
@@ -196,7 +202,7 @@ export interface SURefKeyword extends SURefMetaBaseEntity {
  * Meld-infected creatures in Salvage Union
  */
 export interface SURefMeld extends SURefMetaBaseEntity {
-  actions: SURefMetaAction[]
+  actions: string[]
   /**
    * Special traits and properties of items, systems, or abilities
    */
@@ -244,7 +250,7 @@ export interface SURefRollTable extends SURefMetaBaseEntity {
  */
 export interface SURefSquad extends SURefMetaBaseEntity {
   hitPoints?: SURefHitPoints
-  actions: SURefMetaAction[]
+  actions: string[]
   /**
    * Special traits and properties of items, systems, or abilities
    */

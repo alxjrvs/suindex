@@ -4,29 +4,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Meld Drone",
     "actions": [
-      {
-        "name": "Bite",
-        "range": ["Close"],
-        "damage": {
-          "amount": 2,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "meld infection"
-          }
-        ],
-        "id": "5db10ab3-6099-4c8e-82df-fc4f9b18eb18",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Meld Drone mindlessly attacks the target with teeth and claw."
-          }
-        ]
-      }
+      "Bite"
     ],
     "salvageValue": 1,
     "hitPoints": 3,
@@ -43,33 +21,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Meld Drone Swarm",
     "actions": [
-      {
-        "name": "Devour",
-        "range": ["Close"],
-        "damage": {
-          "amount": 3,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "meld infection"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 3
-          }
-        ],
-        "id": "5ff0cbf4-4604-4072-a37c-065b45b3416c",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Meld Drones bite and claw at a target with all their multitude limbs and maws."
-          }
-        ]
-      }
+      "Devour"
     ],
     "salvageValue": 3,
     "hitPoints": 6,
@@ -91,29 +43,7 @@
       }
     ],
     "actions": [
-      {
-        "name": "Nanoid Tendrils",
-        "range": ["Close"],
-        "damage": {
-          "amount": 3,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "meld infection"
-          }
-        ],
-        "id": "f00aff83-c0a0-4a86-886d-fe22c2302d4c",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The nanoid lashes out with it's tendrils"
-          }
-        ]
-      }
+      "Nanoid Tendrils"
     ],
     "structurePoints": 5,
     "salvageValue": 5,
@@ -131,43 +61,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Meld Splitter",
     "actions": [
-      {
-        "name": "Splitter Tendrils",
-        "range": ["Medium"],
-        "damage": {
-          "amount": 4,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "meld infection"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "9c894b18-09df-417d-b644-282298a1883b",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Huge tendrils lash out at anything nearby."
-          }
-        ]
-      },
-      {
-        "name": "Split",
-        "id": "68b99a49-990f-4afb-a932-054026608c0f",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "When a Meld Splitter is reduced to 0 SP it turns into 2 Meld Nanoids. These act at the start of the next round."
-          }
-        ]
-      }
+      "Splitter Tendrils",
+      "Split"
     ],
     "structurePoints": 10,
     "salvageValue": 10,
@@ -185,64 +80,9 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Meld Behemoth",
     "actions": [
-      {
-        "name": "Behemoth Tendrils",
-        "actionType": "Turn",
-        "range": ["Medium"],
-        "damage": {
-          "amount": 6,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "c51d7aad-9fec-4767-bbe3-e90fb0010c9e",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Long reaching tendrils whip around to grab all within reach, either crushing them or drawing them nearer to be assimilated."
-          }
-        ]
-      },
-      {
-        "name": "Assimilation",
-        "actionType": "Turn",
-        "id": "06fa1e74-ae4a-4478-b84d-02530dfd1053",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "A Meld Behemoth does not infect, instead it absorbs everything it destroys into its mammoth, ever expanding form."
-          }
-        ]
-      },
-      {
-        "name": "Titanic Actions",
-        "id": "e73ec1f7-42d4-4ebd-8c5e-89feaa8aa783",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Meld Behemoth can take three Titanic Actions, choosing from the options below. Only one Titanic Action may be chosen at a time and only at the end of another Pilot's or NPC's turn. Meld Behemoth regains spent Titanic Actions at the start of their turn."
-          },
-          {
-            "type": "list-item",
-            "value": "The Meld Behemoth moves one Range Band."
-          },
-          {
-            "type": "list-item",
-            "value": "The Meld Behemoth makes a single Behemoth Tendrils Attack. This does not have the [[Multi-Attack]] Trait."
-          },
-          {
-            "type": "list-item",
-            "value": "The Meld Behemoth uses the Behemoth Assimilation Ability."
-          }
-        ]
-      }
+      "Behemoth Tendrils",
+      "Assimilation",
+      "Titanic Actions (6)"
     ],
     "structurePoints": 60,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/meld/meld%20behemoth.jpg",

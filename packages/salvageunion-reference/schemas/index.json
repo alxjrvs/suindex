@@ -47,6 +47,17 @@
       "meta": true
     },
     {
+      "id": "actions",
+      "title": "actions",
+      "description": "Actions, abilities, and attacks that can be performed in Salvage Union",
+      "dataFile": "data/actions.json",
+      "schemaFile": "schemas/actions.schema.json",
+      "itemCount": 443,
+      "requiredFields": ["id", "name"],
+      "displayName": "Actions",
+      "meta": true
+    },
+    {
       "id": "chassis",
       "title": "chassis",
       "description": "Mech chassis definitions in Salvage Union",

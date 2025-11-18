@@ -16,7 +16,7 @@
       "actions": {
         "type": "array",
         "items": {
-          "$ref": "shared/objects.schema.json#/definitions/action"
+          "type": "string"
         }
       },
       "traits": {

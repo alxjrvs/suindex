@@ -4,28 +4,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Waster Mob",
     "actions": [
-      {
-        "name": "Improvised Weapons",
-        "range": ["Close"],
-        "damage": {
-          "amount": 4,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "63859850-7ffd-4449-b840-312fbbc05d61"
-      },
-      {
-        "name": "Salvaging Tools",
-        "id": "97acc3d5-6250-485c-8188-84523edc9365"
-      }
+      "Improvised Weapons",
+      "Salvaging Tools"
     ],
     "hitPoints": 4,
     "damageType": "HP",
@@ -42,28 +22,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Raider Band",
     "actions": [
-      {
-        "name": "Improvised Firearms",
-        "range": ["Close"],
-        "damage": {
-          "amount": 4,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "ballistic"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "5cbd2c39-f22a-4382-bdc1-99feae76f6ef"
-      },
-      {
-        "name": "High Tensile Wire",
-        "id": "2f091973-50eb-4ceb-826c-5e2c202f87e6"
-      }
+      "Improvised Firearms",
+      "High Tensile Wire (1)"
     ],
     "hitPoints": 6,
     "damageType": "HP",
@@ -80,31 +40,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Rifle Squad",
     "actions": [
-      {
-        "name": "Rifles",
-        "range": ["Medium"],
-        "damage": {
-          "amount": 6,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "ballistic"
-          },
-          {
-            "type": "jamming"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "08aadf97-911d-4885-a001-b8f888e61969"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "ceb83ee9-c612-43ba-92d4-a1d637e7a8b4"
-      }
+      "Rifles",
+      "Portable Comms Unit"
     ],
     "hitPoints": 10,
     "damageType": "HP",
@@ -121,38 +58,9 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Machine Gun Squad",
     "actions": [
-      {
-        "name": ".50 Cal Machine Gun",
-        "range": ["Close"],
-        "damage": {
-          "amount": 3,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "ballistic"
-          },
-          {
-            "type": "jamming"
-          },
-          {
-            "type": "pinning"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "54487422-177c-43ab-92e4-da9536094c3d"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "94540ef2-41ed-4890-9480-0f5a5df31e1f"
-      },
-      {
-        "name": "First Aid Kit",
-        "id": "b4680af4-008c-4f7d-95bc-8d2379609183"
-      }
+      ".50 Cal Machine Gun (1)",
+      "Portable Comms Unit",
+      "First Aid Kit (1)"
     ],
     "hitPoints": 10,
     "damageType": "HP",
@@ -169,40 +77,9 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Missile Squad",
     "actions": [
-      {
-        "name": "Rocket Launcher",
-        "range": ["Long"],
-        "damage": {
-          "amount": 6,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "missile"
-          },
-          {
-            "type": "explosive",
-            "amount": 1
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          },
-          {
-            "type": "uses",
-            "amount": 3
-          }
-        ],
-        "id": "30df4001-e19d-45da-8fe9-eb043b15aed4"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "a61bfbe6-040b-4fc9-9941-48e90c4a7677"
-      },
-      {
-        "name": "First Aid Kit",
-        "id": "748e6faa-7482-47be-a502-fe28640ba568"
-      }
+      "Rocket Launcher (1)",
+      "Portable Comms Unit",
+      "First Aid Kit"
     ],
     "hitPoints": 10,
     "damageType": "HP",
@@ -219,35 +96,9 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Elite Blade Squad",
     "actions": [
-      {
-        "name": "Monomolecular Sword",
-        "range": ["Close"],
-        "damage": {
-          "amount": 6,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "deadly"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "64d10d60-fc06-4208-b248-786b5ec65eb1"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "a348a0e5-e921-4463-9397-2388d84800e3"
-      },
-      {
-        "name": "Electro Grappling Hook",
-        "id": "6229ca55-4a76-4c88-8207-640265d6bbe4"
-      }
+      "Monomolecular Sword (1)",
+      "Portable Comms Unit",
+      "Electro Grappling Hook (1)"
     ],
     "hitPoints": 20,
     "damageType": "HP",
@@ -265,40 +116,9 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Elite Beam Squad",
     "actions": [
-      {
-        "name": "Beta Fission Gun",
-        "range": ["Long"],
-        "damage": {
-          "amount": 9,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "burn",
-            "amount": 2
-          },
-          {
-            "type": "energy"
-          },
-          {
-            "type": "explosive",
-            "amount": 1
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "60c3c816-c849-4f33-83c1-b5773c095908"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "17c468b3-6752-47c1-ab60-ac85654dc385"
-      },
-      {
-        "name": "Night Vision Optics",
-        "id": "06d310cc-249e-4762-8264-4127db41c8b8"
-      }
+      "Beta Fission Gun (1)",
+      "Portable Comms Unit",
+      "Night Vision Optics"
     ],
     "hitPoints": 20,
     "damageType": "HP",
@@ -315,30 +135,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Wasteland Herd",
     "actions": [
-      {
-        "name": "Stampede",
-        "range": ["Close"],
-        "damage": {
-          "amount": 3,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "424068a6-0196-473c-964b-854b4aa13224",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Creatures hit by this attack are knocked prone."
-          }
-        ]
-      }
+      "Stampede"
     ],
     "hitPoints": 4,
     "damageType": "HP",
@@ -355,32 +152,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Drone Squadron",
     "actions": [
-      {
-        "name": "Red Laser",
-        "range": ["Medium"],
-        "damage": {
-          "amount": 4,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "energy"
-          },
-          {
-            "type": "hot",
-            "amount": 1
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "8efcb234-f723-4f61-b21b-530a26cc14a0"
-      },
-      {
-        "name": "Hover Locomotion System",
-        "id": "3968e047-1219-4a02-9e4f-2f4a58fa326d"
-      }
+      "Red Laser (1)",
+      "Hover Locomotion System (1)"
     ],
     "hitPoints": 8,
     "damageType": "SP",

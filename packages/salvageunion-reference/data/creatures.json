@@ -4,26 +4,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Irradiated Scorpion",
     "actions": [
-      {
-        "name": "Stinger",
-        "range": ["Close"],
-        "damage": {
-          "amount": 2,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "poison"
-          },
-          {
-            "type": "deadly (creatures only)"
-          }
-        ],
-        "id": "110f09d1-2f84-4ec5-a9a2-df36461bde75"
-      }
+      "Stinger"
     ],
     "hitPoints": 4,
     "page": 296,
@@ -45,31 +26,8 @@
       }
     ],
     "actions": [
-      {
-        "name": "Acid Spit",
-        "range": ["Medium"],
-        "damage": {
-          "amount": 2,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "burn",
-            "amount": 2
-          }
-        ],
-        "id": "85f9957b-7c90-417f-bff2-c62e4673ba08"
-      },
-      {
-        "name": "Corrosive Skin Glands",
-        "id": "9205f5c9-21ee-4433-93e8-c87a164cc590",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "When hit by a melee attack, the attacker takes 2 HP damage."
-          }
-        ]
-      }
+      "Acid Spit",
+      "Corrosive Skin Glands"
     ],
     "hitPoints": 2,
     "page": 266,
@@ -86,30 +44,7 @@
     "name": "Chimeripede",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/creatures/chimeripede.jpg",
     "actions": [
-      {
-        "name": "Barbed Tentacles",
-        "range": ["Close"],
-        "damage": {
-          "amount": 3,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "pinning"
-          },
-          {
-            "type": "poison"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 3
-          }
-        ],
-        "id": "ff32cfbb-0930-4fe3-a7d3-c51f71cc06d8"
-      }
+      "Barbed Tentacles"
     ],
     "hitPoints": 10,
     "page": 272,
@@ -125,20 +60,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Wasteland Bear",
     "actions": [
-      {
-        "name": "Bear Carnage",
-        "range": ["Close"],
-        "damage": {
-          "amount": 4,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          }
-        ],
-        "id": "167d2315-0770-4f18-812a-fef772daabed"
-      }
+      "Bear Carnage"
     ],
     "hitPoints": 5,
     "page": 297,
@@ -160,20 +82,7 @@
       }
     ],
     "actions": [
-      {
-        "name": "Iron Claw",
-        "range": ["Close"],
-        "damage": {
-          "amount": 4,
-          "damageType": "SP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          }
-        ],
-        "id": "86a7997d-a983-49c2-bdc9-c1a4cef76e1e"
-      }
+      "Iron Claw"
     ],
     "hitPoints": 12,
     "page": 266,
@@ -194,15 +103,7 @@
       }
     ],
     "actions": [
-      {
-        "name": "Talons",
-        "range": ["Close"],
-        "damage": {
-          "amount": 3,
-          "damageType": "HP"
-        },
-        "id": "a138ebfe-33fc-4594-9a80-77486fdeb1a9"
-      }
+      "Talons"
     ],
     "hitPoints": 3,
     "page": 266,

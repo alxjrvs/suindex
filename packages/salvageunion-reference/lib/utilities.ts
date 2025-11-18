@@ -114,11 +114,48 @@ export function getPageReference(entity: SURefMetaEntity): number | undefined {
 
 /**
  * Extract actions from an entity
+ * Resolves action names to full action objects from actions schema
  * @param entity - The entity to extract from
  * @returns The actions array or undefined
  */
 export function extractActions(entity: SURefMetaEntity): SURefMetaAction[] | undefined {
-  return 'actions' in entity && Array.isArray(entity.actions) ? entity.actions : undefined
+  if (!('actions' in entity) || !Array.isArray(entity.actions)) {
+    return undefined
+  }
+
+  const actionNames = entity.actions as string[]
+
+  // Resolve each action name to its full action object from actions schema
+  const { dataMap } = getDataMaps()
+  const actionsData = dataMap['actions'] as SURefMetaAction[] | undefined
+
+  if (!actionsData) {
+    console.warn('actions schema not found')
+    return undefined
+  }
+
+  // Create a map of action name to action object
+  const actionMap = new Map<string, SURefMetaAction>()
+  actionsData.forEach((action) => {
+    actionMap.set(action.name, action)
+  })
+
+  // Resolve each action name to its object
+  const resolved: SURefMetaAction[] = []
+  for (const actionName of actionNames) {
+    if (typeof actionName !== 'string') {
+      console.warn(`Invalid action: expected string, got ${typeof actionName}`)
+      continue
+    }
+    const action = actionMap.get(actionName)
+    if (action) {
+      resolved.push(action)
+    } else {
+      console.warn(`Action "${actionName}" not found in actions schema`)
+    }
+  }
+
+  return resolved.length > 0 ? resolved : undefined
 }
 
 /**
@@ -323,7 +360,7 @@ export function hasSlotsRequired(
  */
 export function hasActions(
   entity: SURefMetaEntity
-): entity is SURefMetaEntity & { actions: unknown[] } {
+): entity is SURefMetaEntity & { actions: string[] } {
   return 'actions' in entity && Array.isArray(entity.actions)
 }
 
@@ -340,14 +377,16 @@ export function hasTraits(
     'traits' in entity && (entity.traits === undefined || Array.isArray(entity.traits))
 
   // Check if traits exists in actions[0] property
-  const hasActionTraits =
-    'actions' in entity &&
-    Array.isArray(entity.actions) &&
-    entity.actions.length > 0 &&
-    entity.actions[0] !== null &&
-    typeof entity.actions[0] === 'object' &&
-    'traits' in entity.actions[0] &&
-    (entity.actions[0].traits === undefined || Array.isArray(entity.actions[0].traits))
+  // Check resolved actions[0] property (actions are now strings, need to resolve)
+  const resolvedActions = extractActions(entity)
+  const hasActionTraits = Boolean(
+    resolvedActions &&
+    resolvedActions.length > 0 &&
+    resolvedActions[0] !== null &&
+    typeof resolvedActions[0] === 'object' &&
+    'traits' in resolvedActions[0] &&
+    (resolvedActions[0].traits === undefined || Array.isArray(resolvedActions[0].traits))
+  )
 
   return hasBaseTraits || hasActionTraits
 }
@@ -701,18 +740,18 @@ export function getTable(entity: SURefMetaEntity):
     }
   }
 
-  // Check actions[0] property
+  // Check resolved actions[0] property (actions are now strings, need to resolve)
+  const resolvedActions = extractActions(entity)
   if (
-    'actions' in entity &&
-    Array.isArray(entity.actions) &&
-    entity.actions.length > 0 &&
-    entity.actions[0] !== null &&
-    typeof entity.actions[0] === 'object' &&
-    'table' in entity.actions[0] &&
-    entity.actions[0].table !== null &&
-    typeof entity.actions[0].table === 'object'
+    resolvedActions &&
+    resolvedActions.length > 0 &&
+    resolvedActions[0] !== null &&
+    typeof resolvedActions[0] === 'object' &&
+    'table' in resolvedActions[0] &&
+    resolvedActions[0].table !== null &&
+    typeof resolvedActions[0].table === 'object'
   ) {
-    return entity.actions[0].table as {
+    return resolvedActions[0].table as {
       type: 'standard' | 'alternate' | 'flat' | 'full'
       [key: string]: string
     }
@@ -738,17 +777,17 @@ export function getOptions(entity: SURefMetaEntity):
     return entity.options as Array<{ label: string; value: string }>
   }
 
-  // Check actions[0] property
+  // Check resolved actions[0] property (actions are now strings, need to resolve)
+  const resolvedActions = extractActions(entity)
   if (
-    'actions' in entity &&
-    Array.isArray(entity.actions) &&
-    entity.actions.length > 0 &&
-    entity.actions[0] !== null &&
-    typeof entity.actions[0] === 'object' &&
-    'options' in entity.actions[0] &&
-    Array.isArray(entity.actions[0].options)
+    resolvedActions &&
+    resolvedActions.length > 0 &&
+    resolvedActions[0] !== null &&
+    typeof resolvedActions[0] === 'object' &&
+    'options' in resolvedActions[0] &&
+    Array.isArray(resolvedActions[0].options)
   ) {
-    return entity.actions[0].options as Array<{ label: string; value: string }>
+    return resolvedActions[0].options as Array<{ label: string; value: string }>
   }
 
   return undefined
