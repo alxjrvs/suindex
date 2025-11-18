@@ -106,7 +106,7 @@ function ContentBlock({
         // Level 3: same size as paragraph
         headingFontSize = fontSize
       }
-      
+
       return (
         <Text
           as="span"

@@ -515,6 +515,7 @@
     "id": "74904a14-92be-41e0-80d9-63fce02b8851",
     "name": "Pilot Bay",
     "source": "Salvage Union Workshop Manual",
+    "damagedEffect": "If the Pilot Bay is damaged, you cannot train any new Pilot Abilities.",
     "page": 223,
     "npc": {
       "position": "Ace",

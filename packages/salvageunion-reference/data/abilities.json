@@ -804,7 +804,7 @@
           },
           {
             "type": "paragraph",
-            "value": "When you activate this Ability you gain full control of a Mech within Range for 10 minutes. You learn all of its Stats, Systems, Modules, and Abilities, and can control it as though it was your Mech. Whilst it is under your control, you cannot take any actions as a Pilot or with your Mech except for free actions such as talking. You can choose to end control of the Mech at any time as a Free Action. If you are reduced to 0 HP, or your Mech is reduced to 0 SP, you also lose control of the hacked Mech."
+            "value": "When you activate this Ability you gain full control of a Mech within Range for 10 minutes. You learn all of its Stats, Systems, Modules, and Abilities, and can control it as though it was your Mech. Whilst it is under your control, you cannot take any actions as a Pilot or with your Mech except for free actions such as talking."
           },
           {
             "type": "paragraph",
@@ -1658,7 +1658,7 @@
             "label": "4 AP"
           },
           {
-            "type": "paragraph",
+            "type": "list-item",
             "value": "You create the persona of someone at the top of their respective social hierarchy and in an immense position of power and influ- ence, such as a corpo executive, union leader, or general. You are able to access the highest ranks of society and the majority of people will treat you with deference.",
             "label": "6 AP"
           }

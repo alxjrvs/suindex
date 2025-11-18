@@ -14,7 +14,6 @@ interface BayInfoProps {
   bayEntityId: string
 }
 
-
 export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
   const [isFunctionExpanded, setIsFunctionExpanded] = useState(false)
   const handleUpdateChoice = useManageEntityChoices(bayEntityId)
