@@ -1,14 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog } from 'salvageunion-reference'
-import { z } from 'zod'
 import { RulesReferenceLanding } from '../components/Reference/RulesReferenceLanding'
 import { ReferenceError } from '../components/errors/ReferenceError'
 
 const schemaIndexData = getSchemaCatalog()
-
-const landingSearchSchema = z.object({
-  q: z.string().optional(),
-})
 
 function IndexPage() {
   const { schemas } = Route.useLoaderData()
@@ -18,7 +13,6 @@ function IndexPage() {
 export const Route = createFileRoute('/')({
   component: IndexPage,
   errorComponent: ReferenceError,
-  validateSearch: landingSearchSchema,
   loader: () => {
     return { schemas: schemaIndexData.schemas }
   },
