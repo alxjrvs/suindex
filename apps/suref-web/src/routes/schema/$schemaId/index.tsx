@@ -59,7 +59,7 @@ export const Route = createFileRoute('/schema/$schemaId/')({
             '@type': 'Dataset',
             name: schemaName,
             description: `Salvage Union ${schemaName} System Reference Document (SRD) data`,
-            url: `https://suindex.pages.dev/schema/${schemaId}`,
+            url: `https://su-srd.pages.dev/schema/${schemaId}`,
             keywords: ['Salvage Union', 'TTRPG', 'SRD', 'System Reference Document', schemaName],
             creator: {
               '@type': 'Organization',
