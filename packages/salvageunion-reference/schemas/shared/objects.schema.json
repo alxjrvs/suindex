@@ -712,6 +712,10 @@
         },
         "table": {
           "$ref": "#/definitions/table"
+        },
+        "hidden": {
+          "type": "boolean",
+          "description": "If true, this action will not affect the rendering of the entity display"
         }
       }
     },

@@ -13,7 +13,7 @@ interface NestedActionDisplayProps {
   data: SURefMetaAction
   /** Whether to use compact styling */
   compact?: boolean
-  /** Whether this is the last item in a list (affects bottom border) */
+  /** Whether this is the last item in a list */
   isLast?: boolean
   /** Whether to hide the action content/description */
   hideContent?: boolean
@@ -50,10 +50,7 @@ export function NestedActionDisplay({
   const hasChoices = actionChoices.length > 0
 
   return (
-    <Box bg="su.lightBlue" overflow="hidden" pb={isLast ? 0 : spacing} position="relative">
-      {!isLast && (
-        <Box position="absolute" bottom={0} left="10%" width="80%" height="2px" bg="su.black" />
-      )}
+    <Box bg="su.lightBlue" overflow="hidden">
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
         <Text
           fontSize={titleFontSize}

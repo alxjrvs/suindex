@@ -1,5 +1,5 @@
 import { VStack } from '@chakra-ui/react'
-import { hasActions, extractActions } from 'salvageunion-reference'
+import { hasActions, extractVisibleActions } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { NestedActionDisplay } from '../NestedActionDisplay'
 
@@ -11,12 +11,12 @@ export function EntityActions() {
 
   if (!hasActions(data)) return null
 
-  const actions = extractActions(data)
+  const actions = extractVisibleActions(data)
   if (!actions || actions.length === 0) return null
 
   // Don't render nested action display for single-action entities
   // The action's content will be rendered in EntityTopMatter instead
-  // In compact mode, only show nested action headers if there are multiple actions
+  // In compact mode, only show nested action headers if there are multiple visible actions
   if (actions.length === 1) return null
 
   return (

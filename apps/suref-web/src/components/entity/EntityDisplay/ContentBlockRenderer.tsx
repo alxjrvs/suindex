@@ -148,7 +148,7 @@ function ContentBlock({
       return (
         <Box
           color="su.black"
-          fontWeight="medium"
+          fontWeight="normal"
           fontStyle="italic"
           lineHeight="relaxed"
           wordBreak="break-word"

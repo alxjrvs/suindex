@@ -205,6 +205,10 @@ export interface SURefMetaAction {
   }
   choices?: SURefMetaChoice[]
   table?: SURefMetaTable
+  /**
+   * If true, this action will not affect the rendering of the entity display
+   */
+  hidden?: boolean
 }
 
 /**
