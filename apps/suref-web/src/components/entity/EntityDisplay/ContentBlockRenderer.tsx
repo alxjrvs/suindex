@@ -1,4 +1,4 @@
-import { Box, Flex, List } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import type { SURefMetaContentBlock, SURefMetaDataValue } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
@@ -139,28 +139,19 @@ function ContentBlock({
     }
 
     case 'list-item':
-      // If list item has a label, render as dot-less list item with bold label: value
-      if (block.label) {
-        return (
-          <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize}>
+      return (
+        <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize} pl={2}>
+          <Text as="span" fontWeight="bold" mr={1}>
+            -
+          </Text>
+          {block.label && (
             <Text as="span" fontWeight="bold">
               {block.label}:
-            </Text>{' '}
-            {parsedValue}
-          </Box>
-        )
-      }
-      // Otherwise render as regular bulleted list item
-      return (
-        <List.Root as="ul">
-          <List.Item>
-            <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize}>
-              {parsedValue}
-            </Box>
-          </List.Item>
-        </List.Root>
+            </Text>
+          )}
+          {parsedValue}
+        </Box>
       )
-
     case 'hint':
       return (
         <Box
