@@ -2,7 +2,7 @@ import { Flex, Box } from '@chakra-ui/react'
 
 interface ActivationCostBoxProps {
   cost: string | number
-  currency?: string
+  currency?: string | undefined | number
   compact?: boolean
 }
 

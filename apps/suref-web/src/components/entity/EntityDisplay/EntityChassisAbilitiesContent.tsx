@@ -2,7 +2,7 @@ import { VStack } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
 import { getChassisAbilities } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
-import { NestedActionDisplay } from '../NestedActionDisplay'
+import { NestedChassisAbility } from '../NestedChassisAbility'
 
 export function EntityChassisAbilitiesContent() {
   const { data, spacing, compact } = useEntityDisplayContext()
@@ -14,12 +14,10 @@ export function EntityChassisAbilitiesContent() {
     <VStack gap={spacing.smallGap} alignItems="stretch">
       {chassisAbilities.map((ability, index) => {
         return (
-          <NestedActionDisplay
+          <NestedChassisAbility
             compact={compact}
             key={index}
             data={ability}
-            isLast={index === chassisAbilities.length - 1}
-            variant="chassis"
           />
         )
       })}

@@ -8,7 +8,7 @@ import {
 } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
-import { NestedActionDisplay } from '../entity/NestedActionDisplay'
+import { NestedChassisAbility } from '../entity/NestedChassisAbility'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
@@ -71,7 +71,7 @@ export function ChassisAbilities({
             },
           ]
         ).map((ability, idx) => (
-          <NestedActionDisplay key={idx} data={ability} compact />
+          <NestedChassisAbility key={idx} data={ability} compact />
         ))}
       </VStack>
     </RoundedBox>

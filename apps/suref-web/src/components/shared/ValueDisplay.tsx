@@ -27,6 +27,9 @@ export function ValueDisplay({
       whiteSpace="nowrap"
       border="1px solid black"
       display={inline ? 'inline-flex' : 'flex'}
+      flexShrink={0}
+      flexGrow={0}
+      width="fit-content"
     >
       <Text
         variant={mainVariant}

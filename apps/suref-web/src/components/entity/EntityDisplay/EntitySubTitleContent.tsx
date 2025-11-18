@@ -7,22 +7,20 @@ import {
   getTraits,
 } from 'salvageunion-reference'
 import type { DataValue } from '../../../types/common'
-import { ActivationCostBox } from '../../shared/ActivationCostBox'
-import { EntityDetailDisplay } from '../EntityDetailDisplay'
 import { getActivationCurrency } from '../entityDisplayHelpers'
-import { ValueDisplay } from '../../shared/ValueDisplay'
 import { Flex } from '@chakra-ui/react'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
+import { SharedDetailItem, formatActionType } from './sharedDetailItem'
 
 export function EntitySubTitleElement() {
-  const { data, schemaName, spacing } = useEntityDisplayContext()
+  const { data, schemaName, spacing, compact } = useEntityDisplayContext()
   const values = extractDetails(data, schemaName)
   if (values.length === 0) return null
 
   return (
     <Flex gap={spacing.minimalGap} flexWrap="wrap">
       {values.map((item, index) => (
-        <DetailItem key={index} item={item} />
+        <SharedDetailItem key={index} item={item} compact={compact} />
       ))}
     </Flex>
   )
@@ -58,16 +56,14 @@ function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefSchemaName)
   const actionType = getActionType(data)
   if (actionType) {
     details.push({
-      label: actionType,
+      label: formatActionType(actionType),
       value: isGeneric ? 'Pilot' : undefined,
       type: 'keyword',
     })
   }
 
   if ('mechActionType' in data && data.mechActionType) {
-    const mechActionType = data.mechActionType.includes('action')
-      ? data.mechActionType
-      : `${data.mechActionType} Action`
+    const mechActionType = formatActionType(data.mechActionType)
     details.push({ label: mechActionType, value: 'Mech', type: 'keyword' })
   }
 
@@ -130,42 +126,4 @@ function extractDetails(data: SURefMetaEntity, schemaName?: SURefSchemaName): Da
   details.push(...extractTraitDetails(data))
 
   return details
-}
-
-function DetailItem({ item }: { item: DataValue }) {
-  const { compact } = useEntityDisplayContext()
-
-  if (item.type === 'cost') {
-    return <ActivationCostBox cost={item.label} currency="" compact={compact} />
-  }
-
-  if (item.type === 'trait') {
-    return (
-      <EntityDetailDisplay
-        label={item.label}
-        value={item.value}
-        compact={compact}
-        schemaName="traits"
-        inline={false}
-      />
-    )
-  }
-
-  if (item.type === 'keyword') {
-    return (
-      <EntityDetailDisplay
-        label={item.label}
-        value={item.value}
-        compact={compact}
-        schemaName="keywords"
-        inline={false}
-      />
-    )
-  }
-
-  if (item.type === 'meta') {
-    return <ValueDisplay label={item.label} compact={compact} inline={false} />
-  }
-
-  return <ValueDisplay label={item.label} value={item.value} compact={compact} inline={false} />
 }

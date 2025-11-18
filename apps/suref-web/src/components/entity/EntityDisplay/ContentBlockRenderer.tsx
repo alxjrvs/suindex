@@ -188,7 +188,7 @@ function ContentBlock({
 
 function DataValueItem({ item, compact }: { item: SURefMetaDataValue; compact: boolean }) {
   if (item.type === 'cost') {
-    return <ActivationCostBox cost={String(item.label)} currency="" compact={compact} />
+    return <ActivationCostBox cost={String(item.label)} currency={item.value} compact={compact} />
   }
 
   if (item.type === 'trait') {
