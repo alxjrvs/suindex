@@ -14,7 +14,7 @@ export const Route = createFileRoute('/')({
   component: IndexPage,
   errorComponent: ReferenceError,
   loader: () => {
-    return { schemas: schemaIndexData.schemas }
+    return { schemas: schemaIndexData.schemas.filter((s) => !s.meta) }
   },
   head: () => ({
     meta: [

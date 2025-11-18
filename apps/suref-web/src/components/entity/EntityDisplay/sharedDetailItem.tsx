@@ -13,9 +13,10 @@ import { ValueDisplay } from '../../shared/ValueDisplay'
  * - "Reaction" → "Reaction" (no change)
  * - Already includes "action" → unchanged
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function formatActionType(actionType: string): string {
   const actionTypeLower = actionType.toLowerCase()
-  
+
   // Don't append "Action" if it already includes "action" or is Passive/Reaction
   if (
     actionTypeLower.includes('action') ||
@@ -24,7 +25,7 @@ export function formatActionType(actionType: string): string {
   ) {
     return actionType
   }
-  
+
   return `${actionType} Action`
 }
 
@@ -89,4 +90,3 @@ export function SharedDetailItem({
 
   return <ValueDisplay label={item.label} value={item.value} compact={compact} inline={false} />
 }
-

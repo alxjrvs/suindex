@@ -11,8 +11,6 @@ interface NestedActionDisplayProps {
   data: SURefMetaAction
   /** Whether to use compact styling */
   compact?: boolean
-  /** Whether this is the last item in a list */
-  isLast?: boolean
   /** Whether to hide the action content/description */
   hideContent?: boolean
 }
@@ -32,7 +30,6 @@ interface NestedActionDisplayProps {
 export function NestedActionDisplay({
   data,
   compact = false,
-  isLast = false,
   hideContent = false,
 }: NestedActionDisplayProps) {
   const details = extractActionDetails(data)

@@ -9,6 +9,7 @@ import type {
   SURefAbilityTreeRequirement,
   SURefBioTitan,
   SURefChassis,
+  SURefMetaChassisAbility,
   SURefAdvancedClass,
   SURefCoreClass,
   SURefCrawlerBay,
@@ -118,11 +119,13 @@ export type SURefEntity =
   | SURefVehicle
 
 // Union type of all meta entity types (entities with common base properties)
+// Includes chassis abilities as they are actions, not top-level entities
 export type SURefMetaEntity =
   | SURefAbility
   | SURefAbilityTreeRequirement
   | SURefBioTitan
   | SURefChassis
+  | SURefMetaChassisAbility
   | SURefAdvancedClass
   | SURefCoreClass
   | SURefCrawlerBay

@@ -12,6 +12,7 @@ import type {
   SURefModule,
   SURefSystem,
 } from './types/index.js'
+import { getDataMaps } from './ModelFactory.js'
 
 // ============================================================================
 // TYPE UTILITIES
@@ -133,13 +134,49 @@ export function extractVisibleActions(entity: SURefMetaEntity): SURefMetaAction[
 
 /**
  * Extract chassis abilities from a chassis
+ * Resolves ability names to full ability objects from chassis-abilities schema
  * @param entity - The entity to extract from
  * @returns The chassis abilities array or undefined
  */
 export function getChassisAbilities(entity: SURefMetaEntity): SURefMetaAction[] | undefined {
-  return 'chassisAbilities' in entity && Array.isArray(entity.chassisAbilities)
-    ? entity.chassisAbilities
-    : undefined
+  if (!('chassisAbilities' in entity) || !Array.isArray(entity.chassisAbilities)) {
+    return undefined
+  }
+
+  const chassisAbilities = entity.chassisAbilities
+
+  // Chassis abilities are now stored as an array of ability names (strings)
+  // Resolve each name to its full ability object from the chassis-abilities schema
+  const { dataMap } = getDataMaps()
+  const chassisAbilitiesData = dataMap['chassis-abilities'] as SURefMetaAction[] | undefined
+
+  if (!chassisAbilitiesData) {
+    console.warn('chassis-abilities schema not found')
+    return undefined
+  }
+
+  // Create a map of ability name to ability object
+  const abilityMap = new Map<string, SURefMetaAction>()
+  chassisAbilitiesData.forEach((ability) => {
+    abilityMap.set(ability.name, ability)
+  })
+
+  // Resolve each ability name to its object
+  const resolved: SURefMetaAction[] = []
+  for (const abilityName of chassisAbilities) {
+    if (typeof abilityName !== 'string') {
+      console.warn(`Invalid chassis ability: expected string, got ${typeof abilityName}`)
+      continue
+    }
+    const ability = abilityMap.get(abilityName)
+    if (ability) {
+      resolved.push(ability)
+    } else {
+      console.warn(`Chassis ability "${abilityName}" not found in chassis-abilities schema`)
+    }
+  }
+
+  return resolved.length > 0 ? resolved : undefined
 }
 
 /**

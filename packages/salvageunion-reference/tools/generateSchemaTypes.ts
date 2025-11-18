@@ -206,14 +206,19 @@ function generateProperties(
 /**
  * Generate TypeScript type from schema items definition
  */
-function generateSchemaType(schemaId: string, schema: JSONSchema): string | null {
+function generateSchemaType(
+  schemaId: string,
+  schema: JSONSchema,
+  isMeta: boolean = false
+): string | null {
   // Use getSingularTypeName for consistent singular naming
   const singularName = getSingularTypeName(schemaId, __dirname)
   if (!singularName) {
     console.warn(`⚠️  No mapping found for schema: ${schemaId}`)
     return null
   }
-  const typeName = `SURef${singularName}`
+  // Use SURefMeta prefix for meta schemas
+  const typeName = isMeta ? `SURefMeta${singularName}` : `SURef${singularName}`
   const lines: string[] = []
 
   // Schema should be type: "array" with items
@@ -261,13 +266,17 @@ function generateSchemaType(schemaId: string, schema: JSONSchema): string | null
     }
   }
 
-  // If we have multiple base types and no own properties, use type intersection
-  if (baseTypes.length > 1 && Object.keys(ownProperties).length === 0) {
-    lines.push(`export type ${typeName} = ${baseTypes.join(' & ')}`)
+  // If we have base types and no own properties, use type alias instead of empty interface
+  if (baseTypes.length > 0 && Object.keys(ownProperties).length === 0) {
+    if (baseTypes.length === 1) {
+      lines.push(`export type ${typeName} = ${baseTypes[0]}`)
+    } else {
+      lines.push(`export type ${typeName} = ${baseTypes.join(' & ')}`)
+    }
     return lines.join('\n')
   }
 
-  // Generate interface
+  // Generate interface (only if we have own properties or no base types)
   if (baseTypes.length > 0) {
     lines.push(`export interface ${typeName} extends ${baseTypes.join(', ')} {`)
   } else {
@@ -310,12 +319,13 @@ async function generateSchemaTypes() {
   for (const schemaEntry of schemas) {
     const schemaPath = path.join(__dirname, '..', schemaEntry.schemaFile)
     const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'))
+    const isMeta = schemaEntry.meta === true
 
-    const typeCode = generateSchemaType(schemaEntry.id, schema)
+    const typeCode = generateSchemaType(schemaEntry.id, schema, isMeta)
     if (typeCode) {
       typeDefinitions.push(typeCode)
       typeDefinitions.push('')
-      console.log(`   ✓ ${schemaEntry.id}`)
+      console.log(`   ✓ ${schemaEntry.id}${isMeta ? ' (meta)' : ''}`)
     }
   }
 

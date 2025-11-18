@@ -14,6 +14,7 @@ import abilitiesData from '../data/abilities.json' with { type: 'json' }
 import abilityTreeRequirementsData from '../data/ability-tree-requirements.json' with { type: 'json' }
 import bioTitansData from '../data/bio-titans.json' with { type: 'json' }
 import chassisData from '../data/chassis.json' with { type: 'json' }
+import chassisAbilitiesData from '../data/chassis-abilities.json' with { type: 'json' }
 import classesAdvancedData from '../data/classes.advanced.json' with { type: 'json' }
 import classesCoreData from '../data/classes.core.json' with { type: 'json' }
 import crawlerBaysData from '../data/crawler-bays.json' with { type: 'json' }
@@ -38,6 +39,7 @@ import abilitiesSchema from '../schemas/abilities.schema.json' with { type: 'jso
 import abilityTreeRequirementsSchema from '../schemas/ability-tree-requirements.schema.json' with { type: 'json' }
 import bioTitansSchema from '../schemas/bio-titans.schema.json' with { type: 'json' }
 import chassisSchema from '../schemas/chassis.schema.json' with { type: 'json' }
+import chassisAbilitiesSchema from '../schemas/chassis-abilities.schema.json' with { type: 'json' }
 import classesAdvancedSchema from '../schemas/classes.advanced.schema.json' with { type: 'json' }
 import classesCoreSchema from '../schemas/classes.core.schema.json' with { type: 'json' }
 import crawlerBaysSchema from '../schemas/crawler-bays.schema.json' with { type: 'json' }
@@ -65,6 +67,7 @@ const dataMap: Record<string, unknown[]> = {
   'ability-tree-requirements': abilityTreeRequirementsData,
   'bio-titans': bioTitansData,
   chassis: chassisData,
+  'chassis-abilities': chassisAbilitiesData,
   'classes.advanced': classesAdvancedData,
   'classes.core': classesCoreData,
   'crawler-bays': crawlerBaysData,
@@ -93,6 +96,7 @@ const schemaMap: Record<string, Record<string, unknown>> = {
   'ability-tree-requirements': abilityTreeRequirementsSchema,
   'bio-titans': bioTitansSchema,
   chassis: chassisSchema,
+  'chassis-abilities': chassisAbilitiesSchema,
   'classes.advanced': classesAdvancedSchema,
   'classes.core': classesCoreSchema,
   'crawler-bays': crawlerBaysSchema,
@@ -254,6 +258,7 @@ export interface EnhancedSchemaMetadata {
   requiredFields: string[]
   displayName: string
   displayNamePlural: string
+  meta?: boolean
 }
 
 /**

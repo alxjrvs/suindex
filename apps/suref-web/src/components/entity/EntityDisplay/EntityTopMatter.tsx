@@ -41,7 +41,12 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
     schemaName === 'chassis' && getChassisAbilities(data) && !hideActions && !compact
 
   return (
-    <Flex gap={spacing.smallGap} p={spacing.contentPadding} alignItems="flex-start" minH={!compact ? '200px' : undefined}>
+    <Flex
+      gap={spacing.smallGap}
+      p={spacing.contentPadding}
+      alignItems="flex-start"
+      minH={!compact ? '200px' : undefined}
+    >
       <EntityImage />
       <VStack
         justifyContent={!compact ? 'space-between' : undefined}

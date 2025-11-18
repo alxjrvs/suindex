@@ -13,6 +13,9 @@ export function EntityChassisAbilities() {
   const chassisAbilities = getChassisAbilities(data)
   if (!chassisAbilities || chassisAbilities.length === 0) return null
 
+  // Get chassis name from data
+  const chassisName = 'name' in data ? data.name : undefined
+
   return (
     <VStack
       gap={spacing.smallGap}
@@ -24,7 +27,14 @@ export function EntityChassisAbilities() {
         Chassis Abilities
       </Text>
       {chassisAbilities.map((ability, index) => {
-        return <NestedChassisAbility compact={compact} key={index} data={ability} />
+        return (
+          <NestedChassisAbility
+            compact={compact}
+            key={index}
+            data={ability}
+            chassisName={chassisName}
+          />
+        )
       })}
     </VStack>
   )

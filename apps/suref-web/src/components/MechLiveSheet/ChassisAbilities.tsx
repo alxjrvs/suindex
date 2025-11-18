@@ -71,7 +71,7 @@ export function ChassisAbilities({
             },
           ]
         ).map((ability, idx) => (
-          <NestedChassisAbility key={idx} data={ability} compact />
+          <NestedChassisAbility key={idx} data={ability} compact chassisName={chassis?.name} />
         ))}
       </VStack>
     </RoundedBox>

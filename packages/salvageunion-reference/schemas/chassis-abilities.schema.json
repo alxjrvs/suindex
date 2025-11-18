@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/chassis-abilities.schema.json",
+  "title": "chassis-abilities",
+  "description": "Chassis abilities for mech chassis in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "name"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/action"
+      }
+    ],
+    "unevaluatedProperties": false
+  }
+}

@@ -104,22 +104,25 @@ function NotFoundPage() {
               Popular Schemas:
             </Text>
             <Flex flexWrap="wrap" gap={2}>
-              {schemaIndexData.schemas.slice(0, 6).map((schema) => (
-                <Button
-                  key={schema.id}
-                  onClick={() => navigate({ to: `/schema/${schema.id}` })}
-                  size="sm"
-                  px={3}
-                  py={1}
-                  bg="su.lightBlue"
-                  color="su.black"
-                  borderRadius="md"
-                  _hover={{ bg: 'su.orange', color: 'su.white' }}
-                  fontSize="xs"
-                >
-                  {schema.displayName}
-                </Button>
-              ))}
+              {schemaIndexData.schemas
+                .filter((s) => !s.meta)
+                .slice(0, 6)
+                .map((schema) => (
+                  <Button
+                    key={schema.id}
+                    onClick={() => navigate({ to: `/schema/${schema.id}` })}
+                    size="sm"
+                    px={3}
+                    py={1}
+                    bg="su.lightBlue"
+                    color="su.black"
+                    borderRadius="md"
+                    _hover={{ bg: 'su.orange', color: 'su.white' }}
+                    fontSize="xs"
+                  >
+                    {schema.displayName}
+                  </Button>
+                ))}
             </Flex>
           </Box>
         </VStack>

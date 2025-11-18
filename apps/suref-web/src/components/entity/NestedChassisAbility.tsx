@@ -18,6 +18,8 @@ interface NestedChassisAbilityProps {
   compact?: boolean
   /** Whether to hide the action content */
   hideContent?: boolean
+  /** Chassis name to replace [(CHASSIS)] placeholder with */
+  chassisName?: string
 }
 
 /**
@@ -32,6 +34,7 @@ export function NestedChassisAbility({
   data,
   compact = false,
   hideContent = false,
+  chassisName,
 }: NestedChassisAbilityProps) {
   const details = extractChassisActionDetails(data)
 
@@ -156,7 +159,11 @@ export function NestedChassisAbility({
           ))}
         {/* Render first content block inline when condition is met */}
         {renderFirstContentInline && firstContentBlock && (
-          <InlineContentBlock block={firstContentBlock} fontSize={fontSize} />
+          <InlineContentBlock
+            block={firstContentBlock}
+            fontSize={fontSize}
+            chassisName={chassisName}
+          />
         )}
       </Box>
 
@@ -179,7 +186,12 @@ export function NestedChassisAbility({
       {/* Remaining content blocks below detail row */}
       {remainingContent && remainingContent.length > 0 && !hideContent && (
         <VStack gap={spacing} alignItems="stretch" pt={0}>
-          <ContentBlockRenderer content={remainingContent} fontSize={fontSize} compact={compact} />
+          <ContentBlockRenderer
+            content={remainingContent}
+            fontSize={fontSize}
+            compact={compact}
+            chassisName={chassisName}
+          />
         </VStack>
       )}
 
@@ -269,15 +281,23 @@ function extractChassisActionDetails(data: SURefMetaAction): DataValue[] {
 function InlineContentBlock({
   block,
   fontSize,
+  chassisName,
 }: {
   block: SURefMetaContentBlock
   fontSize: string
+  chassisName?: string
 }) {
   const type = block.type || 'paragraph'
   const blockValue = block.value
 
   // Parse strings non-conditionally
-  const stringValue = typeof blockValue === 'string' ? blockValue : ''
+  let stringValue = typeof blockValue === 'string' ? blockValue : ''
+
+  // Replace [(CHASSIS)] placeholder with actual chassis name
+  if (chassisName && stringValue) {
+    stringValue = stringValue.replace(/\[\(CHASSIS\)\]/g, chassisName)
+  }
+
   const parsedValue = useParseTraitReferences(stringValue)
 
   // Only render paragraph and hint types inline (others should be block-level)

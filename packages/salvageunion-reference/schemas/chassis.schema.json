@@ -30,8 +30,9 @@
       "chassisAbilities": {
         "type": "array",
         "items": {
-          "$ref": "shared/objects.schema.json#/definitions/action"
-        }
+          "type": "string"
+        },
+        "description": "Array of chassis ability names that reference chassis-abilities.json"
       },
       "patterns": {
         "type": "array",

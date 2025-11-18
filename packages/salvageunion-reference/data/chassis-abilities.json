@@ -1,0 +1,462 @@
+[
+  {
+    "name": "Integrated Cargo Bay",
+    "id": "d14854b7-56fc-4bf4-a9e8-74a5648fc661",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Increases the Cargo Capacity of [(CHASSIS)] by 10, to 16."
+      }
+    ]
+  },
+  {
+    "name": "Hover Drone",
+    "id": "65d87343-8b66-434c-a933-68a7c114f9ea",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] has an Integrated Hover Locomotion System which is included in its profile. This allows it to hover over obstacles and terrain."
+      }
+    ]
+  },
+  {
+    "name": "Hazard Protected Chassis",
+    "id": "1825c81c-bba8-4d8f-926c-833987b6f710",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] suffers no effect or damage from hazardous environmental effects such as radiation storms. In addition, when dealing with severe environmental hazards they may Push once for free to circumvent or resist any effects."
+      }
+    ]
+  },
+  {
+    "name": "Data Scanner",
+    "activationCost": 2,
+    "actionType": "Short",
+    "range": ["Close"],
+    "traits": [
+      {
+        "type": "scanner"
+      }
+    ],
+    "id": "65940c9e-3236-4ee9-9e34-3aff37763a87",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] is a mobile data repository that has all manner of information stored within it. It is able to scan objects to both gain information about them and store that data to access at a later time."
+      },
+      {
+        "type": "paragraph",
+        "value": "You scan a single object in Range. This can be a Mech, System, Module, Vehicle, Creature, artefact, structure, fauna, or flora, or anything else appropriate in the world. You may ask the Mediator two questions about this object and the answers they give must be true. If you scan an Intact Mech Chassis, System, or Module in the field, you now have its blueprint. You and everyone on your Union Crawler is now able to craft this item even if you would not normally be able to do so."
+      }
+    ]
+  },
+  {
+    "name": "Heavily Armoured Chassis",
+    "id": "0d9b5e11-968b-48e1-a479-14127a604ea2",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Any attack that rolls a 'Nailed It' (20) result against [(CHASSIS)] counts as a standard hit (11-19) and does not deal 2× damage or have any other bonus effect."
+      }
+    ]
+  },
+  {
+    "name": "Integrated Epoxy Printer",
+    "id": "eb674791-d327-41b2-92a7-bd59c0508965",
+    "actionType": "Short",
+    "activationCost": 3,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] is able to 3D print metallic structures via a specialised epoxy."
+      },
+      {
+        "type": "paragraph",
+        "value": "When this Ability is activated, pick from the following options to craft. Anything crafted with [(CHASSIS)] cannot be salvaged for Scrap."
+      },
+      {
+        "type": "list-item",
+        "value": "You craft an Armour Plating System.",
+        "label": "Armour Plating"
+      },
+      {
+        "type": "list-item",
+        "value": "You craft a Mech Melee Armament System or 10 Improvised Melee Weapons",
+        "label": "Simple Weapon"
+      },
+      {
+        "type": "list-item",
+        "value": "You craft a series of traps designed to slow and damage encroaching Mechs. Any Mechs that move through the traps take 3 SP damage and move at half their normal speed.",
+        "label": "Mech Traps"
+      },
+      {
+        "type": "list-item",
+        "value": "You craft a metallic structure of your own design. This cannot have any complex or moving parts.",
+        "label": "Custom Item"
+      }
+    ]
+  },
+  {
+    "name": "Integrated Expanded Transport Hold",
+    "id": "0adbd032-5c64-4f24-9128-9cfb4771539a",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Increases the Cargo Capacity of [(CHASSIS)] by 6, to 12."
+      }
+    ]
+  },
+  {
+    "name": "Fast",
+    "id": "5b3adf7f-fc0e-4fb7-b4e8-844325ba441c",
+    "content": [
+      {
+        "type": "paragraph"
+      }
+    ]
+  },
+  {
+    "name": "Reinforced Chassis",
+    "table": {
+      "1": "The Jackhammer Mech Chassis is damaged. All of its mounted Systems, Modules, and any carried Cargo are destroyed. The Pilot survives in the reinforced cockpit.",
+      "20": "The Jackhammer is Intact and operational with 1 SP. The Pilot is unharmed.",
+      "11-19": "The Jackhammer is temporarily Shutdown and becomes inoperable. At the end of its next turn it activates and becomes operational with 1 SP. The Pilot is unharmed.",
+      "6-10": "As per 11-19, but a random Module on the Jackhammer is also Damaged.",
+      "2-5": "As per 11-19, but a random System on the Jackhammer is also Damaged.",
+      "type": "standard"
+    },
+    "id": "86600ea9-91dc-4408-b780-a097833bc684",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] rolls on this alternate Critical Damage Table:"
+      }
+    ]
+  },
+  {
+    "name": "Scrap Plating",
+    "id": "ffc41898-8744-4211-b3a3-d4e79e937244",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] counts as having 3 Armour Plating Systems. If any of these are destroyed, any number of them can be restored by using any ability that can repair [(CHASSIS)] Chassis, or during Downtime in a T2 or higher Mech Bay."
+      }
+    ]
+  },
+  {
+    "name": "Integrated Amphibious Locomotion System",
+    "id": "6f85dbb0-141a-4b3d-ba2a-91e3fd655b2b",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] has an integral Advanced Amphibious Locomotion System included in its profile. This allows [(CHASSIS)] to operate indefinitely in underwater conditions at significant depths whilst also being able to walk on land. Its sealed Chassis is also airtight and watertight."
+      }
+    ]
+  },
+  {
+    "name": "Hot Swap Universal Mounts",
+    "id": "9412655e-2d96-468f-b6d2-b3008471c940",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] allows you to mount and dismount Systems on it in the field significantly faster. This uses the normal rules for mounting, but increases the speed and versatility. A Pilot may Mount a System on [(CHASSIS)] as a Short Action (10 minutes). A Mech, including [(CHASSIS)] itself, may Mount a System on [(CHASSIS)] as a Turn Action."
+      }
+    ]
+  },
+  {
+    "name": "Integrated Advanced Shield Dome",
+    "activationCost": "X",
+    "actionType": "Turn",
+    "traits": [
+      {
+        "type": "shield"
+      }
+    ],
+    "id": "f183cc63-d4ae-4802-9cbd-91eee1cb9e70",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "The Mirror Ball can project a glowing, protective energy field around its Chassis."
+      },
+      {
+        "type": "paragraph",
+        "value": "When activated, you project a Shield Dome around your Mech. Choose any amount of Energy Points when you activate this Ability. The Shield Dome has a number of Structure Points equal to 3× the Energy Points you spend on this Ability. You may only have one Shield Dome active at a time. You may deactivate the Shield Dome as a Free Action."
+      },
+      {
+        "type": "paragraph",
+        "value": "When you or any allied target within Close Range of your Mech is dealt damage, the damage is instead dealt to the Shield Dome."
+      },
+      {
+        "type": "paragraph",
+        "value": "If the attack deals 0 damage to the target then they also suffer no additional effect from the hit. Any excess damage that penetrates the shield is dealt to the target instead."
+      }
+    ]
+  },
+  {
+    "name": "Integrated Colossal Cargo Bay",
+    "id": "76308ada-500f-4e96-a09b-cf6156c6da8a",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Increases the Cargo Capacity of [(CHASSIS)] by 24, to 30."
+      }
+    ]
+  },
+  {
+    "name": "Close Range Protocols",
+    "id": "bf7ec0e9-3751-4a7e-9a04-60f6c8989610",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] deals an additional 2 SP damage when it makes an attack at any target within Close Range of it. This bonus is applied before other modifiers."
+      }
+    ]
+  },
+  {
+    "name": "Sestra Drone Controller",
+    "id": "2973801a-830e-4029-88c0-e1ec00c04589",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] comes with a single Sestra Drone that it controls up to Far Range. Roll on the A.I. Personality Table for the drone's personality."
+      },
+      {
+        "type": "paragraph",
+        "value": "The Sestra Drone acts separately to [(CHASSIS)] on its own turn, and is controlled by the Pilot. It functions effectively as a Mech, but cannot Push. It can be installed with Systems and Modules and restores its SP and EP in a T3 or higher Mech Bay during Downtime. If the Drone is damaged it can be repaired as though it was a Mech. If it is destroyed you may craft a new Sestra Drone for 2 Tech 3 Scrap as per the crafting rules. [(CHASSIS)] may have one active Sestra Drone at a time. Sestra Drone Stats: 7 SP, 8 EP, 6 Heat Cap, 7 System Slots, 2 Module Slots, 3 Cargo Cap, Tech Level 3, Salvage Value 2. Integrated Hover Locomotion System."
+      }
+    ]
+  },
+  {
+    "activationCost": 2,
+    "range": ["Medium"],
+    "actionType": "Turn",
+    "traits": [
+      {
+        "type": "hacking"
+      }
+    ],
+    "name": "Integrated Frog Prince Module",
+    "id": "05bdea9b-ef33-48ee-bd0b-1f31f75653db",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "This specialised hacking module developed for [(CHASSIS)] allows you to take control of defensive and security systems."
+      },
+      {
+        "type": "paragraph",
+        "value": "You take control of one of the following devices within Range, whilst it is under your control you may send it commands such as attack, move, activate, or power down/up as well as read any data it receives. You may not take other actions whilst it is under your control. Relinquishing control is a Free Action."
+      },
+      {
+        "type": "list-item",
+        "value": "Security Cameras (Free Action to Command)"
+      },
+      {
+        "type": "list-item",
+        "value": "Automated Doors (Free Action to Command)"
+      },
+      {
+        "type": "list-item",
+        "value": "Lights (Free Action to Command)"
+      },
+      {
+        "type": "list-item",
+        "value": "Defensive Turrets (Turn Action to Command)"
+      },
+      {
+        "type": "list-item",
+        "value": "Drones (Turn Action to Command)"
+      },
+      {
+        "type": "paragraph",
+        "value": "When this Module is activated you may pay 1 EP per additional device you would like to control."
+      }
+    ]
+  },
+  {
+    "name": "Solar Reactor",
+    "id": "9e5b1dec-909f-4f83-b9bd-3d930e6834b9",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "As a Long Action you may fully restore the Energy Points of [(CHASSIS)] to its maximum value. You must be in an area of sunlight to do this. You may only use this Ability once every 24 hours."
+      }
+    ]
+  },
+  {
+    "name": "Polycarbonate Stealth Chassis",
+    "id": "56f1e08f-1870-49d5-b542-18add87294f9",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] cannot be targeted with anything that uses the [[Targeter]] Trait such as targeting Modules. It also cannot be seen by anything with the [[Optics]] Trait or [[Scanner]] Trait. It does not appear on sensors, radar systems, or scanners, and needs clear and direct visual confirmation to be spotted."
+      }
+    ]
+  },
+  {
+    "name": "Terraforming Bubble",
+    "activationCost": 2,
+    "actionType": "Turn",
+    "id": "1e2916fd-ed83-478c-8e57-8a7130c5c8c3",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When activated, [(CHASSIS)] projects a safe, oxygenated, and habitable atmospheric bubble around it for 1 hour, or until shut off as a Free Action. Within the bubble gravity levels, pressure, heat, and other environmental factors are comparable to an Earth-like planet. This extends to Medium Range, and everything within it is safe from all harmful environmental effects irrespective of their severity."
+      }
+    ]
+  },
+  {
+    "name": "Integrated Advanced Shield Projector",
+    "activationCost": "X",
+    "actionType": "Reaction",
+    "range": ["Medium"],
+    "traits": [
+      {
+        "type": "shield"
+      }
+    ],
+    "id": "7b1ffa81-deaf-4096-80ba-90eaa164c495",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When a target within Range is hit by an attack or something that would deal damage, you may activate the Advanced Shield Projector. The damage of the attack is reduced by 3× the amount of Energy Points you expend on this Ability. If this reduces the damage to 0 or less the attack also has no additional effects."
+      }
+    ]
+  },
+  {
+    "name": "Eradication Protocols",
+    "id": "9a500906-868d-4b6a-853d-9694f958ecae",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "If [(CHASSIS)] rolls a 'Nailed It' result (20) with an attack roll, it deals 4× damage instead of 2× damage."
+      }
+    ]
+  },
+  {
+    "name": "Flashy",
+    "id": "84b97703-bddc-4713-9b4d-29d29157c180",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] has the [[Flashy]] Trait. It looks incredibly impressive, never being less than mint and pristine to onlookers, and fills them with much awe and admiration."
+      }
+    ]
+  },
+  {
+    "actionType": "Turn",
+    "activationCost": 2,
+    "name": "Morph Sphere",
+    "id": "ab735870-c818-418e-b651-3f08443b42ea",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "This advanced anti-matter tech developed by Ascension PLC enables [(CHASSIS)] to reconstruct its form into a spherical mechanical ball around People size."
+      },
+      {
+        "type": "paragraph",
+        "value": "When activated, [(CHASSIS)] transforms into a sphere that encases the Pilot or passenger. As a sphere, [(CHASSIS)] gains the [[Fast]] Trait, which it can make use of immediately after transforming. The sphere is quick and mobile, and slightly flexible, able to squeeze into tunnels and other hard to enter spots whilst transformed. [(CHASSIS)] cannot attack or activate any Systems whilst transformed but may activate Modules."
+      },
+      {
+        "type": "paragraph",
+        "value": "When in this form [(CHASSIS)] takes up only 3 Cargo Slots if carried.[(CHASSIS)] may transform from a sphere back into its standard form as a Free Action at no EP cost."
+      }
+    ]
+  },
+  {
+    "name": "Integrated Advanced Vectored Thrust Unit",
+    "id": "00440cc8-2afa-440b-a5be-460858f4f291",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] has an Integrated Advanced Vectored Thrust Unit. This acts as a standard Vectored Thrust Unit System. In addition, when [(CHASSIS)] activates the Advanced VTU System it can move an additional Range Band, ignoring all obstacles, Mechs, and terrain, and still move on its turn as normal."
+      }
+    ]
+  },
+  {
+    "name": "Heat Efficient Reactor",
+    "id": "cbad70da-a9e2-409a-a237-b67fa432c710",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Everytime [(CHASSIS)] gains Heat, reduce the amount gained to 1. Treat each source of Heat separately when using this Ability. For example if [(CHASSIS)] fires a Blue Mining Laser with the [[[Hot] (3)]] Trait it gains 1 Heat instead of 3. If [(CHASSIS)] then chooses to Push it would gain an additional 1 Heat instead of 2 for the Push."
+      }
+    ]
+  },
+  {
+    "name": "Integrated Mech Bay",
+    "id": "a304d370-5311-45fd-8f37-3355cb09e00d",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] has an integrated Tech 4 Mech Bay which can carry up to 5 Tech 4 or lower Mechs in an active and ready state. This acts as a Tech 4 Mech Bay allowing you to fully heal the SP, EP, and Heat of all Mechs within it over a week of Downtime and mount or remove any number of Systems or Modules as well as anything else the Mech Bay would be capable of."
+      }
+    ]
+  },
+  {
+    "name": "Stealth Projector",
+    "activationCost": 4,
+    "actionType": "Turn",
+    "id": "51cd852b-98cc-4639-9620-87fede9e840d",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When activated, the Stealth Projector makes [(CHASSIS)] effectively invisible. It cannot be spotted via any form of visual confirmation. This effect lasts for 1 hour or until [(CHASSIS)] Pilot deactivates it as a Free Action."
+      }
+    ]
+  },
+  {
+    "name": "Cybernetic Neuralink",
+    "id": "d6ccd961-09a0-41cb-924d-17f8e83ebae4",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] connects directly to the Pilot with an advanced neuralink mesh that allows their thoughts to be directly translated to the actions of the Mech, merging them into one entity."
+      },
+      {
+        "type": "paragraph",
+        "value": "They may spend their Pilot Ability Points on any Energy Point Abilities [(CHASSIS)] has access to. They may spend their Energy Points on any Pilot Abilities their Pilot has access to that [(CHASSIS)] would reasonably be able to perform."
+      },
+      {
+        "type": "paragraph",
+        "value": "In addition, they always count as having a Neuralink Communicator installed in their Mech."
+      }
+    ]
+  },
+  {
+    "name": "Burrower",
+    "activationCost": 2,
+    "actionType": "Turn",
+    "id": "febf523d-2ed0-47bf-bee0-1c035a4546e2",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When you activate this Ability, [(CHASSIS)] can burrow and move underneath the ground. It can burrow through sand, stone, and earth as well as basic metal and stone structures such as bunkers. [(CHASSIS)] remains burrowed until it unborrows as a Turn Action where it emerges at a point of the Pilot's choice within Close Range of it. When burrowed, [(CHASSIS)] cannot be targeted by anything on the ground, however it cannot see anything on the ground either. Its location can be verified with a Deep Survey Scanner."
+      },
+      {
+        "type": "paragraph",
+        "value": "The burrowing Ability of [(CHASSIS)] enables it to create tunnels behind it that are large enough for a Mech to fit through."
+      }
+    ]
+  },
+  {
+    "name": "Juggernaut",
+    "id": "b3a909de-7629-4f79-9534-d6fe3bc36af7",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] may fire up to 2 Weapons Systems in a turn as a single Turn Action. Resolve each attack separately."
+      }
+    ]
+  },
+  {
+    "name": "Integrated VTU System",
+    "id": "7b4cb082-5cc0-4b33-9dd7-4bb179622b23",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "[(CHASSIS)] has an integrated Vectored Thrust Unit System which is included in its profile. This functions as a standard VTU System."
+      }
+    ]
+  }
+]
