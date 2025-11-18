@@ -37,23 +37,24 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
     return null
   }
 
+  const hasChassisAbilitiesInTopMatter =
+    schemaName === 'chassis' && getChassisAbilities(data) && !hideActions && !compact
+
   return (
-    <Flex gap={spacing.smallGap} p={spacing.contentPadding} alignItems="flex-start">
+    <Flex gap={spacing.smallGap} p={spacing.contentPadding} alignItems="flex-start" minH={!compact ? '200px' : undefined}>
       <EntityImage />
       <VStack
-        justifyContent="space-between"
+        justifyContent={!compact ? 'space-between' : undefined}
         flex="1"
         gap={spacing.contentPadding}
         alignItems="stretch"
-        h="full"
+        h={!compact ? 'full' : undefined}
         minW="0"
       >
         {showContent && (
           <ContentBlockRenderer content={contentBlocks!} fontSize={fontSize.sm} compact={compact} />
         )}
-        {schemaName === 'chassis' && getChassisAbilities(data) && (!hideActions || compact) && (
-          <EntityChassisAbilitiesContent />
-        )}
+        {hasChassisAbilitiesInTopMatter && <EntityChassisAbilitiesContent />}
         {(!hideActions || compact) && <EntityActions />}
       </VStack>
     </Flex>

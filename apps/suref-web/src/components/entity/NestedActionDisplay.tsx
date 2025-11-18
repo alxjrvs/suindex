@@ -6,6 +6,7 @@ import { ValueDisplay } from '../shared/ValueDisplay'
 import { EntityDetailDisplay } from './EntityDetailDisplay'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
 import { EntityChoice } from './EntityDisplay/EntityChoice'
+import { useParseTraitReferences } from '../../utils/parseTraitReferences'
 import type { DataValue } from '../../types/common'
 
 interface NestedActionDisplayProps {
@@ -17,6 +18,8 @@ interface NestedActionDisplayProps {
   isLast?: boolean
   /** Whether to hide the action content/description */
   hideContent?: boolean
+  /** Display variant - 'default' for light blue background, 'chassis' for white with black border */
+  variant?: 'default' | 'chassis'
 }
 
 /**
@@ -36,6 +39,7 @@ export function NestedActionDisplay({
   compact = false,
   isLast = false,
   hideContent = false,
+  variant = 'default',
 }: NestedActionDisplayProps) {
   const details = extractActionDetails(data)
 
@@ -49,6 +53,39 @@ export function NestedActionDisplay({
   const actionChoices: SURefMetaChoice[] = data.choices || []
   const hasChoices = actionChoices.length > 0
 
+  // Extract text content from first paragraph for chassis variant inline rendering
+  let contentText = ''
+  if (hasContent && !hideContent && data.content) {
+    const firstParagraph = data.content.find((block) => block.type === 'paragraph')
+    if (firstParagraph && typeof firstParagraph.value === 'string') {
+      contentText = firstParagraph.value
+    }
+  }
+  const parsedContent = useParseTraitReferences(contentText)
+
+  // Chassis variant: simplified style with black border and white background
+  if (variant === 'chassis') {
+
+    return (
+      <Box
+        bg="white"
+        border="2px solid"
+        borderColor="su.black"
+        overflow="hidden"
+        textAlign="left"
+        p={spacing}
+      >
+        <Text fontSize={fontSize} fontWeight="bold" display="inline">
+          {data.name}:
+        </Text>{' '}
+        <Text fontSize={fontSize} fontWeight="normal" display="inline">
+          {parsedContent}
+        </Text>
+      </Box>
+    )
+  }
+
+  // Default variant: light blue background with details
   return (
     <Box bg="su.lightBlue" overflow="hidden">
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">

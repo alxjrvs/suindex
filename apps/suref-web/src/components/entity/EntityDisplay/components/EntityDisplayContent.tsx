@@ -10,7 +10,9 @@ import { EntityRightHeaderContent } from '../EntityRightHeaderContent'
 import { EntityChassisPatterns } from '../EntityChassisPatterns'
 import { EntityOptions } from '../EntityOptions'
 import { EntityTopMatter } from '../EntityTopMatter'
+import { EntityChassisAbilitiesContent } from '../EntityChassisAbilitiesContent'
 import { EntityRequirementDisplay } from '../EntityRequirementDisplay'
+import { getChassisAbilities } from 'salvageunion-reference'
 import { EntityChoices } from '../EntityChoices'
 import { EntityGrants } from '../EntityGrants'
 import { ClassAbilitiesList } from '../../../PilotLiveSheet/ClassAbilitiesList'
@@ -79,6 +81,12 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
           w="full"
         >
           <EntityTopMatter hideActions={hideActions} />
+
+          {compact && schemaName === 'chassis' && getChassisAbilities(data) && (
+            <Box p={spacing.contentPadding}>
+              <EntityChassisAbilitiesContent />
+            </Box>
+          )}
 
           <EntityPopulationRange />
           <EntityBonusPerTechLevel />

@@ -12,11 +12,6 @@ export function EntityChassisAbilitiesContent() {
 
   return (
     <VStack gap={spacing.smallGap} alignItems="stretch">
-      {!compact && (
-        <Text fontSize="xl" variant="pseudoheader">
-          Chassis Abilities
-        </Text>
-      )}
       {chassisAbilities.map((ability, index) => {
         return (
           <NestedActionDisplay
@@ -24,6 +19,7 @@ export function EntityChassisAbilitiesContent() {
             key={index}
             data={ability}
             isLast={index === chassisAbilities.length - 1}
+            variant="chassis"
           />
         )
       })}
