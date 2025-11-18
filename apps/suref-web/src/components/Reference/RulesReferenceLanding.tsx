@@ -9,6 +9,7 @@ import type { SchemaInfo } from '../../types/schema'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { extractMatchSnippet, highlightMatch } from '../../utils/searchHighlight'
+import { DEBOUNCE_TIMINGS } from '../../constants/gameRules'
 
 const SEARCH_RESULT_HEIGHT = 72
 const SEARCH_RESULTS_MAX_HEIGHT = 400
@@ -31,8 +32,37 @@ interface SearchResultDisplay {
 export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   const { q: searchQuery = '' } = Route.useSearch()
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [localSearchValue, setLocalSearchValue] = useState(searchQuery)
   const navigate = useNavigate({ from: Route.fullPath })
   const inputRef = useRef<HTMLInputElement>(null)
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Sync local state with URL when it changes externally (e.g., browser back/forward)
+  useEffect(() => {
+    setLocalSearchValue(searchQuery)
+  }, [searchQuery])
+
+  // Debounce URL updates - only update URL after user stops typing
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      if (localSearchValue !== searchQuery) {
+        navigate({
+          search: { q: localSearchValue || undefined },
+          replace: true,
+        })
+      }
+    }, DEBOUNCE_TIMINGS.search)
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [localSearchValue, searchQuery, navigate])
 
   const debouncedQuery = searchQuery
 
@@ -48,17 +78,24 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
 
   const handleSelectResult = useCallback(
     (result: SearchResultDisplay) => {
+      // Clear search state immediately
+      setLocalSearchValue('')
+      setSelectedIndex(0)
+
+      // Navigate to the selected result
       if (result.type === 'schema') {
-        navigate({ to: '/schema/$schemaId', params: { schemaId: result.schemaId } })
+        navigate({
+          to: '/schema/$schemaId',
+          params: { schemaId: result.schemaId },
+          search: { q: undefined },
+        })
       } else if (result.itemId) {
         navigate({
           to: '/schema/$schemaId/item/$itemId',
           params: { schemaId: result.schemaId, itemId: result.itemId },
+          search: { q: undefined },
         })
       }
-
-      navigate({ search: { q: undefined }, replace: true })
-      setSelectedIndex(0)
     },
     [navigate]
   )
@@ -118,6 +155,15 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
     if (typeof window === 'undefined') return
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (localSearchValue) {
+          e.preventDefault()
+          setLocalSearchValue('')
+          setSelectedIndex(0)
+        }
+        return
+      }
+
       if (!searchResults.length) return
 
       if (e.key === 'ArrowDown') {
@@ -129,15 +175,12 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
       } else if (e.key === 'Enter') {
         e.preventDefault()
         handleSelectResult(searchResults[selectedIndex])
-      } else if (e.key === 'Escape') {
-        navigate({ search: { q: undefined }, replace: true })
-        setSelectedIndex(0)
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [searchResults, navigate, selectedIndex, handleSelectResult])
+  }, [searchResults, navigate, selectedIndex, handleSelectResult, localSearchValue])
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -206,12 +249,9 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
             </Text>
             <Input
               ref={inputRef}
-              value={searchQuery}
+              value={localSearchValue}
               onChange={(e) => {
-                navigate({
-                  search: { q: e.target.value || undefined },
-                  replace: true,
-                })
+                setLocalSearchValue(e.target.value)
                 setSelectedIndex(0)
               }}
               placeholder="Search all rules, items, and schemas..."
