@@ -22,14 +22,7 @@ export function EntityActions() {
   return (
     <VStack gap={spacing.smallGap} alignItems="stretch" borderRadius="md">
       {actions.map((action, index) => {
-        return (
-          <NestedActionDisplay
-            compact={compact}
-            key={index}
-            data={action}
-            isLast={index === actions.length - 1}
-          />
-        )
+        return <NestedActionDisplay compact={compact} key={index} data={action} />
       })}
     </VStack>
   )

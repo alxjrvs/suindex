@@ -11,12 +11,12 @@ Bays and facilities on Union Crawlers in Salvage Union
 
 ## Fields
 
-| Field              | Type               | Required | Description                                                   |
-| ------------------ | ------------------ | -------- | ------------------------------------------------------------- |
-| `damagedEffect`    | string             | ✅       | Effect when this bay is damaged                               |
-| `npc`              | `npc`              | ✅       |                                                               |
-| `choices`          | Array<`choice`>    | ❌       | Choices available to the player when interacting with the NPC |
-| `table`            | `table`            | ❌       |                                                               |
+| Field           | Type            | Required | Description                                                   |
+| --------------- | --------------- | -------- | ------------------------------------------------------------- |
+| `damagedEffect` | string          | ✅       | Effect when this bay is damaged                               |
+| `npc`           | `npc`           | ✅       |                                                               |
+| `choices`       | Array<`choice`> | ❌       | Choices available to the player when interacting with the NPC |
+| `table`         | `table`         | ❌       |                                                               |
 
 ## Example
 

@@ -368,9 +368,12 @@ const priorityProperties = [
 
 const generatedExtractors = new Set<string>()
 
+// Properties that have manual implementations and should not be auto-generated
+const manualProperties = new Set(['chassisAbilities'])
+
 // Generate extractors for priority properties first
 for (const propName of priorityProperties) {
-  if (allProperties.has(propName)) {
+  if (allProperties.has(propName) && !manualProperties.has(propName)) {
     output += generatePropertyExtractor(propName, allProperties.get(propName)!)
     generatedExtractors.add(propName)
   }
@@ -378,7 +381,7 @@ for (const propName of priorityProperties) {
 
 // Generate extractors for remaining properties
 for (const [propName, propType] of allProperties.entries()) {
-  if (!generatedExtractors.has(propName)) {
+  if (!generatedExtractors.has(propName) && !manualProperties.has(propName)) {
     output += generatePropertyExtractor(propName, propType)
     generatedExtractors.add(propName)
   }

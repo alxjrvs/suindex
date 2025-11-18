@@ -136,18 +136,7 @@
         "value": "The 'M-63' Mule was developed by the Opus Institute as one of the first open source Mech blueprints. They remain a ubiquitous presence across the wasteland as a result. Their design was replicated not only by other corpos, but numerous enthusiasts with a crafting bay. The Mule's spacious cargo bay makes the Mech invaluable to wastelanders, corpos, and salvagers alike for transporting salvage over a wide array of terrain, whilst its general hardiness allows it to survive numerous threats from raider ambushes to radiation storms."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Cargo Bay",
-        "id": "d14854b7-56fc-4bf4-a9e8-74a5648fc661",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Increases the Cargo Capacity of the Mule by 10, to 16."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Cargo Bay"]
   },
   {
     "id": "df6b7872-5fbe-4602-b564-564157864746",
@@ -260,18 +249,7 @@
         "value": "The Mazona 'PR1-M3' was created by DronTek Systems in the aftermath of the first Luddite Rebellion. It was designed as a delivery drone that could be piloted by a worker rather than automated. Its design remains useful due to the majority of automated drones malfunctioning as a result of the increased radiation storms across the wastelands. Whilst fragile, the DronTek patented hover function enables it to operate across a wide variety of terrain, plus it is a cheap Mech to rebuild if it does get blown apart."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Hover Drone",
-        "id": "65d87343-8b66-434c-a933-68a7c114f9ea",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Mazona has an Integrated Hover Locomotion System which is included in its profile. This allows it to hover over obstacles and terrain."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Hover Drone"]
   },
   {
     "id": "105055e2-eb07-4329-8dc0-a344d6d77212",
@@ -404,18 +382,7 @@
         "value": "The 'S-5000' Scrapper was designed by Hodgson & Vasquez, a subsidiary of Evantis Heavy Industries, for trash haulage and waste disposal. Its Hazard Protected Chassis was necessary to protect the Pilot against the accumulated toxic wastes of the great trash mountains that dotted the Arid Steppes around the Evantis home arco of Haven."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Hazard Protected Chassis",
-        "id": "1825c81c-bba8-4d8f-926c-833987b6f710",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Scrapper suffers no effect or damage from hazardous environmental effects such as radiation storms. In addition, when dealing with severe environmental hazards they may Push once for free to circumvent or resist any effects."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Hazard Protected Chassis"]
   },
   {
     "id": "c465ea55-0230-41c9-a014-2baf453e2d2b",
@@ -548,30 +515,7 @@
         "value": "The 'Z-80A' Spectrum was developed by Advanced Microprocessor Systems (AMS), a subsidiary of Thatcher Steel, as a pilotable, mobile, data centre for use in the establishment of colonies either offworld or within inhospitable locations. The Spectrum's Chassis is specifically designed to protect its data core and other vital components from any environmental damage and in the event of a colony collapse it can be moved with ease along with the vital intelligence contained in its mammoth core."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Data Scanner",
-        "activationCost": 2,
-        "actionType": "Short",
-        "range": ["Close"],
-        "traits": [
-          {
-            "type": "scanner"
-          }
-        ],
-        "id": "65940c9e-3236-4ee9-9e34-3aff37763a87",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Spectrum is a mobile data repository that has all manner of information stored within it. It is able to scan objects to both gain information about them and store that data to access at a later time."
-          },
-          {
-            "type": "paragraph",
-            "value": "You scan a single object in Range. This can be a Mech, System, Module, Vehicle, Creature, artefact, structure, fauna, or flora, or anything else appropriate in the world. You may ask the Mediator two questions about this object and the answers they give must be true. If you scan an Intact Mech Chassis, System, or Module in the field, you now have its blueprint. You and everyone on your Union Crawler is now able to craft this item even if you would not normally be able to do so."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Data Scanner"]
   },
   {
     "id": "61e24c6d-fc2f-4ff7-b9ca-3d8325764666",
@@ -687,18 +631,7 @@
         "value": "The 'T-690' Thresher was designed as a multi-purpose agriculture Mech by Hodgson & Vasquez to aid in the large-scale crop harvesting and forestry operations within the Verdant Crescent. It is one of the longest operating Mechs in existence, said to have been used in the Great War. Its multiple layers of heavy armour are a clunky holdover from that era, but provide solid protection to the Mech in the perilous wastes."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Heavily Armoured Chassis",
-        "id": "0d9b5e11-968b-48e1-a479-14127a604ea2",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Any attack that rolls a 'Nailed It' (20) result against the Thresher counts as a standard hit (11-19) and does not deal 2× damage or have any other bonus effect."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Heavily Armoured Chassis"]
   },
   {
     "id": "b9ad42f1-55a8-4e87-aa9a-e135ad434831",
@@ -848,50 +781,7 @@
         "value": "The 'O-F-531' Forge was developed by Osiris Construction as a fabrication Mech that could rapidly construct and repair structures within the field, whilst also defending the area from attack. They were purchased en-masse by Herrsch Manufacturing, and used effectively to prevent the inner tier of their home arco in the Verdant Crescent from being breached by starving citizens during the great food riots. This proved successful, and Osiris soon rolled them out to other corporate arcos to operate in a similar capacity."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Epoxy Printer",
-        "id": "eb674791-d327-41b2-92a7-bd59c0508965",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": " The Forge is able to 3D print metallic structures via a specialised epoxy."
-          }
-        ]
-      },
-      {
-        "activationCost": 3,
-        "actionType": "Short",
-        "name": "Forge",
-        "id": "c9f95197-ac31-4398-ab99-28f109896fbd",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "When this Ability is activated, pick from the following options to craft. Anything crafted with the Forge cannot be salvaged for Scrap."
-          },
-          {
-            "type": "list-item",
-            "value": "You craft an Armour Plating System.",
-            "label": "Armour Plating"
-          },
-          {
-            "type": "list-item",
-            "value": "You craft a Mech Melee Armament System or 10 Improvised Melee Weapons",
-            "label": "Simple Weapon"
-          },
-          {
-            "type": "list-item",
-            "value": "You craft a series of traps designed to slow and damage encroaching Mechs. Any Mechs that move through the traps take 3 SP damage and move at half their normal speed.",
-            "label": "Mech Traps"
-          },
-          {
-            "type": "list-item",
-            "value": "You craft a metallic structure of your own design. This cannot have any complex or moving parts.",
-            "label": "Custom Item"
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Epoxy Printer"]
   },
   {
     "id": "9782857d-ccf4-4d95-8da2-d3912a6da8e3",
@@ -1030,18 +920,7 @@
         "value": "*Following the Olympia Springs incident it is against Union Regulations to store raw meat in the Expanded Transport Hold.*"
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Expanded Transport Hold",
-        "id": "0adbd032-5c64-4f24-9128-9cfb4771539a",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Increases the Cargo Capacity of the Gopher by 6, to 12."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Expanded Transport Hold"]
   },
   {
     "id": "a7134396-92a6-47a7-b6fe-bd2e8a93c4fb",
@@ -1182,18 +1061,7 @@
         "value": "The 'V-IG83' Hussar was designed as a general purpose light-combat Mech by Contour Aerospace that was relatively cheap for the corpo to mass produce. Able to rapidly mobilise against threats, they were primarily used as a 'peacekeeping' force by Contour Aerospace security detachments during the Oceanic Expanse. They fell into disuse following the war and have since become a Mech utilised by wasters of all kinds, due to their speed, cheap cost and hit and run capabilities."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Fast",
-        "id": "5b3adf7f-fc0e-4fb7-b4e8-844325ba441c",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Hussar can move an additional Range band on its turn as a Free Action. In addition, it moves twice as fast across the Campaign, Area, and Region Maps."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Fast"]
   },
   {
     "id": "bc0be363-b45b-4f3f-8ce1-67406cb2c24c",
@@ -1323,26 +1191,7 @@
         "value": "The 'BG-288' Jackhammer was commissioned by the Terrestrial Democratic Alliance and constructed by Thatcher Steel. The Jackhammer was built in response to a series of costly uranium mining accidents on off-world colonies, due to lax worker safety protocols, in which a slew of mining Mechs were destroyed in tunnel collapses and the worker pilots tragically killed. The reinforced chassis of the Jackhammer was designed to protect the Mech's expensive reactor and core systems in the event of an accident which immobilised or crushed the Mech. That it happened to also protect the worker pilot was of secondary consideration to the corpo."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Reinforced Chassis",
-        "table": {
-          "1": "The Jackhammer Mech Chassis is damaged. All of its mounted Systems, Modules, and any carried Cargo are destroyed. The Pilot survives in the reinforced cockpit.",
-          "20": "The Jackhammer is Intact and operational with 1 SP. The Pilot is unharmed.",
-          "11-19": "The Jackhammer is temporarily Shutdown and becomes inoperable. At the end of its next turn it activates and becomes operational with 1 SP. The Pilot is unharmed.",
-          "6-10": "As per 11-19, but a random Module on the Jackhammer is also Damaged.",
-          "2-5": "As per 11-19, but a random System on the Jackhammer is also Damaged.",
-          "type": "standard"
-        },
-        "id": "86600ea9-91dc-4408-b780-a097833bc684",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Jackhammer rolls on this alternate Critical Damage Table:"
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Reinforced Chassis"]
   },
   {
     "name": "Goliath",
@@ -1364,18 +1213,7 @@
         "value": "The salvager answer to the Leviathan Chassis. This junker Mech is built out of a hodgepodge of scrap parts, giving it a hulking appearance. Layers of expendable scrap armour built into its hull make it rugged, and resilient for its tech level, despite a relatively fragile core. The Goliath is used extensively by salvagers in regions where scrap is ripe."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Scrap Plating",
-        "id": "ffc41898-8744-4211-b3a3-d4e79e937244",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Goliath counts as having 3 Armour Plating Systems. If any of these are destroyed, any number of them can be restored by using any ability that can repair the Goliath Chassis, or during Downtime in a T2 or higher Mech Bay."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Scrap Plating"]
   },
   {
     "id": "1ba741eb-5b33-496f-81f8-7f9d05e27985",
@@ -1535,18 +1373,7 @@
         "value": "The 'USM-53' Kraken was developed by Aegean Dynamics as one of the first hybrid land and water Mechs. Able to carry a large crew to the depths of ocean trenches, it proved instrumental in the construction and repair of underwater fibre net pipelines which were a vulnerable target during the cyberwars. It has a reputation for being a chunky Mech on land, but its pilots often extol its comfortable environmental systems which keeps it both airtight and watertight. When on land this also keeps it protected from wasteland debris, dust, and dangerous gases."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Amphibious Locomotion System",
-        "id": "6f85dbb0-141a-4b3d-ba2a-91e3fd655b2b",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Kraken has an integral Advanced Amphibious Locomotion System included in its profile. This allows the Kraken to operate indefinitely in underwater conditions at significant depths whilst also being able to walk on land. Its sealed Chassis is also airtight and watertight."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Amphibious Locomotion System"]
   },
   {
     "id": "c505adcd-26af-4c2a-91f4-55ff1fd8fe72",
@@ -1691,18 +1518,7 @@
         "value": "The 'Type 43' Magpie was developed by Thatcher Steel on behalf of Stefanus as an industrial worker Mech. Its universal mounting points allowed for rapid transition between the various complex servo arms needed during the development and roll out of the Stefanus Prion Chassis. This means its parts can be rapidly hot swapped in the field, even in a combat situation making it something of a holy grail for salvagers, though less so for its namesake."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Hot Swap Universal Mounts",
-        "id": "9412655e-2d96-468f-b6d2-b3008471c940",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Magpie allows you to mount and dismount Systems on it in the field significantly faster. This uses the normal rules for mounting, but increases the speed and versatility. A Pilot may Mount a System on the Magpie as a Short Action (10 minutes). A Mech, including the Magpie itself, may Mount a System on the Magpie as a Turn Action."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Hot Swap Universal Mounts"]
   },
   {
     "id": "fdb9542b-d85e-468b-911a-517f8411efab",
@@ -1834,29 +1650,7 @@
         "value": "The 'V6.10.3' Mirror Ball was developed by Aeon as a mobile shield Mech designed to protect machinery and workers within inhospitable locations. During the 'Great Exodus' Mirrorball units were used effectively as a rearguard against corpo harriers by the first salvagers who fled their home arcos to forge a destiny of their own. Its nickname derives from the sparkling ball of energy that surrounds and protects it when it is operational."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Advanced Shield Dome",
-        "activationCost": "X",
-        "actionType": "Turn",
-        "traits": [
-          {
-            "type": "shield"
-          }
-        ],
-        "id": "f183cc63-d4ae-4802-9cbd-91eee1cb9e70",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Mirror Ball can project a glowing, protective energy field around its Chassis."
-          },
-          {
-            "type": "paragraph",
-            "value": "When activated, you project a Shield Dome around your Mech. Choose any amount of Energy Points when you activate this Ability. The Shield Dome has a number of Structure Points equal to 3× the Energy Points you spend on this Ability. You may only have one Shield Dome active at a time. You may deactivate the Shield Dome as a Free Action. When you or any allied target within Close Range of your Mech is dealt damage, the damage is instead dealt to the Shield Dome. If the attack deals 0 damage to the target then they also suffer no additional effect from the hit. Any excess damage that penetrates the shield is dealt to the target instead."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Advanced Shield Dome"]
   },
   {
     "id": "4ba6cc9f-19b0-4ae7-9471-3552f5470d4a",
@@ -1989,18 +1783,7 @@
         "value": "The 'MK8' Atlas was developed by Evantis Heavy Industries as a mobile, heavily armoured, resupply base. When Evantis switched their Mech production to focus on their Colossus Chassis during the midst of the First Corpo War, it made the Atlas technically the smallest Mech they still produced. This led to the Atlas being known colloquially as the 'Evantis Scout'."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Colossal Cargo Bay",
-        "id": "76308ada-500f-4e96-a09b-cf6156c6da8a",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Increases the Cargo Capacity of the Atlas by 24, to 30."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Colossal Cargo Bay"]
   },
   {
     "id": "d05330c9-e87e-4e1b-b1b4-cb70a97e7543",
@@ -2140,18 +1923,7 @@
         "value": "The 'GC-C21' Brawler is a combat Mech favoured by corpo mercs due to its relatively low scrip debt cost. The Terrestrial Democratic Alliance began to mass produce Brawlers during the Second Corpo War, and deployed them in the siege of the Central Wastes where they obliterated the Herrsch home arco. They later became one of the first combat Mechs to be produced as an open source blueprint by the Opus Institute."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Close Range Protocols",
-        "id": "bf7ec0e9-3751-4a7e-9a04-60f6c8989610",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Brawler deals an additional 2 SP damage when it makes an attack at any target within Close Range of it. This bonus is applied before other modifiers."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Close Range Protocols"]
   },
   {
     "id": "01944f26-0843-4897-a72d-da19a56b1974",
@@ -2280,18 +2052,7 @@
         "value": "The 'НC-15' Little Sestra is a Mech designed by DronTek Systems to control a Sestra Drone in the field. Little Sestra Mechs are utilised for reconnaissance or in larger numbers to support DronTek's Big Brother Mechs in battle. Sestra Mechs were utilised effectively in the First Corpo War to pick off retreating Evantis forces following their failed invasion of the Northern Wastes. The majority of remote drones are unusable in the wastes, but the Little Sestra's high end, specialised drone controller continues to function where others have failed."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Sestra Drone Controller",
-        "id": "2973801a-830e-4029-88c0-e1ec00c04589",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Little Sestra comes with a single Sestra Drone that it controls up to Far Range. Roll on the A.I. Personality Table for the drone's personality. The Sestra Drone acts separately to the Little Sestra on its own turn, and is controlled by the Pilot. It functions effectively as a Mech, but cannot Push. It can be installed with Systems and Modules and restores its SP and EP in a T3 or higher Mech Bay during Downtime. If the Drone is damaged it can be repaired as though it was a Mech. If it is destroyed you may craft a new Sestra Drone for 2 Tech 3 Scrap as per the crafting rules. The Little Sestra may have one active Sestra Drone at a time. Sestra Drone Stats: 7 SP, 8 EP, 6 Heat Cap, 7 System Slots, 2 Module Slots, 3 Cargo Cap, Tech Level 3, Salvage Value 2. Integrated Hover Locomotion System."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Sestra Drone Controller"]
   },
   {
     "id": "c77fa33c-1c94-4b7f-a84e-dc6a37e1e527",
@@ -2442,60 +2203,7 @@
         "value": "Developed as a collaboration between the software arm of Stefanus Industries and Sakura Futures, the 'MCS-1337' Mantis was designed as a lightweight hacking Mech. Rarely deployed on the battlefield, it has primarily been utilised in a series of Black Ops operations, most notably during the endless intra-corporate cold wars. With its high energy capacity and a wide array of Module customisation options you sometimes just have to respect corpo engineering."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Frog Prince Module",
-        "id": "d2430a84-ade3-4a75-9f68-fa27afe7fea3",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "This specialised hacking module developed for the Mantis allows you to take control of defensive and security systems."
-          }
-        ]
-      },
-      {
-        "activationCost": 2,
-        "range": ["Medium"],
-        "actionType": "Turn",
-        "traits": [
-          {
-            "type": "hacking"
-          }
-        ],
-        "name": "Integrated Frog Prince Module",
-        "id": "05bdea9b-ef33-48ee-bd0b-1f31f75653db",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "You take control of one of the following devices within Range, whilst it is under your control you may send it commands such as attack, move, activate, or power down/up as well as read any data it receives. You may not take other actions whilst it is under your control. Relinquishing control is a Free Action."
-          },
-          {
-            "type": "list-item",
-            "value": "Security Cameras (Free Action to Command)"
-          },
-          {
-            "type": "list-item",
-            "value": "Automated Doors (Free Action to Command)"
-          },
-          {
-            "type": "list-item",
-            "value": "Lights (Free Action to Command)"
-          },
-          {
-            "type": "list-item",
-            "value": "Defensive Turrets (Turn Action to Command)"
-          },
-          {
-            "type": "list-item",
-            "value": "Drones (Turn Action to Command)"
-          },
-          {
-            "type": "list-item",
-            "value": "When this Module is activated you may pay 1 EP per additional device you would like to control."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Frog Prince Module"]
   },
   {
     "id": "7772b791-e24f-4944-b524-9105f0991d8f",
@@ -2629,18 +2337,7 @@
         "value": "The Photon was a byproduct of numerous aborted attempts to create clean energy reactors as global temperatures began to routinely rise to 50 degrees Celsius. Stefanus Corporation commissioned Noel Sküm, a populist tech mogul, to develop clean energy reactors that would fuel the vast mainframes within their home arco. Instead, he used the funds to build the 'EM-28' Photon, which whilst flashy and powerful was expensive, over designed and failed to gain mass adoption. When the venture with Sküm failed, the Stefanus Corporation instead moved their home arco to the frozen Forgotten Tundra."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Solar Reactor",
-        "id": "9e5b1dec-909f-4f83-b9bd-3d930e6834b9",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "As a Long Action you may fully restore the Energy Points of the Photon to its maximum value. You must be in an area of sunlight to do this. You may only use this Ability once every 24 hours."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Solar Reactor"]
   },
   {
     "id": "c1b7996e-6d98-44d8-bfc5-b6a029e0b4f4",
@@ -2790,18 +2487,7 @@
         "value": "The 'S-1300' Solo was designed by Sakura for use in wetwork operations due to its capability to smuggle deadly weaponry close to exposed targets, whilst avoiding radar and scanning systems. As a result of its design, it has become prized by smugglers across the wastes who utilise its Chassis to ferry all manner of contraband through the various arcos and militarised checkpoints dotted around the wastelands."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Polycarbonate Stealth Chassis",
-        "id": "56f1e08f-1870-49d5-b542-18add87294f9",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Solo cannot be targeted with anything that uses the [[Targeter]] Trait such as targeting Modules. It also cannot be seen by anything with the [[Optics]] Trait or [[Scanner]] Trait. It does not appear on sensors, radar systems, or scanners, and needs clear and direct visual confirmation to be spotted."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Polycarbonate Stealth Chassis"]
   },
   {
     "id": "c7dba8f0-cec4-4e32-a01f-5832da666afc",
@@ -2939,20 +2625,7 @@
         "value": "Designed as a terraforming Mech by Kombu Technology, the 'T-246' Terra is able to project a human habitable atmospheric bubble around it, making it invaluable in the process of colony formation. As the space elevators dotting the globe began to be destroyed or fell into disrepair, the Terra found a new use in the wastelands in creating habitable zones for wastelanders. It is utilised efficiently by salvagers for picking apart wreckage within hazardous zones."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Terraforming Bubble",
-        "activationCost": 2,
-        "actionType": "Turn",
-        "id": "1e2916fd-ed83-478c-8e57-8a7130c5c8c3",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "When activated, the Terra projects a safe, oxygenated, and habitable atmospheric bubble around it for 1 hour, or until shut off as a Free Action. Within the bubble gravity levels, pressure, heat, and other environmental factors are comparable to an Earth-like planet. This extends to Medium Range, and everything within it is safe from all harmful environmental effects irrespective of their severity."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Terraforming Bubble"]
   },
   {
     "id": "70a37be9-5592-46b7-bbe5-5310ac2a0ed1",
@@ -3099,26 +2772,7 @@
         "value": "The 'V8.12.5' Aegis was developed by Aeon as a combat Mech intended to protect trade convoys or VIP corporate personnel against attack and ambush. The energy absorbers which power its Advanced Shield Projector were developed atop the great cloud spire of the corporation's home arco. Aegis units were subsequently utilised in the rebuilding of the Central Wastes following Impact Day, its shielding protecting construction units from debris, solar flares, and rival corpo attacks."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Advanced Shield Projector",
-        "activationCost": "X",
-        "actionType": "Reaction",
-        "range": ["Medium"],
-        "traits": [
-          {
-            "type": "shield"
-          }
-        ],
-        "id": "7b1ffa81-deaf-4096-80ba-90eaa164c495",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "When a target within Range is hit by an attack or something that would deal damage, you may activate the Advanced Shield Projector. The damage of the attack is reduced by 3× the amount of Energy Points you expend on this Ability. If this reduces the damage to 0 or less the attack also has no additional effects."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Advanced Shield Projector"]
   },
   {
     "id": "e6f4410c-7356-4e05-9af2-9a48fe76e027",
@@ -3258,28 +2912,7 @@
         "value": "The 'Mk7' Colossus is the main battle Mech of Evantis Industries, and sums them up as a corpo. It is big, dumb, and gets the job done. They are still manufactured in the Evantis home arco of Haven and its surrounding smog soaked sprawl. These were rolled out in droves during the First Corpo War, their thunderous advance captured entire arcos whose resources and facilities were fed into the guzzling industrial maw of Evantis."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Eradication Protocols",
-        "id": "9a500906-868d-4b6a-853d-9694f958ecae",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "If the Colossus rolls a 'Nailed It' result (20) with an attack roll, it deals 4× damage instead of 2× damage."
-          }
-        ]
-      },
-      {
-        "name": "Heavily Armoured Chassis",
-        "id": "627fa969-b43e-47d6-a6c5-90693e5cb417",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Any attack that rolls a 'Nailed It' (20) result against the Colossus counts as a standard hit (11-19) and does not deal 2× damage or have any other bonus effect."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Eradication Protocols", "Heavily Armoured Chassis"]
   },
   {
     "id": "26850363-6398-4902-aff0-2acc9500027d",
@@ -3416,40 +3049,7 @@
         "value": "Consul Mechs are designed to be utilised as diplomatic envoys and are often used by corporate council members. They are a means for corpos to flex their wealth, power, and prestige when dealing with other corpos and diplomatic entities whilst maintaining a veneer of civility and decorum. As a result, they come in a vast array of different designs as befits the branding of the corpo, with the only commonality being that they are all, in a means unique to their corpo, incredibly flashy. Their inbuilt Morph Sphere technology further allows their pilot, typically a high ranking corpo exec, to rapidly exit an area in a dangerous situation."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Flashy",
-        "id": "84b97703-bddc-4713-9b4d-29d29157c180",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Consul has the [[Flashy]] Trait. It looks incredibly impressive, never being less than mint and pristine to onlookers, and fills them with much awe and admiration."
-          }
-        ]
-      },
-      {
-        "name": "Morph Sphere",
-        "id": "8a215a2b-27f5-4dd6-ae36-f2a78bb61221",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "This advanced anti-matter tech developed by Ascension PLC enables the Consul to reconstruct its form into a spherical mechanical ball around People size."
-          }
-        ]
-      },
-      {
-        "actionType": "Turn",
-        "activationCost": 2,
-        "name": "Morph Sphere",
-        "id": "ab735870-c818-418e-b651-3f08443b42ea",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "When activated, the Consul transforms into a sphere that encases the Pilot or passenger. As a sphere, the Consul gains the [[Fast]] Trait, which it can make use of immediately after transforming. The sphere is quick and mobile, and slightly flexible, able to squeeze into tunnels and other hard to enter spots whilst transformed. The Consul cannot attack or activate any Systems whilst transformed but may activate Modules. When in this form the Consul takes up only 3 Cargo Slots if carried.The Consul may transform from a sphere back into its standard form as a Free Action at no EP cost."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Flashy", "Morph Sphere"]
   },
   {
     "id": "065ef9ea-4d21-449f-aed7-f67ac0d3dad6",
@@ -3600,18 +3200,7 @@
         "value": "The 'V-TX15' Drop Bear was designed by Contour Aerospace as a means to return aerial dominance to its rightful place in the battlefield. The great rocky eyrie where the Contour home arco is situated in the Oceanic Rim is perfectly suited to maximise the speed and aerial capability of the Drop Bear. Vast flocks of these are said to patrol the rocky fortress and surrounding wastelands. The distinct saw-like buzzing sound of its VTU System is often the last thing the victims hear before being shredded by fire and then picked apart for salvage. Originally named the 'Dragoon' by Contour, this Mech was 'affectionately' nicknamed the Drop Bear by local salvagers who came into contact with the Mech."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Advanced Vectored Thrust Unit",
-        "id": "00440cc8-2afa-440b-a5be-460858f4f291",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Drop Bear has an Integrated Advanced Vectored Thrust Unit. This acts as a standard Vectored Thrust Unit System. In addition, when the Drop Bear activates the Advanced VTU System it can move an additional Range Band, ignoring all obstacles, Mechs, and terrain, and still move on its turn as normal."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Advanced Vectored Thrust Unit"]
   },
   {
     "id": "175c3af3-8083-4733-8836-9596c210cd96",
@@ -3741,18 +3330,7 @@
         "value": "The 'V-X 113.5' Vorpal is a highly heat efficient Mech designed to mount vastly oversized mining lasers for use in heavy duty excavation operations. Designed by Thatcher Steel, the Vorpal was so efficient that the majority of uranium mines within the Ferrous Range were rapidly stripped bare. Thatcher Steel then pulled out and pumped resources into its space elevator program to start off-world mining. This left the various worker satellite colonies to fend for themselves. Many of these miner settlements were said to have joined up together in one of the first examples of a proto Salvage Union using scrapped Mechs to retake swathes of Thatcher Steel territory and declare it independent."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Heat Efficient Reactor",
-        "id": "cbad70da-a9e2-409a-a237-b67fa432c710",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Everytime the Vorpal gains Heat, reduce the amount gained to 1. Treat each source of Heat separately when using this Ability. For example if the Vorpal fires a Blue Mining Laser with the [[[Hot] (3)]] Trait it gains 1 Heat instead of 3. If the Vorpal then chooses to Push it would gain an additional 1 Heat instead of 2 for the Push."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Heat Efficient Reactor"]
   },
   {
     "id": "76abcfe2-5262-4f3b-953d-dcb88980871c",
@@ -3896,18 +3474,7 @@
         "value": "Developed by Contour Aerospace as a mobile Mech carrier. The 'TJG-93' Carrier can launch Mechs from its mammoth bays, and acts as a mobile recharge and resupply base. It has proven invaluable for salvagers able to scrap one together as it effectively acts as a support crawler, allowing Pilots to operate for longer periods of time away from the Union Crawler and get to the hardest to reach places to claim sweet, sweet salvage."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated Mech Bay",
-        "id": "a304d370-5311-45fd-8f37-3355cb09e00d",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Carrier has an integrated Tech 4 Mech Bay which can carry up to 5 Tech 4 or lower Mechs in an active and ready state. This acts as a Tech 4 Mech Bay allowing you to fully heal the SP, EP, and Heat of all Mechs within it over a week of Downtime and mount or remove any number of Systems or Modules as well as anything else the Mech Bay would be capable of."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated Mech Bay"]
   },
   {
     "id": "3995435a-fab2-411e-bb58-85afefb179d8",
@@ -4069,30 +3636,7 @@
         "value": "The peak of Sakura stealth technology, the 'E-1T2' Eidolon has a polycarbonate stealth Chassis combined with integrated stealth projectors which when activated make it for all intents and purposes invisible. Sabotage by this Mech is considered responsible for the year long blackout of Cothon, the Osiris home arco during the corpo cold war. It is difficult for advanced electronics to detect the Eidolon, but their stealth systems can be foiled by some surprisingly low tech solutions. Shrapnel and other explosives, even a simple hose can all outline the void the Eidolon occupies."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Polycarbonate Stealth Chassis",
-        "id": "97d0d63b-bac3-480e-b9cf-d55d23d57d0c",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Eidolon cannot be targeted with anything that uses the [[Targeter]] Trait such as targeting Modules. It also cannot be seen by anything with the [[Optics]] Trait or [[Scanner]] Trait. It does not appear on sensors, radar systems, or scanners, and needs clear and direct visual confirmation to be spotted."
-          }
-        ]
-      },
-      {
-        "name": "Stealth Projector",
-        "activationCost": 4,
-        "actionType": "Turn",
-        "id": "51cd852b-98cc-4639-9620-87fede9e840d",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "When activated, the Stealth Projector makes the Eidolon effectively invisible. It cannot be spotted via any form of visual confirmation. This effect lasts for 1 hour or until the Eidolon Pilot deactivates it as a Free Action."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Polycarbonate Stealth Chassis", "Stealth Projector"]
   },
   {
     "id": "760d3f94-245d-4260-b071-2df4f8541905",
@@ -4221,18 +3765,7 @@
         "value": "The 'AUG-440' Neura-Phage is a fully neuralinked Mech that connects directly to a Pilot's nervous system. This allows for direct one-to-one control of the Mech as though it was their own body, making pilot and machine as one. Developed at the end of the Second Corpo War by Ascension PLC, the Neura-Phage mech was purchased by numerous other corpos and deployed as the last lines of defence in their home arcos. The reasoning behind this deployment was that any Pilot who would wire themselves directly to their Mechs were significantly devoted to their corpo. In practice, many often had little choice in the matter with many corpos recruiting Neura-Phage Pilots from terminally wounded veterans or Pilots who would otherwise be captured and killed by enemy forces."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Cybernetic Neuralink",
-        "id": "d6ccd961-09a0-41cb-924d-17f8e83ebae4",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Neura-Phage connects directly to the Pilot with an advanced neuralink mesh that allows their thoughts to be directly translated to the actions of the Mech, merging them into one entity. They may spend their Pilot Ability Points on any Energy Point Abilities the Neura-Phage has access to. They may spend their Energy Points on any Pilot Abilities their Pilot has access to that the Neura-Phage would reasonably be able to perform. In addition, they always count as having a Neuralink Communicator installed in their Mech."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Cybernetic Neuralink"]
   },
   {
     "id": "33839393-b860-4fa7-a410-6ba6dc82d941",
@@ -4377,20 +3910,7 @@
         "value": "The 'EPBM-S11' Iron Wyrm is a mammoth tunnelling Mech capable of subterranean operations. It was designed as a joint venture between Sakura Futures, Herrsch Manufacturing, and Thatcher Steel in order to construct a vast tunnel network that would connect the Ferrous Range with the Central Wastes. Nobody knows whether the project was completed or what the current state of the tunnel network is, but some say the tunnels still exist and that they are filled with salvage just lying around. ready to be plundered. They also say that the tunnels are inhabited by those who have not seen the red sun for generations."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Burrower",
-        "activationCost": 2,
-        "actionType": "Turn",
-        "id": "febf523d-2ed0-47bf-bee0-1c035a4546e2",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "When you activate this Ability, the Iron Wyrm can burrow and move underneath the ground. It can burrow through sand, stone, and earth as well as basic metal and stone structures such as bunkers. The Iron Wyrm remains burrowed until it unborrows as a Turn Action where it emerges at a point of the Pilot's choice within Close Range of it. When burrowed, the Iron Wyrm cannot be targeted by anything on the ground, however it cannot see anything on the ground either. Its location can be verified with a Deep Survey Scanner. The burrowing Ability of the Iron Wyrm enables it to create tunnels behind it that are large enough for a Mech to fit through."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Burrower"]
   },
   {
     "id": "bedfa4d4-b1b2-4130-8e7b-efcd235da430",
@@ -4539,38 +4059,7 @@
         "value": "The pinnacle of the Evantis range, the 'Mk3' Leviathan is currently the only general release Super Heavy Mech available to buy on the Corpo Net. Enormously powerful, it can be fitted with a veritable arsenal of lasers, missiles, and cannons, as well as enough Modules to make those shots count. It uses a modified reactor from a 1,000 tonne terraforming rig, and is so heavily armoured that nothing short of a tactical nuke can take it out. If you find yourself against one of these, you will either need a madcap plan under your belt to stop it or a good pair of running boots."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Juggernaut",
-        "id": "b3a909de-7629-4f79-9534-d6fe3bc36af7",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Leviathan may fire up to 2 Weapons Systems in a turn as a single Turn Action. Resolve each attack separately."
-          }
-        ]
-      },
-      {
-        "name": "Eradication Protocols",
-        "id": "b81257c7-16b9-45cd-a3be-f6af901903da",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "If the Leviathan rolls a 'Nailed It' result (20) with an attack roll, it deals 4× damage instead of 2× damage."
-          }
-        ]
-      },
-      {
-        "name": "Heavily Armoured Chassis",
-        "id": "df1bddde-d3fd-4ad5-8efd-29d1c4023492",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Any 'Nailed It' (20) result made against the Leviathan counts as a standard hit (11-19) and does not deal 2× damage or have any other bonus effect."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Juggernaut", "Eradication Protocols", "Heavily Armoured Chassis"]
   },
   {
     "id": "7b7f33cf-88db-41dd-8e11-fd7fc264c4bb",
@@ -4751,47 +4240,6 @@
         "value": "The 'v3.94.0' Shaitan is a custom crafted and over-designed Mech favoured by corpo execs who want to play. It packs an exec body suit, custom branding, high speed actuators, gold plated gyroscopes, and an array of hood ornaments. Even its bells have whistles. It can hit a max top speed that rivals all but the fastest of pure mil-tech design, and has a polycarb Chassis as well as integrated VTU for extra mileage. It contains frankly too many Module slots, allowing it to pack in extended comms, advanced optics, and multiple recreational devices."
       }
     ],
-    "chassisAbilities": [
-      {
-        "name": "Integrated VTU System",
-        "id": "7b4cb082-5cc0-4b33-9dd7-4bb179622b23",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Shaitan has an integrated Vectored Thrust Unit System which is included in its profile. This functions as a standard VTU System."
-          }
-        ]
-      },
-      {
-        "name": "Flashy",
-        "id": "bf7e6dfb-310f-4ceb-9128-703f366d9259",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Shaitan has the [[Flashy]] Trait. It is incredibly stunning to look at and fills onlookers with awe and admiration."
-          }
-        ]
-      },
-      {
-        "name": "Fast",
-        "id": "2833d182-5006-4bf6-85f0-9a81ab5c4bf5",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Shaitan can move an additional Range Band on its turn as a free action. In addition, it moves twice as fast across the Campaign, Area, and Region Maps."
-          }
-        ]
-      },
-      {
-        "name": "Polycarbonate Stealth Chassis",
-        "id": "c905cb36-de27-4191-aa2d-7a3d4ea26e54",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "The Shaitan cannot be targeted with anything that uses the [[Targeter]] Trait such as targeting Modules. It also cannot be seen by anything with the [[Optics]] Trait or [[Scanner]] Trait. It does not appear on sensors, radar systems, or scanners and needs direct visual confirmation to be spotted."
-          }
-        ]
-      }
-    ]
+    "chassisAbilities": ["Integrated VTU System", "Flashy", "Fast", "Polycarbonate Stealth Chassis"]
   }
 ]

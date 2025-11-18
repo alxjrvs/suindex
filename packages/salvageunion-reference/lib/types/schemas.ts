@@ -71,10 +71,18 @@ export interface SURefBioTitan extends SURefMetaBaseEntity {
 }
 
 /**
+ * Chassis abilities for mech chassis in Salvage Union
+ */
+export type SURefMetaChassisAbility = SURefMetaAction
+
+/**
  * Mech chassis definitions in Salvage Union
  */
 export interface SURefChassis extends SURefMetaBaseEntity, SURefMetaChassisStats {
-  chassisAbilities: SURefMetaAction[]
+  /**
+   * Array of chassis ability names that reference chassis-abilities.json
+   */
+  chassisAbilities: string[]
   patterns: SURefMetaPattern[]
   npc?: SURefMetaNpc
 }

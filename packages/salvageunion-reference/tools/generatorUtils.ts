@@ -66,10 +66,10 @@ export function generateSchemaNameMap(schemaIndex: SchemaIndex): Record<string, 
         // Singularize each word
         let singular = word
 
-        // Handle special cases
+        // Handle special cases first (before generic plural handling)
         if (word === 'Abilities') singular = 'Ability'
         else if (word === 'Chassis')
-          singular = 'Chassis' // Already singular
+          singular = 'Chassis' // Already singular, don't remove 's'
         else if (word === 'Equipment')
           singular = 'Equipment' // Already singular
         else if (word === 'Meld')
@@ -80,8 +80,8 @@ export function generateSchemaNameMap(schemaIndex: SchemaIndex): Record<string, 
         else if (word.endsWith('ies')) {
           // Abilities -> Ability
           singular = word.slice(0, -3) + 'y'
-        } else if (word.endsWith('s')) {
-          // Remove trailing 's' for most plurals
+        } else if (word.endsWith('s') && word !== 'Chassis' && word !== 'chassis') {
+          // Remove trailing 's' for most plurals, but not for "Chassis" (case-insensitive check)
           singular = word.slice(0, -1)
         }
 

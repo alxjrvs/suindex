@@ -8,7 +8,7 @@ import {
 } from 'salvageunion-reference'
 import { RoundedBox } from '../shared/RoundedBox'
 import { StatDisplay } from '../StatDisplay'
-import { NestedActionDisplay } from '../entity/NestedActionDisplay'
+import { NestedChassisAbility } from '../entity/NestedChassisAbility'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined
@@ -62,17 +62,16 @@ export function ChassisAbilities({
       disabled={!chassis}
     >
       <VStack gap={3} alignItems="stretch" w="full">
-        {(
-          chassisAbilities || [
-            {
-              id: 'no-chassis',
-              name: '',
-              content: [{ type: 'paragraph', value: 'No chassis selected.' }],
-            },
-          ]
-        ).map((ability, idx) => (
-          <NestedActionDisplay key={idx} data={ability} compact />
-        ))}
+        {chassisAbilities && chassisAbilities.length > 0
+          ? chassisAbilities.map((ability, idx) => (
+              <NestedChassisAbility
+                key={idx}
+                data={ability}
+                compact={false}
+                chassisName={chassis?.name}
+              />
+            ))
+          : null}
       </VStack>
     </RoundedBox>
   )

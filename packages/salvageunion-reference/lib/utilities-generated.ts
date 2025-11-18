@@ -353,17 +353,6 @@ export function getRequirement(entity: SURefMetaEntity): string[] | undefined {
 }
 
 /**
- * Extract chassisAbilities from an entity
- * @param entity - The entity to extract from
- * @returns The chassisAbilities or undefined
- */
-export function getChassisAbilities(entity: SURefMetaEntity): SURefMetaAction[] | undefined {
-  return 'chassisAbilities' in entity && Array.isArray(entity.chassisAbilities)
-    ? entity.chassisAbilities
-    : undefined
-}
-
-/**
  * Extract patterns from an entity
  * @param entity - The entity to extract from
  * @returns The patterns or undefined

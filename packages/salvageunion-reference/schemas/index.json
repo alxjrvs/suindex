@@ -3,7 +3,7 @@
   "title": "Salvage Union Data Schema Catalog",
   "description": "Catalog of all available schemas in the salvageunion-data repository",
   "version": "2.1.10",
-  "generated": "2025-11-18T01:35:18.064Z",
+  "generated": "2025-11-18T13:51:03.095Z",
   "schemas": [
     {
       "id": "abilities",
@@ -34,6 +34,17 @@
       "itemCount": 6,
       "requiredFields": ["structurePoints", "actions"],
       "displayName": "Bio-Titans"
+    },
+    {
+      "id": "chassis-abilities",
+      "title": "chassis-abilities",
+      "description": "Chassis abilities for mech chassis in Salvage Union",
+      "dataFile": "data/chassis-abilities.json",
+      "schemaFile": "schemas/chassis-abilities.schema.json",
+      "itemCount": 32,
+      "requiredFields": ["id", "name"],
+      "displayName": "chassis-abilities",
+      "meta": true
     },
     {
       "id": "chassis",

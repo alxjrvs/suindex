@@ -22,8 +22,12 @@ function generateIndexFile() {
   const templatePath = path.join(__dirname, '..', 'lib', 'index.template.ts')
   let template = fs.readFileSync(templatePath, 'utf-8')
 
-  // Generate type imports
-  const typeImports = schemaIndex.schemas
+  // Schemas that are not top-level entities (excluded from entity operations)
+  const nonEntitySchemas = new Set(['chassis-abilities'])
+
+  // Generate type imports (only for entity schemas)
+  const entitySchemas = schemaIndex.schemas.filter((entry) => !nonEntitySchemas.has(entry.id))
+  const typeImports = entitySchemas
     .map((entry: SchemaIndexEntry) => {
       const singularName = getSingularTypeName(entry.id)
       return `  SURef${singularName}`
@@ -33,8 +37,8 @@ function generateIndexFile() {
   // Add union types to imports
   const allTypeImports = `${typeImports},\n  SURefEntity,\n  SURefSchemaName`
 
-  // Generate SchemaToEntityMap
-  const schemaToEntityEntries = schemaIndex.schemas
+  // Generate SchemaToEntityMap (only for entity schemas)
+  const schemaToEntityEntries = entitySchemas
     .map((entry: SchemaIndexEntry) => {
       const singularName = getSingularTypeName(entry.id)
       return `  '${entry.id}': SURef${singularName}`
@@ -56,8 +60,8 @@ function generateIndexFile() {
     })
     .join(',\n')
 
-  // Generate static model properties
-  const modelProperties = schemaIndex.schemas
+  // Generate static model properties (only for entity schemas)
+  const modelProperties = entitySchemas
     .map((entry: SchemaIndexEntry) => {
       const modelName = toPascalCase(entry.id)
       return `  static ${modelName} = models.${modelName} as ModelWithMetadata<

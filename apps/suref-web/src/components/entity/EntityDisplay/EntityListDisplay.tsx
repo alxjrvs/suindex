@@ -1,5 +1,11 @@
 import { VStack } from '@chakra-ui/react'
-import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
+import type {
+  SURefMetaChoice,
+  SURefSchemaName,
+  SURefMetaSystemModule,
+  SURefMetaEntity,
+  SURefMetaAction,
+} from 'salvageunion-reference'
 import type { ButtonProps } from '@chakra-ui/react'
 import { getModel, extractVisibleActions } from 'salvageunion-reference'
 import { EntityDisplay } from './index'
@@ -42,12 +48,18 @@ export function EntityListDisplay({
 
   const visibleEntities = selectedChoice
     ? entities.filter((entity) => {
-        const entityName = 'name' in entity 
-          ? entity.name 
-          : (() => {
-              const visibleActions = extractVisibleActions(entity)
-              return visibleActions && visibleActions.length > 0 ? visibleActions[0].name : undefined
-            })()
+        const isSystemModule = 'actions' in entity && !('id' in entity)
+        const entityName =
+          'name' in entity
+            ? entity.name
+            : isSystemModule
+              ? (entity as SURefMetaSystemModule).actions.find((a) => !a.hidden)?.name
+              : (() => {
+                  const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
+                  return visibleActions && visibleActions.length > 0
+                    ? visibleActions[0].name
+                    : undefined
+                })()
         return entityName === selectedChoice
       })
     : entities
@@ -76,12 +88,18 @@ export function EntityListDisplay({
               children: 'Remove',
             }
           } else {
-            const entityName = 'name' in entity 
-              ? entity.name 
-              : (() => {
-                  const visibleActions = extractVisibleActions(entity)
-                  return visibleActions && visibleActions.length > 0 ? visibleActions[0].name : undefined
-                })()
+            const isSystemModule = 'actions' in entity && !('id' in entity)
+            const entityName =
+              'name' in entity
+                ? entity.name
+                : isSystemModule
+                  ? (entity as SURefMetaSystemModule).actions.find((a) => !a.hidden)?.name
+                  : (() => {
+                      const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
+                      return visibleActions && visibleActions.length > 0
+                        ? visibleActions[0].name
+                        : undefined
+                    })()
             buttonConfig = {
               bg: 'su.orange',
               color: 'su.white',
@@ -100,7 +118,8 @@ export function EntityListDisplay({
         const isSystemModule = 'actions' in entity && !('id' in entity)
 
         if (isSystemModule) {
-          const visibleActions = extractVisibleActions(entity)
+          const systemModule = entity as SURefMetaSystemModule
+          const visibleActions = systemModule.actions.filter((a) => !a.hidden) as SURefMetaAction[]
           if (visibleActions && visibleActions.length > 0) {
             return <NestedActionDisplay key={idx} data={visibleActions[0]} compact />
           }

@@ -13,6 +13,10 @@
       "url": "./schemas/bio-titans.schema.json"
     },
     {
+      "fileMatch": ["data/chassis-abilities.json"],
+      "url": "./schemas/chassis-abilities.schema.json"
+    },
+    {
       "fileMatch": ["data/chassis.json"],
       "url": "./schemas/chassis.schema.json"
     },

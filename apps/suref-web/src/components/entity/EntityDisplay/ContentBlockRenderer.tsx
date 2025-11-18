@@ -13,6 +13,8 @@ interface ContentBlockRendererProps {
   fontSize?: string
   /** Whether to use compact styling */
   compact?: boolean
+  /** Chassis name to replace [(CHASSIS)] placeholder with */
+  chassisName?: string
 }
 
 /**
@@ -31,6 +33,7 @@ export function ContentBlockRenderer({
   content,
   fontSize = 'sm',
   compact = false,
+  chassisName,
 }: ContentBlockRendererProps) {
   if (!content || content.length === 0) {
     return null
@@ -39,7 +42,13 @@ export function ContentBlockRenderer({
   return (
     <>
       {content.map((block, index) => (
-        <ContentBlock key={index} block={block} fontSize={fontSize} compact={compact} />
+        <ContentBlock
+          key={index}
+          block={block}
+          fontSize={fontSize}
+          compact={compact}
+          chassisName={chassisName}
+        />
       ))}
     </>
   )
@@ -49,16 +58,24 @@ function ContentBlock({
   block,
   fontSize,
   compact,
+  chassisName,
 }: {
   block: SURefMetaContentBlock
   fontSize: string
   compact: boolean
+  chassisName?: string
 }) {
   const type = block.type || 'paragraph'
   const blockValue = block.value
 
   // Parse strings non-conditionally
-  const stringValue = typeof blockValue === 'string' ? blockValue : ''
+  let stringValue = typeof blockValue === 'string' ? blockValue : ''
+
+  // Replace [(CHASSIS)] placeholder with actual chassis name, prefixed with "The"
+  if (chassisName && stringValue) {
+    stringValue = stringValue.replace(/\[\(CHASSIS\)\]/g, `The ${chassisName}`)
+  }
+
   const parsedValue = useParseTraitReferences(stringValue)
 
   // Handle datavalues type - value is an array of dataValue objects
@@ -125,7 +142,7 @@ function ContentBlock({
       // If list item has a label, render as dot-less list item with bold label: value
       if (block.label) {
         return (
-          <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize} pl={4}>
+          <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize}>
             <Text as="span" fontWeight="bold">
               {block.label}:
             </Text>{' '}
@@ -135,7 +152,7 @@ function ContentBlock({
       }
       // Otherwise render as regular bulleted list item
       return (
-        <List.Root as="ul" pl={4}>
+        <List.Root as="ul">
           <List.Item>
             <Box color="su.black" fontWeight="medium" lineHeight="relaxed" fontSize={fontSize}>
               {parsedValue}
@@ -188,7 +205,7 @@ function ContentBlock({
 
 function DataValueItem({ item, compact }: { item: SURefMetaDataValue; compact: boolean }) {
   if (item.type === 'cost') {
-    return <ActivationCostBox cost={String(item.label)} currency="" compact={compact} />
+    return <ActivationCostBox cost={String(item.label)} currency={item.value} compact={compact} />
   }
 
   if (item.type === 'trait') {

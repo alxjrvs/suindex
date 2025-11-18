@@ -1,25 +1,18 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import type { SURefMetaAction, SURefMetaChoice } from 'salvageunion-reference'
 import { Text } from '../base/Text'
-import { ActivationCostBox } from '../shared/ActivationCostBox'
-import { ValueDisplay } from '../shared/ValueDisplay'
-import { EntityDetailDisplay } from './EntityDetailDisplay'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
 import { EntityChoice } from './EntityDisplay/EntityChoice'
-import { useParseTraitReferences } from '../../utils/parseTraitReferences'
 import type { DataValue } from '../../types/common'
+import { SharedDetailItem, formatActionType } from './EntityDisplay/sharedDetailItem'
 
 interface NestedActionDisplayProps {
   /** Action data from salvageunion-reference */
   data: SURefMetaAction
   /** Whether to use compact styling */
   compact?: boolean
-  /** Whether this is the last item in a list */
-  isLast?: boolean
   /** Whether to hide the action content/description */
   hideContent?: boolean
-  /** Display variant - 'default' for light blue background, 'chassis' for white with black border */
-  variant?: 'default' | 'chassis'
 }
 
 /**
@@ -37,9 +30,7 @@ interface NestedActionDisplayProps {
 export function NestedActionDisplay({
   data,
   compact = false,
-  isLast = false,
   hideContent = false,
-  variant = 'default',
 }: NestedActionDisplayProps) {
   const details = extractActionDetails(data)
 
@@ -53,39 +44,10 @@ export function NestedActionDisplay({
   const actionChoices: SURefMetaChoice[] = data.choices || []
   const hasChoices = actionChoices.length > 0
 
-  // Extract text content from first paragraph for chassis variant inline rendering
-  let contentText = ''
-  if (hasContent && !hideContent && data.content) {
-    const firstParagraph = data.content.find((block) => block.type === 'paragraph')
-    if (firstParagraph && typeof firstParagraph.value === 'string') {
-      contentText = firstParagraph.value
-    }
-  }
-  const parsedContent = useParseTraitReferences(contentText)
-
-  // Chassis variant: simplified style with black border and white background
-  if (variant === 'chassis') {
-
-    return (
-      <Box
-        bg="white"
-        border="2px solid"
-        borderColor="su.black"
-        overflow="hidden"
-        textAlign="left"
-        p={spacing}
-      >
-        <Text fontSize={fontSize} fontWeight="bold" display="inline">
-          {data.name}:
-        </Text>{' '}
-        <Text fontSize={fontSize} fontWeight="normal" display="inline">
-          {parsedContent}
-        </Text>
-      </Box>
-    )
-  }
-
   // Default variant: light blue background with details
+  // Always render data row on a new line, regardless of content blocks
+  const hasContentToRender = hasContent && !hideContent
+
   return (
     <Box bg="su.lightBlue" overflow="hidden">
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
@@ -99,15 +61,16 @@ export function NestedActionDisplay({
         </Text>
       </Flex>
 
+      {/* Detail row - always on new line for default variant */}
       {details.length > 0 && (
         <Flex gap={compact ? 0.5 : 1} flexWrap="wrap" alignItems="center" p={spacing} pt={0}>
           {details.map((item, index) => (
-            <DetailItem key={index} item={item} compact={compact} />
+            <SharedDetailItem key={index} item={item} compact={compact} />
           ))}
         </Flex>
       )}
 
-      {hasContent && !hideContent && (
+      {hasContentToRender && (
         <VStack
           gap={spacing}
           p={spacing}
@@ -122,7 +85,7 @@ export function NestedActionDisplay({
         <VStack
           gap={spacing}
           p={spacing}
-          pt={hasContent && !hideContent ? 0 : details.length > 0 ? 0 : spacing}
+          pt={hasContentToRender && !hideContent ? 0 : details.length > 0 ? 0 : spacing}
           alignItems="stretch"
         >
           {actionChoices.map((choice) => (
@@ -140,7 +103,7 @@ export function NestedActionDisplay({
 }
 
 /**
- * Extract action details for header display
+ * Extract action details for header display (uses AP currency for regular actions)
  */
 function extractActionDetails(data: SURefMetaAction): DataValue[] {
   const details: DataValue[] = []
@@ -148,15 +111,17 @@ function extractActionDetails(data: SURefMetaAction): DataValue[] {
   // Access activationCost directly from action
   const activationCost = data.activationCost
   if (activationCost !== undefined) {
-    const costValue =
-      String(activationCost).toLowerCase() === 'variable' ? 'X AP' : `${activationCost} AP`
+    // Regular actions use AP
+    const currency = 'AP'
+    const isVariable = String(activationCost).toLowerCase() === 'variable'
+    const costValue = isVariable ? `X ${currency}` : `${activationCost} ${currency}`
     details.push({ label: costValue, type: 'cost' })
   }
 
   // Access actionType directly from action
   const actionType = data.actionType
   if (actionType) {
-    details.push({ label: actionType, type: 'keyword' })
+    details.push({ label: formatActionType(actionType), type: 'keyword' })
   }
 
   // Access range directly from action
@@ -188,39 +153,4 @@ function extractActionDetails(data: SURefMetaAction): DataValue[] {
   }
 
   return details
-}
-
-/**
- * Render individual detail item
- */
-function DetailItem({ item, compact }: { item: DataValue; compact: boolean }) {
-  if (item.type === 'cost') {
-    return <ActivationCostBox cost={item.label} currency="" compact={compact} />
-  }
-
-  if (item.type === 'trait') {
-    return (
-      <EntityDetailDisplay
-        label={item.label}
-        value={item.value}
-        compact={compact}
-        schemaName="traits"
-        inline={false}
-      />
-    )
-  }
-
-  if (item.type === 'keyword') {
-    return (
-      <EntityDetailDisplay
-        label={item.label}
-        value={item.value}
-        compact={compact}
-        schemaName="keywords"
-        inline={false}
-      />
-    )
-  }
-
-  return <ValueDisplay label={item.label} value={item.value} compact={compact} inline={false} />
 }

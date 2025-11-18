@@ -165,6 +165,7 @@ interface SchemaIndex {
     itemCount: number
     requiredFields: string[]
     displayName: string
+    meta?: boolean
   }>
 }
 
@@ -184,6 +185,9 @@ function generateSchemaIndex(schemas: SchemaInfo[]): void {
     version: getPackageVersion(),
     generated: new Date().toISOString(),
     schemas: schemas.map((s) => {
+      // Find existing entry to preserve meta property
+      const existingEntry = existingIndex?.schemas.find((e) => e.id === s.id)
+
       const entry: SchemaIndex['schemas'][0] = {
         id: s.id,
         title: s.title,
@@ -197,6 +201,10 @@ function generateSchemaIndex(schemas: SchemaInfo[]): void {
       // Only include comment if it exists
       if (s.comment) {
         entry.comment = s.comment
+      }
+      // Preserve meta property from existing entry if it exists
+      if (existingEntry?.meta !== undefined) {
+        entry.meta = existingEntry.meta
       }
       return entry
     }),

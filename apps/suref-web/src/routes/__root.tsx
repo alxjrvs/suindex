@@ -75,7 +75,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <EntityViewerModalProvider>
               <GlobalLoadingBar />
               <Flex flexDirection="column" h="100vh" bg="su.white">
-                <TopNavigation user={user} schemas={schemaIndexData.schemas} />
+                <TopNavigation
+                  user={user}
+                  schemas={schemaIndexData.schemas.filter((s) => !s.meta)}
+                />
                 <Box
                   as="main"
                   flex="1"
@@ -160,22 +163,25 @@ function NotFoundComponent() {
               Popular Schemas:
             </Text>
             <Flex flexWrap="wrap" gap={2}>
-              {schemaIndexData.schemas.slice(0, 6).map((schema) => (
-                <Button
-                  key={schema.id}
-                  asChild
-                  size="sm"
-                  px={3}
-                  py={1}
-                  bg="su.lightBlue"
-                  color="su.black"
-                  borderRadius="md"
-                  _hover={{ bg: 'su.orange', color: 'su.white' }}
-                  fontSize="xs"
-                >
-                  <a href={`/schema/${schema.id}`}>{schema.displayName}</a>
-                </Button>
-              ))}
+              {schemaIndexData.schemas
+                .filter((s) => !s.meta)
+                .slice(0, 6)
+                .map((schema) => (
+                  <Button
+                    key={schema.id}
+                    asChild
+                    size="sm"
+                    px={3}
+                    py={1}
+                    bg="su.lightBlue"
+                    color="su.black"
+                    borderRadius="md"
+                    _hover={{ bg: 'su.orange', color: 'su.white' }}
+                    fontSize="xs"
+                  >
+                    <a href={`/schema/${schema.id}`}>{schema.displayName}</a>
+                  </Button>
+                ))}
             </Flex>
           </Box>
         </VStack>

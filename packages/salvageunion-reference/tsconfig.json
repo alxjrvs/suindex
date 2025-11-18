@@ -15,5 +15,5 @@
     "declarationMap": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist", "tools", "**/*.template.ts"]
+  "exclude": ["node_modules", "dist", "**/*.template.ts"]
 }
