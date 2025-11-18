@@ -1,11 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useSearch } from '@tanstack/react-router'
 import { Box, Container, Flex, Image, Link, VStack, HStack } from '@chakra-ui/react'
 import { Text } from '../components/base/Text'
 import Footer from '../components/Footer'
 
 function AboutPage() {
+  const search = useSearch({ strict: false })
+  const searchParams = search as Record<string, unknown>
+  // Find the HAVEN parameter case-insensitively
+  const havenKey = Object.keys(searchParams).find((key) => key.toUpperCase() === 'HAVEN')
+  const havenValue = havenKey ? searchParams[havenKey] : undefined
+  // Convert to string and check if it equals 'TRUE' (case-insensitive)
+  const havenStr = havenValue != null ? String(havenValue) : undefined
+  const showHavenEpisodes = havenStr?.toUpperCase() === 'TRUE'
   return (
-    <Flex direction="column" w="full" h="full" flex="1" justifyContent="center">
+    <Flex direction="column" w="full" h="full" flex="1" justifyContent="center" bg="su.white">
       <Container
         maxW="6xl"
         h="full"
@@ -14,8 +22,13 @@ function AboutPage() {
         justifyContent="center"
         alignItems="stretch"
         px={6}
+        bg="transparent"
+        borderWidth={0}
+        shadow="none"
+        m={0}
+        mx="auto"
       >
-        <VStack gap={8} align="stretch">
+        <VStack gap={8} align="stretch" bg="transparent">
           {/* Quote section - centered */}
           <Box textAlign="center">
             <Text fontSize="md" fontStyle="italic" color="su.darkGrey">
@@ -135,6 +148,120 @@ function AboutPage() {
               </VStack>
             </Box>
           </Flex>
+
+          {/* Haven Episodes List */}
+          {showHavenEpisodes && (
+            <Box bg="transparent">
+              <VStack gap={4} align="stretch" bg="transparent">
+                <Box textAlign="center">
+                  <Text variant="pseudoheader" fontSize="lg">
+                    SEASON 1
+                  </Text>
+                </Box>
+                <VStack gap={2} align="stretch">
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 1: HE WHO IS TRANSPLANTED
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 2: WHERE THERE'S SMOKE
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 3: DUST IN THE WIND
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 4: A PLACE, A PART
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 5: WORTH A SHOT (Now you get to meet boss hog)
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 6: I'M IN THE UNION NOW
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 7: HEY THERE DELILAH (A near-beth experience)
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 8: HOW MUCH WOULD
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 9: TIPPY-TOE FIVE FIFTY
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 10: THAT WAS EASY
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 11: MY DINNER WITH RB
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 12: GET AWAY FROM MY SLIPPERY BOYFRIEND
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 13: LET ME TASTE THAT STEW
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 14: ONE STUART RICHER
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 15: THIS ONE ALSO HAS A THING THAT KILLS YOU IN ONE HIT (THIS SHOULDN'T
+                    HAPPEN)
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 16: HOT FUZZ FOR TWO
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 17: THEY BOTH TURNED LEFT
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 18: AND THEN I PUNCH HIM RIGHT IN THE DICK
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 19: ANTI BULLY TECH
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 20: GIVE PAPA A HUG
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 21: ITS ONLY GAY IF THE MECHS TOUCH
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 22: MEATBALL MEDICINE
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 22: IN TATTERS I: WHAT HAPPENED TO YOUR ACCENT
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 23: IN TATTERS II: IT'S A FEATURE
+                  </Text>
+                </VStack>
+
+                <Box textAlign="center" mt={4}>
+                  <Text variant="pseudoheader" fontSize="lg">
+                    SEASON 2
+                  </Text>
+                </Box>
+                <VStack gap={2} align="stretch">
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 1: PARTING WAYS (JASON STATHAM CUM GUTTERS MIDRIFF EXPOSED)
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 2 (S2E2): DIAL UP NOISESz
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 3: THANK YOU FOR RESPECTING OUR CULTURE
+                  </Text>
+                  <Text fontSize="md" textAlign="center">
+                    EPISODE 4: WE'RE COMPARING BOSS HOGS
+                  </Text>
+                </VStack>
+
+                <Box textAlign="right" mt={4}>
+                  <Text variant="pseudoheader" fontSize="lg">
+                    THE ADVENTURE CONTINUES....
+                  </Text>
+                </Box>
+              </VStack>
+            </Box>
+          )}
 
           {/* Thanks section - centered */}
           <Box textAlign="center">
