@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+bunx lint-staged
+
+# Run type check and tests after lint-staged passes
+bun --filter suref-web run typecheck
+bun --filter suref-web run test
+

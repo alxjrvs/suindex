@@ -16,7 +16,11 @@
     "gen:types": "bunx supabase gen types typescript --project-id opxrguskxuogghzcnppk --schema public > src/types/database-generated.types.ts",
     "gen:zod": "bunx supazod --input src/types/database-generated.types.ts --output src/types/database-generated.zod.ts",
     "gen:all": "bun run gen:types && bun run gen:zod",
-    "test": "bun test"
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "test:watch": "bun test --watch",
+    "clean": "rm -rf dist .vite node_modules/.vite",
+    "check": "bun run lint && bun run format:check && bun run typecheck"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.29.0",

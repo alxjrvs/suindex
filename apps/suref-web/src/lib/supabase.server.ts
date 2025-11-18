@@ -1,13 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { createClient } from '@supabase/supabase-js'
-import type { Database } from '../types/database-generated.types'
+import type { Database } from '@/types/database-generated.types'
+import { getSupabaseUrl, getSupabaseAnonKey } from './env'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY!
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
-}
+const supabaseUrl = getSupabaseUrl()
+const supabaseAnonKey = getSupabaseAnonKey()
 
 /**
  * Get Supabase client for server-side operations

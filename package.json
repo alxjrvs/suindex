@@ -26,10 +26,15 @@
     "test:all": "bun --filter \"*\" test",
     "sanity": "bun --filter suref-web sanity",
     "sanity:all": "bun --filter \"*\" sanity",
-    "publish:package": "bun --filter salvageunion-reference publish"
+    "publish:package": "bun --filter salvageunion-reference publish",
+    "clean": "bun --filter \"*\" clean || true",
+    "check:all": "bun run lint:all && bun run format:check:all && bun run typecheck",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "netlify-cli": "^23.11.1",
     "prettier": "^3.6.2",
     "typescript-eslint": "^8.47.0"
