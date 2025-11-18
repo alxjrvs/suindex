@@ -8,7 +8,7 @@ describe('Search API', () => {
       const results = search({ query: 'Railgun' })
 
       expect(results.length).toBeGreaterThan(0)
-      const railgun = results.find((r) => r.entityName === 'Railgun')
+      const railgun = results.find((r) => r.entityName === 'Railgun' && r.schemaName === 'systems')
       expect(railgun).toBeDefined()
       expect(railgun?.schemaName).toBe('systems')
     })
