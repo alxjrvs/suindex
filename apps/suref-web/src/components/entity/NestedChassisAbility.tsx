@@ -38,8 +38,11 @@ export function NestedChassisAbility({
 }: NestedChassisAbilityProps) {
   const details = extractChassisActionDetails(data)
 
-  // Match EntityDisplay fontSize.sm: compact ? 'xs' : 'sm'
+  // Current sizing is considered "Compact"
+  // Compact: xs (small), Non-compact: sm (medium) for body text
   const fontSize = compact ? 'xs' : 'sm'
+  // Title font size: compact uses sm, non-compact uses md
+  const titleFontSize = compact ? 'sm' : 'md'
   const spacing = compact ? 1 : 2
 
   const hasContent = data.content && data.content.length > 0
@@ -145,7 +148,7 @@ export function NestedChassisAbility({
             : 0
         }
       >
-        <Text as="span" fontWeight="bold">
+        <Text as="span" fontWeight="bold" fontSize={titleFontSize}>
           {data.name}:
         </Text>
         {/* Render details inline with title if condition is met - each item wraps independently */}
@@ -293,9 +296,9 @@ function InlineContentBlock({
   // Parse strings non-conditionally
   let stringValue = typeof blockValue === 'string' ? blockValue : ''
 
-  // Replace [(CHASSIS)] placeholder with actual chassis name
+  // Replace [(CHASSIS)] placeholder with actual chassis name, prefixed with "The"
   if (chassisName && stringValue) {
-    stringValue = stringValue.replace(/\[\(CHASSIS\)\]/g, chassisName)
+    stringValue = stringValue.replace(/\[\(CHASSIS\)\]/g, `The ${chassisName}`)
   }
 
   const parsedValue = useParseTraitReferences(stringValue)
