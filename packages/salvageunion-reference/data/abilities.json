@@ -2593,18 +2593,21 @@
             "id": "64c7bec9-fe16-4c57-af5c-5441e6fc961d",
             "name": "Black Market Modules",
             "schema": ["modules"],
+            "setIndexable": true,
             "schemaEntities": ["Goflow Plant Growing System", "Corrupted Neuralink Module"]
           },
           {
             "id": "ae51286a-64c8-416f-a052-81ef0869d4cc",
             "name": "Black Market Systems",
             "schema": ["systems"],
+            "setIndexable": true,
             "schemaEntities": ["Napalm Launcher", "Rad Wave Generator"]
           },
           {
             "id": "3df10ce5-ef5d-44a5-8a64-949a6e56bed6",
             "name": "Black Market Pilot Equipment",
             "schema": ["equipment"],
+            "setIndexable": true,
             "schemaEntities": ["Blinding Blue Laser Rifle"]
           }
         ]

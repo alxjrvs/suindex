@@ -150,6 +150,7 @@ export interface SURefMetaChoice {
   schemaEntities?: string[]
   schema?: SURefSchemaName[]
   customSystemOptions?: SURefMetaSystemModule[]
+  setIndexable?: boolean
   constraints?: {
     field?: string
     min?: SURefNonNegativeInteger
