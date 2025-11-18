@@ -2556,33 +2556,6 @@
     "page": 60,
     "actions": [
       {
-        "name": "Meld Tendril Attack",
-        "damage": {
-          "damageType": "SP",
-          "amount": 5
-        },
-        "range": ["Medium"],
-        "traits": [
-          {
-            "type": "melee"
-          },
-          {
-            "type": "meld infection"
-          },
-          {
-            "type": "multi-attack",
-            "amount": 2
-          }
-        ],
-        "id": "6c595ec1-29ee-4d24-ba84-ad2e70dc5e4c",
-        "content": [
-          {
-            "type": "paragraph",
-            "value": "Attack with your Meld tendrils."
-          }
-        ]
-      },
-      {
         "id": "3ffeb3a4-a54c-44f4-a8f1-7da808f776fc",
         "actionType": "Passive",
         "name": "Meld Form",
