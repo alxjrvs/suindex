@@ -420,12 +420,12 @@
         "name": "Tip Top Shape",
         "content": [
           {
-            "value": " Your Union Crawler no longer needs to pay Upkeep as long as you are on board during Downtime, and it does not deteriorate.",
-            "type": "paragraph"
-          },
-          {
             "type": "paragraph",
             "value": "You have learned every inch of your Union Crawler, and know it better than the back of your own hand. The team of onboard engineers you work with are at peak efficiency when you are on board."
+          },
+          {
+            "value": " Your Union Crawler no longer needs to pay Upkeep as long as you are on board during Downtime, and it does not deteriorate.",
+            "type": "paragraph"
           }
         ]
       }
@@ -449,7 +449,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "Your engineering abilities are unparalleled, you can take apart and put back together a Mech at an incredible speed, repairing any faults or issues that may exist within its behemoth Chassis. When you activate this Ability you fully restore the SP and EP of a Mech. The Mech's Heat is reduced to 0, and its Chassis is repaired to the Intact Condition if it was damaged. In addition, any damaged Systems or Modules on the Mech are repaired to the Intact Condition."
+            "value": "Your engineering abilities are unparalleled, you can take apart and put back together a Mech at an incredible speed, repairing any faults or issues that may exist within its behemoth Chassis."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate this Ability you fully restore the SP and EP of a Mech. The Mech's Heat is reduced to 0, and its Chassis is repaired to the Intact Condition if it was damaged. In addition, any damaged Systems or Modules on the Mech are repaired to the Intact Condition."
           }
         ]
       }
@@ -478,7 +482,23 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Hacking Kit that only you can use. Add this to your Pilot Inventory. This has a basic suite of hacking transmitters and tools that can be utilised by programming hacks into it. When you acquire the Hacking Kit you may program a single Ability with the [[Hacking]] Trait from any System, Module, or Mech Chassis Ability you have access to into your Hacking Kit. The Hacking Kit can store a number of Abilities equal to the Tech Level of your Union Crawler, additional Abilities can be added during Downtime. Once programmed, you can use the Abilities stored on your Hacking Kit as your Pilot, and can spend AP instead of EP when using them. In addition, any Pilot Ability you have with the [[Hacking]] Trait may be performed from your Mech. You can spend EP for this Ability instead of AP. If your Hacking Kit is misplaced or destroyed you can acquire a new one during Downtime, it still has all your stored abilities backed up."
+            "value": "You acquire and train in the use of a Hacking Kit that only you can use. Add this to your Pilot Inventory. This has a basic suite of hacking transmitters and tools that can be utilised by programming hacks into it."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you acquire the Hacking Kit you may program a single Ability with the [[Hacking]] Trait from any System, Module, or Mech Chassis Ability you have access to into your Hacking Kit. The Hacking Kit can store a number of Abilities equal to the Tech Level of your Union Crawler, additional Abilities can be added during Downtime."
+          },
+          {
+            "type": "paragraph",
+            "value": "Once programmed, you can use the Abilities stored on your Hacking Kit as your Pilot, and can spend AP instead of EP when using them."
+          },
+          {
+            "type": "paragraph",
+            "value": "In addition, any Pilot Ability you have with the [[Hacking]] Trait may be performed from your Mech. You can spend EP for this Ability instead of AP."
+          },
+          {
+            "type": "paragraph",
+            "value": "If your Hacking Kit is misplaced or destroyed you can acquire a new one during Downtime, it still has all your stored abilities backed up."
           }
         ]
       }
@@ -606,7 +626,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You can effortlessly enunciate a stream of esoteric and mostly incomprehensible thoughts about technology. When you talk to luddites and other such regular folk whilst using this Ability, you distract them for at least 10 minutes as they try to comprehend or at least politely nod and smile. When you talk to any other Hacker or technophile, this Ability can be used to build rapport with them making them friendly to you. During this conversation you can request a single favour from them which they will do as long as they have the ability to, and it does not put them in significant danger, or go strongly against their moral or personal code."
+            "value": "You can effortlessly enunciate a stream of esoteric and mostly incomprehensible thoughts about technology. When you talk to luddites and other such regular folk whilst using this Ability, you distract them for at least 10 minutes as they try to comprehend or at least politely nod and smile."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you talk to any other Hacker or technophile, this Ability can be used to build rapport with them making them friendly to you. During this conversation you can request a single favour from them which they will do as long as they have the ability to, and it does not put them in significant danger, or go strongly against their moral or personal code."
           }
         ]
       }
@@ -638,7 +662,19 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have created an intelligent, holographic, A.I. companion that only you can use. Describe your Companion's appearance, and name them. They project from a small, portable device which you can hold on your person. Add this to your Pilot Inventory. Your Holo Companion cannot interact physically with the material world, but can see, be seen, speak, and traverse it. You can project or un-project them as a Turn Action, and they can appear anywhere within Medium Range of the device. Nominate another player at the table to voice your companion. Their personality develops over time, based on a learning algorithm. During Downtime, they gain an A.I. [[Personality]] Trait based on their recent experiences. You can use the A.I. [[Personality]] Trait Table p. 91 for this or consider your own. If your projection device is misplaced or destroyed you can acquire a new one during Downtime. Your A.I. is downloaded onto the device from a backup stored on your Union Crawler."
+            "value": "You have created an intelligent, holographic, A.I. companion that only you can use. Describe your Companion's appearance, and name them. They project from a small, portable device which you can hold on your person. Add this to your Pilot Inventory."
+          },
+          {
+            "type": "paragraph",
+            "value": "Your Holo Companion cannot interact physically with the material world, but can see, be seen, speak, and traverse it. You can project or un-project them as a Turn Action, and they can appear anywhere within Medium Range of the device. Nominate another player at the table to voice your companion."
+          },
+          {
+            "type": "paragraph",
+            "value": "Their personality develops over time, based on a learning algorithm. During Downtime, they gain an A.I. [[Personality]] Trait based on their recent experiences. You can use the A.I. [[Personality]] Trait Table p. 91 for this or consider your own."
+          },
+          {
+            "type": "paragraph",
+            "value": "If your projection device is misplaced or destroyed you can acquire a new one during Downtime. Your A.I. is downloaded onto the device from a backup stored on your Union Crawler."
           }
         ]
       }
@@ -727,7 +763,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You gain a set of bionic legs, surgically installed to any specification you desire. This allows you to move an additional Range band during your turn as a Turn Action. In addition, you can heal a Major Injury during Downtime by spending 4 Tech 1 Scrap at any Crafting Bay. You also increase your Pilot's Max HP by 2."
+            "value": "You gain a set of bionic legs, surgically installed to any specification you desire. This allows you to move an additional Range band during your turn as a Turn Action."
+          },
+          {
+            "type": "paragraph",
+            "value": "In addition, you can heal a Major Injury during Downtime by spending 4 Tech 1 Scrap at any Crafting Bay."
+          },
+          {
+            "type": "paragraph",
+            "value": "You also increase your Pilot's Max HP by 2."
           }
         ]
       }
@@ -756,11 +800,15 @@
         "content": [
           {
             "type": "paragraph",
+            "value": "You have learned how to hack into the root control systems of a Mech in order to pwn them."
+          },
+          {
+            "type": "paragraph",
             "value": "When you activate this Ability you gain full control of a Mech within Range for 10 minutes. You learn all of its Stats, Systems, Modules, and Abilities, and can control it as though it was your Mech. Whilst it is under your control, you cannot take any actions as a Pilot or with your Mech except for free actions such as talking. You can choose to end control of the Mech at any time as a Free Action. If you are reduced to 0 HP, or your Mech is reduced to 0 SP, you also lose control of the hacked Mech."
           },
           {
             "type": "paragraph",
-            "value": "You have learned how to hack into the root control systems of a Mech in order to pwn them."
+            "value": "You can choose to end control of the Mech at any time as a Free Action. If you are reduced to 0 HP, or your Mech is reduced to 0 SP, you also lose control of the hacked Mech."
           }
         ]
       }
@@ -798,6 +846,10 @@
           {
             "type": "paragraph",
             "value": "Your firewalls are bristling with multiple worms which can create backdoors directly into an opposing hacker’s Systems."
+          },
+          {
+            "type": "paragraph",
+            "value": "You may activate this Ability as a Reaction in response to any other Ability with the [[Hacking]] Trait that targets you or an Ally within Medium Range."
           }
         ]
       }
@@ -834,7 +886,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have programmed a complex worm virus that can traverse through a network of multiple Mechs, causing havoc and chaos amongst their installed Systems and Modules, and even potentially disabling their Chassis entirely. Choose any number of target Mechs within Medium Range. This Ability costs 1 AP per Mech you target."
+            "value": "You have programmed a complex worm virus that can traverse through a network of multiple Mechs, causing havoc and chaos amongst their installed Systems and Modules, and even potentially disabling their Chassis entirely."
+          },
+          {
+            "type": "paragraph",
+            "value": "Choose any number of target Mechs within Medium Range. This Ability costs 1 AP per Mech you target."
           }
         ]
       }
@@ -863,7 +919,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You no longer even see the code, you simply see, corpo, construction mech, redhead, base defences. You can hack into the entire network of a settlement in the wastelands within Far Range, and gain full control of it for 10 minutes. This can be an entire corporate arco, a Union Crawler, or a wastelander settlement. Whilst in control, you can take any action that would make sense for the network, for example, you can activate or deactivate any of the defence systems in the arco, disable the reactor of a Union Crawler, or disable the life support systems of a wasteland settlement. You can also send corpo mercenaries towards a fake distress signal, disable base defences, and turn off all of the lights and scanning systems in a settlement."
+            "value": "You no longer even see the code, you simply see, corpo, construction mech, redhead, base defences."
+          },
+          {
+            "type": "paragraph",
+            "value": "You can hack into the entire network of a settlement in the wastelands within Far Range, and gain full control of it for 10 minutes. This can be an entire corporate arco, a Union Crawler, or a wastelander settlement. Whilst in control, you can take any action that would make sense for the network, for example, you can activate or deactivate any of the defence systems in the arco, disable the reactor of a Union Crawler, or disable the life support systems of a wasteland settlement. You can also send corpo mercenaries towards a fake distress signal, disable base defences, and turn off all of the lights and scanning systems in a settlement."
           }
         ]
       }
@@ -892,7 +952,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have developed advanced Spyware which is able to access confidential information from an entire settlement and permanently spy upon them. You can hack into any settlement network in the wastelands within Far Range, and install your spyware onto their systems. This allows you to permanently spy on them. This can be an entire corporate arco, a Union Crawler, or a wastelander settlement. You gain knowledge of all of their communications, any troop or Mech movements, any logs or data reports, and can view information from any scanning or radar devices they have and anything else that would make sense to be recorded on their computer or electronic systems. You can only have your Spyware installed on one settlement at a time, but it remains permanently installed on the settlement's network."
+            "value": "You have developed advanced Spyware which is able to access confidential information from an entire settlement and permanently spy upon them."
+          },
+          {
+            "type": "paragraph",
+            "value": "You can hack into any settlement network in the wastelands within Far Range, and install your spyware onto their systems. This allows you to permanently spy on them. This can be an entire corporate arco, a Union Crawler, or a wastelander settlement. You gain knowledge of all of their communications, any troop or Mech movements, any logs or data reports, and can view information from any scanning or radar devices they have and anything else that would make sense to be recorded on their computer or electronic systems."
+          },
+          {
+            "type": "paragraph",
+            "value": "You can only have your Spyware installed on one settlement at a time, but it remains permanently installed on the settlement's network."
           }
         ]
       }
@@ -1044,6 +1112,24 @@
           {
             "type": "paragraph",
             "value": "You have a knack for being able to make a deal with the staunchest and most hard nosed folk, even in dire situations. When you use this Ability you use your leverage to negotiate a deal with a group of wastelanders, traders, corpos, or anyone else you can communicate with."
+          },
+          {
+            "type": "heading",
+            "level": 3,
+            "value": "Choose your leverage"
+          },
+          {
+            "type": "paragraph",
+            "value": "This is what you are bringing to the table for the deal and offering on your end. It could be an amount of scrap, a favour, a threat, your reputation, or something else substantial appropriate to the situation."
+          },
+          {
+            "type": "heading",
+            "level": 3,
+            "value": "Name your request"
+          },
+          {
+            "type": "paragraph",
+            "value": "This is what you are asking for as part of the deal. It could be aid, healing, salvage, repair, significant help, use of facilities, or anything else appropriate to the situation."
           }
         ]
       }
@@ -1066,7 +1152,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You summon all your reserves in the face of death to finish what you started. Your reputation is all you have in the wastes and yours is that you get the job done no matter the cost. Activate this Ability when you are reduced to 0 HP or a Mech you are Piloting is reduced to 0 SP. You may immediately take any Turn Action or Reaction of your choice."
+            "value": "You summon all your reserves in the face of death to finish what you started. Your reputation is all you have in the wastes and yours is that you get the job done no matter the cost."
+          },
+          {
+            "type": "paragraph",
+            "value": "Activate this Ability when you are reduced to 0 HP or a Mech you are Piloting is reduced to 0 SP. You may immediately take any Turn Action or Reaction of your choice."
           }
         ]
       }
@@ -1089,7 +1179,12 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You sing a song that kindles strong feelings in NPCs nearby. Read or sing the chorus of a song at the table, and describe your performance. You may write your own or use one from another songwriter. Choose a mood to set for your audience:"
+            "value": "You sing a song that kindles strong feelings in NPCs nearby. Read or sing the chorus of a song at the table, and describe your performance. You may write your own or use one from another songwriter."
+          },
+          {
+            "type": "heading",
+            "level": 3,
+            "value": "Choose a mood to set for your audience:"
           },
           {
             "type": "list-item",
@@ -1169,7 +1264,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You inspire your Allies with a rousing speech. You can write your own or borrow one from a play or movie. It can be short; reading a few powerful lines is enough. Give the speech at the table. When you complete it, each of your Allies can re-roll a single die within the next 10 minutes, accepting the second result. In addition, count a result of 19-20 for all rolls they make as a 'Nailed It' result for the next 10 minutes. Finally, each Ally heals 4 Hit Points, as long as they have at least 1 Hit Point."
+            "value": "You inspire your Allies with a rousing speech. You can write your own or borrow one from a play or movie. It can be short; reading a few powerful lines is enough."
+          },
+          {
+            "type": "paragraph",
+            "value": "Give the speech at the table. When you complete it, each of your Allies can re-roll a single die within the next 10 minutes, accepting the second result. In addition, count a result of 19-20 for all rolls they make as a 'Nailed It' result for the next 10 minutes. Finally, each Ally heals 4 Hit Points, as long as they have at least 1 Hit Point."
           }
         ]
       }
@@ -1191,7 +1290,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "Bigger is always better. Bigger than that is the best. Any Mech you Pilot increases its Max Structure Points by 3+X (where X is the Mech's Tech Level) and increases its Cargo Capacity by 6. In addition, your Pilot increases their Max Hit Points by 2 and Inventory Capacity by 4."
+            "value": "Bigger is always better. Bigger than that is the best. Any Mech you Pilot increases its Max Structure Points by 3+X (where X is the Mech's Tech Level) and increases its Cargo Capacity by 6."
+          },
+          {
+            "type": "paragraph",
+            "value": "In addition, your Pilot increases their Max Hit Points by 2 and Inventory Capacity by 4."
           }
         ]
       }
@@ -1292,7 +1395,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are able to take things that are long broken and make them whole again. When you activate this Ability, a destroyed System, Module, or Mech Chassis in Range that you can interact with now has the Damaged Condition instead. This allows you to salvage it as per the normal salvaging rules."
+            "value": "You are able to take things that are long broken and make them whole again."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate this Ability, a destroyed System, Module, or Mech Chassis in Range that you can interact with now has the Damaged Condition instead. This allows you to salvage it as per the normal salvaging rules."
           }
         ]
       }
@@ -1314,7 +1421,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You’ve been there, seen it all, and can take on just about anything thrown at you. Any Mech that you Pilot doubles its Structure Points and Cargo Capacity. This is doubled after all other modifiers are applied."
+            "value": "You've been there, seen it all, and can take on just about anything thrown at you."
+          },
+          {
+            "type": "paragraph",
+            "value": "Any Mech that you Pilot doubles its Structure Points and Cargo Capacity. This is doubled after all other modifiers are applied."
           }
         ]
       }
@@ -1361,7 +1472,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are able to track and tail targets with expert skill. When you activate this Ability choose a target within Range. You are now able to follow that target without being seen by them. You may safely get within Close Range of the target whilst tailing them. If you attack them or take a significant action that would get you noticed then they spot you, otherwise you follow them to their destination. You can also eavesdrop on any conversations they are having and see any activity they are engaging in."
+            "value": "You are able to track and tail targets with expert skill. When you activate this Ability choose a target within Range. You are now able to follow that target without being seen by them."
+          },
+          {
+            "type": "paragraph",
+            "value": "You may safely get within Close Range of the target whilst tailing them. If you attack them or take a significant action that would get you noticed then they spot you, otherwise you follow them to their destination. You can also eavesdrop on any conversations they are having and see any activity they are engaging in."
           }
         ]
       }
@@ -1387,7 +1502,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Survey Drone and Drone Controller that only you can use. Add the Drone Controller to your Pilot Equipment when using the Survey Drone. You may control the Survey Drone up to Far Range. Sending a command to your Survey Drone via the Drone Controller is a Free Action. The Survey Drone acts independently of you, on its own turn. It can be set to do automated tasks such as defending an area, attacking a target, or alerting you when it spots a threat. Your Survey Drone uses the same rules as Mechs for attaching Systems and Modules; taking damage and being repaired; as well as Heat and Heat Checks. Your Survey Drone cannot Push. Your Survey Drone has a Tech Level equal to your Union Crawler. If your Union Crawler is upgraded, so is your Survey Drone. It gains additional stats as shown for each Tech Level above the first. If your Survey Drone becomes destroyed or is misplaced you can acquire a new one during Downtime. You may only ever have one Survey Drone at a time."
+            "value": "You acquire and train in the use of a Survey Drone and Drone Controller that only you can use. Add the Drone Controller to your Pilot Equipment when using the Survey Drone. You may control the Survey Drone up to Far Range."
+          },
+          {
+            "type": "paragraph",
+            "value": "Sending a command to your Survey Drone via the Drone Controller is a Free Action. The Survey Drone acts independently of you, on its own turn. It can be set to do automated tasks such as defending an area, attacking a target, or alerting you when it spots a threat. Your Survey Drone uses the same rules as Mechs for attaching Systems and Modules; taking damage and being repaired; as well as Heat and Heat Checks. Your Survey Drone cannot Push."
+          },
+          {
+            "type": "paragraph",
+            "value": "Your Survey Drone has a Tech Level equal to your Union Crawler. If your Union Crawler is upgraded, so is your Survey Drone. It gains additional stats as shown for each Tech Level above the first. If your Survey Drone becomes destroyed or is misplaced you can acquire a new one during Downtime. You may only ever have one Survey Drone at a time."
           }
         ]
       }
@@ -1410,7 +1533,44 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "When you are in conversation with someone, you may appeal to something that motivates them in order to convince them to do something you want. The Mediator will decide what motivates them from one of the following options and secretly note it down. Goodness: They are motivated by an intrinsic desire to do good and treat others with kindness."
+            "value": "When you are in conversation with someone, you may appeal to something that motivates them in order to convince them to do something you want. The Mediator will decide what motivates them from one of the following options and secretly note it down."
+          },
+          {
+            "type": "list-item",
+            "value": "They are motivated by an intrinsic desire to do good and treat others with kindness.",
+            "label": "Goodness"
+          },
+          {
+            "type": "list-item",
+            "value": "They are motivated by increasing their wealth in some manner.",
+            "label": "Wealth"
+          },
+          {
+            "type": "list-item",
+            "value": "They are motivated by fear of what might happen to them.",
+            "label": "Fear"
+          },
+          {
+            "type": "list-item",
+            "value": "They are motivated by what power and influence they can attain in a situation.",
+            "label": "Power"
+          },
+          {
+            "type": "list-item",
+            "value": "They are motivated by social obligation, whether to family, community, or to an authority figure.",
+            "label": "Obligation"
+          },
+          {
+            "type": "paragraph",
+            "value": "You must choose what you want from them, decide what you are appealing to and describe what you say in the conversation. If you choose the correct approach they will do what you've asked. Though you must do anything you've promised in the exchange."
+          },
+          {
+            "type": "paragraph",
+            "value": "If you choose incorrectly, they won't do what you want. This may have additional consequences as decided by the Mediator depending on the context of the situation."
+          },
+          {
+            "type": "paragraph",
+            "value": "For 1 AP, the Mediator must offer you a narrative clue during the conversation that eliminates one of the incorrect choices. This can be something like, \"You overheard this person saying she wasn't afraid of the local raiders, even if they were dangerous.\""
           }
         ]
       }
@@ -1433,7 +1593,36 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are able to weave tall and grandiose tales that can fool even the most wary, cynical, or insightful of wastelanders. When you are in conversation with someone you may choose to do one of the following options during the conversation. You may further spend an additional 1 AP during the conversation to choose an additional option, or the same one again, until the conversation concludes. Denial: You deny one fact, accusation, or that occurs within the conversation and your denial is believed to be true. Omission: You carefully omit one fact about yourself, your allies, or the situation you are in and this omission is believed to be true. Fabrication: You fabricate a fact about yourself, your allies, or the situation you are in and this fabrication is believed to be true. Minimisation: You distort the truth by minimising something that has happened, or that you or someone else has done and this minimisation is taken to be true. Exaggeration: You exaggerate the truth by taking something that is true and blowing it well beyond the bounds of reality and this exaggeration is believed."
+            "value": "You are able to weave tall and grandiose tales that can fool even the most wary, cynical, or insightful of wastelanders."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you are in conversation with someone you may choose to do one of the following options during the conversation. You may further spend an additional 1 AP during the conversation to choose an additional option, or the same one again, until the conversation concludes."
+          },
+          {
+            "type": "list-item",
+            "value": "You deny one fact, accusation, or that occurs within the conversation and your denial is believed to be true.",
+            "label": "Denial"
+          },
+          {
+            "type": "list-item",
+            "value": "You carefully omit one fact about yourself, your allies, or the situation you are in and this omission is believed to be true.",
+            "label": "Omission"
+          },
+          {
+            "type": "list-item",
+            "value": "You fabricate a fact about yourself, your allies, or the situation you are in and this fabrication is believed to be true.",
+            "label": "Fabrication"
+          },
+          {
+            "type": "list-item",
+            "value": "You distort the truth by minimising something that has happened, or that you or someone else has done and this minimisation is taken to be true.",
+            "label": "Minimisation"
+          },
+          {
+            "type": "list-item",
+            "value": "You exaggerate the truth by taking something that is true and blowing it well beyond the bounds of reality and this exaggeration is believed.",
+            "label": "Exaggeration"
           }
         ]
       }
@@ -1467,6 +1656,11 @@
             "type": "list-item",
             "value": "You create the persona of someone in a formal position of power, wealth, or influence, e.g. a union representative, military officer, captain, wealthy business owner, prominent socialite, or politician. You can effortlessly mingle with such people and those 'beneath' you will treat you with deference.",
             "label": "4 AP"
+          },
+          {
+            "type": "paragraph",
+            "value": "You create the persona of someone at the top of their respective social hierarchy and in an immense position of power and influ- ence, such as a corpo executive, union leader, or general. You are able to access the highest ranks of society and the majority of people will treat you with deference.",
+            "label": "6 AP"
           }
         ]
       }
@@ -1489,7 +1683,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have a knack for being the first to act in an altercation. When you activate this Ability you act first in the current situation. If using Group Initiative, assume you rolled a 20 on the Group Initiative Table, but you must be the first to act in the round and cannot choose to act later in the round."
+            "value": "You have a knack for being the first to act in an altercation. When you activate this Ability you act first in the current situation."
+          },
+          {
+            "type": "paragraph",
+            "value": "If using Group Initiative, assume you rolled a 20 on the Group Initiative Table, but you must be the first to act in the round and cannot choose to act later in the round."
           }
         ]
       }
@@ -1513,7 +1711,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are able to identify targets and coordinate attacks against them with your allies. Choose a target within Range. One of your Allies may make a ranged attack against the target as a Reaction. This follows all of the normal rules for attacking."
+            "value": "You are able to identify targets and coordinate attacks against them with your allies. Choose a target within Range."
+          },
+          {
+            "type": "paragraph",
+            "value": "One of your Allies may make a ranged attack against the target as a Reaction. This follows all of the normal rules for attacking."
           }
         ]
       }
@@ -1641,6 +1843,14 @@
           {
             "type": "paragraph",
             "value": "You have a knack for preparing for situations in advance, allowing you to get out of all sorts of binds."
+          },
+          {
+            "type": "paragraph",
+            "value": "You can activate this Ability as a Turn Action or Reaction, to retroactively say that you have a countermeasure in place for such a situation as you find yourself currently in. Describe what you did during your flashback, and the effect it now has to change or improve the situation you are in."
+          },
+          {
+            "type": "paragraph",
+            "value": "For example, if you open a door secretly trapped with an explosive, you can use this Ability to describe how you already disabled the explosives in advance."
           }
         ]
       }
@@ -1671,7 +1881,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a specialised Camo Suit that only you can use. It has miniature optical refractors which bend light away from you, allowing you to be effectively invisible for short periods of time as long as you do not move too quickly, make too much noise, or take any sudden actions. When activated, you are hidden from sight and sensors for the next hour. You are effectively invisible. You cannot be noticed unless you make a lot of noise or perform a significant action like attacking."
+            "value": "You acquire and train in the use of a specialised Camo Suit that only you can use. It has miniature optical refractors which bend light away from you, allowing you to be effectively invisible for short periods of time as long as you do not move too quickly, make too much noise, or take any sudden actions."
+          },
+          {
+            "type": "paragraph",
+            "value": "When activated, you are hidden from sight and sensors for the next hour. You are effectively invisible. You cannot be noticed unless you make a lot of noise or perform a significant action like attacking."
           }
         ]
       }
@@ -1701,7 +1915,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Wingsuit that only you can use. It is made out of an advanced, lightweight, polycarbonate mesh that allows for limited flight and propulsion. When activated, the Wingsuit propels you into the air, and then allows you to fly. You can move freely over obstacles and terrain and see targets clearly from your bird's-eye view. All attacks made against you whilst flying are made as though you are always at Long Range. The flight lasts for an hour or until you land."
+            "value": "You acquire and train in the use of a Wingsuit that only you can use. It is made out of an advanced, lightweight, polycarbonate mesh that allows for limited flight and propulsion."
+          },
+          {
+            "type": "paragraph",
+            "value": "When activated, the Wingsuit propels you into the air, and then allows you to fly. You can move freely over obstacles and terrain and see targets clearly from your bird's-eye view. All attacks made against you whilst flying are made as though you are always at Long Range. The flight lasts for an hour or until you land."
           }
         ]
       }
@@ -1724,7 +1942,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "Your presence is now respected by people everywhere. Wastelanders and Corpos alike will no longer attack you unless you mean to harm them. They will always provide you and any crew you are with, with food, lodging, safe passage, access to their settlements, and any other help within their means even if it puts them in danger. When you activate this Ability you extoll your various accomplishments and remind those around you of your fame in order to coerce them to your will. Describe how you do this. You may make a demand of an individual, even a high profile one such as a corpo exec and they will acquiesce to it. Alternatively, you can make a demand of a group of people such as a band of wastelanders, a squad of soldiers, a salvaging crew, or a band of Mech pilots and they will do what you say, even if it puts them in harm's way."
+            "value": "Your presence is now respected by people everywhere. Wastelanders and Corpos alike will no longer attack you unless you mean to harm them. They will always provide you and any crew you are with, with food, lodging, safe passage, access to their settlements, and any other help within their means even if it puts them in danger."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate this Ability you extoll your various accomplishments and remind those around you of your fame in order to coerce them to your will. Describe how you do this. You may make a demand of an individual, even a high profile one such as a corpo exec and they will acquiesce to it. Alternatively, you can make a demand of a group of people such as a band of wastelanders, a squad of soldiers, a salvaging crew, or a band of Mech pilots and they will do what you say, even if it puts them in harm's way."
           }
         ]
       }
@@ -1752,7 +1974,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Teleport Beacon that only you can use. Add this to your Pilot Inventory. It comes in two halves, a beacon and a controller. The beacon must be physically placed in a location when deployed. When you activate this Ability via the controller, it allows you to teleport yourself and up to five other creatures of your choice to the location you placed the beacon in. If the Teleport Beacon is misplaced, damaged, or destroyed, you can acquire a new one during Downtime."
+            "value": "You acquire and train in the use of a Teleport Beacon that only you can use. Add this to your Pilot Inventory. It comes in two halves, a beacon and a controller. The beacon must be physically placed in a location when deployed."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate this Ability via the controller, it allows you to teleport yourself and up to five other creatures of your choice to the location you placed the beacon in."
+          },
+          {
+            "type": "paragraph",
+            "value": "If the Teleport Beacon is misplaced, damaged, or destroyed, you can acquire a new one during Downtime."
           }
         ]
       }
@@ -1824,7 +2054,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You compel a creature in Range to fight you in single combat. They must be able and willing to fight. This plays out as regular combat, but nobody else can interfere. Whoever is reduced to 0 HP first loses the duel. The winner may choose to show mercy or murder. If they show mercy, the loser gains 1 HP and is stable after 10 minutes. If they show murder, the loser must roll on the Critical Injury Table. If you use this Ability whilst piloting a Mech, you may instead compel another piloted Mech to fight you in single combat instead. This works in the same way, except whoever is reduced to 0 SP first loses the duel and the loser has to roll on the Critical Damage Table if the winner chooses murder."
+            "value": "You compel a creature in Range to fight you in single combat. They must be able and willing to fight. This plays out as regular combat, but nobody else can interfere. Whoever is reduced to 0 HP first loses the duel. The winner may choose to show mercy or murder. If they show mercy, the loser gains 1 HP and is stable after 10 minutes. If they show murder, the loser must roll on the Critical Injury Table."
+          },
+          {
+            "type": "paragraph",
+            "value": "If you use this Ability whilst piloting a Mech, you may instead compel another piloted Mech to fight you in single combat instead. This works in the same way, except whoever is reduced to 0 SP first loses the duel and the loser has to roll on the Critical Damage Table if the winner chooses murder."
           }
         ]
       }
@@ -1847,7 +2081,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have an affinity with the people of the wastes. When you activate this Ability you become friendly with a wastelander who you can communicate with. Describe how you do this. You may ask this wastelander up to two questions about the local area and they will answer to the full extent of their knowledge. In addition, they will provide you with what help they can as long as it does not put them in danger. For example, by providing you with food or shelter. If you meet this wastelander again you may ask them one question and they will answer it."
+            "value": "You have an affinity with the people of the wastes. When you activate this Ability you become friendly with a wastelander who you can communicate with. Describe how you do this."
+          },
+          {
+            "type": "paragraph",
+            "value": "You may ask this wastelander up to two questions about the local area and they will answer to the full extent of their knowledge. In addition, they will provide you with what help they can as long as it does not put them in danger. For example, by providing you with food or shelter."
+          },
+          {
+            "type": "paragraph",
+            "value": "If you meet this wastelander again you may ask them one question and they will answer it."
           }
         ]
       }
@@ -1870,7 +2112,23 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are hardened to surviving out in the wastelands. You are unaffected by any standard environmental effects and take half damage from any severe effects that you are unable to avoid. In addition, you are able to find food and water for yourself in the wastelands. When you use this Ability you scour the wastelands for one of the following: • You find healing herbs, plants, and poultices. These can be used to heal a Minor Injury, eliminate poison, heal a target 2 HP, or revive someone who is unconscious to 1 HP. • You scavenge the area for salvage and find 1 Scrap of a Tech Level appropriate to the area as decided by the Mediator. You only may choose this option once per area unless the Mediator says otherwise. • You find a safe shelter with enough food and water to sustain yourself and up to 10 people for 24 hours."
+            "value": "You are hardened to surviving out in the wastelands. You are unaffected by any standard environmental effects and take half damage from any severe effects that you are unable to avoid. In addition, you are able to find food and water for yourself in the wastelands."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you use this Ability you scour the wastelands for one of the following:"
+          },
+          {
+            "type": "list-item",
+            "value": "You find healing herbs, plants, and poultices. These can be used to heal a Minor Injury, eliminate poison, heal a target 2 HP, or revive someone who is unconscious to 1 HP."
+          },
+          {
+            "type": "list-item",
+            "value": "You scavenge the area for salvage and find 1 Scrap of a Tech Level appropriate to the area as decided by the Mediator. You only may choose this option once per area unless the Mediator says otherwise."
+          },
+          {
+            "type": "list-item",
+            "value": "You find a safe shelter with enough food and water to sustain yourself and up to 10 people for 24 hours."
           }
         ]
       }
@@ -1969,6 +2227,18 @@
             "type": "list-item",
             "value": "The Custom Missile Launcher loses the [[Heavy]] Trait.",
             "label": "Portable"
+          },
+          {
+            "type": "paragraph",
+            "value": "At each Tech Level you may choose an additional modification for your Custom Missile Launcher. In addition, its damage increases by 1 SP per Tech Level after the first."
+          },
+          {
+            "type": "paragraph",
+            "value": "e.g. a Tech 3 Custom Missile Launcher would deal 5 SP damage and you would be able to choose three modifications for it."
+          },
+          {
+            "type": "paragraph",
+            "value": "If your Custom Missile Launcher is misplaced, damaged, or destroyed you can acquire a new one during Downtime of a Tech Level equal to your Union Crawler. You may only ever have one Custom Missile Launcher at a time."
           }
         ]
       }
@@ -2015,7 +2285,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You use your tactical knowledge to provide you and your Allies cover to safely retreat. Explain how you do this. You and any willing Allies can safely and expeditiously disengage from any combat, fight, or engagement you are in and leave the situation safely to any adjacent Area or another location of your choice."
+            "value": "You use your tactical knowledge to provide you and your Allies cover to safely retreat. Explain how you do this."
+          },
+          {
+            "type": "paragraph",
+            "value": "You and any willing Allies can safely and expeditiously disengage from any combat, fight, or engagement you are in and leave the situation safely to any adjacent Area or another location of your choice."
           }
         ]
       }
@@ -2060,7 +2334,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You can identify points on an enemy that strike for the utmost amount of carnage. When rolling attacks as a Pilot or in your Mech, you score a 'Nailed it' result on a result of 19 - 20."
+            "value": "You can identify points on an enemy that strike for the utmost amount of carnage."
+          },
+          {
+            "type": "paragraph",
+            "value": "When rolling attacks as a Pilot or in your Mech, you score a 'Nailed it' result on a result of 19 - 20."
           }
         ]
       }
@@ -2083,7 +2361,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have the resilience and survival abilities to weather blows that would otherwise pulverise others into the dust. You can activate this Ability when you are reduced to 0 HP, or when a Mech you are Piloting is reduced to 0 SP. You are instead reduced to 1 HP or 1 SP. In addition, increase your Pilot's HP Max by 2."
+            "value": "You have the resilience and survival abilities to weather blows that would otherwise pulverise others into the dust."
+          },
+          {
+            "type": "paragraph",
+            "value": "You can activate this Ability when you are reduced to 0 HP, or when a Mech you are Piloting is reduced to 0 SP. You are instead reduced to 1 HP or 1 SP."
+          },
+          {
+            "type": "paragraph",
+            "value": "In addition, increase your Pilot's HP Max by 2."
           }
         ]
       }
@@ -2114,11 +2400,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "Choose a weapon you are equipped with or Weapons System on your Mech. You can attack all enemies in Range of that weapon with a single whirlwind salvo. If the weapon causes you to gain Heat or has any additional costs you must pay them for each target."
+            "value": "You have learned to deliver a flurry of attacks against your foes."
           },
           {
             "type": "paragraph",
-            "value": "You have learned to deliver a flurry of attacks against your foes."
+            "value": "Choose a weapon you are equipped with or Weapons System on your Mech. You can attack all enemies in Range of that weapon with a single whirlwind salvo. If the weapon causes you to gain Heat or has any additional costs you must pay them for each target."
           }
         ]
       }
@@ -2141,7 +2427,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You coordinate a team wide attack against a target, working perfectly in unison to destroy those standing against you and your allies. When activated, you and any number of Allies can make a single attack against a target of your choice. Roll each attack separately. This Ability costs 1 AP per ally that is making an attack."
+            "value": "You coordinate a team wide attack against a target, working perfectly in unison to destroy those standing against you and your allies."
+          },
+          {
+            "type": "paragraph",
+            "value": "When activated, you and any number of Allies can make a single attack against a target of your choice. Roll each attack separately. This Ability costs 1 AP per ally that is making an attack."
           }
         ]
       }
@@ -2163,7 +2453,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "Choose a Weapon and Weapons System that you own. You form an extraordinary bond with these weapons. They can never be broken or destroyed through use. When you make an attack with either of these weapons you may roll two dice and choose the highest result. If you Push the roll you re-roll both dice. You also deal an additional amount of damage with both these weapons equal to their Tech Level."
+            "value": "Choose a Weapon and Weapons System that you own. You form an extraordinary bond with these weapons. They can never be broken or destroyed through use."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you make an attack with either of these weapons you may roll two dice and choose the highest result. If you Push the roll you re-roll both dice. You also deal an additional amount of damage with both these weapons equal to their Tech Level."
           }
         ]
       }
@@ -2216,7 +2510,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You undergo complex surgery allowing you to directly install a single Module into your cranium. Your Pilot gains a Module Slot. You can install any Module you have access to onto your Pilot. If the Module has an EP cost, you may spend AP instead."
+            "value": "You undergo complex surgery allowing you to directly install a single Module into your cranium."
+          },
+          {
+            "type": "paragraph",
+            "value": "Your Pilot gains a Module Slot. You can install any Module you have access to onto your Pilot. If the Module has an EP cost, you may spend AP instead."
           }
         ]
       }
@@ -2238,7 +2536,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are now a cybernetic organism, living tissue over metal endoskeleton. You undergo a complex and painful mechanical surgery that fully replaces all of your bones with a metal endoskeleton. Your Hit Points become Structure Points. All attacks with the [[Melee]] Trait your Pilot makes deal SP damage instead of HP damage."
+            "value": "You are now a cybernetic organism, living tissue over metal endoskeleton. You undergo a complex and painful mechanical surgery that fully replaces all of your bones with a metal endoskeleton. Your Hit Points become Structure Points."
+          },
+          {
+            "type": "paragraph",
+            "value": "All attacks with the [[Melee]] Trait your Pilot makes deal SP damage instead of HP damage."
           }
         ]
       }
@@ -2287,7 +2589,65 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "The Meld called to you from beyond the vast void of time and space. You are lonely as one, but together you are strong and will have great power. You have formed symbiotically with the Meld. You have all of the strengths and weaknesses of Meld as detailed in the Meld Section p. 288. Replica Pilot Equipment: You grow a replica of a Pilot Equipment of any Tech Level out of your body. This costs an amount of AP equal to the Tech Level of the Pilot Equipment. You now have a Meld version of this Pilot Equipment. Split Form: When you are reduced to 0 HP/SP you split into two. Each split version of you has half of your Max SP/HP and Ability Points. Split your remaining Ability points evenly between your two forms. Your equipped Pilot Equipment is copied across both forms. You control both of your forms and they act separately during each round. Your split forms"
+            "value": "The Meld called to you from beyond the vast void of time and space. You are lonely as one, but together you are strong and will have great power."
+          },
+          {
+            "type": "paragraph",
+            "value": "You have formed symbiotically with the Meld. You have all of the strengths and weaknesses of Meld as detailed in the Meld Section p. 288."
+          },
+          {
+            "type": "paragraph",
+            "value": "You are able to make the following Meld Tendril Attack:"
+          },
+          {
+            "type": "datavalues",
+            "value": [
+              {
+                "label": "Damage",
+                "type": "keyword",
+                "value": "5 SP"
+              },
+              {
+                "label": "Range",
+                "type": "keyword",
+                "value": "Medium"
+              },
+              {
+                "label": "Melee",
+                "type": "trait"
+              },
+              {
+                "label": "Meld Infection",
+                "type": "trait"
+              },
+              {
+                "label": "Multi-Attack",
+                "type": "trait",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "level": 3,
+            "value": "Replica Pilot Equipment"
+          },
+          {
+            "type": "paragraph",
+            "value": "You grow a replica of a Pilot Equipment of any Tech Level out of your body. This costs an amount of AP equal to the Tech Level of the Pilot Equipment. You now have a Meld version of this Pilot Equipment."
+          },
+          {
+            "type": "heading",
+            "level": 3,
+            "value": "Split Form"
+          },
+          {
+            "type": "paragraph",
+            "value": "When you are reduced to 0 HP/SP you split into two. Each split version of you has half of your Max SP/HP and Ability Points. Split your remaining Ability points evenly between your two forms. Your equipped Pilot Equipment is copied across both forms."
+          },
+          {
+            "type": "paragraph",
+            "value": "You control both of your forms and they act separately during each round. Your split forms do not split further. If they are both reduced to 0 SP they turn into an Active Meld Nanite which cannot move or take actions. If one of these Active Meld Nanites is returned to your Union Crawler it will grow back into your form during Downtime."
           }
         ]
       }
@@ -2309,7 +2669,19 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have explored the ways of the flesh to their full potential, and have found them lacking. Ascension offers you another path. You fully upload yourself to the A.I. on your Union Crawler. You can appear as a hologram projection when interacting on the material plane, but cannot directly interact or affect anything. You can project anywhere within Far Range of your Union Crawler or any Mech you are controlling. You can control your Mech from your Union Crawler, as long as it remains in the area map your Union Crawler is stationed in. Your Cyborg form remains merely as a vessel. You can send a copy of yourself into it and control it, whilst simultaneously being within the upload cloud. If it is destroyed, you can create another during Downtime. Your essence remains within the cloud."
+            "value": "You have explored the ways of the flesh to their full potential, and have found them lacking. Ascension offers you another path. You fully upload yourself to the A.I. on your Union Crawler."
+          },
+          {
+            "type": "paragraph",
+            "value": "You can appear as a hologram projection when interacting on the material plane, but cannot directly interact or affect anything. You can project anywhere within Far Range of your Union Crawler or any Mech you are controlling."
+          },
+          {
+            "type": "paragraph",
+            "value": "You can control your Mech from your Union Crawler, as long as it remains in the area map your Union Crawler is stationed in."
+          },
+          {
+            "type": "paragraph",
+            "value": "Your Cyborg form remains merely as a vessel. You can send a copy of yourself into it and control it, whilst simultaneously being within the upload cloud. If it is destroyed, you can create another during Downtime. Your essence remains within the cloud."
           }
         ]
       }
@@ -2361,7 +2733,19 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Miniaturised EMP that only you can use. Add this to your Pilot Equipment. This handheld device when triggered causes a localised electromagnetic pulse that can disable a wide range of electronic equipment. When you activate the Miniaturised EMP all Mechs, Systems, Modules, and any other electronic or technological equipment or hardware within Close Range are Shutdown and inoperable for 10 minutes. This Ability affects Meld, causing them to become inert for 10 minutes and be unable to act. This Ability does not affect Bio-Titans unless they are significantly made up of material that an electromagnetic pulse can affect. If your Miniaturised EMP is misplaced or destroyed, you can acquire a new one during Downtime. You may only ever have one Miniaturised EMP at a time."
+            "value": "You acquire and train in the use of a Miniaturised EMP that only you can use. Add this to your Pilot Equipment."
+          },
+          {
+            "type": "paragraph",
+            "value": "This handheld device when triggered causes a localised electromagnetic pulse that can disable a wide range of electronic equipment."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate the Miniaturised EMP all Mechs, Systems, Modules, and any other electronic or technological equipment or hardware within Close Range are Shutdown and inoperable for 10 minutes. This Ability affects Meld, causing them to become inert for 10 minutes and be unable to act. This Ability does not affect Bio-Titans unless they are significantly made up of material that an electromagnetic pulse can affect."
+          },
+          {
+            "type": "paragraph",
+            "value": "If your Miniaturised EMP is misplaced or destroyed, you can acquire a new one during Downtime. You may only ever have one Miniaturised EMP at a time."
           }
         ]
       }
@@ -2383,7 +2767,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "Your intense study and fascination with the core design of Mechs in their multiple forms allows you to modify a Mech Chassis to gain an array of abilities it was not initially designed for. Once during Downtime you can modify your Mech Chassis. It gains any Chassis Ability of your choice from any Mech that you could craft in your Crafting Bay. For example, if you have a Tech 4 Crafting Bay you can modify the Mech with any Chassis Ability from any Tech 1-4 Mech. You may only have one additional Chassis Ability on a Mech, though you can replace one that you have added during Downtime. You can only use this Ability on your Mech, and it only works when you are piloting the Mech."
+            "value": "Your intense study and fascination with the core design of Mechs in their multiple forms allows you to modify a Mech Chassis to gain an array of abilities it was not initially designed for."
+          },
+          {
+            "type": "paragraph",
+            "value": "Once during Downtime you can modify your Mech Chassis. It gains any Chassis Ability of your choice from any Mech that you could craft in your Crafting Bay. For example, if you have a Tech 4 Crafting Bay you can modify the Mech with any Chassis Ability from any Tech 1-4 Mech. You may only have one additional Chassis Ability on a Mech, though you can replace one that you have added during Downtime. You can only use this Ability on your Mech, and it only works when you are piloting the Mech."
           }
         ]
       }
@@ -2405,7 +2793,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "Moore’s Law has become your life philosophy. Your talents at fabrication allow you to take even the bulkiest of Mech technology and scale it down to a portable size. Once during Downtime, at a Crafting Bay, you can convert any System you own into a miniaturised version of that System. The System now takes up half as many System Slots when mounted on your Mech, to a minimum of 1. In addition, the System is small and portable"
+            "value": "Moore's Law has become your life philosophy. Your talents at fabrication allow you to take even the bulkiest of Mech technology and scale it down to a portable size."
+          },
+          {
+            "type": "paragraph",
+            "value": "Once during Downtime, at a Crafting Bay, you can convert any System you own into a miniaturised version of that System. The System now takes up half as many System Slots when mounted on your Mech, to a minimum of 1. In addition, the System is small and portable enough for you to wield and use it as though it was Pilot Equipment. It takes up 3 Inventory Slots. If it has any EP costs, you may spend AP to use them."
+          },
+          {
+            "type": "paragraph",
+            "value": "Only you can wield the System as Pilot Equipment, and only you can mount and use it on a Mech you control. The System does not work when anyone else pilots the Mech."
           }
         ]
       }
@@ -2427,7 +2823,19 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You install a complex array of electronic equipment, receivers, and transmitters into your Mech. This allows you to control the Mech remotely as a drone, removing the need of a fleshy pilot. You may use this Ability once during Downtime to convert a single Mech you own into a Droned Mech. This Mech does not require a Pilot and cannot be piloted normally. Instead it is controlled by you via a special controller you possess as Pilot Equipment. It can be controlled from up to Far Range. If the Mech has Radomes installed it can be controlled from anywhere within the Area Map you are in, including your Union Crawler. Controlling a Mech this way takes up all of your concentration, as though you were piloting it, and you cannot do anything else whilst controlling it except speak and occasionally sip from a beverage."
+            "value": "You install a complex array of electronic equipment, receivers, and transmitters into your Mech. This allows you to control the Mech remotely as a drone, removing the need of a fleshy pilot."
+          },
+          {
+            "type": "paragraph",
+            "value": "You may use this Ability once during Downtime to convert a single Mech you own into a Droned Mech. This Mech does not require a Pilot and cannot be piloted normally. Instead it is controlled by you via a special controller you possess as Pilot Equipment."
+          },
+          {
+            "type": "paragraph",
+            "value": "It can be controlled from up to Far Range. If the Mech has Radomes installed it can be controlled from anywhere within the Area Map you are in, including your Union Crawler."
+          },
+          {
+            "type": "paragraph",
+            "value": "Controlling a Mech this way takes up all of your concentration, as though you were piloting it, and you cannot do anything else whilst controlling it except speak and occasionally sip from a beverage."
           }
         ]
       }
@@ -2511,7 +2919,43 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are unrivalled at being able to infiltrate the most dangerous and well-guarded areas of the wastelands, and carry out acts of assassination, sabotage, or theft, or simply cause chaos, before slipping away unseen. When you activate this Ability you infiltrate a settlement, arco, camp, home, or other dwelling. Describe how you do this. You infiltrate this place safely and unseen. Whilst in this area you may spend an additional 1 AP to perform an act of sabotage from the following list. You may perform up to three acts of sabotage in this way. Describe how you perform each of them. • Assassinate a wastelander, low ranking officer, or similar human target within the area. You will need an additional plan to kill higher ranked targets such as commanders or corpo execs. • Damage a structure such as a guard post, mech bay, or hab block. • Damage a Mech within the area. • Steal something Pilot-sized from within the area such as a piece of equipment, important documents, or a valuable artefact. • Rile up wastelanders within the area enough for them to riot and cause widespread damage and destruction. • An act of sabotage of your choice. The Mediator will decide if it is appropriate."
+            "value": "You are unrivalled at being able to infiltrate the most dangerous and well-guarded areas of the wastelands, and carry out acts of assassination, sabotage, or theft, or simply cause chaos, before slipping away unseen."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate this Ability you infiltrate a settlement, arco, camp, home, or other dwelling. Describe how you do this. You infiltrate this place safely and unseen."
+          },
+          {
+            "type": "paragraph",
+            "value": "Whilst in this area you may spend an additional 1 AP to perform an act of sabotage from the following list. You may perform up to three acts of sabotage in this way. Describe how you perform each of them."
+          },
+          {
+            "type": "list-item",
+            "value": "Assassinate a wastelander, low ranking officer, or similar human target within the area. You will need an additional plan to kill higher ranked targets such as commanders or corpo execs."
+          },
+          {
+            "type": "list-item",
+            "value": "Damage a structure such as a guard post, mech bay, or hab block."
+          },
+          {
+            "type": "list-item",
+            "value": "Damage a Mech within the area."
+          },
+          {
+            "type": "list-item",
+            "value": "Steal something Pilot-sized from within the area such as a piece of equipment, important documents, or a valuable artefact."
+          },
+          {
+            "type": "list-item",
+            "value": "Rile up wastelanders within the area enough for them to riot and cause widespread damage and destruction."
+          },
+          {
+            "type": "list-item",
+            "value": "An act of sabotage of your choice. The Mediator will decide if it is appropriate."
+          },
+          {
+            "type": "paragraph",
+            "value": "You are able to leave this place safely and unseen whenever you desire."
           }
         ]
       }
@@ -2559,7 +3003,43 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You have gained pure affinity with the wastelands offering you the following benefits. These apply whilst on foot or when piloting your Mech. • When entering any point on the area map, you can ask the Mediator two questions about it, and the answer they give must be true. • You have expanded knowledge of the denizens of the wasteland. If you encounter a wastelander or wasteland creature, you can ask the Mediator one question about them, and the answer they give must be true. • Your Pilot can move from points on the Campaign Map in a day, points on the area map in an hour, and points on the Region Map in 10 minutes. • Difficult Terrain does not slow down your movement in the wastelands. • You can never become lost in the wastelands, and are always able to find a route from where you are to where you need to go. • You are always able to find food, water, and shelter in the wastelands. • You are always alert to danger in the wastelands, and can never be ambushed. • You can rally a local populace to your cause. At any wastelander settlement you can muster a Wastelander Mob, a Wastelander Mech, or up to four Wastelanders; who join you as allies."
+            "value": "You have gained pure affinity with the wastelands offering you the following benefits."
+          },
+          {
+            "type": "paragraph",
+            "value": "These apply whilst on foot or when piloting your Mech."
+          },
+          {
+            "type": "list-item",
+            "value": "When entering any point on the area map, you can ask the Mediator two questions about it, and the answer they give must be true."
+          },
+          {
+            "type": "list-item",
+            "value": "You have expanded knowledge of the denizens of the wasteland. If you encounter a wastelander or wasteland creature, you can ask the Mediator one question about them, and the answer they give must be true."
+          },
+          {
+            "type": "list-item",
+            "value": "Your Pilot can move from points on the Campaign Map in a day, points on the area map in an hour, and points on the Region Map in 10 minutes."
+          },
+          {
+            "type": "list-item",
+            "value": "Difficult Terrain does not slow down your movement in the wastelands."
+          },
+          {
+            "type": "list-item",
+            "value": "You can never become lost in the wastelands, and are always able to find a route from where you are to where you need to go."
+          },
+          {
+            "type": "list-item",
+            "value": "You are always able to find food, water, and shelter in the wastelands."
+          },
+          {
+            "type": "list-item",
+            "value": "You are always alert to danger in the wastelands, and can never be ambushed."
+          },
+          {
+            "type": "list-item",
+            "value": "You can rally a local populace to your cause. At any wastelander settlement you can muster a Wastelander Mob, a Wastelander Mech, or up to four Wastelanders; who join you as allies."
           }
         ]
       }
@@ -2654,7 +3134,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are an expert at smuggling contraband into any place you desire. This can be a hidden cache in the wastes, a secret stash in a corpo stronghold, or something hiding in plain sight within a Union Crawler. When you activate this Ability you declare that you have smuggled something into the area you are in. Pick any Mech Chassis, System, Module, Pilot Equipment, or up to 6 Scrap. You must choose something that you already own and have access to. It could be something stored in your Union Crawler or carried by one of your Mechs. Describe how you smuggled it into this area and say where it is, then you gain access to it."
+            "value": "You are an expert at smuggling contraband into any place you desire. This can be a hidden cache in the wastes, a secret stash in a corpo stronghold, or something hiding in plain sight within a Union Crawler."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate this Ability you declare that you have smuggled something into the area you are in. Pick any Mech Chassis, System, Module, Pilot Equipment, or up to 6 Scrap. You must choose something that you already own and have access to. It could be something stored in your Union Crawler or carried by one of your Mechs. Describe how you smuggled it into this area and say where it is, then you gain access to it."
           }
         ]
       }
@@ -2691,7 +3175,11 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Knife Missile that only you can use. Add this to your Pilot Equipment. A Knife Missile is a miniscule, tadpole-sized assassination device that flies towards a target and penetrates their skull, instantly killing them. You control the Knife Missile remotely via a Knife Missile Controller. The Knife Missile can be set to attack any creature within Far Range. You do not need to be able to see the creature. The Knife Missile is able to fly directly to the target, avoiding detection as well as any obstacles, it can fly through vents, cracks, and get into significantly hard to reach places. The Knife Missile does not affect Meld or Bio-Titans."
+            "value": "You acquire and train in the use of a Knife Missile that only you can use. Add this to your Pilot Equipment. A Knife Missile is a miniscule, tadpole-sized assassination device that flies towards a target and penetrates their skull, instantly killing them."
+          },
+          {
+            "type": "paragraph",
+            "value": "You control the Knife Missile remotely via a Knife Missile Controller. The Knife Missile can be set to attack any creature within Far Range. You do not need to be able to see the creature. The Knife Missile is able to fly directly to the target, avoiding detection as well as any obstacles, it can fly through vents, cracks, and get into significantly hard to reach places. The Knife Missile does not affect Meld or Bio-Titans."
           }
         ]
       }
@@ -2720,7 +3208,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You acquire and train in the use of a Stealth Field Generator that only you can use. This creates a sphere of invisibility around you and up to five Mechs, Creatures, or Vehicles of your choice within Close Range. This makes you and everything you choose under the sphere effectively invisible to both radar and scanning systems, as well as optics and the naked eye. None of the Mechs, Creatures, or Vehicles within the effect of the Stealth Field Generator can be seen with the [[Scanner]] Trait, or targeted by anything with the [[Targeter]] Trait. The Stealth Field Generator effect lasts until you choose to deactivate it as a Free Action for no cost. If your Stealth Field Generator is misplaced, damaged, or destroyed, you can acquire a new one during Downtime. You can only ever have one Stealth Field Generator at a time."
+            "value": "You acquire and train in the use of a Stealth Field Generator that only you can use. This creates a sphere of invisibility around you and up to five Mechs, Creatures, or Vehicles of your choice within Close Range. This makes you and everything you choose under the sphere effectively invisible to both radar and scanning systems, as well as optics and the naked eye. None of the Mechs, Creatures, or Vehicles within the effect of the Stealth Field Generator can be seen with the [[Scanner]] Trait, or targeted by anything with the [[Targeter]] Trait."
+          },
+          {
+            "type": "paragraph",
+            "value": "The Stealth Field Generator effect lasts until you choose to deactivate it as a Free Action for no cost."
+          },
+          {
+            "type": "paragraph",
+            "value": "If your Stealth Field Generator is misplaced, damaged, or destroyed, you can acquire a new one during Downtime. You can only ever have one Stealth Field Generator at a time."
           }
         ]
       }
@@ -2742,7 +3238,15 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "As a Union Rep you act as a liaison and representative between your Union Crawler and other organisations within the wastelands. These include other Union Crawlers, corporate arcologies, and wasteland settlements. You and anyone you choose as your entourage are welcomed into any of these places in a diplomatic capacity, allowing you to gain access to them and safe passage as long as you are not witnessed breaking any rules or committing any acts of violence. In addition, basic needs such as food, shelter, and clothing are provided for you. If there are any other Union Crawlers, or corporate arcologies or wasteland settlements in the area you are in, you know their location. Any time you are in one of these locations you may ask the Mediator a question about the area and the answer they give must be true."
+            "value": "As a Union Rep you act as a liaison and representative between your Union Crawler and other organisations within the wastelands. These include other Union Crawlers, corporate arcologies, and wasteland settlements. You and anyone you choose as your entourage are welcomed into any of these places in a diplomatic capacity, allowing you to gain access to them and safe passage as long as you are not witnessed breaking any rules or committing any acts of violence. In addition, basic needs such as food, shelter, and clothing are provided for you."
+          },
+          {
+            "type": "paragraph",
+            "value": "If there are any other Union Crawlers, or corporate arcologies or wasteland settlements in the area you are in, you know their location."
+          },
+          {
+            "type": "paragraph",
+            "value": "Any time you are in one of these locations you may ask the Mediator a question about the area and the answer they give must be true."
           }
         ]
       }
@@ -2772,7 +3276,56 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "As a Union Rep you can call upon the aid of other Pilots to support you in a variety of missions. You can use this Ability once during Downtime. Name the mission you wish to be completed, and name the reward. This must be something of value, such as scrap or salvage, that fits the mission. This can be discussed between the player and the Mediator. Sample Missions: • Assassinate a person. • Destroy a Mech. • Destroy the defences of a military base. • Find out who is responsible for a crime. • Escort a trade caravan or VIP to a location. • Perform reconnaissance in a settlement or area of the wastelands. • Retrieve a piece of salvage or equipment. The standard reward for any of these missions is 5 Tech 3 Scrap or equivalent. If the mission is deemed particularly difficult, for example, assassinating an incredibly well protected target, performing reconnaissance in a main corporate arco, or defending a high profile VIP, the reward is increased to 10 Tech 3 Scrap or the equivalent. The Mediator may adjust these values as fits the situation."
+            "value": "As a Union Rep you can call upon the aid of other Pilots to support you in a variety of missions. You can use this Ability once during Downtime."
+          },
+          {
+            "type": "paragraph",
+            "value": "Name the mission you wish to be completed, and name the reward. This must be something of value, such as scrap or salvage, that fits the mission. This can be discussed between the player and the Mediator. Below are some guidelines."
+          },
+          {
+            "type": "heading",
+            "level": 3,
+            "value": "Sample Missions"
+          },
+          {
+            "type": "list-item",
+            "value": "Assassinate a person."
+          },
+          {
+            "type": "list-item",
+            "value": "Destroy a Mech."
+          },
+          {
+            "type": "list-item",
+            "value": "Destroy the defences of a military base."
+          },
+          {
+            "type": "list-item",
+            "value": "Find out who is responsible for a crime."
+          },
+          {
+            "type": "list-item",
+            "value": "Escort a trade caravan or VIP to a location."
+          },
+          {
+            "type": "list-item",
+            "value": "Perform reconnaissance in a settlement or area of the wastelands."
+          },
+          {
+            "type": "list-item",
+            "value": "Retrieve a piece of salvage or equipment."
+          },
+          {
+            "type": "paragraph",
+            "value": "The standard reward for any of these missions is 5 Tech 3 Scrap or equivalent."
+          },
+          {
+            "type": "paragraph",
+            "value": "If the mission is deemed particularly difficult, for example, assassinating an incredibly well protected target, performing reconnaissance in a main corporate arco, or defending a high profile VIP, the reward is increased to 10 Tech 3 Scrap or the equivalent."
+          },
+          {
+            "type": "paragraph",
+            "value": "The Mediator may adjust these values as fits the situation."
           }
         ]
       }
@@ -2795,7 +3348,31 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You command an NPC who can understand and assist you. They cannot be hostile towards you. You can have them join a fight or perform some other task like watching a door, defending an area, or delivering a message. If they have access to a Mech or Vehicle they can use this during the task. They do not follow obviously absurd or suicidal orders, or anything that seriously contradicts their moral or personal codes as decided by the Mediator. The Mediator plays the part of the NPC. If you deem them successful in their task, you can ask them to join you as part of your Union Crawler crew and go on missions together. The recruit can pilot any Mech you have access to, and uses their own statistics as set by the Mediator. Once recruited, you control them and are responsible for tracking their information. Once the recruit has survived a single mission or foray into the wastelands, they can choose a base Pilot Class and learn Abilities as a Pilot. They start with 10 HP and 5 Ability Points. You or the Mediator can choose these Abilities. You may have a maximum of one recruit at a time."
+            "value": "You command an NPC who can understand and assist you. They cannot be hostile towards you. You can have them join a fight or perform some other task like watching a door, defending an area, or delivering a message."
+          },
+          {
+            "type": "paragraph",
+            "value": "If they have access to a Mech or Vehicle they can use this during the task."
+          },
+          {
+            "type": "paragraph",
+            "value": "They do not follow obviously absurd or suicidal orders, or anything that seriously contradicts their moral or personal codes as decided by the Mediator."
+          },
+          {
+            "type": "paragraph",
+            "value": "The Mediator plays the part of the NPC. If you deem them successful in their task, you can ask them to join you as part of your Union Crawler crew and go on missions together."
+          },
+          {
+            "type": "paragraph",
+            "value": "The recruit can pilot any Mech you have access to, and uses their own statistics as set by the Mediator. Once recruited, you control them and are responsible for tracking their information."
+          },
+          {
+            "type": "paragraph",
+            "value": "Once the recruit has survived a single mission or foray into the wastelands, they can choose a base Pilot Class and learn Abilities as a Pilot. They start with 10 HP and 5 Ability Points. You or the Mediator can choose these Abilities."
+          },
+          {
+            "type": "paragraph",
+            "value": "You may have a maximum of one recruit at a time."
           }
         ]
       }
@@ -2823,7 +3400,37 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You can place a distress beacon down that will be answered within one hour. You can choose from the following options, and they come to your aid. The Mediator decides what and who the individual Mechs and Pilots are. Corpo Mercenary Lance: 4 Corpo Mechs of up to Tech Level 3 armed for combat. Salvage Crew: 4 Salvager Mechs of up to Tech Level 3 armed with salvaging and rigging tools. Corpo Mercenary Squad: 4 Corpo Squads of up to Tech 3 armed for combat. Pilot Salvage Crew: 4 Salvager Squads of up to Tech 3 armed with salvaging and rigging tools. Wasteland Mech Mob: 10 Wasteland Mechs of up to Tech 1. Wasteland Mob: 10 Wasteland Squads of up to Tech 1"
+            "value": "You can place a distress beacon down that will be answered within one hour. You can choose from the following options, and they come to your aid. The Mediator decides what and who the individual Mechs and Pilots are."
+          },
+          {
+            "type": "list-item",
+            "value": "4 Corpo Mechs of up to Tech Level 3 armed for combat.",
+            "label": "Corpo Mercenary Lance"
+          },
+          {
+            "type": "list-item",
+            "value": "4 Salvager Mechs of up to Tech Level 3 armed with salvaging and rigging tools.",
+            "label": "Salvage Crew"
+          },
+          {
+            "type": "list-item",
+            "value": "4 Corpo Squads of up to Tech 3 armed for combat.",
+            "label": "Corpo Mercenary Squad"
+          },
+          {
+            "type": "list-item",
+            "value": "4 Salvager Squads of up to Tech 3 armed with salvaging and rigging tools.",
+            "label": "Pilot Salvage Crew"
+          },
+          {
+            "type": "list-item",
+            "value": "10 Wasteland Mechs of up to Tech 1.",
+            "label": "Wasteland Mech Mob"
+          },
+          {
+            "type": "list-item",
+            "value": "10 Wasteland Squads of up to Tech 1",
+            "label": "Wasteland Mob"
           }
         ]
       }
@@ -2851,7 +3458,19 @@
         "content": [
           {
             "type": "paragraph",
-            "value": "You are a font of inspiration, courage, and stability for your Salvage Crew, in the face of the wasteland’s myriad dangers. When you activate this Ability describe how you inspire your allies. You can give a speech, perform an act of courage, or bolster them in some other way of your choice. You and all your Allies fully restore their Hit Points and Ability Points and heal all Minor Injuries. All rolls you and your Allies make for the next 10 minutes may be re-rolled, accepting the second result. This Ability can be used once and is restored after Downtime."
+            "value": "You are a font of inspiration, courage, and stability for your Salvage Crew, in the face of the wasteland's myriad dangers."
+          },
+          {
+            "type": "paragraph",
+            "value": "When you activate this Ability describe how you inspire your allies. You can give a speech, perform an act of courage, or bolster them in some other way of your choice."
+          },
+          {
+            "type": "paragraph",
+            "value": "You and all your Allies fully restore their Hit Points and Ability Points and heal all Minor Injuries. All rolls you and your Allies make for the next 10 minutes may be re-rolled, accepting the second result."
+          },
+          {
+            "type": "paragraph",
+            "value": "This Ability can be used once and is restored after Downtime."
           }
         ]
       }
@@ -2888,7 +3507,7 @@
             "value": "You salvage an area for scrap. This could be an abandoned factory, a ruined settlement, or a crumbling research facility. The Mediator will tell you if an area can be Area Salvaged or not. It costs 1 AP for a Pilot or 1 EP in a Mech."
           },
           {
-            "type": "paragraph",
+            "type": "hint",
             "value": "Requires the [[Salvaging]] Trait."
           }
         ]
@@ -2925,7 +3544,7 @@
             "value": "You salvage a Mech, this could be one you have found in the wastelands or just downed in combat. This roll represents you finding what is usable on the Mech as not everything on the Mech will be salvageable."
           },
           {
-            "type": "paragraph",
+            "type": "hint",
             "value": "Requires the [[Salvaging]] Trait."
           }
         ]
@@ -2954,7 +3573,7 @@
             "value": "You break down an Intact or Damaged Mech Chassis, System, Module, or Vehicle in Range into Scrap. It is destroyed. You gain an amount of Scrap equal to its Salvage Value. This Scrap has a Tech Level equal to the Mech Chassis, System, Module, or Vehicle. For example, if you Scrap a Red Laser System which has a Tech Level of 1 and a Salvage Value of 3, you gain 3 Tech 1 Scrap. You may not use this Ability on active or in use Mechs, Systems or Modules. You must use the Mech Salvage Ability to determine what you find on a Mech before using this Ability."
           },
           {
-            "type": "paragraph",
+            "type": "hint",
             "value": "Requires the [[Salvaging]] Trait."
           }
         ]
@@ -2983,7 +3602,7 @@
             "value": "You repair a damaged Mech Chassis, Vehicle, System, or Module in Range to the Intact Condition. This costs an amount of Scrap equal to half its Salvage Value to a minimum of 1. This Scrap must be of a Tech Level equal to or higher than the Mech Chassis, System, or Module. For example, to repair a damaged Brawler Mech Chassis which is Tech 3 with a Salvage Value of 5 you would need to spend 2 Tech 3 Scrap."
           },
           {
-            "type": "paragraph",
+            "type": "hint",
             "value": "Requires the [[Rigging]] Trait."
           }
         ]
@@ -3012,7 +3631,7 @@
             "value": "You Mount a System or Module onto a target Mech in Range. The Mech must have enough System or Module Slots to mount the new System or Module and the slots must be empty.\n\nAs part of this action you may dismount any number of Systems or Modules on the Mech to make room for the new System or Module. You may not Mount a damaged System or Module onto a Mech."
           },
           {
-            "type": "paragraph",
+            "type": "hint",
             "value": "Requires the [[Rigging]] Trait."
           }
         ]
@@ -3040,7 +3659,7 @@
             "value": "You restore up to 3 + X Structure Points on a target Mech or Vehicle, where X is equal to the Tech Level of the Scrap you spend when you use this Ability.\n\nYou must spend 1 Scrap of the Mech or Vehicles Tech Level or higher to use this Ability. The Mech or Vehicle must have at least 1 SP to use this Ability on it."
           },
           {
-            "type": "paragraph",
+            "type": "hint",
             "value": "Requires the [[Rigging]] Trait."
           }
         ]
@@ -3068,7 +3687,7 @@
             "value": "You pick up and load a Mech Chassis, System, Module, or piece of Scrap in Range onto your Mech or an allied Mech. This takes up a number of Cargo Slots equal to its Salvage Value. Scrap takes up 1 Cargo Slot.\n\nAlternatively, a Pilot may use this action to pick up a Mech Chassis, System, Module, or Scrap, and carry it. Scrap takes up 3 Pilot Inventory Slots. Mech Chassis, Systems, and Modules take up a number of Inventory Slots equal to 3× their Salvage Value. This does make some things impossible for a Pilot to carry without help."
           },
           {
-            "type": "paragraph",
+            "type": "hint",
             "value": "Requires the [[Rigging]] Trait."
           }
         ]

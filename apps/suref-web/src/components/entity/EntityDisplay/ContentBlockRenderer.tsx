@@ -1,7 +1,6 @@
 import { Box, Flex, List } from '@chakra-ui/react'
 import type { SURefMetaContentBlock, SURefMetaDataValue } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
-import { Heading } from '../../base/Heading'
 import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
 import { ValueDisplay } from '../../shared/ValueDisplay'
 import { EntityDetailDisplay } from '../EntityDetailDisplay'
@@ -21,10 +20,11 @@ interface ContentBlockRendererProps {
  *
  * Handles different content block types:
  * - paragraph: Regular text with trait reference parsing
- * - heading: Styled heading
+ * - heading: Bold styled text (not true HTML headers) with level-based sizing
  * - list-item: Bulleted list item
  * - list-item-naked: List item without bullet
  * - label: Labeled content
+ * - hint: Italic text for hints/tips
  * - datavalues: Array of data values rendered as compact flex row (value is array of dataValue objects)
  */
 export function ContentBlockRenderer({
@@ -93,12 +93,33 @@ function ContentBlock({
         </Box>
       )
 
-    case 'heading':
+    case 'heading': {
+      // Render as bold Text, not true HTML heading
+      // Level 1: larger, Level 2: slightly smaller, Level 3: same as paragraph but bold
+      const level = block.level || 3
+      let headingFontSize: string
+      if (level === 1) {
+        headingFontSize = compact ? 'lg' : 'xl'
+      } else if (level === 2) {
+        headingFontSize = compact ? 'md' : 'lg'
+      } else {
+        // Level 3: same size as paragraph
+        headingFontSize = fontSize
+      }
+      
       return (
-        <Heading level="h3" fontSize={compact ? 'md' : 'lg'}>
-          {stringValue}
-        </Heading>
+        <Text
+          as="span"
+          fontWeight="bold"
+          fontSize={headingFontSize}
+          color="su.black"
+          lineHeight="relaxed"
+          display="block"
+        >
+          {parsedValue}
+        </Text>
       )
+    }
 
     case 'list-item':
       // If list item has a label, render as dot-less list item with bold label: value
@@ -121,6 +142,24 @@ function ContentBlock({
             </Box>
           </List.Item>
         </List.Root>
+      )
+
+    case 'hint':
+      return (
+        <Box
+          color="su.black"
+          fontWeight="medium"
+          fontStyle="italic"
+          lineHeight="relaxed"
+          wordBreak="break-word"
+          overflowWrap="break-word"
+          whiteSpace="normal"
+          overflow="hidden"
+          maxW="100%"
+          fontSize={fontSize}
+        >
+          {parsedValue}
+        </Box>
       )
 
     case 'label':
