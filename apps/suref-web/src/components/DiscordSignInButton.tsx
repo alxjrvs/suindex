@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, Flex } from '@chakra-ui/react'
 import type { ButtonProps } from '@chakra-ui/react'
+import { useSearch } from '@tanstack/react-router'
 import { signInWithDiscord } from '../lib/api'
 import { DiscordIcon } from './shared/DiscordIcon'
 
@@ -16,7 +17,20 @@ export function DiscordSignInButton({
 }: DiscordSignInButtonProps) {
   const [loading, setLoading] = useState(false)
 
-  if (respect && import.meta.env.VITE_SHOW_DISCORD_SIGNIN !== '1') {
+  const search = useSearch({ strict: false })
+  const searchParams = search as Record<string, unknown>
+  const havenKey = Object.keys(searchParams).find((key) => key.toUpperCase() === 'HAVEN')
+  const havenValue = havenKey ? searchParams[havenKey] : undefined
+  const havenStr = havenValue != null ? String(havenValue) : undefined
+
+  let showDiscordSignIn = havenStr?.toUpperCase() === 'TRUE'
+  if (!showDiscordSignIn && typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search)
+    const havenParam = urlParams.get('haven') || urlParams.get('HAVEN')
+    showDiscordSignIn = havenParam?.toUpperCase() === 'TRUE'
+  }
+
+  if (respect && !showDiscordSignIn) {
     return null
   }
 
