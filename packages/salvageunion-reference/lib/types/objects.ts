@@ -178,18 +178,6 @@ export interface SURefMetaPatternSystemModule {
 }
 
 /**
- * Effect that scales with tech level
- */
-export interface SURefMetaTechLevelEffect {
-  techLevelMin: SURefPositiveInteger
-  techLevelMax: SURefPositiveInteger
-  effects: {
-    label?: string
-    value: string
-  }[]
-}
-
-/**
  * An action, ability, or attack that can be performed
  */
 export interface SURefMetaAction {
@@ -370,7 +358,5 @@ export type SURefMetaSchemaEntities = string[]
 export type SURefMetaSchemaNames = SURefSchemaName[]
 
 export type SURefMetaSystems = string[]
-
-export type SURefMetaTechLevelEffects = SURefMetaTechLevelEffect[]
 
 export type SURefMetaTraits = SURefMetaTrait[]

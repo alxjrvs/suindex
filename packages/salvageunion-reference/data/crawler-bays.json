@@ -4,7 +4,6 @@
     "name": "Command Bay",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Command Bay is damaged your Union Crawler can no longer move, and its scanning and map functions no longer work. You are in the dark when it comes to conducting missions outside of the immediate area.",
-    "techLevelEffects": [],
     "actions": [
       {
         "name": "Wasteland Scanning",
@@ -72,7 +71,6 @@
     "name": "Mech Bay",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Mech Bay becomes damaged, your Mechs can no longer restore SP and EP during Downtime. Their Chassis as well as any Systems or Modules will not be repaired if they are damaged, and you will have to make any System or Module modifications manually.",
-    "techLevelEffects": [],
     "actions": [
       {
         "name": "Mech Repair",
@@ -160,7 +158,6 @@
     "name": "Storage Bay",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Storage Bay becomes damaged, half of the Mech Chassis, Systems, and Modules stored within it are damaged and half of the Scrap within it is destroyed. Determine this randomly. In addition, you cannot store anything else within it until it is repaired.",
-    "techLevelEffects": [],
     "actions": [],
     "page": 221,
     "npc": {
@@ -217,7 +214,6 @@
     "name": "Armament Bay",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Armament Bay becomes damaged, the Union Crawler cannot use any of its Weapons Systems.",
-    "techLevelEffects": [],
     "actions": [],
     "choices": [
       {
@@ -287,7 +283,6 @@
     "name": "Crafting Bay",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Crafting Bay becomes damaged, you can no longer craft anything.",
-    "techLevelEffects": [],
     "actions": [],
     "page": 222,
     "npc": {
@@ -344,7 +339,6 @@
     "name": "Trading Bay",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Trading Bay becomes damaged, you can no longer trade Scrap or roll on the Trading Bay Table during Downtime.",
-    "techLevelEffects": [],
     "table": {
       "1": "Nothing is available for trade during this Downtime.",
       "20": "An Intact Mech Chassis is available for trade.",
@@ -430,35 +424,6 @@
     "name": "Med Bay",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Med Bay is damaged, you cannot heal any of your Pilot's Hit Points or injuries.",
-    "techLevelEffects": [
-      {
-        "techLevelMin": 1,
-        "techLevelMax": 2,
-        "effects": [
-          {
-            "value": "Heals a Pilot to full Hit Points during Downtime."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 3,
-        "techLevelMax": 4,
-        "effects": [
-          {
-            "value": "Heals a Pilot to full Hit Points, and heals any Minor Injuries fully during Downtime."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 5,
-        "techLevelMax": 6,
-        "effects": [
-          {
-            "value": "Heals a Pilot to full Hit Points, and heals any Major and Minor Injuries fully during Downtime."
-          }
-        ]
-      }
-    ],
     "actions": [],
     "page": 223,
     "npc": {
@@ -507,6 +472,25 @@
       {
         "type": "paragraph",
         "value": "A Med Bay allows Pilots to heal their injuries. The higher the Tech Level of your Union Crawler, the more advanced your Med Bay is."
+      },
+      {
+        "type": "list-item",
+        "value": "Heals a Pilot to full Hit Points during Downtime.",
+        "label": "Tech 1-2"
+      },
+      {
+        "type": "list-item",
+        "value": "Heals a Pilot to full Hit Points, and heals any Minor Injuries fully during Downtime.",
+        "label": "Tech 3-4"
+      },
+      {
+        "type": "list-item",
+        "value": "Heals a Pilot to full Hit Points, and heals any Major and Minor Injuries fully during Downtime.",
+        "label": "Tech 5-6"
+      },
+      {
+        "type": "paragraph",
+        "label": "If the Med Bay is damaged, you cannot heal any of your Pilot's Hit Points or injuries."
       }
     ]
   },
@@ -514,90 +498,6 @@
     "id": "74904a14-92be-41e0-80d9-63fce02b8851",
     "name": "Pilot Bay",
     "source": "Salvage Union Workshop Manual",
-    "damagedEffect": "If the Pilot Bay is damaged, you cannot train any new Pilot Abilities.",
-    "techLevelEffects": [
-      {
-        "techLevelMin": 1,
-        "techLevelMax": 2,
-        "effects": [
-          {
-            "value": "Allows training of all Core Pilot Abilities."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 3,
-        "techLevelMax": 4,
-        "effects": [
-          {
-            "value": "Allows training of all Core, Advanced, and Hybrid Class Pilot Abilities."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 5,
-        "techLevelMax": 6,
-        "effects": [
-          {
-            "value": "Allows training of all Core, Advanced, Hybrid Class, and Legendary Pilot Abilities."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 1,
-        "techLevelMax": 1,
-        "effects": [
-          {
-            "value": "Training during Downtime on your Union Crawler in a Tech 2 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 2,
-        "techLevelMax": 2,
-        "effects": [
-          {
-            "value": "Training during Downtime on your Union Crawler in a Tech 3 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 3,
-        "techLevelMax": 3,
-        "effects": [
-          {
-            "value": "Training during Downtime on your Union Crawler in a Tech 4 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 4,
-        "techLevelMax": 4,
-        "effects": [
-          {
-            "value": "Training during Downtime on your Union Crawler in a Tech 5 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 5,
-        "techLevelMax": 5,
-        "effects": [
-          {
-            "value": "Training during Downtime on your Union Crawler in a Tech 6 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
-          }
-        ]
-      },
-      {
-        "techLevelMin": 6,
-        "techLevelMax": 6,
-        "effects": [
-          {
-            "value": "Training during Downtime on your Union Crawler in a Tech 6 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
-          }
-        ]
-      }
-    ],
     "actions": [],
     "page": 223,
     "npc": {
@@ -646,6 +546,138 @@
       {
         "type": "paragraph",
         "value": "This area is where your Pilots are able to rest and entertain themselves during Downtime. It also allows your Pilots to train new Abilities. Training in the Pilot Bay during Downtime provides you one Training Point, which you can spend on new Abilities."
+      },
+      {
+        "type": "list-item",
+        "value": "Allows training of all Core Pilot Abilities.",
+        "label": "Tech 1-2"
+      },
+      {
+        "type": "list-item",
+        "value": "Allows training of all Core, Advanced, and Hybrid Class Pilot Abilities.",
+        "label": "Tech 3-4"
+      },
+      {
+        "type": "list-item",
+        "value": "Allows training of all Core, Advanced, Hybrid Class, and Legendary Pilot Abilities.",
+        "label": "Tech 5-6"
+      },
+      {
+        "type": "paragraph",
+        "label": "If the Pilot Bay is damaged, you cannot train any new Pilot Abilities."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "value": "Pilot Training Points (TP)"
+      },
+      {
+        "type": "paragraph",
+        "value": "You may spend your Training Points to train your Pilot Abilities. Once spent, you gain access to the Abilities."
+      },
+      {
+        "type": "paragraph",
+        "value": "Core Abilities cost 1 Training Point to train. You must have the preceding Ability in a Core Ability Tree to train the new Ability. For example, to train the Hauler Ability 'No Job Too Big' you must take the Ability 'Let's Make a Deal' first."
+      },
+      {
+        "type": "paragraph",
+        "value": "Advanced and Hybrid Class Abilities cost 2 Training Points to train. You must have training in 6 Core Abilities before you train in Advanced or Hybrid Class Abilities. You must have the preceding Ability in the Advanced or Hybrid Ability Tree to train the new Ability."
+      },
+      {
+        "type": "paragraph",
+        "value": "Legendary Abilities cost 3 Training Points to train. You must have 6 Core Abilities and 3 Advanced or Hybrid Class Abilities trained before you train a Legendary Ability. You may only have one Legendary Ability."
+      },
+      {
+        "type": "paragraph",
+        "value": "You may also spend 1 Training Point to forget any Ability you have learned to make room for another Ability."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "value": "Advanced Pilot Training"
+      },
+      {
+        "type": "paragraph",
+        "value": "To specialise in an Advanced Ability Tree a Pilot must have training in any 6 Core Abilities they have access to."
+      },
+      {
+        "type": "paragraph",
+        "value": "When a Pilot starts to train Advanced Abilities, they have a choice. They can specialise in their chosen Pilot Class or they can adopt a new Pilot Class, keeping their existing Abilities and also gaining access to new Abilities unique to that Class."
+      },
+      {
+        "type": "paragraph",
+        "value": "For example, an Engineer can specialise and take Abilities from the Advanced Engineer Tree. They retain access to all Engineer Core Abilities as well. They also gain access to the Legendary Engineer Tree."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "value": "Hybrid Pilot Training"
+      },
+      {
+        "type": "paragraph",
+        "value": "The Engineer can instead choose to become a Fabricator, in which case they gain access to the Fabricator Tree, the Forging Tree, and the Electronics Tree."
+      },
+      {
+        "type": "paragraph",
+        "value": "They still retain access to all their trained Engineer Core Abilities, but cannot learn new ones. They can now only learn Abilities from the Fabricator Core Abilities They are also able to train Abilities from the Legendary Fabricator Tree."
+      },
+      {
+        "type": "paragraph",
+        "value": "They can also choose to become a Union Rep, in which case they gain access to the Union Rep Tree, the Mechanical Knowledge Tree, and the Trading Tree. They retain access to all their trained Engineer Core Abilities, and as with the Fabricator can now only pick from the Union Rep Trees."
+      },
+      {
+        "type": "paragraph",
+        "value": "Once this decision is made it is final, and Pilots cannot choose to specialise in another Advanced or Hybrid Class."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "value": "Legendary Abilities"
+      },
+      {
+        "type": "paragraph",
+        "value": "Once a Pilot has 6 Core Abilities and 3 Advanced Abilities they may train in one of their Legendary Abilities by spending 3 Training Points."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "value": "Stat Training"
+      },
+      {
+        "type": "paragraph",
+        "value": "As Pilots advance and get access to higher Tech Level Pilot Bays their statistics improve as well."
+      },
+      {
+        "type": "paragraph",
+        "value": "You will gain each of these benefits only once when you reach the specified Tech Level. You may only gain this benefit if you have already gained the previous benefit."
+      },
+      {
+        "type": "paragraph",
+        "value": "For example, you can only train in a Tech 3 Pilot Bay and gain the benefit from it if you have already trained in a Tech 2 Pilot Bay."
+      },
+      {
+        "type": "paragraph",
+        "value": "This training and benefit is in addition to any Training Points you spend to train new Abilities during that Downtime."
+      },
+      {
+        "type": "list-item",
+        "value": "Training during Downtime on your Union Crawler in a Tech 2 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
+      },
+      {
+        "type": "list-item",
+        "value": "Training during Downtime on your Union Crawler in a Tech 3 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
+      },
+      {
+        "type": "list-item",
+        "value": "Training during Downtime on your Union Crawler in a Tech 4 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
+      },
+      {
+        "type": "list-item",
+        "value": "Training during Downtime on your Union Crawler in a Tech 5 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
+      },
+      {
+        "type": "list-item",
+        "value": "Training during Downtime on your Union Crawler in a Tech 6 Pilot Bay grants a Pilot a one-off improvement of +2 HP and +1 AP."
       }
     ]
   },
@@ -654,8 +686,6 @@
     "name": "Armoury",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Armoury becomes damaged, you can no longer acquire Pilot Equipment from it, and half of all stored Pilot Equipment within it is destroyed. Determine this randomly.",
-    "techLevelEffects": [],
-    "actions": [],
     "page": 225,
     "npc": {
       "position": "Smith",
@@ -711,7 +741,6 @@
     "name": "Cantina",
     "source": "Salvage Union Workshop Manual",
     "damagedEffect": "If the Cantina becomes damaged, you no longer have food and water purifiers and your food and water supply is spoiled. The people on your Union Crawler will die of starvation and dehydration within four weeks if it is not repaired. In addition, you can no longer ask around for rumours.",
-    "techLevelEffects": [],
     "actions": [
       {
         "name": "Gather Rumours",

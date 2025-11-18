@@ -51,7 +51,6 @@ function resolveTypeFromRef(ref: string, schemasDir: string): string {
     if (defName === 'content') return 'array'
     if (defName === 'table') return 'object'
     if (defName === 'npc') return 'object'
-    if (defName === 'techLevelEffects') return 'array'
     if (defName === 'bonusPerTechLevel') return 'object'
     return 'object'
   }
@@ -188,7 +187,6 @@ function getTypeScriptType(propName: string, propType: string): string {
     content: 'SURefMetaContent',
     npc: 'SURefMetaNpc',
     table: 'SURefMetaTable',
-    techLevelEffects: 'SURefMetaTechLevelEffects',
     bonusPerTechLevel: 'SURefMetaBonusPerTechLevel',
     traits: 'SURefMetaTraits',
     actions: 'SURefMetaAction[]',

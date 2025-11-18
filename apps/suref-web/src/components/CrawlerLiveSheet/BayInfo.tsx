@@ -49,11 +49,7 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
   }
 
   const hasFunction = !!description
-  const hasAbilities =
-    !!(bayRef.actions && bayRef.actions.length > 0) ||
-    (!!bayRef.techLevelEffects && bayRef.techLevelEffects.length > 0)
-
-  const techLevelEffects = bayRef.techLevelEffects
+  const hasAbilities = !!(bayRef.actions && bayRef.actions.length > 0)
 
   return (
     <VStack mt="2" gap={2} justifyContent="flex-start" alignItems="stretch" w="full">
@@ -116,15 +112,6 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
               description={getParagraphString(ability.content)}
             />
           ))}
-          {techLevelEffects?.map((effect, idx) =>
-            effect.effects.map((eff, effIdx) => (
-              <EffectDisplay
-                key={`${idx}-${effIdx}`}
-                label={eff.label || `Tech Level ${effect.techLevelMin}`}
-                value={eff.value}
-              />
-            ))
-          )}
         </VStack>
       )}
     </VStack>

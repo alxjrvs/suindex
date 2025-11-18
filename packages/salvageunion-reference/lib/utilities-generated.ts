@@ -66,8 +66,7 @@ export function isCrawlerBay(entity: SURefMetaEntity): entity is SURefCrawlerBay
   return (
     'damagedEffect' in entity &&
     'npc' in entity &&
-    'actions' in entity &&
-    'techLevelEffects' in entity
+    'actions' in entity
   )
 }
 
@@ -399,19 +398,6 @@ export function getChoices(entity: SURefMetaEntity): SURefMetaChoices | undefine
 }
 
 /**
- * Extract techLevelEffects from an entity
- * @param entity - The entity to extract from
- * @returns The techLevelEffects or undefined
- */
-export function getTechLevelEffects(
-  entity: SURefMetaEntity
-): SURefMetaTechLevelEffects | undefined {
-  return 'techLevelEffects' in entity && Array.isArray(entity.techLevelEffects)
-    ? entity.techLevelEffects
-    : undefined
-}
-
-/**
  * Extract table from an entity
  * @param entity - The entity to extract from
  * @returns The table or undefined
@@ -493,6 +479,5 @@ import type {
   SURefMetaNpc,
   SURefMetaPattern,
   SURefMetaTable,
-  SURefMetaTechLevelEffects,
   SURefMetaTraits,
 } from './types/objects.js'

@@ -25,7 +25,6 @@ import type {
   SURefMetaStats,
   SURefMetaSystemModule,
   SURefMetaTable,
-  SURefMetaTechLevelEffects,
   SURefMetaTrait,
 } from './objects.js'
 
@@ -111,7 +110,6 @@ export interface SURefCrawlerBay extends SURefMetaBaseEntity {
    */
   choices?: SURefMetaChoice[]
   actions: SURefMetaAction[]
-  techLevelEffects: SURefMetaTechLevelEffects
   table?: SURefMetaTable
 }
 

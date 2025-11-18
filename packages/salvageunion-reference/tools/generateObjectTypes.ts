@@ -428,7 +428,6 @@ async function generateObjectTypes() {
     'choice',
     'npc',
     'patternSystemModule',
-    'techLevelEffect',
     'action',
     'grant',
     'pattern',
