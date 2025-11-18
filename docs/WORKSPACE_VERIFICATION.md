@@ -7,16 +7,15 @@ This document confirms that the `suref-web` app is correctly using the local `sa
 ### 1. Workspace Configuration ✅
 
 **Root `package.json`:**
+
 ```json
 {
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "workspaces": ["apps/*", "packages/*"]
 }
 ```
 
 **App `package.json`:**
+
 ```json
 {
   "dependencies": {
@@ -28,19 +27,22 @@ This document confirms that the `suref-web` app is correctly using the local `sa
 ### 2. Workspace Linking ✅
 
 The symlink is correctly created:
+
 ```bash
 apps/suref-web/node_modules/salvageunion-reference -> ../../../packages/salvageunion-reference
 ```
 
 Verified with:
+
 ```bash
 readlink -f apps/suref-web/node_modules/salvageunion-reference
-# Output: /Users/jarvis/Code/suindex/packages/salvageunion-reference
+# Output: /Users/jarvis/Code/SU-SRD/packages/salvageunion-reference
 ```
 
 ### 3. Bun Workspace Resolution ✅
 
 Bun correctly identifies the workspace package:
+
 ```bash
 bun pm ls | grep salvageunion-reference
 # Output: ├── salvageunion-reference@workspace:packages/salvageunion-reference
@@ -49,6 +51,7 @@ bun pm ls | grep salvageunion-reference
 ### 4. Vite Configuration ✅
 
 The Vite config includes:
+
 - **Alias**: Explicitly resolves to the local package path
 - **OptimizeDeps exclusion**: Prevents pre-bundling issues
 - **Manual chunking**: Properly bundles the workspace package
@@ -67,6 +70,7 @@ optimizeDeps: {
 ### 5. TypeScript Resolution ✅
 
 TypeScript correctly resolves types from the local package:
+
 ```bash
 bun run typecheck
 # ✅ Exited with code 0
@@ -75,14 +79,16 @@ bun run typecheck
 ### 6. Runtime Import ✅
 
 The package can be imported and used at runtime:
+
 ```javascript
-import { SalvageUnionReference } from 'salvageunion-reference';
+import { SalvageUnionReference } from 'salvageunion-reference'
 // ✅ Works correctly
 ```
 
 ### 7. Build Process ✅
 
 The build process correctly bundles the workspace package:
+
 ```bash
 bun run build
 # ✅ Build succeeds
@@ -92,7 +98,7 @@ bun run build
 
 1. **Bun Workspaces**: When you run `bun install`, Bun detects the `workspace:*` protocol and creates a symlink from `apps/suref-web/node_modules/salvageunion-reference` to `packages/salvageunion-reference`.
 
-2. **Module Resolution**: 
+2. **Module Resolution**:
    - Bun's runtime resolves `salvageunion-reference` through the symlink
    - TypeScript resolves types from `packages/salvageunion-reference/dist/index.d.ts`
    - Vite uses the alias to ensure proper bundling
@@ -108,8 +114,8 @@ bun run build
 ✅ **The `suref-web` app is using the local `salvageunion-reference` package, not a published npm version.**
 
 The workspace protocol (`workspace:*`) ensures that:
+
 - The local package is always used
 - Changes are immediately available after rebuild
 - No version conflicts with published packages
 - TypeScript and Vite resolve correctly
-

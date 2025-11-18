@@ -56,7 +56,7 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
       '@type': 'Article',
       headline: itemName,
       description: metaDescription,
-      url: `https://suindex.pages.dev/schema/${schemaId}/item/${itemId}`,
+      url: `https://su-srd.pages.dev/schema/${schemaId}/item/${itemId}`,
       keywords: [
         'Salvage Union',
         'TTRPG',

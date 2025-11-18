@@ -38,7 +38,7 @@ export const prerenderConfig = {
   routes: getStaticPaths(),
 
   sitemap: {
-    hostname: 'https://suindex.pages.dev',
+    hostname: 'https://su-srd.pages.dev',
     getEntry: (route: string) => {
       if (route === '/') {
         return { priority: 1.0, changefreq: 'weekly' as const }
@@ -59,6 +59,6 @@ export const prerenderConfig = {
   robots: {
     allow: '/',
     disallow: ['/dashboard', '/api'],
-    sitemap: 'https://suindex.pages.dev/sitemap.xml',
+    sitemap: 'https://su-srd.pages.dev/sitemap.xml',
   },
 }
