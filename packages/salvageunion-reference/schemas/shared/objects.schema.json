@@ -183,37 +183,6 @@
         }
       }
     },
-    "techLevelEffect": {
-      "type": "object",
-      "description": "Effect that scales with tech level",
-      "additionalProperties": false,
-      "required": ["techLevelMin", "techLevelMax", "effects"],
-      "properties": {
-        "techLevelMin": {
-          "$ref": "common.schema.json#/definitions/positiveInteger"
-        },
-        "techLevelMax": {
-          "$ref": "common.schema.json#/definitions/positiveInteger"
-        },
-        "effects": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "description": "Related entry or reference",
-            "additionalProperties": false,
-            "required": ["value"],
-            "properties": {
-              "label": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    },
     "choice": {
       "type": "object",
       "additionalProperties": false,
@@ -856,12 +825,6 @@
             }
           }
         }
-      }
-    },
-    "techLevelEffects": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/techLevelEffect"
       }
     }
   }

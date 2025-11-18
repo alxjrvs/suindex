@@ -8,7 +8,6 @@ import { EntitySubTitleElement } from '../EntitySubTitleContent'
 import { EntityLeftContent } from '../EntityLeftContent'
 import { EntityRightHeaderContent } from '../EntityRightHeaderContent'
 import { EntityChassisPatterns } from '../EntityChassisPatterns'
-import { EntityTechLevelEffects } from '../EntityTechLevelEffects'
 import { EntityOptions } from '../EntityOptions'
 import { EntityTopMatter } from '../EntityTopMatter'
 import { EntityRequirementDisplay } from '../EntityRequirementDisplay'
@@ -108,7 +107,6 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
                   />
                 </Box>
               )}
-              <EntityTechLevelEffects />
               {'damagedEffect' in data && data.damagedEffect && compact && (
                 <ConditionalSheetInfo
                   propertyName="damagedEffect"

@@ -11,7 +11,7 @@
     },
     "contentType": {
       "type": "string",
-      "enum": ["paragraph", "heading", "list-item", "label", "datavalues"],
+      "enum": ["paragraph", "heading", "list-item", "label", "datavalues", "hint"],
       "description": "Type of content block for rendering structured text"
     },
     "range": {

@@ -6,7 +6,7 @@
   "type": "array",
   "items": {
     "type": "object",
-    "required": ["damagedEffect", "npc", "actions", "techLevelEffects"],
+    "required": ["damagedEffect", "npc"],
     "allOf": [
       {
         "$ref": "shared/objects.schema.json#/definitions/baseEntity"
@@ -26,15 +26,6 @@
         "items": {
           "$ref": "shared/objects.schema.json#/definitions/choice"
         }
-      },
-      "actions": {
-        "type": "array",
-        "items": {
-          "$ref": "shared/objects.schema.json#/definitions/action"
-        }
-      },
-      "techLevelEffects": {
-        "$ref": "shared/objects.schema.json#/definitions/techLevelEffects"
       },
       "table": {
         "$ref": "shared/objects.schema.json#/definitions/table"

@@ -386,8 +386,8 @@ describe('Property Extractors', () => {
     it('should extract actions from crawler bays', () => {
       const crawlerBay = SalvageUnionReference.CrawlerBays.all()[0]
       const actions = extractActions(crawlerBay)
-      expect(actions).toBeDefined()
-      expect(Array.isArray(actions)).toBe(true)
+      // Crawler bays no longer have actions property
+      expect(actions).toBeUndefined()
     })
 
     it('should return undefined for entities without actions', () => {
