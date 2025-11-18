@@ -1,5 +1,19 @@
+import { useState } from 'react'
 import { createFileRoute, useSearch } from '@tanstack/react-router'
-import { Box, Container, Flex, Image, Link, VStack, HStack } from '@chakra-ui/react'
+import {
+  Box,
+  Container,
+  Flex,
+  Image,
+  Link,
+  VStack,
+  HStack,
+  DialogRoot,
+  DialogContent,
+  DialogBackdrop,
+  DialogCloseTrigger,
+  DialogPositioner,
+} from '@chakra-ui/react'
 import { Text } from '../components/base/Text'
 import Footer from '../components/Footer'
 
@@ -12,6 +26,8 @@ function AboutPage() {
   // Convert to string and check if it equals 'TRUE' (case-insensitive)
   const havenStr = havenValue != null ? String(havenValue) : undefined
   const showHavenEpisodes = havenStr?.toUpperCase() === 'TRUE'
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
+  const imageAlt = 'Created using Shmeppy.com'
   return (
     <Flex direction="column" w="full" h="full" flex="1" justifyContent="center" bg="su.white">
       <Container
@@ -58,10 +74,14 @@ function AboutPage() {
                 >
                   <Image
                     src="/eldridge-coast-map.png"
-                    alt="Created using Shmeppy.com"
+                    alt={imageAlt}
                     w="full"
                     h="auto"
                     objectFit="contain"
+                    cursor="pointer"
+                    onClick={() => setIsImageModalOpen(true)}
+                    _hover={{ opacity: 0.9 }}
+                    transition="opacity 0.2s"
                   />
                 </Box>
                 <Box w="full" bg="su.black" color="su.white" px={2} py={1} textAlign="center">
@@ -330,6 +350,70 @@ function AboutPage() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Image Modal */}
+      <DialogRoot
+        open={isImageModalOpen}
+        onOpenChange={(e) => {
+          if (!e.open) {
+            setIsImageModalOpen(false)
+          }
+        }}
+        size="xl"
+        placement="center"
+      >
+        <DialogBackdrop bg="blackAlpha.700" />
+        <DialogPositioner
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsImageModalOpen(false)
+            }
+          }}
+        >
+          <DialogContent
+            maxW="90vw"
+            maxH="90vh"
+            bg="transparent"
+            border="none"
+            shadow="none"
+            p={0}
+            onClick={(e) => e.stopPropagation()}
+            position="relative"
+          >
+            <DialogCloseTrigger
+              position="absolute"
+              top={2}
+              right={2}
+              color="su.white"
+              bg="su.black"
+              borderRadius="md"
+              _hover={{ bg: 'su.brick' }}
+              fontSize="2xl"
+              fontWeight="bold"
+              zIndex={10}
+              w={10}
+              h={10}
+            >
+              ×
+            </DialogCloseTrigger>
+            <VStack gap={4} align="stretch">
+              <Image
+                src="/eldridge-coast-map.png"
+                alt={imageAlt}
+                w="full"
+                h="auto"
+                maxH="85vh"
+                objectFit="contain"
+              />
+              <Box textAlign="center">
+                <Text fontSize="sm" color="su.white">
+                  {imageAlt}
+                </Text>
+              </Box>
+            </VStack>
+          </DialogContent>
+        </DialogPositioner>
+      </DialogRoot>
     </Flex>
   )
 }
