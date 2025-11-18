@@ -109,7 +109,6 @@ export interface SURefCrawlerBay extends SURefMetaBaseEntity {
    * Choices available to the player when interacting with the NPC
    */
   choices?: SURefMetaChoice[]
-  actions: SURefMetaAction[]
   table?: SURefMetaTable
 }
 

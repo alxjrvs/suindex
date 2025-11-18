@@ -65,8 +65,7 @@ export function isCoreClass(entity: SURefMetaEntity): entity is SURefCoreClass {
 export function isCrawlerBay(entity: SURefMetaEntity): entity is SURefCrawlerBay {
   return (
     'damagedEffect' in entity &&
-    'npc' in entity &&
-    'actions' in entity
+    'npc' in entity
   )
 }
 

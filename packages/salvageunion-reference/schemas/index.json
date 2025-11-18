@@ -83,7 +83,7 @@
       "dataFile": "data/crawler-bays.json",
       "schemaFile": "schemas/crawler-bays.schema.json",
       "itemCount": 10,
-      "requiredFields": ["damagedEffect", "npc", "actions"],
+      "requiredFields": ["damagedEffect", "npc"],
       "displayName": "Crawler Bays"
     },
     {

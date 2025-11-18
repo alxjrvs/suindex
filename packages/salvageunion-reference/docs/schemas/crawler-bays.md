@@ -16,7 +16,6 @@ Bays and facilities on Union Crawlers in Salvage Union
 | `damagedEffect`    | string             | ✅       | Effect when this bay is damaged                               |
 | `npc`              | `npc`              | ✅       |                                                               |
 | `choices`          | Array<`choice`>    | ❌       | Choices available to the player when interacting with the NPC |
-| `actions`          | `actions`          | ✅       |                                                               |
 | `table`            | `table`            | ❌       |                                                               |
 
 ## Example
@@ -27,18 +26,6 @@ Bays and facilities on Union Crawlers in Salvage Union
   "name": "Command Bay",
   "source": "Salvage Union Workshop Manual",
   "damagedEffect": "If the Command Bay is damaged your Union Crawler can no longer move, and its scanning and map functions no longer work. You are in the dark when it comes to conducting missions outside of the immediate area.",
-  "actions": [
-    {
-      "name": "Wasteland Scanning",
-      "id": "70b54038-eff6-4e1b-ba3a-0e6fea1212a4",
-      "content": [
-        {
-          "type": "paragraph",
-          "value": "Once per Downtime, before you set out into the wasteland, you may ask the Mediator a number of questions equal to the Tech Level of your Union Crawler about the area of the Region Map you are in, and they will answer you truthfully."
-        }
-      ]
-    }
-  ],
   "page": 221,
   "npc": {
     "position": "Princeps",
