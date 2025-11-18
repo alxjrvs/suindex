@@ -32,13 +32,37 @@ export function getStaticPaths() {
 }
 
 /**
+ * Get the site URL from environment variable or use default
+ * Defaults to production URL (salvageunion.io)
+ * For Netlify previews, can be set to suindex.netlify.app or auto-detected
+ */
+function getSiteUrl(): string {
+  // Check for VITE_SITE_URL environment variable
+  const envUrl = import.meta.env.VITE_SITE_URL
+  if (envUrl) {
+    return envUrl
+  }
+
+  // Check for Netlify environment variables
+  const netlifyUrl = import.meta.env.NETLIFY_URL
+  if (netlifyUrl) {
+    return `https://${netlifyUrl}`
+  }
+
+  // Default to production URL
+  return 'https://salvageunion.io'
+}
+
+const siteUrl = getSiteUrl()
+
+/**
  * Prerender configuration for TanStack Start
  */
 export const prerenderConfig = {
   routes: getStaticPaths(),
 
   sitemap: {
-    hostname: 'https://su-srd.pages.dev',
+    hostname: siteUrl,
     getEntry: (route: string) => {
       if (route === '/') {
         return { priority: 1.0, changefreq: 'weekly' as const }
@@ -59,6 +83,6 @@ export const prerenderConfig = {
   robots: {
     allow: '/',
     disallow: ['/dashboard', '/api'],
-    sitemap: 'https://su-srd.pages.dev/sitemap.xml',
+    sitemap: `${siteUrl}/sitemap.xml`,
   },
 }

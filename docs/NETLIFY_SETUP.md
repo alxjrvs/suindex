@@ -1,37 +1,42 @@
 # Netlify Deployment Configuration for Monorepo
 
-## Current Issue
+## Site Information
 
-The Netlify UI build settings are overriding the `netlify.toml` file. Update the following settings in your Netlify dashboard:
+- **Production URL**: `https://salvageunion.io`
+- **Netlify URL**: `https://suindex.netlify.app`
 
 ## Required Netlify UI Settings
 
 ### Build Settings
 
 1. **Base directory**: `/` (keep as root)
-2. **Build command**: `bun install --frozen-lockfile && cd packages/salvageunion-reference && bun install && bun run build || echo 'Package build completed' && cd ../../apps/suref-web && bun run build`
-   - OR use the simpler: `bun run build` (which runs the root build script)
-3. **Publish directory**: `apps/suref-web/dist/client`
-   - This is where TanStack Start outputs the built client files
+2. **Build command**: Leave empty (uses `netlify.toml`)
+3. **Publish directory**: Leave empty (uses `netlify.toml`)
 
-### Alternative: Use netlify.toml
+The `netlify.toml` file in `apps/suref-web/` contains all build configuration:
 
-If you prefer to manage everything in `netlify.toml` (recommended), you can:
-
-1. **Clear the Build command** in Netlify UI (leave it empty)
-2. **Clear the Publish directory** in Netlify UI (leave it empty)
-3. Netlify will then use the settings from `netlify.toml`
+- Build command: `bun install --frozen-lockfile && bun run build:package && bun --filter suref-web build`
+- Publish directory: `apps/suref-web/dist/client`
 
 ## Environment Variables
 
 Make sure to add your environment variables in Netlify:
 
 - Go to Site settings → Environment variables
-- Add:
-  - `VITE_SUPABASE_URL`
-  - `VITE_SUPABASE_ANON_KEY`
-  - `VITE_SHOW_DISCORD_SIGNIN` (if needed)
-  - `VITE_GA_MEASUREMENT_ID` (if needed)
+- Add the following:
+
+### Required Variables
+
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+
+### Optional Variables
+
+- `VITE_SITE_URL` - Site URL for sitemap generation (defaults to `https://salvageunion.io`)
+  - For production: `https://salvageunion.io`
+  - For previews: `https://suindex.netlify.app` (or leave unset to auto-detect from Netlify)
+- `VITE_SHOW_DISCORD_SIGNIN` - Enable Discord sign-in button (if needed)
+- `VITE_GA_MEASUREMENT_ID` - Google Analytics measurement ID (if needed)
 
 ## Build Process
 
@@ -39,16 +44,50 @@ The build process:
 
 1. Installs all dependencies (including workspace packages)
 2. Builds the `salvageunion-reference` package (generates types and dist)
-3. Builds the `suref-web` app
-4. Copies Netlify functions from `apps/suref-web/.netlify/v1/functions/` to `netlify/functions/` and fixes import paths
+3. Builds the `suref-web` app with TanStack Start
+4. The `@netlify/vite-plugin-tanstack-start` plugin automatically handles:
+   - Generating Netlify serverless functions for SSR routes
+   - Placing functions in the correct location
+   - Configuring function routing
 5. Publishes from `apps/suref-web/dist/client`
 
-## Functions Directory
+## Netlify Functions
 
-The `@netlify/vite-plugin-tanstack-start` plugin generates functions in `apps/suref-web/.netlify/v1/functions/`, but Netlify expects them at the root `netlify/functions/` directory.
+The `@netlify/vite-plugin-tanstack-start` plugin automatically handles function generation and placement. No manual configuration is needed. The plugin:
 
-A post-build script (`apps/suref-web/scripts/copy-netlify-functions.sh`) automatically:
+- Generates serverless functions for routes that use SSR (`staticData.ssr: true`)
+- Places functions in the correct location for Netlify
+- Handles routing automatically
 
-- Copies functions to the root `netlify/functions/` directory
-- Updates import paths to work from the new location
-- This is handled automatically in the build command in `netlify.toml`
+Routes with `staticData.ssr: false` are prerendered as static files.
+
+## Configuration Features
+
+The `netlify.toml` file includes:
+
+### Redirects
+
+- SPA catch-all redirect for client-side routing (`/*` → `/index.html` with status 200)
+
+### Headers
+
+- **Security headers**: X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Referrer-Policy, Permissions-Policy, Content-Security-Policy
+- **Caching headers**: Long-term caching for static assets and images, no-cache for HTML files
+
+### Asset Optimization
+
+- CSS bundling and minification
+- JavaScript bundling and minification
+- HTML pretty URLs
+- Image compression
+
+## Sitemap and SEO
+
+The sitemap is automatically generated during build with:
+
+- All prerendered routes from the reference data
+- Configurable hostname via `VITE_SITE_URL` environment variable
+- Defaults to `https://salvageunion.io` for production
+- Auto-detects Netlify preview URLs if `NETLIFY_URL` is available
+
+The `robots.txt` file is also generated with appropriate allow/disallow rules.
