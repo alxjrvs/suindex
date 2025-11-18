@@ -32,6 +32,7 @@ export type SURefContentType =
   | 'list-item'
   | 'label'
   | 'datavalues'
+  | 'hint'
 
 /**
  * Type of damage
