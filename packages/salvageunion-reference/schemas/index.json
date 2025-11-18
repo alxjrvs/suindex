@@ -3,7 +3,7 @@
   "title": "Salvage Union Data Schema Catalog",
   "description": "Catalog of all available schemas in the salvageunion-data repository",
   "version": "2.1.10",
-  "generated": "2025-11-17T22:59:58.094Z",
+  "generated": "2025-11-18T01:35:18.064Z",
   "schemas": [
     {
       "id": "abilities",
@@ -62,7 +62,7 @@
       "description": "Advanced and Hybrid character classes in Salvage Union",
       "dataFile": "data/classes.advanced.json",
       "schemaFile": "schemas/classes.advanced.schema.json",
-      "itemCount": 10,
+      "itemCount": 9,
       "requiredFields": [],
       "displayName": "Advanced Classes"
     },

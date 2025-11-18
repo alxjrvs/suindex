@@ -128,22 +128,6 @@
     ]
   },
   {
-    "id": "35b915bb-bb7b-418b-8f66-ca5908ee4a6c",
-    "type": "Hybrid",
-    "name": "Smuggler",
-    "source": "Salvage Union Workshop Manual",
-    "advancedTree": "Smuggler",
-    "legendaryTree": "Legendary Smuggler",
-    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/smuggler.jpg",
-    "page": 70,
-    "content": [
-      {
-        "type": "paragraph",
-        "value": "You have chosen the path of the Smuggler. Your cargo hides contraband goods, your comms unit whispers dark deals, and nothing is beyond your reach. What escapades will you find yourself in?"
-      }
-    ]
-  },
-  {
     "id": "4570fb02-10c4-4f53-8575-e54bd08d47d3",
     "type": "Hybrid",
     "name": "Ranger",
