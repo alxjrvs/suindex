@@ -30,31 +30,21 @@ interface SearchResultDisplay {
 }
 
 export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
-  const { q: searchQuery = '' } = Route.useSearch()
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [localSearchValue, setLocalSearchValue] = useState(searchQuery)
+  const [localSearchValue, setLocalSearchValue] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
   const navigate = useNavigate({ from: Route.fullPath })
   const inputRef = useRef<HTMLInputElement>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Sync local state with URL when it changes externally (e.g., browser back/forward)
-  useEffect(() => {
-    setLocalSearchValue(searchQuery)
-  }, [searchQuery])
-
-  // Debounce URL updates - only update URL after user stops typing
+  // Debounce search query for search results computation
   useEffect(() => {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current)
     }
 
     debounceTimerRef.current = setTimeout(() => {
-      if (localSearchValue !== searchQuery) {
-        navigate({
-          search: { q: localSearchValue || undefined },
-          replace: true,
-        })
-      }
+      setDebouncedQuery(localSearchValue)
     }, DEBOUNCE_TIMINGS.search)
 
     return () => {
@@ -62,9 +52,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         clearTimeout(debounceTimerRef.current)
       }
     }
-  }, [localSearchValue, searchQuery, navigate])
-
-  const debouncedQuery = searchQuery
+  }, [localSearchValue])
 
   const schemaMetadata = useMemo(
     () =>
@@ -87,13 +75,11 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         navigate({
           to: '/schema/$schemaId',
           params: { schemaId: result.schemaId },
-          search: { q: undefined },
         })
       } else if (result.itemId) {
         navigate({
           to: '/schema/$schemaId/item/$itemId',
           params: { schemaId: result.schemaId, itemId: result.itemId },
-          search: { q: undefined },
         })
       }
     },
@@ -180,7 +166,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [searchResults, navigate, selectedIndex, handleSelectResult, localSearchValue])
+  }, [searchResults, selectedIndex, handleSelectResult, localSearchValue])
 
   const containerRef = useRef<HTMLDivElement>(null)
 
