@@ -4,10 +4,9 @@ import type {
   SURefSchemaName,
   SURefMetaSystemModule,
   SURefMetaEntity,
-  SURefMetaAction,
 } from 'salvageunion-reference'
 import type { ButtonProps } from '@chakra-ui/react'
-import { getModel, extractVisibleActions } from 'salvageunion-reference'
+import { getModel, extractActions, extractVisibleActions } from 'salvageunion-reference'
 import { EntityDisplay } from './index'
 import { NestedActionDisplay } from '../NestedActionDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
@@ -53,7 +52,11 @@ export function EntityListDisplay({
           'name' in entity
             ? entity.name
             : isSystemModule
-              ? (entity as SURefMetaSystemModule).actions.find((a) => !a.hidden)?.name
+              ? (() => {
+                  const systemModule = entity as SURefMetaSystemModule
+                  const resolvedActions = extractActions(systemModule as SURefMetaEntity)
+                  return resolvedActions?.find((a) => !a.hidden)?.name
+                })()
               : (() => {
                   const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
                   return visibleActions && visibleActions.length > 0
@@ -93,7 +96,11 @@ export function EntityListDisplay({
               'name' in entity
                 ? entity.name
                 : isSystemModule
-                  ? (entity as SURefMetaSystemModule).actions.find((a) => !a.hidden)?.name
+                  ? (() => {
+                      const systemModule = entity as SURefMetaSystemModule
+                      const resolvedActions = extractActions(systemModule as SURefMetaEntity)
+                      return resolvedActions?.find((a) => !a.hidden)?.name
+                    })()
                   : (() => {
                       const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
                       return visibleActions && visibleActions.length > 0
@@ -119,7 +126,8 @@ export function EntityListDisplay({
 
         if (isSystemModule) {
           const systemModule = entity as SURefMetaSystemModule
-          const visibleActions = systemModule.actions.filter((a) => !a.hidden) as SURefMetaAction[]
+          const resolvedActions = extractActions(systemModule as SURefMetaEntity)
+          const visibleActions = resolvedActions?.filter((a) => !a.hidden)
           if (visibleActions && visibleActions.length > 0) {
             return <NestedActionDisplay key={idx} data={visibleActions[0]} compact />
           }

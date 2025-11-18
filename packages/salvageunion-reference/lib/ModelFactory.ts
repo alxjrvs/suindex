@@ -12,6 +12,7 @@ import schemaIndex from '../schemas/index.json' with { type: 'json' }
 // Import all data files
 import abilitiesData from '../data/abilities.json' with { type: 'json' }
 import abilityTreeRequirementsData from '../data/ability-tree-requirements.json' with { type: 'json' }
+import actionsData from '../data/actions.json' with { type: 'json' }
 import bioTitansData from '../data/bio-titans.json' with { type: 'json' }
 import chassisData from '../data/chassis.json' with { type: 'json' }
 import chassisAbilitiesData from '../data/chassis-abilities.json' with { type: 'json' }
@@ -37,6 +38,7 @@ import vehiclesData from '../data/vehicles.json' with { type: 'json' }
 // Import all schema files
 import abilitiesSchema from '../schemas/abilities.schema.json' with { type: 'json' }
 import abilityTreeRequirementsSchema from '../schemas/ability-tree-requirements.schema.json' with { type: 'json' }
+import actionsSchema from '../schemas/actions.schema.json' with { type: 'json' }
 import bioTitansSchema from '../schemas/bio-titans.schema.json' with { type: 'json' }
 import chassisSchema from '../schemas/chassis.schema.json' with { type: 'json' }
 import chassisAbilitiesSchema from '../schemas/chassis-abilities.schema.json' with { type: 'json' }
@@ -65,6 +67,7 @@ import vehiclesSchema from '../schemas/vehicles.schema.json' with { type: 'json'
 const dataMap: Record<string, unknown[]> = {
   abilities: abilitiesData,
   'ability-tree-requirements': abilityTreeRequirementsData,
+  actions: actionsData,
   'bio-titans': bioTitansData,
   chassis: chassisData,
   'chassis-abilities': chassisAbilitiesData,
@@ -94,6 +97,7 @@ const dataMap: Record<string, unknown[]> = {
 const schemaMap: Record<string, Record<string, unknown>> = {
   abilities: abilitiesSchema,
   'ability-tree-requirements': abilityTreeRequirementsSchema,
+  actions: actionsSchema,
   'bio-titans': bioTitansSchema,
   chassis: chassisSchema,
   'chassis-abilities': chassisAbilitiesSchema,

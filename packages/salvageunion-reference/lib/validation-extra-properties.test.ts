@@ -71,14 +71,7 @@ describe('Extra Properties Validation', () => {
           page: 1,
           tree: 'Generic',
           level: 1,
-          actions: [
-            {
-              id: 'action-test-id',
-              name: 'Test Ability',
-              description: 'Test description',
-              actionType: 'Passive',
-            },
-          ],
+          actions: ['Test Ability'], // Use action name, not object
           invalidProperty: 'This should not be allowed', // Extra property
         },
       ]
@@ -100,14 +93,7 @@ describe('Extra Properties Validation', () => {
           page: 1,
           tree: 'Generic',
           level: 1,
-          actions: [
-            {
-              id: 'action-test-id',
-              name: 'Test Ability',
-              description: 'Test description',
-              actionType: 'Passive',
-            },
-          ],
+          actions: ['Test Ability'], // Use action name, not object
         },
       ]
 
@@ -174,13 +160,7 @@ describe('Extra Properties Validation', () => {
           source: 'Salvage Union Workshop Manual',
           page: 1,
           techLevel: 1,
-          actions: [
-            {
-              id: 'action-test-id',
-              name: 'Test Equipment',
-              description: 'Test description',
-            },
-          ],
+          actions: ['Test Equipment'], // Use action name, not object
           unknownField: 'This should not be allowed', // Extra property
         },
       ]

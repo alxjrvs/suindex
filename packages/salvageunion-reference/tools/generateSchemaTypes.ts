@@ -317,6 +317,19 @@ async function generateSchemaTypes() {
   // Generate types for each schema
   console.log('📋 Generating schema types...')
   for (const schemaEntry of schemas) {
+    // Skip generating SURefMetaAction for actions schema since it's already defined in objects.ts
+    // We'll generate SURefAction as an alias instead
+    if (schemaEntry.id === 'actions') {
+      typeDefinitions.push('/**')
+      typeDefinitions.push(' * Actions, abilities, and attacks that can be performed in Salvage Union')
+      typeDefinitions.push(' * Note: SURefMetaAction is defined in objects.ts, this is just an alias for convenience')
+      typeDefinitions.push(' */')
+      typeDefinitions.push('export type SURefAction = SURefMetaAction')
+      typeDefinitions.push('')
+      console.log(`   ✓ ${schemaEntry.id} (meta - alias)`)
+      continue
+    }
+
     const schemaPath = path.join(__dirname, '..', schemaEntry.schemaFile)
     const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'))
     const isMeta = schemaEntry.meta === true

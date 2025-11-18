@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/actions.schema.json",
+  "title": "actions",
+  "description": "Actions, abilities, and attacks that can be performed in Salvage Union",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "name"],
+    "allOf": [
+      {
+        "$ref": "shared/objects.schema.json#/definitions/action"
+      }
+    ],
+    "unevaluatedProperties": false
+  }
+}
+

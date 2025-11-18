@@ -28,6 +28,12 @@ interface System {
   }>
 }
 
+interface Action {
+  id: string
+  name: string
+  choices?: Choice[]
+}
+
 interface PatternItem {
   name: string
   preselectedChoices?: { [id: string]: string }
@@ -69,12 +75,15 @@ describe('Preselected Choices Validation', () => {
   it('should ensure all preselectedChoices reference valid choice IDs', () => {
     const systemsData = loadJson('data/systems.json') as System[]
     const chassisData = loadJson('data/chassis.json') as Chassis[]
+    const actionsData = loadJson('data/actions.json') as Action[]
 
     // Build a set of all valid choice IDs
     // This includes both the choice IDs themselves and any customSystemOption IDs
+    // From both systems (for legacy support) and actions (new meta schema)
     const validChoiceIds = new Set<string>()
     const choiceIdToSystemName = new Map<string, string>()
 
+    // Check systems for choices (legacy support)
     for (const system of systemsData) {
       if (system.actions?.[0]?.choices) {
         for (const choice of system.actions[0].choices) {
@@ -89,6 +98,28 @@ describe('Preselected Choices Validation', () => {
               if (option.id) {
                 validChoiceIds.add(option.id)
                 choiceIdToSystemName.set(option.id, system.name)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Check actions for choices (new meta schema)
+    for (const action of actionsData) {
+      if (action.choices) {
+        for (const choice of action.choices) {
+          if (choice.id) {
+            validChoiceIds.add(choice.id)
+            choiceIdToSystemName.set(choice.id, action.name)
+          }
+
+          // Also add customSystemOption IDs if they exist
+          if (choice.customSystemOptions) {
+            for (const option of choice.customSystemOptions) {
+              if (option.id) {
+                validChoiceIds.add(option.id)
+                choiceIdToSystemName.set(option.id, action.name)
               }
             }
           }

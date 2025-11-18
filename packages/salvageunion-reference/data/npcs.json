@@ -5,24 +5,8 @@
     "name": "Wastelander",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/npcs/wastelander.jpg",
     "actions": [
-      {
-        "name": "Improvised Melee Weapon",
-        "range": ["Close"],
-        "damage": {
-          "amount": 2,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "melee"
-          }
-        ],
-        "id": "481f14da-1d3a-49c1-a973-68051980c042"
-      },
-      {
-        "name": "Salvaging Tools",
-        "id": "28704d5b-7842-4bdd-b1ce-5373822dfaaf"
-      }
+      "Improvised Melee Weapon (1)",
+      "Salvaging Tools (1)"
     ],
     "hitPoints": 2,
     "page": 298,
@@ -38,23 +22,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Raider",
     "actions": [
-      {
-        "name": "Improvised Firearm",
-        "range": ["Close"],
-        "damage": {
-          "amount": 3,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "ballistic"
-          },
-          {
-            "type": "unwieldy"
-          }
-        ],
-        "id": "cc732598-c273-481d-a37a-ce107cf1312c"
-      }
+      "Improvised Firearm (1)"
     ],
     "hitPoints": 3,
     "page": 298,
@@ -70,24 +38,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Trooper",
     "actions": [
-      {
-        "name": "Rifle",
-        "range": ["Medium"],
-        "damage": {
-          "amount": 5,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "ballistic"
-          }
-        ],
-        "id": "780c8a12-89f2-4ea7-933f-67e356953ac8"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "8110d372-9910-4ee7-b421-8ac2061eb997"
-      }
+      "Rifle (1)",
+      "Portable Comms Unit (1)"
     ],
     "hitPoints": 5,
     "page": 274,
@@ -103,24 +55,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Veteran",
     "actions": [
-      {
-        "name": "Green Laser Rifle",
-        "range": ["Medium"],
-        "damage": {
-          "amount": 5,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "energy"
-          }
-        ],
-        "id": "91a2fd03-ded5-4e51-970c-fdf246b5ede2"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "d33ed41a-7cf7-416e-bece-5772673a82c8"
-      }
+      "Green Laser Rifle (1)",
+      "Portable Comms Unit"
     ],
     "hitPoints": 9,
     "page": 298,
@@ -136,24 +72,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Combat Pilot",
     "actions": [
-      {
-        "name": "Pistol",
-        "range": ["Close"],
-        "damage": {
-          "amount": 3,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "ballistic"
-          }
-        ],
-        "id": "7feff15d-e417-4d08-b02d-d64c94893542"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "44a3b141-a50c-4eb1-b5ca-4e9c14ac2271"
-      }
+      "Pistol (1)",
+      "Portable Comms Unit"
     ],
     "hitPoints": 10,
     "page": 298,
@@ -169,24 +89,8 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Ace",
     "actions": [
-      {
-        "name": "Sniper Rifle",
-        "range": ["Long"],
-        "damage": {
-          "amount": 6,
-          "damageType": "HP"
-        },
-        "traits": [
-          {
-            "type": "ballistic"
-          }
-        ],
-        "id": "d59c2720-ab52-4999-a830-da2525ce2dea"
-      },
-      {
-        "name": "Portable Comms Unit",
-        "id": "30348f5b-ec98-4ed3-a1e0-fc2b5a2e97b4"
-      }
+      "Sniper Rifle (1)",
+      "Portable Comms Unit"
     ],
     "hitPoints": 16,
     "page": 298,

@@ -288,12 +288,14 @@ export function getDescription(entity: SURefMetaEntity): string | undefined {
 
 /**
  * Extract actions from an entity
+ * Note: This function returns the raw string array. Use extractActions() from utilities.ts
+ * to get resolved action objects.
  * @param entity - The entity to extract from
  * @returns The actions or undefined
  */
-export function getActions(entity: SURefMetaEntity): SURefMetaAction[] | undefined {
+export function getActions(entity: SURefMetaEntity): string[] | undefined {
   return 'actions' in entity && Array.isArray(entity.actions)
-    ? entity.actions
+    ? (entity.actions as string[])
     : undefined
 }
 
@@ -348,7 +350,7 @@ export function getActivationCurrency(entity: SURefMetaEntity): string | undefin
  */
 export function getRequirement(entity: SURefMetaEntity): string[] | undefined {
   return 'requirement' in entity && Array.isArray(entity.requirement)
-    ? entity.requirement
+    ? (entity.requirement as string[])
     : undefined
 }
 
@@ -395,7 +397,7 @@ export function getAdvanceable(entity: SURefMetaEntity): boolean | undefined {
  */
 export function getCoreTrees(entity: SURefMetaEntity): string[] | undefined {
   return 'coreTrees' in entity && Array.isArray(entity.coreTrees)
-    ? entity.coreTrees
+    ? (entity.coreTrees as string[])
     : undefined
 }
 
@@ -507,7 +509,6 @@ export function getDamageType(entity: SURefMetaEntity): string | undefined {
 
 // Import meta types used in property extractors
 import type {
-  SURefMetaAction,
   SURefMetaBonusPerTechLevel,
   SURefMetaChoices,
   SURefMetaContent,

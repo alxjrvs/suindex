@@ -189,8 +189,8 @@ function getTypeScriptType(propName: string, propType: string): string {
     table: 'SURefMetaTable',
     bonusPerTechLevel: 'SURefMetaBonusPerTechLevel',
     traits: 'SURefMetaTraits',
-    actions: 'SURefMetaAction[]',
-    chassisAbilities: 'SURefMetaAction[]',
+    actions: 'string[]', // Actions are now string arrays (action names), use extractActions() to resolve
+    chassisAbilities: 'SURefMetaAction[]', // Chassis abilities are resolved objects
     grants: 'SURefMetaGrant[]',
     systems: 'SURefMetaSystems',
     modules: 'SURefMetaModules',
@@ -221,6 +221,10 @@ function generatePropertyExtractor(propName: string, propType: string): string {
 
   let code = `/**\n`
   code += ` * Extract ${propName} from an entity\n`
+  if (propName === 'actions') {
+    code += ` * Note: This function returns the raw string array. Use extractActions() from utilities.ts\n`
+    code += ` * to get resolved action objects.\n`
+  }
   code += ` * @param entity - The entity to extract from\n`
   code += ` * @returns The ${propName} or undefined\n`
   code += ` */\n`
@@ -244,9 +248,16 @@ function generatePropertyExtractor(propName: string, propType: string): string {
     returnType.includes('[]') ||
     (returnType.startsWith('SURefMeta') && returnType.endsWith('s') && !returnType.includes('|'))
   ) {
-    code += `  return '${propName}' in entity && Array.isArray(entity.${propName})\n`
-    code += `    ? entity.${propName}\n`
-    code += `    : undefined\n`
+    // For string arrays (like actions), cast to the correct type
+    if (returnType === 'string[]') {
+      code += `  return '${propName}' in entity && Array.isArray(entity.${propName})\n`
+      code += `    ? (entity.${propName} as ${returnType})\n`
+      code += `    : undefined\n`
+    } else {
+      code += `  return '${propName}' in entity && Array.isArray(entity.${propName})\n`
+      code += `    ? entity.${propName}\n`
+      code += `    : undefined\n`
+    }
   } else if (
     propType === 'object' ||
     returnType.startsWith('SURefMeta') ||
@@ -318,6 +329,9 @@ output += `// ==================================================================
 output += `// PROPERTY EXTRACTORS\n`
 output += `// ============================================================================\n\n`
 
+// Properties that have manual implementations and should not be auto-generated
+const manualProperties = new Set(['chassisAbilities'])
+
 // Collect all unique properties across all schemas
 const allProperties = new Map<string, string>()
 
@@ -331,8 +345,13 @@ for (const schemaInfo of schemaIndex.schemas) {
 }
 
 // Determine which meta types are actually used based on properties
+// Only include types from properties that will be auto-generated (not manual)
 const usedMetaTypes = new Set<string>()
 for (const [propName, propType] of allProperties.entries()) {
+  // Skip manual properties - they have their own implementations
+  if (manualProperties.has(propName)) {
+    continue
+  }
   const metaType = getTypeScriptType(propName, propType)
   if (metaType.startsWith('SURefMeta')) {
     // Extract base type from arrays (e.g., 'SURefMetaAction[]' -> 'SURefMetaAction')
@@ -367,9 +386,6 @@ const priorityProperties = [
 ]
 
 const generatedExtractors = new Set<string>()
-
-// Properties that have manual implementations and should not be auto-generated
-const manualProperties = new Set(['chassisAbilities'])
 
 // Generate extractors for priority properties first
 for (const propName of priorityProperties) {

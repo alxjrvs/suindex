@@ -23,7 +23,7 @@ function generateIndexFile() {
   let template = fs.readFileSync(templatePath, 'utf-8')
 
   // Schemas that are not top-level entities (excluded from entity operations)
-  const nonEntitySchemas = new Set(['chassis-abilities'])
+  const nonEntitySchemas = new Set(['chassis-abilities', 'actions'])
 
   // Generate type imports (only for entity schemas)
   const entitySchemas = schemaIndex.schemas.filter((entry) => !nonEntitySchemas.has(entry.id))

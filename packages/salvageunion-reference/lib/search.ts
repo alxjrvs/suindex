@@ -4,6 +4,7 @@
 
 import type { SURefEntity, SURefSchemaName } from './types/index.js'
 import { getSchemaCatalog, getDataMaps } from './ModelFactory.js'
+import { extractActions } from './utilities.js'
 
 export interface SearchOptions {
   query: string
@@ -178,9 +179,10 @@ function matchesQuery(
     }
   }
 
-  // Check actions for content blocks
-  if ('actions' in entity && Array.isArray(entity.actions)) {
-    for (const action of entity.actions) {
+  // Check actions for content blocks (actions are now strings, need to resolve)
+  const resolvedActions = extractActions(entity)
+  if (resolvedActions) {
+    for (const action of resolvedActions) {
       if (typeof action === 'object' && action !== null && 'content' in action) {
         const actionContentText = extractContentText(action.content)
         const searchableActionContent = caseSensitive
