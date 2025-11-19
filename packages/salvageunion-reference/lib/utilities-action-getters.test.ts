@@ -41,7 +41,7 @@ describe('Action Property Getters', () => {
       }
     })
 
-    test('should extract from actions[0] when entity has exactly 1 action', () => {
+    test('should extract from action when action name matches entity name', () => {
       const { dataMap } = getDataMaps()
       const actionsData = dataMap['actions'] as Array<{
         id: string
@@ -53,9 +53,10 @@ describe('Action Property Getters', () => {
       const testAction = actionsData.find((a) => a.activationCost === 3)
 
       if (testAction && testAction.activationCost !== undefined) {
+        // Entity name must match action name for extraction to work
         const entity = {
-          id: 'test-single-action',
-          name: 'Test Single Action',
+          id: 'test-matching-action',
+          name: testAction.name, // Match action name
           actions: [testAction.name], // Use action name, not object
         }
 
@@ -64,18 +65,28 @@ describe('Action Property Getters', () => {
       }
     })
 
-    test('should return undefined when entity has multiple actions', () => {
-      const entity = {
-        id: 'test-multi-action',
-        name: 'Test Multi Action',
-        actions: ['Action 1', 'Action 2'], // Use action names, not objects
-      }
+    test('should return undefined when action name does not match entity name', () => {
+      const { dataMap } = getDataMaps()
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        activationCost?: number
+      }>
+      const testAction = actionsData.find((a) => a.activationCost === 3)
 
-      const cost = getActivationCost(entity as never)
-      expect(cost).toBeUndefined()
+      if (testAction) {
+        const entity = {
+          id: 'test-non-matching-action',
+          name: 'Different Entity Name', // Different from action name
+          actions: [testAction.name], // Use action name, not object
+        }
+
+        const cost = getActivationCost(entity as never)
+        expect(cost).toBeUndefined()
+      }
     })
 
-    test('should prefer base-level property over actions[0]', () => {
+    test('should prefer base-level property over matching action', () => {
       const { dataMap } = getDataMaps()
       const actionsData = dataMap['actions'] as Array<{ id: string; name: string }>
       const testAction = actionsData[0]
@@ -93,15 +104,21 @@ describe('Action Property Getters', () => {
       }
     })
 
-    test('should work correctly with real single-action systems', () => {
-      const singleActionSystem = SalvageUnionReference.Systems.all().find(
-        (s) => s.actions && s.actions.length === 1
-      )
-      if (singleActionSystem && singleActionSystem.actions) {
-        const resolvedActions = extractActions(singleActionSystem)
-        const cost = getActivationCost(singleActionSystem)
-        if (resolvedActions && resolvedActions[0]?.activationCost) {
-          expect(cost).toBe(resolvedActions[0].activationCost)
+    test('should work correctly with real systems where action name matches entity name', () => {
+      const systems = SalvageUnionReference.Systems.all()
+      const systemWithMatchingAction = systems.find((s) => {
+        if (!s.actions || s.actions.length === 0) return false
+        const resolvedActions = extractActions(s)
+        return resolvedActions?.some((action) => action.name === s.name)
+      })
+      if (systemWithMatchingAction) {
+        const resolvedActions = extractActions(systemWithMatchingAction)
+        const matchingAction = resolvedActions?.find(
+          (action) => action.name === systemWithMatchingAction.name
+        )
+        const cost = getActivationCost(systemWithMatchingAction)
+        if (matchingAction?.activationCost) {
+          expect(cost).toBe(matchingAction.activationCost)
         }
       }
     })
@@ -125,7 +142,7 @@ describe('Action Property Getters', () => {
       expect(typeof actionType).toBe('string')
     })
 
-    test('should extract from actions[0] when entity has exactly 1 action', () => {
+    test('should extract from action when action name matches entity name', () => {
       const { dataMap } = getDataMaps()
       const actionsData = dataMap['actions'] as Array<{
         id: string
@@ -135,25 +152,33 @@ describe('Action Property Getters', () => {
       const testAction = actionsData.find((a) => a.actionType === 'Attack')
 
       if (testAction && testAction.actionType) {
+        // Entity name must match action name for extraction to work
         const entity = {
           id: 'test',
-          name: 'Test',
+          name: testAction.name, // Match action name
           actions: [testAction.name], // Use action name, not object
         }
         expect(getActionType(entity as never)).toBe('Attack')
       }
     })
 
-    test('should return undefined when entity has multiple actions', () => {
-      const entity = {
-        id: 'test',
-        name: 'Test',
-        actions: [
-          { id: 'a1', name: 'A1', actionType: 'Attack' },
-          { id: 'a2', name: 'A2', actionType: 'Utility' },
-        ],
+    test('should return undefined when action name does not match entity name', () => {
+      const { dataMap } = getDataMaps()
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        actionType?: string
+      }>
+      const testAction = actionsData.find((a) => a.actionType === 'Attack')
+
+      if (testAction) {
+        const entity = {
+          id: 'test',
+          name: 'Different Entity Name', // Different from action name
+          actions: [testAction.name], // Use action name, not object
+        }
+        expect(getActionType(entity as never)).toBeUndefined()
       }
-      expect(getActionType(entity as never)).toBeUndefined()
     })
   })
 
@@ -167,7 +192,7 @@ describe('Action Property Getters', () => {
       }
     })
 
-    test('should extract from actions[0] when entity has exactly 1 action', () => {
+    test('should extract from action when action name matches entity name', () => {
       const { dataMap } = getDataMaps()
       const actionsData = dataMap['actions'] as Array<{
         id: string
@@ -177,25 +202,33 @@ describe('Action Property Getters', () => {
       const testAction = actionsData.find((a) => a.range && a.range.length > 0)
 
       if (testAction && testAction.range) {
+        // Entity name must match action name for extraction to work
         const entity = {
           id: 'test',
-          name: 'Test',
+          name: testAction.name, // Match action name
           actions: [testAction.name], // Use action name, not object
         }
         expect(getRange(entity as never)).toEqual(testAction.range)
       }
     })
 
-    test('should return undefined when entity has multiple actions', () => {
-      const entity = {
-        id: 'test',
-        name: 'Test',
-        actions: [
-          { id: 'a1', name: 'A1', range: ['6'] },
-          { id: 'a2', name: 'A2', range: ['12'] },
-        ],
+    test('should return undefined when action name does not match entity name', () => {
+      const { dataMap } = getDataMaps()
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        range?: string[]
+      }>
+      const testAction = actionsData.find((a) => a.range && a.range.length > 0)
+
+      if (testAction) {
+        const entity = {
+          id: 'test',
+          name: 'Different Entity Name', // Different from action name
+          actions: [testAction.name], // Use action name, not object
+        }
+        expect(getRange(entity as never)).toBeUndefined()
       }
-      expect(getRange(entity as never)).toBeUndefined()
     })
   })
 
@@ -221,7 +254,7 @@ describe('Action Property Getters', () => {
       }
     })
 
-    test('should extract from actions[0] when entity has exactly 1 action', () => {
+    test('should extract from action when action name matches entity name', () => {
       const { dataMap } = getDataMaps()
       const actionsData = dataMap['actions'] as Array<{
         id: string
@@ -231,22 +264,33 @@ describe('Action Property Getters', () => {
       const testAction = actionsData.find((a) => a.damage)
 
       if (testAction && testAction.damage) {
+        // Entity name must match action name for extraction to work
         const entity = {
           id: 'test',
-          name: 'Test',
+          name: testAction.name, // Match action name
           actions: [testAction.name], // Use action name, not object
         }
         expect(getDamage(entity as never)).toEqual(testAction.damage)
       }
     })
 
-    test('should return undefined when entity has multiple actions', () => {
-      const entity = {
-        id: 'test',
-        name: 'Test',
-        actions: ['Action 1', 'Action 2'], // Use action names, not objects
+    test('should return undefined when action name does not match entity name', () => {
+      const { dataMap } = getDataMaps()
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        damage?: { damageType: string; amount: number }
+      }>
+      const testAction = actionsData.find((a) => a.damage)
+
+      if (testAction) {
+        const entity = {
+          id: 'test',
+          name: 'Different Entity Name', // Different from action name
+          actions: [testAction.name], // Use action name, not object
+        }
+        expect(getDamage(entity as never)).toBeUndefined()
       }
-      expect(getDamage(entity as never)).toBeUndefined()
     })
   })
 
@@ -271,7 +315,7 @@ describe('Action Property Getters', () => {
       }
     })
 
-    test('should extract from actions[0] when entity has exactly 1 action', () => {
+    test('should extract from action when action name matches entity name', () => {
       const { dataMap } = getDataMaps()
       const actionsData = dataMap['actions'] as Array<{
         id: string
@@ -281,22 +325,33 @@ describe('Action Property Getters', () => {
       const testAction = actionsData.find((a) => a.traits && a.traits.length > 0)
 
       if (testAction && testAction.traits) {
+        // Entity name must match action name for extraction to work
         const entity = {
           id: 'test',
-          name: 'Test',
+          name: testAction.name, // Match action name
           actions: [testAction.name], // Use action name, not object
         }
         expect(getTraits(entity as never)).toEqual(testAction.traits)
       }
     })
 
-    test('should return undefined when entity has multiple actions', () => {
-      const entity = {
-        id: 'test',
-        name: 'Test',
-        actions: ['Action 1', 'Action 2'], // Use action names, not objects
+    test('should return undefined when action name does not match entity name', () => {
+      const { dataMap } = getDataMaps()
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        traits?: Array<{ type: string; amount?: number }>
+      }>
+      const testAction = actionsData.find((a) => a.traits && a.traits.length > 0)
+
+      if (testAction) {
+        const entity = {
+          id: 'test',
+          name: 'Different Entity Name', // Different from action name
+          actions: [testAction.name], // Use action name, not object
+        }
+        expect(getTraits(entity as never)).toBeUndefined()
       }
-      expect(getTraits(entity as never)).toBeUndefined()
     })
   })
 

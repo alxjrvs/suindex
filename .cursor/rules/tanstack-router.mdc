@@ -6,68 +6,15 @@ globs:
 alwaysApply: false
 ---
 
-# TanStack Router Patterns
+TanStack Router patterns for file-based routing in the web app.
 
-## Route Structure
-
-- Routes are file-based in `src/routes/`
-- Route files use default exports for route components
+- Routes are file-based in `src/routes/` with default exports for route components
 - Route tree is auto-generated to `routeTree.gen.ts` (don't edit)
-
-## Route Configuration
-
 - Use `createRoute()` or `createFileRoute()` from `@tanstack/react-router`
-- Define `beforeLoad` for data prefetching
-- Use `loader` for route-level data fetching
-- Use `component` for the route component
-
-## Navigation
-
+- Define `beforeLoad` for data prefetching, use `loader` for route-level data fetching, use `component` for the route component
 - Use `useNavigate()` hook for programmatic navigation
 - Use `Link` component from `@tanstack/react-router` for links
-- Use `useSearch()` for query params (with `strict: false` for optional params)
-
-## Data Loading
-
-- Prefer `beforeLoad` for server-side data fetching
-- Use TanStack Query in components for client-side data
-- Pass prefetched data via route context
-
-## Route Context
-
-- Access route context via `useRouteContext()`
-- Root route provides `serverUser` in context
-- Use context for shared data across route tree
-
-## Examples
-
-```tsx
-// Route with beforeLoad
-import { createFileRoute, useRouteContext } from '@tanstack/react-router'
-import { useHydratedPilot } from '@/hooks/pilot'
-
-export const Route = createFileRoute('/pilots/$id')({
-  beforeLoad: async ({ params }) => {
-    // Prefetch data
-    return { pilotId: params.id }
-  },
-  component: PilotRoute,
-})
-
-function PilotRoute() {
-  const { pilotId } = useRouteContext({ from: '/pilots/$id' })
-  const { pilot } = useHydratedPilot(pilotId)
-  // Use pilot
-}
-```
-
-```tsx
-// Using search params
-import { useSearch } from '@tanstack/react-router'
-
-function MyComponent() {
-  const search = useSearch({ strict: false })
-  const pattern = (search as { pattern?: string }).pattern
-  // Use pattern
-}
-```
+- Use `useSearch()` for query params (with `strict: false` for optional params): `const search = useSearch({ strict: false }); const pattern = (search as { pattern?: string }).pattern`
+- Prefer `beforeLoad` for server-side data fetching, use TanStack Query in components for client-side data, pass prefetched data via route context
+- Access route context via `useRouteContext()`: `const { pilotId } = useRouteContext({ from: '/pilots/$id' })`
+- Root route provides `serverUser` in context, use context for shared data across route tree
