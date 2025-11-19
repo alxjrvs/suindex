@@ -9,6 +9,10 @@
       "url": "./schemas/ability-tree-requirements.schema.json"
     },
     {
+      "fileMatch": ["data/actions.json"],
+      "url": "./schemas/actions.schema.json"
+    },
+    {
       "fileMatch": ["data/bio-titans.json"],
       "url": "./schemas/bio-titans.schema.json"
     },

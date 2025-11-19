@@ -63,14 +63,8 @@ function EquipmentItemWithSlots({
   const systemSlots = getSystemSlots(item.equipment)
   const moduleSlots = getModuleSlots(item.equipment)
 
-  const allSystems = useMemo(
-    () => SalvageUnionReference.findAllIn('systems', () => true),
-    []
-  )
-  const allModules = useMemo(
-    () => SalvageUnionReference.findAllIn('modules', () => true),
-    []
-  )
+  const allSystems = useMemo(() => SalvageUnionReference.findAllIn('systems', () => true), [])
+  const allModules = useMemo(() => SalvageUnionReference.findAllIn('modules', () => true), [])
 
   const sortedSystems = useMemo(() => {
     return equipmentSystems
@@ -207,9 +201,7 @@ function EquipmentItemWithSlots({
                       collapsible
                       defaultExpanded={false}
                       buttonConfig={
-                        !readOnly
-                          ? systemRemoveButtonConfig(system, systemEntity)
-                          : undefined
+                        !readOnly ? systemRemoveButtonConfig(system, systemEntity) : undefined
                       }
                     />
                   )
@@ -255,9 +247,7 @@ function EquipmentItemWithSlots({
                       collapsible
                       defaultExpanded={false}
                       buttonConfig={
-                        !readOnly
-                          ? moduleRemoveButtonConfig(module, moduleEntity)
-                          : undefined
+                        !readOnly ? moduleRemoveButtonConfig(module, moduleEntity) : undefined
                       }
                     />
                   )
