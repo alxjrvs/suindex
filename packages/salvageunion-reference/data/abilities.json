@@ -476,6 +476,12 @@
     "tree": "Recon",
     "level": 3,
     "page": 48,
+    "grants": [
+      {
+        "name": "Survey Drone",
+        "schema": "equipment"
+      }
+    ],
     "actions": ["Survey Drone"],
     "description": "Gain a Survey Drone that can be equipped with Systems and Modules."
   },
@@ -843,7 +849,13 @@
     "level": 1,
     "page": 68,
     "actions": ["Mecha Companion"],
-    "description": "Gain a robot familiar. It can be equipped with Systems and Modules."
+    "description": "Gain a robot familiar. It can be equipped with Systems and Modules.",
+    "grants": [
+      {
+        "name": "Mecha Companion",
+        "schema": "equipment"
+      }
+    ]
   },
   {
     "id": "f3b2da0b-d9b9-400d-947a-73dea06c2529",
@@ -872,6 +884,16 @@
     "tree": "Legendary Ranger",
     "level": "L",
     "page": 69,
+    "grants": [
+      {
+        "name": "Mecha Companion",
+        "schema": "equipment"
+      },
+      {
+        "name": "Mecha Companion",
+        "schema": "equipment"
+      }
+    ],
     "actions": ["Mecha Packmaster"],
     "description": "Gain a second Mecha Companion in addition to your first."
   },
