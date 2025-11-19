@@ -320,7 +320,7 @@ function AboutPage() {
           <Box textAlign="center">
             <HStack gap={2} justifyContent="center" display="inline-flex">
               <Text fontSize="sm" color="su.darkGrey">
-                developing ongoing at
+                development ongoing at
               </Text>
               <Link
                 href="https://github.com/alxjrvs/SU-SRD"
