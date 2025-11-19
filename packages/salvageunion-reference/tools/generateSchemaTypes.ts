@@ -321,8 +321,12 @@ async function generateSchemaTypes() {
     // We'll generate SURefAction as an alias instead
     if (schemaEntry.id === 'actions') {
       typeDefinitions.push('/**')
-      typeDefinitions.push(' * Actions, abilities, and attacks that can be performed in Salvage Union')
-      typeDefinitions.push(' * Note: SURefMetaAction is defined in objects.ts, this is just an alias for convenience')
+      typeDefinitions.push(
+        ' * Actions, abilities, and attacks that can be performed in Salvage Union'
+      )
+      typeDefinitions.push(
+        ' * Note: SURefMetaAction is defined in objects.ts, this is just an alias for convenience'
+      )
       typeDefinitions.push(' */')
       typeDefinitions.push('export type SURefAction = SURefMetaAction')
       typeDefinitions.push('')

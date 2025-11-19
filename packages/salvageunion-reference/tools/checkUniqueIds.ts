@@ -77,8 +77,10 @@ interface ValidationResult {
 const dataFiles = [
   'abilities.json',
   'ability-tree-requirements.json',
+  'actions.json',
   'bio-titans.json',
   'chassis.json',
+  'chassis-abilities.json',
   'classes.advanced.json',
   'classes.core.json',
   'crawler-bays.json',
@@ -137,15 +139,24 @@ function checkFile(filename: string): FileResult {
     }
 
     // Check nested action IDs (recursive)
-    const checkActions = (actions: Action[], context: string) => {
+    // Actions can be strings or objects
+    const checkActions = (actions: unknown[], context: string) => {
       if (actions && Array.isArray(actions)) {
         actions.forEach((action, actionIndex) => {
-          if (action.id) {
-            checkId(action.id, index, `${context}[${actionIndex}]`)
+          // Skip if action is a string (reference to action name)
+          if (typeof action === 'string') {
+            return
           }
-          // Recursively check nested actions
-          if (action.actions) {
-            checkActions(action.actions, `${context}[${actionIndex}].actions`)
+          // Only process if action is an object with an id property
+          if (typeof action === 'object' && action !== null && 'id' in action) {
+            const actionObj = action as Action
+            if (actionObj.id) {
+              checkId(actionObj.id, index, `${context}[${actionIndex}]`)
+            }
+            // Recursively check nested actions
+            if (actionObj.actions) {
+              checkActions(actionObj.actions, `${context}[${actionIndex}].actions`)
+            }
           }
         })
       }
@@ -225,15 +236,24 @@ function checkAllFiles(): ValidationResult {
       }
 
       // Add nested action IDs (recursive)
-      const addActionIds = (actions: Action[]) => {
+      // Actions can be strings or objects
+      const addActionIds = (actions: unknown[]) => {
         if (actions && Array.isArray(actions)) {
           actions.forEach((action) => {
-            if (action.id) {
-              addToGlobalMap(action.id, index)
+            // Skip if action is a string (reference to action name)
+            if (typeof action === 'string') {
+              return
             }
-            // Recursively add nested action IDs
-            if (action.actions) {
-              addActionIds(action.actions)
+            // Only process if action is an object with an id property
+            if (typeof action === 'object' && action !== null && 'id' in action) {
+              const actionObj = action as Action
+              if (actionObj.id) {
+                addToGlobalMap(actionObj.id, index)
+              }
+              // Recursively add nested action IDs
+              if (actionObj.actions) {
+                addActionIds(actionObj.actions)
+              }
             }
           })
         }

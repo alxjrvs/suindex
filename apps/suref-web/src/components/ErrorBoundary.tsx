@@ -23,38 +23,6 @@ interface ErrorContext {
   userId?: string
 }
 
-/**
- * Optional error reporting function
- * Can be configured to send errors to external service (e.g., Sentry)
- * Set via window.reportError or environment variable
- */
-function reportError(context: ErrorContext): void {
-  // Log to console in all environments
-  console.error('Error caught by boundary:', context)
-
-  // Check for custom error reporter (e.g., Sentry)
-  if (typeof window !== 'undefined' && (window as any).reportError) {
-    try {
-      ;(window as any).reportError(context)
-    } catch (reportError) {
-      console.error('Failed to report error:', reportError)
-    }
-  }
-
-  // TODO: Add Sentry or other error reporting service integration
-  // Example:
-  // if (import.meta.env.VITE_SENTRY_DSN) {
-  //   Sentry.captureException(context.error, {
-  //     contexts: {
-  //       react: {
-  //         componentStack: context.errorInfo.componentStack,
-  //       },
-  //     },
-  //     user: context.userId ? { id: context.userId } : undefined,
-  //   })
-  // }
-}
-
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props)

@@ -16,24 +16,6 @@ const requiredEnvVars = {
   },
 } as const
 
-const optionalEnvVars = {
-  VITE_SITE_URL: {
-    name: 'VITE_SITE_URL',
-    description: 'Site URL for sitemap generation',
-    example: 'https://salvageunion.io',
-  },
-  VITE_SHOW_DISCORD_SIGNIN: {
-    name: 'VITE_SHOW_DISCORD_SIGNIN',
-    description: 'Enable Discord sign-in button',
-    example: 'true',
-  },
-  VITE_GA_MEASUREMENT_ID: {
-    name: 'VITE_GA_MEASUREMENT_ID',
-    description: 'Google Analytics measurement ID',
-    example: 'G-XXXXXXXXXX',
-  },
-} as const
-
 /**
  * Get environment variable with validation
  * @param key - Environment variable key
@@ -138,4 +120,3 @@ export function validateEnvVars(): void {
     }
   }
 }
-

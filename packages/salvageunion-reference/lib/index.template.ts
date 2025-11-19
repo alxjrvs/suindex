@@ -45,6 +45,14 @@ export type * from './types/index.js'
 
 // INJECT:SCHEMA_TO_ENTITY_MAP
 
+// Type for entity schema names (includes entity schemas and meta schemas, excludes non-entity schemas)
+export type EntitySchemaName = keyof SchemaToEntityMap
+
+// Runtime set of entity schema names (for runtime checks)
+export const EntitySchemaNames = new Set<EntitySchemaName>([
+  // INJECT:ENTITY_SCHEMA_NAMES
+])
+
 // INJECT:SCHEMA_TO_MODEL_MAP
 
 // INJECT:SCHEMA_TO_DISPLAY_NAME
@@ -213,7 +221,11 @@ export class SalvageUnionReference {
   public static getByRef(ref: string): SURefEntity | undefined {
     const parsed = this.parseRef(ref)
     if (!parsed) return undefined
-    return this.get(parsed.schemaName, parsed.id)
+    // Only work with entity schemas (not meta schemas)
+    if (EntitySchemaNames.has(parsed.schemaName as EntitySchemaName)) {
+      return this.get(parsed.schemaName as EntitySchemaName, parsed.id)
+    }
+    return undefined
   }
 
   /**

@@ -3,9 +3,7 @@
     "id": "ba8b32f2-3916-43d0-937d-74168b846114",
     "source": "Salvage Union Workshop Manual",
     "name": "Irradiated Scorpion",
-    "actions": [
-      "Stinger"
-    ],
+    "actions": ["Stinger"],
     "hitPoints": 4,
     "page": 296,
     "content": [
@@ -25,10 +23,7 @@
         "type": "burrower"
       }
     ],
-    "actions": [
-      "Acid Spit",
-      "Corrosive Skin Glands"
-    ],
+    "actions": ["Acid Spit", "Corrosive Skin Glands"],
     "hitPoints": 2,
     "page": 266,
     "content": [
@@ -43,9 +38,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Chimeripede",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/creatures/chimeripede.jpg",
-    "actions": [
-      "Barbed Tentacles"
-    ],
+    "actions": ["Barbed Tentacles"],
     "hitPoints": 10,
     "page": 272,
     "content": [
@@ -59,9 +52,7 @@
     "id": "bfbf2664-6139-4727-8ad1-26ec1c01ae12",
     "source": "Salvage Union Workshop Manual",
     "name": "Wasteland Bear",
-    "actions": [
-      "Bear Carnage"
-    ],
+    "actions": ["Bear Carnage"],
     "hitPoints": 5,
     "page": 297,
     "content": [
@@ -81,9 +72,7 @@
         "type": "burrower"
       }
     ],
-    "actions": [
-      "Iron Claw"
-    ],
+    "actions": ["Iron Claw"],
     "hitPoints": 12,
     "page": 266,
     "content": [
@@ -102,9 +91,7 @@
         "type": "fly"
       }
     ],
-    "actions": [
-      "Talons"
-    ],
+    "actions": ["Talons"],
     "hitPoints": 3,
     "page": 266,
     "content": [

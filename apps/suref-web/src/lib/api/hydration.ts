@@ -5,8 +5,13 @@
  * Uses the new v1.50 direct lookup methods (get, getMany) for efficient batch operations.
  */
 
-import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
+import {
+  SalvageUnionReference,
+  EntitySchemaNames,
+  type SURefEntity,
+  type SURefSchemaName,
+  type EntitySchemaName,
+} from 'salvageunion-reference'
 import type { Tables } from '../../types/database-generated.types'
 import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
 
@@ -24,7 +29,11 @@ export function hydrateEntity(
   choices: Tables<'player_choices'>[] = [],
   parentEntity?: HydratedEntity
 ): HydratedEntity {
-  const ref = SalvageUnionReference.get(entity.schema_name as SURefSchemaName, entity.schema_ref_id)
+  // Only entity schemas are stored in the database, not meta schemas
+  const schemaName = entity.schema_name as SURefSchemaName
+  const ref = EntitySchemaNames.has(schemaName as EntitySchemaName)
+    ? SalvageUnionReference.get(schemaName as EntitySchemaName, entity.schema_ref_id)
+    : undefined
 
   if (!ref) {
     throw new Error(`Reference not found: ${entity.schema_name}/${entity.schema_ref_id}`)

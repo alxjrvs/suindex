@@ -73,7 +73,7 @@
       "hitPoints": 4,
       "choices": [
         {
-          "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+          "id": "e654b6ee-7df9-48b6-bda6-fe13e6b815b7",
           "name": "Name",
           "content": [
             {
@@ -343,7 +343,6 @@
       "6-10": "An Intact System is available for trade.",
       "11-19": "An Intact System and an Intact Module are available for trade."
     },
-
     "page": 222,
     "npc": {
       "position": "Operator",

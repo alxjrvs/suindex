@@ -23,7 +23,8 @@
       "schemaFile": "schemas/ability-tree-requirements.schema.json",
       "itemCount": 20,
       "requiredFields": ["requirement"],
-      "displayName": "Ability Tree Requirements"
+      "displayName": "Ability Tree Requirements",
+      "meta": true
     },
     {
       "id": "bio-titans",
@@ -116,7 +117,8 @@
       "schemaFile": "schemas/crawler-tech-levels.schema.json",
       "itemCount": 6,
       "requiredFields": ["techLevel", "structurePoints", "populationMin", "populationMax"],
-      "displayName": "Crawler Tech Levels"
+      "displayName": "Crawler Tech Levels",
+      "meta": true
     },
     {
       "id": "crawlers",

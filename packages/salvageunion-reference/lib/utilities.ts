@@ -3,6 +3,9 @@
  * Manually defined type guards and property extractors
  */
 
+// Re-export all generated utilities (type guards and property extractors)
+export * from './utilities-generated.js'
+
 import type { SURefMetaEntity, SURefMetaAction, SURefMetaGrant } from './types/index.js'
 import type {
   SURefAbility,
@@ -199,6 +202,8 @@ export function getChassisAbilities(entity: SURefMetaEntity): SURefMetaAction[] 
   })
 
   // Resolve each ability name to its object
+  // Use a Set to track IDs to prevent duplicates (in case same ability is referenced multiple times)
+  const seenIds = new Set<string>()
   const resolved: SURefMetaAction[] = []
   for (const abilityName of chassisAbilities) {
     if (typeof abilityName !== 'string') {
@@ -207,6 +212,13 @@ export function getChassisAbilities(entity: SURefMetaEntity): SURefMetaAction[] 
     }
     const ability = abilityMap.get(abilityName)
     if (ability) {
+      // Skip if we've already added this ability (duplicate reference)
+      if (ability.id && seenIds.has(ability.id)) {
+        continue
+      }
+      if (ability.id) {
+        seenIds.add(ability.id)
+      }
       resolved.push(ability)
     } else {
       console.warn(`Chassis ability "${abilityName}" not found in chassis-abilities schema`)
@@ -381,11 +393,11 @@ export function hasTraits(
   const resolvedActions = extractActions(entity)
   const hasActionTraits = Boolean(
     resolvedActions &&
-    resolvedActions.length > 0 &&
-    resolvedActions[0] !== null &&
-    typeof resolvedActions[0] === 'object' &&
-    'traits' in resolvedActions[0] &&
-    (resolvedActions[0].traits === undefined || Array.isArray(resolvedActions[0].traits))
+      resolvedActions.length > 0 &&
+      resolvedActions[0] !== null &&
+      typeof resolvedActions[0] === 'object' &&
+      'traits' in resolvedActions[0] &&
+      (resolvedActions[0].traits === undefined || Array.isArray(resolvedActions[0].traits))
   )
 
   return hasBaseTraits || hasActionTraits

@@ -42,11 +42,15 @@ describe('Action Property Getters', () => {
 
     test('should extract from actions[0] when entity has exactly 1 action', () => {
       const { dataMap } = getDataMaps()
-      const actionsData = dataMap['actions'] as Array<{ id: string; name: string; activationCost?: number }>
-      
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        activationCost?: number
+      }>
+
       // Find an existing action with activationCost = 3
-      const testAction = actionsData.find(a => a.activationCost === 3)
-      
+      const testAction = actionsData.find((a) => a.activationCost === 3)
+
       if (testAction && testAction.activationCost !== undefined) {
         const entity = {
           id: 'test-single-action',
@@ -74,7 +78,7 @@ describe('Action Property Getters', () => {
       const { dataMap } = getDataMaps()
       const actionsData = dataMap['actions'] as Array<{ id: string; name: string }>
       const testAction = actionsData[0]
-      
+
       if (testAction) {
         const entity = {
           id: 'test-base-level',
@@ -125,9 +129,13 @@ describe('Action Property Getters', () => {
 
     test('should extract from actions[0] when entity has exactly 1 action', () => {
       const { dataMap } = getDataMaps()
-      const actionsData = dataMap['actions'] as Array<{ id: string; name: string; actionType?: string }>
-      const testAction = actionsData.find(a => a.actionType === 'Attack')
-      
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        actionType?: string
+      }>
+      const testAction = actionsData.find((a) => a.actionType === 'Attack')
+
       if (testAction && testAction.actionType) {
         const entity = {
           id: 'test',
@@ -163,9 +171,13 @@ describe('Action Property Getters', () => {
 
     test('should extract from actions[0] when entity has exactly 1 action', () => {
       const { dataMap } = getDataMaps()
-      const actionsData = dataMap['actions'] as Array<{ id: string; name: string; range?: string[] }>
-      const testAction = actionsData.find(a => a.range && a.range.length > 0)
-      
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        range?: string[]
+      }>
+      const testAction = actionsData.find((a) => a.range && a.range.length > 0)
+
       if (testAction && testAction.range) {
         const entity = {
           id: 'test',
@@ -212,9 +224,13 @@ describe('Action Property Getters', () => {
 
     test('should extract from actions[0] when entity has exactly 1 action', () => {
       const { dataMap } = getDataMaps()
-      const actionsData = dataMap['actions'] as Array<{ id: string; name: string; damage?: { damageType: string; amount: number } }>
-      const testAction = actionsData.find(a => a.damage)
-      
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        damage?: { damageType: string; amount: number }
+      }>
+      const testAction = actionsData.find((a) => a.damage)
+
       if (testAction && testAction.damage) {
         const entity = {
           id: 'test',
@@ -258,9 +274,13 @@ describe('Action Property Getters', () => {
 
     test('should extract from actions[0] when entity has exactly 1 action', () => {
       const { dataMap } = getDataMaps()
-      const actionsData = dataMap['actions'] as Array<{ id: string; name: string; traits?: Array<{ type: string; amount?: number }> }>
-      const testAction = actionsData.find(a => a.traits && a.traits.length > 0)
-      
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        traits?: Array<{ type: string; amount?: number }>
+      }>
+      const testAction = actionsData.find((a) => a.traits && a.traits.length > 0)
+
       if (testAction && testAction.traits) {
         const entity = {
           id: 'test',

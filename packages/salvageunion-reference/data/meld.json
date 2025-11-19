@@ -3,9 +3,7 @@
     "id": "f04d6f2a-723a-45ec-91be-23be3b8275fa",
     "source": "Salvage Union Workshop Manual",
     "name": "Meld Drone",
-    "actions": [
-      "Bite"
-    ],
+    "actions": ["Bite"],
     "salvageValue": 1,
     "hitPoints": 3,
     "page": 289,
@@ -20,9 +18,7 @@
     "id": "7b76574d-3eb3-4ed0-b658-b1a356fd4c7f",
     "source": "Salvage Union Workshop Manual",
     "name": "Meld Drone Swarm",
-    "actions": [
-      "Devour"
-    ],
+    "actions": ["Devour"],
     "salvageValue": 3,
     "hitPoints": 6,
     "page": 289,
@@ -42,9 +38,7 @@
         "type": "fast"
       }
     ],
-    "actions": [
-      "Nanoid Tendrils"
-    ],
+    "actions": ["Nanoid Tendrils"],
     "structurePoints": 5,
     "salvageValue": 5,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/meld/meld%20nanoid.jpg",
@@ -60,10 +54,7 @@
     "id": "e1286046-f761-4c74-ab76-2afb8da1aab7",
     "source": "Salvage Union Workshop Manual",
     "name": "Meld Splitter",
-    "actions": [
-      "Splitter Tendrils",
-      "Split"
-    ],
+    "actions": ["Splitter Tendrils", "Split"],
     "structurePoints": 10,
     "salvageValue": 10,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/meld/meld%20splitter.jpg",
@@ -79,11 +70,7 @@
     "id": "e13f967e-a2af-4c30-a3c0-153a14ec9fdf",
     "source": "Salvage Union Workshop Manual",
     "name": "Meld Behemoth",
-    "actions": [
-      "Behemoth Tendrils",
-      "Assimilation",
-      "Titanic Actions (6)"
-    ],
+    "actions": ["Behemoth Tendrils", "Assimilation", "Titanic Actions (6)"],
     "structurePoints": 60,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/meld/meld%20behemoth.jpg",
     "page": 290,
