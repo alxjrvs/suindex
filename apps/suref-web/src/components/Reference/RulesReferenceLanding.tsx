@@ -81,9 +81,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         })
       } else if (result.itemId) {
         // Use slug from entity if available, otherwise fallback to itemId
-        const itemSlug = result.itemEntity
-          ? getEntitySlug(result.itemEntity)
-          : result.itemId
+        const itemSlug = result.itemEntity ? getEntitySlug(result.itemEntity) : result.itemId
         navigate({
           to: '/schema/$schemaId/item/$itemId',
           params: { schemaId: result.schemaId, itemId: itemSlug },

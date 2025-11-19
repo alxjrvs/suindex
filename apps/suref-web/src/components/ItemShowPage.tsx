@@ -28,8 +28,7 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
   const item =
     prefetchedItem ??
     (itemId
-      ? findEntityBySlug(schemaId as SURefSchemaName, itemId) ??
-        data.find((d) => d.id === itemId)
+      ? (findEntityBySlug(schemaId as SURefSchemaName, itemId) ?? data.find((d) => d.id === itemId))
       : null)
 
   const formatValue = (value: unknown): ReactElement => {
