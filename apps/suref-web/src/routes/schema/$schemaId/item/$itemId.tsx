@@ -3,6 +3,7 @@ import { getSchemaCatalog, SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import ItemShowPage from '../../../../components/ItemShowPage'
 import { ReferenceError } from '../../../../components/errors/ReferenceError'
+import { findEntityBySlug, getEntitySlug } from '../../../../utils/slug'
 
 const schemaIndexData = getSchemaCatalog()
 
@@ -16,19 +17,28 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
     let itemName = params.itemId
     let itemDescription = ''
     if (schema) {
-      try {
-        item = SalvageUnionReference.findIn(
-          params.schemaId as SURefSchemaName,
-          (i) => i.id === params.itemId
-        )
-        if (item && 'name' in item) {
+      // Try to find by slug first (URL-safe name)
+      item = findEntityBySlug(params.schemaId as SURefSchemaName, params.itemId)
+
+      // Fallback to ID lookup for backward compatibility
+      if (!item) {
+        try {
+          item = SalvageUnionReference.findIn(
+            params.schemaId as SURefSchemaName,
+            (i) => i.id === params.itemId
+          )
+        } catch {
+          // Ignore errors when item not found
+        }
+      }
+
+      if (item) {
+        if ('name' in item && item.name) {
           itemName = item.name as string
         }
-        if (item && 'description' in item && typeof item.description === 'string') {
+        if ('description' in item && typeof item.description === 'string') {
           itemDescription = item.description
         }
-      } catch {
-        // Ignore errors when item not found
       }
     }
     return { schemas: schemaIndexData.schemas, schema, itemName, itemDescription, item }
@@ -45,7 +55,10 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
     const itemDescription = loaderData?.itemDescription || ''
     const item = loaderData?.item
     const schemaId = params.schemaId
-    const itemId = params.itemId
+
+    // Always use slug for SEO URLs, even if item was found by ID (backward compatibility)
+    const itemSlug = item ? getEntitySlug(item) : params.itemId
+    const canonicalUrl = `https://su-srd.pages.dev/schema/${schemaId}/item/${itemSlug}`
 
     const metaDescription =
       itemDescription ||
@@ -56,7 +69,7 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
       '@type': 'Article',
       headline: itemName,
       description: metaDescription,
-      url: `https://su-srd.pages.dev/schema/${schemaId}/item/${itemId}`,
+      url: canonicalUrl,
       keywords: [
         'Salvage Union',
         'TTRPG',
@@ -104,12 +117,40 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
           content: metaDescription,
         },
         {
+          name: 'canonical',
+          content: canonicalUrl,
+        },
+        {
           property: 'og:title',
           content: `${itemName} - ${schemaName} - Salvage Union System Reference Document`,
         },
         {
           property: 'og:description',
           content: metaDescription,
+        },
+        {
+          property: 'og:url',
+          content: canonicalUrl,
+        },
+        {
+          property: 'og:type',
+          content: 'article',
+        },
+        {
+          name: 'twitter:card',
+          content: 'summary',
+        },
+        {
+          name: 'twitter:title',
+          content: `${itemName} - ${schemaName} - Salvage Union System Reference Document`,
+        },
+        {
+          name: 'twitter:description',
+          content: metaDescription,
+        },
+        {
+          name: 'twitter:url',
+          content: canonicalUrl,
         },
       ],
       scripts: [

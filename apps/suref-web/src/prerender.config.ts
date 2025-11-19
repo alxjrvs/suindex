@@ -1,5 +1,6 @@
 import { getSchemaCatalog, SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSchemaName } from 'salvageunion-reference'
+import { getEntitySlug } from './utils/slug'
 
 /**
  * Generate all static paths for prerendering
@@ -20,7 +21,9 @@ export function getStaticPaths() {
       const items = SalvageUnionReference.findAllIn(schema.id as SURefSchemaName, () => true)
       for (const item of items) {
         if ('id' in item && item.id) {
-          paths.push(`/schema/${schema.id}/item/${item.id}`)
+          // Use slug for URLs instead of ID
+          const itemSlug = getEntitySlug(item)
+          paths.push(`/schema/${schema.id}/item/${itemSlug}`)
         }
       }
     } catch (error) {
