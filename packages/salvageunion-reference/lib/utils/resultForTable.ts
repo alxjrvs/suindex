@@ -1,4 +1,4 @@
-import type { SURefMetaTable } from '../types/index.js'
+import type { SURefObjectTable } from '../types/index.js'
 
 /**
  * Result type for table roll resolution
@@ -21,7 +21,7 @@ export type TableRollResult = { success: boolean; result: string; key: string }
  *   console.error(result.error);
  * }
  */
-export function resultForTable(table: SURefMetaTable | undefined, roll: number): TableRollResult {
+export function resultForTable(table: SURefObjectTable | undefined, roll: number): TableRollResult {
   if (!table) {
     return {
       success: false,

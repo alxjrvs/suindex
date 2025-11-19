@@ -9,7 +9,7 @@
 
 import { z } from 'zod'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import {
   publicCargoInsertSchema,
   publicCargoUpdateSchema,
@@ -57,7 +57,10 @@ export const createCargoSchema = publicCargoInsertSchema
   .refine(
     (data) => {
       if (data.schema_name && data.schema_ref_id) {
-        return SalvageUnionReference.exists(data.schema_name as SURefSchemaName, data.schema_ref_id)
+        return SalvageUnionReference.exists(
+          data.schema_name as SURefEnumSchemaName,
+          data.schema_ref_id
+        )
       }
       return true
     },

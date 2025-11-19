@@ -6,7 +6,7 @@
 // Re-export all generated utilities (type guards and property extractors)
 export * from './utilities-generated.js'
 
-import type { SURefMetaEntity, SURefMetaAction, SURefMetaGrant } from './types/index.js'
+import type { SURefMetaEntity, SURefMetaAction, SURefObjectGrant } from './types/index.js'
 import type {
   SURefAbility,
   SURefAdvancedClass,
@@ -855,9 +855,9 @@ export function getChoices(entity: SURefMetaEntity):
  * @param entity - The entity to extract grants from
  * @returns The grants array or undefined if not present
  */
-export function getGrants(entity: SURefMetaEntity): SURefMetaGrant[] | undefined {
+export function getGrants(entity: SURefMetaEntity): SURefObjectGrant[] | undefined {
   if ('grants' in entity && Array.isArray(entity.grants)) {
-    return entity.grants as SURefMetaGrant[]
+    return entity.grants as SURefObjectGrant[]
   }
 
   return undefined

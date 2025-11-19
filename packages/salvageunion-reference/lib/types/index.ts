@@ -20,6 +20,8 @@ import type {
   SURefKeyword,
   SURefMeld,
   SURefMetaAbilityTreeRequirement,
+  SURefMetaAction,
+  SURefMetaChassisAbility,
   SURefMetaCrawlerTechLevel,
   SURefModule,
   SURefNPC,
@@ -44,53 +46,53 @@ export type * from './schemas.js'
 
 // Re-export specific commonly used types for convenience
 export type {
-  SURefSchemaName,
-  SURefTree,
-  SURefActionType,
-  SURefDamageType,
-  SURefRange,
-  SURefSource,
-  SURefClassType,
-  SURefContentType,
+  SURefEnumSchemaName,
+  SURefEnumTree,
+  SURefEnumActionType,
+  SURefEnumDamageType,
+  SURefEnumRange,
+  SURefEnumSource,
+  SURefEnumClassType,
+  SURefEnumContentType,
 } from './enums.js'
 
 export type {
-  SURefId,
-  SURefName,
-  SURefTechLevel,
-  SURefSalvageValue,
-  SURefHitPoints,
-  SURefStructurePoints,
-  SURefPositiveInteger,
-  SURefNonNegativeInteger,
-  SURefActivationCost,
-  SURefAssetUrl,
+  SURefCommonId,
+  SURefCommonName,
+  SURefCommonTechLevel,
+  SURefCommonSalvageValue,
+  SURefCommonHitPoints,
+  SURefCommonStructurePoints,
+  SURefCommonPositiveInteger,
+  SURefCommonNonNegativeInteger,
+  SURefCommonActivationCost,
+  SURefCommonAssetUrl,
 } from './common.js'
 
 export type {
-  SURefMetaTrait,
-  SURefMetaStats,
-  SURefMetaChassisStats,
-  SURefMetaEquipmentStats,
-  SURefMetaDataValue,
-  SURefMetaChoice,
-  SURefMetaNpc,
-  SURefMetaSystemModule,
-  SURefMetaTable,
-  SURefMetaAdvancedClass,
-  SURefMetaAction,
-  SURefMetaGrant,
-  SURefMetaChoices,
-  SURefMetaContent,
-  SURefMetaContentBlock,
-  SURefMetaPattern,
-  SURefMetaSystems,
-  SURefMetaModules,
-  SURefMetaTraits,
-  SURefMetaBaseEntity,
-  SURefMetaCombatEntity,
-  SURefMetaMechanicalEntity,
-  SURefMetaSchemaName,
+  SURefObjectTrait,
+  SURefObjectStats,
+  SURefObjectChassisStats,
+  SURefObjectEquipmentStats,
+  SURefObjectDataValue,
+  SURefObjectChoice,
+  SURefObjectNpc,
+  SURefObjectSystemModule,
+  SURefObjectTable,
+  SURefObjectAdvancedClass,
+  SURefObjectAction,
+  SURefObjectGrant,
+  SURefObjectChoices,
+  SURefObjectContent,
+  SURefObjectContentBlock,
+  SURefObjectPattern,
+  SURefObjectSystems,
+  SURefObjectModules,
+  SURefObjectTraits,
+  SURefObjectBaseEntity,
+  SURefObjectCombatEntity,
+  SURefObjectMechanicalEntity,
+  SURefObjectSchemaName,
 } from './objects.js'
 
 // Union type of all entity types (excludes meta schemas and non-entities)
@@ -132,6 +134,8 @@ export type SURefMetaEntity =
   | SURefKeyword
   | SURefMeld
   | SURefMetaAbilityTreeRequirement
+  | SURefMetaAction
+  | SURefMetaChassisAbility
   | SURefMetaCrawlerTechLevel
   | SURefModule
   | SURefNPC

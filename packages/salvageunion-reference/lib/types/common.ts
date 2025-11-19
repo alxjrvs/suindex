@@ -7,49 +7,49 @@
 /**
  * Non-negative integer (0 or greater)
  */
-export type SURefNonNegativeInteger = number
+export type SURefCommonNonNegativeInteger = number
 
 /**
  * Positive integer (1 or greater)
  */
-export type SURefPositiveInteger = number
+export type SURefCommonPositiveInteger = number
 
 /**
  * Unique identifier for the entry
  */
-export type SURefId = string
+export type SURefCommonId = string
 
 /**
  * URL to an image asset for this entry
  */
-export type SURefAssetUrl = string
+export type SURefCommonAssetUrl = string
 
 /**
  * Cost in ability points to activate an ability
  */
-export type SURefActivationCost = number | 'X'
+export type SURefCommonActivationCost = number | 'X'
 
 /**
  * Name of the entry
  */
-export type SURefName = string
+export type SURefCommonName = string
 
 /**
  * Technology level of the item or entity
  */
-export type SURefTechLevel = SURefNonNegativeInteger
+export type SURefCommonTechLevel = SURefCommonNonNegativeInteger
 
 /**
  * Salvage value in credits
  */
-export type SURefSalvageValue = SURefNonNegativeInteger
+export type SURefCommonSalvageValue = SURefCommonNonNegativeInteger
 
 /**
  * Hit points for creatures and personnel
  */
-export type SURefHitPoints = SURefNonNegativeInteger
+export type SURefCommonHitPoints = SURefCommonNonNegativeInteger
 
 /**
  * Structure points for mechs, vehicles, and titans
  */
-export type SURefStructurePoints = SURefPositiveInteger
+export type SURefCommonStructurePoints = SURefCommonPositiveInteger

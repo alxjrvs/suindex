@@ -7,7 +7,7 @@
 /**
  * Type of action required to use an ability
  */
-export type SURefActionType =
+export type SURefEnumActionType =
   | 'Passive'
   | 'Free'
   | 'Reaction'
@@ -19,12 +19,12 @@ export type SURefActionType =
 /**
  * Type of advanced class
  */
-export type SURefClassType = 'Advanced' | 'Hybrid'
+export type SURefEnumClassType = 'Advanced' | 'Hybrid'
 
 /**
  * Type of content block for rendering structured text
  */
-export type SURefContentType =
+export type SURefEnumContentType =
   | 'paragraph'
   | 'heading'
   | 'list-item'
@@ -35,22 +35,22 @@ export type SURefContentType =
 /**
  * Type of damage
  */
-export type SURefDamageType = 'HP' | 'SP'
+export type SURefEnumDamageType = 'HP' | 'SP'
 
 /**
  * Individual range value
  */
-export type SURefRangeItem = 'Close' | 'Medium' | 'Long' | 'Far'
+export type SURefEnumRangeItem = 'Close' | 'Medium' | 'Long' | 'Far'
 
 /**
  * Range bands for abilities and weapons
  */
-export type SURefRange = SURefRangeItem[]
+export type SURefEnumRange = SURefEnumRangeItem[]
 
 /**
  * Name of the schema
  */
-export type SURefSchemaName =
+export type SURefEnumSchemaName =
   | 'abilities'
   | 'ability-tree-requirements'
   | 'bio-titans'
@@ -77,12 +77,12 @@ export type SURefSchemaName =
 /**
  * The source book or expansion for this content
  */
-export type SURefSource = 'Salvage Union Workshop Manual' | 'Mech Monday'
+export type SURefEnumSource = 'Salvage Union Workshop Manual' | 'Mech Monday'
 
 /**
  * Ability tree name
  */
-export type SURefTree =
+export type SURefEnumTree =
   | 'Advanced Engineer'
   | 'Advanced Hacking'
   | 'Advanced Hauler'

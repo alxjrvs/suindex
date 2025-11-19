@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Box, Flex, IconButton, Button } from '@chakra-ui/react'
-import { resultForTable, type SURefMetaTable } from 'salvageunion-reference'
+import { resultForTable, type SURefObjectTable } from 'salvageunion-reference'
 import { roll } from '@randsum/roller'
 import { useParseTraitReferences } from '../../utils/parseTraitReferences'
 import { Text } from '../base/Text'
@@ -13,7 +13,7 @@ interface DigestedRollTable {
 }
 
 type RollTableType =
-  | SURefMetaTable
+  | SURefObjectTable
   | { type: 'standard' | 'alternate' | 'flat' | 'full'; [key: string]: string }
 
 interface RollTableDisplayProps {
@@ -91,7 +91,7 @@ export function RollTable({
 
   const handleRoll = () => {
     setHighlightedKey(null)
-    const { key } = resultForTable(table as SURefMetaTable, roll('1d20').total)
+    const { key } = resultForTable(table as SURefObjectTable, roll('1d20').total)
     setTimeout(() => setHighlightedKey(key), 300)
   }
 

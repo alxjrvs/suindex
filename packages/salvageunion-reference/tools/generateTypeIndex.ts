@@ -44,7 +44,17 @@ function generateTypeIndex() {
     }
 
     // Skip non-entity schemas from imports (they're not exported from schemas.ts)
-    if (schema.nonEntity) {
+    // meta and nonEntity are 1:1 - if meta is true, treat as nonEntity
+    const isNonEntity = schema.nonEntity === true || schema.meta === true
+    if (isNonEntity) {
+      // For meta schemas, we still need to add them to metaEntityTypes and import from schemas.ts
+      if (schema.meta === true && !typeAliases.has(schema.id)) {
+        const singularName = getSingularTypeName(schema.id, __dirname)
+        const typeName = `SURefMeta${singularName}`
+        metaEntityTypes.push(typeName)
+        // These are defined in schemas.ts, so add to imports
+        schemaTypeImports.push(typeName)
+      }
       continue
     }
 
@@ -55,12 +65,19 @@ function generateTypeIndex() {
     schemaTypeImports.push(typeName)
 
     // Entity types (non-meta, non-nonEntity)
-    if (!schema.meta && !schema.nonEntity) {
+    // meta and nonEntity are 1:1 - if meta is true, treat as nonEntity
+    // isNonEntity was already computed above
+    if (!isNonEntity) {
       entityTypes.push(typeName)
     }
 
     // Meta entity types (all schemas except non-entities)
-    if (!schema.nonEntity) {
+    // meta and nonEntity are 1:1 - if meta is true, treat as nonEntity
+    // isNonEntity was already computed above
+    if (!isNonEntity) {
+      metaEntityTypes.push(typeName)
+    } else if (schema.meta === true) {
+      // Meta schemas are still meta entities (they're in SURefMetaEntity union)
       metaEntityTypes.push(typeName)
     }
   }
@@ -99,55 +116,55 @@ function generateTypeIndex() {
   // Re-export specific commonly used types for convenience
   lines.push('// Re-export specific commonly used types for convenience')
   lines.push('export type {')
-  lines.push('  SURefSchemaName,')
-  lines.push('  SURefTree,')
-  lines.push('  SURefActionType,')
-  lines.push('  SURefDamageType,')
-  lines.push('  SURefRange,')
-  lines.push('  SURefSource,')
-  lines.push('  SURefClassType,')
-  lines.push('  SURefContentType,')
+  lines.push('  SURefEnumSchemaName,')
+  lines.push('  SURefEnumTree,')
+  lines.push('  SURefEnumActionType,')
+  lines.push('  SURefEnumDamageType,')
+  lines.push('  SURefEnumRange,')
+  lines.push('  SURefEnumSource,')
+  lines.push('  SURefEnumClassType,')
+  lines.push('  SURefEnumContentType,')
   lines.push("} from './enums.js'")
   lines.push('')
 
   lines.push('export type {')
-  lines.push('  SURefId,')
-  lines.push('  SURefName,')
-  lines.push('  SURefTechLevel,')
-  lines.push('  SURefSalvageValue,')
-  lines.push('  SURefHitPoints,')
-  lines.push('  SURefStructurePoints,')
-  lines.push('  SURefPositiveInteger,')
-  lines.push('  SURefNonNegativeInteger,')
-  lines.push('  SURefActivationCost,')
-  lines.push('  SURefAssetUrl,')
+  lines.push('  SURefCommonId,')
+  lines.push('  SURefCommonName,')
+  lines.push('  SURefCommonTechLevel,')
+  lines.push('  SURefCommonSalvageValue,')
+  lines.push('  SURefCommonHitPoints,')
+  lines.push('  SURefCommonStructurePoints,')
+  lines.push('  SURefCommonPositiveInteger,')
+  lines.push('  SURefCommonNonNegativeInteger,')
+  lines.push('  SURefCommonActivationCost,')
+  lines.push('  SURefCommonAssetUrl,')
   lines.push("} from './common.js'")
   lines.push('')
 
   lines.push('export type {')
-  lines.push('  SURefMetaTrait,')
-  lines.push('  SURefMetaStats,')
-  lines.push('  SURefMetaChassisStats,')
-  lines.push('  SURefMetaEquipmentStats,')
-  lines.push('  SURefMetaDataValue,')
-  lines.push('  SURefMetaChoice,')
-  lines.push('  SURefMetaNpc,')
-  lines.push('  SURefMetaSystemModule,')
-  lines.push('  SURefMetaTable,')
-  lines.push('  SURefMetaAdvancedClass,')
-  lines.push('  SURefMetaAction,')
-  lines.push('  SURefMetaGrant,')
-  lines.push('  SURefMetaChoices,')
-  lines.push('  SURefMetaContent,')
-  lines.push('  SURefMetaContentBlock,')
-  lines.push('  SURefMetaPattern,')
-  lines.push('  SURefMetaSystems,')
-  lines.push('  SURefMetaModules,')
-  lines.push('  SURefMetaTraits,')
-  lines.push('  SURefMetaBaseEntity,')
-  lines.push('  SURefMetaCombatEntity,')
-  lines.push('  SURefMetaMechanicalEntity,')
-  lines.push('  SURefMetaSchemaName,')
+  lines.push('  SURefObjectTrait,')
+  lines.push('  SURefObjectStats,')
+  lines.push('  SURefObjectChassisStats,')
+  lines.push('  SURefObjectEquipmentStats,')
+  lines.push('  SURefObjectDataValue,')
+  lines.push('  SURefObjectChoice,')
+  lines.push('  SURefObjectNpc,')
+  lines.push('  SURefObjectSystemModule,')
+  lines.push('  SURefObjectTable,')
+  lines.push('  SURefObjectAdvancedClass,')
+  lines.push('  SURefObjectAction,')
+  lines.push('  SURefObjectGrant,')
+  lines.push('  SURefObjectChoices,')
+  lines.push('  SURefObjectContent,')
+  lines.push('  SURefObjectContentBlock,')
+  lines.push('  SURefObjectPattern,')
+  lines.push('  SURefObjectSystems,')
+  lines.push('  SURefObjectModules,')
+  lines.push('  SURefObjectTraits,')
+  lines.push('  SURefObjectBaseEntity,')
+  lines.push('  SURefObjectCombatEntity,')
+  lines.push('  SURefObjectMechanicalEntity,')
+  lines.push('  SURefObjectSchemaName,')
   lines.push("} from './objects.js'")
   lines.push('')
 

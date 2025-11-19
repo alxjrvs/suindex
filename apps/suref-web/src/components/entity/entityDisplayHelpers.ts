@@ -1,14 +1,14 @@
 import type {
   SURefMetaEntity,
-  SURefSchemaName,
-  SURefMetaBonusPerTechLevel,
+  SURefEnumSchemaName,
+  SURefObjectBonusPerTechLevel,
 } from 'salvageunion-reference'
 import { getBlackMarket } from 'salvageunion-reference'
 
 /**
- * Local type that extends SURefSchemaName to include meta schemas like 'actions'
+ * Local type that extends SURefEnumSchemaName to include meta schemas like 'actions'
  */
-type SURefMetaSchemaName = SURefSchemaName | 'actions'
+type SURefMetaSchemaName = SURefEnumSchemaName | 'actions'
 
 /**
  * Get activation currency based on schema name
@@ -25,8 +25,8 @@ export function getActivationCurrency(
 }
 
 export function extractName(
-  data: SURefMetaEntity | SURefMetaBonusPerTechLevel,
-  schemaName: SURefSchemaName
+  data: SURefMetaEntity | SURefObjectBonusPerTechLevel,
+  schemaName: SURefEnumSchemaName
 ): string {
   if (!('name' in data)) {
     return ''
@@ -45,7 +45,7 @@ export function calculateBackgroundColor(
   schemaName: SURefMetaSchemaName,
   headerColor: string = '',
   techLevel: number | undefined,
-  data: SURefMetaEntity | SURefMetaBonusPerTechLevel,
+  data: SURefMetaEntity | SURefObjectBonusPerTechLevel,
   techLevelColors: Record<number, string>
 ): string {
   // Check for Black Market items first - they get dark grey background

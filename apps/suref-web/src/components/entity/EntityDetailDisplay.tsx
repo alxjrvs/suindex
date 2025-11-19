@@ -1,7 +1,7 @@
 import {
   SalvageUnionReference,
   EntitySchemaNames,
-  type SURefSchemaName,
+  type SURefEnumSchemaName,
   type EntitySchemaName,
 } from 'salvageunion-reference'
 import { EntityDisplayTooltip } from './EntityDisplayTooltip'
@@ -18,7 +18,7 @@ export function EntityDetailDisplay({
   value?: number | string
   label: number | string
   compact?: boolean
-  schemaName: SURefSchemaName
+  schemaName: SURefEnumSchemaName
   /** Whether to display inline (default: true). Set to false for flex container contexts. */
   inline?: boolean
 }) {

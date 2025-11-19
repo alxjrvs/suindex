@@ -1,5 +1,5 @@
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import {
   DialogRoot,
   DialogContent,
@@ -12,7 +12,7 @@ import { EntityDisplay } from './EntityDisplay'
 interface EntityDisplayModalProps {
   isOpen: boolean
   onClose: () => void
-  schemaName: SURefSchemaName | null
+  schemaName: SURefEnumSchemaName | null
   entityId: string | null
 }
 

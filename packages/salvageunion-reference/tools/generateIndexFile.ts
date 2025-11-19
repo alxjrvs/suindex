@@ -11,7 +11,6 @@ import {
   toPascalCase,
   type SchemaIndexEntry,
 } from './generatorUtils.js'
-import { categorizeSchemas } from './schemaAnalysis.js'
 
 const __dirname = getDirname(import.meta.url)
 const schemaIndex = loadSchemaIndex(__dirname)
@@ -23,13 +22,11 @@ function generateIndexFile() {
   const templatePath = path.join(__dirname, '..', 'lib', 'index.template.ts')
   let template = fs.readFileSync(templatePath, 'utf-8')
 
-  // Get non-entity schemas from schema metadata
-  const { nonEntities } = categorizeSchemas(schemaIndex)
-  const nonEntitySchemas = new Set(nonEntities.map((entry) => entry.id))
+  // Note: meta and nonEntity are 1:1, but meta schemas still need model properties
 
   // Generate type imports for entity schemas (non-meta, non-excluded)
   const entitySchemas = schemaIndex.schemas.filter(
-    (entry) => !nonEntitySchemas.has(entry.id) && !entry.meta
+    (entry) => !(entry.nonEntity === true && entry.meta !== true) && !entry.meta
   )
   const typeImports = entitySchemas
     .map((entry: SchemaIndexEntry) => {
@@ -39,9 +36,7 @@ function generateIndexFile() {
     .join(',\n')
 
   // Generate meta type imports (for meta schemas that need model properties)
-  const metaSchemas = schemaIndex.schemas.filter(
-    (entry) => !nonEntitySchemas.has(entry.id) && entry.meta
-  )
+  const metaSchemas = schemaIndex.schemas.filter((entry) => entry.meta === true)
   const metaTypeImports = metaSchemas
     .map((entry: SchemaIndexEntry) => {
       const singularName = getSingularTypeName(entry.id)
@@ -51,14 +46,19 @@ function generateIndexFile() {
 
   // Combine all imports
   const allTypeImports = metaTypeImports
-    ? `${typeImports},\n${metaTypeImports},\n  SURefEntity,\n  SURefSchemaName`
-    : `${typeImports},\n  SURefEntity,\n  SURefSchemaName`
+    ? `${typeImports},\n${metaTypeImports},\n  SURefEntity,\n  SURefEnumSchemaName`
+    : `${typeImports},\n  SURefEntity,\n  SURefEnumSchemaName`
 
   // EntitySchemaName is defined in the generated file, not imported
 
   // Generate SchemaToEntityMap (includes entity schemas AND meta schemas, excludes nonEntitySchemas)
   // This includes all schemas that can be queried via the ORM
-  const schemasForEntityMap = schemaIndex.schemas.filter((entry) => !nonEntitySchemas.has(entry.id))
+  // Note: meta and nonEntity are 1:1, but meta schemas still need to be in the map
+  const schemasForEntityMap = schemaIndex.schemas.filter((entry) => {
+    // Include all schemas except those explicitly marked as nonEntity (but not meta)
+    // Meta schemas are nonEntity but still need to be in the map
+    return !(entry.nonEntity === true && entry.meta !== true)
+  })
   const schemaToEntityEntries = schemasForEntityMap
     .map((entry: SchemaIndexEntry) => {
       const singularName = getSingularTypeName(entry.id)
@@ -87,8 +87,13 @@ function generateIndexFile() {
 
   // Generate static model properties for ALL schemas (including meta)
   // Entity schemas use SchemaToEntityMap, meta schemas use their direct type
+  // Note: meta and nonEntity are 1:1, but meta schemas still need model properties
   const modelProperties = schemaIndex.schemas
-    .filter((entry) => !nonEntitySchemas.has(entry.id))
+    .filter((entry) => {
+      // Include all schemas except those explicitly marked as nonEntity (but not meta)
+      // Meta schemas are nonEntity but still need model properties
+      return !(entry.nonEntity === true && entry.meta !== true)
+    })
     .map((entry: SchemaIndexEntry) => {
       const modelName = toPascalCase(entry.id)
       const singularName = getSingularTypeName(entry.id)

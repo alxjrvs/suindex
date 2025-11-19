@@ -52,28 +52,28 @@ function extractRefType(
 ): { source: 'enum' | 'common' | 'object'; typeName: string } | null {
   if (ref.includes('enums.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURef${capitalize(defName)}`
+    const typeName = `SURefEnum${capitalize(defName)}`
     imports.enums.add(typeName)
     return { source: 'enum', typeName }
   }
 
   if (ref.includes('common.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURef${toPascalCase(defName)}`
+    const typeName = `SURefCommon${toPascalCase(defName)}`
     imports.common.add(typeName)
     return { source: 'common', typeName }
   }
 
   if (ref.includes('objects.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     imports.objects.add(typeName)
     return { source: 'object', typeName }
   }
 
   if (ref.includes('arrays.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     imports.objects.add(typeName)
     return { source: 'object', typeName }
   }
@@ -219,6 +219,10 @@ function generateSchemaType(
   if (itemSchema.$ref && !itemSchema.allOf && !itemSchema.properties) {
     const refType = extractRefType(itemSchema.$ref)
     if (refType) {
+      // If the type name matches the referenced type exactly, skip generating it (it's already defined)
+      if (typeName === refType.typeName) {
+        return null
+      }
       lines.push(`export type ${typeName} = ${refType.typeName}`)
       return lines.join('\n')
     }
@@ -248,6 +252,10 @@ function generateSchemaType(
 
   // If we have base types and no own properties, use type alias instead of empty interface
   if (baseTypes.length > 0 && Object.keys(ownProperties).length === 0) {
+    // If the type name matches the base type exactly, skip generating it (it's already defined)
+    if (baseTypes.length === 1 && typeName === baseTypes[0]) {
+      return null
+    }
     if (baseTypes.length === 1) {
       lines.push(`export type ${typeName} = ${baseTypes[0]}`)
     } else {
@@ -301,7 +309,9 @@ async function generateSchemaTypes() {
     // Handle type aliases from schema metadata
     if (typeAliases.has(schemaEntry.id)) {
       const aliasType = typeAliases.get(schemaEntry.id)!
-      const baseType = aliasType.replace('SURef', 'SURefMeta')
+      // For actions, the base type is SURefObjectAction (from objects.ts)
+      // The alias type is SURefMetaAction (the meta schema type)
+      const baseType = aliasType.replace('SURefMeta', 'SURefObject')
       typeDefinitions.push('/**')
       typeDefinitions.push(` * ${schemaEntry.description || schemaEntry.title}`)
       typeDefinitions.push(
@@ -322,6 +332,11 @@ async function generateSchemaTypes() {
       typeDefinitions.push(typeCode)
       typeDefinitions.push('')
       console.log(`   ✓ ${schemaEntry.id}${isMeta ? ' (meta)' : ''}`)
+    } else {
+      // Type was skipped because it's already defined elsewhere (e.g., in objects.ts)
+      console.log(
+        `   ⊘ ${schemaEntry.id}${isMeta ? ' (meta - skipped, already defined)' : ' (skipped, already defined)'}`
+      )
     }
   }
 

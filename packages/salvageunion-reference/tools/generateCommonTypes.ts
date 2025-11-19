@@ -41,7 +41,7 @@ function toPascalCase(str: string): string {
  * Generate TypeScript type definition from common schema definition
  */
 function generateCommonType(name: string, schema: JSONSchema): string | null {
-  const typeName = `SURef${toPascalCase(name)}`
+  const typeName = `SURefCommon${toPascalCase(name)}`
   const lines: string[] = []
 
   if (schema.description) {
@@ -86,7 +86,7 @@ function generateCommonType(name: string, schema: JSONSchema): string | null {
   if (schema.$ref) {
     const refName = schema.$ref.split('/').pop()
     if (refName) {
-      const refTypeName = `SURef${toPascalCase(refName)}`
+      const refTypeName = `SURefCommon${toPascalCase(refName)}`
       lines.push(`export type ${typeName} = ${refTypeName}`)
       return lines.join('\n')
     }

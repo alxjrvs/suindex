@@ -1,5 +1,5 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
-import type { SURefMetaAction, SURefMetaChoice } from 'salvageunion-reference'
+import type { SURefMetaAction, SURefObjectChoice } from 'salvageunion-reference'
 import { Text } from '../base/Text'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
 import { EntityChoice } from './EntityDisplay/EntityChoice'
@@ -41,7 +41,7 @@ export function NestedActionDisplay({
   const headerPadding = compact ? { px: 0.5, py: 0.25 } : { px: 1, py: 0.5 }
 
   const hasContent = data.content && data.content.length > 0
-  const actionChoices: SURefMetaChoice[] = data.choices || []
+  const actionChoices: SURefObjectChoice[] = data.choices || []
   const hasChoices = actionChoices.length > 0
 
   // Default variant: light blue background with details

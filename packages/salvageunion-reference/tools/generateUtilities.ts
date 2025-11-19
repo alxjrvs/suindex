@@ -83,9 +83,9 @@ function getTypeScriptType(propName: string, propType: string, propInfo?: Proper
       if (propInfo.refPath.includes('objects.schema.json')) {
         const capitalized = refName.charAt(0).toUpperCase() + refName.slice(1)
         if (propInfo.isArray) {
-          return `SURefMeta${capitalized}[]`
+          return `SURefObject${capitalized}[]`
         }
-        return `SURefMeta${capitalized}`
+        return `SURefObject${capitalized}`
       }
 
       // Handle arrays of enums
@@ -100,7 +100,7 @@ function getTypeScriptType(propName: string, propType: string, propInfo?: Proper
     return 'string[]' // Actions are string arrays (action names)
   }
   if (propName === 'chassisAbilities' && propType === 'array') {
-    return 'SURefMetaAction[]' // Chassis abilities are resolved objects
+    return 'SURefObjectAction[]' // Chassis abilities are resolved objects
   }
   if ((propName === 'requirement' || propName === 'coreTrees') && propType === 'array') {
     return 'string[]' // Arrays of tree enums
@@ -152,7 +152,7 @@ function generatePropertyExtractor(
   } else if (
     propType === 'array' ||
     returnType.includes('[]') ||
-    (returnType.startsWith('SURefMeta') && returnType.endsWith('s') && !returnType.includes('|'))
+    (returnType.startsWith('SURefObject') && returnType.endsWith('s') && !returnType.includes('|'))
   ) {
     // For string arrays (like actions), cast to the correct type
     if (returnType === 'string[]') {
@@ -166,7 +166,7 @@ function generatePropertyExtractor(
     }
   } else if (
     propType === 'object' ||
-    returnType.startsWith('SURefMeta') ||
+    returnType.startsWith('SURefObject') ||
     returnType === 'Record<string, unknown>'
   ) {
     code += `  return '${propName}' in entity &&\n`
@@ -265,8 +265,8 @@ for (const [propName, propData] of allProperties.entries()) {
     continue
   }
   const metaType = getTypeScriptType(propName, propData.type, propData.info)
-  if (metaType.startsWith('SURefMeta')) {
-    // Extract base type from arrays (e.g., 'SURefMetaAction[]' -> 'SURefMetaAction')
+  if (metaType.startsWith('SURefObject')) {
+    // Extract base type from arrays (e.g., 'SURefObjectAction[]' -> 'SURefObjectAction')
     const baseType = metaType.replace(/\[]$/, '')
     usedMetaTypes.add(baseType)
   }
@@ -290,9 +290,9 @@ for (const [propName, propData] of sortedProperties) {
   }
 }
 
-// Add imports for meta types used in property extractors
+// Add imports for object types used in property extractors
 if (usedMetaTypes.size > 0) {
-  output += `\n// Import meta types used in property extractors\n`
+  output += `\n// Import object types used in property extractors\n`
   output += `import type {\n`
   const metaTypeList = Array.from(usedMetaTypes).sort()
   output += metaTypeList.map((type) => `  ${type}`).join(',\n')

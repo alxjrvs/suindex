@@ -409,7 +409,7 @@ export function getStructurePoints(entity: SURefMetaEntity): number | undefined 
  * @param entity - The entity to extract from
  * @returns The traits or undefined
  */
-export function getTraits(entity: SURefMetaEntity): SURefMetaTrait[] | undefined {
+export function getTraits(entity: SURefMetaEntity): SURefObjectTrait[] | undefined {
   return 'traits' in entity && Array.isArray(entity.traits) ? entity.traits : undefined
 }
 
@@ -445,7 +445,7 @@ export function getHitPoints(entity: SURefMetaEntity): unknown | undefined {
  * @param entity - The entity to extract from
  * @returns The npc or undefined
  */
-export function getNpc(entity: SURefMetaEntity): SURefMetaNpc | undefined {
+export function getNpc(entity: SURefMetaEntity): SURefObjectNpc | undefined {
   return 'npc' in entity &&
     entity.npc !== null &&
     typeof entity.npc === 'object' &&
@@ -514,7 +514,7 @@ export function getCargoCapacity(entity: SURefMetaEntity): number | undefined {
  * @param entity - The entity to extract from
  * @returns The choices or undefined
  */
-export function getChoices(entity: SURefMetaEntity): SURefMetaChoice[] | undefined {
+export function getChoices(entity: SURefMetaEntity): SURefObjectChoice[] | undefined {
   return 'choices' in entity && Array.isArray(entity.choices) ? entity.choices : undefined
 }
 
@@ -523,7 +523,7 @@ export function getChoices(entity: SURefMetaEntity): SURefMetaChoice[] | undefin
  * @param entity - The entity to extract from
  * @returns The table or undefined
  */
-export function getTable(entity: SURefMetaEntity): SURefMetaTable | undefined {
+export function getTable(entity: SURefMetaEntity): SURefObjectTable | undefined {
   return 'table' in entity &&
     entity.table !== null &&
     typeof entity.table === 'object' &&
@@ -584,7 +584,7 @@ export function getMechActionType(entity: SURefMetaEntity): unknown | undefined 
  * @param entity - The entity to extract from
  * @returns The grants or undefined
  */
-export function getGrants(entity: SURefMetaEntity): SURefMetaGrant[] | undefined {
+export function getGrants(entity: SURefMetaEntity): SURefObjectGrant[] | undefined {
   return 'grants' in entity && Array.isArray(entity.grants) ? entity.grants : undefined
 }
 
@@ -611,11 +611,20 @@ export function getRequirement(entity: SURefMetaEntity): string[] | undefined {
 }
 
 /**
+ * Extract chassisAbilities from an entity
+ * @param entity - The entity to extract from
+ * @returns The chassisAbilities or undefined
+ */
+export function getChassisAbilities(entity: SURefMetaEntity): unknown | undefined {
+  return 'chassisAbilities' in entity ? entity.chassisAbilities : undefined
+}
+
+/**
  * Extract patterns from an entity
  * @param entity - The entity to extract from
  * @returns The patterns or undefined
  */
-export function getPatterns(entity: SURefMetaEntity): SURefMetaPattern[] | undefined {
+export function getPatterns(entity: SURefMetaEntity): SURefObjectPattern[] | undefined {
   return 'patterns' in entity && Array.isArray(entity.patterns) ? entity.patterns : undefined
 }
 
@@ -692,7 +701,7 @@ export function getPopulationMax(entity: SURefMetaEntity): number | undefined {
  */
 export function getBonusPerTechLevel(
   entity: SURefMetaEntity
-): SURefMetaBonusPerTechLevel | undefined {
+): SURefObjectBonusPerTechLevel | undefined {
   return 'bonusPerTechLevel' in entity &&
     entity.bonusPerTechLevel !== null &&
     typeof entity.bonusPerTechLevel === 'object' &&
@@ -719,13 +728,13 @@ export function getDamageType(entity: SURefMetaEntity): unknown | undefined {
   return 'damageType' in entity ? entity.damageType : undefined
 }
 
-// Import meta types used in property extractors
+// Import object types used in property extractors
 import type {
-  SURefMetaBonusPerTechLevel,
-  SURefMetaChoice,
-  SURefMetaGrant,
-  SURefMetaNpc,
-  SURefMetaPattern,
-  SURefMetaTable,
-  SURefMetaTrait,
+  SURefObjectBonusPerTechLevel,
+  SURefObjectChoice,
+  SURefObjectGrant,
+  SURefObjectNpc,
+  SURefObjectPattern,
+  SURefObjectTable,
+  SURefObjectTrait,
 } from './types/objects.js'

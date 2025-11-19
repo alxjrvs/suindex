@@ -61,35 +61,35 @@ function extractRefType(
 ): { source: 'enum' | 'common' | 'object' | 'array'; typeName: string } | null {
   if (ref.includes('enums.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURef${capitalize(defName)}`
+    const typeName = `SURefEnum${capitalize(defName)}`
     imports.enums.add(typeName)
     return { source: 'enum', typeName }
   }
 
   if (ref.includes('common.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURef${toPascalCase(defName)}`
+    const typeName = `SURefCommon${toPascalCase(defName)}`
     imports.common.add(typeName)
     return { source: 'common', typeName }
   }
 
   if (ref.includes('objects.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     forwardRefs.add(typeName)
     return { source: 'object', typeName }
   }
 
   if (ref.startsWith('#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     forwardRefs.add(typeName)
     return { source: 'object', typeName }
   }
 
   if (ref.includes('arrays.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     return { source: 'array', typeName }
   }
 
@@ -228,7 +228,7 @@ function generateProperties(
  * Generate TypeScript interface from object schema definition
  */
 function generateObjectType(name: string, schema: JSONSchema): string | null {
-  const typeName = `SURefMeta${capitalize(name)}`
+  const typeName = `SURefObject${capitalize(name)}`
   const lines: string[] = []
 
   if (schema.description) {
@@ -329,7 +329,7 @@ function generateObjectType(name: string, schema: JSONSchema): string | null {
  * Generate TypeScript type alias from array schema definition
  */
 function generateArrayType(name: string, schema: JSONSchema): string | null {
-  const typeName = `SURefMeta${capitalize(name)}`
+  const typeName = `SURefObject${capitalize(name)}`
   const lines: string[] = []
 
   if (schema.description) {

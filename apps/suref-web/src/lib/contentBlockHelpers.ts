@@ -1,4 +1,4 @@
-import type { SURefMetaContentBlock } from 'salvageunion-reference'
+import type { SURefObjectContentBlock } from 'salvageunion-reference'
 
 /**
  * Extract the string value from a paragraph content block
@@ -6,7 +6,7 @@ import type { SURefMetaContentBlock } from 'salvageunion-reference'
  * @returns The string value from the first paragraph block, or undefined if not found
  */
 export function getParagraphString(
-  content: SURefMetaContentBlock[] | undefined
+  content: SURefObjectContentBlock[] | undefined
 ): string | undefined {
   if (!content) return undefined
   const block = content.find((b) => !b.type || b.type === 'paragraph')

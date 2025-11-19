@@ -1,5 +1,5 @@
 import { getSchemaCatalog, SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import { getEntitySlug } from './utils/slug'
 
 /**
@@ -18,7 +18,7 @@ export function getStaticPaths() {
     paths.push(`/schema/${schema.id}`)
 
     try {
-      const items = SalvageUnionReference.findAllIn(schema.id as SURefSchemaName, () => true)
+      const items = SalvageUnionReference.findAllIn(schema.id as SURefEnumSchemaName, () => true)
       for (const item of items) {
         if ('id' in item && item.id) {
           // Use slug for URLs instead of ID

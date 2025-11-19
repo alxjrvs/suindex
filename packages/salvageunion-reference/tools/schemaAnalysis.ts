@@ -406,7 +406,9 @@ export function categorizeSchemas(schemaIndex: SchemaIndex): {
       nonMetaSchemas.push(schema)
     }
 
-    if (schema.nonEntity === true) {
+    // meta and nonEntity are 1:1 - if meta is true, treat as nonEntity
+    const isNonEntity = schema.nonEntity === true || schema.meta === true
+    if (isNonEntity) {
       nonEntities.push(schema)
     } else {
       entities.push(schema)

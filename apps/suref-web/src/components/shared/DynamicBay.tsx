@@ -5,7 +5,7 @@ import { useMemo, useEffect } from 'react'
 import { packCargoGrid } from '../../utils/cargoGridPacking'
 import { techLevelColors } from '../../theme'
 import { EntityDisplayTooltip } from '../entity/EntityDisplayTooltip'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import type { HydratedCargo } from '../../types/hydrated'
 import { useUpdateCargo } from '../../hooks/cargo/useCargo'
 
@@ -297,7 +297,7 @@ export function DynamicBay({
         return cargoItem.ref && schemaName && entityId ? (
           <EntityDisplayTooltip
             key={`item-${index}`}
-            schemaName={schemaName as SURefSchemaName}
+            schemaName={schemaName as SURefEnumSchemaName}
             entityId={entityId}
             openDelay={300}
           >

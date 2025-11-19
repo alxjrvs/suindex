@@ -32,9 +32,11 @@ import type {
   SURefTrait,
   SURefVehicle,
   SURefMetaAbilityTreeRequirement,
+  SURefMetaAction,
+  SURefMetaChassisAbility,
   SURefMetaCrawlerTechLevel,
   SURefEntity,
-  SURefSchemaName,
+  SURefEnumSchemaName,
 } from './types/index.js'
 
 export { BaseModel, type ModelWithMetadata } from './BaseModel.js'
@@ -72,7 +74,9 @@ export type * from './types/index.js'
 export type SchemaToEntityMap = {
   abilities: SURefAbility
   'ability-tree-requirements': SURefMetaAbilityTreeRequirement
+  actions: SURefMetaAction
   'bio-titans': SURefBioTitan
+  'chassis-abilities': SURefMetaChassisAbility
   chassis: SURefChassis
   'classes.advanced': SURefAdvancedClass
   'classes.core': SURefCoreClass
@@ -101,7 +105,9 @@ export type EntitySchemaName = keyof SchemaToEntityMap
 export const EntitySchemaNames = new Set<EntitySchemaName>([
   'abilities',
   'ability-tree-requirements',
+  'actions',
   'bio-titans',
+  'chassis-abilities',
   'chassis',
   'classes.advanced',
   'classes.core',
@@ -190,7 +196,9 @@ export class SalvageUnionReference {
   static Abilities = models.Abilities as ModelWithMetadata<SchemaToEntityMap['abilities']>
   static AbilityTreeRequirements =
     models.AbilityTreeRequirements as ModelWithMetadata<SURefMetaAbilityTreeRequirement>
+  static Actions = models.Actions as ModelWithMetadata<SURefMetaAction>
   static BioTitans = models.BioTitans as ModelWithMetadata<SchemaToEntityMap['bio-titans']>
+  static ChassisAbilities = models.ChassisAbilities as ModelWithMetadata<SURefMetaChassisAbility>
   static Chassis = models.Chassis as ModelWithMetadata<SchemaToEntityMap['chassis']>
   static AdvancedClasses = models.AdvancedClasses as ModelWithMetadata<
     SchemaToEntityMap['classes.advanced']
@@ -253,7 +261,7 @@ export class SalvageUnionReference {
   }
 
   // Entity cache for O(1) lookups
-  private static entityCache = new Map<string, SURefEntity>()
+  private static entityCache = new Map<string, SchemaToEntityMap[keyof SchemaToEntityMap]>()
 
   /**
    * Get an entity by schema name and ID (O(1) with caching)
@@ -315,7 +323,7 @@ export class SalvageUnionReference {
    */
   public static getMany(
     requests: Array<{ schemaName: keyof SchemaToEntityMap; id: string }>
-  ): (SURefEntity | undefined)[] {
+  ): (SchemaToEntityMap[keyof SchemaToEntityMap] | undefined)[] {
     return requests.map((req) => this.get(req.schemaName, req.id))
   }
 
@@ -345,16 +353,16 @@ export class SalvageUnionReference {
    * // => { schemaName: 'abilities', id: 'bionic-senses' }
    */
   public static parseRef(ref: string): {
-    schemaName: SURefSchemaName
+    schemaName: SURefEnumSchemaName
     id: string
   } | null {
     const parts = ref.split('::')
     if (parts.length !== 2) return null
 
     const [schemaName, id] = parts
-    if (!SchemaToModelMap[schemaName as SURefSchemaName]) return null
+    if (!SchemaToModelMap[schemaName as SURefEnumSchemaName]) return null
 
-    return { schemaName: schemaName as SURefSchemaName, id }
+    return { schemaName: schemaName as SURefEnumSchemaName, id }
   }
 
   /**
@@ -366,12 +374,12 @@ export class SalvageUnionReference {
    * @example
    * const ability = SalvageUnionReference.getByRef('abilities::bionic-senses')
    */
-  public static getByRef(ref: string): SURefEntity | undefined {
+  public static getByRef(ref: string): SchemaToEntityMap[keyof SchemaToEntityMap] | undefined {
     const parsed = this.parseRef(ref)
     if (!parsed) return undefined
-    // Only work with entity schemas (not meta schemas)
-    if (EntitySchemaNames.has(parsed.schemaName as EntitySchemaName)) {
-      return this.get(parsed.schemaName as EntitySchemaName, parsed.id)
+    // Work with all schemas in SchemaToEntityMap (includes meta schemas)
+    if (parsed.schemaName in SchemaToModelMap) {
+      return this.get(parsed.schemaName as keyof SchemaToEntityMap, parsed.id)
     }
     return undefined
   }
@@ -388,8 +396,10 @@ export class SalvageUnionReference {
    *   'systems::energy-shield'
    * ])
    */
-  public static getManyByRef(refs: string[]): Map<string, SURefEntity | undefined> {
-    const result = new Map<string, SURefEntity | undefined>()
+  public static getManyByRef(
+    refs: string[]
+  ): Map<string, SchemaToEntityMap[keyof SchemaToEntityMap] | undefined> {
+    const result = new Map<string, SchemaToEntityMap[keyof SchemaToEntityMap] | undefined>()
     for (const ref of refs) {
       result.set(ref, this.getByRef(ref))
     }
@@ -456,7 +466,7 @@ export class SalvageUnionReference {
    * const systems = SalvageUnionReference.searchIn('systems', 'laser')
    */
   public static searchIn<T extends SURefEntity>(
-    schemaName: SURefSchemaName,
+    schemaName: SURefEnumSchemaName,
     query: string,
     options?: { limit?: number; caseSensitive?: boolean }
   ): T[] {
@@ -476,7 +486,7 @@ export class SalvageUnionReference {
   public static getSuggestions(
     query: string,
     options?: {
-      schemas?: SURefSchemaName[]
+      schemas?: SURefEnumSchemaName[]
       limit?: number
       caseSensitive?: boolean
     }
