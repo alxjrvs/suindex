@@ -16,11 +16,11 @@ export function EntityActions() {
 
   // Get entity name - prefer title from context, fallback to data.name
   const entityName = title || ('name' in data ? String(data.name) : '')
-  
+
   // Filter out actions where the action name matches the entity name
   // Those actions have their content rendered in EntityTopMatter instead
   const actionsToDisplay = actions.filter((action) => action.name !== entityName)
-  
+
   if (actionsToDisplay.length === 0) return null
 
   return (
