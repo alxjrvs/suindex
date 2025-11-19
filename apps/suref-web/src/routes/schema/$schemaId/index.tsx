@@ -33,6 +33,7 @@ export const Route = createFileRoute('/schema/$schemaId/')({
   head: ({ loaderData }) => {
     const schemaName = loaderData?.schema?.displayName || 'Schema'
     const schemaId = loaderData?.schema?.id || ''
+    const canonicalUrl = `https://su-srd.pages.dev/schema/${schemaId}`
     return {
       meta: [
         {
@@ -43,12 +44,24 @@ export const Route = createFileRoute('/schema/$schemaId/')({
           content: `Browse all ${schemaName} in the Salvage Union SRD (System Reference Document). Complete reference with stats, abilities, and details.`,
         },
         {
+          name: 'canonical',
+          content: canonicalUrl,
+        },
+        {
           property: 'og:title',
           content: `${schemaName} - Salvage Union System Reference Document`,
         },
         {
           property: 'og:description',
           content: `Browse all ${schemaName} in the Salvage Union SRD (System Reference Document). Complete reference with stats, abilities, and details.`,
+        },
+        {
+          property: 'og:url',
+          content: canonicalUrl,
+        },
+        {
+          property: 'og:type',
+          content: 'website',
         },
       ],
       scripts: [
@@ -59,7 +72,7 @@ export const Route = createFileRoute('/schema/$schemaId/')({
             '@type': 'Dataset',
             name: schemaName,
             description: `Salvage Union ${schemaName} System Reference Document (SRD) data`,
-            url: `https://su-srd.pages.dev/schema/${schemaId}`,
+            url: canonicalUrl,
             keywords: ['Salvage Union', 'TTRPG', 'SRD', 'System Reference Document', schemaName],
             creator: {
               '@type': 'Organization',
