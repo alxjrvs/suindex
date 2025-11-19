@@ -11,6 +11,7 @@ import { Route } from '../../routes/schema/$schemaId/index'
 import { getDisplayComponent } from '../componentRegistry'
 import type { SURefEntity } from 'salvageunion-reference'
 import { getTechLevel } from 'salvageunion-reference'
+import { getEntitySlug } from '../../utils/slug'
 
 interface SchemaViewerProps {
   schemas: SchemaInfo[]
@@ -208,7 +209,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
               onClick={() =>
                 navigate({
                   to: '/schema/$schemaId/item/$itemId',
-                  params: { schemaId, itemId: item.id },
+                  params: { schemaId, itemId: getEntitySlug(item) },
                 })
               }
             >

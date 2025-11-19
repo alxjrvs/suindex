@@ -7,9 +7,11 @@ import { ReferenceHeader } from '../shared/ReferenceHeader'
 import Footer from '../Footer'
 import type { SchemaInfo } from '../../types/schema'
 import { SalvageUnionReference } from 'salvageunion-reference'
+import type { SURefEntity } from 'salvageunion-reference'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { extractMatchSnippet, highlightMatch } from '../../utils/searchHighlight'
 import { DEBOUNCE_TIMINGS } from '../../constants/gameRules'
+import { getEntitySlug } from '../../utils/slug'
 
 const SEARCH_RESULT_HEIGHT = 72
 const SEARCH_RESULTS_MAX_HEIGHT = 400
@@ -24,6 +26,7 @@ interface SearchResultDisplay {
   schemaTitle: string
   itemId?: string
   itemName?: string
+  itemEntity?: SURefEntity
   matchText: string
   matchedFields?: string[]
   description?: string
@@ -77,9 +80,13 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
           params: { schemaId: result.schemaId },
         })
       } else if (result.itemId) {
+        // Use slug from entity if available, otherwise fallback to itemId
+        const itemSlug = result.itemEntity
+          ? getEntitySlug(result.itemEntity)
+          : result.itemId
         navigate({
           to: '/schema/$schemaId/item/$itemId',
-          params: { schemaId: result.schemaId, itemId: result.itemId },
+          params: { schemaId: result.schemaId, itemId: itemSlug },
         })
       }
     },
@@ -123,6 +130,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         schemaTitle: result.schemaTitle.replace('Salvage Union ', ''),
         itemId: result.entityId,
         itemName: result.entityName,
+        itemEntity: result.entity,
         matchText: result.entityName,
         matchedFields: result.matchedFields,
         description,

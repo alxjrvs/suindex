@@ -3,6 +3,7 @@ import { getSchemaCatalog, SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSchemaName } from 'salvageunion-reference'
 import ItemShowPage from '../../../../components/ItemShowPage'
 import { ReferenceError } from '../../../../components/errors/ReferenceError'
+import { findEntityBySlug } from '../../../../utils/slug'
 
 const schemaIndexData = getSchemaCatalog()
 
@@ -16,19 +17,28 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
     let itemName = params.itemId
     let itemDescription = ''
     if (schema) {
-      try {
-        item = SalvageUnionReference.findIn(
-          params.schemaId as SURefSchemaName,
-          (i) => i.id === params.itemId
-        )
-        if (item && 'name' in item) {
+      // Try to find by slug first (URL-safe name)
+      item = findEntityBySlug(params.schemaId as SURefSchemaName, params.itemId)
+      
+      // Fallback to ID lookup for backward compatibility
+      if (!item) {
+        try {
+          item = SalvageUnionReference.findIn(
+            params.schemaId as SURefSchemaName,
+            (i) => i.id === params.itemId
+          )
+        } catch {
+          // Ignore errors when item not found
+        }
+      }
+      
+      if (item) {
+        if ('name' in item && item.name) {
           itemName = item.name as string
         }
-        if (item && 'description' in item && typeof item.description === 'string') {
+        if ('description' in item && typeof item.description === 'string') {
           itemDescription = item.description
         }
-      } catch {
-        // Ignore errors when item not found
       }
     }
     return { schemas: schemaIndexData.schemas, schema, itemName, itemDescription, item }
