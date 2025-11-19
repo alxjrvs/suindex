@@ -1,37 +1,47 @@
 import { Flex, VStack } from '@chakra-ui/react'
 import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
-import { hasActions, extractVisibleActions, getChassisAbilities } from 'salvageunion-reference'
+import {
+  hasActions,
+  extractVisibleActions,
+  getChassisAbilities,
+  getAssetUrl,
+} from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { ContentBlockRenderer } from './ContentBlockRenderer'
 import { EntityChassisAbilitiesContent } from './EntityChassisAbilitiesContent'
 
 export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
-  const { data, schemaName, spacing, fontSize, compact } = useEntityDisplayContext()
+  const { data, schemaName, spacing, fontSize, compact, title } = useEntityDisplayContext()
 
   // Determine which content to render
   let contentBlocks = 'content' in data ? data.content : undefined
 
-  // For single visible action entities, use the action's content instead
+  // Check if any action name matches the entity name - if so, use that action's content
   const visibleActions = extractVisibleActions(data)
-  const isSingleVisibleAction = hasActions(data) && visibleActions && visibleActions.length === 1
-  if (isSingleVisibleAction) {
-    if (visibleActions && visibleActions.length === 1) {
-      contentBlocks = visibleActions[0].content
+  if (hasActions(data) && visibleActions && visibleActions.length > 0) {
+    // Get entity name - prefer title from context, fallback to data.name
+    const entityName = title || ('name' in data ? String(data.name) : '')
+
+    // Find action with matching name
+    const matchingAction = visibleActions.find((action) => action.name === entityName)
+
+    // Only replace entity content if action has content
+    if (matchingAction && matchingAction.content && matchingAction.content.length > 0) {
+      contentBlocks = matchingAction.content
     }
   }
 
-  // Show content if:
-  // 1. Entity has content blocks, OR
-  // 2. Entity has a single visible action (content extracted above)
-  // Note: For abilities with single visible actions, we show the action content inline
-  // For abilities with multiple visible actions, we show them as NestedActionDisplay (handled by EntityActions)
+  // Show content if entity has content blocks
   const showContent = contentBlocks && contentBlocks.length > 0
 
   const hasChassisAbilities = schemaName === 'chassis' && getChassisAbilities(data)
 
-  const hasContent =
-    !!showContent || (visibleActions && visibleActions.length > 1) || hasChassisAbilities
+  // Check if we should render EntityTopMatter:
+  // 1. Entity has content blocks, OR
+  // 2. Entity has chassis abilities, OR
+  // 3. Entity has an image URL (so images can render even without content)
+  const hasContent = !!showContent || hasChassisAbilities || !!getAssetUrl(data)
 
   if (!hasContent) {
     return null

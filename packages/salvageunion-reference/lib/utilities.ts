@@ -162,6 +162,27 @@ export function extractActions(entity: SURefMetaEntity): SURefMetaAction[] | und
 }
 
 /**
+ * Find action with name matching entity name
+ * Used to determine if action stats should be extracted into entity header
+ * @param entity - The entity to check
+ * @returns The matching action or undefined
+ */
+function findMatchingAction(entity: SURefMetaEntity): SURefMetaAction | undefined {
+  if (!('name' in entity) || typeof entity.name !== 'string') {
+    return undefined
+  }
+
+  const entityName = entity.name
+  const visibleActions = extractVisibleActions(entity)
+
+  if (!visibleActions || visibleActions.length === 0) {
+    return undefined
+  }
+
+  return visibleActions.find((action) => action.name === entityName)
+}
+
+/**
  * Extract visible (non-hidden) actions from an entity
  * @param entity - The entity to extract from
  * @returns The visible actions array or undefined
@@ -553,7 +574,7 @@ export function getDescription(entity: SURefMetaEntity): string | undefined {
 
 /**
  * Get activation cost from an entity
- * Checks base level first, then actions[0] if entity has exactly 1 visible action
+ * Checks base level first, then action if action name matches entity name
  * @param entity - The entity to extract activation cost from
  * @returns The activation cost or undefined if not present
  */
@@ -566,18 +587,17 @@ export function getActivationCost(entity: SURefMetaEntity): number | string | un
     return entity.activationCost
   }
 
-  // Check actions[0] property (only if entity has exactly 1 visible action)
-  const visibleActions = extractVisibleActions(entity)
+  // Check action property (only if action name matches entity name)
+  const matchingAction = findMatchingAction(entity)
   if (
-    visibleActions &&
-    visibleActions.length === 1 &&
-    visibleActions[0] !== null &&
-    typeof visibleActions[0] === 'object' &&
-    'activationCost' in visibleActions[0] &&
-    (typeof visibleActions[0].activationCost === 'number' ||
-      typeof visibleActions[0].activationCost === 'string')
+    matchingAction !== undefined &&
+    matchingAction !== null &&
+    typeof matchingAction === 'object' &&
+    'activationCost' in matchingAction &&
+    (typeof matchingAction.activationCost === 'number' ||
+      typeof matchingAction.activationCost === 'string')
   ) {
-    return visibleActions[0].activationCost
+    return matchingAction.activationCost
   }
 
   return undefined
@@ -585,7 +605,7 @@ export function getActivationCost(entity: SURefMetaEntity): number | string | un
 
 /**
  * Get action type from an entity
- * Checks base level first, then actions[0] if entity has exactly 1 visible action
+ * Checks base level first, then action if action name matches entity name
  * @param entity - The entity to extract action type from
  * @returns The action type or undefined if not present
  */
@@ -595,17 +615,16 @@ export function getActionType(entity: SURefMetaEntity): string | undefined {
     return entity.actionType
   }
 
-  // Check actions[0] property (only if entity has exactly 1 visible action)
-  const visibleActions = extractVisibleActions(entity)
+  // Check action property (only if action name matches entity name)
+  const matchingAction = findMatchingAction(entity)
   if (
-    visibleActions &&
-    visibleActions.length === 1 &&
-    visibleActions[0] !== null &&
-    typeof visibleActions[0] === 'object' &&
-    'actionType' in visibleActions[0] &&
-    typeof visibleActions[0].actionType === 'string'
+    matchingAction !== undefined &&
+    matchingAction !== null &&
+    typeof matchingAction === 'object' &&
+    'actionType' in matchingAction &&
+    typeof matchingAction.actionType === 'string'
   ) {
-    return visibleActions[0].actionType
+    return matchingAction.actionType
   }
 
   return undefined
@@ -613,7 +632,7 @@ export function getActionType(entity: SURefMetaEntity): string | undefined {
 
 /**
  * Get range from an entity
- * Checks base level first, then actions[0] if entity has exactly 1 visible action
+ * Checks base level first, then action if action name matches entity name
  * @param entity - The entity to extract range from
  * @returns The range array or undefined if not present
  */
@@ -623,17 +642,16 @@ export function getRange(entity: SURefMetaEntity): string[] | undefined {
     return entity.range
   }
 
-  // Check actions[0] property (only if entity has exactly 1 visible action)
-  const visibleActions = extractVisibleActions(entity)
+  // Check action property (only if action name matches entity name)
+  const matchingAction = findMatchingAction(entity)
   if (
-    visibleActions &&
-    visibleActions.length === 1 &&
-    visibleActions[0] !== null &&
-    typeof visibleActions[0] === 'object' &&
-    'range' in visibleActions[0] &&
-    Array.isArray(visibleActions[0].range)
+    matchingAction !== undefined &&
+    matchingAction !== null &&
+    typeof matchingAction === 'object' &&
+    'range' in matchingAction &&
+    Array.isArray(matchingAction.range)
   ) {
-    return visibleActions[0].range
+    return matchingAction.range
   }
 
   return undefined
@@ -641,7 +659,7 @@ export function getRange(entity: SURefMetaEntity): string[] | undefined {
 
 /**
  * Get damage from an entity
- * Checks base level first, then actions[0] if entity has exactly 1 visible action
+ * Checks base level first, then action if action name matches entity name
  * @param entity - The entity to extract damage from
  * @returns The damage object or undefined if not present
  */
@@ -656,18 +674,17 @@ export function getDamage(entity: SURefMetaEntity):
     return entity.damage as { damageType: string; amount: number | string }
   }
 
-  // Check actions[0] property (only if entity has exactly 1 visible action)
-  const visibleActions = extractVisibleActions(entity)
+  // Check action property (only if action name matches entity name)
+  const matchingAction = findMatchingAction(entity)
   if (
-    visibleActions &&
-    visibleActions.length === 1 &&
-    visibleActions[0] !== null &&
-    typeof visibleActions[0] === 'object' &&
-    'damage' in visibleActions[0] &&
-    visibleActions[0].damage !== null &&
-    typeof visibleActions[0].damage === 'object'
+    matchingAction !== undefined &&
+    matchingAction !== null &&
+    typeof matchingAction === 'object' &&
+    'damage' in matchingAction &&
+    matchingAction.damage !== null &&
+    typeof matchingAction.damage === 'object'
   ) {
-    return visibleActions[0].damage as {
+    return matchingAction.damage as {
       damageType: string
       amount: number | string
     }
@@ -678,7 +695,7 @@ export function getDamage(entity: SURefMetaEntity):
 
 /**
  * Get traits from an entity
- * Checks base level first, then actions[0] if entity has exactly 1 visible action
+ * Checks base level first, then action if action name matches entity name
  * @param entity - The entity to extract traits from
  * @returns The traits array or undefined if not present
  */
@@ -693,17 +710,16 @@ export function getTraits(entity: SURefMetaEntity):
     return entity.traits as Array<{ amount?: number | string; type: string }>
   }
 
-  // Check actions[0] property (only if entity has exactly 1 visible action)
-  const visibleActions = extractVisibleActions(entity)
+  // Check action property (only if action name matches entity name)
+  const matchingAction = findMatchingAction(entity)
   if (
-    visibleActions &&
-    visibleActions.length === 1 &&
-    visibleActions[0] !== null &&
-    typeof visibleActions[0] === 'object' &&
-    'traits' in visibleActions[0] &&
-    Array.isArray(visibleActions[0].traits)
+    matchingAction !== undefined &&
+    matchingAction !== null &&
+    typeof matchingAction === 'object' &&
+    'traits' in matchingAction &&
+    Array.isArray(matchingAction.traits)
   ) {
-    return visibleActions[0].traits as Array<{
+    return matchingAction.traits as Array<{
       amount?: number | string
       type: string
     }>
@@ -752,18 +768,17 @@ export function getTable(entity: SURefMetaEntity):
     }
   }
 
-  // Check resolved actions[0] property (actions are now strings, need to resolve)
-  const resolvedActions = extractActions(entity)
+  // Check action property (only if action name matches entity name)
+  const matchingAction = findMatchingAction(entity)
   if (
-    resolvedActions &&
-    resolvedActions.length > 0 &&
-    resolvedActions[0] !== null &&
-    typeof resolvedActions[0] === 'object' &&
-    'table' in resolvedActions[0] &&
-    resolvedActions[0].table !== null &&
-    typeof resolvedActions[0].table === 'object'
+    matchingAction !== undefined &&
+    matchingAction !== null &&
+    typeof matchingAction === 'object' &&
+    'table' in matchingAction &&
+    matchingAction.table !== null &&
+    typeof matchingAction.table === 'object'
   ) {
-    return resolvedActions[0].table as {
+    return matchingAction.table as {
       type: 'standard' | 'alternate' | 'flat' | 'full'
       [key: string]: string
     }
@@ -789,17 +804,16 @@ export function getOptions(entity: SURefMetaEntity):
     return entity.options as Array<{ label: string; value: string }>
   }
 
-  // Check resolved actions[0] property (actions are now strings, need to resolve)
-  const resolvedActions = extractActions(entity)
+  // Check action property (only if action name matches entity name)
+  const matchingAction = findMatchingAction(entity)
   if (
-    resolvedActions &&
-    resolvedActions.length > 0 &&
-    resolvedActions[0] !== null &&
-    typeof resolvedActions[0] === 'object' &&
-    'options' in resolvedActions[0] &&
-    Array.isArray(resolvedActions[0].options)
+    matchingAction !== undefined &&
+    matchingAction !== null &&
+    typeof matchingAction === 'object' &&
+    'options' in matchingAction &&
+    Array.isArray(matchingAction.options)
   ) {
-    return resolvedActions[0].options as Array<{ label: string; value: string }>
+    return matchingAction.options as Array<{ label: string; value: string }>
   }
 
   return undefined
@@ -807,7 +821,7 @@ export function getOptions(entity: SURefMetaEntity):
 
 /**
  * Get choices from an entity
- * Checks single action choices first (if entity has exactly 1 visible action), then root-level choices
+ * Checks action choices first (if action name matches entity name), then root-level choices
  * @param entity - The entity to extract choices from
  * @returns The choices array or undefined if not present
  */
@@ -819,17 +833,16 @@ export function getChoices(entity: SURefMetaEntity):
       [key: string]: unknown
     }>
   | undefined {
-  // Check if entity has a single visible action with choices - use those first
-  const visibleActions = extractVisibleActions(entity)
+  // Check if entity has an action with matching name that has choices - use those first
+  const matchingAction = findMatchingAction(entity)
   if (
-    visibleActions &&
-    visibleActions.length === 1 &&
-    visibleActions[0] !== null &&
-    typeof visibleActions[0] === 'object' &&
-    'choices' in visibleActions[0] &&
-    Array.isArray(visibleActions[0].choices)
+    matchingAction !== undefined &&
+    matchingAction !== null &&
+    typeof matchingAction === 'object' &&
+    'choices' in matchingAction &&
+    Array.isArray(matchingAction.choices)
   ) {
-    return visibleActions[0].choices as Array<{
+    return matchingAction.choices as Array<{
       id: string
       name: string
       description?: string
