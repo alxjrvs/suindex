@@ -68,12 +68,7 @@
     "id": "9c548eba-0fbe-4eb5-8752-a0cfe4c319f9",
     "source": "Salvage Union Workshop Manual",
     "name": "Phantom",
-    "actions": [
-      "Nether Teleport",
-      "Phasic Core",
-      "Morph Scythes",
-      "Titanic Actions (3)"
-    ],
+    "actions": ["Nether Teleport", "Phasic Core", "Morph Scythes", "Titanic Actions (3)"],
     "structurePoints": 54,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/bio-titans/phantom.jpg",
     "page": 282,

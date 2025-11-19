@@ -58,9 +58,10 @@
     "validate:references": "tsx tools/validateReferences.ts",
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "test": "bun test",
+    "test:coverage": "bun test --coverage",
     "lint": "eslint .",
-    "sanity": "bun run lint -- --fix && bun run format && bun run typecheck",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "clean": "rm -rf dist *.tsbuildinfo"
   },
   "repository": {
     "type": "git",

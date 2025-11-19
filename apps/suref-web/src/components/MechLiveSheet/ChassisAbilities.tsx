@@ -63,9 +63,9 @@ export function ChassisAbilities({
     >
       <VStack gap={3} alignItems="stretch" w="full">
         {chassisAbilities && chassisAbilities.length > 0
-          ? chassisAbilities.map((ability, idx) => (
+          ? chassisAbilities.map((ability) => (
               <NestedChassisAbility
-                key={idx}
+                key={ability.id}
                 data={ability}
                 compact={false}
                 chassisName={chassis?.name}

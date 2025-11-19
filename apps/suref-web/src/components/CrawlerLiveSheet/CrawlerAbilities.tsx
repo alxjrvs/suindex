@@ -5,9 +5,9 @@ import { RoundedBox } from '../shared/RoundedBox'
 import { SheetDisplay } from '../shared/SheetDisplay'
 import { VStack } from '@chakra-ui/react'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
-import { useHydratedCrawler } from '../../hooks/crawler'
-import { useManageEntityChoices } from '../../hooks/suentity'
-import { getParagraphString } from '../../lib/contentBlockHelpers'
+import { useHydratedCrawler } from '@/hooks/crawler'
+import { useManageEntityChoices } from '@/hooks/suentity'
+import { getParagraphString } from '@/lib/contentBlockHelpers'
 
 export function CrawlerAbilities({
   id,

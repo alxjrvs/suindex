@@ -1,4 +1,9 @@
-import { SalvageUnionReference, type SURefSchemaName } from 'salvageunion-reference'
+import {
+  SalvageUnionReference,
+  EntitySchemaNames,
+  type SURefSchemaName,
+  type EntitySchemaName,
+} from 'salvageunion-reference'
 import { EntityDisplayTooltip } from './EntityDisplayTooltip'
 import { ValueDisplay } from '../shared/ValueDisplay'
 import { useMemo } from 'react'
@@ -18,11 +23,14 @@ export function EntityDetailDisplay({
   inline?: boolean
 }) {
   const entity = useMemo(() => {
-    const found = SalvageUnionReference.findIn(
-      schemaName,
-      (t) => t.name.toLowerCase() === String(label).toLowerCase()
-    )
-    return found
+    // Only search in entity schemas (not meta schemas)
+    if (EntitySchemaNames.has(schemaName as EntitySchemaName)) {
+      return SalvageUnionReference.findIn(
+        schemaName as EntitySchemaName,
+        (t) => t.name.toLowerCase() === String(label).toLowerCase()
+      )
+    }
+    return undefined
   }, [schemaName, label])
   const id = entity?.id
 

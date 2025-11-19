@@ -8,15 +8,10 @@ import { act } from '@testing-library/react'
 
 const schemaCatalog = getSchemaCatalog()
 
-const EXCLUDED_SCHEMAS = [
-  'actions',
-  'ability-tree-requirements',
-  'crawler-tech-levels',
-  'roll-tables',
-]
+// Automatically exclude meta schemas (schemas marked with meta: true)
 const SCHEMAS_TO_TEST = schemaCatalog.schemas
-  .map((schema) => schema.id)
-  .filter((id) => !EXCLUDED_SCHEMAS.includes(id)) as SURefSchemaName[]
+  .filter((schema) => !schema.meta)
+  .map((schema) => schema.id) as SURefSchemaName[]
 
 type PropertyCheckConfig = {
   /** Properties that should appear as numbers in the rendered output */
@@ -38,6 +33,7 @@ const SCHEMA_PROPERTY_CHECKS: Record<string, PropertyCheckConfig> = {
   npcs: { numericProps: ['hp', 'ap'] },
   squads: { numericProps: ['structurePoints'] },
   'classes.core': { numericProps: ['startingHp', 'startingAp'] },
+  'roll-tables': { textProps: ['name'] },
 }
 
 /**
@@ -71,6 +67,11 @@ function verifyEntityProperties(
     if (prop in entity) {
       const value = entity[prop as keyof typeof entity]
       if (typeof value === 'string' && value.length > 1) {
+        // For roll-tables, the name is already checked separately at line 109
+        // so we skip checking it again here to avoid duplicate checks
+        if (schemaId === 'roll-tables' && prop === 'name') {
+          return
+        }
         expect(textContent).toContain(value)
       }
     }

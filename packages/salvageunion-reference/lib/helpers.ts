@@ -11,11 +11,12 @@ import type {
   SURefCoreClass,
   SURefCrawler,
   SURefCrawlerBay,
-  SURefCrawlerTechLevel,
+  SURefMetaCrawlerTechLevel,
   SURefEquipment,
   SURefEntity,
   SURefSchemaName,
 } from './types/index.js'
+import type { EntitySchemaName } from './index.js'
 import type { ModelWithMetadata } from './BaseModel.js'
 
 /**
@@ -78,27 +79,27 @@ export function getModelMap(): Record<SURefSchemaName, ModelWithMetadata<SURefEn
 }
 
 /**
- * Find an entity by ID in any schema
- * @param schemaName - The schema to search in
+ * Find an entity by ID in any schema (only works with entity schemas, not meta schemas)
+ * @param schemaName - The schema to search in (must be an entity schema)
  * @param id - The entity ID
  * @returns The entity or undefined if not found
  */
 export function findById<T extends SURefEntity>(
-  schemaName: SURefSchemaName,
+  schemaName: EntitySchemaName,
   id: string
 ): T | undefined {
   return SalvageUnionReference.get(schemaName, id) as T | undefined
 }
 
 /**
- * Get the name of an entity by ID with fallback
- * @param schemaName - The schema to search in
+ * Get the name of an entity by ID with fallback (only works with entity schemas, not meta schemas)
+ * @param schemaName - The schema to search in (must be an entity schema)
  * @param id - The entity ID
  * @param fallback - Fallback string if entity not found (default: 'Unknown')
  * @returns The entity name or fallback
  */
 export function getNameById(
-  schemaName: SURefSchemaName,
+  schemaName: EntitySchemaName,
   id: string | null,
   fallback = 'Unknown'
 ): string {
@@ -267,7 +268,7 @@ export function getCrawlerNameById(crawlerId: string | null, fallback = 'Unknown
  * @param techLevel - The tech level number to find
  * @returns The tech level or undefined if not found
  */
-export function findCrawlerTechLevel(techLevel: number): SURefCrawlerTechLevel | undefined {
+export function findCrawlerTechLevel(techLevel: number): SURefMetaCrawlerTechLevel | undefined {
   return SalvageUnionReference.CrawlerTechLevels.find((tl) => tl.techLevel === techLevel)
 }
 

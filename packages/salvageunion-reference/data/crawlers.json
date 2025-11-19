@@ -35,9 +35,7 @@
         }
       ]
     },
-    "actions": [
-      "Crawler Wide Augments"
-    ],
+    "actions": ["Crawler Wide Augments"],
     "page": 216,
     "content": [
       {
@@ -100,9 +98,7 @@
         }
       ]
     },
-    "actions": [
-      "Improved Armour and Armaments"
-    ],
+    "actions": ["Improved Armour and Armaments"],
     "page": 216,
     "content": [
       {
@@ -161,9 +157,7 @@
         }
       ]
     },
-    "actions": [
-      "Exceptional Engineering"
-    ],
+    "actions": ["Exceptional Engineering"],
     "page": 216,
     "content": [
       {
@@ -218,9 +212,7 @@
         }
       ]
     },
-    "actions": [
-      "All Terrain Locomotion"
-    ],
+    "actions": ["All Terrain Locomotion"],
     "page": 217,
     "content": [
       {
@@ -279,9 +271,7 @@
         }
       ]
     },
-    "actions": [
-      "Improved Trading Bay"
-    ],
+    "actions": ["Improved Trading Bay"],
     "page": 217,
     "content": [
       {

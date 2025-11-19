@@ -34,7 +34,11 @@ for (const action of actionsData) {
             // Convert embedded action objects to action names
             const actionNames: string[] = []
             for (const embeddedAction of option.actions) {
-              if (typeof embeddedAction === 'object' && embeddedAction !== null && 'name' in embeddedAction) {
+              if (
+                typeof embeddedAction === 'object' &&
+                embeddedAction !== null &&
+                'name' in embeddedAction
+              ) {
                 actionNames.push(embeddedAction.name as string)
                 fixed++
               } else if (typeof embeddedAction === 'string') {
@@ -53,18 +57,34 @@ for (const action of actionsData) {
 for (const action of actionsData) {
   // Keep only valid action properties
   const validKeys = new Set([
-    'id', 'name', 'content', 'activationCost', 'actionType', 'range', 'damage', 'traits',
-    'hidden', 'structurePoints', 'energyPoints', 'heatCapacity', 'systemSlots', 'moduleSlots',
-    'cargoCapacity', 'techLevel', 'salvageValue', 'choices', 'table'
+    'id',
+    'name',
+    'content',
+    'activationCost',
+    'actionType',
+    'range',
+    'damage',
+    'traits',
+    'hidden',
+    'structurePoints',
+    'energyPoints',
+    'heatCapacity',
+    'systemSlots',
+    'moduleSlots',
+    'cargoCapacity',
+    'techLevel',
+    'salvageValue',
+    'choices',
+    'table',
   ])
-  
+
   const keysToRemove: string[] = []
   for (const key in action) {
     if (!validKeys.has(key)) {
       keysToRemove.push(key)
     }
   }
-  
+
   for (const key of keysToRemove) {
     delete action[key]
     fixed++
@@ -73,4 +93,3 @@ for (const action of actionsData) {
 
 fs.writeFileSync(actionsPath, JSON.stringify(actionsData, null, 2) + '\n')
 console.log(`✅ Fixed ${fixed} issues in actions.json`)
-

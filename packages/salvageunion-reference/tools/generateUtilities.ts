@@ -157,17 +157,25 @@ function extractProperties(schemaFile: string): PropertyInfo[] {
   return Array.from(propertyMap.values())
 }
 
-function generateTypeGuard(schemaId: string, typeName: string, properties: PropertyInfo[]): string {
+function generateTypeGuard(
+  schemaId: string,
+  typeName: string,
+  properties: PropertyInfo[],
+  isMeta: boolean
+): string {
   const requiredProps = properties.filter((p) => p.required)
 
   if (requiredProps.length === 0) return ''
+
+  const prefix = isMeta ? 'SURefMeta' : 'SURef'
+  const typeRef = `${prefix}${typeName}`
 
   let code = `/**\n`
   code += ` * Type guard to check if an entity is a ${typeName}\n`
   code += ` * @param entity - The entity to check\n`
   code += ` * @returns True if the entity is a ${typeName}\n`
   code += ` */\n`
-  code += `export function is${typeName}(entity: SURefMetaEntity): entity is SURef${typeName} {\n`
+  code += `export function is${typeName}(entity: SURefMetaEntity): entity is ${typeRef} {\n`
   code += `  return (\n`
 
   const checks = requiredProps.map((prop) => {
@@ -306,10 +314,12 @@ output += `// ==================================================================
 for (const schemaInfo of schemaIndex.schemas) {
   const properties = extractProperties(schemaInfo.schemaFile)
   const typeName = getSingularTypeName(schemaInfo.id, __dirname)
-  const typeGuard = generateTypeGuard(schemaInfo.id, typeName, properties)
+  const isMeta = schemaInfo.meta === true
+  const prefix = isMeta ? 'SURefMeta' : 'SURef'
+  const typeGuard = generateTypeGuard(schemaInfo.id, typeName, properties, isMeta)
   if (typeGuard) {
     // Only track types that actually got a type guard generated
-    usedTypes.add(`SURef${typeName}`)
+    usedTypes.add(`${prefix}${typeName}`)
     output += typeGuard
   }
 }

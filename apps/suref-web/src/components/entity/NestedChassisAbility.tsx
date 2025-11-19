@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import type {
   SURefMetaAction,
@@ -155,10 +156,10 @@ export function NestedChassisAbility({
         {renderDetailsInline &&
           details.length > 0 &&
           details.map((item, index) => (
-            <>
+            <React.Fragment key={index}>
               {' '}
-              <SharedDetailItem key={index} item={item} compact={compact} />
-            </>
+              <SharedDetailItem item={item} compact={compact} />
+            </React.Fragment>
           ))}
         {/* Render first content block inline when condition is met */}
         {renderFirstContentInline && firstContentBlock && (

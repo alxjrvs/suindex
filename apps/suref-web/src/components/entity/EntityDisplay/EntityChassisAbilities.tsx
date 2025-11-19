@@ -26,11 +26,11 @@ export function EntityChassisAbilities() {
       <Text fontSize="xl" variant="pseudoheader">
         Chassis Abilities
       </Text>
-      {chassisAbilities.map((ability, index) => {
+      {chassisAbilities.map((ability) => {
         return (
           <NestedChassisAbility
             compact={compact}
-            key={index}
+            key={ability.id}
             data={ability}
             chassisName={chassisName}
           />

@@ -14,11 +14,11 @@ export function EntityChassisAbilitiesContent() {
 
   return (
     <VStack gap={spacing.smallGap} alignItems="stretch">
-      {chassisAbilities.map((ability, index) => {
+      {chassisAbilities.map((ability) => {
         return (
           <NestedChassisAbility
             compact={compact}
-            key={index}
+            key={ability.id}
             data={ability}
             chassisName={chassisName}
           />

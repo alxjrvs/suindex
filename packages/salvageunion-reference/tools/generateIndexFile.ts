@@ -25,8 +25,10 @@ function generateIndexFile() {
   // Schemas that are not top-level entities (excluded from entity operations)
   const nonEntitySchemas = new Set(['chassis-abilities', 'actions'])
 
-  // Generate type imports (only for entity schemas)
-  const entitySchemas = schemaIndex.schemas.filter((entry) => !nonEntitySchemas.has(entry.id))
+  // Generate type imports for entity schemas (non-meta, non-excluded)
+  const entitySchemas = schemaIndex.schemas.filter(
+    (entry) => !nonEntitySchemas.has(entry.id) && !entry.meta
+  )
   const typeImports = entitySchemas
     .map((entry: SchemaIndexEntry) => {
       const singularName = getSingularTypeName(entry.id)
@@ -34,16 +36,40 @@ function generateIndexFile() {
     })
     .join(',\n')
 
-  // Add union types to imports
-  const allTypeImports = `${typeImports},\n  SURefEntity,\n  SURefSchemaName`
-
-  // Generate SchemaToEntityMap (only for entity schemas)
-  const schemaToEntityEntries = entitySchemas
+  // Generate meta type imports (for meta schemas that need model properties)
+  const metaSchemas = schemaIndex.schemas.filter(
+    (entry) => !nonEntitySchemas.has(entry.id) && entry.meta
+  )
+  const metaTypeImports = metaSchemas
     .map((entry: SchemaIndexEntry) => {
       const singularName = getSingularTypeName(entry.id)
-      return `  '${entry.id}': SURef${singularName}`
+      return `  SURefMeta${singularName}`
+    })
+    .join(',\n')
+
+  // Combine all imports
+  const allTypeImports = metaTypeImports
+    ? `${typeImports},\n${metaTypeImports},\n  SURefEntity,\n  SURefSchemaName`
+    : `${typeImports},\n  SURefEntity,\n  SURefSchemaName`
+
+  // EntitySchemaName is defined in the generated file, not imported
+
+  // Generate SchemaToEntityMap (includes entity schemas AND meta schemas, excludes nonEntitySchemas)
+  // This includes all schemas that can be queried via the ORM
+  const schemasForEntityMap = schemaIndex.schemas.filter((entry) => !nonEntitySchemas.has(entry.id))
+  const schemaToEntityEntries = schemasForEntityMap
+    .map((entry: SchemaIndexEntry) => {
+      const singularName = getSingularTypeName(entry.id)
+      const prefix = entry.meta ? 'SURefMeta' : 'SURef'
+      return `  '${entry.id}': ${prefix}${singularName}`
     })
     .join('\n')
+
+  // Generate EntitySchemaName type (includes entity schemas and meta schemas, excludes nonEntitySchemas)
+  const entitySchemaNames = schemasForEntityMap.map((entry) => `  '${entry.id}'`).join(' |\n')
+
+  // Generate runtime constant for entity schema names (for runtime checks)
+  const entitySchemaNameList = schemasForEntityMap.map((entry) => `  '${entry.id}'`).join(',\n')
 
   // Generate SchemaToModelMap
   const schemaToModelEntries = schemaIndex.schemas
@@ -60,12 +86,17 @@ function generateIndexFile() {
     })
     .join(',\n')
 
-  // Generate static model properties (only for entity schemas)
-  const modelProperties = entitySchemas
+  // Generate static model properties for ALL schemas (including meta)
+  // Entity schemas use SchemaToEntityMap, meta schemas use their direct type
+  const modelProperties = schemaIndex.schemas
+    .filter((entry) => !nonEntitySchemas.has(entry.id))
     .map((entry: SchemaIndexEntry) => {
       const modelName = toPascalCase(entry.id)
+      const singularName = getSingularTypeName(entry.id)
+      const prefix = entry.meta ? 'SURefMeta' : 'SURef'
+      const typeRef = entry.meta ? `${prefix}${singularName}` : `SchemaToEntityMap['${entry.id}']`
       return `  static ${modelName} = models.${modelName} as ModelWithMetadata<
-    SchemaToEntityMap['${entry.id}']
+    ${typeRef}
   >`
     })
     .join('\n')
@@ -80,11 +111,13 @@ ${allTypeImports},
 
   template = template.replace(
     '// INJECT:SCHEMA_TO_ENTITY_MAP',
-    `// Type mapping from schema names to entity types
-type SchemaToEntityMap = {
+    `// Type mapping from schema names to entity types (includes entity schemas and meta schemas)
+export type SchemaToEntityMap = {
 ${schemaToEntityEntries}
 }`
   )
+
+  template = template.replace('// INJECT:ENTITY_SCHEMA_NAMES', entitySchemaNameList)
 
   template = template.replace(
     '// INJECT:SCHEMA_TO_MODEL_MAP',

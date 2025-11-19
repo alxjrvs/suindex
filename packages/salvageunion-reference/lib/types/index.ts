@@ -6,14 +6,14 @@
 // Import types for use in union types
 import type {
   SURefAbility,
-  SURefAbilityTreeRequirement,
+  SURefMetaAbilityTreeRequirement,
   SURefBioTitan,
   SURefChassis,
   SURefMetaChassisAbility,
   SURefAdvancedClass,
   SURefCoreClass,
   SURefCrawlerBay,
-  SURefCrawlerTechLevel,
+  SURefMetaCrawlerTechLevel,
   SURefCrawler,
   SURefCreature,
   SURefDistance,
@@ -93,16 +93,14 @@ export type {
   SURefMetaSchemaName,
 } from './objects.js'
 
-// Union type of all entity types
+// Union type of all entity types (excludes meta schemas)
 export type SURefEntity =
   | SURefAbility
-  | SURefAbilityTreeRequirement
   | SURefBioTitan
   | SURefChassis
   | SURefAdvancedClass
   | SURefCoreClass
   | SURefCrawlerBay
-  | SURefCrawlerTechLevel
   | SURefCrawler
   | SURefCreature
   | SURefDistance
@@ -119,17 +117,17 @@ export type SURefEntity =
   | SURefVehicle
 
 // Union type of all meta entity types (entities with common base properties)
-// Includes chassis abilities as they are actions, not top-level entities
+// Includes meta schemas and chassis abilities
 export type SURefMetaEntity =
   | SURefAbility
-  | SURefAbilityTreeRequirement
+  | SURefMetaAbilityTreeRequirement
   | SURefBioTitan
   | SURefChassis
   | SURefMetaChassisAbility
   | SURefAdvancedClass
   | SURefCoreClass
   | SURefCrawlerBay
-  | SURefCrawlerTechLevel
+  | SURefMetaCrawlerTechLevel
   | SURefCrawler
   | SURefCreature
   | SURefDistance
