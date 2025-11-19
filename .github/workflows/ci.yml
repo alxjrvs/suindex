@@ -22,22 +22,11 @@ jobs:
       - name: Build salvageunion-reference package
         run: bun run build:package
 
-      - name: Validate package IDs
-        run: bun --filter salvageunion-reference validate:ids
       - name: Validate package cross-references
         run: bun --filter salvageunion-reference validate:references
 
-      - name: Lint
-        run: bun run lint
-
-      - name: Format check
-        run: bun run format:check
-
-      - name: Type check
-        run: bun run typecheck
-
-      - name: Test
-        run: bun run test
+      - name: Run all checks
+        run: bun run check:all
 
       - name: Build
         run: bun run build
