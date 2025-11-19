@@ -81,7 +81,6 @@ function normalizeAction(action: Action): string {
 
 const allActions: Action[] = []
 const contentHashMap = new Map<string, Action>() // content hash -> canonical action
-const nameMap = new Map<string, Action[]>() // name -> actions with that name
 
 // Collect all actions
 for (const file of dataFiles) {
@@ -113,7 +112,7 @@ for (const action of allActions) {
 
   // Check if we already have an action with this exact normalized content
   let found = false
-  for (const [hash, existing] of contentHashMap.entries()) {
+  for (const [, existing] of contentHashMap.entries()) {
     if (normalizeAction(existing) === normalized) {
       found = true
       break

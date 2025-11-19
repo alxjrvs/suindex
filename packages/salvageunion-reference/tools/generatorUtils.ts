@@ -19,6 +19,10 @@ export interface SchemaIndexEntry {
   itemCount: number
   requiredFields: string[]
   displayName: string
+  meta?: boolean
+  nonEntity?: boolean
+  manualPropertyExtractors?: string[]
+  typeAlias?: string
 }
 
 /**

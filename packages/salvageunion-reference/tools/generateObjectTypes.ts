@@ -9,11 +9,16 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
+import {
+  loadSchema,
+  analyzeSchemaDependencies,
+  topologicalSort,
+  type JSONSchema,
+} from './schemaAnalysis.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const OBJECTS_SCHEMA_PATH = path.join(__dirname, '../schemas/shared/objects.schema.json')
 const OUTPUT_FILE = path.join(__dirname, '../lib/types/objects.ts')
 
 /**
@@ -31,23 +36,6 @@ function toPascalCase(str: string): string {
     .split('_')
     .map((part) => capitalize(part))
     .join('')
-}
-
-interface JSONSchema {
-  type?: string | string[]
-  description?: string
-  properties?: Record<string, JSONSchema>
-  required?: string[]
-  items?: JSONSchema
-  $ref?: string
-  oneOf?: JSONSchema[]
-  allOf?: JSONSchema[]
-  const?: string | number
-  minimum?: number
-  minLength?: number
-  additionalProperties?: boolean | JSONSchema
-  default?: unknown
-  enum?: (string | number)[]
 }
 
 interface ImportTracker {
@@ -374,7 +362,7 @@ async function generateObjectTypes() {
   console.log('🔧 Generating TypeScript object and array types from objects.schema.json...\n')
 
   // Read schema
-  const objectsSchema = JSON.parse(fs.readFileSync(OBJECTS_SCHEMA_PATH, 'utf8'))
+  const objectsSchema = loadSchema('schemas/shared/objects.schema.json')
 
   const typeDefinitions: string[] = []
 
@@ -391,7 +379,7 @@ async function generateObjectTypes() {
   typeDefinitions.push('') // Will be replaced with imports
 
   // Get all definitions
-  const allDefs = objectsSchema.definitions || {}
+  const allDefs = objectsSchema.definitions || objectsSchema.$defs || {}
 
   // Separate object types from array types
   const objectDefs: Record<string, JSONSchema> = {}
@@ -410,32 +398,9 @@ async function generateObjectTypes() {
     }
   }
 
-  // Generate object types in dependency order
-  const objectOrder = [
-    'entry',
-    'baseEntity',
-    'damage',
-    'trait',
-    'grantable',
-    'effect',
-    'stats',
-    'chassisStats',
-    'equipmentStats',
-    'dataValue',
-    'contentBlock',
-    'combatEntity',
-    'mechanicalEntity',
-    'choice',
-    'npc',
-    'patternSystemModule',
-    'action',
-    'grant',
-    'pattern',
-    'systemModule',
-    'table',
-    'bonusPerTechLevel',
-    'advancedClass',
-  ]
+  // Generate object types in dependency order using topological sort
+  const objectDependencyGraph = analyzeSchemaDependencies(objectsSchema, objectDefs)
+  const objectOrder = topologicalSort(objectDependencyGraph)
 
   console.log('📋 Generating object types...')
   for (const typeName of objectOrder) {

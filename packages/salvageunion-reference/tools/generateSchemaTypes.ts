@@ -8,12 +8,11 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { getSingularTypeName, getDirname } from './generatorUtils.js'
+import { getSingularTypeName, getDirname, loadSchemaIndex } from './generatorUtils.js'
+import { loadSchema, getTypeAliases, type JSONSchema } from './schemaAnalysis.js'
 
 const __dirname = getDirname(import.meta.url)
 
-const SCHEMAS_DIR = path.join(__dirname, '../schemas')
-const SCHEMA_INDEX_PATH = path.join(SCHEMAS_DIR, 'index.json')
 const OUTPUT_FILE = path.join(__dirname, '../lib/types/schemas.ts')
 
 /**
@@ -31,25 +30,6 @@ function toPascalCase(str: string): string {
     .split(/[-_.]/)
     .map((part) => capitalize(part))
     .join('')
-}
-
-interface JSONSchema {
-  type?: string | string[]
-  description?: string
-  properties?: Record<string, JSONSchema>
-  required?: string[]
-  items?: JSONSchema
-  $ref?: string
-  oneOf?: JSONSchema[]
-  allOf?: JSONSchema[]
-  const?: string | number
-  minimum?: number
-  maximum?: number
-  minLength?: number
-  additionalProperties?: boolean | JSONSchema
-  default?: unknown
-  enum?: (string | number)[]
-  unevaluatedProperties?: boolean
 }
 
 interface ImportTracker {
@@ -297,8 +277,9 @@ async function generateSchemaTypes() {
   console.log('🔧 Generating TypeScript schema types from schema files...\n')
 
   // Read schema index
-  const schemaIndex = JSON.parse(fs.readFileSync(SCHEMA_INDEX_PATH, 'utf8'))
+  const schemaIndex = loadSchemaIndex(__dirname)
   const schemas = schemaIndex.schemas || []
+  const typeAliases = getTypeAliases(schemaIndex)
 
   const typeDefinitions: string[] = []
 
@@ -317,25 +298,23 @@ async function generateSchemaTypes() {
   // Generate types for each schema
   console.log('📋 Generating schema types...')
   for (const schemaEntry of schemas) {
-    // Skip generating SURefMetaAction for actions schema since it's already defined in objects.ts
-    // We'll generate SURefAction as an alias instead
-    if (schemaEntry.id === 'actions') {
+    // Handle type aliases from schema metadata
+    if (typeAliases.has(schemaEntry.id)) {
+      const aliasType = typeAliases.get(schemaEntry.id)!
+      const baseType = aliasType.replace('SURef', 'SURefMeta')
       typeDefinitions.push('/**')
+      typeDefinitions.push(` * ${schemaEntry.description || schemaEntry.title}`)
       typeDefinitions.push(
-        ' * Actions, abilities, and attacks that can be performed in Salvage Union'
-      )
-      typeDefinitions.push(
-        ' * Note: SURefMetaAction is defined in objects.ts, this is just an alias for convenience'
+        ` * Note: ${baseType} is defined in objects.ts, this is just an alias for convenience`
       )
       typeDefinitions.push(' */')
-      typeDefinitions.push('export type SURefAction = SURefMetaAction')
+      typeDefinitions.push(`export type ${aliasType} = ${baseType}`)
       typeDefinitions.push('')
       console.log(`   ✓ ${schemaEntry.id} (meta - alias)`)
       continue
     }
 
-    const schemaPath = path.join(__dirname, '..', schemaEntry.schemaFile)
-    const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'))
+    const schema = loadSchema(schemaEntry.schemaFile)
     const isMeta = schemaEntry.meta === true
 
     const typeCode = generateSchemaType(schemaEntry.id, schema, isMeta)

@@ -25,14 +25,14 @@ export type SURefId = string
 export type SURefAssetUrl = string
 
 /**
- * Name of the entry
- */
-export type SURefName = string
-
-/**
  * Cost in ability points to activate an ability
  */
 export type SURefActivationCost = number | 'X'
+
+/**
+ * Name of the entry
+ */
+export type SURefName = string
 
 /**
  * Technology level of the item or entity

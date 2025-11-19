@@ -84,7 +84,7 @@ function getFieldType(def: Record<string, unknown>): string {
   return 'unknown'
 }
 
-function generateExampleJson(schema: Record<string, unknown>, data: unknown[]): string {
+function generateExampleJson(_schema: Record<string, unknown>, data: unknown[]): string {
   if (!data || data.length === 0) return '```json\n// No example data available\n```'
 
   // Get first item as example

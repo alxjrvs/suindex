@@ -11,6 +11,7 @@ import {
   toPascalCase,
   type SchemaIndexEntry,
 } from './generatorUtils.js'
+import { categorizeSchemas } from './schemaAnalysis.js'
 
 const __dirname = getDirname(import.meta.url)
 const schemaIndex = loadSchemaIndex(__dirname)
@@ -22,8 +23,9 @@ function generateIndexFile() {
   const templatePath = path.join(__dirname, '..', 'lib', 'index.template.ts')
   let template = fs.readFileSync(templatePath, 'utf-8')
 
-  // Schemas that are not top-level entities (excluded from entity operations)
-  const nonEntitySchemas = new Set(['chassis-abilities', 'actions'])
+  // Get non-entity schemas from schema metadata
+  const { nonEntities } = categorizeSchemas(schemaIndex)
+  const nonEntitySchemas = new Set(nonEntities.map((entry) => entry.id))
 
   // Generate type imports for entity schemas (non-meta, non-excluded)
   const entitySchemas = schemaIndex.schemas.filter(
@@ -64,9 +66,6 @@ function generateIndexFile() {
       return `  '${entry.id}': ${prefix}${singularName}`
     })
     .join('\n')
-
-  // Generate EntitySchemaName type (includes entity schemas and meta schemas, excludes nonEntitySchemas)
-  const entitySchemaNames = schemasForEntityMap.map((entry) => `  '${entry.id}'`).join(' |\n')
 
   // Generate runtime constant for entity schema names (for runtime checks)
   const entitySchemaNameList = schemasForEntityMap.map((entry) => `  '${entry.id}'`).join(',\n')
