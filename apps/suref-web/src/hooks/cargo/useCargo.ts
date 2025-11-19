@@ -18,7 +18,7 @@ import { fetchCargoForParent, createCargo, updateCargo, deleteCargo } from '../.
 import { LOCAL_ID, isLocalId, generateLocalId, addToCache } from '../../lib/cacheHelpers'
 import type { HydratedCargo } from '../../types/hydrated'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 
 export { LOCAL_ID }
 
@@ -107,7 +107,10 @@ export function useCreateCargo() {
       if (isLocalId(parentId)) {
         let ref = undefined
         if (data.schema_name && data.schema_ref_id) {
-          ref = SalvageUnionReference.get(data.schema_name as SURefSchemaName, data.schema_ref_id)
+          ref = SalvageUnionReference.get(
+            data.schema_name as SURefEnumSchemaName,
+            data.schema_ref_id
+          )
         }
 
         const localCargo: HydratedCargo = {
@@ -145,7 +148,7 @@ export function useCreateCargo() {
 
       let ref = undefined
       if (data.schema_name && data.schema_ref_id) {
-        ref = SalvageUnionReference.get(data.schema_name as SURefSchemaName, data.schema_ref_id)
+        ref = SalvageUnionReference.get(data.schema_name as SURefEnumSchemaName, data.schema_ref_id)
       }
 
       const optimisticCargo: HydratedCargo = {

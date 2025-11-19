@@ -14,7 +14,7 @@ import type {
   SURefMetaCrawlerTechLevel,
   SURefEquipment,
   SURefEntity,
-  SURefSchemaName,
+  SURefEnumSchemaName,
 } from './types/index.js'
 import type { EntitySchemaName } from './index.js'
 import type { ModelWithMetadata } from './BaseModel.js'
@@ -24,7 +24,7 @@ import type { ModelWithMetadata } from './BaseModel.js'
  * @param schemaName - The schema name
  * @returns The display name or the schema name if not found
  */
-export function getDisplayName(schemaName: SURefSchemaName): string {
+export function getDisplayName(schemaName: SURefEnumSchemaName): string {
   return SchemaToDisplayName[schemaName] || schemaName
 }
 
@@ -34,7 +34,7 @@ export function getDisplayName(schemaName: SURefSchemaName): string {
  * @param schemaName - The schema name (may be an alias)
  * @returns The normalized schema name
  */
-export function normalizeSchemaName(schemaName: string): SURefSchemaName {
+export function normalizeSchemaName(schemaName: string): SURefEnumSchemaName {
   // Handle class schema aliases
   if (schemaName === 'classes-core') return 'classes.core'
   if (schemaName === 'classes-advanced') return 'classes.advanced'
@@ -43,7 +43,7 @@ export function normalizeSchemaName(schemaName: string): SURefSchemaName {
   }
 
   // Return as-is if it's already a valid schema name
-  return schemaName as SURefSchemaName
+  return schemaName as SURefEnumSchemaName
 }
 
 /**
@@ -53,7 +53,7 @@ export function normalizeSchemaName(schemaName: string): SURefSchemaName {
  * @returns The model instance or undefined if not found
  */
 export function getModel(
-  schemaName: string | SURefSchemaName
+  schemaName: string | SURefEnumSchemaName
 ): ModelWithMetadata<SURefEntity> | undefined {
   const normalized = normalizeSchemaName(schemaName)
   const modelName = SchemaToModelMap[normalized]
@@ -67,12 +67,12 @@ export function getModel(
  * Get a map of all schema names to their models
  * Useful for dynamic model access
  */
-export function getModelMap(): Record<SURefSchemaName, ModelWithMetadata<SURefEntity>> {
-  const map = {} as Record<SURefSchemaName, ModelWithMetadata<SURefEntity>>
+export function getModelMap(): Record<SURefEnumSchemaName, ModelWithMetadata<SURefEntity>> {
+  const map = {} as Record<SURefEnumSchemaName, ModelWithMetadata<SURefEntity>>
   for (const schemaName in SchemaToModelMap) {
-    const model = getModel(schemaName as SURefSchemaName)
+    const model = getModel(schemaName as SURefEnumSchemaName)
     if (model) {
-      map[schemaName as SURefSchemaName] = model
+      map[schemaName as SURefEnumSchemaName] = model
     }
   }
   return map

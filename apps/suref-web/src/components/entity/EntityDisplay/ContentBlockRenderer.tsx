@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react'
-import type { SURefMetaContentBlock, SURefMetaDataValue } from 'salvageunion-reference'
+import type { SURefObjectContentBlock, SURefObjectDataValue } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
 import { ValueDisplay } from '../../shared/ValueDisplay'
@@ -8,7 +8,7 @@ import { ActivationCostBox } from '../../shared/ActivationCostBox'
 
 interface ContentBlockRendererProps {
   /** Content blocks to render */
-  content: SURefMetaContentBlock[]
+  content: SURefObjectContentBlock[]
   /** Font size for content */
   fontSize?: string
   /** Whether to use compact styling */
@@ -60,7 +60,7 @@ function ContentBlock({
   compact,
   chassisName,
 }: {
-  block: SURefMetaContentBlock
+  block: SURefObjectContentBlock
   fontSize: string
   compact: boolean
   chassisName?: string
@@ -194,7 +194,7 @@ function ContentBlock({
   }
 }
 
-function DataValueItem({ item, compact }: { item: SURefMetaDataValue; compact: boolean }) {
+function DataValueItem({ item, compact }: { item: SURefObjectDataValue; compact: boolean }) {
   if (item.type === 'cost') {
     return <ActivationCostBox cost={String(item.label)} currency={item.value} compact={compact} />
   }

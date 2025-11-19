@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog, SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import ItemShowPage from '../../../../components/ItemShowPage'
 import { ReferenceError } from '../../../../components/errors/ReferenceError'
 import { findEntityBySlug, getEntitySlug } from '../../../../utils/slug'
@@ -18,13 +18,13 @@ export const Route = createFileRoute('/schema/$schemaId/item/$itemId')({
     let itemDescription = ''
     if (schema) {
       // Try to find by slug first (URL-safe name)
-      item = findEntityBySlug(params.schemaId as SURefSchemaName, params.itemId)
+      item = findEntityBySlug(params.schemaId as SURefEnumSchemaName, params.itemId)
 
       // Fallback to ID lookup for backward compatibility
       if (!item) {
         try {
           item = SalvageUnionReference.findIn(
-            params.schemaId as SURefSchemaName,
+            params.schemaId as SURefEnumSchemaName,
             (i) => i.id === params.itemId
           )
         } catch {

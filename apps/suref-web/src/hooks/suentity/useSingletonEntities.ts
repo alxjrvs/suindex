@@ -8,7 +8,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 
 /**
  * Map of parent ID to singleton entity reference data
@@ -102,7 +102,7 @@ export function usePilotClasses(pilotIds: string[]) {
       for (const entity of entities || []) {
         if (entity.pilot_id) {
           const ref = SalvageUnionReference.get(
-            entity.schema_name as SURefSchemaName,
+            entity.schema_name as SURefEnumSchemaName,
             entity.schema_ref_id
           )
           if (ref) {

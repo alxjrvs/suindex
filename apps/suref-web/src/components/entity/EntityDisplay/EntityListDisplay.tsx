@@ -1,8 +1,8 @@
 import { VStack } from '@chakra-ui/react'
 import type {
-  SURefMetaChoice,
-  SURefSchemaName,
-  SURefMetaSystemModule,
+  SURefObjectChoice,
+  SURefEnumSchemaName,
+  SURefObjectSystemModule,
   SURefMetaEntity,
 } from 'salvageunion-reference'
 import type { ButtonProps } from '@chakra-ui/react'
@@ -12,7 +12,7 @@ import { NestedActionDisplay } from '../NestedActionDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export interface EntityListDisplayProps {
-  choice: SURefMetaChoice
+  choice: SURefObjectChoice
   selectedChoice?: string
   userChoices?: Record<string, string> | null
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
@@ -53,7 +53,7 @@ export function EntityListDisplay({
             ? entity.name
             : isSystemModule
               ? (() => {
-                  const systemModule = entity as SURefMetaSystemModule
+                  const systemModule = entity as SURefObjectSystemModule
                   const resolvedActions = extractActions(systemModule as SURefMetaEntity)
                   return resolvedActions?.find((a) => !a.hidden)?.name
                 })()
@@ -97,7 +97,7 @@ export function EntityListDisplay({
                 ? entity.name
                 : isSystemModule
                   ? (() => {
-                      const systemModule = entity as SURefMetaSystemModule
+                      const systemModule = entity as SURefObjectSystemModule
                       const resolvedActions = extractActions(systemModule as SURefMetaEntity)
                       return resolvedActions?.find((a) => !a.hidden)?.name
                     })()
@@ -125,7 +125,7 @@ export function EntityListDisplay({
         const isSystemModule = 'actions' in entity && !('id' in entity)
 
         if (isSystemModule) {
-          const systemModule = entity as SURefMetaSystemModule
+          const systemModule = entity as SURefObjectSystemModule
           const resolvedActions = extractActions(systemModule as SURefMetaEntity)
           const visibleActions = resolvedActions?.filter((a) => !a.hidden)
           if (visibleActions && visibleActions.length > 0) {
@@ -134,7 +134,7 @@ export function EntityListDisplay({
           return null
         }
 
-        const schema = (choice.schema?.[0] || 'systems') as SURefSchemaName
+        const schema = (choice.schema?.[0] || 'systems') as SURefEnumSchemaName
         return (
           <EntityDisplay
             key={idx}

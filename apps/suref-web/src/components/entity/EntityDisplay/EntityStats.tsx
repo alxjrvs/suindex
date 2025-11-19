@@ -1,12 +1,12 @@
 import { Flex } from '@chakra-ui/react'
 import { StatDisplay } from '../../StatDisplay'
-import type { SURefMetaBonusPerTechLevel, SURefMetaEntity } from 'salvageunion-reference'
+import type { SURefObjectBonusPerTechLevel, SURefMetaEntity } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import { ENTITY_STATS_CONFIG, applyStatLabel } from './entityStatsConfig'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export interface EntityStatsProps {
-  data: SURefMetaEntity | SURefMetaBonusPerTechLevel
+  data: SURefMetaEntity | SURefObjectBonusPerTechLevel
   label?: string
   prefix?: string
 }

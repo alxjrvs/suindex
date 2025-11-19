@@ -23,7 +23,7 @@ import {
 import { LOCAL_ID, isLocalId, generateLocalId, addToCache } from '../../lib/cacheHelpers'
 import type { HydratedEntity } from '../../types/hydrated'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 
 export { LOCAL_ID }
 
@@ -118,7 +118,7 @@ export function useCreateEntity() {
 
       if (isLocalId(parentId)) {
         const ref = SalvageUnionReference.get(
-          data.schema_name as SURefSchemaName,
+          data.schema_name as SURefEnumSchemaName,
           data.schema_ref_id
         )
 
@@ -162,7 +162,10 @@ export function useCreateEntity() {
         entitiesKeys.forParent(parentType, parentId)
       )
 
-      const ref = SalvageUnionReference.get(data.schema_name as SURefSchemaName, data.schema_ref_id)
+      const ref = SalvageUnionReference.get(
+        data.schema_name as SURefEnumSchemaName,
+        data.schema_ref_id
+      )
 
       if (!ref) {
         throw new Error(`Reference not found: ${data.schema_name}/${data.schema_ref_id}`)
@@ -212,7 +215,7 @@ export function useCreateEntity() {
       if (ref && 'grants' in ref && Array.isArray(ref.grants) && ref.grants.length > 0) {
         for (const grant of ref.grants) {
           if (grant && typeof grant === 'object' && 'name' in grant && 'schema' in grant) {
-            const grantSchema = grant.schema as SURefSchemaName
+            const grantSchema = grant.schema as SURefEnumSchemaName
             const grantName = grant.name as string
 
             const grantedItem = SalvageUnionReference.findIn(

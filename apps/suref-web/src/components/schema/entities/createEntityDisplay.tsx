@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
 import { EntityDisplay } from '../../entity/EntityDisplay'
 
 interface EntityDisplayProps {
@@ -20,7 +20,7 @@ interface EntityDisplayProps {
  * @returns A display component configured for the specified entity type
  */
 export function createEntityDisplay(
-  schemaName: SURefSchemaName
+  schemaName: SURefEnumSchemaName
 ): ComponentType<EntityDisplayProps> {
   const Component = ({
     data,

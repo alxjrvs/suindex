@@ -8,12 +8,11 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { getSingularTypeName, getDirname } from './generatorUtils.js'
+import { getSingularTypeName, getDirname, loadSchemaIndex } from './generatorUtils.js'
+import { loadSchema, getTypeAliases, type JSONSchema } from './schemaAnalysis.js'
 
 const __dirname = getDirname(import.meta.url)
 
-const SCHEMAS_DIR = path.join(__dirname, '../schemas')
-const SCHEMA_INDEX_PATH = path.join(SCHEMAS_DIR, 'index.json')
 const OUTPUT_FILE = path.join(__dirname, '../lib/types/schemas.ts')
 
 /**
@@ -31,25 +30,6 @@ function toPascalCase(str: string): string {
     .split(/[-_.]/)
     .map((part) => capitalize(part))
     .join('')
-}
-
-interface JSONSchema {
-  type?: string | string[]
-  description?: string
-  properties?: Record<string, JSONSchema>
-  required?: string[]
-  items?: JSONSchema
-  $ref?: string
-  oneOf?: JSONSchema[]
-  allOf?: JSONSchema[]
-  const?: string | number
-  minimum?: number
-  maximum?: number
-  minLength?: number
-  additionalProperties?: boolean | JSONSchema
-  default?: unknown
-  enum?: (string | number)[]
-  unevaluatedProperties?: boolean
 }
 
 interface ImportTracker {
@@ -72,28 +52,28 @@ function extractRefType(
 ): { source: 'enum' | 'common' | 'object'; typeName: string } | null {
   if (ref.includes('enums.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURef${capitalize(defName)}`
+    const typeName = `SURefEnum${capitalize(defName)}`
     imports.enums.add(typeName)
     return { source: 'enum', typeName }
   }
 
   if (ref.includes('common.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURef${toPascalCase(defName)}`
+    const typeName = `SURefCommon${toPascalCase(defName)}`
     imports.common.add(typeName)
     return { source: 'common', typeName }
   }
 
   if (ref.includes('objects.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     imports.objects.add(typeName)
     return { source: 'object', typeName }
   }
 
   if (ref.includes('arrays.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     imports.objects.add(typeName)
     return { source: 'object', typeName }
   }
@@ -239,6 +219,10 @@ function generateSchemaType(
   if (itemSchema.$ref && !itemSchema.allOf && !itemSchema.properties) {
     const refType = extractRefType(itemSchema.$ref)
     if (refType) {
+      // If the type name matches the referenced type exactly, skip generating it (it's already defined)
+      if (typeName === refType.typeName) {
+        return null
+      }
       lines.push(`export type ${typeName} = ${refType.typeName}`)
       return lines.join('\n')
     }
@@ -268,6 +252,10 @@ function generateSchemaType(
 
   // If we have base types and no own properties, use type alias instead of empty interface
   if (baseTypes.length > 0 && Object.keys(ownProperties).length === 0) {
+    // If the type name matches the base type exactly, skip generating it (it's already defined)
+    if (baseTypes.length === 1 && typeName === baseTypes[0]) {
+      return null
+    }
     if (baseTypes.length === 1) {
       lines.push(`export type ${typeName} = ${baseTypes[0]}`)
     } else {
@@ -297,8 +285,9 @@ async function generateSchemaTypes() {
   console.log('🔧 Generating TypeScript schema types from schema files...\n')
 
   // Read schema index
-  const schemaIndex = JSON.parse(fs.readFileSync(SCHEMA_INDEX_PATH, 'utf8'))
+  const schemaIndex = loadSchemaIndex(__dirname)
   const schemas = schemaIndex.schemas || []
+  const typeAliases = getTypeAliases(schemaIndex)
 
   const typeDefinitions: string[] = []
 
@@ -317,25 +306,25 @@ async function generateSchemaTypes() {
   // Generate types for each schema
   console.log('📋 Generating schema types...')
   for (const schemaEntry of schemas) {
-    // Skip generating SURefMetaAction for actions schema since it's already defined in objects.ts
-    // We'll generate SURefAction as an alias instead
-    if (schemaEntry.id === 'actions') {
+    // Handle type aliases from schema metadata
+    if (typeAliases.has(schemaEntry.id)) {
+      const aliasType = typeAliases.get(schemaEntry.id)!
+      // For actions, the base type is SURefObjectAction (from objects.ts)
+      // The alias type is SURefMetaAction (the meta schema type)
+      const baseType = aliasType.replace('SURefMeta', 'SURefObject')
       typeDefinitions.push('/**')
+      typeDefinitions.push(` * ${schemaEntry.description || schemaEntry.title}`)
       typeDefinitions.push(
-        ' * Actions, abilities, and attacks that can be performed in Salvage Union'
-      )
-      typeDefinitions.push(
-        ' * Note: SURefMetaAction is defined in objects.ts, this is just an alias for convenience'
+        ` * Note: ${baseType} is defined in objects.ts, this is just an alias for convenience`
       )
       typeDefinitions.push(' */')
-      typeDefinitions.push('export type SURefAction = SURefMetaAction')
+      typeDefinitions.push(`export type ${aliasType} = ${baseType}`)
       typeDefinitions.push('')
       console.log(`   ✓ ${schemaEntry.id} (meta - alias)`)
       continue
     }
 
-    const schemaPath = path.join(__dirname, '..', schemaEntry.schemaFile)
-    const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'))
+    const schema = loadSchema(schemaEntry.schemaFile)
     const isMeta = schemaEntry.meta === true
 
     const typeCode = generateSchemaType(schemaEntry.id, schema, isMeta)
@@ -343,6 +332,11 @@ async function generateSchemaTypes() {
       typeDefinitions.push(typeCode)
       typeDefinitions.push('')
       console.log(`   ✓ ${schemaEntry.id}${isMeta ? ' (meta)' : ''}`)
+    } else {
+      // Type was skipped because it's already defined elsewhere (e.g., in objects.ts)
+      console.log(
+        `   ⊘ ${schemaEntry.id}${isMeta ? ' (meta - skipped, already defined)' : ' (skipped, already defined)'}`
+      )
     }
   }
 

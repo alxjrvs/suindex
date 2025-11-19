@@ -3,7 +3,7 @@
  * and finding entities by their slug
  */
 
-import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
 import { SalvageUnionReference } from 'salvageunion-reference'
 
 /**
@@ -27,7 +27,10 @@ export function nameToSlug(name: string): string {
  * Finds an entity in a schema by its slug
  * Returns the entity if found, null otherwise
  */
-export function findEntityBySlug(schemaName: SURefSchemaName, slug: string): SURefEntity | null {
+export function findEntityBySlug(
+  schemaName: SURefEnumSchemaName,
+  slug: string
+): SURefEntity | null {
   try {
     const entity = SalvageUnionReference.findIn(schemaName, (item) => {
       if (!('name' in item) || !item.name) {

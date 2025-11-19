@@ -9,7 +9,7 @@
 
 import { z } from 'zod'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import {
   publicSuentitiesInsertSchema,
   publicSuentitiesUpdateSchema,
@@ -57,7 +57,10 @@ export const createEntitySchema = publicSuentitiesInsertSchema
   )
   .refine(
     (data) => {
-      return SalvageUnionReference.exists(data.schema_name as SURefSchemaName, data.schema_ref_id)
+      return SalvageUnionReference.exists(
+        data.schema_name as SURefEnumSchemaName,
+        data.schema_ref_id
+      )
     },
     { message: 'Invalid entity reference - schema_ref_id does not exist in reference data' }
   )

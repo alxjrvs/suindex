@@ -4,7 +4,7 @@ import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import Modal from '../Modal'
 import { EntitySelectionModal } from '../entity/EntitySelectionModal'
-import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
 import { SalvageUnionReference } from 'salvageunion-reference'
 
 interface CargoModalProps {
@@ -86,7 +86,7 @@ export function CargoModal({
     [hasCargoTracking, availableCargo]
   )
 
-  const handleEntitySelect = (entityId: string, schemaName: SURefSchemaName) => {
+  const handleEntitySelect = (entityId: string, schemaName: SURefEnumSchemaName) => {
     const entity = SalvageUnionReference.get(schemaName, entityId)
     if (entity && 'name' in entity) {
       const entityName = entity.name as string

@@ -4,10 +4,17 @@
  * Creates type guards and property extractors based on schema structure
  */
 
-import { readFileSync, writeFileSync } from 'fs'
+import { writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { getSingularTypeName } from './generatorUtils.js'
+import { getSingularTypeName, loadSchemaIndex } from './generatorUtils.js'
+import {
+  loadSchema,
+  extractProperties,
+  computePropertyUsageFrequency,
+  getManualPropertyExtractors,
+  extractRefName,
+} from './schemaAnalysis.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -16,153 +23,31 @@ const schemasDir = join(__dirname, '..', 'schemas')
 const outputFile = join(__dirname, '..', 'lib', 'utilities-generated.ts')
 
 // Load schema index
-const schemaIndex = JSON.parse(readFileSync(join(schemasDir, 'index.json'), 'utf-8'))
+const schemaIndex = loadSchemaIndex(__dirname)
 
 interface PropertyInfo {
   name: string
   type: string
   required: boolean
+  isArray?: boolean
+  isRef?: boolean
+  refPath?: string
 }
 
-function resolveTypeFromRef(ref: string, schemasDir: string): string {
-  // Handle references to shared schemas
-  if (ref.includes('common.schema.json') || ref.startsWith('#/definitions/')) {
-    const defName = ref.split('/').pop()
-    const commonSchema = JSON.parse(
-      readFileSync(join(schemasDir, 'shared', 'common.schema.json'), 'utf-8')
-    )
-    const def = commonSchema.$defs?.[defName || ''] || commonSchema.definitions?.[defName || '']
-    if (def?.type) {
-      // Map integer to number for TypeScript
-      const type = String(def.type)
-      return type === 'integer' ? 'number' : type
-    }
-    if (def?.$ref) return resolveTypeFromRef(String(def.$ref), schemasDir)
-  }
-
-  if (ref.includes('enums.schema.json')) {
-    // All enums are strings
-    return 'string'
-  }
-
-  if (ref.includes('objects.schema.json')) {
-    const defName = ref.split('/').pop()
-    // Known object types
-    if (defName === 'content') return 'array'
-    if (defName === 'table') return 'object'
-    if (defName === 'npc') return 'object'
-    if (defName === 'bonusPerTechLevel') return 'object'
-    return 'object'
-  }
-
-  return 'unknown'
+function extractPropertiesFromSchema(schemaFile: string): PropertyInfo[] {
+  const schema = loadSchema(schemaFile)
+  const properties = extractProperties(schema, schemasDir, schema)
+  return properties.map((prop) => ({
+    name: prop.name,
+    type: prop.type,
+    required: prop.required,
+    isArray: prop.isArray,
+    isRef: prop.isRef,
+    refPath: prop.refPath,
+  }))
 }
 
-function extractProperties(schemaFile: string): PropertyInfo[] {
-  const schema = JSON.parse(
-    readFileSync(join(schemasDir, schemaFile.replace('schemas/', '')), 'utf-8')
-  )
-  const properties: PropertyInfo[] = []
-  const propertyMap = new Map<string, PropertyInfo>()
-
-  if (!schema.items?.properties) return properties
-
-  const required = schema.items.required || []
-
-  // First, extract properties from allOf references
-  if (schema.items.allOf) {
-    for (const ref of schema.items.allOf) {
-      if (ref.$ref) {
-        const refPath = ref.$ref.replace('#/$defs/', '').replace('#/definitions/', '')
-        const refParts = refPath.split('/')
-        const defName = refParts[refParts.length - 1]
-
-        // Try to load the referenced schema
-        let refSchema
-        if (refPath.startsWith('shared/')) {
-          const sharedFile = refPath.split('/')[1] + '.schema.json'
-          try {
-            refSchema = JSON.parse(readFileSync(join(schemasDir, 'shared', sharedFile), 'utf-8'))
-          } catch {
-            continue
-          }
-        }
-
-        // Extract properties from the referenced definition
-        if (refSchema?.$defs?.[defName]?.properties) {
-          const refProps = refSchema.$defs[defName].properties
-          const refRequired = refSchema.$defs[defName].required || []
-
-          for (const [propName, propDef] of Object.entries(refProps)) {
-            const def = propDef as Record<string, unknown>
-            if (typeof def === 'boolean' && def === true) continue
-
-            let type = 'unknown'
-            if (def.type) {
-              type = String(def.type)
-            } else if (def.$ref) {
-              type = resolveTypeFromRef(String(def.$ref), schemasDir)
-            }
-
-            propertyMap.set(propName, {
-              name: propName,
-              type,
-              required: refRequired.includes(propName),
-            })
-          }
-        }
-      }
-    }
-  }
-
-  // Then add/override with direct properties
-  for (const [propName, propDef] of Object.entries(schema.items.properties)) {
-    const def = propDef as Record<string, unknown>
-
-    // Skip inherited properties (marked as true) unless we don't have them yet
-    if (typeof def === 'boolean' && def === true) continue
-
-    let type = 'unknown'
-    if (def.type) {
-      type = String(def.type)
-    } else if (def.$ref) {
-      type = resolveTypeFromRef(String(def.$ref), schemasDir)
-    } else if (def.oneOf) {
-      // Handle oneOf - try to infer the common type
-      const oneOfArray = def.oneOf as Array<Record<string, unknown>>
-      const types = oneOfArray.map((item) => {
-        if (item.type) return String(item.type)
-        if (item.$ref) return resolveTypeFromRef(String(item.$ref), schemasDir)
-        return 'unknown'
-      })
-      // If all types are the same, use that type
-      const uniqueTypes = [...new Set(types)]
-      if (uniqueTypes.length === 1) {
-        type = uniqueTypes[0]
-      } else if (uniqueTypes.every((t) => t === 'integer' || t === 'number')) {
-        type = 'number'
-      } else if (uniqueTypes.every((t) => t === 'string' || t === 'number' || t === 'integer')) {
-        // Mixed string/number - use 'string | number' union
-        type = 'string | number'
-      }
-    }
-
-    propertyMap.set(propName, {
-      name: propName,
-      type,
-      required: required.includes(propName),
-    })
-  }
-
-  return Array.from(propertyMap.values())
-}
-
-function generateTypeGuard(
-  schemaId: string,
-  typeName: string,
-  properties: PropertyInfo[],
-  isMeta: boolean
-): string {
+function generateTypeGuard(typeName: string, properties: PropertyInfo[], isMeta: boolean): string {
   const requiredProps = properties.filter((p) => p.required)
 
   if (requiredProps.length === 0) return ''
@@ -189,27 +74,36 @@ function generateTypeGuard(
   return code
 }
 
-function getTypeScriptType(propName: string, propType: string): string {
-  // Map property names to their SURef types
-  const typeMap: Record<string, string> = {
-    content: 'SURefMetaContent',
-    npc: 'SURefMetaNpc',
-    table: 'SURefMetaTable',
-    bonusPerTechLevel: 'SURefMetaBonusPerTechLevel',
-    traits: 'SURefMetaTraits',
-    actions: 'string[]', // Actions are now string arrays (action names), use extractActions() to resolve
-    chassisAbilities: 'SURefMetaAction[]', // Chassis abilities are resolved objects
-    grants: 'SURefMetaGrant[]',
-    systems: 'SURefMetaSystems',
-    modules: 'SURefMetaModules',
-    choices: 'SURefMetaChoices',
-    patterns: 'SURefMetaPattern[]',
-    requirement: 'string[]', // array of tree enums
-    coreTrees: 'string[]', // array of tree enums
+function getTypeScriptType(propName: string, propType: string, propInfo?: PropertyInfo): string {
+  // Derive type from schema reference if available
+  if (propInfo && propInfo.isRef && propInfo.refPath) {
+    const refName = extractRefName(propInfo.refPath)
+    if (refName) {
+      // Map common object types
+      if (propInfo.refPath.includes('objects.schema.json')) {
+        const capitalized = refName.charAt(0).toUpperCase() + refName.slice(1)
+        if (propInfo.isArray) {
+          return `SURefObject${capitalized}[]`
+        }
+        return `SURefObject${capitalized}`
+      }
+
+      // Handle arrays of enums
+      if (propInfo.refPath.includes('enums.schema.json') && propInfo.isArray) {
+        return 'string[]'
+      }
+    }
   }
 
-  if (typeMap[propName]) {
-    return typeMap[propName]
+  // Special cases based on property name and type
+  if (propName === 'actions' && propType === 'array') {
+    return 'string[]' // Actions are string arrays (action names)
+  }
+  if (propName === 'chassisAbilities' && propType === 'array') {
+    return 'SURefObjectAction[]' // Chassis abilities are resolved objects
+  }
+  if ((propName === 'requirement' || propName === 'coreTrees') && propType === 'array') {
+    return 'string[]' // Arrays of tree enums
   }
 
   // Fall back to basic types
@@ -223,9 +117,13 @@ function getTypeScriptType(propName: string, propType: string): string {
   return 'unknown'
 }
 
-function generatePropertyExtractor(propName: string, propType: string): string {
+function generatePropertyExtractor(
+  propName: string,
+  propType: string,
+  propInfo?: PropertyInfo
+): string {
   const functionName = `get${propName.charAt(0).toUpperCase()}${propName.slice(1)}`
-  const returnType = getTypeScriptType(propName, propType)
+  const returnType = getTypeScriptType(propName, propType, propInfo)
 
   let code = `/**\n`
   code += ` * Extract ${propName} from an entity\n`
@@ -254,7 +152,7 @@ function generatePropertyExtractor(propName: string, propType: string): string {
   } else if (
     propType === 'array' ||
     returnType.includes('[]') ||
-    (returnType.startsWith('SURefMeta') && returnType.endsWith('s') && !returnType.includes('|'))
+    (returnType.startsWith('SURefObject') && returnType.endsWith('s') && !returnType.includes('|'))
   ) {
     // For string arrays (like actions), cast to the correct type
     if (returnType === 'string[]') {
@@ -268,7 +166,7 @@ function generatePropertyExtractor(propName: string, propType: string): string {
     }
   } else if (
     propType === 'object' ||
-    returnType.startsWith('SURefMeta') ||
+    returnType.startsWith('SURefObject') ||
     returnType === 'Record<string, unknown>'
   ) {
     code += `  return '${propName}' in entity &&\n`
@@ -312,11 +210,11 @@ output += `// ==================================================================
 
 // Generate type guards for each schema and track which types are used
 for (const schemaInfo of schemaIndex.schemas) {
-  const properties = extractProperties(schemaInfo.schemaFile)
+  const properties = extractPropertiesFromSchema(schemaInfo.schemaFile)
   const typeName = getSingularTypeName(schemaInfo.id, __dirname)
   const isMeta = schemaInfo.meta === true
   const prefix = isMeta ? 'SURefMeta' : 'SURef'
-  const typeGuard = generateTypeGuard(schemaInfo.id, typeName, properties, isMeta)
+  const typeGuard = generateTypeGuard(typeName, properties, isMeta)
   if (typeGuard) {
     // Only track types that actually got a type guard generated
     usedTypes.add(`${prefix}${typeName}`)
@@ -339,83 +237,62 @@ output += `// ==================================================================
 output += `// PROPERTY EXTRACTORS\n`
 output += `// ============================================================================\n\n`
 
-// Properties that have manual implementations and should not be auto-generated
-const manualProperties = new Set(['chassisAbilities'])
+// Get manual properties from schema metadata
+const manualProperties = getManualPropertyExtractors(schemaIndex)
 
-// Collect all unique properties across all schemas
-const allProperties = new Map<string, string>()
+// Collect all unique properties across all schemas with their full info
+const allProperties = new Map<string, { type: string; info?: PropertyInfo }>()
 
 for (const schemaInfo of schemaIndex.schemas) {
-  const properties = extractProperties(schemaInfo.schemaFile)
+  const schema = loadSchema(schemaInfo.schemaFile)
+  const properties = extractProperties(schema, schemasDir, schema)
   for (const prop of properties) {
     if (!allProperties.has(prop.name)) {
-      allProperties.set(prop.name, prop.type)
+      allProperties.set(prop.name, { type: prop.type, info: prop })
     }
   }
 }
 
+// Compute property usage frequency for prioritization
+const propertyFrequency = computePropertyUsageFrequency(schemaIndex, schemasDir)
+
 // Determine which meta types are actually used based on properties
 // Only include types from properties that will be auto-generated (not manual)
 const usedMetaTypes = new Set<string>()
-for (const [propName, propType] of allProperties.entries()) {
+for (const [propName, propData] of allProperties.entries()) {
   // Skip manual properties - they have their own implementations
   if (manualProperties.has(propName)) {
     continue
   }
-  const metaType = getTypeScriptType(propName, propType)
-  if (metaType.startsWith('SURefMeta')) {
-    // Extract base type from arrays (e.g., 'SURefMetaAction[]' -> 'SURefMetaAction')
+  const metaType = getTypeScriptType(propName, propData.type, propData.info)
+  if (metaType.startsWith('SURefObject')) {
+    // Extract base type from arrays (e.g., 'SURefObjectAction[]' -> 'SURefObjectAction')
     const baseType = metaType.replace(/\[]$/, '')
     usedMetaTypes.add(baseType)
   }
 }
 
 // Generate property extractors for all properties
-// Prioritize common properties first, then add the rest
-const priorityProperties = [
-  'techLevel',
-  'salvageValue',
-  'slotsRequired',
-  'structurePoints',
-  'energyPoints',
-  'heatCapacity',
-  'systemSlots',
-  'moduleSlots',
-  'cargoCapacity',
-  'hitPoints',
-  'armour',
-  'speed',
-  'maxAbilities',
-  'level',
-  'tree',
-  'description',
-  'actions',
-  'grants',
-  'traits',
-  'systems',
-]
+// Prioritize by usage frequency (most common first)
+const sortedProperties = Array.from(allProperties.entries()).sort((a, b) => {
+  const freqA = propertyFrequency.get(a[0]) || 0
+  const freqB = propertyFrequency.get(b[0]) || 0
+  return freqB - freqA // Descending order
+})
 
 const generatedExtractors = new Set<string>()
 
-// Generate extractors for priority properties first
-for (const propName of priorityProperties) {
-  if (allProperties.has(propName) && !manualProperties.has(propName)) {
-    output += generatePropertyExtractor(propName, allProperties.get(propName)!)
+// Generate extractors for all properties (sorted by frequency)
+for (const [propName, propData] of sortedProperties) {
+  if (!manualProperties.has(propName)) {
+    output += generatePropertyExtractor(propName, propData.type, propData.info)
     generatedExtractors.add(propName)
   }
 }
 
-// Generate extractors for remaining properties
-for (const [propName, propType] of allProperties.entries()) {
-  if (!generatedExtractors.has(propName) && !manualProperties.has(propName)) {
-    output += generatePropertyExtractor(propName, propType)
-    generatedExtractors.add(propName)
-  }
-}
-
-// Add imports for meta types used in property extractors
+// Add imports for object types used in property extractors
 if (usedMetaTypes.size > 0) {
-  output += `\n// Import meta types used in property extractors\n`
+  output += `\n// Import object types used in property extractors\n`
   output += `import type {\n`
   const metaTypeList = Array.from(usedMetaTypes).sort()
   output += metaTypeList.map((type) => `  ${type}`).join(',\n')

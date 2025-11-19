@@ -2,13 +2,13 @@
  * Search functionality for Salvage Union data
  */
 
-import type { SURefEntity, SURefSchemaName } from './types/index.js'
+import type { SURefEntity, SURefEnumSchemaName } from './types/index.js'
 import { getSchemaCatalog, getDataMaps } from './ModelFactory.js'
 import { extractActions } from './utilities.js'
 
 export interface SearchOptions {
   query: string
-  schemas?: SURefSchemaName[]
+  schemas?: SURefEnumSchemaName[]
   limit?: number
   caseSensitive?: boolean
 }
@@ -57,7 +57,7 @@ function trimCache(): void {
 }
 
 export interface SearchResult {
-  schemaName: SURefSchemaName
+  schemaName: SURefEnumSchemaName
   schemaTitle: string
   entity: SURefEntity
   entityId: string
@@ -227,11 +227,11 @@ export function search(options: SearchOptions): SearchResult[] {
 
   // Filter schemas if specified
   const schemasToSearch = schemaFilter
-    ? schemaCatalog.schemas.filter((s) => schemaFilter.includes(s.id as SURefSchemaName))
+    ? schemaCatalog.schemas.filter((s) => schemaFilter.includes(s.id as SURefEnumSchemaName))
     : schemaCatalog.schemas
 
   for (const schema of schemasToSearch) {
-    const schemaId = schema.id as SURefSchemaName
+    const schemaId = schema.id as SURefEnumSchemaName
     const data = dataMap[schemaId]
 
     if (!data || !Array.isArray(data)) {
@@ -274,7 +274,7 @@ export function search(options: SearchOptions): SearchResult[] {
  * Search within a specific schema
  */
 export function searchIn<T extends SURefEntity>(
-  schemaName: SURefSchemaName,
+  schemaName: SURefEnumSchemaName,
   query: string,
   options?: { limit?: number; caseSensitive?: boolean }
 ): T[] {
@@ -295,7 +295,7 @@ export function searchIn<T extends SURefEntity>(
 export function getSuggestions(
   query: string,
   options?: {
-    schemas?: SURefSchemaName[]
+    schemas?: SURefEnumSchemaName[]
     limit?: number
     caseSensitive?: boolean
   }

@@ -8,6 +8,7 @@ import {
   getRange,
   getDamage,
   getTraits,
+  getChassisAbilities,
   getEffects,
   getTable,
   getOptions,
@@ -107,10 +108,7 @@ describe('Action Property Getters', () => {
 
     test('should return undefined for real multi-action chassis', () => {
       const multiActionChassis = SalvageUnionReference.Chassis.all().find(
-        (c) =>
-          c.chassisAbilities &&
-          c.chassisAbilities.length > 1 &&
-          c.chassisAbilities[0].activationCost !== undefined
+        (c) => c.chassisAbilities && c.chassisAbilities.length > 1
       )
       if (multiActionChassis) {
         const cost = getActivationCost(multiActionChassis)
@@ -213,10 +211,11 @@ describe('Action Property Getters', () => {
     })
 
     test('should get damage from chassis action (base level)', () => {
-      const chassis = SalvageUnionReference.Chassis.all().find(
-        (c) => c.chassisAbilities && c.chassisAbilities.length > 0 && c.chassisAbilities[0].damage
-      )
-      if (chassis && chassis.chassisAbilities && chassis.chassisAbilities[0]) {
+      const chassis = SalvageUnionReference.Chassis.all().find((c) => {
+        const abilities = getChassisAbilities(c)
+        return abilities && abilities.length > 0 && abilities[0].damage !== undefined
+      })
+      if (chassis) {
         const damage = getDamage(chassis)
         expect(damage).toBeDefined()
       }

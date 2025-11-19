@@ -1,6 +1,6 @@
 import { Box, VStack } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
-import type { SURefMetaChoice } from 'salvageunion-reference'
+import type { SURefObjectChoice } from 'salvageunion-reference'
 import { getChoices } from 'salvageunion-reference'
 import { EntityChoice } from './EntityChoice'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
@@ -16,7 +16,7 @@ export function EntityChoices({ userChoices, onChoiceSelection }: EntityChoicesP
   const { data, spacing, fontSize, hideChoices } = useEntityDisplayContext()
 
   // Get choices using the utility function (checks single action first, then root-level)
-  const entityChoices: SURefMetaChoice[] = getChoices(data) || []
+  const entityChoices: SURefObjectChoice[] = getChoices(data) || []
 
   if (entityChoices.length === 0) {
     return null

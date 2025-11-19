@@ -1,4 +1,4 @@
-import type { SURefMetaEntity, SURefMetaTrait, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefMetaEntity, SURefObjectTrait, SURefEnumSchemaName } from 'salvageunion-reference'
 import {
   getActivationCost,
   getActionType,
@@ -31,7 +31,7 @@ export function EntitySubTitleElement() {
  */
 function extractActivationCostDetail(
   data: SURefMetaEntity,
-  schemaName?: SURefSchemaName
+  schemaName?: SURefEnumSchemaName
 ): DataValue | null {
   const activationCost = getActivationCost(data)
   if (activationCost === undefined) return null
@@ -49,7 +49,7 @@ function extractActivationCostDetail(
 /**
  * Extract action type details
  */
-function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefSchemaName): DataValue[] {
+function extractActionTypes(data: SURefMetaEntity, schemaName?: SURefEnumSchemaName): DataValue[] {
   const details: DataValue[] = []
   const isGeneric = schemaName === 'abilities' && 'level' in data && data.level === 'G'
 
@@ -99,7 +99,7 @@ function extractDamageDetail(data: SURefMetaEntity): DataValue | null {
 function extractTraitDetails(data: SURefMetaEntity): DataValue[] {
   const traits = getTraits(data)
   if (!traits || traits.length === 0) return []
-  return traits.map((t: SURefMetaTrait) => {
+  return traits.map((t: SURefObjectTrait) => {
     const label = t.type.charAt(0).toUpperCase() + t.type.slice(1)
     const value = 'amount' in t && t.amount !== undefined ? t.amount : undefined
     return { label, value, type: 'trait' }
@@ -109,7 +109,7 @@ function extractTraitDetails(data: SURefMetaEntity): DataValue[] {
 /**
  * Extract details for header (activation cost, range, damage, traits)
  */
-function extractDetails(data: SURefMetaEntity, schemaName?: SURefSchemaName): DataValue[] {
+function extractDetails(data: SURefMetaEntity, schemaName?: SURefEnumSchemaName): DataValue[] {
   const details: DataValue[] = []
 
   const activationCost = extractActivationCostDetail(data, schemaName)

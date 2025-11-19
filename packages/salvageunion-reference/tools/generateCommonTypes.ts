@@ -8,11 +8,16 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
+import {
+  loadSchema,
+  analyzeSchemaDependencies,
+  topologicalSort,
+  type JSONSchema,
+} from './schemaAnalysis.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const COMMON_SCHEMA_PATH = path.join(__dirname, '../schemas/shared/common.schema.json')
 const OUTPUT_FILE = path.join(__dirname, '../lib/types/common.ts')
 
 /**
@@ -32,22 +37,11 @@ function toPascalCase(str: string): string {
     .join('')
 }
 
-interface JSONSchema {
-  type?: string
-  description?: string
-  minimum?: number
-  minLength?: number
-  format?: string
-  const?: string | number
-  oneOf?: JSONSchema[]
-  $ref?: string
-}
-
 /**
  * Generate TypeScript type definition from common schema definition
  */
 function generateCommonType(name: string, schema: JSONSchema): string | null {
-  const typeName = `SURef${toPascalCase(name)}`
+  const typeName = `SURefCommon${toPascalCase(name)}`
   const lines: string[] = []
 
   if (schema.description) {
@@ -92,7 +86,7 @@ function generateCommonType(name: string, schema: JSONSchema): string | null {
   if (schema.$ref) {
     const refName = schema.$ref.split('/').pop()
     if (refName) {
-      const refTypeName = `SURef${toPascalCase(refName)}`
+      const refTypeName = `SURefCommon${toPascalCase(refName)}`
       lines.push(`export type ${typeName} = ${refTypeName}`)
       return lines.join('\n')
     }
@@ -107,7 +101,7 @@ async function generateCommonTypes() {
   console.log('🔧 Generating TypeScript common types from common.schema.json...\n')
 
   // Read the common schema
-  const commonSchema = JSON.parse(fs.readFileSync(COMMON_SCHEMA_PATH, 'utf8'))
+  const commonSchema = loadSchema('schemas/shared/common.schema.json')
 
   const typeDefinitions: string[] = []
 
@@ -119,34 +113,13 @@ async function generateCommonTypes() {
   typeDefinitions.push(' */')
   typeDefinitions.push('')
 
-  // Generate types in dependency order
-  const definitions = commonSchema.definitions || {}
+  // Generate types in dependency order using schema analysis
+  const definitions = commonSchema.definitions || commonSchema.$defs || {}
+  const dependencyGraph = analyzeSchemaDependencies(commonSchema, definitions)
+  const sortedTypes = topologicalSort(dependencyGraph)
 
-  // First pass: base types (no $ref dependencies)
-  const baseTypes = [
-    'nonNegativeInteger',
-    'positiveInteger',
-    'id',
-    'asset_url',
-    'name',
-    'activationCost',
-  ]
-  const dependentTypes = ['techLevel', 'salvageValue', 'hitPoints', 'structurePoints']
-
-  console.log('📋 Generating base types...')
-  for (const typeName of baseTypes) {
-    if (definitions[typeName]) {
-      const typeCode = generateCommonType(typeName, definitions[typeName])
-      if (typeCode) {
-        typeDefinitions.push(typeCode)
-        typeDefinitions.push('')
-        console.log(`   ✓ ${typeName}`)
-      }
-    }
-  }
-
-  console.log('\n📋 Generating dependent types...')
-  for (const typeName of dependentTypes) {
+  console.log('📋 Generating types in dependency order...')
+  for (const typeName of sortedTypes) {
     if (definitions[typeName]) {
       const typeCode = generateCommonType(typeName, definitions[typeName])
       if (typeCode) {
@@ -163,7 +136,7 @@ async function generateCommonTypes() {
 
   console.log('\n✅ Common types generated successfully!')
   console.log(`📄 Output: ${OUTPUT_FILE}`)
-  console.log(`📊 Generated ${baseTypes.length + dependentTypes.length} common types`)
+  console.log(`📊 Generated ${sortedTypes.length} common types`)
 }
 
 // Run the generator

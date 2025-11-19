@@ -5,7 +5,7 @@ import {
   SalvageUnionReference,
   getTechLevel,
   type SURefEntity,
-  type SURefSchemaName,
+  type SURefEnumSchemaName,
 } from 'salvageunion-reference'
 import Modal from '../Modal'
 import { EntityDisplay } from './EntityDisplay'
@@ -15,9 +15,9 @@ interface EntitySelectionModalProps {
   isOpen: boolean
   onClose: () => void
   /** Array of schema names to search from (e.g., ['equipment', 'modules']) */
-  schemaNames: SURefSchemaName[] | undefined
+  schemaNames: SURefEnumSchemaName[] | undefined
   /** Callback when an entity is selected - receives the entity ID and schema name */
-  onSelect: (entityId: string, schemaName: SURefSchemaName) => void
+  onSelect: (entityId: string, schemaName: SURefEnumSchemaName) => void
   /** Modal title */
   title?: string
   /** Prefix for select button text (e.g., "Equip", "Select", "Add") */
@@ -27,7 +27,7 @@ interface EntitySelectionModalProps {
   /** Optional selected entity ID (for showing selected state) */
   selectedEntityId?: string | null
   /** Optional selected entity schema name (required if selectedEntityId is provided) */
-  selectedEntitySchemaName?: SURefSchemaName
+  selectedEntitySchemaName?: SURefEnumSchemaName
   /** Whether to hide chassis patterns in entity displays */
   hidePatterns?: boolean
 }
@@ -47,7 +47,7 @@ export function EntitySelectionModal({
   const [searchTerm, setSearchTerm] = useState('')
   const [filterSearchTerm, setFilterSearchTerm] = useState('')
   const [techLevelFilter, setTechLevelFilter] = useState<number | null>(null)
-  const [schemaFilter, setSchemaFilter] = useState<SURefSchemaName | null>(null)
+  const [schemaFilter, setSchemaFilter] = useState<SURefEnumSchemaName | null>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   // Update filter search term with debounce, but keep input immediate
@@ -68,7 +68,7 @@ export function EntitySelectionModal({
   }, [searchTerm])
 
   const allEntities = useMemo(() => {
-    const entities: Array<{ entity: SURefEntity; schemaName: SURefSchemaName }> = []
+    const entities: Array<{ entity: SURefEntity; schemaName: SURefEnumSchemaName }> = []
 
     schemaNames.forEach((schemaName) => {
       const items = SalvageUnionReference.findAllIn(schemaName, () => true)
@@ -144,7 +144,7 @@ export function EntitySelectionModal({
       })
   }, [allEntities, filterSearchTerm, techLevelFilter, schemaFilter, disabledEntities])
 
-  const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
+  const handleSelect = (entityId: string, schemaName: SURefEnumSchemaName) => {
     onSelect(entityId, schemaName)
     onClose()
   }

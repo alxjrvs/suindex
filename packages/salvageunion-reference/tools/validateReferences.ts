@@ -49,7 +49,7 @@ console.log(`Loaded ${systemNames.size} systems and ${moduleNames.size} modules`
 // Validate chassis patterns
 console.log('\nValidating chassis patterns...')
 for (const chassisItem of chassis) {
-  if (!chassisItem.patterns) continue
+  if (!chassisItem.patterns || !Array.isArray(chassisItem.patterns)) continue
 
   for (const pattern of chassisItem.patterns) {
     // Validate systems in pattern
@@ -59,8 +59,8 @@ for (const chassisItem of chassis) {
         if (!systemNames.has(systemName)) {
           errors.push({
             file: 'chassis.json',
-            entityName: chassisItem.name,
-            field: `patterns.${pattern.name}.systems`,
+            entityName: String(chassisItem.name ?? 'unknown'),
+            field: `patterns.${(pattern as { name?: string }).name ?? 'unknown'}.systems`,
             referencedName: systemName,
             message: `System "${systemName}" not found in systems.json`,
           })
@@ -75,8 +75,8 @@ for (const chassisItem of chassis) {
         if (!moduleNames.has(moduleName)) {
           errors.push({
             file: 'chassis.json',
-            entityName: chassisItem.name,
-            field: `patterns.${pattern.name}.modules`,
+            entityName: String(chassisItem.name ?? 'unknown'),
+            field: `patterns.${(pattern as { name?: string }).name ?? 'unknown'}.modules`,
             referencedName: moduleName,
             message: `Module "${moduleName}" not found in modules.json`,
           })
@@ -86,13 +86,14 @@ for (const chassisItem of chassis) {
 
     // Validate drone systems and modules if present
     if (pattern.drone) {
-      if (pattern.drone.systems) {
-        for (const systemName of pattern.drone.systems) {
+      const drone = pattern.drone as { systems?: string[]; modules?: string[] } | undefined
+      if (drone?.systems && Array.isArray(drone.systems)) {
+        for (const systemName of drone.systems) {
           if (!systemNames.has(systemName)) {
             errors.push({
               file: 'chassis.json',
-              entityName: chassisItem.name,
-              field: `patterns.${pattern.name}.drone.systems`,
+              entityName: String(chassisItem.name ?? 'unknown'),
+              field: `patterns.${(pattern as { name?: string }).name ?? 'unknown'}.drone.systems`,
               referencedName: systemName,
               message: `Drone system "${systemName}" not found in systems.json`,
             })
@@ -100,13 +101,13 @@ for (const chassisItem of chassis) {
         }
       }
 
-      if (pattern.drone.modules) {
-        for (const moduleName of pattern.drone.modules) {
+      if (drone?.modules && Array.isArray(drone.modules)) {
+        for (const moduleName of drone.modules) {
           if (!moduleNames.has(moduleName)) {
             errors.push({
               file: 'chassis.json',
-              entityName: chassisItem.name,
-              field: `patterns.${pattern.name}.drone.modules`,
+              entityName: String(chassisItem.name ?? 'unknown'),
+              field: `patterns.${(pattern as { name?: string }).name ?? 'unknown'}.drone.modules`,
               referencedName: moduleName,
               message: `Drone module "${moduleName}" not found in modules.json`,
             })
@@ -120,13 +121,15 @@ for (const chassisItem of chassis) {
 // Validate vehicle systems
 console.log('Validating vehicle systems...')
 for (const vehicle of vehicles) {
-  if (!vehicle.systems) continue
+  const systems = vehicle.systems
+  if (!systems || !Array.isArray(systems)) continue
 
-  for (const systemName of vehicle.systems) {
+  for (const systemName of systems) {
+    if (typeof systemName !== 'string') continue
     if (!systemNames.has(systemName)) {
       errors.push({
         file: 'vehicles.json',
-        entityName: vehicle.name,
+        entityName: String(vehicle.name ?? 'unknown'),
         field: 'systems',
         referencedName: systemName,
         message: `System "${systemName}" not found in systems.json`,
@@ -138,13 +141,15 @@ for (const vehicle of vehicles) {
 // Validate drone systems and modules
 console.log('Validating drone systems and modules...')
 for (const drone of drones) {
-  if (drone.systems) {
-    for (const systemName of drone.systems) {
+  const systems = drone.systems
+  if (systems && Array.isArray(systems)) {
+    for (const systemName of systems) {
+      if (typeof systemName !== 'string') continue
       // Check if it's a system or module
       if (!systemNames.has(systemName) && !moduleNames.has(systemName)) {
         errors.push({
           file: 'drones.json',
-          entityName: drone.name,
+          entityName: String(drone.name ?? 'unknown'),
           field: 'systems',
           referencedName: systemName,
           message: `"${systemName}" not found in systems.json or modules.json`,

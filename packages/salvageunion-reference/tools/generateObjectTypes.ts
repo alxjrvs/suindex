@@ -9,11 +9,16 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
+import {
+  loadSchema,
+  analyzeSchemaDependencies,
+  topologicalSort,
+  type JSONSchema,
+} from './schemaAnalysis.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const OBJECTS_SCHEMA_PATH = path.join(__dirname, '../schemas/shared/objects.schema.json')
 const OUTPUT_FILE = path.join(__dirname, '../lib/types/objects.ts')
 
 /**
@@ -31,23 +36,6 @@ function toPascalCase(str: string): string {
     .split('_')
     .map((part) => capitalize(part))
     .join('')
-}
-
-interface JSONSchema {
-  type?: string | string[]
-  description?: string
-  properties?: Record<string, JSONSchema>
-  required?: string[]
-  items?: JSONSchema
-  $ref?: string
-  oneOf?: JSONSchema[]
-  allOf?: JSONSchema[]
-  const?: string | number
-  minimum?: number
-  minLength?: number
-  additionalProperties?: boolean | JSONSchema
-  default?: unknown
-  enum?: (string | number)[]
 }
 
 interface ImportTracker {
@@ -73,35 +61,35 @@ function extractRefType(
 ): { source: 'enum' | 'common' | 'object' | 'array'; typeName: string } | null {
   if (ref.includes('enums.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURef${capitalize(defName)}`
+    const typeName = `SURefEnum${capitalize(defName)}`
     imports.enums.add(typeName)
     return { source: 'enum', typeName }
   }
 
   if (ref.includes('common.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURef${toPascalCase(defName)}`
+    const typeName = `SURefCommon${toPascalCase(defName)}`
     imports.common.add(typeName)
     return { source: 'common', typeName }
   }
 
   if (ref.includes('objects.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     forwardRefs.add(typeName)
     return { source: 'object', typeName }
   }
 
   if (ref.startsWith('#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     forwardRefs.add(typeName)
     return { source: 'object', typeName }
   }
 
   if (ref.includes('arrays.schema.json#/definitions/')) {
     const defName = ref.split('/').pop()!
-    const typeName = `SURefMeta${capitalize(defName)}`
+    const typeName = `SURefObject${capitalize(defName)}`
     return { source: 'array', typeName }
   }
 
@@ -240,7 +228,7 @@ function generateProperties(
  * Generate TypeScript interface from object schema definition
  */
 function generateObjectType(name: string, schema: JSONSchema): string | null {
-  const typeName = `SURefMeta${capitalize(name)}`
+  const typeName = `SURefObject${capitalize(name)}`
   const lines: string[] = []
 
   if (schema.description) {
@@ -341,7 +329,7 @@ function generateObjectType(name: string, schema: JSONSchema): string | null {
  * Generate TypeScript type alias from array schema definition
  */
 function generateArrayType(name: string, schema: JSONSchema): string | null {
-  const typeName = `SURefMeta${capitalize(name)}`
+  const typeName = `SURefObject${capitalize(name)}`
   const lines: string[] = []
 
   if (schema.description) {
@@ -374,7 +362,7 @@ async function generateObjectTypes() {
   console.log('🔧 Generating TypeScript object and array types from objects.schema.json...\n')
 
   // Read schema
-  const objectsSchema = JSON.parse(fs.readFileSync(OBJECTS_SCHEMA_PATH, 'utf8'))
+  const objectsSchema = loadSchema('schemas/shared/objects.schema.json')
 
   const typeDefinitions: string[] = []
 
@@ -391,7 +379,7 @@ async function generateObjectTypes() {
   typeDefinitions.push('') // Will be replaced with imports
 
   // Get all definitions
-  const allDefs = objectsSchema.definitions || {}
+  const allDefs = objectsSchema.definitions || objectsSchema.$defs || {}
 
   // Separate object types from array types
   const objectDefs: Record<string, JSONSchema> = {}
@@ -410,32 +398,9 @@ async function generateObjectTypes() {
     }
   }
 
-  // Generate object types in dependency order
-  const objectOrder = [
-    'entry',
-    'baseEntity',
-    'damage',
-    'trait',
-    'grantable',
-    'effect',
-    'stats',
-    'chassisStats',
-    'equipmentStats',
-    'dataValue',
-    'contentBlock',
-    'combatEntity',
-    'mechanicalEntity',
-    'choice',
-    'npc',
-    'patternSystemModule',
-    'action',
-    'grant',
-    'pattern',
-    'systemModule',
-    'table',
-    'bonusPerTechLevel',
-    'advancedClass',
-  ]
+  // Generate object types in dependency order using topological sort
+  const objectDependencyGraph = analyzeSchemaDependencies(objectsSchema, objectDefs)
+  const objectOrder = topologicalSort(objectDependencyGraph)
 
   console.log('📋 Generating object types...')
   for (const typeName of objectOrder) {

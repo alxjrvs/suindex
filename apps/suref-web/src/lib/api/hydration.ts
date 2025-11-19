@@ -9,7 +9,7 @@ import {
   SalvageUnionReference,
   EntitySchemaNames,
   type SURefEntity,
-  type SURefSchemaName,
+  type SURefEnumSchemaName,
   type EntitySchemaName,
 } from 'salvageunion-reference'
 import type { Tables } from '../../types/database-generated.types'
@@ -30,9 +30,12 @@ export function hydrateEntity(
   parentEntity?: HydratedEntity
 ): HydratedEntity {
   // Only entity schemas are stored in the database, not meta schemas
-  const schemaName = entity.schema_name as SURefSchemaName
+  const schemaName = entity.schema_name as SURefEnumSchemaName
   const ref = EntitySchemaNames.has(schemaName as EntitySchemaName)
-    ? SalvageUnionReference.get(schemaName as EntitySchemaName, entity.schema_ref_id)
+    ? (SalvageUnionReference.get(
+        schemaName as EntitySchemaName,
+        entity.schema_ref_id
+      ) as SURefEntity)
     : undefined
 
   if (!ref) {
@@ -64,7 +67,7 @@ export function hydrateEntities(
   choicesByEntityId: Map<string, Tables<'player_choices'>[]> = new Map()
 ): HydratedEntity[] {
   const requests = entities.map((entity) => ({
-    schemaName: entity.schema_name as SURefSchemaName,
+    schemaName: entity.schema_name as SURefEnumSchemaName,
     id: entity.schema_ref_id,
   }))
 
@@ -74,7 +77,8 @@ export function hydrateEntities(
   refs.forEach((ref, index) => {
     if (ref) {
       const request = requests[index]
-      refsByKey.set(`${request.schemaName}:${request.id}`, ref)
+      // Only entity schemas are stored in the database, so ref is guaranteed to be SURefEntity
+      refsByKey.set(`${request.schemaName}:${request.id}`, ref as SURefEntity)
     }
   })
 
@@ -126,7 +130,10 @@ export function hydrateEntities(
  */
 export function hydrateCargo(cargo: Tables<'cargo'>): HydratedCargo {
   if (cargo.schema_name && cargo.schema_ref_id) {
-    const ref = SalvageUnionReference.get(cargo.schema_name as SURefSchemaName, cargo.schema_ref_id)
+    const ref = SalvageUnionReference.get(
+      cargo.schema_name as SURefEnumSchemaName,
+      cargo.schema_ref_id
+    )
 
     if (!ref) {
       throw new Error(`Reference not found for cargo: ${cargo.schema_name}/${cargo.schema_ref_id}`)
@@ -155,7 +162,7 @@ export function hydrateCargoItems(cargoItems: Tables<'cargo'>[]): HydratedCargo[
   const custom = cargoItems.filter((c) => !c.schema_name || !c.schema_ref_id)
 
   const requests = schemaBased.map((cargo) => ({
-    schemaName: cargo.schema_name as SURefSchemaName,
+    schemaName: cargo.schema_name as SURefEnumSchemaName,
     id: cargo.schema_ref_id!,
   }))
 
@@ -165,7 +172,8 @@ export function hydrateCargoItems(cargoItems: Tables<'cargo'>[]): HydratedCargo[
   refs.forEach((ref, index) => {
     if (ref) {
       const request = requests[index]
-      refsByKey.set(`${request.schemaName}:${request.id}`, ref)
+      // Only entity schemas are stored in the database, so ref is guaranteed to be SURefEntity
+      refsByKey.set(`${request.schemaName}:${request.id}`, ref as SURefEntity)
     }
   })
 

@@ -5,90 +5,171 @@
  */
 
 import type {
-  SURefActionType,
-  SURefClassType,
-  SURefContentType,
-  SURefDamageType,
-  SURefRange,
-  SURefSchemaName,
-  SURefSource,
-  SURefTree,
+  SURefEnumActionType,
+  SURefEnumClassType,
+  SURefEnumContentType,
+  SURefEnumDamageType,
+  SURefEnumRange,
+  SURefEnumSchemaName,
+  SURefEnumSource,
+  SURefEnumTree,
 } from './enums.js'
 
 import type {
-  SURefActivationCost,
-  SURefAssetUrl,
-  SURefHitPoints,
-  SURefId,
-  SURefName,
-  SURefNonNegativeInteger,
-  SURefPositiveInteger,
-  SURefSalvageValue,
-  SURefTechLevel,
+  SURefCommonActivationCost,
+  SURefCommonAssetUrl,
+  SURefCommonHitPoints,
+  SURefCommonId,
+  SURefCommonName,
+  SURefCommonNonNegativeInteger,
+  SURefCommonPositiveInteger,
+  SURefCommonSalvageValue,
+  SURefCommonTechLevel,
 } from './common.js'
-
-/**
- * Basic entity with name, content, source, and page reference
- */
-export interface SURefMetaBaseEntity {
-  asset_url?: SURefAssetUrl
-  content?: SURefMetaContent
-  id: SURefId
-  indexable?: boolean
-  blackMarket?: boolean
-  name: SURefName
-  source: SURefSource
-  page: SURefPositiveInteger
-}
 
 /**
  * Special traits and properties of items, systems, or abilities
  */
-export interface SURefMetaTrait {
-  amount?: SURefNonNegativeInteger | string
+export interface SURefObjectTrait {
+  amount?: SURefCommonNonNegativeInteger | string
   type: string
 }
 
 /**
  * Statistics for mechs, chassis, and vehicles
  */
-export interface SURefMetaStats {
-  structurePoints?: SURefNonNegativeInteger
-  energyPoints?: SURefNonNegativeInteger
-  heatCapacity?: SURefNonNegativeInteger
-  systemSlots?: SURefNonNegativeInteger
-  moduleSlots?: SURefNonNegativeInteger
-  cargoCapacity?: SURefNonNegativeInteger
-  techLevel?: SURefTechLevel
-  salvageValue?: SURefSalvageValue
+export interface SURefObjectStats {
+  structurePoints?: SURefCommonNonNegativeInteger
+  energyPoints?: SURefCommonNonNegativeInteger
+  heatCapacity?: SURefCommonNonNegativeInteger
+  systemSlots?: SURefCommonNonNegativeInteger
+  moduleSlots?: SURefCommonNonNegativeInteger
+  cargoCapacity?: SURefCommonNonNegativeInteger
+  techLevel?: SURefCommonTechLevel
+  salvageValue?: SURefCommonSalvageValue
 }
 
 /**
  * Statistics specific to chassis
  */
-export interface SURefMetaChassisStats {
-  structurePoints?: SURefNonNegativeInteger
-  energyPoints?: SURefNonNegativeInteger
-  heatCapacity?: SURefNonNegativeInteger
-  systemSlots?: SURefNonNegativeInteger
-  moduleSlots?: SURefNonNegativeInteger
-  cargoCapacity?: SURefNonNegativeInteger
-  techLevel?: SURefTechLevel
-  salvageValue?: SURefSalvageValue
+export interface SURefObjectChassisStats {
+  structurePoints?: SURefCommonNonNegativeInteger
+  energyPoints?: SURefCommonNonNegativeInteger
+  heatCapacity?: SURefCommonNonNegativeInteger
+  systemSlots?: SURefCommonNonNegativeInteger
+  moduleSlots?: SURefCommonNonNegativeInteger
+  cargoCapacity?: SURefCommonNonNegativeInteger
+  techLevel?: SURefCommonTechLevel
+  salvageValue?: SURefCommonSalvageValue
 }
 
 /**
  * Statistics for equipment (systems and modules)
  */
-export interface SURefMetaEquipmentStats {
-  techLevel?: SURefTechLevel
-  salvageValue?: SURefSalvageValue
+export interface SURefObjectEquipmentStats {
+  techLevel?: SURefCommonTechLevel
+  salvageValue?: SURefCommonSalvageValue
+}
+
+/**
+ * Entity that can perform actions and has traits
+ */
+export interface SURefObjectCombatEntity {
+  actions?: string[]
+  traits?: SURefObjectTrait[]
+}
+
+/**
+ * Mechanical entity with structure points and equipment stats
+ */
+export interface SURefObjectMechanicalEntity {
+  structurePoints?: SURefCommonPositiveInteger
+  techLevel?: SURefCommonTechLevel
+  salvageValue?: SURefCommonSalvageValue
+  systems?: string[]
+  traits?: SURefObjectTrait[]
+}
+
+/**
+ * NPC associated with an entity
+ */
+export interface SURefObjectNpc {
+  position: SURefCommonName
+  content?: SURefObjectContent
+  hitPoints: SURefCommonHitPoints
+  choices?: SURefObjectChoices
+}
+
+export interface SURefObjectPatternSystemModule {
+  name: SURefCommonName
+  count?: SURefCommonNonNegativeInteger
+  /**
+   * Preselected choices for this system or module, keyed by choice ID
+   */
+  preselectedChoices?: Record<string, SURefCommonName>
+}
+
+/**
+ * A system or module that can be installed on a mech
+ */
+export interface SURefObjectSystemModule extends SURefObjectStats {
+  techLevel: SURefCommonTechLevel
+  slotsRequired: SURefCommonNonNegativeInteger
+  salvageValue: SURefCommonSalvageValue
+  recommended?: boolean
+  count?: SURefCommonNonNegativeInteger
+  actions: string[]
+}
+
+export interface SURefObjectChoice {
+  id: SURefCommonId
+  name: SURefCommonName
+  content?: SURefObjectContent
+  rollTable?: string
+  schemaEntities?: string[]
+  schema?: SURefEnumSchemaName[]
+  customSystemOptions?: SURefObjectSystemModule[]
+  setIndexable?: boolean
+  constraints?: {
+    field?: string
+    min?: SURefCommonNonNegativeInteger
+    max?: SURefCommonNonNegativeInteger
+  }
+}
+
+/**
+ * Basic entity with name, content, source, and page reference
+ */
+export interface SURefObjectBaseEntity {
+  asset_url?: SURefCommonAssetUrl
+  content?: SURefObjectContent
+  id: SURefCommonId
+  indexable?: boolean
+  blackMarket?: boolean
+  name: SURefCommonName
+  source: SURefEnumSource
+  page: SURefCommonPositiveInteger
+}
+
+/**
+ * Bonus values that increase with tech level
+ */
+export type SURefObjectBonusPerTechLevel = SURefObjectStats
+
+/**
+ * Advanced or hybrid character class
+ */
+export interface SURefObjectAdvancedClass extends SURefObjectBaseEntity {
+  type: SURefEnumClassType
+  advancedTree: SURefEnumTree
+  legendaryTree: SURefEnumTree
+  content?: SURefObjectContent
 }
 
 /**
  * A data value with label, optional value, and optional type
  */
-export interface SURefMetaDataValue {
+export interface SURefObjectDataValue {
   /**
    * The label for this data value
    */
@@ -106,9 +187,9 @@ export interface SURefMetaDataValue {
 /**
  * Block of structured content for rendering (paragraph, heading, list item, etc.)
  */
-export interface SURefMetaContentBlock {
-  type?: SURefContentType
-  value?: string | SURefMetaDataValue[]
+export interface SURefObjectContentBlock {
+  type?: SURefEnumContentType
+  value?: string | SURefObjectDataValue[]
   /**
    * Optional label for this content block (e.g., for labeled sections)
    */
@@ -120,91 +201,45 @@ export interface SURefMetaContentBlock {
   /**
    * Nested content blocks (e.g., list items within a list)
    */
-  items?: SURefMetaContentBlock[]
+  items?: SURefObjectContentBlock[]
 }
 
 /**
- * Entity that can perform actions and has traits
+ * Grantable entity with a name and description
  */
-export interface SURefMetaCombatEntity {
-  actions?: string[]
-  traits?: SURefMetaTrait[]
-}
-
-/**
- * Mechanical entity with structure points and equipment stats
- */
-export interface SURefMetaMechanicalEntity {
-  structurePoints?: SURefPositiveInteger
-  techLevel?: SURefTechLevel
-  salvageValue?: SURefSalvageValue
-  systems?: string[]
-  traits?: SURefMetaTrait[]
-}
-
-export interface SURefMetaChoice {
-  id: SURefId
-  name: SURefName
-  content?: SURefMetaContent
-  rollTable?: string
-  schemaEntities?: string[]
-  schema?: SURefSchemaName[]
-  customSystemOptions?: SURefMetaSystemModule[]
-  setIndexable?: boolean
-  constraints?: {
-    field?: string
-    min?: SURefNonNegativeInteger
-    max?: SURefNonNegativeInteger
-  }
-}
-
-/**
- * NPC associated with an entity
- */
-export interface SURefMetaNpc {
-  position: SURefName
-  content?: SURefMetaContent
-  hitPoints: SURefHitPoints
-  choices?: SURefMetaChoices
-}
-
-export interface SURefMetaPatternSystemModule {
-  name: SURefName
-  count?: SURefNonNegativeInteger
-  /**
-   * Preselected choices for this system or module, keyed by choice ID
-   */
-  preselectedChoices?: Record<string, SURefName>
+export interface SURefObjectGrant {
+  schema: SURefEnumSchemaName | 'choice'
+  name: SURefCommonName
 }
 
 /**
  * An action, ability, or attack that can be performed
  */
-export interface SURefMetaAction {
-  id: SURefId
-  content?: SURefMetaContent
+export interface SURefObjectAction {
+  id: SURefCommonId
+  content?: SURefObjectContent
   structurePoints?: number
   energyPoints?: number
   heatCapacity?: number
   systemSlots?: number
   moduleSlots?: number
   cargoCapacity?: number
-  techLevel?: SURefTechLevel
+  techLevel?: SURefCommonTechLevel
   salvageValue?: number
-  name: SURefName
-  activationCost?: SURefActivationCost
-  range?: SURefRange
-  actionType?: SURefActionType
-  traits?: SURefMetaTrait[]
+  name: SURefCommonName
+  activationCost?: SURefCommonActivationCost
+  range?: SURefEnumRange
+  actionType?: SURefEnumActionType
+  traits?: SURefObjectTrait[]
   /**
    * Damage dealt by an attack or ability
    */
   damage?: {
-    damageType: SURefDamageType
-    amount: SURefNonNegativeInteger | string
+    damageType: SURefEnumDamageType
+    amount: SURefCommonNonNegativeInteger | string
   }
-  choices?: SURefMetaChoice[]
-  table?: SURefMetaTable
+  choices?: SURefObjectChoice[]
+  table?: SURefObjectTable
   /**
    * If true, this action will not affect the rendering of the entity display
    */
@@ -212,22 +247,14 @@ export interface SURefMetaAction {
 }
 
 /**
- * Grantable entity with a name and description
- */
-export interface SURefMetaGrant {
-  schema: SURefSchemaName | 'choice'
-  name: SURefName
-}
-
-/**
  * Mech chassis pattern configuration
  */
-export interface SURefMetaPattern {
-  name: SURefName
-  content?: SURefMetaContent
+export interface SURefObjectPattern {
+  name: SURefCommonName
+  content?: SURefObjectContent
   legalStarting?: boolean
-  systems: SURefMetaPatternSystemModule[]
-  modules: SURefMetaPatternSystemModule[]
+  systems: SURefObjectPatternSystemModule[]
+  modules: SURefObjectPatternSystemModule[]
   /**
    * Optional drone configuration
    */
@@ -237,39 +264,12 @@ export interface SURefMetaPattern {
   }
 }
 
-/**
- * A system or module that can be installed on a mech
- */
-export interface SURefMetaSystemModule extends SURefMetaStats {
-  techLevel: SURefTechLevel
-  slotsRequired: SURefNonNegativeInteger
-  salvageValue: SURefSalvageValue
-  recommended?: boolean
-  count?: SURefNonNegativeInteger
-  actions: string[]
-}
-
-/**
- * Bonus values that increase with tech level
- */
-export type SURefMetaBonusPerTechLevel = SURefMetaStats
-
-/**
- * Advanced or hybrid character class
- */
-export interface SURefMetaAdvancedClass extends SURefMetaBaseEntity {
-  type: SURefClassType
-  advancedTree: SURefTree
-  legendaryTree: SURefTree
-  content?: SURefMetaContent
-}
-
-export type SURefMetaSchemaName = SURefSchemaName | 'actions'
+export type SURefObjectSchemaName = SURefEnumSchemaName | 'actions'
 
 /**
  * Roll table for random outcomes based on d20 rolls
  */
-export type SURefMetaTable =
+export type SURefObjectTable =
   | {
       /**
        * Critical failure outcome
@@ -344,23 +344,23 @@ export type SURefMetaTable =
       type: 'dramatic'
     }
 
-export type SURefMetaActionOptions = {
+export type SURefObjectActionOptions = {
   label: string
   value: string
 }[]
 
-export type SURefMetaChoices = SURefMetaChoice[]
+export type SURefObjectChoices = SURefObjectChoice[]
 
-export type SURefMetaContent = SURefMetaContentBlock[]
+export type SURefObjectContent = SURefObjectContentBlock[]
 
-export type SURefMetaCustomSystemOptions = SURefMetaSystemModule[]
+export type SURefObjectCustomSystemOptions = SURefObjectSystemModule[]
 
-export type SURefMetaModules = string[]
+export type SURefObjectModules = string[]
 
-export type SURefMetaSchemaEntities = string[]
+export type SURefObjectSchemaEntities = string[]
 
-export type SURefMetaSchemaNames = SURefSchemaName[]
+export type SURefObjectSchemaNames = SURefEnumSchemaName[]
 
-export type SURefMetaSystems = string[]
+export type SURefObjectSystems = string[]
 
-export type SURefMetaTraits = SURefMetaTrait[]
+export type SURefObjectTraits = SURefObjectTrait[]

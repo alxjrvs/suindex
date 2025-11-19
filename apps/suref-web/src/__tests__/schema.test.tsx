@@ -3,7 +3,7 @@ import { render, waitFor } from '../test/render'
 import { EntityDisplay } from '../components/entity/EntityDisplay'
 import { getSchemaCatalog } from 'salvageunion-reference'
 import { getModel } from 'salvageunion-reference'
-import type { SURefEntity, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
 import { act } from '@testing-library/react'
 
 const schemaCatalog = getSchemaCatalog()
@@ -11,7 +11,7 @@ const schemaCatalog = getSchemaCatalog()
 // Automatically exclude meta schemas (schemas marked with meta: true)
 const SCHEMAS_TO_TEST = schemaCatalog.schemas
   .filter((schema) => !schema.meta)
-  .map((schema) => schema.id) as SURefSchemaName[]
+  .map((schema) => schema.id) as SURefEnumSchemaName[]
 
 type PropertyCheckConfig = {
   /** Properties that should appear as numbers in the rendered output */
@@ -42,7 +42,7 @@ const SCHEMA_PROPERTY_CHECKS: Record<string, PropertyCheckConfig> = {
 function verifyEntityProperties(
   textContent: string,
   entity: SURefEntity,
-  schemaId: SURefSchemaName
+  schemaId: SURefEnumSchemaName
 ) {
   if ('description' in entity && entity.description) {
     const descriptionWithoutBrackets = entity.description
@@ -81,7 +81,7 @@ function verifyEntityProperties(
 /**
  * Helper function to get all entities for a schema
  */
-function getSchemaEntities(schemaId: SURefSchemaName): SURefEntity[] {
+function getSchemaEntities(schemaId: SURefEnumSchemaName): SURefEntity[] {
   const model = getModel(schemaId)
   return model?.all() || []
 }

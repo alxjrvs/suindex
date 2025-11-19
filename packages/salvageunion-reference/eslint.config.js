@@ -7,7 +7,14 @@ const __dirname = dirname(__filename)
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', '**/*.d.ts', 'lib/*.template.ts', 'tools/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '**/*.d.ts',
+      'lib/*.template.ts',
+      'tools/**',
+      'examples/**',
+    ],
   },
   ...baseConfig,
   {

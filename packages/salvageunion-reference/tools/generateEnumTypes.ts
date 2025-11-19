@@ -26,7 +26,7 @@ function capitalize(str: string): string {
  * Generate TypeScript type definition from enum schema
  */
 function generateEnumType(name: string, enumValues: string[], description?: string): string {
-  const typeName = `SURef${capitalize(name)}`
+  const typeName = `SURefEnum${capitalize(name)}`
   const lines: string[] = []
 
   if (description) {
@@ -82,8 +82,8 @@ async function generateEnumTypes() {
       Array.isArray(enumDef.items.enum)
     ) {
       // Array of enum strings - generate both the item type and array type
-      const itemTypeName = `SURef${capitalize(enumName)}Item`
-      const arrayTypeName = `SURef${capitalize(enumName)}`
+      const itemTypeName = `SURefEnum${capitalize(enumName)}Item`
+      const arrayTypeName = `SURefEnum${capitalize(enumName)}`
 
       // Generate item type
       const itemTypeCode = generateEnumType(

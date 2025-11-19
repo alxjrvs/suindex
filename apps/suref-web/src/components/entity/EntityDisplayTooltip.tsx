@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefSchemaName } from 'salvageunion-reference'
+import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import { HoverCard, Portal } from '@chakra-ui/react'
 import { EntityDisplay } from './EntityDisplay'
 
 interface EntityDisplayTooltipProps {
-  schemaName: SURefSchemaName
+  schemaName: SURefEnumSchemaName
   entityId: string
   children: ReactNode
   /** Minimum width for the tooltip content (default: 340px) */

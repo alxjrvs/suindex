@@ -1,6 +1,6 @@
 import { Box, HStack } from '@chakra-ui/react'
 import { Text } from '../../base/Text'
-import type { SURefMetaChoice } from 'salvageunion-reference'
+import type { SURefObjectChoice } from 'salvageunion-reference'
 
 import { SheetInput } from '../../shared/SheetInput'
 import { EntitySubheader } from './EntitySubheader'
@@ -10,7 +10,7 @@ import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { getParagraphString } from '../../../lib/contentBlockHelpers'
 
 interface EntityChoiceProps {
-  choice: SURefMetaChoice
+  choice: SURefObjectChoice
   userChoices?: Record<string, string> | null
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
 }

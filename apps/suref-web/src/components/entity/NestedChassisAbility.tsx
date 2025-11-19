@@ -2,8 +2,8 @@ import React from 'react'
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import type {
   SURefMetaAction,
-  SURefMetaChoice,
-  SURefMetaContentBlock,
+  SURefObjectChoice,
+  SURefObjectContentBlock,
 } from 'salvageunion-reference'
 import { Text } from '../base/Text'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
@@ -47,7 +47,7 @@ export function NestedChassisAbility({
   const spacing = compact ? 1 : 2
 
   const hasContent = data.content && data.content.length > 0
-  const actionChoices: SURefMetaChoice[] = data.choices || []
+  const actionChoices: SURefObjectChoice[] = data.choices || []
   const hasChoices = actionChoices.length > 0
 
   // If there's a content block that's a datavalues type, extract those values
@@ -62,7 +62,7 @@ export function NestedChassisAbility({
       datavaluesBlocks.forEach((block) => {
         if (Array.isArray(block.value)) {
           const datavalues = block.value.map((item) => {
-            // Convert SURefMetaDataValue to DataValue
+            // Convert SURefObjectDataValue to DataValue
             if (item.type === 'cost') {
               const cost = String(item.label)
               const currency = item.value
@@ -98,7 +98,7 @@ export function NestedChassisAbility({
   //    - If <=1 content blocks: render detail row inline, content below
   // 3. If data items but no content: render detail row inline
 
-  let firstContentBlock: SURefMetaContentBlock | null = null
+  let firstContentBlock: SURefObjectContentBlock | null = null
   let remainingContent: typeof data.content | undefined = undefined
   let renderDetailsInline = false
   let renderFirstContentInline = false
@@ -287,7 +287,7 @@ function InlineContentBlock({
   fontSize,
   chassisName,
 }: {
-  block: SURefMetaContentBlock
+  block: SURefObjectContentBlock
   fontSize: string
   chassisName?: string
 }) {

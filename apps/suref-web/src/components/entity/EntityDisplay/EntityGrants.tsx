@@ -1,5 +1,5 @@
 import { VStack, Box } from '@chakra-ui/react'
-import type { SURefMetaGrant, SURefSchemaName, SURefEntity } from 'salvageunion-reference'
+import type { SURefObjectGrant, SURefEnumSchemaName, SURefEntity } from 'salvageunion-reference'
 import { getGrants, getModel } from 'salvageunion-reference'
 import { EntityDisplay } from './index'
 import { EntitySubheader } from './EntitySubheader'
@@ -17,20 +17,22 @@ export function EntityGrants() {
 
   // Resolve granted entities
   const grantedEntities = entityGrants
-    .map((grant: SURefMetaGrant) => {
+    .map((grant: SURefObjectGrant) => {
       // Skip 'choice' schema grants as they're handled separately
       if (grant.schema === 'choice') {
         return null
       }
 
-      const schema = grant.schema as SURefSchemaName
+      const schema = grant.schema as SURefEnumSchemaName
       const model = getModel(schema.toLowerCase())
       if (!model) return null
 
       const entity = model.find((e: SURefEntity) => e.name === grant.name)
       return entity ? { entity, schemaName: schema } : null
     })
-    .filter((item): item is { entity: SURefEntity; schemaName: SURefSchemaName } => item !== null)
+    .filter(
+      (item): item is { entity: SURefEntity; schemaName: SURefEnumSchemaName } => item !== null
+    )
 
   if (grantedEntities.length === 0) {
     return null

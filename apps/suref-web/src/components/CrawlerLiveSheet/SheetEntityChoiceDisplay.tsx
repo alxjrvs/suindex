@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react'
 import { useState, useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefMetaChoice, SURefSchemaName } from 'salvageunion-reference'
+import type { SURefObjectChoice, SURefEnumSchemaName, SURefEntity } from 'salvageunion-reference'
 import { EntityDisplay } from '../entity/EntityDisplay'
 import { EntitySelectionModal } from '../entity/EntitySelectionModal'
 import { usePlayerChoices } from '../../hooks/suentity'
@@ -11,7 +11,7 @@ export function SheetEntityChoiceDisplay({
   onUpdateChoice,
   entityId,
 }: {
-  choice: SURefMetaChoice
+  choice: SURefObjectChoice
   onUpdateChoice?: (choiceId: string, value: string | undefined) => void
   entityId: string | undefined
 }) {
@@ -32,7 +32,9 @@ export function SheetEntityChoiceDisplay({
     const parsed = SalvageUnionReference.parseRef(selectedValue)
     if (!parsed) return null
 
-    return { entity, schemaName: parsed.schemaName.toLowerCase() }
+    // EntityDisplay expects SURefEntity, but getByRef can return meta schemas
+    // Since choices only reference entity schemas, this is safe
+    return { entity: entity as SURefEntity, schemaName: parsed.schemaName.toLowerCase() }
   }, [selectedValue])
 
   const schemaNames = useMemo(() => {
@@ -40,7 +42,7 @@ export function SheetEntityChoiceDisplay({
 
     if (!schema) return []
 
-    const pluralToSchemaName: Record<string, SURefSchemaName> = {
+    const pluralToSchemaName: Record<string, SURefEnumSchemaName> = {
       Systems: 'systems',
       Modules: 'modules',
       Abilities: 'abilities',
@@ -63,11 +65,11 @@ export function SheetEntityChoiceDisplay({
         return pluralToSchemaName[schema as keyof typeof pluralToSchemaName]
       }
 
-      return schema as SURefSchemaName
+      return schema as SURefEnumSchemaName
     })
   }, [choice])
 
-  const handleSelect = (entityId: string, schemaName: SURefSchemaName) => {
+  const handleSelect = (entityId: string, schemaName: SURefEnumSchemaName) => {
     onUpdateChoice?.(choice.id, SalvageUnionReference.composeRef(schemaName, entityId))
     setIsModalOpen(false)
   }
@@ -91,7 +93,7 @@ export function SheetEntityChoiceDisplay({
         )
       ) : (
         <EntityDisplay
-          schemaName={selectedEntity.schemaName as SURefSchemaName}
+          schemaName={selectedEntity.schemaName as SURefEnumSchemaName}
           data={selectedEntity.entity}
           compact
           collapsible
