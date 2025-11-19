@@ -417,6 +417,7 @@
   {
     "source": "Salvage Union Workshop Manual",
     "name": "Auto-Turret",
+    "indexable": false,
     "techLevel": 1,
     "moduleSlots": 4,
     "systemSlots": 15,
@@ -437,7 +438,139 @@
     },
     "page": 30,
     "actions": ["Auto-Turret"],
-    "id": "f5f04072-9e81-4c9d-a835-b71f45120d66"
+    "id": "f5f04072-9e81-4c9d-a835-b71f45120d66",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "Immobile"
+      },
+      {
+        "type": "paragraph",
+        "value": "Portable"
+      }
+    ]
+  },
+  {
+    "name": "Camo Suit",
+    "indexable": false,
+    "source": "Salvage Union Workshop Manual",
+    "techLevel": 1,
+    "actions": ["Camo Suit"],
+    "page": 51,
+    "id": "12345678-90ab-4cd1-82e3-456789012345"
+  },
+  {
+    "name": "WingSuit",
+    "indexable": false,
+    "source": "Salvage Union Workshop Manual",
+    "techLevel": 1,
+    "actions": ["Wingsuit"],
+    "page": 51,
+    "id": "21aa5d3f-2dfd-415f-8f60-86913aeb797b"
+  },
+  {
+    "name": "Hacking Kit",
+    "indexable": false,
+    "source": "Salvage Union Workshop Manual",
+    "techLevel": 1,
+    "actions": ["Hacking Kit"],
+    "page": 51,
+    "id": "c9929a61-d5fc-4362-827f-d0c7644ddd3d"
+  },
+  {
+    "name": "Teleport Beacon",
+    "indexable": false,
+    "source": "Salvage Union Workshop Manual",
+    "techLevel": 1,
+    "actions": ["Teleport Beacon"],
+    "page": 51,
+    "id": "b0de76c5-18e3-42b3-a5b3-8bcee8794ad0"
+  },
+  {
+    "name": "Stealth Field Generator",
+    "indexable": false,
+    "source": "Salvage Union Workshop Manual",
+    "techLevel": 1,
+    "actions": ["Stealth Field Generator"],
+    "page": 73,
+    "id": "f09dddca-4cf3-45fd-8ce7-640048a5c43d"
+  },
+  {
+    "name": "Knife Missle",
+    "indexable": false,
+    "source": "Salvage Union Workshop Manual",
+    "techLevel": 1,
+    "actions": ["Knife Missle"],
+    "page": 73,
+    "id": "256126db-8ba3-4a57-975a-2ed74832b983"
+  },
+  {
+    "name": "Custom Missle Launcher",
+    "indexable": false,
+    "source": "Salvage Union Workshop Manual",
+    "techLevel": 1,
+    "actions": ["Custom Missle Launcher"],
+    "page": 73,
+    "id": "d83b2f0b-ba15-431d-baa2-2e2381a4d9fb"
+  },
+  {
+    "name": "Survey Drone",
+    "indexable": false,
+    "source": "Salvage Union Workshop Manual",
+    "techLevel": 1,
+    "moduleSlots": 1,
+    "systemSlots": 3,
+    "structurePoints": 2,
+    "energyPoints": 4,
+    "heatCapacity": 2,
+    "cargoCapacity": 1,
+    "salvageValue": 2,
+    "bonusPerTechLevel": {
+      "structurePoints": 2,
+      "energyPoints": 2,
+      "heatCapacity": 2,
+      "systemSlots": 1,
+      "moduleSlots": 1,
+      "cargoCapacity": 1,
+      "techLevel": 1,
+      "salvageValue": 0
+    },
+    "actions": ["Survey Drone"],
+    "page": 48,
+    "id": "4b6483d0-811e-40f9-8808-d88e940f5e61",
+    "content": [
+      {
+        "label": "Integrated Hover Locomotion System",
+        "type": "paragraph",
+        "value": "Your Survey Drone has the Hover trait."
+      }
+    ]
+  },
+  {
+    "name": "Mecha Companion",
+    "indexable": false,
+    "techLevel": 3,
+    "moduleSlots": 2,
+    "systemSlots": 12,
+    "structurePoints": 12,
+    "energyPoints": 5,
+    "heatCapacity": 8,
+    "cargoCapacity": 3,
+    "salvageValue": 2,
+    "bonusPerTechLevel": {
+      "structurePoints": 4,
+      "energyPoints": 1,
+      "heatCapacity": 2,
+      "systemSlots": 3,
+      "moduleSlots": 1,
+      "cargoCapacity": 1,
+      "techLevel": 1,
+      "salvageValue": 0
+    },
+    "actions": ["Mecha Companion"],
+    "page": 68,
+    "id": "248c2e65-5159-4518-a0ce-9d8083794871",
+    "source": "Salvage Union Workshop Manual"
   },
   {
     "id": "fbb3002c-24d2-4a1b-a623-9c9eab3ac566",
