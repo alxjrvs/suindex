@@ -19,7 +19,9 @@ export function EntityActions() {
 
   // Filter out actions where the action name matches the entity name
   // Those actions have their content rendered in EntityTopMatter instead
-  const actionsToDisplay = actions.filter((action) => action.name !== entityName)
+  const actionsToDisplay = actions.filter(
+    (action) => action.displayName !== entityName && action.name !== entityName
+  )
 
   if (actionsToDisplay.length === 0) return null
 
