@@ -3,7 +3,7 @@
     "id": "fa6feaf4-1202-4263-9e1a-a71a6f43a661",
     "source": "Salvage Union Workshop Manual",
     "name": "Waster Mob",
-    "actions": ["Improvised Weapons", "Salvaging Tools"],
+    "actions": ["Improvised Weapons", "Salvaging Tools (NPC)"],
     "hitPoints": 4,
     "damageType": "HP",
     "page": 300,

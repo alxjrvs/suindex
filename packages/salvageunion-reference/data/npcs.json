@@ -4,7 +4,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Wastelander",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/npcs/wastelander.jpg",
-    "actions": ["Improvised Melee Weapon (Wastelander)", "Salvaging Tools (Wastelander)"],
+    "actions": ["Improvised Melee Weapon (Wastelander)", "Salvaging Tools (NPC)"],
     "hitPoints": 2,
     "page": 298,
     "content": [
