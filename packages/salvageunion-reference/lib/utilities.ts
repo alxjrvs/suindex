@@ -6,7 +6,13 @@
 // Re-export all generated utilities (type guards and property extractors)
 export * from './utilities-generated.js'
 
-import type { SURefMetaEntity, SURefMetaAction, SURefObjectGrant } from './types/index.js'
+import type {
+  SURefMetaEntity,
+  SURefMetaAction,
+  SURefObjectGrant,
+  SURefEntity,
+  SURefEnumSchemaName,
+} from './types/index.js'
 import type {
   SURefAbility,
   SURefChassis,
@@ -16,6 +22,7 @@ import type {
   SURefObjectAdvancedClass,
 } from './types/index.js'
 import { getDataMaps } from './ModelFactory.js'
+import { getModel } from './helpers.js'
 
 // ============================================================================
 // TYPE UTILITIES
@@ -845,6 +852,8 @@ export function getOptions(entity: SURefMetaEntity):
 /**
  * Get choices from an entity
  * Checks action choices first (if action name matches entity name), then root-level choices
+ * If both base entity and a granted entity have actions with the same name, action choices
+ * are filtered out (handled by grantable UI) but root-level choices are still returned
  * @param entity - The entity to extract choices from
  * @returns The choices array or undefined if not present
  */
@@ -858,13 +867,58 @@ export function getChoices(entity: SURefMetaEntity):
   | undefined {
   // Check if entity has an action with matching name that has choices - use those first
   const matchingAction = findMatchingAction(entity)
-  if (
+  const hasMatchingActionWithChoices =
     matchingAction !== undefined &&
     matchingAction !== null &&
     typeof matchingAction === 'object' &&
     'choices' in matchingAction &&
     Array.isArray(matchingAction.choices)
+
+  // Check if we should filter out action choices due to duplicate action names in grants
+  let shouldFilterActionChoices = false
+  if (
+    hasMatchingActionWithChoices &&
+    matchingAction &&
+    'name' in entity &&
+    typeof entity.name === 'string'
   ) {
+    const entityName = entity.name
+    const grants = getGrants(entity)
+
+    if (grants && grants.length > 0) {
+      // Check each grant to see if granted entity has an action with the same name
+      for (const grant of grants) {
+        // Skip 'choice' schema grants as they're handled separately
+        if (grant.schema === 'choice') {
+          continue
+        }
+
+        const schema = grant.schema as SURefEnumSchemaName
+        const model = getModel(schema.toLowerCase())
+        if (!model) continue
+
+        const grantedEntity = model.find((e: SURefEntity) => e.name === grant.name)
+        if (!grantedEntity) continue
+
+        // Check if granted entity has an action with the same name as the base entity
+        const grantedMatchingAction = findMatchingAction(grantedEntity)
+        if (
+          grantedMatchingAction !== undefined &&
+          grantedMatchingAction !== null &&
+          typeof grantedMatchingAction === 'object' &&
+          grantedMatchingAction.name === entityName
+        ) {
+          // Both base entity and granted entity have actions with the same name
+          // Filter out action choices (they'll be handled by grantable UI)
+          shouldFilterActionChoices = true
+          break
+        }
+      }
+    }
+  }
+
+  // If we have matching action choices and shouldn't filter them, return them
+  if (hasMatchingActionWithChoices && !shouldFilterActionChoices) {
     return matchingAction.choices as Array<{
       id: string
       name: string
@@ -873,7 +927,7 @@ export function getChoices(entity: SURefMetaEntity):
     }>
   }
 
-  // Fall back to root-level choices
+  // Fall back to root-level choices (always return these, even if action choices were filtered)
   if ('choices' in entity && Array.isArray(entity.choices)) {
     return entity.choices as Array<{
       id: string
