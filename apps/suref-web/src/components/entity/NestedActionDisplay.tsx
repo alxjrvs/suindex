@@ -48,6 +48,9 @@ export function NestedActionDisplay({
   // Always render data row on a new line, regardless of content blocks
   const hasContentToRender = hasContent && !hideContent
 
+  // Use displayName if available, otherwise fall back to name
+  const actionDisplayName = data.displayName || data.name
+
   return (
     <Box bg="su.lightBlue" overflow="hidden">
       <Flex bg="su.lightBlue" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
@@ -57,7 +60,7 @@ export function NestedActionDisplay({
           width="fit-content"
           {...headerPadding}
         >
-          {data.name}
+          {actionDisplayName}
         </Text>
       </Flex>
 

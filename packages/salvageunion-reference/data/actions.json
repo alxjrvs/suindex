@@ -30,7 +30,8 @@
     ]
   },
   {
-    "name": ".50 Cal Machine Gun (1)",
+    "name": ".50 Cal Machine Gun (Machine Gun Squad)",
+    "displayName": ".50 Cal Machine Gun",
     "range": ["Close"],
     "damage": {
       "amount": 3,
@@ -442,7 +443,8 @@
     ]
   },
   {
-    "name": "Armour Plating (1)",
+    "name": "Armour Plating (Scylla)",
+    "displayName": "Armour Plating",
     "actionType": "Passive",
     "traits": [
       {
@@ -849,7 +851,8 @@
     ]
   },
   {
-    "name": "Beta Fission Gun (1)",
+    "name": "Beta Fission Gun (Elite Beam Squad)",
+    "displayName": "Beta Fission Gun",
     "range": ["Long"],
     "damage": {
       "amount": 9,
@@ -1357,7 +1360,8 @@
     ]
   },
   {
-    "name": "Chassis Repair (1)",
+    "name": "Chassis Repair (Welding Laser)",
+    "displayName": "Chassis Repair",
     "activationCost": 4,
     "range": ["Close"],
     "actionType": "Long",
@@ -1633,7 +1637,8 @@
     ]
   },
   {
-    "name": "Coolant Flush (1)",
+    "name": "Coolant Flush (Coolant Flow Manifold)",
+    "displayName": "Coolant Flush",
     "activationCost": 1,
     "actionType": "Short",
     "id": "d9978c57-c028-4a80-adf8-8bc2c6817e49",
@@ -1980,7 +1985,8 @@
       "amount": 2
     },
     "range": ["Long"],
-    "name": "Custom Sniper Rifle (1)",
+    "name": "Custom Sniper Rifle (Custom Sniper Rifle)",
+    "displayName": "Custom Sniper Rifle",
     "content": [
       {
         "type": "paragraph",
@@ -2428,7 +2434,8 @@
     ]
   },
   {
-    "name": "Electro Grappling Hook (1)",
+    "name": "Electro Grappling Hook (Elite Blade Squad)",
+    "displayName": "Electro Grappling Hook",
     "id": "6229ca55-4a76-4c88-8207-640265d6bbe4"
   },
   {
@@ -2865,7 +2872,8 @@
     ]
   },
   {
-    "name": "First Aid Kit (1)",
+    "name": "First Aid Kit (Machine Gun Squad)",
+    "displayName": "First Aid Kit",
     "id": "b4680af4-008c-4f7d-95bc-8d2379609183"
   },
   {
@@ -3169,7 +3177,8 @@
     ]
   },
   {
-    "name": "Green Laser Rifle (1)",
+    "name": "Green Laser Rifle (Veteran)",
+    "displayName": "Green Laser Rifle",
     "range": ["Medium"],
     "damage": {
       "amount": 5,
@@ -3523,7 +3532,8 @@
     ]
   },
   {
-    "name": "High Tensile Wire (1)",
+    "name": "High Tensile Wire (Raider Band)",
+    "displayName": "High Tensile Wire",
     "id": "2f091973-50eb-4ceb-826c-5e2c202f87e6"
   },
   {
@@ -3554,7 +3564,8 @@
     ]
   },
   {
-    "name": "Holo Companion (1)",
+    "name": "Holo Companion (Holo Companion)",
+    "displayName": "Holo Companion",
     "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
     "choices": [
       {
@@ -3634,7 +3645,8 @@
     ]
   },
   {
-    "name": "Hover Locomotion System (1)",
+    "name": "Hover Locomotion System (Drone Squadron)",
+    "displayName": "Hover Locomotion System",
     "id": "3968e047-1219-4a02-9e4f-2f4a58fa326d"
   },
   {
@@ -3824,7 +3836,8 @@
     ]
   },
   {
-    "name": "Improvised Firearm (1)",
+    "name": "Improvised Firearm (Raider)",
+    "displayName": "Improvised Firearm",
     "range": ["Close"],
     "damage": {
       "amount": 3,
@@ -3882,7 +3895,8 @@
     ]
   },
   {
-    "name": "Improvised Melee Weapon (1)",
+    "name": "Improvised Melee Weapon (Wastelander)",
+    "displayName": "Improvised Melee Weapon",
     "range": ["Close"],
     "damage": {
       "amount": 2,
@@ -4195,7 +4209,8 @@
     ]
   },
   {
-    "name": "Laser Guidance (1)",
+    "name": "Laser Guidance (Adv. Targeting Array)",
+    "displayName": "Laser Guidance",
     "activationCost": 3,
     "actionType": "Free",
     "traits": [
@@ -5111,7 +5126,8 @@
     ]
   },
   {
-    "name": "Monomolecular Sword (1)",
+    "name": "Monomolecular Sword (Elite Blade Squad)",
+    "displayName": "Monomolecular Sword",
     "range": ["Close"],
     "damage": {
       "amount": 6,
@@ -5251,7 +5267,8 @@
     ]
   },
   {
-    "name": "Multi-Targeter (1)",
+    "name": "Multi-Targeter (Adv. Targeting Array)",
+    "displayName": "Multi-Targeter",
     "activationCost": "X",
     "actionType": "Turn",
     "traits": [
@@ -5728,7 +5745,8 @@
     ]
   },
   {
-    "name": "Patch (1)",
+    "name": "Patch (Welding Laser)",
+    "displayName": "Patch",
     "activationCost": 2,
     "range": ["Close"],
     "actionType": "Turn",
@@ -6010,7 +6028,8 @@
     ]
   },
   {
-    "name": "Pinpoint Targeter (1)",
+    "name": "Pinpoint Targeter (Adv. Targeting Array)",
+    "displayName": "Pinpoint Targeter",
     "activationCost": 3,
     "actionType": "Turn",
     "traits": [
@@ -6047,7 +6066,8 @@
     ]
   },
   {
-    "name": "Pistol (1)",
+    "name": "Pistol (Combat Pilot)",
+    "displayName": "Pistol",
     "range": ["Close"],
     "damage": {
       "amount": 3,
@@ -6146,7 +6166,8 @@
     ]
   },
   {
-    "name": "Portable Comms Unit (1)",
+    "name": "Portable Comms Unit (Trooper)",
+    "displayName": "Portable Comms Unit",
     "id": "8110d372-9910-4ee7-b421-8ac2061eb997"
   },
   {
@@ -6597,7 +6618,8 @@
     ]
   },
   {
-    "name": "Red Laser (1)",
+    "name": "Red Laser (Drone Squadron)",
+    "displayName": "Red Laser",
     "range": ["Medium"],
     "damage": {
       "amount": 4,
@@ -6830,7 +6852,8 @@
     ]
   },
   {
-    "name": "Repair (1)",
+    "name": "Repair (Fabrication Bay)",
+    "displayName": "Repair",
     "id": "36835956-4448-4cc7-9b7e-7c0820383bfc",
     "content": [
       {
@@ -6900,7 +6923,8 @@
     ]
   },
   {
-    "name": "Rifle (1)",
+    "name": "Rifle (Trooper)",
+    "displayName": "Rifle",
     "range": ["Medium"],
     "damage": {
       "amount": 5,
@@ -7015,7 +7039,8 @@
     ]
   },
   {
-    "name": "Rocket Launcher (1)",
+    "name": "Rocket Launcher (Missile Squad)",
+    "displayName": "Rocket Launcher",
     "range": ["Long"],
     "damage": {
       "amount": 6,
@@ -7098,7 +7123,8 @@
     ]
   },
   {
-    "name": "Salvaging Tools (1)",
+    "name": "Salvaging Tools (Wastelander)",
+    "displayName": "Salvaging Tools",
     "id": "28704d5b-7842-4bdd-b1ce-5373822dfaaf"
   },
   {
@@ -7400,7 +7426,8 @@
     ]
   },
   {
-    "name": "Sniper Rifle (1)",
+    "name": "Sniper Rifle (Ace)",
+    "displayName": "Sniper Rifle",
     "range": ["Long"],
     "damage": {
       "amount": 6,
@@ -7858,7 +7885,8 @@
     ]
   },
   {
-    "name": "System Repair (1)",
+    "name": "System Repair (Welding Laser)",
+    "displayName": "System Repair",
     "activationCost": 2,
     "range": ["Close"],
     "actionType": "Short",
@@ -8328,7 +8356,8 @@
     ]
   },
   {
-    "name": "Titanic Actions (1)",
+    "name": "Titanic Actions (Typhon)",
+    "displayName": "Titanic Actions",
     "id": "303c8cea-5025-452b-a765-2ffa7537a382",
     "content": [
       {
