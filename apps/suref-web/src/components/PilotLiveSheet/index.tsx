@@ -41,6 +41,12 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
   const isEditable = isLocal || (pilot ? isOwner(pilot.user_id, userId) : false)
 
   const selectedClassRef = selectedClass?.ref as SURefClass | undefined
+  const selectedAdvancedClassRef = selectedAdvancedClass?.ref as SURefClass | undefined
+
+  // Use hybrid class asset_url if hybrid class is selected and no custom photo is uploaded
+  // Otherwise, use core class asset_url
+  const defaultAssetUrl = selectedAdvancedClassRef?.asset_url ?? selectedClassRef?.asset_url
+  const defaultAlt = selectedAdvancedClassRef?.name ?? selectedClassRef?.name
 
   const { handleUpload, isUploading } = useImageUpload({
     entityType: 'pilots',
@@ -85,9 +91,9 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
       <Flex gap={2} w="full">
         <LiveSheetAssetDisplay
           bg={selectedClass ? 'su.orange' : 'su.grey'}
-          url={selectedClassRef?.asset_url}
+          url={defaultAssetUrl}
           userImageUrl={(pilot as { image_url?: string })?.image_url}
-          alt={selectedClassRef?.name}
+          alt={defaultAlt}
           onUpload={!isLocal && isEditable ? handleUpload : undefined}
           isUploading={isUploading}
         />
@@ -107,8 +113,8 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           )}
           <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
           <Box flex="1" />
-          <Tabs.Trigger value="mechs">Mechs</Tabs.Trigger>
-          <Tabs.Trigger value="crawler">Crawler</Tabs.Trigger>
+          {!isLocal && <Tabs.Trigger value="mechs">Mechs</Tabs.Trigger>}
+          {!isLocal && <Tabs.Trigger value="crawler">Crawler</Tabs.Trigger>}
         </Tabs.List>
 
         <Tabs.Content value="class-abilities">
@@ -142,11 +148,13 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           </Tabs.Content>
         )}
 
-        <Tabs.Content value="mechs">
-          <Box mt={6}>
-            <MechsTab pilotId={id} isLocal={isLocal} isEditable={isEditable} />
-          </Box>
-        </Tabs.Content>
+        {!isLocal && (
+          <Tabs.Content value="mechs">
+            <Box mt={6}>
+              <MechsTab pilotId={id} isLocal={isLocal} isEditable={isEditable} />
+            </Box>
+          </Tabs.Content>
+        )}
 
         <Tabs.Content value="notes">
           <Box mt={6}>
@@ -161,9 +169,11 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           </Box>
         </Tabs.Content>
 
-        <Tabs.Content value="crawler">
-          <CrawlerTab pilot={pilot} pilotId={id} isLocal={isLocal} isEditable={isEditable} />
-        </Tabs.Content>
+        {!isLocal && (
+          <Tabs.Content value="crawler">
+            <CrawlerTab pilot={pilot} pilotId={id} isLocal={isLocal} isEditable={isEditable} />
+          </Tabs.Content>
+        )}
       </Tabs.Root>
 
       {!isLocal && (

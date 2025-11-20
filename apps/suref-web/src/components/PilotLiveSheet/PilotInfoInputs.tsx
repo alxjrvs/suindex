@@ -52,6 +52,48 @@ export function PilotInfoInputs({
     return [...baseClasses].sort((a, b) => a.name.localeCompare(b.name))
   }, [allClasses])
 
+  // Check if user has selected core class advanced tree abilities
+  const hasCoreAdvancedAbilities = useMemo(() => {
+    if (!selectedClass?.ref) return false
+    const coreClassRef = selectedClass.ref as { advancedTree?: string }
+    if (!coreClassRef.advancedTree) return false
+
+    return abilities.some((ability) => {
+      const abilityTree = (ability.ref as { tree: string }).tree
+      return abilityTree === coreClassRef.advancedTree
+    })
+  }, [abilities, selectedClass])
+
+  // Calculate class display text for pseudo-header
+  const classDisplayText = useMemo(() => {
+    if (!selectedClass?.ref) return null
+
+    const coreClassName = (selectedClass.ref as { name: string }).name
+
+    // If hybrid class is selected
+    if (selectedAdvancedClass?.ref) {
+      const hybridClassName = (selectedAdvancedClass.ref as { name: string }).name
+      return {
+        main: hybridClassName,
+        sub: coreClassName,
+      }
+    }
+
+    // If core class with advanced abilities
+    if (hasCoreAdvancedAbilities) {
+      return {
+        main: coreClassName,
+        sub: 'Adv.',
+      }
+    }
+
+    // Just core class
+    return {
+      main: coreClassName,
+      sub: null,
+    }
+  }, [selectedClass, selectedAdvancedClass, hasCoreAdvancedAbilities])
+
   // Filter hybrid classes for hybrid dropdown
   const availableHybridClasses = useMemo(() => {
     // Must have at least 6 abilities
@@ -143,6 +185,29 @@ export function PilotInfoInputs({
       flex="1"
       minW="0"
       disabled={incomplete}
+      absoluteElements={
+        classDisplayText ? (
+          <Text
+            position="absolute"
+            variant="pseudoheader"
+            fontSize="sm"
+            textTransform="uppercase"
+            ml={3}
+            mt={-2}
+            left={0}
+          >
+            {classDisplayText.main}
+            {classDisplayText.sub && (
+              <>
+                {' '}
+                <Text as="span" fontSize="xs" variant="pseudoheader">
+                  ({classDisplayText.sub})
+                </Text>
+              </>
+            )}
+          </Text>
+        ) : null
+      }
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
         <SheetInput
@@ -187,20 +252,31 @@ export function PilotInfoInputs({
           </Box>
 
           <Box flex="1" h="full">
-            <SheetSelect
-              label="Hybrid classes"
-              value={advancedClassId}
-              onChange={onHybridClassChange}
-              disabled={disabled || availableHybridClasses.length === 0}
-              isOwner={!disabled}
-              placeholder="Select..."
-            >
-              {availableHybridClasses.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </SheetSelect>
+            {hasCoreAdvancedAbilities ? (
+              <SheetInput
+                label="Advanced Class"
+                value={`Advanced ${selectedClass?.ref?.name ?? ''}`}
+                onChange={() => {}}
+                disabled={true}
+                isOwner={false}
+                placeholder=""
+              />
+            ) : (
+              <SheetSelect
+                label="Hybrid Class"
+                value={advancedClassId}
+                onChange={onHybridClassChange}
+                disabled={disabled || availableHybridClasses.length === 0}
+                isOwner={!disabled}
+                placeholder="Select..."
+              >
+                {availableHybridClasses.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </SheetSelect>
+            )}
           </Box>
         </Flex>
 

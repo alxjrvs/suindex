@@ -67,7 +67,6 @@ export function RoundedBox({
 }: RoundedBoxProps) {
   const actualHeaderBg = disabled ? 'su.grey' : headerBg || bg
   const actualBodyBg = disabled ? 'su.grey' : bodyBg || bg
-  const actualBorderColor = disabled ? 'blackAlpha.400' : 'black'
 
   const hasHeader = !!(title || leftContent || rightContent)
   const headerCursor = onHeaderClick ? 'pointer' : 'default'
@@ -79,8 +78,6 @@ export function RoundedBox({
       alignItems="center"
       justifyContent={justifyContent}
       bg={actualBodyBg}
-      borderWidth="3px"
-      borderColor={actualBorderColor}
       borderRadius="md"
       p={0}
       shadow="lg"
