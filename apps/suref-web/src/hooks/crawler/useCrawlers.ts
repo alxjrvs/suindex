@@ -330,10 +330,15 @@ export function useDeleteCrawler() {
       await deleteEntity('crawlers', id)
     },
     onSuccess: (_, id) => {
-      if (isLocalId(id)) return
+      if (isLocalId(id)) {
+        queryClient.invalidateQueries({
+          queryKey: crawlersKeys.all,
+        })
+        return
+      }
 
       queryClient.invalidateQueries({
-        queryKey: crawlersKeys.byId(id),
+        queryKey: crawlersKeys.all,
       })
     },
   })

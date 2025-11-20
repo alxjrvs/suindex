@@ -1,8 +1,11 @@
 import { VStack, Box, Flex } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
-import { useGame, useGameCrawler } from '../../hooks/game/useGames'
+import { useGame, useGameCrawler, useDeleteGame } from '../../hooks/game/useGames'
 import { useGameMembers } from '../../hooks/game/useGameMembers'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { isGameMediator } from '../../lib/permissions'
+import { DeleteButton } from '../shared/DeleteButton'
 
 interface GameSmallDisplayProps {
   id: string
@@ -14,10 +17,14 @@ export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayPr
   const { data: game, isLoading: gameLoading } = useGame(id)
   const { data: members } = useGameMembers(id)
   const { data: crawler } = useGameCrawler(id)
+  const { userId } = useCurrentUser()
+  const deleteGame = useDeleteGame()
 
   const mediator = members?.find((m) => m.role === 'mediator')
   const mediatorName = mediator?.user_name || mediator?.user_id
   const crawlerName = crawler?.name
+
+  const isMediator = members && userId ? isGameMediator(members, userId) : false
 
   if (gameLoading || !game) {
     return (
@@ -61,6 +68,18 @@ export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayPr
     </VStack>
   )
 
+  const handleDelete = async () => {
+    await deleteGame.mutateAsync(id)
+  }
+
+  const deleteButton = isMediator ? (
+    <DeleteButton
+      entityName="Game"
+      onConfirmDelete={handleDelete}
+      disabled={deleteGame.isPending}
+    />
+  ) : undefined
+
   return (
     <UserEntitySmallDisplay
       onClick={onClick}
@@ -71,6 +90,7 @@ export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayPr
       rightHeader={crawlerName || 'New Game'}
       detailContent={crawlerName || mediatorName ? detailContent : undefined}
       isInactive={isInactive}
+      deleteButton={deleteButton}
     />
   )
 }

@@ -245,10 +245,15 @@ export function useDeletePilot() {
       await deleteEntity('pilots', id)
     },
     onSuccess: (_, id) => {
-      if (isLocalId(id)) return
+      if (isLocalId(id)) {
+        queryClient.invalidateQueries({
+          queryKey: pilotsKeys.all,
+        })
+        return
+      }
 
       queryClient.invalidateQueries({
-        queryKey: pilotsKeys.byId(id),
+        queryKey: pilotsKeys.all,
       })
     },
   })

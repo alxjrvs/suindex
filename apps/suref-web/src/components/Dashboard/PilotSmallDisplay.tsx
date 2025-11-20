@@ -1,7 +1,7 @@
 import { VStack, Box } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
-import { useHydratedPilot } from '../../hooks/pilot'
+import { useHydratedPilot, useDeletePilot } from '../../hooks/pilot'
 import { useNavigate } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
@@ -10,6 +10,7 @@ import { fetchUserDisplayName } from '../../lib/api/users'
 import { pilotsKeys } from '../../hooks/pilot/usePilots'
 import { fetchEntity } from '../../lib/api/entities'
 import type { Tables } from '../../types/database-generated.types'
+import { DeleteButton } from '../shared/DeleteButton'
 
 interface PilotSmallDisplayProps {
   id?: string
@@ -27,6 +28,7 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
     selectedAdvancedClass,
     loading: pilotLoading,
   } = useHydratedPilot(id)
+  const deletePilot = useDeletePilot()
   const className = selectedClass?.ref.name
   const advancedClassName = selectedAdvancedClass?.ref.name
 
@@ -132,6 +134,20 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
     ? advancedClassName.toUpperCase()
     : className?.toUpperCase()
 
+  const handleDelete = async () => {
+    if (!id) return
+    await deletePilot.mutateAsync(id)
+  }
+
+  const deleteButton =
+    isOwner && id ? (
+      <DeleteButton
+        entityName="Pilot"
+        onConfirmDelete={handleDelete}
+        disabled={deletePilot.isPending}
+      />
+    ) : undefined
+
   return (
     <UserEntitySmallDisplay
       onClick={onClick}
@@ -144,6 +160,7 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
       rightHeader={rightHeader}
       detailContent={crawlerName || mechChassisPattern ? detailContent : undefined}
       isInactive={pilot.active === false}
+      deleteButton={deleteButton}
     />
   )
 }
