@@ -40,7 +40,7 @@ export function ContentBlockRenderer({
   }
 
   return (
-    <>
+    <Box mt={0}>
       {content.map((block, index) => (
         <ContentBlock
           key={index}
@@ -50,7 +50,7 @@ export function ContentBlockRenderer({
           chassisName={chassisName}
         />
       ))}
-    </>
+    </Box>
   )
 }
 
@@ -102,9 +102,8 @@ function ContentBlock({
           wordBreak="break-word"
           overflowWrap="break-word"
           whiteSpace="normal"
-          overflow="hidden"
-          maxW="100%"
           fontSize={fontSize}
+          mb={2}
         >
           {parsedValue}
         </Box>
