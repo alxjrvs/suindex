@@ -398,7 +398,12 @@
     "techLevel": 2,
     "slotsRequired": 3,
     "salvageValue": 3,
-    "actions": ["Patch (1)", "System Repair (1)", "Chassis Repair (1)", "Welding Laser"],
+    "actions": [
+      "Patch (Welding Laser)",
+      "System Repair (Welding Laser)",
+      "Chassis Repair (Welding Laser)",
+      "Welding Laser"
+    ],
     "page": 172
   },
   {
@@ -788,7 +793,7 @@
     "techLevel": 5,
     "slotsRequired": 7,
     "salvageValue": 5,
-    "actions": ["Repair (1)", "Fabrication Bay"],
+    "actions": ["Repair (Fabrication Bay)", "Fabrication Bay"],
     "page": 183
   },
   {

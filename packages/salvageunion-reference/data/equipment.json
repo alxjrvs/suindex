@@ -109,7 +109,7 @@
     "page": 35,
     "indexable": false,
     "techLevel": 0,
-    "actions": ["Holo Companion (1)", "Project", "Un-Project"],
+    "actions": ["Holo Companion (Holo Companion)", "Project", "Un-Project"],
     "id": "dd96f7c0-3760-4b71-9451-77ced25a3b09",
     "content": [
       {
@@ -412,7 +412,7 @@
         ]
       }
     ],
-    "actions": ["Custom Sniper Rifle (1)"]
+    "actions": ["Custom Sniper Rifle (Custom Sniper Rifle)"]
   },
   {
     "source": "Salvage Union Workshop Manual",

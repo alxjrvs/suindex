@@ -10,6 +10,14 @@
     "allOf": [
       {
         "$ref": "shared/objects.schema.json#/definitions/action"
+      },
+      {
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "The optional display name of the action"
+          }
+        }
       }
     ],
     "unevaluatedProperties": false

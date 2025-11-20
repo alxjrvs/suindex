@@ -307,7 +307,7 @@
     "techLevel": 3,
     "slotsRequired": 1,
     "salvageValue": 2,
-    "actions": ["Coolant Flow", "Coolant Flush (1)", "Coolant Flow Manifold"],
+    "actions": ["Coolant Flow", "Coolant Flush (Coolant Flow Manifold)", "Coolant Flow Manifold"],
     "page": 199
   },
   {
@@ -517,7 +517,11 @@
     "techLevel": 5,
     "slotsRequired": 2,
     "salvageValue": 2,
-    "actions": ["Pinpoint Targeter (1)", "Multi-Targeter (1)", "Laser Guidance (1)"],
+    "actions": [
+      "Pinpoint Targeter (Adv. Targeting Array)",
+      "Multi-Targeter (Adv. Targeting Array)",
+      "Laser Guidance (Adv. Targeting Array)"
+    ],
     "content": [
       {
         "type": "paragraph",
