@@ -51,7 +51,7 @@
     "actions": [
       ".50 Cal Machine Gun (Machine Gun Squad)",
       "Portable Comms Unit (NPC)",
-      "First Aid Kit (Machine Gun Squad)"
+      "First Aid Kit (NPC)"
     ],
     "hitPoints": 10,
     "damageType": "HP",
@@ -67,7 +67,11 @@
     "id": "f2542b86-1982-49da-8906-e5f672511161",
     "source": "Salvage Union Workshop Manual",
     "name": "Missile Squad",
-    "actions": ["Rocket Launcher (Missile Squad)", "Portable Comms Unit (NPC)", "First Aid Kit"],
+    "actions": [
+      "Rocket Launcher (Missile Squad)",
+      "Portable Comms Unit (NPC)",
+      "First Aid Kit (NPC)"
+    ],
     "hitPoints": 10,
     "damageType": "HP",
     "page": 300,
