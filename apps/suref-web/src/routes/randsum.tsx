@@ -88,7 +88,7 @@ function RandsumPage() {
                 {/* Add to Discord Button */}
                 <Box>
                   <Link
-                    href="https://salvageunion.io/"
+                    href="https://discord.com/oauth2/authorize?client_id=1290434147159904276&permissions=274877906944&scope=bot%20applications.commands"
                     target="_blank"
                     rel="noopener noreferrer"
                     textDecoration="none"
