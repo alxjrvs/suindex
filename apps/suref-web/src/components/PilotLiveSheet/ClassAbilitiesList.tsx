@@ -1,6 +1,8 @@
 import { useMemo, useCallback } from 'react'
 import { Box, Grid, Stack } from '@chakra-ui/react'
 import { Heading } from '../base/Heading'
+import { Text } from '../base/Text'
+import { RoundedBox } from '../shared/RoundedBox'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefAbility, SURefAdvancedClass, SURefCoreClass } from 'salvageunion-reference'
 import { EntityDisplay } from '../entity/EntityDisplay'
@@ -70,6 +72,16 @@ export function ClassAbilitiesList({
   const hasAdvancedOrLegendary =
     (selectedAdvancedClass?.advancedTree && allTreeAbilities[selectedAdvancedClass.advancedTree]) ||
     (selectedAdvancedClass?.legendaryTree && allTreeAbilities[selectedAdvancedClass.legendaryTree])
+
+  if (!selectedClass && !selectedAdvancedClass) {
+    return (
+      <RoundedBox bg="su.grey">
+        <Text variant="pseudoheader" textAlign="center">
+          Choose class to see abilities
+        </Text>
+      </RoundedBox>
+    )
+  }
 
   return (
     <Box p={compact ? 1 : 2} w="full">

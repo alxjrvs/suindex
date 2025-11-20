@@ -84,7 +84,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
       )}
       <Flex gap={2} w="full">
         <LiveSheetAssetDisplay
-          bg="su.orange"
+          bg={selectedClass ? 'su.orange' : 'su.grey'}
           url={selectedClassRef?.asset_url}
           userImageUrl={(pilot as { image_url?: string })?.image_url}
           alt={selectedClassRef?.name}
@@ -97,11 +97,9 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
         <PilotResourceSteppers id={id} disabled={!isEditable} incomplete={!selectedClass} />
       </Flex>
 
-      <Tabs.Root defaultValue="general-abilities">
+      <Tabs.Root defaultValue="class-abilities">
         <Tabs.List>
-          <Tabs.Trigger value="class-abilities" disabled={!selectedClass}>
-            Class Abilities
-          </Tabs.Trigger>
+          <Tabs.Trigger value="class-abilities">Class Abilities</Tabs.Trigger>
           <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
           <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
           {(modules.length > 0 || systems.length > 0) && (
