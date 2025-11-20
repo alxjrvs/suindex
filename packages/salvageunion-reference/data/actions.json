@@ -3537,6 +3537,9 @@
     "id": "2f091973-50eb-4ceb-826c-5e2c202f87e6"
   },
   {
+    "name": "Portable Comms Unit ()"
+  },
+  {
     "id": "308c2b41-23fa-423f-afbb-8f8faaf80af3",
     "traits": [
       {
@@ -6155,7 +6158,7 @@
     ]
   },
   {
-    "name": "Portable Comms Unit (Trooper)",
+    "name": "Portable Comms Unit (NPC)",
     "displayName": "Portable Comms Unit",
     "id": "8110d372-9910-4ee7-b421-8ac2061eb997"
   },
