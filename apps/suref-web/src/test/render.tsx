@@ -31,8 +31,11 @@ function createTestQueryClient() {
   })
 }
 
-export function render(ui: ReactNode): RenderResult {
+let currentQueryClient: QueryClient | null = null
+
+export function render(ui: ReactNode): RenderResult & { queryClient: QueryClient } {
   const queryClient = createTestQueryClient()
+  currentQueryClient = queryClient
 
   const rootRoute = createRootRoute({
     component: () => <>{ui}</>,
@@ -45,7 +48,7 @@ export function render(ui: ReactNode): RenderResult {
     }),
   })
 
-  return rtlRender(
+  const result = rtlRender(
     <QueryClientProvider client={queryClient}>
       <ChakraProvider value={system}>
         <div style={{ width: '1920px', minWidth: '1920px' }}>
@@ -54,4 +57,14 @@ export function render(ui: ReactNode): RenderResult {
       </ChakraProvider>
     </QueryClientProvider>
   )
+
+  return { ...result, queryClient }
+}
+
+/**
+ * Get the current QueryClient from the last render call
+ * Useful for test helpers that need to manipulate cache
+ */
+export function getCurrentQueryClient(): QueryClient | null {
+  return currentQueryClient
 }
