@@ -9,7 +9,7 @@
       "Climb",
       "Armour Plating (Scylla)",
       "Ambush Predator",
-      "Titanic Actions"
+      "Titanic Actions (Scylla)"
     ],
     "structurePoints": 39,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/bio-titans/scylla.jpg",
@@ -27,7 +27,7 @@
     "name": "Typhon",
     "actions": [
       "Burrower",
-      "Armour Plating (2)",
+      "Armour Plating (Typhon)",
       "Swallow Whole",
       "Spiked Carapace",
       "Titanic Actions (Typhon)"
@@ -52,7 +52,7 @@
       "Entrancing Song",
       "Cocoon",
       "Birth Pods",
-      "Titanic Actions (2)"
+      "Titanic Actions (Chrysalis)"
     ],
     "structurePoints": 80,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/bio-titans/chrysalis.jpg",
@@ -68,7 +68,7 @@
     "id": "9c548eba-0fbe-4eb5-8752-a0cfe4c319f9",
     "source": "Salvage Union Workshop Manual",
     "name": "Phantom",
-    "actions": ["Nether Teleport", "Phasic Core", "Morph Scythes", "Titanic Actions (3)"],
+    "actions": ["Nether Teleport", "Phasic Core", "Morph Scythes", "Titanic Actions (Phantom)"],
     "structurePoints": 54,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/bio-titans/phantom.jpg",
     "page": 282,
@@ -89,7 +89,7 @@
       "Hover",
       "Bio-Electric Arc",
       "Bio-Electric Shield",
-      "Titanic Actions (4)"
+      "Titanic Actions (Electrophorus)"
     ],
     "structurePoints": 96,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/bio-titans/electrophorus.jpg",
@@ -113,7 +113,7 @@
       "Tail Swat",
       "Rending Bite",
       "Irradiated Beam",
-      "Titanic Actions (5)"
+      "Titanic Actions (Tyrant)"
     ],
     "structurePoints": 215,
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/bio-titans/tyrant.jpg",
