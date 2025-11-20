@@ -559,6 +559,26 @@ export function isSystemOrModule(entity: SURefMetaEntity): entity is SURefSystem
 // ============================================================================
 
 /**
+ * Get display name from an entity
+ * Falls back to name if displayName is not provided
+ * @param entity - The entity to extract display name from
+ * @returns The display name or name, or undefined if neither is present
+ */
+export function getEntityDisplayName(entity: SURefMetaEntity): string | undefined {
+  // Check for displayName first (for actions)
+  if ('displayName' in entity && typeof entity.displayName === 'string') {
+    return entity.displayName
+  }
+
+  // Fall back to name
+  if ('name' in entity && typeof entity.name === 'string') {
+    return entity.name
+  }
+
+  return undefined
+}
+
+/**
  * Get description from an entity
  * @param entity - The entity to extract description from
  * @returns The description or undefined if not an ability

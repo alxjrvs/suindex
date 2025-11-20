@@ -19,13 +19,16 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
   const { fontSize } = useEntityDisplayContext()
   const hasSchemaEntities = 'schemaEntities' in choice && choice.schemaEntities
   const hasCustomSystemOptions = 'customSystemOptions' in choice && choice.customSystemOptions
+  const hasChoiceOptions = 'choiceOptions' in choice && choice.choiceOptions
   const hasSchema = 'schema' in choice && choice.schema && choice.schema.length > 0
   const selectedChoice = userChoices?.[choice.id]
+  const isMultiSelect = 'multiSelect' in choice && choice.multiSelect === true
 
-  const isSimpleChoice = !hasSchema && !hasSchemaEntities && !hasCustomSystemOptions
+  const isSimpleChoice =
+    !hasSchema && !hasSchemaEntities && !hasCustomSystemOptions && !hasChoiceOptions
 
   const isSchemaPageMode = onChoiceSelection === undefined
-  const hasLimitedChoices = hasSchemaEntities || hasCustomSystemOptions
+  const hasLimitedChoices = hasSchemaEntities || hasCustomSystemOptions || hasChoiceOptions
   const isSetIndexable = 'setIndexable' in choice && choice.setIndexable === true
 
   return (
@@ -35,7 +38,7 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
           <EntitySubheader disabled={isSchemaPageMode} label={choice.name} />
           {hasLimitedChoices && !selectedChoice && !isSetIndexable && (
             <Text fontSize={fontSize.sm} color="su.black" opacity={0.7}>
-              (choose one)
+              {isMultiSelect ? '(choose multiple)' : '(choose one)'}
             </Text>
           )}
         </HStack>
@@ -49,12 +52,13 @@ export function EntityChoice({ choice, userChoices, onChoiceSelection }: EntityC
           <PreselectedEntityDisplay choice={choice} selectedChoice={selectedChoice} />
         )}
 
-      {(hasSchemaEntities || hasCustomSystemOptions) && (
+      {(hasSchemaEntities || hasCustomSystemOptions || hasChoiceOptions) && (
         <EntityListDisplay
           choice={choice}
           selectedChoice={selectedChoice}
           userChoices={userChoices}
           onChoiceSelection={onChoiceSelection}
+          isMultiSelect={isMultiSelect}
         />
       )}
 

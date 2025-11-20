@@ -221,6 +221,33 @@
         "setIndexable": {
           "type": "boolean"
         },
+        "multiSelect": {
+          "type": "boolean",
+          "description": "If true, this choice can be selected multiple times"
+        },
+        "choiceOptions": {
+          "type": "array",
+          "description": "Structured options for this choice (similar to actionOptions)",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "value"],
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Display name for this option"
+              },
+              "value": {
+                "type": "string",
+                "description": "Identifier value for this option"
+              },
+              "description": {
+                "type": "string",
+                "description": "Optional description of this option"
+              }
+            }
+          }
+        },
         "constraints": {
           "type": "object",
           "additionalProperties": false,
@@ -666,6 +693,10 @@
         },
         "name": {
           "$ref": "common.schema.json#/definitions/name"
+        },
+        "displayName": {
+          "$ref": "common.schema.json#/definitions/name",
+          "description": "Optional display name for the action. Falls back to name if not provided."
         },
         "activationCost": {
           "$ref": "common.schema.json#/definitions/activationCost"

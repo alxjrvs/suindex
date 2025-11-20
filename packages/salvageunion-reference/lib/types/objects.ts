@@ -130,6 +130,12 @@ export interface SURefObjectChoice {
   schema?: SURefEnumSchemaName[]
   customSystemOptions?: SURefObjectSystemModule[]
   setIndexable?: boolean
+  multiSelect?: boolean
+  choiceOptions?: Array<{
+    label: string
+    value: string
+    description?: string
+  }>
   constraints?: {
     field?: string
     min?: SURefCommonNonNegativeInteger

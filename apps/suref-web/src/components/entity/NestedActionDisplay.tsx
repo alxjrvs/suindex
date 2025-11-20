@@ -1,5 +1,6 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import type { SURefMetaAction, SURefObjectChoice } from 'salvageunion-reference'
+import { getEntityDisplayName } from 'salvageunion-reference'
 import { Text } from '../base/Text'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
 import { EntityChoice } from './EntityDisplay/EntityChoice'
@@ -48,8 +49,7 @@ export function NestedActionDisplay({
   // Always render data row on a new line, regardless of content blocks
   const hasContentToRender = hasContent && !hideContent
 
-  // Use displayName if available, otherwise fall back to name
-  const actionDisplayName = data.displayName || data.name
+  const displayName = getEntityDisplayName(data) || data.name
 
   return (
     <Box bg="su.lightBlue" overflow="hidden">
@@ -60,7 +60,7 @@ export function NestedActionDisplay({
           width="fit-content"
           {...headerPadding}
         >
-          {actionDisplayName}
+          {displayName}
         </Text>
       </Flex>
 

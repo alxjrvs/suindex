@@ -225,10 +225,12 @@ export function search(options: SearchOptions): SearchResult[] {
   const schemaCatalog = getSchemaCatalog()
   const { dataMap } = getDataMaps()
 
-  // Filter schemas if specified
-  const schemasToSearch = schemaFilter
-    ? schemaCatalog.schemas.filter((s) => schemaFilter.includes(s.id as SURefEnumSchemaName))
-    : schemaCatalog.schemas
+  // Filter schemas if specified, and exclude meta schemas
+  const schemasToSearch = (
+    schemaFilter
+      ? schemaCatalog.schemas.filter((s) => schemaFilter.includes(s.id as SURefEnumSchemaName))
+      : schemaCatalog.schemas
+  ).filter((s) => !s.meta)
 
   for (const schema of schemasToSearch) {
     const schemaId = schema.id as SURefEnumSchemaName
