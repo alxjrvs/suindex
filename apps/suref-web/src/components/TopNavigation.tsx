@@ -182,19 +182,19 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
 
             <Box as="li">
               <NavigationLink
-                isActive={isActive('/about')}
-                onClick={() => handleNavigate('/about')}
+                isActive={isActive('/randsum')}
+                onClick={() => handleNavigate('/randsum')}
               >
-                About
+                Discord Bot
               </NavigationLink>
             </Box>
 
             <Box as="li">
               <NavigationLink
-                isActive={isActive('/randsum')}
-                onClick={() => handleNavigate('/randsum')}
+                isActive={isActive('/about')}
+                onClick={() => handleNavigate('/about')}
               >
-                Discord Bot
+                About
               </NavigationLink>
             </Box>
           </HStack>
