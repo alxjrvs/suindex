@@ -4,7 +4,7 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Wastelander",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/npcs/wastelander.jpg",
-    "actions": ["Improvised Melee Weapon (Wastelander)", "Salvaging Tools (Wastelander)"],
+    "actions": ["Improvised Melee Weapon (Wastelander)", "Salvaging Tools (NPC)"],
     "hitPoints": 2,
     "page": 298,
     "content": [
@@ -32,7 +32,7 @@
     "id": "28015ce1-8440-471c-b97e-bb4ff114a667",
     "source": "Salvage Union Workshop Manual",
     "name": "Trooper",
-    "actions": ["Rifle (Trooper)", "Portable Comms Unit (Trooper)"],
+    "actions": ["Rifle (Trooper)", "Portable Comms Unit (NPC)"],
     "hitPoints": 5,
     "page": 274,
     "content": [
@@ -46,7 +46,7 @@
     "id": "5b1e5b18-c023-4e7c-a6b9-c6a22cb6e48d",
     "source": "Salvage Union Workshop Manual",
     "name": "Veteran",
-    "actions": ["Green Laser Rifle (Veteran)", "Portable Comms Unit"],
+    "actions": ["Green Laser Rifle (Veteran)", "Portable comms Unit (NPC)"],
     "hitPoints": 9,
     "page": 298,
     "content": [
@@ -60,7 +60,7 @@
     "id": "ad0a3127-2fb2-4d38-af8e-7fc76d9d05d9",
     "source": "Salvage Union Workshop Manual",
     "name": "Combat Pilot",
-    "actions": ["Pistol (Combat Pilot)", "Portable Comms Unit"],
+    "actions": ["Pistol (Combat Pilot)", "Portable comms Unit (NPC)"],
     "hitPoints": 10,
     "page": 298,
     "content": [
@@ -74,7 +74,7 @@
     "id": "15ff8ca3-a759-4c39-a546-1cac319ffc4e",
     "source": "Salvage Union Workshop Manual",
     "name": "Ace",
-    "actions": ["Sniper Rifle (Ace)", "Portable Comms Unit"],
+    "actions": ["Sniper Rifle (Ace)", "Portable comms Unit (NPC)"],
     "hitPoints": 16,
     "page": 298,
     "content": [

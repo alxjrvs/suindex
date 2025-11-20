@@ -1,4 +1,4 @@
-import { Flex, VStack } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
 import {
@@ -51,22 +51,15 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
     schemaName === 'chassis' && getChassisAbilities(data) && !hideActions && !compact
 
   return (
-    <Flex gap={spacing.smallGap} p={spacing.contentPadding} alignItems="flex-start">
-      <EntityImage />
-      <VStack
-        justifyContent={!compact ? 'space-between' : undefined}
-        flex="1"
-        gap={spacing.contentPadding}
-        alignItems="stretch"
-        h={!compact ? 'full' : undefined}
-        minW="0"
-      >
+    <>
+      <Box p={spacing.contentPadding}>
+        <EntityImage />
         {showContent && (
           <ContentBlockRenderer content={contentBlocks!} fontSize={fontSize.sm} compact={compact} />
         )}
-        {hasChassisAbilitiesInTopMatter && <EntityChassisAbilitiesContent />}
-        {(!hideActions || compact) && <EntityActions />}
-      </VStack>
-    </Flex>
+      </Box>
+      {hasChassisAbilitiesInTopMatter && <EntityChassisAbilitiesContent />}
+      {(!hideActions || compact) && <EntityActions />}
+    </>
   )
 }

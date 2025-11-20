@@ -130,12 +130,27 @@ export interface SURefObjectChoice {
   schema?: SURefEnumSchemaName[]
   customSystemOptions?: SURefObjectSystemModule[]
   setIndexable?: boolean
+  /**
+   * If true, this choice can be selected multiple times
+   */
   multiSelect?: boolean
-  choiceOptions?: Array<{
+  /**
+   * Structured options for this choice (similar to actionOptions)
+   */
+  choiceOptions?: {
+    /**
+     * Display name for this option
+     */
     label: string
+    /**
+     * Identifier value for this option
+     */
     value: string
+    /**
+     * Optional description of this option
+     */
     description?: string
-  }>
+  }[]
   constraints?: {
     field?: string
     min?: SURefCommonNonNegativeInteger
@@ -233,6 +248,10 @@ export interface SURefObjectAction {
   techLevel?: SURefCommonTechLevel
   salvageValue?: number
   name: SURefCommonName
+  /**
+   * Optional display name for the action. Falls back to name if not provided.
+   */
+  displayName?: SURefCommonName
   activationCost?: SURefCommonActivationCost
   range?: SURefEnumRange
   actionType?: SURefEnumActionType

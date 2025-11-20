@@ -17,16 +17,22 @@ export function EntityImage() {
       borderColor={isAdvanced ? 'su.crawlerPink' : 'su.black'}
       bg="su.white"
       borderWidth="2px"
-      maxW="40%"
+      width={compact ? '200px' : '300px'}
+      float="left"
+      marginRight={4}
+      marginBottom={2}
+      marginTop={0}
+      shapeOutside="margin-box"
       flexShrink={0}
+      verticalAlign="top"
     >
       <Image
         src={assetUrl}
         alt={title}
         w="full"
-        maxW={compact ? `200px` : undefined}
         h="auto"
         objectFit="contain"
+        display="block"
         onError={() => {
           console.error(`Failed to load image: ${assetUrl}`)
           setShowImage(false)

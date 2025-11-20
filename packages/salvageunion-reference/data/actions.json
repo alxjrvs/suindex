@@ -461,7 +461,7 @@
     ]
   },
   {
-    "name": "Armour Plating (2)",
+    "name": "Armour Plating (Typhon)",
     "actionType": "Passive",
     "traits": [
       {
@@ -2872,7 +2872,7 @@
     ]
   },
   {
-    "name": "First Aid Kit (Machine Gun Squad)",
+    "name": "First Aid Kit (NPC)",
     "displayName": "First Aid Kit",
     "id": "b4680af4-008c-4f7d-95bc-8d2379609183"
   },
@@ -3535,6 +3535,10 @@
     "name": "High Tensile Wire (Raider Band)",
     "displayName": "High Tensile Wire",
     "id": "2f091973-50eb-4ceb-826c-5e2c202f87e6"
+  },
+  {
+    "name": "Portable Comms Unit ()",
+    "id": "174a2143-78c2-4b5a-8fda-f78c479ae844"
   },
   {
     "id": "308c2b41-23fa-423f-afbb-8f8faaf80af3",
@@ -6155,7 +6159,7 @@
     ]
   },
   {
-    "name": "Portable Comms Unit (Trooper)",
+    "name": "Portable Comms Unit (NPC)",
     "displayName": "Portable Comms Unit",
     "id": "8110d372-9910-4ee7-b421-8ac2061eb997"
   },
@@ -7112,7 +7116,7 @@
     ]
   },
   {
-    "name": "Salvaging Tools (Wastelander)",
+    "name": "Salvaging Tools (NPC)",
     "displayName": "Salvaging Tools",
     "id": "28704d5b-7842-4bdd-b1ce-5373822dfaaf"
   },
@@ -8323,7 +8327,8 @@
     ]
   },
   {
-    "name": "Titanic Actions",
+    "name": "Titanic Actions (Scylla)",
+    "displayName": "Titanic Actions",
     "id": "8f24fa54-bbfa-4330-be66-f383342068b7",
     "content": [
       {
@@ -8368,7 +8373,8 @@
     ]
   },
   {
-    "name": "Titanic Actions (2)",
+    "name": "Titanic Actions (Chrysalis)",
+    "displayName": "Titanic Actions",
     "id": "56c0dd0a-d86b-4ee2-b39e-0f285a7a2ca9",
     "content": [
       {
@@ -8394,7 +8400,8 @@
     ]
   },
   {
-    "name": "Titanic Actions (3)",
+    "name": "Titanic Actions (Phantom)",
+    "displayName": "Titanic Actions",
     "id": "ad40bee3-9b0f-4fb4-9582-cc3964c569f1",
     "content": [
       {
@@ -8416,7 +8423,8 @@
     ]
   },
   {
-    "name": "Titanic Actions (4)",
+    "name": "Titanic Actions (Electrophorus)",
+    "displayName": "Titanic Actions",
     "id": "96c71613-c4a7-40ed-9531-8a1be3ccf830",
     "content": [
       {
@@ -8438,7 +8446,8 @@
     ]
   },
   {
-    "name": "Titanic Actions (5)",
+    "name": "Titanic Actions (Tyrant)",
+    "displayName": "Titanic Actions",
     "id": "575f96ee-f864-4db5-9db4-ebf7ce09d3de",
     "content": [
       {
@@ -8460,7 +8469,8 @@
     ]
   },
   {
-    "name": "Titanic Actions (6)",
+    "name": "Titanic Actions (Meld Behemoth)",
+    "displayName": "Titanic Actions",
     "id": "e73ec1f7-42d4-4ebd-8c5e-89feaa8aa783",
     "content": [
       {
