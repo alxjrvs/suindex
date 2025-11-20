@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Box, Flex, Tabs } from '@chakra-ui/react'
-import type { SURefCoreClass, SURefAdvancedClass } from 'salvageunion-reference'
+import type { SURefClass } from 'salvageunion-reference'
 import { PilotInfoInputs } from './PilotInfoInputs'
 import { PilotResourceSteppers } from './PilotResourceSteppers'
 import { ClassAbilitiesList } from './ClassAbilitiesList'
@@ -40,7 +40,7 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
 
   const isEditable = isLocal || (pilot ? isOwner(pilot.user_id, userId) : false)
 
-  const selectedClassRef = selectedClass?.ref as SURefCoreClass | undefined
+  const selectedClassRef = selectedClass?.ref as SURefClass | undefined
 
   const { handleUpload, isUploading } = useImageUpload({
     entityType: 'pilots',
@@ -115,8 +115,8 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
           <Box mt={6}>
             <ClassAbilitiesList
               id={id}
-              selectedClass={selectedClass?.ref as SURefCoreClass | undefined}
-              selectedAdvancedClass={selectedAdvancedClass?.ref as SURefAdvancedClass | undefined}
+              selectedClass={selectedClass?.ref as SURefClass | undefined}
+              selectedAdvancedClass={selectedAdvancedClass?.ref as SURefClass | undefined}
               hideUnchosen={!isEditable}
             />
           </Box>

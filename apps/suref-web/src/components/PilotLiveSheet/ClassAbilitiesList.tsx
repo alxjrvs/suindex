@@ -4,11 +4,12 @@ import { Heading } from '../base/Heading'
 import { Text } from '../base/Text'
 import { RoundedBox } from '../shared/RoundedBox'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { SURefAbility, SURefAdvancedClass, SURefCoreClass } from 'salvageunion-reference'
+import type { SURefAbility, SURefClass } from 'salvageunion-reference'
 import { EntityDisplay } from '../entity/EntityDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
 import { useManagePilotAbilities } from '../../hooks/pilot/useManagePilotAbilities'
 import { useHydratedPilot } from '../../hooks/pilot'
+import { checkTreeRequirements } from './utils/checkTreeRequirements'
 
 export function ClassAbilitiesList({
   id,
@@ -18,34 +19,77 @@ export function ClassAbilitiesList({
   hideUnchosen = false,
 }: {
   id?: string | undefined
-  selectedClass: SURefCoreClass | undefined
-  selectedAdvancedClass: SURefAdvancedClass | undefined
+  selectedClass: SURefClass | undefined
+  selectedAdvancedClass: SURefClass | undefined
   compact?: boolean
   hideUnchosen?: boolean
 }) {
+  const { pilot, abilities } = useHydratedPilot(id)
   const allAbilities = useMemo(() => SalvageUnionReference.Abilities.all(), [])
 
-  const { allTreeAbilities } = useMemo(() => {
-    if (!selectedClass && !selectedAdvancedClass) {
+  const { allTreeAbilities, coreAdvancedTree, coreLegendaryTree } = useMemo(() => {
+    if (!selectedClass) {
       return {
         allTreeAbilities: {},
+        coreAdvancedTree: null as string | null,
+        coreLegendaryTree: null as string | null,
       }
     }
 
     const allTreeAbilities: Record<string, SURefAbility[]> = {}
 
-    if (selectedClass) {
-      selectedClass.coreTrees.forEach((tree) => {
+    // Always show core trees
+    if ('coreTrees' in selectedClass && Array.isArray(selectedClass.coreTrees)) {
+      selectedClass.coreTrees.forEach((tree: string) => {
         allTreeAbilities[tree] = []
       })
     }
 
-    if (selectedAdvancedClass?.advancedTree) {
-      allTreeAbilities[selectedAdvancedClass.advancedTree] = []
+    // Check if core class advanced tree should be shown
+    // Hide core class advanced/legendary trees when hybrid class is selected
+    let coreAdvancedTree: string | null = null
+    let coreLegendaryTree: string | null = null
+
+    if (
+      !selectedAdvancedClass &&
+      'advancedTree' in selectedClass &&
+      selectedClass.advancedTree &&
+      pilot &&
+      abilities.length >= 6
+    ) {
+      // Check if requirements are met for advanced tree
+      if (checkTreeRequirements(abilities, selectedClass.advancedTree)) {
+        coreAdvancedTree = selectedClass.advancedTree
+        allTreeAbilities[selectedClass.advancedTree] = []
+
+        // Check if all advanced abilities are selected to show legendary tree
+        const advancedTreeAbilities = allAbilities.filter(
+          (a) => a.tree === selectedClass.advancedTree
+        )
+        const allAdvancedSelected = advancedTreeAbilities.every((ability) =>
+          abilities.some((a) => a.ref.id === ability.id)
+        )
+
+        if (
+          allAdvancedSelected &&
+          'legendaryTree' in selectedClass &&
+          selectedClass.legendaryTree
+        ) {
+          coreLegendaryTree = selectedClass.legendaryTree
+          allTreeAbilities[selectedClass.legendaryTree] = []
+        }
+      }
     }
 
-    if (selectedAdvancedClass?.legendaryTree) {
-      allTreeAbilities[selectedAdvancedClass.legendaryTree] = []
+    // Show hybrid class trees if hybrid class is selected
+    if (selectedAdvancedClass) {
+      if ('advancedTree' in selectedAdvancedClass && selectedAdvancedClass.advancedTree) {
+        allTreeAbilities[selectedAdvancedClass.advancedTree] = []
+      }
+
+      if ('legendaryTree' in selectedAdvancedClass && selectedAdvancedClass.legendaryTree) {
+        allTreeAbilities[selectedAdvancedClass.legendaryTree] = []
+      }
     }
 
     allAbilities.forEach((ability) => {
@@ -55,7 +99,8 @@ export function ClassAbilitiesList({
     })
 
     Object.keys(allTreeAbilities).forEach((tree) => {
-      if (selectedAdvancedClass?.legendaryTree === tree) {
+      // Legendary trees are sorted by name, others by level
+      if (selectedAdvancedClass?.legendaryTree === tree || coreLegendaryTree === tree) {
         allTreeAbilities[tree].sort((a, b) => a.name.localeCompare(b.name))
       } else {
         allTreeAbilities[tree].sort((a, b) => Number(a.level) - Number(b.level))
@@ -64,14 +109,27 @@ export function ClassAbilitiesList({
 
     return {
       allTreeAbilities,
+      coreAdvancedTree,
+      coreLegendaryTree,
     }
-  }, [allAbilities, selectedClass, selectedAdvancedClass])
+  }, [allAbilities, selectedClass, selectedAdvancedClass, pilot, abilities])
 
-  const coreTreeNames = selectedClass?.coreTrees || []
+  const coreTreeNames =
+    selectedClass && 'coreTrees' in selectedClass && Array.isArray(selectedClass.coreTrees)
+      ? selectedClass.coreTrees
+      : []
 
   const hasAdvancedOrLegendary =
-    (selectedAdvancedClass?.advancedTree && allTreeAbilities[selectedAdvancedClass.advancedTree]) ||
-    (selectedAdvancedClass?.legendaryTree && allTreeAbilities[selectedAdvancedClass.legendaryTree])
+    (coreAdvancedTree && allTreeAbilities[coreAdvancedTree]) ||
+    (coreLegendaryTree && allTreeAbilities[coreLegendaryTree]) ||
+    (selectedAdvancedClass &&
+      'advancedTree' in selectedAdvancedClass &&
+      selectedAdvancedClass.advancedTree &&
+      allTreeAbilities[selectedAdvancedClass.advancedTree]) ||
+    (selectedAdvancedClass &&
+      'legendaryTree' in selectedAdvancedClass &&
+      selectedAdvancedClass.legendaryTree &&
+      allTreeAbilities[selectedAdvancedClass.legendaryTree])
 
   if (!selectedClass && !selectedAdvancedClass) {
     return (
@@ -91,7 +149,7 @@ export function ClassAbilitiesList({
         mb={hasAdvancedOrLegendary ? 4 : 0}
         w="full"
       >
-        {coreTreeNames.map((treeName) => (
+        {coreTreeNames.map((treeName: string) => (
           <TreeSection
             selectedClass={selectedClass}
             selectedAdvancedClass={selectedAdvancedClass}
@@ -106,7 +164,38 @@ export function ClassAbilitiesList({
 
       {hasAdvancedOrLegendary && (
         <Grid gridTemplateColumns="repeat(2, 1fr)" gap={2} w="full">
-          {selectedAdvancedClass?.advancedTree &&
+          {/* Core class advanced tree */}
+          {coreAdvancedTree && allTreeAbilities[coreAdvancedTree] && (
+            <TreeSection
+              selectedClass={selectedClass}
+              selectedAdvancedClass={selectedAdvancedClass}
+              key={coreAdvancedTree}
+              treeName={coreAdvancedTree}
+              treeAbilities={allTreeAbilities[coreAdvancedTree] || []}
+              id={id}
+              hideUnchosen={hideUnchosen}
+              isCoreClassTree={true}
+            />
+          )}
+
+          {/* Core class legendary tree */}
+          {coreLegendaryTree && allTreeAbilities[coreLegendaryTree] && (
+            <TreeSection
+              selectedClass={selectedClass}
+              selectedAdvancedClass={selectedAdvancedClass}
+              key={coreLegendaryTree}
+              treeName={coreLegendaryTree}
+              treeAbilities={allTreeAbilities[coreLegendaryTree] || []}
+              hideUnchosen={hideUnchosen}
+              id={id}
+              isCoreClassTree={true}
+            />
+          )}
+
+          {/* Hybrid class advanced tree */}
+          {selectedAdvancedClass &&
+            'advancedTree' in selectedAdvancedClass &&
+            selectedAdvancedClass.advancedTree &&
             allTreeAbilities[selectedAdvancedClass.advancedTree] && (
               <TreeSection
                 selectedClass={selectedClass}
@@ -116,10 +205,14 @@ export function ClassAbilitiesList({
                 treeAbilities={allTreeAbilities[selectedAdvancedClass.advancedTree] || []}
                 id={id}
                 hideUnchosen={hideUnchosen}
+                isCoreClassTree={false}
               />
             )}
 
-          {selectedAdvancedClass?.legendaryTree &&
+          {/* Hybrid class legendary tree */}
+          {selectedAdvancedClass &&
+            'legendaryTree' in selectedAdvancedClass &&
+            selectedAdvancedClass.legendaryTree &&
             allTreeAbilities[selectedAdvancedClass.legendaryTree] && (
               <TreeSection
                 selectedClass={selectedClass}
@@ -129,6 +222,7 @@ export function ClassAbilitiesList({
                 treeAbilities={allTreeAbilities[selectedAdvancedClass.legendaryTree] || []}
                 hideUnchosen={hideUnchosen}
                 id={id}
+                isCoreClassTree={false}
               />
             )}
         </Grid>
@@ -144,13 +238,15 @@ function TreeSection({
   selectedClass,
   selectedAdvancedClass,
   id,
+  isCoreClassTree = false,
 }: {
   treeName: string
   treeAbilities: SURefAbility[]
-  selectedClass: SURefCoreClass | undefined
-  selectedAdvancedClass: SURefAdvancedClass | undefined
+  selectedClass: SURefClass | undefined
+  selectedAdvancedClass: SURefClass | undefined
   hideUnchosen?: boolean
   id: string | undefined
+  isCoreClassTree?: boolean
 }) {
   const { pilot, abilities } = useHydratedPilot(id)
   const { handleAddAbility, handleRemoveAbility } = useManagePilotAbilities(id)
@@ -194,7 +290,15 @@ function TreeSection({
 
   const isReadOnly = hideUnchosen || !id
 
-  const isLegendaryTree = selectedAdvancedClass?.legendaryTree === treeName
+  // Check if this is a legendary tree (from core class or hybrid class)
+  const isLegendaryTree =
+    (isCoreClassTree &&
+      selectedClass &&
+      'legendaryTree' in selectedClass &&
+      selectedClass.legendaryTree === treeName) ||
+    (selectedAdvancedClass &&
+      'legendaryTree' in selectedAdvancedClass &&
+      selectedAdvancedClass.legendaryTree === treeName)
 
   const hasSelectedAbilities = useMemo(() => {
     return treeAbilities.some((ability) => isSelected(ability.id))
@@ -208,14 +312,46 @@ function TreeSection({
   }, [hideUnchosen, hasSelectedAbilities, treeAbilities, isSelected, isLegendaryTree])
 
   const allAdvancedAbilitiesSelected = useMemo(() => {
-    if (!isLegendaryTree || !selectedAdvancedClass?.advancedTree) return true
+    if (!isLegendaryTree) return true
 
-    const advancedTreeAbilities = allAbilities.filter(
-      (a) => a.tree === selectedAdvancedClass.advancedTree
-    )
+    // For core class legendary tree, check core class advanced tree
+    if (
+      isCoreClassTree &&
+      selectedClass &&
+      'advancedTree' in selectedClass &&
+      selectedClass.advancedTree
+    ) {
+      const advancedTreeAbilities = allAbilities.filter(
+        (a) => a.tree === selectedClass.advancedTree
+      )
+      return advancedTreeAbilities.every((ability) =>
+        abilities?.some((a) => a.ref.id === ability.id)
+      )
+    }
 
-    return advancedTreeAbilities.every((ability) => abilities?.some((a) => a.ref.id === ability.id))
-  }, [isLegendaryTree, selectedAdvancedClass, allAbilities, abilities])
+    // For hybrid class legendary tree, check hybrid class advanced tree
+    if (
+      selectedAdvancedClass &&
+      'advancedTree' in selectedAdvancedClass &&
+      selectedAdvancedClass.advancedTree
+    ) {
+      const advancedTreeAbilities = allAbilities.filter(
+        (a) => a.tree === selectedAdvancedClass.advancedTree
+      )
+      return advancedTreeAbilities.every((ability) =>
+        abilities?.some((a) => a.ref.id === ability.id)
+      )
+    }
+
+    return true
+  }, [
+    isLegendaryTree,
+    isCoreClassTree,
+    selectedClass,
+    selectedAdvancedClass,
+    allAbilities,
+    abilities,
+  ])
 
   const hasLegendaryAbilitySelected = useMemo(() => {
     if (!isLegendaryTree) return false
@@ -261,6 +397,13 @@ function TreeSection({
 
           const showSelectButton =
             !alreadySelected && !(isLegendaryTree && hasLegendaryAbilitySelected)
+
+          // Dim header if:
+          // 1. Not already selected AND can't select, OR
+          // 2. Legendary tree AND another legendary ability is selected AND this one isn't
+          const shouldDimHeader =
+            (!alreadySelected && !canSelect) ||
+            (isLegendaryTree && hasLegendaryAbilitySelected && !alreadySelected)
 
           let buttonConfig = undefined
           if (alreadySelected && handleRemoveAbility) {
@@ -308,7 +451,7 @@ function TreeSection({
               key={ability.id}
               data={ability}
               disabled={!canSelect && !alreadySelected}
-              dimHeader={!canSelect}
+              dimHeader={shouldDimHeader}
               defaultExpanded={alreadySelected}
               buttonConfig={buttonConfig}
             />

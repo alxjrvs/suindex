@@ -1,9 +1,9 @@
 import { Box, VStack, Button, Flex } from '@chakra-ui/react'
-import type { SURefAdvancedClass, SURefCoreClass } from 'salvageunion-reference'
+import type { SURefClass } from 'salvageunion-reference'
 import { getEffects, getTable } from 'salvageunion-reference'
 import { PageReferenceDisplay } from '../../../shared/PageReferenceDisplay'
 import { RollTable } from '../../../shared/RollTable'
-import { RoundedBox } from '../../../shared/RoundedBox'
+import { EntityContainer } from '../../../shared/EntityContainer'
 import { EntitySubTitleElement } from '../EntitySubTitleContent'
 import { EntityLeftContent } from '../EntityLeftContent'
 import { EntityRightHeaderContent } from '../EntityRightHeaderContent'
@@ -45,13 +45,11 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
   } = useEntityDisplayContext()
 
   return (
-    <RoundedBox
-      borderWidth="2px"
+    <EntityContainer
       bg={'su.lightBlue'}
       w="full"
       headerBg={headerBg}
       headerOpacity={opacity.header}
-      bottomHeaderBorder
       leftContent={<EntityLeftContent />}
       subTitleContent={<EntitySubTitleElement />}
       rightContent={
@@ -71,8 +69,6 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
         <VStack
           flex="1"
           bg={contentBg}
-          borderBottomRightRadius="md"
-          borderBottomLeftRadius="md"
           opacity={opacity.content}
           p={0}
           gap={spacing.smallGap}
@@ -122,14 +118,19 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
                   label="Damaged Effect"
                 />
               )}
-              {schemaName.includes('classes') && (
+              {schemaName === 'classes' && (
                 <ClassAbilitiesList
                   compact={compact}
                   selectedClass={
-                    schemaName === 'classes.core' ? (data as SURefCoreClass) : undefined
+                    'coreTrees' in data &&
+                    Array.isArray((data as { coreTrees: string[] }).coreTrees)
+                      ? (data as SURefClass)
+                      : undefined
                   }
                   selectedAdvancedClass={
-                    schemaName === 'classes.advanced' ? (data as SURefAdvancedClass) : undefined
+                    'hybrid' in data && (data as { hybrid?: boolean }).hybrid === true
+                      ? (data as SURefClass)
+                      : undefined
                   }
                 />
               )}
@@ -160,6 +161,6 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
           {!hideActions && <PageReferenceDisplay bg={headerBg} />}
         </VStack>
       )}
-    </RoundedBox>
+    </EntityContainer>
   )
 }

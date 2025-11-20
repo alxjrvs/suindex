@@ -7,10 +7,9 @@
 // Import types for use in union types
 import type {
   SURefAbility,
-  SURefAdvancedClass,
   SURefBioTitan,
   SURefChassis,
-  SURefCoreClass,
+  SURefClass,
   SURefCrawler,
   SURefCrawlerBay,
   SURefCreature,
@@ -98,10 +97,9 @@ export type {
 // Union type of all entity types (excludes meta schemas and non-entities)
 export type SURefEntity =
   | SURefAbility
-  | SURefAdvancedClass
   | SURefBioTitan
   | SURefChassis
-  | SURefCoreClass
+  | SURefClass
   | SURefCrawler
   | SURefCrawlerBay
   | SURefCreature
@@ -121,10 +119,9 @@ export type SURefEntity =
 // Union type of all meta entity types (includes all schemas except non-entities)
 export type SURefMetaEntity =
   | SURefAbility
-  | SURefAdvancedClass
   | SURefBioTitan
   | SURefChassis
-  | SURefCoreClass
+  | SURefClass
   | SURefCrawler
   | SURefCrawlerBay
   | SURefCreature

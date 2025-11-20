@@ -160,7 +160,10 @@ describe('SalvageUnionReference.findAllIn', () => {
   })
 
   it('should find all core classes', () => {
-    const coreClasses = SalvageUnionReference.findAllIn('classes.core', () => true)
+    const coreClasses = SalvageUnionReference.findAllIn(
+      'classes',
+      (c) => 'coreTrees' in c && Array.isArray(c.coreTrees)
+    )
     expect(coreClasses.length).toBeGreaterThan(0)
   })
 })

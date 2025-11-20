@@ -25,9 +25,7 @@ const ENTITY_SCHEMA_NAMES = [
   'systems',
   'modules',
   'crawler-bays',
-  'classes.core',
-  'classes.advanced',
-  'classes.hybrid',
+  'classes',
   'chassis',
   'crawlers',
 ] as const

@@ -23,12 +23,8 @@ describe('Model Metadata', () => {
       expect(SalvageUnionReference.Chassis.schemaName).toBe('chassis')
     })
 
-    it('should return correct schema name for CoreClasses', () => {
-      expect(SalvageUnionReference.CoreClasses.schemaName).toBe('classes.core')
-    })
-
-    it('should return correct schema name for AdvancedClasses', () => {
-      expect(SalvageUnionReference.AdvancedClasses.schemaName).toBe('classes.advanced')
+    it('should return correct schema name for Classes', () => {
+      expect(SalvageUnionReference.Classes.schemaName).toBe('classes')
     })
 
     it('should return correct schema name for AbilityTreeRequirements', () => {
@@ -55,12 +51,8 @@ describe('Model Metadata', () => {
       expect(SalvageUnionReference.Chassis.displayName).toBe('Chassis')
     })
 
-    it('should return correct display name for CoreClasses', () => {
-      expect(SalvageUnionReference.CoreClasses.displayName).toBe('Core Classes')
-    })
-
-    it('should return correct display name for AdvancedClasses', () => {
-      expect(SalvageUnionReference.AdvancedClasses.displayName).toBe('Advanced Classes')
+    it('should return correct display name for Classes', () => {
+      expect(SalvageUnionReference.Classes.displayName).toBe('Classes')
     })
 
     it('should return correct display name for AbilityTreeRequirements', () => {
@@ -91,12 +83,8 @@ describe('Model Metadata', () => {
       expect(SchemaToDisplayName.chassis).toBe('Chassis')
     })
 
-    it('should have correct mapping for classes.core', () => {
-      expect(SchemaToDisplayName['classes.core']).toBe('Core Classes')
-    })
-
-    it('should have correct mapping for classes.advanced', () => {
-      expect(SchemaToDisplayName['classes.advanced']).toBe('Advanced Classes')
+    it('should have correct mapping for classes', () => {
+      expect(SchemaToDisplayName['classes']).toBe('Classes')
     })
 
     it('should have correct mapping for ability-tree-requirements', () => {
@@ -109,8 +97,7 @@ describe('Model Metadata', () => {
         'ability-tree-requirements',
         'bio-titans',
         'chassis',
-        'classes.advanced',
-        'classes.core',
+        'classes',
         'crawler-bays',
         'crawler-tech-levels',
         'crawlers',
@@ -148,8 +135,7 @@ describe('Model Metadata', () => {
         SalvageUnionReference.Equipment,
         SalvageUnionReference.Modules,
         SalvageUnionReference.Chassis,
-        SalvageUnionReference.CoreClasses,
-        SalvageUnionReference.AdvancedClasses,
+        SalvageUnionReference.Classes,
         SalvageUnionReference.Systems,
         SalvageUnionReference.Drones,
         SalvageUnionReference.Vehicles,

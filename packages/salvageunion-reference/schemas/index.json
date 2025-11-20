@@ -80,24 +80,14 @@
       "displayName": "Chassis"
     },
     {
-      "id": "classes.advanced",
-      "title": "classes.advanced",
-      "description": "Advanced and Hybrid character classes in Salvage Union",
-      "dataFile": "data/classes.advanced.json",
-      "schemaFile": "schemas/classes.advanced.schema.json",
-      "itemCount": 9,
+      "id": "classes",
+      "title": "classes",
+      "description": "Character classes in Salvage Union (base, advanced, and hybrid)",
+      "dataFile": "data/classes.json",
+      "schemaFile": "schemas/classes.schema.json",
+      "itemCount": 10,
       "requiredFields": [],
-      "displayName": "Advanced Classes"
-    },
-    {
-      "id": "classes.core",
-      "title": "classes.core",
-      "description": "Core character classes in Salvage Union",
-      "dataFile": "data/classes.core.json",
-      "schemaFile": "schemas/classes.core.schema.json",
-      "itemCount": 6,
-      "requiredFields": ["maxAbilities", "advanceable", "coreTrees"],
-      "displayName": "Core Classes"
+      "displayName": "Classes"
     },
     {
       "id": "crawler-bays",

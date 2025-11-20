@@ -91,28 +91,33 @@ export interface SURefChassis extends SURefObjectBaseEntity, SURefObjectChassisS
 }
 
 /**
- * Advanced and Hybrid character classes in Salvage Union
+ * Character classes in Salvage Union (base, advanced, and hybrid)
  */
-export type SURefAdvancedClass = SURefObjectAdvancedClass
-
-/**
- * Core character classes in Salvage Union
- */
-export interface SURefCoreClass extends SURefObjectBaseEntity {
-  /**
-   * Maximum number of abilities this class can have
-   */
-  maxAbilities: number
-  /**
-   * Whether this class can advance to hybrid classes
-   */
-  advanceable: boolean
-  /**
-   * Core ability trees available to this class
-   */
-  coreTrees: SURefEnumTree[]
-  content?: SURefObjectContent
-}
+export type SURefClass =
+  | (SURefObjectBaseEntity & {
+      /**
+       * Maximum number of abilities this class can have
+       */
+      maxAbilities: number
+      /**
+       * Whether this class can advance to hybrid classes
+       */
+      advanceable: boolean
+      /**
+       * Core ability trees available to this class
+       */
+      coreTrees: SURefEnumTree[]
+      /**
+       * Advanced ability tree for this class (only for advanceable base classes)
+       */
+      advancedTree?: SURefEnumTree
+      /**
+       * Legendary ability tree for this class (only for advanceable base classes)
+       */
+      legendaryTree?: SURefEnumTree
+      content?: SURefObjectContent
+    })
+  | SURefObjectAdvancedClass
 
 /**
  * Bays and facilities on Union Crawlers in Salvage Union

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "https://salvageunion.com/schemas/classes.schema.json",
+  "title": "classes",
+  "description": "Character classes in Salvage Union (base, advanced, and hybrid)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "oneOf": [
+      {
+        "type": "object",
+        "description": "Base character class",
+        "required": ["maxAbilities", "advanceable", "coreTrees"],
+        "allOf": [
+          {
+            "$ref": "shared/objects.schema.json#/definitions/baseEntity"
+          }
+        ],
+        "properties": {
+          "maxAbilities": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum number of abilities this class can have"
+          },
+          "advanceable": {
+            "type": "boolean",
+            "description": "Whether this class can advance to hybrid classes"
+          },
+          "coreTrees": {
+            "type": "array",
+            "description": "Core ability trees available to this class",
+            "items": {
+              "$ref": "shared/enums.schema.json#/definitions/tree"
+            }
+          },
+          "advancedTree": {
+            "$ref": "shared/enums.schema.json#/definitions/tree",
+            "description": "Advanced ability tree for this class (only for advanceable base classes)"
+          },
+          "legendaryTree": {
+            "$ref": "shared/enums.schema.json#/definitions/tree",
+            "description": "Legendary ability tree for this class (only for advanceable base classes)"
+          },
+          "content": {
+            "$ref": "shared/objects.schema.json#/definitions/content"
+          }
+        },
+        "unevaluatedProperties": false
+      },
+      {
+        "$ref": "shared/objects.schema.json#/definitions/advancedClass"
+      }
+    ]
+  }
+}

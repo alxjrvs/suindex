@@ -190,12 +190,12 @@ export default function MechLiveSheet({ id }: { id: string }) {
                       options={availablePilots.map((p) => {
                         const parts = [p.callsign]
                         if (p.class_id) {
-                          const coreClass = SalvageUnionReference.get('classes.core', p.class_id)
+                          const coreClass = SalvageUnionReference.get('classes', p.class_id)
                           if (coreClass) parts.push(coreClass.name)
                         }
                         if (p.advanced_class_id) {
                           const advancedClass = SalvageUnionReference.get(
-                            'classes.advanced',
+                            'classes',
                             p.advanced_class_id
                           )
                           if (advancedClass) parts.push(`/ ${advancedClass.name}`)
@@ -236,15 +236,12 @@ export default function MechLiveSheet({ id }: { id: string }) {
                             options={availablePilots.map((p) => {
                               const parts = [p.callsign]
                               if (p.class_id) {
-                                const coreClass = SalvageUnionReference.get(
-                                  'classes.core',
-                                  p.class_id
-                                )
+                                const coreClass = SalvageUnionReference.get('classes', p.class_id)
                                 if (coreClass) parts.push(coreClass.name)
                               }
                               if (p.advanced_class_id) {
                                 const advancedClass = SalvageUnionReference.get(
-                                  'classes.advanced',
+                                  'classes',
                                   p.advanced_class_id
                                 )
                                 if (advancedClass) parts.push(`/ ${advancedClass.name}`)

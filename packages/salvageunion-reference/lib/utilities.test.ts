@@ -133,18 +133,26 @@ describe('Additional Type Guards', () => {
 
   describe('isClass', () => {
     it('should return true for core classes', () => {
-      const coreClass = SalvageUnionReference.CoreClasses.all()[0]
+      const coreClass = SalvageUnionReference.Classes.find(
+        (c) => 'coreTrees' in c && Array.isArray(c.coreTrees)
+      )!
       expect(isClass(coreClass)).toBe(true)
     })
 
     it('should return true for advanced classes', () => {
-      const advancedClass = SalvageUnionReference.AdvancedClasses.all()[0]
+      const advancedClass = SalvageUnionReference.Classes.find((c): boolean => {
+        if (!('advancedTree' in c) || !c.advancedTree) return false
+        const hasHybrid = 'hybrid' in c && (c as { hybrid?: boolean }).hybrid === true
+        return !hasHybrid
+      })!
       expect(isClass(advancedClass)).toBe(true)
     })
 
     it('should return true for hybrid classes', () => {
-      // Hybrid classes are now in AdvancedClasses with type: "Hybrid"
-      const hybridClass = SalvageUnionReference.AdvancedClasses.find((c) => c.type === 'Hybrid')
+      // Hybrid classes have hybrid: true
+      const hybridClass = SalvageUnionReference.Classes.find(
+        (c) => 'hybrid' in c && c.hybrid === true
+      )
       expect(hybridClass).toBeDefined()
       expect(isClass(hybridClass!)).toBe(true)
     })
@@ -204,11 +212,15 @@ describe('Additional Type Guards', () => {
     })
 
     it('should narrow type for classes', () => {
-      const coreClass = SalvageUnionReference.CoreClasses.all()[0]
+      const coreClass = SalvageUnionReference.Classes.find(
+        (c) => 'coreTrees' in c && Array.isArray(c.coreTrees)
+      )!
 
       if (isClass(coreClass)) {
         // TypeScript should know this is a class
-        expect(coreClass.coreTrees).toBeDefined()
+        if ('coreTrees' in coreClass) {
+          expect(coreClass.coreTrees).toBeDefined()
+        }
       }
     })
   })
@@ -601,7 +613,9 @@ describe('Property Extractors', () => {
     })
 
     it('should extract asset_url from core classes', () => {
-      const coreClass = SalvageUnionReference.CoreClasses.find((c) => c.name === 'Engineer')
+      const coreClass = SalvageUnionReference.Classes.find(
+        (c) => c.name === 'Engineer' && 'coreTrees' in c && Array.isArray(c.coreTrees)
+      )
       const assetUrl = getAssetUrl(coreClass!)
       expect(assetUrl).toBeDefined()
       expect(typeof assetUrl).toBe('string')
@@ -609,8 +623,10 @@ describe('Property Extractors', () => {
     })
 
     it('should extract asset_url from hybrid classes', () => {
-      // Hybrid classes are now in AdvancedClasses with type: "Hybrid"
-      const hybridClass = SalvageUnionReference.AdvancedClasses.find((c) => c.name === 'Cyborg')
+      // Hybrid classes have hybrid: true
+      const hybridClass = SalvageUnionReference.Classes.find(
+        (c) => c.name === 'Cyborg' && 'hybrid' in c && c.hybrid === true
+      )
       const assetUrl = getAssetUrl(hybridClass!)
       expect(assetUrl).toBeDefined()
       expect(typeof assetUrl).toBe('string')

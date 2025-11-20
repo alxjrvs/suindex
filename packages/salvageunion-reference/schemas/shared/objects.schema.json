@@ -521,15 +521,16 @@
     "advancedClass": {
       "type": "object",
       "description": "Advanced or hybrid character class",
-      "required": ["type", "advancedTree", "legendaryTree"],
+      "required": ["advancedTree", "legendaryTree"],
       "allOf": [
         {
           "$ref": "#/definitions/baseEntity"
         }
       ],
       "properties": {
-        "type": {
-          "$ref": "enums.schema.json#/definitions/classType"
+        "hybrid": {
+          "type": "boolean",
+          "description": "Whether this is a hybrid class (cannot be selected as initial class)"
         },
         "advancedTree": {
           "$ref": "enums.schema.json#/definitions/tree"

@@ -9,11 +9,11 @@ export * from './utilities-generated.js'
 import type { SURefMetaEntity, SURefMetaAction, SURefObjectGrant } from './types/index.js'
 import type {
   SURefAbility,
-  SURefAdvancedClass,
   SURefChassis,
-  SURefCoreClass,
+  SURefClass,
   SURefModule,
   SURefSystem,
+  SURefObjectAdvancedClass,
 } from './types/index.js'
 import { getDataMaps } from './ModelFactory.js'
 
@@ -494,7 +494,9 @@ export function isChassis(entity: SURefMetaEntity): entity is SURefChassis {
  * @param entity - The entity to check
  * @returns True if the entity is a Core Class
  */
-export function isCoreClass(entity: SURefMetaEntity): entity is SURefCoreClass {
+export function isCoreClass(
+  entity: SURefMetaEntity
+): entity is SURefClass & { coreTrees: string[] } {
   return (
     entity !== null &&
     typeof entity === 'object' &&
@@ -509,7 +511,7 @@ export function isCoreClass(entity: SURefMetaEntity): entity is SURefCoreClass {
  * @param entity - The entity to check
  * @returns True if the entity is an Advanced Class
  */
-export function isBaseAdvancedClass(entity: SURefMetaEntity): entity is SURefAdvancedClass {
+export function isBaseAdvancedClass(entity: SURefMetaEntity): entity is SURefObjectAdvancedClass {
   return (
     entity !== null &&
     typeof entity === 'object' &&
@@ -519,21 +521,22 @@ export function isBaseAdvancedClass(entity: SURefMetaEntity): entity is SURefAdv
 }
 
 /**
- * Type guard to check if an entity is an Advanced Class
+ * Type guard to check if an entity is an Advanced Class (base class with advancedTree, not a hybrid)
  * @param entity - The entity to check
  * @returns True if the entity is an Advanced Class
  */
-export function isAdvancedClass(entity: SURefMetaEntity): entity is SURefAdvancedClass {
-  return isBaseAdvancedClass(entity) && entity.type === 'Advanced'
+export function isAdvancedClass(entity: SURefMetaEntity): entity is SURefObjectAdvancedClass {
+  return isBaseAdvancedClass(entity) && !('hybrid' in entity && entity.hybrid === true)
 }
 
 /**
  * Type guard to check if an entity is a Hybrid Class
+ * Note: This is also exported from helpers.ts, but we keep it here for backwards compatibility
  * @param entity - The entity to check
  * @returns True if the entity is a Hybrid Class
  */
-export function isHybridClass(entity: SURefMetaEntity): entity is SURefAdvancedClass {
-  return isBaseAdvancedClass(entity) && entity.type === 'Hybrid'
+export function isHybridClass(entity: SURefMetaEntity): entity is SURefObjectAdvancedClass {
+  return isBaseAdvancedClass(entity) && 'hybrid' in entity && entity.hybrid === true
 }
 
 /**
@@ -541,7 +544,7 @@ export function isHybridClass(entity: SURefMetaEntity): entity is SURefAdvancedC
  * @param entity - The entity to check
  * @returns True if the entity is a Core, Advanced, or Hybrid class
  */
-export function isClass(entity: SURefMetaEntity): entity is SURefCoreClass | SURefAdvancedClass {
+export function isClass(entity: SURefMetaEntity): entity is SURefClass {
   return isCoreClass(entity) || isAdvancedClass(entity) || isHybridClass(entity)
 }
 
