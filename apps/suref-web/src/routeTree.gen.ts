@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RandsumRouteImport } from './routes/randsum'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as R404RouteImport } from './routes/404'
@@ -29,6 +30,11 @@ import { Route as DashboardGamesGameIdRouteImport } from './routes/dashboard/gam
 import { Route as DashboardCrawlersIdRouteImport } from './routes/dashboard/crawlers/$id'
 import { Route as SchemaSchemaIdItemItemIdRouteImport } from './routes/schema/$schemaId/item/$itemId'
 
+const RandsumRoute = RandsumRouteImport.update({
+  id: '/randsum',
+  path: '/randsum',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/404': typeof R404Route
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/randsum': typeof RandsumRoute
   '/dashboard/join': typeof DashboardJoinRoute
   '/sheets/crawler': typeof SheetsCrawlerRoute
   '/sheets/mech': typeof SheetsMechRoute
@@ -151,6 +158,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/404': typeof R404Route
   '/about': typeof AboutRoute
+  '/randsum': typeof RandsumRoute
   '/dashboard/join': typeof DashboardJoinRoute
   '/sheets/crawler': typeof SheetsCrawlerRoute
   '/sheets/mech': typeof SheetsMechRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/404': typeof R404Route
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/randsum': typeof RandsumRoute
   '/dashboard/join': typeof DashboardJoinRoute
   '/sheets/crawler': typeof SheetsCrawlerRoute
   '/sheets/mech': typeof SheetsMechRoute
@@ -196,6 +205,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/about'
     | '/dashboard'
+    | '/randsum'
     | '/dashboard/join'
     | '/sheets/crawler'
     | '/sheets/mech'
@@ -216,6 +226,7 @@ export interface FileRouteTypes {
     | '/'
     | '/404'
     | '/about'
+    | '/randsum'
     | '/dashboard/join'
     | '/sheets/crawler'
     | '/sheets/mech'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/about'
     | '/dashboard'
+    | '/randsum'
     | '/dashboard/join'
     | '/sheets/crawler'
     | '/sheets/mech'
@@ -259,6 +271,7 @@ export interface RootRouteChildren {
   R404Route: typeof R404Route
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  RandsumRoute: typeof RandsumRoute
   SheetsCrawlerRoute: typeof SheetsCrawlerRoute
   SheetsMechRoute: typeof SheetsMechRoute
   SheetsPilotRoute: typeof SheetsPilotRoute
@@ -268,6 +281,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/randsum': {
+      id: '/randsum'
+      path: '/randsum'
+      fullPath: '/randsum'
+      preLoaderRoute: typeof RandsumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -439,6 +459,7 @@ const rootRouteChildren: RootRouteChildren = {
   R404Route: R404Route,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  RandsumRoute: RandsumRoute,
   SheetsCrawlerRoute: SheetsCrawlerRoute,
   SheetsMechRoute: SheetsMechRoute,
   SheetsPilotRoute: SheetsPilotRoute,

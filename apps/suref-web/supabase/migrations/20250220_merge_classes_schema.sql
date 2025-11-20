@@ -10,3 +10,4 @@ WHERE schema_name IN ('classes.core', 'classes.advanced', 'classes.hybrid');
 -- SELECT COUNT(*) FROM suentities WHERE schema_name = 'classes';
 -- Should return the count of all class entities (core + advanced + hybrid)
 
+

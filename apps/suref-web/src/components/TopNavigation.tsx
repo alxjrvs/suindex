@@ -188,6 +188,15 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                 About
               </NavigationLink>
             </Box>
+
+            <Box as="li">
+              <NavigationLink
+                isActive={isActive('/randsum')}
+                onClick={() => handleNavigate('/randsum')}
+              >
+                Discord Bot
+              </NavigationLink>
+            </Box>
           </HStack>
         </Flex>
 
