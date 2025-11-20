@@ -32,7 +32,7 @@
     "id": "28015ce1-8440-471c-b97e-bb4ff114a667",
     "source": "Salvage Union Workshop Manual",
     "name": "Trooper",
-    "actions": ["Rifle (Trooper)", "Portable Comms Unit (Trooper)"],
+    "actions": ["Rifle (Trooper)", "Portable Comms Unit (NPC)"],
     "hitPoints": 5,
     "page": 274,
     "content": [
