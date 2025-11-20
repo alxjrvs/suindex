@@ -17,11 +17,11 @@ type DisplayComponentType = ComponentType<DisplayComponentProps>
 export const componentRegistry: Record<string, DisplayComponentType> = {
   abilities: createEntityDisplay('abilities'),
   'ability-tree-requirements': createEntityDisplay('ability-tree-requirements'),
-  classes: createEntityDisplay('classes.core'),
-  'classes.core': createEntityDisplay('classes.core'),
-  'classes.advanced': createEntityDisplay('classes.advanced'),
+  classes: createEntityDisplay('classes'),
+  'classes.core': createEntityDisplay('classes'),
+  'classes.advanced': createEntityDisplay('classes'),
 
-  'classes.hybrid': createEntityDisplay('classes.advanced'),
+  'classes.hybrid': createEntityDisplay('classes'),
   'crawler-bays': createEntityDisplay('crawler-bays'),
   'crawler-tech-levels': createEntityDisplay('crawler-tech-levels'),
 

@@ -2,7 +2,7 @@ import { Flex, type FlexProps } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
 import { Text } from '../base/Text'
 
-type RoundedBoxProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'direction'> & {
+type EntityContainerProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'direction'> & {
   /** Background color token (e.g., 'bg.builder.pilot', 'su.orange', 'su.green') */
   bg?: string
   /** Optional background color for the header section (defaults to bg if not provided) */
@@ -39,10 +39,9 @@ type RoundedBoxProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'dire
   compact?: boolean
   /** Whether to reverse the header layout (title on right, rightContent on left) */
   reverse?: boolean
-  bottomHeaderBorder?: boolean
 }
 
-export function RoundedBox({
+export function EntityContainer({
   label,
   compact = false,
   bg = 'su.lightBlue',
@@ -60,17 +59,15 @@ export function RoundedBox({
   bodyBg,
   bodyPadding,
   onHeaderClick,
-  bottomHeaderBorder = false,
   headerTestId,
   reverse = false,
   ...flexProps
-}: RoundedBoxProps) {
+}: EntityContainerProps) {
   const actualHeaderBg = disabled ? 'su.grey' : headerBg || bg
   const actualBodyBg = disabled ? 'su.grey' : bodyBg || bg
 
   const hasHeader = !!(title || leftContent || rightContent)
   const headerCursor = onHeaderClick ? 'pointer' : 'default'
-  const headerBottomRadius = children ? '0' : 'xs'
 
   return (
     <Flex
@@ -78,7 +75,6 @@ export function RoundedBox({
       alignItems="center"
       justifyContent={justifyContent}
       bg={actualBodyBg}
-      borderRadius="md"
       p={0}
       shadow="lg"
       overflow="visible"
@@ -120,13 +116,9 @@ export function RoundedBox({
           alignItems="center"
           data-testid={headerTestId}
           p={compact ? 1 : 2}
-          borderTopRadius="xs"
-          borderBottomRadius={headerBottomRadius}
           bg={actualHeaderBg}
           opacity={headerOpacity}
           h={compact ? '70px' : undefined}
-          borderBottomWidth="2px"
-          borderColor={bottomHeaderBorder ? 'su.black' : actualHeaderBg}
           overflow="visible"
         >
           <Flex alignItems="center" gap={compact ? 0.5 : 1}>
@@ -175,14 +167,7 @@ export function RoundedBox({
         </Flex>
       )}
       {children && (
-        <Flex
-          direction="column"
-          alignItems="center"
-          w="full"
-          p={bodyPadding ?? 4}
-          flex="1"
-          borderBottomRadius="md"
-        >
+        <Flex direction="column" alignItems="center" w="full" p={bodyPadding ?? 4} flex="1">
           {children}
         </Flex>
       )}

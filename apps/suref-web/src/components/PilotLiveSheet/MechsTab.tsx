@@ -2,6 +2,7 @@ import { Box, VStack, HStack } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Text } from '../base/Text'
+import { RoundedBox } from '../shared/RoundedBox'
 import { AddStatButton } from '../shared/AddStatButton'
 import { MechSmallDisplay } from '../Dashboard/MechSmallDisplay'
 import { useCreateMech } from '../../hooks/mech'
@@ -110,11 +111,11 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
       )}
 
       {mechs.length === 0 && (
-        <Box bg="su.lightBlue" p={8} borderRadius="md" borderWidth="2px" borderColor="black">
-          <Text textAlign="center" color="su.brick" fontWeight="bold">
+        <RoundedBox bg="su.grey">
+          <Text variant="pseudoheader" textAlign="center">
             No mechs assigned to this pilot
           </Text>
-        </Box>
+        </RoundedBox>
       )}
     </VStack>
   )

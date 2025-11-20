@@ -3,12 +3,13 @@ import { Box, Flex, Grid } from '@chakra-ui/react'
 import { SheetInput } from '../shared/SheetInput'
 import { SheetSelect } from '../shared/SheetSelect'
 import { RoundedBox } from '../shared/RoundedBox'
-import { SalvageUnionReference, type SURefAbility } from 'salvageunion-reference'
+import { SalvageUnionReference } from 'salvageunion-reference'
 import { useChangePilotClass } from '../../hooks/pilot/useChangePilotClass'
-import { useChangePilotAdvancedClass } from '../../hooks/pilot/useChangePilotAdvancedClass'
+import { useChangePilotHybridClass } from '../../hooks/pilot/useChangePilotHybridClass'
 import { useHydratedPilot, useUpdatePilot } from '../../hooks/pilot'
 import { Text } from '../base/Text'
 import { rollTable } from '@randsum/salvageunion'
+import { checkTreeRequirements } from './utils/checkTreeRequirements'
 
 interface PilotInfoInputsProps {
   /** Disables all inputs */
@@ -25,7 +26,7 @@ export function PilotInfoInputs({
 }: PilotInfoInputsProps) {
   const { pilot, abilities, selectedClass, selectedAdvancedClass } = useHydratedPilot(id)
   const onClassChange = useChangePilotClass(id)
-  const onAdvancedClassChange = useChangePilotAdvancedClass(id)
+  const onHybridClassChange = useChangePilotHybridClass(id)
   const updatePilot = useUpdatePilot()
   const motto = pilot?.motto ?? ''
   const mottoUsed = pilot?.motto_used ?? false
@@ -37,17 +38,70 @@ export function PilotInfoInputs({
   const callsign = pilot?.callsign
   const classId = selectedClass?.schema_ref_id ?? null
   const advancedClassId = selectedAdvancedClass?.schema_ref_id ?? null
-  const allAdvancedClasses = useMemo(() => SalvageUnionReference.AdvancedClasses.all(), [])
-  const allCoreClasses = useMemo(() => SalvageUnionReference.CoreClasses.all(), [])
-  const sortedCoreClasses = useMemo(() => {
-    return [...allCoreClasses].sort((a, b) => a.name.localeCompare(b.name))
-  }, [allCoreClasses])
+  const allClasses = useMemo(() => SalvageUnionReference.Classes.all(), [])
 
-  const availableAdvancedClasses = useMemo(() => {
+  // Filter base classes (have coreTrees) for initial class dropdown
+  // Hybrid classes (hybrid === true) cannot be selected as initial class
+  const sortedCoreClasses = useMemo(() => {
+    const baseClasses = allClasses.filter(
+      (cls) =>
+        'coreTrees' in cls &&
+        Array.isArray(cls.coreTrees) &&
+        ('hybrid' in cls ? cls.hybrid !== true : true)
+    )
+    return [...baseClasses].sort((a, b) => a.name.localeCompare(b.name))
+  }, [allClasses])
+
+  // Check if user has selected core class advanced tree abilities
+  const hasCoreAdvancedAbilities = useMemo(() => {
+    if (!selectedClass?.ref) return false
+    const coreClassRef = selectedClass.ref as { advancedTree?: string }
+    if (!coreClassRef.advancedTree) return false
+
+    return abilities.some((ability) => {
+      const abilityTree = (ability.ref as { tree: string }).tree
+      return abilityTree === coreClassRef.advancedTree
+    })
+  }, [abilities, selectedClass])
+
+  // Calculate class display text for pseudo-header
+  const classDisplayText = useMemo(() => {
+    if (!selectedClass?.ref) return null
+
+    const coreClassName = (selectedClass.ref as { name: string }).name
+
+    // If hybrid class is selected
+    if (selectedAdvancedClass?.ref) {
+      const hybridClassName = (selectedAdvancedClass.ref as { name: string }).name
+      return {
+        main: hybridClassName,
+        sub: coreClassName,
+      }
+    }
+
+    // If core class with advanced abilities
+    if (hasCoreAdvancedAbilities) {
+      return {
+        main: coreClassName,
+        sub: 'Adv.',
+      }
+    }
+
+    // Just core class
+    return {
+      main: coreClassName,
+      sub: null,
+    }
+  }, [selectedClass, selectedAdvancedClass, hasCoreAdvancedAbilities])
+
+  // Filter hybrid classes for hybrid dropdown
+  const availableHybridClasses = useMemo(() => {
+    // Must have at least 6 abilities
     if (abilities.length < 6) {
       return []
     }
 
+    // Base class must be advanceable - if not advanceable, never enable hybrid selector
     if (
       selectedClass?.ref &&
       'advanceable' in selectedClass.ref &&
@@ -56,41 +110,51 @@ export function PilotInfoInputs({
       return []
     }
 
-    const abilitiesByTree: Record<string, number> = {}
-    abilities.forEach((entity) => {
-      const ability = entity.ref as SURefAbility
-      const tree = ability.tree
-      abilitiesByTree[tree] = (abilitiesByTree[tree] || 0) + 1
+    // If user has any advanced or legendary abilities from core class, disable hybrid dropdown
+    if (selectedClass?.ref) {
+      const coreClassRef = selectedClass.ref as {
+        advancedTree?: string
+        legendaryTree?: string
+      }
+      const hasCoreAdvancedOrLegendaryAbilities = abilities.some((ability) => {
+        const abilityTree = (ability.ref as { tree: string }).tree
+        return (
+          abilityTree === coreClassRef.advancedTree || abilityTree === coreClassRef.legendaryTree
+        )
+      })
+
+      if (hasCoreAdvancedOrLegendaryAbilities) {
+        return []
+      }
+    }
+
+    // Get only hybrid classes (hybrid === true)
+    const hybridClasses = allClasses.filter((cls) => {
+      return 'hybrid' in cls && cls.hybrid === true
     })
 
-    const completedTrees = new Set(
-      Object.entries(abilitiesByTree)
-        .filter(([, count]) => count >= 3)
-        .map(([tree]) => tree)
-    )
+    // Filter hybrid classes that meet requirements (at least one requirement tree completed)
+    const available = hybridClasses
+      .filter((hybridClass) => {
+        const advancedTree =
+          'advancedTree' in hybridClass && hybridClass.advancedTree
+            ? hybridClass.advancedTree
+            : null
+        if (!advancedTree) return false
 
-    const allTreeRequirements = SalvageUnionReference.AbilityTreeRequirements.all()
-
-    const available = allAdvancedClasses
-      .filter((advClass) => {
-        const treeRequirement = allTreeRequirements.find(
-          (req) => req.name === advClass.advancedTree
-        )
-
-        if (!treeRequirement) {
-          return false
-        }
-
-        return treeRequirement.requirement.some((requiredTree) => completedTrees.has(requiredTree))
+        // Check if requirements are met using shared utility
+        return checkTreeRequirements(abilities, advancedTree)
       })
-      .map((advClass) => ({
-        id: advClass.id,
-        name: advClass.name,
-        isAdvancedVersion: advClass.type === 'Advanced',
-      }))
+      .map((hybridClass) => {
+        return {
+          id: hybridClass.id,
+          name: hybridClass.name,
+        }
+      })
+      .sort((a, b) => a.name.localeCompare(b.name))
 
     return available
-  }, [abilities, selectedClass, allAdvancedClasses])
+  }, [abilities, selectedClass, allClasses])
 
   const handleMottoRoll = async () => {
     const {
@@ -121,6 +185,29 @@ export function PilotInfoInputs({
       flex="1"
       minW="0"
       disabled={incomplete}
+      absoluteElements={
+        classDisplayText ? (
+          <Text
+            position="absolute"
+            variant="pseudoheader"
+            fontSize="sm"
+            textTransform="uppercase"
+            ml={3}
+            mt={-2}
+            left={0}
+          >
+            {classDisplayText.main}
+            {classDisplayText.sub && (
+              <>
+                {' '}
+                <Text as="span" fontSize="xs" variant="pseudoheader">
+                  ({classDisplayText.sub})
+                </Text>
+              </>
+            )}
+          </Text>
+        ) : null
+      }
     >
       <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4} w="full" h="full">
         <SheetInput
@@ -165,20 +252,31 @@ export function PilotInfoInputs({
           </Box>
 
           <Box flex="1" h="full">
-            <SheetSelect
-              label="Advanced"
-              value={advancedClassId}
-              onChange={onAdvancedClassChange}
-              disabled={disabled || availableAdvancedClasses.length === 0}
-              isOwner={!disabled}
-              placeholder="Select..."
-            >
-              {availableAdvancedClasses.map((option) => (
-                <option key={`${option.id}-${option.isAdvancedVersion}`} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </SheetSelect>
+            {hasCoreAdvancedAbilities ? (
+              <SheetInput
+                label="Advanced Class"
+                value={`Advanced ${selectedClass?.ref?.name ?? ''}`}
+                onChange={() => {}}
+                disabled={true}
+                isOwner={false}
+                placeholder=""
+              />
+            ) : (
+              <SheetSelect
+                label="Hybrid Class"
+                value={advancedClassId}
+                onChange={onHybridClassChange}
+                disabled={disabled || availableHybridClasses.length === 0}
+                isOwner={!disabled}
+                placeholder="Select..."
+              >
+                {availableHybridClasses.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </SheetSelect>
+            )}
           </Box>
         </Flex>
 

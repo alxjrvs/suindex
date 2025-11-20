@@ -16,8 +16,7 @@ import actionsData from '../data/actions.json' with { type: 'json' }
 import bioTitansData from '../data/bio-titans.json' with { type: 'json' }
 import chassisData from '../data/chassis.json' with { type: 'json' }
 import chassisAbilitiesData from '../data/chassis-abilities.json' with { type: 'json' }
-import classesAdvancedData from '../data/classes.advanced.json' with { type: 'json' }
-import classesCoreData from '../data/classes.core.json' with { type: 'json' }
+import classesData from '../data/classes.json' with { type: 'json' }
 import crawlerBaysData from '../data/crawler-bays.json' with { type: 'json' }
 import crawlerTechLevelsData from '../data/crawler-tech-levels.json' with { type: 'json' }
 import crawlersData from '../data/crawlers.json' with { type: 'json' }
@@ -42,8 +41,7 @@ import actionsSchema from '../schemas/actions.schema.json' with { type: 'json' }
 import bioTitansSchema from '../schemas/bio-titans.schema.json' with { type: 'json' }
 import chassisSchema from '../schemas/chassis.schema.json' with { type: 'json' }
 import chassisAbilitiesSchema from '../schemas/chassis-abilities.schema.json' with { type: 'json' }
-import classesAdvancedSchema from '../schemas/classes.advanced.schema.json' with { type: 'json' }
-import classesCoreSchema from '../schemas/classes.core.schema.json' with { type: 'json' }
+import classesSchema from '../schemas/classes.schema.json' with { type: 'json' }
 import crawlerBaysSchema from '../schemas/crawler-bays.schema.json' with { type: 'json' }
 import crawlerTechLevelsSchema from '../schemas/crawler-tech-levels.schema.json' with { type: 'json' }
 import crawlersSchema from '../schemas/crawlers.schema.json' with { type: 'json' }
@@ -71,8 +69,7 @@ const dataMap: Record<string, unknown[]> = {
   'bio-titans': bioTitansData,
   chassis: chassisData,
   'chassis-abilities': chassisAbilitiesData,
-  'classes.advanced': classesAdvancedData,
-  'classes.core': classesCoreData,
+  classes: classesData,
   'crawler-bays': crawlerBaysData,
   'crawler-tech-levels': crawlerTechLevelsData,
   crawlers: crawlersData,
@@ -101,8 +98,7 @@ const schemaMap: Record<string, Record<string, unknown>> = {
   'bio-titans': bioTitansSchema,
   chassis: chassisSchema,
   'chassis-abilities': chassisAbilitiesSchema,
-  'classes.advanced': classesAdvancedSchema,
-  'classes.core': classesCoreSchema,
+  classes: classesSchema,
   'crawler-bays': crawlerBaysSchema,
   'crawler-tech-levels': crawlerTechLevelsSchema,
   crawlers: crawlersSchema,
@@ -137,14 +133,13 @@ export function getDataMaps(): {
  * Examples:
  *   abilities -> Abilities
  *   ability-tree-requirements -> AbilityTreeRequirements
- *   classes.core -> CoreClasses
+ *   classes -> Classes
  *
  * Exposed for client use
  */
 export function toPascalCase(id: string): string {
-  // Handle special cases for classes
-  if (id === 'classes.core') return 'CoreClasses'
-  if (id === 'classes.advanced') return 'AdvancedClasses'
+  // Handle special case for classes
+  if (id === 'classes') return 'Classes'
 
   // Handle special case for NPCs (all caps)
   if (id === 'npcs') return 'NPCs'
@@ -222,11 +217,7 @@ const schemaDisplayNames: Record<string, { singular: string; plural: string }> =
   },
   'bio-titans': { singular: 'Bio-Titan', plural: 'Bio-Titans' },
   chassis: { singular: 'Chassis', plural: 'Chassis' },
-  'classes.advanced': {
-    singular: 'Advanced Class',
-    plural: 'Advanced Classes',
-  },
-  'classes.core': { singular: 'Core Class', plural: 'Core Classes' },
+  classes: { singular: 'Class', plural: 'Classes' },
   'crawler-bays': { singular: 'Crawler Bay', plural: 'Crawler Bays' },
   'crawler-tech-levels': {
     singular: 'Crawler Tech Level',

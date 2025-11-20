@@ -1,10 +1,12 @@
 [
   {
-    "id": "886b889c-3f12-4ae7-8104-e04ab01f4b54",
-    "type": "Advanced",
-    "name": "Advanced Engineer",
+    "id": "2b3699e5-399b-4085-ad24-c497c94aa4db",
+    "name": "Engineer",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/engineer.jpg",
+    "coreTrees": ["Mechanical Knowledge", "Forging", "Mech-Tech"],
+    "maxAbilities": 10,
+    "advanceable": true,
     "advancedTree": "Advanced Engineer",
     "legendaryTree": "Legendary Engineer",
     "page": 26,
@@ -16,14 +18,16 @@
     ]
   },
   {
-    "id": "d7baf9cf-414c-4ebd-9e9b-a38aeb095740",
-    "type": "Advanced",
-    "name": "Advanced Hacker",
+    "id": "83ba8f4f-4412-4a4f-93bb-1d67082efda3",
+    "name": "Hacker",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/hacker.jpg",
+    "coreTrees": ["Hacking", "Electronics", "Augmentation"],
+    "advanceable": true,
     "advancedTree": "Advanced Hacking",
     "legendaryTree": "Legendary Hacker",
     "page": 32,
+    "maxAbilities": 10,
     "content": [
       {
         "type": "paragraph",
@@ -32,30 +36,63 @@
     ]
   },
   {
-    "id": "24c63037-5322-4205-84ad-fdb35fcd1734",
-    "type": "Advanced",
-    "name": "Advanced Hauler",
+    "id": "5379550f-6183-4eb2-a2bc-237108688055",
+    "name": "Hauler",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/hauler.jpg",
+    "coreTrees": ["Salvaging", "Trading", "Leadership"],
+    "page": 38,
+    "advanceable": true,
     "advancedTree": "Advanced Hauler",
     "legendaryTree": "Legendary Hauler",
-    "page": 38,
+    "maxAbilities": 10,
     "content": [
       {
         "type": "paragraph",
-        "value": "If you need a job done in the Union, no matter how dirty, you call a Hauler. There is never a job too big, or a deal too messy, that they won’t shake your hand with a smile to do. Whether it is hauling a leaky reactor through a hot zone or salvaging from a buried arco in a toxic waste dump. This can-do attitude makes them a shoo-in for leadership roles, as other salvagers look up to them for their sheer tenacity. Play a Hauler if you want to play a hardy character who can haul large amounts of cargo, make tough deals, and protect and inspire their allies."
+        "value": "If you need a job done in the Union, no matter how dirty, you call a Hauler. There is never a job too big, or a deal too messy, that they won't shake your hand with a smile to do. Whether it is hauling a leaky reactor through a hot zone or salvaging from a buried arco in a toxic waste dump. This can-do attitude makes them a shoo-in for leadership roles, as other salvagers look up to them for their sheer tenacity. Play a Hauler if you want to play a hardy character who can haul large amounts of cargo, make tough deals, and protect and inspire their allies."
       }
     ]
   },
   {
-    "id": "d417c1d1-802e-4b65-802f-4c77fcd21470",
-    "type": "Advanced",
-    "name": "Advanced Scout",
+    "id": "6bf071e2-c1b1-4ea2-a831-354c75dd1ba2",
+    "name": "Salvager",
+    "source": "Salvage Union Workshop Manual",
+    "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/salvager.jpg",
+    "coreTrees": [
+      "Leadership",
+      "Trading",
+      "Mechanical Knowledge",
+      "Mech-Tech",
+      "Recon",
+      "Sleuth",
+      "Sniper",
+      "Survivalist",
+      "Gladitorial Combat",
+      "Hacking",
+      "Augmentation",
+      "Salvaging"
+    ],
+    "page": 9,
+    "advanceable": false,
+    "maxAbilities": 12,
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "The Union runs on the backbone of Salvagers who come from all walks of life. This gives them a wide breadth of knowledge which they use to support the Salvage Union. An average day for a Salvager may see them out in the wastes, salvaging scrap in the morning, welding together broken Mechs in the afternoon, and hacking into the corpo-net in the evening. Play a Salvager if you want to be a jack of all trades who can draw from multiple different Abilities as suits your play style. Salvagers can take a maximum of 12 Pilot Abilities, and can choose Abilities from any of the Core Ability trees from any Class. However they cannot advance into any of the Hybrid Classes, nor do they have any Advanced or Legendary Abilities."
+      }
+    ]
+  },
+  {
+    "id": "97c293dd-62ed-4b3d-95cd-78eb408c0ba2",
+    "name": "Scout",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/scout.jpg",
+    "coreTrees": ["Recon", "Sleuth", "Sniper"],
+    "page": 46,
+    "advanceable": true,
     "advancedTree": "Advanced Scout",
     "legendaryTree": "Legendary Scout",
-    "page": 46,
+    "maxAbilities": 10,
     "content": [
       {
         "type": "paragraph",
@@ -64,14 +101,16 @@
     ]
   },
   {
-    "id": "f335a8fa-1151-4bc8-9a11-a7460e0eab4a",
-    "type": "Advanced",
-    "name": "Advanced Soldier",
+    "id": "444760a5-e8fd-47d4-ad5a-b7b5b383e3f0",
+    "name": "Soldier",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.core/soldier.jpg",
+    "coreTrees": ["Survivalist", "Gladitorial Combat", "Tactical Warfare"],
+    "page": 52,
+    "advanceable": true,
     "advancedTree": "Advanced Soldier",
     "legendaryTree": "Legendary Soldier",
-    "page": 52,
+    "maxAbilities": 10,
     "content": [
       {
         "type": "paragraph",
@@ -81,7 +120,7 @@
   },
   {
     "id": "5fb0f656-b454-45ea-8367-b529e68c9b9e",
-    "type": "Hybrid",
+    "hybrid": true,
     "name": "Fabricator",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/fabricator.jpg",
@@ -97,7 +136,7 @@
   },
   {
     "id": "44dad652-e1d3-4687-b088-1f104bfbe1ab",
-    "type": "Hybrid",
+    "hybrid": true,
     "name": "Cyborg",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/cyborg.jpg",
@@ -113,7 +152,7 @@
   },
   {
     "id": "6ec4d177-fed2-4fed-8f2f-74ee74fdf48b",
-    "type": "Hybrid",
+    "hybrid": true,
     "name": "Union Rep",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/union%20rep.jpg",
@@ -129,7 +168,7 @@
   },
   {
     "id": "4570fb02-10c4-4f53-8575-e54bd08d47d3",
-    "type": "Hybrid",
+    "hybrid": true,
     "name": "Ranger",
     "source": "Salvage Union Workshop Manual",
     "asset_url": "https://opxrguskxuogghzcnppk.supabase.co/storage/v1/object/public/LP-Assets/classes.hybrid/ranger.jpg",

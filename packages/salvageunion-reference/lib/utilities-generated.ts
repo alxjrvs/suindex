@@ -76,23 +76,6 @@ export function isChassis(entity: SURefMetaEntity): entity is SURefChassis {
 }
 
 /**
- * Type guard to check if an entity is a CoreClass
- * @param entity - The entity to check
- * @returns True if the entity is a CoreClass
- */
-export function isCoreClass(entity: SURefMetaEntity): entity is SURefCoreClass {
-  return (
-    'id' in entity &&
-    'name' in entity &&
-    'source' in entity &&
-    'page' in entity &&
-    'maxAbilities' in entity &&
-    'advanceable' in entity &&
-    'coreTrees' in entity
-  )
-}
-
-/**
  * Type guard to check if an entity is a CrawlerBay
  * @param entity - The entity to check
  * @returns True if the entity is a CrawlerBay
@@ -283,7 +266,6 @@ import type {
   SURefAbility,
   SURefBioTitan,
   SURefChassis,
-  SURefCoreClass,
   SURefCrawler,
   SURefCrawlerBay,
   SURefCreature,
@@ -626,39 +608,6 @@ export function getChassisAbilities(entity: SURefMetaEntity): unknown | undefine
  */
 export function getPatterns(entity: SURefMetaEntity): SURefObjectPattern[] | undefined {
   return 'patterns' in entity && Array.isArray(entity.patterns) ? entity.patterns : undefined
-}
-
-/**
- * Extract maxAbilities from an entity
- * @param entity - The entity to extract from
- * @returns The maxAbilities or undefined
- */
-export function getMaxAbilities(entity: SURefMetaEntity): number | undefined {
-  return 'maxAbilities' in entity && typeof entity.maxAbilities === 'number'
-    ? entity.maxAbilities
-    : undefined
-}
-
-/**
- * Extract advanceable from an entity
- * @param entity - The entity to extract from
- * @returns The advanceable or undefined
- */
-export function getAdvanceable(entity: SURefMetaEntity): boolean | undefined {
-  return 'advanceable' in entity && typeof entity.advanceable === 'boolean'
-    ? entity.advanceable
-    : undefined
-}
-
-/**
- * Extract coreTrees from an entity
- * @param entity - The entity to extract from
- * @returns The coreTrees or undefined
- */
-export function getCoreTrees(entity: SURefMetaEntity): string[] | undefined {
-  return 'coreTrees' in entity && Array.isArray(entity.coreTrees)
-    ? (entity.coreTrees as string[])
-    : undefined
 }
 
 /**

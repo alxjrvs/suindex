@@ -85,7 +85,7 @@ export function usePilotClasses(pilotIds: string[]) {
         .from('suentities')
         .select('pilot_id, schema_name, schema_ref_id')
         .in('pilot_id', pilotIds)
-        .in('schema_name', ['classes.core', 'classes.advanced', 'classes.hybrid'])
+        .in('schema_name', ['classes'])
 
       if (error) {
         throw new Error(`Failed to fetch pilot classes: ${error.message}`)
@@ -111,9 +111,16 @@ export function usePilotClasses(pilotIds: string[]) {
               ref_id: entity.schema_ref_id,
             }
 
-            if (entity.schema_name === 'classes.core') {
+            // Determine if this is a base class (can be selected as initial class)
+            // Base classes have coreTrees, hybrid classes have hybrid=true
+            const refClass = ref as { coreTrees?: string[]; hybrid?: boolean }
+            const isBaseClass = 'coreTrees' in refClass && Array.isArray(refClass.coreTrees)
+            const isHybridClass = 'hybrid' in refClass && refClass.hybrid === true
+
+            if (isBaseClass && !isHybridClass) {
               classes.set(entity.pilot_id, data)
             } else {
+              // Advanced version of base class or hybrid class
               advancedClasses.set(entity.pilot_id, data)
             }
           }

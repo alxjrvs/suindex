@@ -1,10 +1,5 @@
 import { useCallback } from 'react'
-import {
-  SalvageUnionReference,
-  type SURefAbility,
-  type SURefCoreClass,
-  type SURefAdvancedClass,
-} from 'salvageunion-reference'
+import { SalvageUnionReference, type SURefAbility, type SURefClass } from 'salvageunion-reference'
 import { getAbilityCost } from '../../components/PilotLiveSheet/utils/getAbilityCost'
 import { useHydratedPilot } from './useHydratedPilot'
 import { useCreateEntity, useDeleteEntity } from '../suentity'
@@ -25,8 +20,8 @@ export function useManagePilotAbilities(id: string | undefined) {
 
       const cost = getAbilityCost(
         ability,
-        selectedClass?.ref as SURefCoreClass | undefined,
-        selectedAdvancedClass?.ref as SURefAdvancedClass | undefined
+        selectedClass?.ref as SURefClass | undefined,
+        selectedAdvancedClass?.ref as SURefClass | undefined
       )
 
       if ((pilot?.current_tp ?? 0) < cost) {

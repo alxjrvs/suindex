@@ -184,6 +184,52 @@ function generateProperties(
 }
 
 /**
+ * Generate inline type for a schema (used in oneOf unions)
+ */
+function generateInlineType(schema: JSONSchema): string | null {
+  const baseTypes: string[] = []
+  let ownProperties = schema.properties || {}
+  let ownRequired = schema.required || []
+
+  // Collect base types from allOf
+  if (schema.allOf) {
+    for (const subSchema of schema.allOf) {
+      if (subSchema.$ref) {
+        const refType = extractRefType(subSchema.$ref)
+        if (refType) {
+          baseTypes.push(refType.typeName)
+        }
+      } else if (subSchema.properties) {
+        // Merge properties from allOf
+        ownProperties = { ...ownProperties, ...subSchema.properties }
+        if (subSchema.required) {
+          ownRequired = [...ownRequired, ...subSchema.required]
+        }
+      }
+    }
+  }
+
+  // If we have base types and no own properties, use type alias
+  if (baseTypes.length > 0 && Object.keys(ownProperties).length === 0) {
+    return baseTypes.length === 1 ? baseTypes[0] : `(${baseTypes.join(' & ')})`
+  }
+
+  // Generate inline type
+  const typeParts: string[] = []
+  if (baseTypes.length > 0) {
+    typeParts.push(baseTypes.join(' & '))
+  }
+  if (Object.keys(ownProperties).length > 0) {
+    const props = generateProperties(ownProperties, ownRequired, '  ')
+    if (props.length > 0) {
+      typeParts.push(`{\n${props.join('\n')}\n}`)
+    }
+  }
+
+  return typeParts.length > 0 ? typeParts.join(' & ') : null
+}
+
+/**
  * Generate TypeScript type from schema items definition
  */
 function generateSchemaType(
@@ -215,8 +261,32 @@ function generateSchemaType(
     lines.push(' */')
   }
 
+  // Handle oneOf (union types) in items schema
+  if (itemSchema.oneOf) {
+    const unionTypes: string[] = []
+    for (const subSchema of itemSchema.oneOf) {
+      if (subSchema.$ref) {
+        const refType = extractRefType(subSchema.$ref)
+        if (refType) {
+          unionTypes.push(refType.typeName)
+        }
+      } else if (subSchema.allOf || subSchema.properties) {
+        // Generate inline type for complex schemas
+        const inlineType = generateInlineType(subSchema)
+        if (inlineType) {
+          unionTypes.push(inlineType)
+        }
+      }
+    }
+    if (unionTypes.length > 0) {
+      lines.push(`export type ${typeName} =`)
+      lines.push(`  | ${unionTypes.join('\n  | ')}`)
+      return lines.join('\n')
+    }
+  }
+
   // If items is just a $ref, use it as a type alias
-  if (itemSchema.$ref && !itemSchema.allOf && !itemSchema.properties) {
+  if (itemSchema.$ref && !itemSchema.allOf && !itemSchema.properties && !itemSchema.oneOf) {
     const refType = extractRefType(itemSchema.$ref)
     if (refType) {
       // If the type name matches the referenced type exactly, skip generating it (it's already defined)

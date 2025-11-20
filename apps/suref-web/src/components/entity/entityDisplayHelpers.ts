@@ -3,7 +3,7 @@ import type {
   SURefEnumSchemaName,
   SURefObjectBonusPerTechLevel,
 } from 'salvageunion-reference'
-import { getBlackMarket } from 'salvageunion-reference'
+import { getBlackMarket, isHybridClass } from 'salvageunion-reference'
 
 /**
  * Local type that extends SURefEnumSchemaName to include meta schemas like 'actions'
@@ -68,8 +68,17 @@ export function calculateBackgroundColor(
   if (schemaName === 'keywords') return headerColor || 'su.orange'
   if (schemaName === 'traits') return headerColor || 'su.orange'
   if (schemaName === 'roll-tables') return headerColor || 'su.orange'
-  if (schemaName === 'classes.core') return headerColor || 'su.orange'
-  if (schemaName === 'classes.advanced') return headerColor || 'su.pink'
+  if (schemaName === 'classes' && !headerColor) {
+    // Base class (hybrid is false or missing) -> pilot orange
+    // Hybrid class -> legendary color (pink)
+    // Check if data is a valid entity (not SURefObjectBonusPerTechLevel)
+    if ('id' in data && 'name' in data && 'source' in data && 'page' in data) {
+      const isHybrid = isHybridClass(data as SURefMetaEntity)
+      return isHybrid ? 'su.pink' : 'su.orange'
+    }
+    return 'su.orange'
+  }
+  if (schemaName === 'classes') return headerColor || 'su.orange'
 
   if (schemaName === 'abilities' && !headerColor) {
     const isLegendary =

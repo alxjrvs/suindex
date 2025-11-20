@@ -14,8 +14,7 @@ import type {
   SURefAbility,
   SURefBioTitan,
   SURefChassis,
-  SURefAdvancedClass,
-  SURefCoreClass,
+  SURefClass,
   SURefCrawlerBay,
   SURefCrawler,
   SURefCreature,
@@ -78,8 +77,7 @@ export type SchemaToEntityMap = {
   'bio-titans': SURefBioTitan
   'chassis-abilities': SURefMetaChassisAbility
   chassis: SURefChassis
-  'classes.advanced': SURefAdvancedClass
-  'classes.core': SURefCoreClass
+  classes: SURefClass
   'crawler-bays': SURefCrawlerBay
   'crawler-tech-levels': SURefMetaCrawlerTechLevel
   crawlers: SURefCrawler
@@ -109,8 +107,7 @@ export const EntitySchemaNames = new Set<EntitySchemaName>([
   'bio-titans',
   'chassis-abilities',
   'chassis',
-  'classes.advanced',
-  'classes.core',
+  'classes',
   'crawler-bays',
   'crawler-tech-levels',
   'crawlers',
@@ -137,8 +134,7 @@ export const SchemaToModelMap = {
   'bio-titans': 'BioTitans',
   'chassis-abilities': 'ChassisAbilities',
   chassis: 'Chassis',
-  'classes.advanced': 'AdvancedClasses',
-  'classes.core': 'CoreClasses',
+  classes: 'Classes',
   'crawler-bays': 'CrawlerBays',
   'crawler-tech-levels': 'CrawlerTechLevels',
   crawlers: 'Crawlers',
@@ -165,8 +161,7 @@ export const SchemaToDisplayName = {
   'bio-titans': 'Bio-Titans',
   'chassis-abilities': 'chassis-abilities',
   chassis: 'Chassis',
-  'classes.advanced': 'Advanced Classes',
-  'classes.core': 'Core Classes',
+  classes: 'Classes',
   'crawler-bays': 'Crawler Bays',
   'crawler-tech-levels': 'Crawler Tech Levels',
   crawlers: 'Crawlers',
@@ -200,10 +195,7 @@ export class SalvageUnionReference {
   static BioTitans = models.BioTitans as ModelWithMetadata<SchemaToEntityMap['bio-titans']>
   static ChassisAbilities = models.ChassisAbilities as ModelWithMetadata<SURefMetaChassisAbility>
   static Chassis = models.Chassis as ModelWithMetadata<SchemaToEntityMap['chassis']>
-  static AdvancedClasses = models.AdvancedClasses as ModelWithMetadata<
-    SchemaToEntityMap['classes.advanced']
-  >
-  static CoreClasses = models.CoreClasses as ModelWithMetadata<SchemaToEntityMap['classes.core']>
+  static Classes = models.Classes as ModelWithMetadata<SchemaToEntityMap['classes']>
   static CrawlerBays = models.CrawlerBays as ModelWithMetadata<SchemaToEntityMap['crawler-bays']>
   static CrawlerTechLevels =
     models.CrawlerTechLevels as ModelWithMetadata<SURefMetaCrawlerTechLevel>

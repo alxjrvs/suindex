@@ -6,7 +6,6 @@
 
 import type {
   SURefEnumActionType,
-  SURefEnumClassType,
   SURefEnumContentType,
   SURefEnumDamageType,
   SURefEnumRange,
@@ -181,7 +180,10 @@ export type SURefObjectBonusPerTechLevel = SURefObjectStats
  * Advanced or hybrid character class
  */
 export interface SURefObjectAdvancedClass extends SURefObjectBaseEntity {
-  type: SURefEnumClassType
+  /**
+   * Whether this is a hybrid class (cannot be selected as initial class)
+   */
+  hybrid?: boolean
   advancedTree: SURefEnumTree
   legendaryTree: SURefEnumTree
   content?: SURefObjectContent

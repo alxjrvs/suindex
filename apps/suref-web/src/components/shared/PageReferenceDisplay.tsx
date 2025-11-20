@@ -13,8 +13,6 @@ export function PageReferenceDisplay({ bg }: { bg?: string }) {
   return (
     <Flex
       p={spacing.contentPadding}
-      borderTopWidth="2px"
-      borderTopColor="su.black"
       color="su.black"
       justifyContent="space-between"
       alignItems="center"

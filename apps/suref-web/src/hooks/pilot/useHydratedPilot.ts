@@ -72,18 +72,25 @@ export function useHydratedPilot(id: string | undefined): HydratedPilot {
 
   const systems = useMemo(() => entities.filter((e) => e.schema_name === 'systems'), [entities])
 
-  const selectedClass = useMemo(
-    () => entities.find((e) => e.schema_name === 'classes.core'),
-    [entities]
-  )
+  const selectedClass = useMemo(() => {
+    // Find all class entities and filter for base class (has coreTrees, not hybrid)
+    const classEntities = entities.filter((e) => e.schema_name === 'classes')
+    return classEntities.find((classEntity) => {
+      const ref = classEntity.ref as { coreTrees?: string[]; hybrid?: boolean }
+      // Base classes have coreTrees and are not hybrid (hybrid !== true)
+      return 'coreTrees' in ref && Array.isArray(ref.coreTrees) && ref.hybrid !== true
+    })
+  }, [entities])
 
-  const selectedAdvancedClass = useMemo(
-    () =>
-      entities.find(
-        (e) => e.schema_name === 'classes.advanced' || e.schema_name === 'classes.hybrid'
-      ),
-    [entities]
-  )
+  const selectedAdvancedClass = useMemo(() => {
+    // Find all class entities and filter for hybrid class only (hybrid === true)
+    const classEntities = entities.filter((e) => e.schema_name === 'classes')
+    return classEntities.find((classEntity) => {
+      const ref = classEntity.ref as { hybrid?: boolean }
+      // Only hybrid classes (hybrid === true)
+      return 'hybrid' in ref && ref.hybrid === true
+    })
+  }, [entities])
 
   const loading = pilotLoading || entitiesLoading
   const error =

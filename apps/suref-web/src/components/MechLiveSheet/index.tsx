@@ -1,7 +1,8 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Box, Flex, Grid, Tabs, Text, VStack, HStack } from '@chakra-ui/react'
+import { Box, Flex, Grid, Tabs, VStack, HStack } from '@chakra-ui/react'
 import { useIsMutating } from '@tanstack/react-query'
 import type { SURefChassis } from 'salvageunion-reference'
+import { Text } from '../base/Text'
 import { PilotSmallDisplay } from '../Dashboard/PilotSmallDisplay'
 import { AddStatButton } from '../shared/AddStatButton'
 import { SheetSelect } from '../shared/SheetSelect'
@@ -11,6 +12,7 @@ import { SystemsList } from './SystemsList'
 import { ModulesList } from './ModulesList'
 import { CargoList } from './CargoList'
 import { Notes } from '../shared/Notes'
+import { RoundedBox } from '../shared/RoundedBox'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { DeleteEntity } from '../shared/DeleteEntity'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
@@ -138,7 +140,7 @@ export default function MechLiveSheet({ id }: { id: string }) {
           <Tabs.Trigger value="storage">Storage</Tabs.Trigger>
           <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
           <Box flex="1" />
-          <Tabs.Trigger value="pilot">Pilot</Tabs.Trigger>
+          {!isLocal && <Tabs.Trigger value="pilot">Pilot</Tabs.Trigger>}
         </Tabs.List>
 
         <Tabs.Content value="abilities">
@@ -178,95 +180,94 @@ export default function MechLiveSheet({ id }: { id: string }) {
           </Box>
         </Tabs.Content>
 
-        <Tabs.Content value="pilot">
-          <VStack gap={6} align="stretch" mt={6}>
-            {mech?.pilot_id ? (
-              <>
-                {!isLocal && isEditable && availablePilots.length > 0 && (
-                  <Box>
-                    <SheetSelect
-                      label="Change Pilot"
-                      value={null}
-                      options={availablePilots.map((p) => {
-                        const parts = [p.callsign]
-                        if (p.class_id) {
-                          const coreClass = SalvageUnionReference.get('classes.core', p.class_id)
-                          if (coreClass) parts.push(coreClass.name)
-                        }
-                        if (p.advanced_class_id) {
-                          const advancedClass = SalvageUnionReference.get(
-                            'classes.advanced',
-                            p.advanced_class_id
-                          )
-                          if (advancedClass) parts.push(`/ ${advancedClass.name}`)
-                        }
-                        return { id: p.id, name: parts.join(' - ') }
-                      })}
-                      onChange={(pilotId) => {
-                        if (pilotId) {
-                          updateMech.mutate({ id, updates: { pilot_id: pilotId } })
-                        }
-                      }}
-                      placeholder="Select a different pilot..."
-                    />
-                  </Box>
-                )}
-                <PilotSmallDisplay id={mech.pilot_id} />
-              </>
-            ) : (
-              <Box bg="su.lightBlue" p={8} borderRadius="md" borderWidth="2px" borderColor="black">
-                <VStack gap={4}>
-                  <Text textAlign="center" color="su.brick" fontWeight="bold">
-                    No pilot assigned to this mech
-                  </Text>
-                  {!isLocal && isEditable && (
-                    <HStack gap={4} justify="center">
-                      <AddStatButton
-                        label="Create"
-                        bottomLabel="Pilot"
-                        onClick={handleCreatePilot}
-                        disabled={createPilot.isPending}
-                        ariaLabel="Create new pilot for this mech"
+        {!isLocal && (
+          <Tabs.Content value="pilot">
+            <VStack gap={6} align="stretch" mt={6}>
+              {mech?.pilot_id ? (
+                <>
+                  {!isLocal && isEditable && availablePilots.length > 0 && (
+                    <Box>
+                      <SheetSelect
+                        label="Change Pilot"
+                        value={null}
+                        options={availablePilots.map((p) => {
+                          const parts = [p.callsign]
+                          if (p.class_id) {
+                            const coreClass = SalvageUnionReference.get('classes', p.class_id)
+                            if (coreClass) parts.push(coreClass.name)
+                          }
+                          if (p.advanced_class_id) {
+                            const advancedClass = SalvageUnionReference.get(
+                              'classes',
+                              p.advanced_class_id
+                            )
+                            if (advancedClass) parts.push(`/ ${advancedClass.name}`)
+                          }
+                          return { id: p.id, name: parts.join(' - ') }
+                        })}
+                        onChange={(pilotId) => {
+                          if (pilotId) {
+                            updateMech.mutate({ id, updates: { pilot_id: pilotId } })
+                          }
+                        }}
+                        placeholder="Select a different pilot..."
                       />
-                      {availablePilots.length > 0 && (
-                        <Box w="300px">
-                          <SheetSelect
-                            label="Or Assign Existing"
-                            value={null}
-                            options={availablePilots.map((p) => {
-                              const parts = [p.callsign]
-                              if (p.class_id) {
-                                const coreClass = SalvageUnionReference.get(
-                                  'classes.core',
-                                  p.class_id
-                                )
-                                if (coreClass) parts.push(coreClass.name)
-                              }
-                              if (p.advanced_class_id) {
-                                const advancedClass = SalvageUnionReference.get(
-                                  'classes.advanced',
-                                  p.advanced_class_id
-                                )
-                                if (advancedClass) parts.push(`/ ${advancedClass.name}`)
-                              }
-                              return { id: p.id, name: parts.join(' - ') }
-                            })}
-                            onChange={(pilotId) => {
-                              if (pilotId) {
-                                updateMech.mutate({ id, updates: { pilot_id: pilotId } })
-                              }
-                            }}
-                            placeholder="Select pilot..."
-                          />
-                        </Box>
-                      )}
-                    </HStack>
+                    </Box>
                   )}
-                </VStack>
-              </Box>
-            )}
-          </VStack>
-        </Tabs.Content>
+                  <PilotSmallDisplay id={mech.pilot_id} />
+                </>
+              ) : (
+                <RoundedBox bg="su.grey">
+                  <VStack gap={4}>
+                    <Text variant="pseudoheader" textAlign="center">
+                      No pilot assigned to this mech
+                    </Text>
+                    {!isLocal && isEditable && (
+                      <HStack gap={4} justify="center">
+                        <AddStatButton
+                          label="Create"
+                          bottomLabel="Pilot"
+                          onClick={handleCreatePilot}
+                          disabled={createPilot.isPending}
+                          ariaLabel="Create new pilot for this mech"
+                        />
+                        {availablePilots.length > 0 && (
+                          <Box w="300px">
+                            <SheetSelect
+                              label="Or Assign Existing"
+                              value={null}
+                              options={availablePilots.map((p) => {
+                                const parts = [p.callsign]
+                                if (p.class_id) {
+                                  const coreClass = SalvageUnionReference.get('classes', p.class_id)
+                                  if (coreClass) parts.push(coreClass.name)
+                                }
+                                if (p.advanced_class_id) {
+                                  const advancedClass = SalvageUnionReference.get(
+                                    'classes',
+                                    p.advanced_class_id
+                                  )
+                                  if (advancedClass) parts.push(`/ ${advancedClass.name}`)
+                                }
+                                return { id: p.id, name: parts.join(' - ') }
+                              })}
+                              onChange={(pilotId) => {
+                                if (pilotId) {
+                                  updateMech.mutate({ id, updates: { pilot_id: pilotId } })
+                                }
+                              }}
+                              placeholder="Select pilot..."
+                            />
+                          </Box>
+                        )}
+                      </HStack>
+                    )}
+                  </VStack>
+                </RoundedBox>
+              )}
+            </VStack>
+          </Tabs.Content>
+        )}
       </Tabs.Root>
 
       {!isLocal && (

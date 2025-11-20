@@ -6,15 +6,15 @@
 import { SalvageUnionReference, SchemaToDisplayName, SchemaToModelMap } from './index.js'
 import type {
   SURefAbility,
-  SURefAdvancedClass,
   SURefChassis,
-  SURefCoreClass,
+  SURefClass,
   SURefCrawler,
   SURefCrawlerBay,
   SURefMetaCrawlerTechLevel,
   SURefEquipment,
   SURefEntity,
   SURefEnumSchemaName,
+  SURefObjectAdvancedClass,
 } from './types/index.js'
 import type { EntitySchemaName } from './index.js'
 import type { ModelWithMetadata } from './BaseModel.js'
@@ -30,16 +30,21 @@ export function getDisplayName(schemaName: SURefEnumSchemaName): string {
 
 /**
  * Normalize a schema name to the canonical form
- * Handles aliases like 'classes-core' -> 'classes.core', 'classes-hybrid' -> 'classes.advanced'
+ * Handles aliases like 'classes-core' -> 'classes', 'classes-hybrid' -> 'classes'
  * @param schemaName - The schema name (may be an alias)
  * @returns The normalized schema name
  */
 export function normalizeSchemaName(schemaName: string): SURefEnumSchemaName {
-  // Handle class schema aliases
-  if (schemaName === 'classes-core') return 'classes.core'
-  if (schemaName === 'classes-advanced') return 'classes.advanced'
-  if (schemaName === 'classes-hybrid' || schemaName === 'classes.hybrid') {
-    return 'classes.advanced'
+  // Handle class schema aliases - all map to unified 'classes' schema
+  if (
+    schemaName === 'classes-core' ||
+    schemaName === 'classes.core' ||
+    schemaName === 'classes-advanced' ||
+    schemaName === 'classes.advanced' ||
+    schemaName === 'classes-hybrid' ||
+    schemaName === 'classes.hybrid'
+  ) {
+    return 'classes'
   }
 
   // Return as-is if it's already a valid schema name
@@ -48,7 +53,7 @@ export function normalizeSchemaName(schemaName: string): SURefEnumSchemaName {
 
 /**
  * Get a model by schema name
- * Automatically normalizes schema name aliases (e.g., 'classes-core' -> 'classes.core')
+ * Automatically normalizes schema name aliases (e.g., 'classes-core' -> 'classes')
  * @param schemaName - The schema name (may be an alias)
  * @returns The model instance or undefined if not found
  */
@@ -115,36 +120,51 @@ export function getNameById(
 // ============================================================================
 
 /**
- * Get all core classes
- * @returns Array of core classes
+ * Type guard to check if a class is a base class (has coreTrees)
  */
-export function getCoreClasses(): SURefCoreClass[] {
-  return SalvageUnionReference.findAllIn('classes.core', () => true)
+export function isBaseClass(cls: SURefClass): cls is SURefClass & { coreTrees: string[] } {
+  return 'coreTrees' in cls && Array.isArray(cls.coreTrees)
 }
 
 /**
- * Get all hybrid classes (advanced classes with type='Hybrid')
+ * Get all base classes (classes with coreTrees)
+ * @returns Array of base classes
+ */
+export function getCoreClasses(): SURefClass[] {
+  return SalvageUnionReference.findAllIn(
+    'classes',
+    (c) => 'coreTrees' in c && Array.isArray(c.coreTrees)
+  )
+}
+
+/**
+ * Get all hybrid classes (classes with hybrid=true)
  * @returns Array of hybrid classes
  */
-export function getHybridClasses(): SURefAdvancedClass[] {
-  return SalvageUnionReference.AdvancedClasses.all().filter((c) => c.type === 'Hybrid')
+export function getHybridClasses(): SURefObjectAdvancedClass[] {
+  return SalvageUnionReference.Classes.all().filter(
+    (c): c is SURefObjectAdvancedClass => 'hybrid' in c && c.hybrid === true
+  )
 }
 
 /**
- * Get all advanced classes (type='Advanced', excluding hybrids)
- * @returns Array of advanced classes
+ * Get all base classes with advanced/legendary trees (advanceable base classes)
+ * @returns Array of advanceable base classes
  */
-export function getAdvancedClasses(): SURefAdvancedClass[] {
-  return SalvageUnionReference.AdvancedClasses.all().filter((c) => c.type === 'Advanced')
+export function getAdvanceableClasses(): SURefClass[] {
+  return SalvageUnionReference.findAllIn(
+    'classes',
+    (c) => 'coreTrees' in c && 'advanceable' in c && c.advanceable === true
+  )
 }
 
 /**
- * Find a core class by name
+ * Find a base class by name
  * @param className - Name of the class to find
- * @returns The core class or undefined if not found
+ * @returns The base class or undefined if not found
  */
-export function findCoreClass(className: string): SURefCoreClass | undefined {
-  return SalvageUnionReference.findIn('classes.core', (c) => c.name === className)
+export function findCoreClass(className: string): SURefClass | undefined {
+  return SalvageUnionReference.findIn('classes', (c) => c.name === className && 'coreTrees' in c)
 }
 
 /**
@@ -152,35 +172,34 @@ export function findCoreClass(className: string): SURefCoreClass | undefined {
  * @param className - Name of the class to find
  * @returns The hybrid class or undefined if not found
  */
-export function findHybridClass(className: string): SURefAdvancedClass | undefined {
-  return SalvageUnionReference.findIn(
-    'classes.advanced',
-    (c) => c.name === className && c.type === 'Hybrid'
-  )
+export function findHybridClass(className: string): SURefObjectAdvancedClass | undefined {
+  const cls = SalvageUnionReference.findIn('classes', (c) => c.name === className)
+  if (cls && 'hybrid' in cls && cls.hybrid === true) {
+    return cls as SURefObjectAdvancedClass
+  }
+  return undefined
 }
 
 /**
- * Find an advanced class by name
- * @param className - Name of the class to find
- * @returns The advanced class or undefined if not found
+ * Find an advanced class by name (base class that has advancedTree)
+ * @param className - Name of the base class to find
+ * @returns The base class with advanced tree or undefined if not found
  */
-export function findAdvancedClass(className: string): SURefAdvancedClass | undefined {
-  return SalvageUnionReference.findIn(
-    'classes.advanced',
-    (c) => c.name === className && c.type === 'Advanced'
-  )
+export function findAdvancedClass(className: string): SURefClass | undefined {
+  const cls = SalvageUnionReference.findIn('classes', (c) => c.name === className)
+  if (cls && 'coreTrees' in cls && 'advancedTree' in cls && cls.advancedTree) {
+    return cls
+  }
+  return undefined
 }
 
 /**
- * Find a class by name across all class types (core, advanced, hybrid)
+ * Find a class by name across all class types (base, hybrid)
  * @param className - Name of the class to find
  * @returns The class or undefined if not found
  */
-export function findClass(className: string): SURefCoreClass | SURefAdvancedClass | undefined {
-  return (
-    SalvageUnionReference.findIn('classes.core', (c) => c.name === className) ||
-    SalvageUnionReference.findIn('classes.advanced', (c) => c.name === className)
-  )
+export function findClass(className: string): SURefClass | undefined {
+  return SalvageUnionReference.findIn('classes', (c) => c.name === className)
 }
 
 // ============================================================================

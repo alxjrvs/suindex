@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Box, Button, Flex, Grid, Tabs, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Grid, Tabs, VStack } from '@chakra-ui/react'
+import { Text } from '../base/Text'
 import { useIsMutating, useQuery } from '@tanstack/react-query'
 import { CrawlerHeaderInputs } from './CrawlerHeaderInputs'
 import { CrawlerAbilities } from './CrawlerAbilities'
@@ -7,6 +8,7 @@ import { CrawlerResourceSteppers } from './CrawlerResourceSteppers'
 import { BayCard } from './BayCard'
 import { StorageCargoBay } from './StorageCargoBay'
 import { Notes } from '../shared/Notes'
+import { RoundedBox } from '../shared/RoundedBox'
 import { LiveSheetLayout } from '../shared/LiveSheetLayout'
 import { LiveSheetControlBar } from '../shared/LiveSheetControlBar'
 import { CrawlerNPC } from './CrawlerNPC'
@@ -120,7 +122,7 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           <Tabs.Trigger value="storage">Storage Bay</Tabs.Trigger>
           <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
           <Box flex="1" />
-          <Tabs.Trigger value="pilots">Pilots & Mechs</Tabs.Trigger>
+          {!isLocal && <Tabs.Trigger value="pilots">Pilots & Mechs</Tabs.Trigger>}
         </Tabs.List>
 
         <Tabs.Content value="abilities">
@@ -168,23 +170,25 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
           </Box>
         </Tabs.Content>
 
-        <Tabs.Content value="pilots">
-          <VStack gap={4} align="stretch" mt={6}>
-            {pilotsWithMechs.length === 0 ? (
-              <Box bg="su.lightBlue" p={8} borderRadius="md" borderWidth="2px" borderColor="black">
-                <Text textAlign="center" color="su.brick" fontWeight="bold">
-                  No pilots assigned to this crawler
-                </Text>
-              </Box>
-            ) : (
-              <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-                {pilotsWithMechs.map(({ pilot }) => (
-                  <PilotMechCell key={pilot.id} crawlerId={id} memberId={pilot.user_id} />
-                ))}
-              </Grid>
-            )}
-          </VStack>
-        </Tabs.Content>
+        {!isLocal && (
+          <Tabs.Content value="pilots">
+            <VStack gap={4} align="stretch" mt={6}>
+              {pilotsWithMechs.length === 0 ? (
+                <RoundedBox bg="su.grey">
+                  <Text variant="pseudoheader" textAlign="center">
+                    No pilots assigned to this crawler
+                  </Text>
+                </RoundedBox>
+              ) : (
+                <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+                  {pilotsWithMechs.map(({ pilot }) => (
+                    <PilotMechCell key={pilot.id} crawlerId={id} memberId={pilot.user_id} />
+                  ))}
+                </Grid>
+              )}
+            </VStack>
+          </Tabs.Content>
+        )}
       </Tabs.Root>
 
       <Button
