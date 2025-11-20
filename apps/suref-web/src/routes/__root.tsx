@@ -67,6 +67,19 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Salvage Union System Reference Document</title>
+        {/* Resource hints for faster external resource loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="https://*.supabase.co" />
+        <link rel="dns-prefetch" href="https://*.supabase.in" />
+        {/* Preload critical font */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap"
+          as="style"
+        />
         <HeadContent />
       </head>
       <body>

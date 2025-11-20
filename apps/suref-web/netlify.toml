@@ -30,6 +30,8 @@
 
 [build.processing.images]
   compress = true
+  # Enable Netlify Image CDN for better performance
+  # This will automatically optimize images on-the-fly
 
 # SPA redirects - catch all non-file requests and serve index.html for client-side routing
 [[redirects]]
@@ -49,6 +51,8 @@
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
     # Content Security Policy - adjust as needed for your app
     Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://*.netlify.app;"
+    # Performance headers
+    X-DNS-Prefetch-Control = "on"
 
 # Caching headers for static assets
 [[headers]]
