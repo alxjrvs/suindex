@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as Super_secret_haven_loginRouteImport } from './routes/super_secret_haven_login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as R404RouteImport } from './routes/404'
@@ -30,12 +29,6 @@ import { Route as DashboardGamesGameIdRouteImport } from './routes/dashboard/gam
 import { Route as DashboardCrawlersIdRouteImport } from './routes/dashboard/crawlers/$id'
 import { Route as SchemaSchemaIdItemItemIdRouteImport } from './routes/schema/$schemaId/item/$itemId'
 
-const Super_secret_haven_loginRoute =
-  Super_secret_haven_loginRouteImport.update({
-    id: '/super_secret_haven_login',
-    path: '/super_secret_haven_login',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -138,7 +131,6 @@ export interface FileRoutesByFullPath {
   '/404': typeof R404Route
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
-  '/super_secret_haven_login': typeof Super_secret_haven_loginRoute
   '/dashboard/join': typeof DashboardJoinRoute
   '/sheets/crawler': typeof SheetsCrawlerRoute
   '/sheets/mech': typeof SheetsMechRoute
@@ -159,7 +151,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/404': typeof R404Route
   '/about': typeof AboutRoute
-  '/super_secret_haven_login': typeof Super_secret_haven_loginRoute
   '/dashboard/join': typeof DashboardJoinRoute
   '/sheets/crawler': typeof SheetsCrawlerRoute
   '/sheets/mech': typeof SheetsMechRoute
@@ -182,7 +173,6 @@ export interface FileRoutesById {
   '/404': typeof R404Route
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
-  '/super_secret_haven_login': typeof Super_secret_haven_loginRoute
   '/dashboard/join': typeof DashboardJoinRoute
   '/sheets/crawler': typeof SheetsCrawlerRoute
   '/sheets/mech': typeof SheetsMechRoute
@@ -206,7 +196,6 @@ export interface FileRouteTypes {
     | '/404'
     | '/about'
     | '/dashboard'
-    | '/super_secret_haven_login'
     | '/dashboard/join'
     | '/sheets/crawler'
     | '/sheets/mech'
@@ -227,7 +216,6 @@ export interface FileRouteTypes {
     | '/'
     | '/404'
     | '/about'
-    | '/super_secret_haven_login'
     | '/dashboard/join'
     | '/sheets/crawler'
     | '/sheets/mech'
@@ -249,7 +237,6 @@ export interface FileRouteTypes {
     | '/404'
     | '/about'
     | '/dashboard'
-    | '/super_secret_haven_login'
     | '/dashboard/join'
     | '/sheets/crawler'
     | '/sheets/mech'
@@ -272,7 +259,6 @@ export interface RootRouteChildren {
   R404Route: typeof R404Route
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRouteWithChildren
-  Super_secret_haven_loginRoute: typeof Super_secret_haven_loginRoute
   SheetsCrawlerRoute: typeof SheetsCrawlerRoute
   SheetsMechRoute: typeof SheetsMechRoute
   SheetsPilotRoute: typeof SheetsPilotRoute
@@ -282,13 +268,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/super_secret_haven_login': {
-      id: '/super_secret_haven_login'
-      path: '/super_secret_haven_login'
-      fullPath: '/super_secret_haven_login'
-      preLoaderRoute: typeof Super_secret_haven_loginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -460,7 +439,6 @@ const rootRouteChildren: RootRouteChildren = {
   R404Route: R404Route,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRouteWithChildren,
-  Super_secret_haven_loginRoute: Super_secret_haven_loginRoute,
   SheetsCrawlerRoute: SheetsCrawlerRoute,
   SheetsMechRoute: SheetsMechRoute,
   SheetsPilotRoute: SheetsPilotRoute,

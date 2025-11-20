@@ -2,7 +2,7 @@ import { VStack, Box } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { useNavigate } from '@tanstack/react-router'
-import { useHydratedMech } from '../../hooks/mech'
+import { useHydratedMech, useDeleteMech } from '../../hooks/mech'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
@@ -10,6 +10,7 @@ import { fetchUserDisplayName } from '../../lib/api/users'
 import { mechsKeys } from '../../hooks/mech/useMechs'
 import { fetchEntity } from '../../lib/api/entities'
 import type { Tables } from '../../types/database-generated.types'
+import { DeleteButton } from '../shared/DeleteButton'
 
 interface MechSmallDisplayProps {
   id?: string
@@ -21,6 +22,7 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
   const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const { mech, selectedChassis, loading: mechLoading } = useHydratedMech(id)
+  const deleteMech = useDeleteMech()
 
   const chassisName = selectedChassis?.ref.name || 'No Chassis'
 
@@ -119,6 +121,20 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
     </VStack>
   )
 
+  const handleDelete = async () => {
+    if (!id) return
+    await deleteMech.mutateAsync(id)
+  }
+
+  const deleteButton =
+    isOwner && id ? (
+      <DeleteButton
+        entityName="Mech"
+        onConfirmDelete={handleDelete}
+        disabled={deleteMech.isPending}
+      />
+    ) : undefined
+
   return (
     <UserEntitySmallDisplay
       reverse={reverse}
@@ -131,6 +147,7 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
       rightHeader={chassisName.toUpperCase()}
       detailContent={crawlerName || pilotData?.callsign ? detailContent : undefined}
       isInactive={mech.active === false}
+      deleteButton={deleteButton}
     />
   )
 }

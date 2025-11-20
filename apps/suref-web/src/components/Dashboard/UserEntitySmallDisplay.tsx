@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import type { BoxProps } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { Text } from '../base/Text'
 import { RoundedBox } from '../shared/RoundedBox'
 import { ValueDisplay } from '../shared/ValueDisplay'
@@ -25,6 +26,8 @@ interface UserEntitySmallDisplayProps extends BoxProps {
   /** Optional label displayed as pseudo-header above the box */
   label?: string
   reverse?: boolean
+  /** Optional delete button to display in the header */
+  deleteButton?: ReactNode
 }
 
 export function UserEntitySmallDisplay({
@@ -38,6 +41,7 @@ export function UserEntitySmallDisplay({
   detailValue,
   rightHeader,
   isInactive = false,
+  deleteButton,
 }: UserEntitySmallDisplayProps) {
   const effectiveBgColor: string = isInactive ? 'gray.400' : bgColor
 
@@ -67,6 +71,12 @@ export function UserEntitySmallDisplay({
       onMouseEnter={onMouseEnter}
       w="full"
       opacity={isInactive ? 0.7 : 1}
-    />
+    >
+      {deleteButton && (
+        <Flex justifyContent="flex-end" p={2} position="absolute" bottom={0} right={0}>
+          {deleteButton}
+        </Flex>
+      )}
+    </RoundedBox>
   )
 }

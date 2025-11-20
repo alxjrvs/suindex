@@ -1,43 +1,19 @@
 import type { DataValue } from '../../../types/common'
+import type { SURefObjectDataValue } from 'salvageunion-reference'
 import { ActivationCostBox } from '../../shared/ActivationCostBox'
 import { EntityDetailDisplay } from '../EntityDetailDisplay'
 import { ValueDisplay } from '../../shared/ValueDisplay'
 
 /**
- * Format action type for display by appending " Action" where needed
- * - "Turn" → "Turn Action"
- * - "Long" → "Long Action"
- * - "Short" → "Short Action"
- * - "Free" → "Free Action"
- * - "Passive" → "Passive" (no change)
- * - "Reaction" → "Reaction" (no change)
- * - Already includes "action" → unchanged
- */
-// eslint-disable-next-line react-refresh/only-export-components
-export function formatActionType(actionType: string): string {
-  const actionTypeLower = actionType.toLowerCase()
-
-  // Don't append "Action" if it already includes "action" or is Passive/Reaction
-  if (
-    actionTypeLower.includes('action') ||
-    actionTypeLower === 'passive' ||
-    actionTypeLower === 'reaction'
-  ) {
-    return actionType
-  }
-
-  return `${actionType} Action`
-}
-
-/**
  * Shared DetailItem component for rendering DataValue items
- * Used by both EntitySubTitleContent and NestedActionDisplay
+ * Accepts both DataValue (from types/common) and SURefObjectDataValue (from salvageunion-reference)
+ * Used by EntitySubTitleContent, NestedActionDisplay, NestedChassisAbility, and ContentBlockRenderer
  */
 export function SharedDetailItem({
   item,
   compact = false,
 }: {
-  item: DataValue
+  item: DataValue | SURefObjectDataValue
   compact?: boolean
 }) {
   if (item.type === 'cost') {

@@ -241,10 +241,15 @@ export function useDeleteMech() {
       await deleteEntity('mechs', id)
     },
     onSuccess: (_, id) => {
-      if (isLocalId(id)) return
+      if (isLocalId(id)) {
+        queryClient.invalidateQueries({
+          queryKey: mechsKeys.all,
+        })
+        return
+      }
 
       queryClient.invalidateQueries({
-        queryKey: mechsKeys.byId(id),
+        queryKey: mechsKeys.all,
       })
     },
   })
