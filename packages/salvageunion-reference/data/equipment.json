@@ -109,7 +109,7 @@
     "page": 35,
     "indexable": false,
     "techLevel": 0,
-    "actions": ["Holo Companion (Holo Companion)", "Project", "Un-Project"],
+    "actions": ["Holo Companion", "Project", "Un-Project"],
     "id": "dd96f7c0-3760-4b71-9451-77ced25a3b09",
     "content": [
       {
@@ -399,16 +399,53 @@
             "value": "At each Tech Level you may choose an additional modification for your Custom Sniper Rifle."
           }
         ],
-        "schemaEntities": [
-          "Rangefinder",
-          "Laser Guidance",
-          "Pinpoint Targeter",
-          "Dum Dum Rounds",
-          "High Calibre Rounds",
-          "Anti-Matter",
-          "Flashy",
-          "Silencer",
-          "Compact Design"
+        "multiSelect": true,
+        "choiceOptions": [
+          {
+            "label": "Rangefinder",
+            "value": "Rangefinder",
+            "description": "The Custom Sniper Rifle increases its Range to Far."
+          },
+          {
+            "label": "Laser Guidance",
+            "value": "Laser Guidance",
+            "description": "You may spend 2 AP to automatically hit with the Custom Sniper Rifle. It also gains the [[Targeter]] Trait."
+          },
+          {
+            "label": "Pinpoint Targeter",
+            "value": "Pinpoint Targeter",
+            "description": "You may spend 2 AP when you make an attack. If it hits, a System, Module, or appendage of your choice on the target is damaged. It also gains the [[Targeter]] Trait."
+          },
+          {
+            "label": "Dum Dum Rounds",
+            "value": "Dum Dum Rounds",
+            "description": "The Custom Sniper Rifle gains the [[Anti-Organic]] Trait."
+          },
+          {
+            "label": "High Calibre Rounds",
+            "value": "High Calibre Rounds",
+            "description": "The Custom Sniper Rifle deals an additional 1 SP damage."
+          },
+          {
+            "label": "Anti-Matter",
+            "value": "Anti-Matter",
+            "description": "The Custom Sniper Rifle gains the [[Deadly]] Trait."
+          },
+          {
+            "label": "Flashy",
+            "value": "Flashy",
+            "description": "The Custom Sniper Rifle gains the [[Flashy]] Trait."
+          },
+          {
+            "label": "Silencer",
+            "value": "Silencer",
+            "description": "The Custom Sniper Rifle gains the [[Silent]] Trait."
+          },
+          {
+            "label": "Compact Design",
+            "value": "Compact Design",
+            "description": "The Custom Sniper Rifle is designed to fold down into a briefcase, making it easily concealable."
+          }
         ]
       }
     ],

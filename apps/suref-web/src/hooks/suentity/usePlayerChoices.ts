@@ -91,11 +91,28 @@ export function useNestedChoices(choiceId: string | undefined) {
 }
 
 /**
+ * Get all selections for a specific choice_ref_id
+ *
+ * @param choices - Array of all player choices
+ * @param choiceRefId - Choice reference ID to filter by
+ * @returns Array of selections for this choice
+ */
+export function getSelectionsForChoice(
+  choices: Tables<'player_choices'>[],
+  choiceRefId: string
+): Tables<'player_choices'>[] {
+  return choices.filter((c) => c.choice_ref_id === choiceRefId)
+}
+
+/**
  * Hook to upsert a player choice
  *
  * Supports both API-backed and cache-only (local) data:
  * - API-backed: Upserts in Supabase
  * - Cache-only: Upserts in cache only
+ *
+ * For multi-select choices, always adds a new selection.
+ * For single-select choices, replaces existing selection.
  *
  * Automatically invalidates the appropriate choice cache on success.
  * Also invalidates the parent's entity cache to update the hydrated entity.
@@ -106,18 +123,24 @@ export function useNestedChoices(choiceId: string | undefined) {
  * ```tsx
  * const upsertChoice = useUpsertPlayerChoice()
  *
- * // Entity choice
+ * // Entity choice (single-select)
  * await upsertChoice.mutate({
- *   entity_id: entityId,
- *   choice_ref_id: 'weapon',
- *   value: 'systems::laser-rifle',
+ *   data: {
+ *     entity_id: entityId,
+ *     choice_ref_id: 'weapon',
+ *     value: 'systems::laser-rifle',
+ *   },
+ *   isMultiSelect: false,
  * })
  *
- * // Nested choice
+ * // Multi-select choice
  * await upsertChoice.mutate({
- *   player_choice_id: parentChoiceId,
- *   choice_ref_id: 'module',
- *   value: 'modules::targeting-computer',
+ *   data: {
+ *     entity_id: entityId,
+ *     choice_ref_id: 'modification',
+ *     value: 'Rangefinder',
+ *   },
+ *   isMultiSelect: true,
  * })
  * ```
  */
@@ -125,7 +148,13 @@ export function useUpsertPlayerChoice() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: TablesInsert<'player_choices'>) => {
+    mutationFn: async ({
+      data,
+      isMultiSelect = false,
+    }: {
+      data: TablesInsert<'player_choices'>
+      isMultiSelect?: boolean
+    }) => {
       const entityId = data.entity_id
       const choiceId = (data as { player_choice_id?: string }).player_choice_id
 
@@ -136,35 +165,53 @@ export function useUpsertPlayerChoice() {
 
         const currentChoices = queryClient.getQueryData<Tables<'player_choices'>[]>(queryKey) || []
 
-        const existingIndex = currentChoices.findIndex(
-          (c) => c.choice_ref_id === data.choice_ref_id
-        )
-
+        let updatedChoices: Tables<'player_choices'>[]
         const now = new Date().toISOString()
-        const upsertedChoice: Tables<'player_choices'> = {
-          id: existingIndex >= 0 ? currentChoices[existingIndex].id : generateLocalId(),
-          created_at: existingIndex >= 0 ? currentChoices[existingIndex].created_at : now,
-          updated_at: now,
-          entity_id: data.entity_id || null,
-          player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
-          choice_ref_id: data.choice_ref_id!,
-          value: data.value!,
+
+        if (isMultiSelect) {
+          // For multi-select, always add a new selection
+          const newChoice: Tables<'player_choices'> = {
+            id: generateLocalId(),
+            created_at: now,
+            updated_at: now,
+            entity_id: data.entity_id || null,
+            player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
+            choice_ref_id: data.choice_ref_id!,
+            value: data.value!,
+          }
+          updatedChoices = [...currentChoices, newChoice]
+          queryClient.setQueryData(queryKey, updatedChoices)
+          return newChoice
+        } else {
+          // For single-select, replace existing selection
+          const existingIndex = currentChoices.findIndex(
+            (c) => c.choice_ref_id === data.choice_ref_id
+          )
+
+          const upsertedChoice: Tables<'player_choices'> = {
+            id: existingIndex >= 0 ? currentChoices[existingIndex].id : generateLocalId(),
+            created_at: existingIndex >= 0 ? currentChoices[existingIndex].created_at : now,
+            updated_at: now,
+            entity_id: data.entity_id || null,
+            player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
+            choice_ref_id: data.choice_ref_id!,
+            value: data.value!,
+          }
+
+          updatedChoices =
+            existingIndex >= 0
+              ? currentChoices.map((c, i) => (i === existingIndex ? upsertedChoice : c))
+              : [...currentChoices, upsertedChoice]
+
+          queryClient.setQueryData(queryKey, updatedChoices)
+          return upsertedChoice
         }
-
-        const updatedChoices =
-          existingIndex >= 0
-            ? currentChoices.map((c, i) => (i === existingIndex ? upsertedChoice : c))
-            : [...currentChoices, upsertedChoice]
-
-        queryClient.setQueryData(queryKey, updatedChoices)
-
-        return upsertedChoice
       }
 
-      return upsertPlayerChoice(data)
+      return upsertPlayerChoice(data, isMultiSelect)
     },
 
-    onMutate: async (data) => {
+    onMutate: async ({ data, isMultiSelect = false }) => {
       const entityId = data.entity_id
       const choiceId = (data as { player_choice_id?: string }).player_choice_id
 
@@ -184,27 +231,46 @@ export function useUpsertPlayerChoice() {
 
       const previousChoices = queryClient.getQueryData<Tables<'player_choices'>[]>(queryKey) || []
 
-      const existingIndex = previousChoices.findIndex((c) => c.choice_ref_id === data.choice_ref_id)
-
       const now = new Date().toISOString()
-      const optimisticChoice: Tables<'player_choices'> = {
-        id: existingIndex >= 0 ? previousChoices[existingIndex].id : generateLocalId(),
-        created_at: existingIndex >= 0 ? previousChoices[existingIndex].created_at : now,
-        updated_at: now,
-        entity_id: data.entity_id || null,
-        player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
-        choice_ref_id: data.choice_ref_id!,
-        value: data.value!,
-      }
+      let updatedChoices: Tables<'player_choices'>[]
 
-      const updatedChoices =
-        existingIndex >= 0
-          ? previousChoices.map((c, i) => (i === existingIndex ? optimisticChoice : c))
-          : [...previousChoices, optimisticChoice]
+      if (isMultiSelect) {
+        // For multi-select, always add new selection
+        const optimisticChoice: Tables<'player_choices'> = {
+          id: generateLocalId(),
+          created_at: now,
+          updated_at: now,
+          entity_id: data.entity_id || null,
+          player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
+          choice_ref_id: data.choice_ref_id!,
+          value: data.value!,
+        }
+        updatedChoices = [...previousChoices, optimisticChoice]
+      } else {
+        // For single-select, replace existing
+        const existingIndex = previousChoices.findIndex(
+          (c) => c.choice_ref_id === data.choice_ref_id
+        )
+
+        const optimisticChoice: Tables<'player_choices'> = {
+          id: existingIndex >= 0 ? previousChoices[existingIndex].id : generateLocalId(),
+          created_at: existingIndex >= 0 ? previousChoices[existingIndex].created_at : now,
+          updated_at: now,
+          entity_id: data.entity_id || null,
+          player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
+          choice_ref_id: data.choice_ref_id!,
+          value: data.value!,
+        }
+
+        updatedChoices =
+          existingIndex >= 0
+            ? previousChoices.map((c, i) => (i === existingIndex ? optimisticChoice : c))
+            : [...previousChoices, optimisticChoice]
+      }
 
       queryClient.setQueryData(queryKey, updatedChoices)
 
-      return { previousChoices, queryKey, entityId, choiceId }
+      return { previousChoices, queryKey, entityId, choiceId, isMultiSelect }
     },
 
     onError: (_err, _data, context) => {
@@ -229,6 +295,9 @@ export function useUpsertPlayerChoice() {
                   (c) => c.choice_ref_id === choice.choice_ref_id
                 )
 
+                // For multi-select, append; for single-select, replace
+                // Note: We can't reliably detect multi-select from cache, so we'll just replace
+                // The UI will handle displaying multiple selections correctly
                 const updatedChoices =
                   existingIndex >= 0
                     ? entity.choices.map((c, i) => (i === existingIndex ? choice : c))

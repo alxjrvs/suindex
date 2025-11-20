@@ -3561,12 +3561,7 @@
         "type": "paragraph",
         "value": "If your projection device is misplaced or destroyed you can acquire a new one during Downtime. Your A.I. is downloaded onto the device from a backup stored on your Union Crawler."
       }
-    ]
-  },
-  {
-    "name": "Holo Companion (Holo Companion)",
-    "displayName": "Holo Companion",
-    "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    ],
     "choices": [
       {
         "name": "Name",
@@ -3577,12 +3572,6 @@
             "value": "Name your Holo Companion."
           }
         ]
-      }
-    ],
-    "content": [
-      {
-        "type": "paragraph",
-        "value": "You have created an intelligent, holographic, A.I. companion. Describe your Companion's appearance, and name them."
       }
     ]
   },

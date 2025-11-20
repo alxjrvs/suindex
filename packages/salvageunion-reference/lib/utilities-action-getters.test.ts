@@ -123,12 +123,53 @@ describe('Action Property Getters', () => {
       }
     })
 
-    test('should return undefined for real multi-action chassis', () => {
-      const multiActionChassis = SalvageUnionReference.Chassis.all().find(
-        (c) => c.chassisAbilities && c.chassisAbilities.length > 1
+    test('should extract from matching action when entity has multiple actions', () => {
+      const { dataMap } = getDataMaps()
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        activationCost?: number
+      }>
+
+      // Find an action with activationCost
+      const matchingAction = actionsData.find((a) => a.activationCost === 3)
+      const otherAction = actionsData.find(
+        (a) => a.activationCost === 2 && a.name !== matchingAction?.name
       )
-      if (multiActionChassis) {
-        const cost = getActivationCost(multiActionChassis)
+
+      if (matchingAction && matchingAction.activationCost !== undefined && otherAction) {
+        // Entity has multiple actions, but one matches the entity name
+        const entity = {
+          id: 'test-multi-action',
+          name: matchingAction.name, // Match one action name
+          actions: [otherAction.name, matchingAction.name], // Multiple actions
+        }
+
+        const cost = getActivationCost(entity as never)
+        expect(cost).toBe(matchingAction.activationCost)
+      }
+    })
+
+    test('should return undefined when entity has multiple actions but none match entity name', () => {
+      const { dataMap } = getDataMaps()
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        activationCost?: number
+      }>
+
+      const action1 = actionsData.find((a) => a.activationCost === 2)
+      const action2 = actionsData.find((a) => a.activationCost === 3 && a.name !== action1?.name)
+
+      if (action1 && action2) {
+        // Entity has multiple actions, but none match the entity name
+        const entity = {
+          id: 'test-multi-action-no-match',
+          name: 'Different Entity Name', // Doesn't match any action name
+          actions: [action1.name, action2.name], // Multiple actions
+        }
+
+        const cost = getActivationCost(entity as never)
         expect(cost).toBeUndefined()
       }
     })
@@ -178,6 +219,29 @@ describe('Action Property Getters', () => {
           actions: [testAction.name], // Use action name, not object
         }
         expect(getActionType(entity as never)).toBeUndefined()
+      }
+    })
+
+    test('should extract from matching action when entity has multiple actions', () => {
+      const { dataMap } = getDataMaps()
+      const actionsData = dataMap['actions'] as Array<{
+        id: string
+        name: string
+        actionType?: string
+      }>
+
+      const matchingAction = actionsData.find((a) => a.actionType === 'Attack')
+      const otherAction = actionsData.find(
+        (a) => a.actionType === 'Reaction' && a.name !== matchingAction?.name
+      )
+
+      if (matchingAction && matchingAction.actionType && otherAction) {
+        const entity = {
+          id: 'test-multi-action',
+          name: matchingAction.name, // Match one action name
+          actions: [otherAction.name, matchingAction.name], // Multiple actions
+        }
+        expect(getActionType(entity as never)).toBe(matchingAction.actionType)
       }
     })
   })
