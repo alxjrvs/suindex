@@ -5,7 +5,6 @@ import { NestedActionDisplay } from '../NestedActionDisplay'
 
 export function EntityActions() {
   const { data, schemaName, spacing, compact, title } = useEntityDisplayContext()
-  const { data, schemaName, spacing, compact, title } = useEntityDisplayContext()
 
   // Chassis now use chassisAbilities instead of actions
   if (schemaName === 'chassis') return null
