@@ -1,10 +1,9 @@
 import { Box, Flex } from '@chakra-ui/react'
-import type { SURefObjectContentBlock, SURefObjectDataValue } from 'salvageunion-reference'
+import type { SURefObjectContentBlock } from 'salvageunion-reference'
 import { Text } from '../../base/Text'
 import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
-import { ValueDisplay } from '../../shared/ValueDisplay'
-import { EntityDetailDisplay } from '../EntityDetailDisplay'
-import { ActivationCostBox } from '../../shared/ActivationCostBox'
+import { parseContentBlockString } from '../../../utils/contentBlockHelpers'
+import { SharedDetailItem } from './sharedDetailItem'
 
 interface ContentBlockRendererProps {
   /** Content blocks to render */
@@ -68,14 +67,9 @@ function ContentBlock({
   const type = block.type || 'paragraph'
   const blockValue = block.value
 
-  // Parse strings non-conditionally
-  let stringValue = typeof blockValue === 'string' ? blockValue : ''
-
-  // Replace [(CHASSIS)] placeholder with actual chassis name, prefixed with "The"
-  if (chassisName && stringValue) {
-    stringValue = stringValue.replace(/\[\(CHASSIS\)\]/g, `The ${chassisName}`)
-  }
-
+  // Always parse the string value for the hook (even if we don't use it for datavalues)
+  // This ensures React hooks are called in the same order every render
+  const stringValue = parseContentBlockString(block, chassisName)
   const parsedValue = useParseTraitReferences(stringValue)
 
   // Handle datavalues type - value is an array of dataValue objects
@@ -86,7 +80,7 @@ function ContentBlock({
     return (
       <Flex gap={1} flexWrap="wrap">
         {blockValue.map((item, index) => (
-          <DataValueItem key={index} item={item} compact={compact} />
+          <SharedDetailItem key={index} item={item} compact={compact} />
         ))}
       </Flex>
     )
@@ -191,40 +185,4 @@ function ContentBlock({
         </Box>
       )
   }
-}
-
-function DataValueItem({ item, compact }: { item: SURefObjectDataValue; compact: boolean }) {
-  if (item.type === 'cost') {
-    return <ActivationCostBox cost={String(item.label)} currency={item.value} compact={compact} />
-  }
-
-  if (item.type === 'trait') {
-    return (
-      <EntityDetailDisplay
-        label={item.label}
-        value={item.value}
-        compact={compact}
-        schemaName="traits"
-        inline={false}
-      />
-    )
-  }
-
-  if (item.type === 'keyword') {
-    return (
-      <EntityDetailDisplay
-        label={item.label}
-        value={item.value}
-        compact={compact}
-        schemaName="keywords"
-        inline={false}
-      />
-    )
-  }
-
-  if (item.type === 'meta') {
-    return <ValueDisplay label={item.label} compact={compact} inline={false} />
-  }
-
-  return <ValueDisplay label={item.label} value={item.value} compact={compact} inline={false} />
 }

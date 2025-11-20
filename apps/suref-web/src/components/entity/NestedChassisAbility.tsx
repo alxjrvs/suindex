@@ -9,8 +9,10 @@ import { Text } from '../base/Text'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
 import { EntityChoice } from './EntityDisplay/EntityChoice'
 import { useParseTraitReferences } from '../../utils/parseTraitReferences'
+import { parseContentBlockString } from '../../utils/contentBlockHelpers'
 import type { DataValue } from '../../types/common'
-import { SharedDetailItem, formatActionType } from './EntityDisplay/sharedDetailItem'
+import { extractEntityDetails } from '../../lib/entityDataExtraction'
+import { SharedDetailItem } from './EntityDisplay/sharedDetailItem'
 
 interface NestedChassisAbilityProps {
   /** Action data from salvageunion-reference */
@@ -37,7 +39,8 @@ export function NestedChassisAbility({
   hideContent = false,
   chassisName,
 }: NestedChassisAbilityProps) {
-  const details = extractChassisActionDetails(data)
+  // Chassis abilities use EP currency
+  const details = extractEntityDetails(data, undefined, 'EP')
 
   // Current sizing is considered "Compact"
   // Compact: xs (small), Non-compact: sm (medium) for body text
@@ -227,59 +230,6 @@ export function NestedChassisAbility({
 }
 
 /**
- * Extract action details for chassis abilities (uses EP currency)
- */
-function extractChassisActionDetails(data: SURefMetaAction): DataValue[] {
-  const details: DataValue[] = []
-
-  // Access activationCost directly from action
-  const activationCost = data.activationCost
-  if (activationCost !== undefined) {
-    // Chassis abilities use EP
-    const currency = 'EP'
-    const isVariable = String(activationCost).toLowerCase() === 'variable'
-    const costValue = isVariable ? `X ${currency}` : `${activationCost} ${currency}`
-    details.push({ label: costValue, type: 'cost' })
-  }
-
-  // Access actionType directly from action
-  const actionType = data.actionType
-  if (actionType) {
-    details.push({ label: formatActionType(actionType), type: 'keyword' })
-  }
-
-  // Access range directly from action
-  const range = data.range
-  if (range) {
-    const ranges = Array.isArray(range) ? range : [range]
-    ranges.forEach((r) => {
-      details.push({ label: 'Range', value: r, type: 'keyword' })
-    })
-  }
-
-  // Access damage directly from action
-  const damage = data.damage
-  if (damage) {
-    details.push({
-      label: 'Damage',
-      value: `${damage.amount}${damage.damageType ?? 'HP'}`,
-    })
-  }
-
-  // Access traits directly from action
-  const traits = data.traits
-  if (traits && traits.length > 0) {
-    traits.forEach((t) => {
-      const label = t.type.charAt(0).toUpperCase() + t.type.slice(1)
-      const value = 'amount' in t && t.amount !== undefined ? t.amount : undefined
-      details.push({ label, value, type: 'trait' })
-    })
-  }
-
-  return details
-}
-
-/**
  * Render a single content block inline (as span, not block)
  */
 function InlineContentBlock({
@@ -292,16 +242,7 @@ function InlineContentBlock({
   chassisName?: string
 }) {
   const type = block.type || 'paragraph'
-  const blockValue = block.value
-
-  // Parse strings non-conditionally
-  let stringValue = typeof blockValue === 'string' ? blockValue : ''
-
-  // Replace [(CHASSIS)] placeholder with actual chassis name, prefixed with "The"
-  if (chassisName && stringValue) {
-    stringValue = stringValue.replace(/\[\(CHASSIS\)\]/g, `The ${chassisName}`)
-  }
-
+  const stringValue = parseContentBlockString(block, chassisName)
   const parsedValue = useParseTraitReferences(stringValue)
 
   // Only render paragraph and hint types inline (others should be block-level)
