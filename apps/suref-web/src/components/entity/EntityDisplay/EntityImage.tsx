@@ -30,6 +30,8 @@ export function EntityImage() {
         h="auto"
         objectFit="contain"
         display="block"
+        loading="lazy"
+        decoding="async"
         onError={() => {
           console.error(`Failed to load image: ${assetUrl}`)
           setShowImage(false)

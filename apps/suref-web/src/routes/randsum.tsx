@@ -51,6 +51,8 @@ function RandsumPage() {
                   w="full"
                   h="auto"
                   objectFit="contain"
+                  loading="lazy"
+                  decoding="async"
                 />
               </Box>
             </Box>
