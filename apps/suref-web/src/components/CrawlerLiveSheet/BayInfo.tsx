@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { VStack, Box } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
-import { SheetDisplay } from '@/components/shared/SheetDisplay'
+import { VStack, Box, Button } from '@chakra-ui/react'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
 
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
@@ -21,22 +19,24 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
   const description = getParagraphString(bayRef.content)
   const parsedDescription = useParseTraitReferences(description || '')
 
-  if (!description) {
+  const hasFunction = !!description
+  const hasChoices = bayRef.choices && bayRef.choices.length > 0
+
+  if (!hasFunction && !hasChoices) {
     return null
   }
 
-  const hasFunction = !!description
-
   return (
     <VStack mt="2" gap={2} justifyContent="flex-start" alignItems="stretch" w="full">
-      {bayRef.choices?.map((choice) => (
-        <SheetEntityChoiceDisplay
-          key={choice.id}
-          choice={choice}
-          onUpdateChoice={handleUpdateChoice}
-          entityId={bayEntityId}
-        />
-      ))}
+      {hasChoices &&
+        bayRef.choices?.map((choice) => (
+          <SheetEntityChoiceDisplay
+            key={choice.id}
+            choice={choice}
+            onUpdateChoice={handleUpdateChoice}
+            entityId={bayEntityId}
+          />
+        ))}
       {hasFunction && (
         <Button
           onClick={() => setIsFunctionExpanded(!isFunctionExpanded)}
@@ -53,11 +53,27 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
       )}
 
       {isFunctionExpanded && hasFunction && parsedDescription && (
-        <SheetDisplay label="Function">
-          <Box lineHeight="relaxed" color="su.black">
+        <Box
+          bg="su.white"
+          border="2px solid"
+          borderColor="su.black"
+          overflow="hidden"
+          textAlign="left"
+          borderRadius="md"
+        >
+          {/* Function content */}
+          <Box
+            bg="su.white"
+            color="su.black"
+            fontWeight="medium"
+            lineHeight="relaxed"
+            fontSize="sm"
+            px={2}
+            py={2}
+          >
             {parsedDescription}
           </Box>
-        </SheetDisplay>
+        </Box>
       )}
     </VStack>
   )

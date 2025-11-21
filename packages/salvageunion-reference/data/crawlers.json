@@ -31,7 +31,7 @@
       "content": [
         {
           "type": "paragraph",
-          "value": "Your Union Crawler has an advanced, intelligent A.I. on board which controls its core functions. The A.I. is jacked into the Corpo Net, once per Downtime you can ask them two questions about any topic and they will answer you truthfully. Name your A.I. and roll on the A.I. Personality Table for their personality."
+          "value": "Your Union Crawler has an advanced, intelligent A.I. on board which controls its core functions. The A.I. is jacked into the Corpo Net, once per Downtime you can ask them two questions about any topic and they will answer you truthfully."
         }
       ]
     },
@@ -86,7 +86,7 @@
       "content": [
         {
           "type": "paragraph",
-          "value": "A Grizzled Veteran is part of your Union Crawler. Name them and give them a Keepsake and Motto. They have 10 HP."
+          "value": "A Grizzled Veteran is part of your Union Crawler."
         },
         {
           "type": "paragraph",
@@ -149,7 +149,7 @@
       "content": [
         {
           "type": "paragraph",
-          "value": "An engineer who is one step ahead of their peers has joined your Union Crawler. Name them and give them a Keepsake and Motto. They have 4 HP."
+          "value": "An engineer who is one step ahead of their peers has joined your Union Crawler."
         },
         {
           "type": "paragraph",
@@ -208,7 +208,7 @@
       "content": [
         {
           "type": "paragraph",
-          "value": "A Wasteland Explorer is part of your Union Crawler. Name them and if you wish, give them a Keepsake and Motto. They have 4 HP."
+          "value": "A Wasteland Explorer is part of your Union Crawler."
         }
       ]
     },
@@ -263,7 +263,7 @@
       "content": [
         {
           "type": "paragraph",
-          "value": "A Savvy Trader is part of your Union Crawler. Name them and give them a Keepsake and Motto. They have 4 HP."
+          "value": "A Savvy Trader is part of your Union Crawler."
         },
         {
           "type": "paragraph",

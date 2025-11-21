@@ -13,6 +13,7 @@ export interface UseCrawlerWizardStateReturn {
   goToPreviousStep: () => void
   setSelectedCrawlerTypeId: (crawlerTypeId: string | null) => void
   setBayNPC: (bayId: string, npc: BayNPCData) => void
+  setBayNPCChoice: (bayId: string, choiceId: string, value: string) => void
   setCrawlerNPC: (npc: CrawlerNPCData | null) => void
   setCrawlerNPCChoice: (choiceId: string, value: string) => void
   setArmamentBayWeaponId: (weaponId: string | null) => void
@@ -23,6 +24,7 @@ export interface UseCrawlerWizardStateReturn {
 const initialState: WizardState = {
   selectedCrawlerTypeId: null,
   bayNPCs: {},
+  bayNPCChoices: {},
   crawlerNPC: null,
   crawlerNPCChoices: {},
   armamentBayWeaponId: null,
@@ -93,15 +95,21 @@ export function useCrawlerWizardState(): UseCrawlerWizardStateReturn {
     goToPreviousStep,
     setSelectedCrawlerTypeId: useCallback((crawlerTypeId: string | null) => {
       setState((prev) => {
-        // Clear bayNPCs and crawlerNPC when selecting a new crawler type
+        // Only clear bayNPCs and crawlerNPC when selecting a new crawler type
+        // AND there was a previous selection (to avoid clearing on initial selection)
         const newCrawlerTypeId = crawlerTypeId
         const isNewType = prev.selectedCrawlerTypeId !== newCrawlerTypeId
+        const hadPreviousSelection = prev.selectedCrawlerTypeId !== null
+        const shouldClear = isNewType && hadPreviousSelection
         return {
           ...prev,
           selectedCrawlerTypeId: newCrawlerTypeId,
-          bayNPCs: isNewType ? {} : prev.bayNPCs,
-          crawlerNPC: isNewType ? null : prev.crawlerNPC,
-          crawlerNPCChoices: isNewType ? {} : prev.crawlerNPCChoices,
+          bayNPCs: shouldClear ? {} : prev.bayNPCs,
+          bayNPCChoices: shouldClear ? {} : prev.bayNPCChoices,
+          crawlerNPC: shouldClear ? null : prev.crawlerNPC,
+          crawlerNPCChoices: shouldClear ? {} : prev.crawlerNPCChoices,
+          // Only clear armamentBayWeaponId if there was a previous crawler type
+          armamentBayWeaponId: shouldClear ? null : prev.armamentBayWeaponId,
         }
       })
     }, []),
@@ -126,6 +134,18 @@ export function useCrawlerWizardState(): UseCrawlerWizardStateReturn {
         bayNPCs: {
           ...prev.bayNPCs,
           [bayId]: npc,
+        },
+      }))
+    }, []),
+    setBayNPCChoice: useCallback((bayId: string, choiceId: string, value: string) => {
+      setState((prev) => ({
+        ...prev,
+        bayNPCChoices: {
+          ...prev.bayNPCChoices,
+          [bayId]: {
+            ...prev.bayNPCChoices[bayId],
+            [choiceId]: value,
+          },
         },
       }))
     }, []),

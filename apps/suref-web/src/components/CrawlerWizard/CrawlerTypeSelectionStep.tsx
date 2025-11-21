@@ -1,9 +1,13 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
-import { Box, VStack, Button, Tabs } from '@chakra-ui/react'
+import { Box, VStack, Button, Tabs, Flex } from '@chakra-ui/react'
+import { extractActions, SalvageUnionReference } from 'salvageunion-reference'
+import type { SURefMetaAction, SURefEnumSchemaName, SURefEntity, SURefObjectChoice } from 'salvageunion-reference'
 import { Text } from '@/components/base/Text'
 import { EntityDisplay } from '@/components/entity/EntityDisplay'
+import { EntitySelectionModal } from '@/components/entity/EntitySelectionModal'
 import { RoundedBox } from '@/components/shared/RoundedBox'
 import { NPCCard } from '@/components/shared/NPCCard'
+import { NestedChassisAbility } from '@/components/entity/NestedChassisAbility'
 import { getParagraphString } from '@/lib/contentBlockHelpers'
 import type { Tables } from '@/types/database-generated.types'
 import type { UseCrawlerWizardStateReturn } from './useCrawlerWizardState'
@@ -108,6 +112,25 @@ export function CrawlerTypeSelectionStep({
     }))
   }, [selectedCrawlerType?.npc?.choices, state.crawlerNPCChoices])
 
+  // Extract abilities from selected crawler type
+  const abilities = useMemo(() => {
+    if (!selectedCrawlerType) return []
+    const resolvedActions = extractActions(selectedCrawlerType)
+    return resolvedActions || []
+  }, [selectedCrawlerType])
+
+  // Handle ability choice updates (for wizard, we'll store in crawlerNPCChoices for now)
+  const handleAbilityChoiceUpdate = useCallback(
+    (choiceId: string, value: string | undefined) => {
+      // For wizard, we can store ability choices in crawlerNPCChoices
+      // They'll be properly associated when the crawler is created
+      if (value) {
+        setCrawlerNPCChoice(choiceId, value)
+      }
+    },
+    [setCrawlerNPCChoice]
+  )
+
   return (
     <VStack gap={6} align="stretch" w="full">
       <VStack gap={2} align="stretch">
@@ -151,41 +174,69 @@ export function CrawlerTypeSelectionStep({
             </Tabs.List>
 
             {selectedCrawlerType && (
-              <EntityDisplay
-                data={selectedCrawlerType}
-                schemaName="crawlers"
-                hideActions
-                hideChoices
-                imageWidth="40%"
-                headerColor={isCrawlerTypeSelected ? 'su.brick' : undefined}
-                buttonConfig={{
-                  bg: isCrawlerTypeSelected ? 'su.brick' : 'su.orange',
-                  color: 'su.white',
-                  fontWeight: 'bold',
-                  textTransform: 'uppercase',
-                  _hover: { bg: isCrawlerTypeSelected ? 'su.black' : 'su.black' },
-                  onClick: handleCrawlerTypeSelect,
-                  children: isCrawlerTypeSelected ? 'Selected' : 'Select This Crawler Type',
-                }}
-              >
+              <Flex gap={6} w="full" align="stretch">
+                {/* Crawler Type EntityDisplay on the left */}
+                <Box flex="1" h="full">
+                  <EntityDisplay
+                    data={selectedCrawlerType}
+                    schemaName="crawlers"
+                    hideActions
+                    hideChoices
+                    imageWidth="40%"
+                    headerColor={isCrawlerTypeSelected ? 'su.brick' : undefined}
+                    buttonConfig={{
+                      bg: isCrawlerTypeSelected ? 'su.brick' : 'su.orange',
+                      color: 'su.white',
+                      fontWeight: 'bold',
+                      textTransform: 'uppercase',
+                      _hover: { bg: isCrawlerTypeSelected ? 'su.black' : 'su.black' },
+                      onClick: handleCrawlerTypeSelect,
+                      children: isCrawlerTypeSelected ? 'Selected' : 'Select This Crawler Type',
+                    }}
+                  >
+                    {/* Ability choices rendered as children - appears above button, below content */}
+                    {abilities.length > 0 && (
+                      <VStack gap={3} alignItems="stretch" w="full" mt={4}>
+                        {abilities.map((ability, idx) => (
+                          <CrawlerAbility
+                            key={ability.id || idx}
+                            ability={ability}
+                            onUpdateChoice={handleAbilityChoiceUpdate}
+                            choices={state.crawlerNPCChoices}
+                          />
+                        ))}
+                      </VStack>
+                    )}
+                  </EntityDisplay>
+                </Box>
+
+                {/* NPC Box on the right */}
                 {selectedCrawlerType.npc && crawlerNPC && (
-                  <RoundedBox bg="bg.builder.crawler" title="NPC" disabled={false} w="full">
-                    <NPCCard
-                      npc={crawlerNPC}
-                      choices={npcChoicesArray}
-                      referenceBay={selectedCrawlerType}
-                      description={getParagraphString(selectedCrawlerType.npc.content) || ''}
-                      maxHP={selectedCrawlerType.npc.hitPoints || 0}
-                      onUpdateBay={handleNPCUpdate}
-                      onUpdateChoice={handleNPCChoiceUpdate}
-                      position={selectedCrawlerType.npc.position || 'NPC'}
-                      tilted={false}
+                  <Box flex="1" maxW="50%" h="full">
+                    <RoundedBox
+                      bg="bg.builder.crawler"
+                      title="NPC"
                       disabled={false}
-                      disableHPEditing={true}
-                    />
-                  </RoundedBox>
+                      w="full"
+                      h="full"
+                      justifyContent="flex-start"
+                    >
+                      <NPCCard
+                        npc={crawlerNPC}
+                        choices={npcChoicesArray}
+                        referenceBay={selectedCrawlerType}
+                        description={getParagraphString(selectedCrawlerType.npc.content) || ''}
+                        maxHP={selectedCrawlerType.npc.hitPoints || 0}
+                        onUpdateBay={handleNPCUpdate}
+                        onUpdateChoice={handleNPCChoiceUpdate}
+                        position={selectedCrawlerType.npc.position || 'NPC'}
+                        tilted={false}
+                        disabled={false}
+                      />
+                    </RoundedBox>
+                  </Box>
                 )}
-              </EntityDisplay>
+              </Flex>
             )}
           </Box>
         </Tabs.Root>
@@ -209,5 +260,172 @@ export function CrawlerTypeSelectionStep({
         CONFIGURE BAYS
       </Button>
     </VStack>
+  )
+}
+
+// Helper component to render a crawler ability with choices
+function CrawlerAbility({
+  ability,
+  onUpdateChoice,
+  choices,
+}: {
+  ability: SURefMetaAction
+  onUpdateChoice: (choiceId: string, value: string | undefined) => void
+  choices: Record<string, string>
+}) {
+  const wrappedChoice = ability.choices ?? []
+
+  return (
+    <VStack gap={3} alignItems="stretch" w="full">
+      <NestedChassisAbility data={ability} compact={false} hideContent={false} hideChoices={true} />
+      {wrappedChoice.map((choice, idx) => (
+        <WizardSheetEntityChoiceDisplay
+          onUpdateChoice={onUpdateChoice}
+          key={choice.id || idx}
+          choice={choice}
+          selectedValue={choices[choice.id]}
+        />
+      ))}
+    </VStack>
+  )
+}
+
+// Wizard-specific choice display that works with wizard state instead of entity IDs
+function WizardSheetEntityChoiceDisplay({
+  choice,
+  onUpdateChoice,
+  selectedValue,
+}: {
+  choice: SURefObjectChoice
+  onUpdateChoice?: (choiceId: string, value: string | undefined) => void
+  selectedValue?: string
+}) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const schemaNames = useMemo(() => {
+    const { schema } = choice
+    if (!schema) return []
+
+    const pluralToSchemaName: Record<string, SURefEnumSchemaName> = {
+      Systems: 'systems',
+      Modules: 'modules',
+      Abilities: 'abilities',
+      Crawlers: 'crawlers',
+      CrawlerBays: 'crawler-bays',
+      Creatures: 'creatures',
+      Drones: 'drones',
+      Vehicles: 'vehicles',
+      BioTitans: 'bio-titans',
+      NPCs: 'npcs',
+      Squads: 'squads',
+      Keywords: 'keywords',
+      Traits: 'traits',
+      RollTables: 'roll-tables',
+      CrawlerTechLevels: 'crawler-tech-levels',
+    }
+
+    return schema
+      .map((s) => {
+        if (s in pluralToSchemaName) {
+          return pluralToSchemaName[s as keyof typeof pluralToSchemaName]
+        }
+        return s as SURefEnumSchemaName
+      })
+      .filter((name): name is SURefEnumSchemaName => name !== undefined)
+  }, [choice])
+
+  const selectedEntity = useMemo(() => {
+    if (!selectedValue) return null
+
+    const entity = SalvageUnionReference.getByRef(selectedValue)
+    if (!entity) return null
+
+    const parsed = SalvageUnionReference.parseRef(selectedValue)
+    if (!parsed) return null
+
+    return {
+      entity: entity as SURefEntity,
+      schemaName: parsed.schemaName.toLowerCase() as SURefEnumSchemaName,
+    }
+  }, [selectedValue])
+
+  const handleSelect = useCallback(
+    (entityId: string, schemaName: SURefEnumSchemaName) => {
+      const value = SalvageUnionReference.composeRef(schemaName, entityId)
+      onUpdateChoice?.(choice.id, value)
+      setIsModalOpen(false)
+    },
+    [choice.id, onUpdateChoice]
+  )
+
+  const handleRemove = useCallback(() => {
+    onUpdateChoice?.(choice.id, undefined)
+  }, [choice.id, onUpdateChoice])
+
+  if (!selectedEntity) {
+    return (
+      <>
+        {onUpdateChoice && (
+          <Button onClick={() => setIsModalOpen(true)} w="full" mt={2}>
+            Select {choice.name}
+          </Button>
+        )}
+        {onUpdateChoice && (
+          <EntitySelectionModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            schemaNames={schemaNames}
+            onSelect={handleSelect}
+            title={`Select ${choice.name}`}
+          />
+        )}
+      </>
+    )
+  }
+
+  return (
+    <>
+      <EntityDisplay
+        schemaName={selectedEntity.schemaName as SURefEnumSchemaName}
+        data={selectedEntity.entity}
+        compact
+        collapsible
+        defaultExpanded={false}
+        buttonConfig={
+          onUpdateChoice
+            ? {
+                bg: 'brand.srd',
+                color: 'su.white',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                _hover: { bg: 'su.black' },
+                onClick: (e) => {
+                  e.stopPropagation()
+                  const entityName =
+                    selectedEntity.entity && 'name' in selectedEntity.entity
+                      ? selectedEntity.entity.name
+                      : choice.name
+                  const confirmed = window.confirm(
+                    `Are you sure you want to remove "${entityName}"?`
+                  )
+                  if (confirmed) {
+                    handleRemove()
+                  }
+                },
+                children: `Remove ${choice.name}`,
+              }
+            : undefined
+        }
+      />
+      {onUpdateChoice && (
+        <EntitySelectionModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          schemaNames={schemaNames}
+          onSelect={handleSelect}
+          title={`Select ${choice.name}`}
+        />
+      )}
+    </>
   )
 }

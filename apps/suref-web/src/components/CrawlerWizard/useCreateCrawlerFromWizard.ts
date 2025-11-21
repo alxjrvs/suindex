@@ -81,9 +81,11 @@ export function useCreateCrawlerFromWizard() {
         await new Promise((resolve) => setTimeout(resolve, 500))
         const bayEntities = await fetchEntitiesForParent('crawler', newCrawler.id)
 
-        // Update bay NPC metadata and create player choices for names
+        // Update bay NPC metadata and create player choices from wizard state
         for (const bayEntity of bayEntities) {
           const bayNPC = state.bayNPCs[bayEntity.schema_ref_id]
+          const bayChoices = state.bayNPCChoices[bayEntity.schema_ref_id] || {}
+          
           if (bayNPC) {
             // Update bay metadata with NPC info (excluding name, which goes in choices)
             await updateEntity.mutateAsync({
@@ -101,17 +103,17 @@ export function useCreateCrawlerFromWizard() {
               },
             })
 
-            // Create player choice for NPC name if provided
-            if (bayNPC.name.trim()) {
-              const bayRef = SalvageUnionReference.get('crawler-bays', bayEntity.schema_ref_id)
-              if (bayRef && 'npc' in bayRef && bayRef.npc.choices) {
-                const nameChoice = bayRef.npc.choices.find((c) => c.name === 'Name')
-                if (nameChoice) {
+            // Create player choices from wizard state
+            const bayRef = SalvageUnionReference.get('crawler-bays', bayEntity.schema_ref_id)
+            if (bayRef && 'npc' in bayRef && bayRef.npc.choices) {
+              for (const choice of bayRef.npc.choices) {
+                const choiceValue = bayChoices[choice.id]
+                if (choiceValue !== undefined && choiceValue.trim()) {
                   await upsertPlayerChoice.mutateAsync({
                     data: {
                       entity_id: bayEntity.id,
-                      choice_ref_id: nameChoice.id,
-                      value: bayNPC.name.trim(),
+                      choice_ref_id: choice.id,
+                      value: choiceValue.trim(),
                     },
                     isMultiSelect: false,
                   })

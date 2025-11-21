@@ -18,6 +18,7 @@ export type CrawlerNPCData = {
 export interface WizardState {
   selectedCrawlerTypeId: string | null
   bayNPCs: Record<string, BayNPCData>
+  bayNPCChoices: Record<string, Record<string, string>> // bayId -> choiceId -> value
   crawlerNPC: CrawlerNPCData | null
   crawlerNPCChoices: Record<string, string>
   armamentBayWeaponId: string | null

@@ -7,7 +7,7 @@ import { RoundedBox } from '@/components/shared/RoundedBox'
 import { NPCCard } from '@/components/shared/NPCCard'
 import { BayInfo } from './BayInfo'
 import { StatDisplay } from '@/components/StatDisplay'
-import { SheetDisplay } from '@/components/shared/SheetDisplay'
+import { Text } from '@/components/base/Text'
 import { getTiltRotation } from '@/utils/tiltUtils'
 import { useUpdateEntity, useManageEntityChoices } from '@/hooks/suentity'
 import { getParagraphString } from '@/lib/contentBlockHelpers'
@@ -112,7 +112,37 @@ export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProp
             px={2}
             filter="drop-shadow(0 0 4px rgba(0, 0, 0, 0.8))"
           >
-            <SheetDisplay label="Damaged Effect" value={bayRef.damagedEffect} />
+            <Box
+              bg="su.white"
+              border="2px solid"
+              borderColor="su.black"
+              overflow="hidden"
+              textAlign="left"
+              borderRadius="md"
+            >
+              <Box
+                bg="su.white"
+                bgColor="su.white"
+                color="su.black"
+                fontWeight="medium"
+                lineHeight="relaxed"
+                fontSize="sm"
+                px={2}
+                py={2}
+              >
+                <Text
+                  fontSize="sm"
+                  textTransform="uppercase"
+                  bg="su.white"
+                  fontWeight="bold"
+                  color="su.black"
+                  mb={1}
+                >
+                  Damaged Effect
+                </Text>
+                {bayRef.damagedEffect}
+              </Box>
+            </Box>
           </Box>
         )}
 
