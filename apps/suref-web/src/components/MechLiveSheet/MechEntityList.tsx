@@ -1,20 +1,23 @@
-import { useState, useMemo } from 'react'
-import { Flex, VStack } from '@chakra-ui/react'
-import { SalvageUnionReference } from 'salvageunion-reference'
+import { useState, useMemo, useCallback } from 'react'
+import { Flex, VStack, Box } from '@chakra-ui/react'
 import type { SURefSystem, SURefModule } from 'salvageunion-reference'
 import { EntityDisplay } from '@/components/entity/EntityDisplay'
 import { StatDisplay } from '@/components/StatDisplay'
 import { AddStatButton } from '@/components/shared/AddStatButton'
 import { RoundedBox } from '@/components/shared/RoundedBox'
 import { EntitySelectionModal } from '@/components/entity/EntitySelectionModal'
+import { Text } from '@/components/base/Text'
+import type { HydratedEntity } from '@/types/hydrated'
+import { useUpdateEntity } from '@/hooks/suentity'
+import { getTiltRotation } from '@/utils/tiltUtils'
 
 interface MechEntityListProps {
   /** Title for the box (e.g., "Systems" or "Modules") */
   title: string
   /** Schema name for the entity type */
   schemaName: 'systems' | 'modules'
-  /** Array of entity IDs */
-  entityIds: string[]
+  /** Array of hydrated entities */
+  entities: HydratedEntity[]
   /** Number of used slots */
   usedSlots: number
   /** Total available slots */
@@ -25,36 +28,143 @@ interface MechEntityListProps {
   onAdd?: (id: string) => void
   /** Whether the component is disabled */
   disabled?: boolean
+  /** Hides add/remove buttons and damage UI when viewing another player's sheet */
+  readOnly?: boolean
+}
+
+interface EntityItemProps {
+  entity: HydratedEntity
+  ref: SURefSystem | SURefModule
+  schemaName: 'systems' | 'modules'
+  disabled: boolean
+  readOnly: boolean
+  onRemove?: (id: string) => void
+  onToggleDamaged: (entity: HydratedEntity) => void
+}
+
+function EntityItem({
+  entity,
+  ref,
+  schemaName,
+  disabled,
+  readOnly,
+  onRemove,
+  onToggleDamaged,
+}: EntityItemProps) {
+  const metadata = useMemo(() => {
+    return (
+      entity.metadata || {
+        damaged: false,
+      }
+    )
+  }, [entity.metadata])
+
+  const isDamaged = (metadata as { damaged?: boolean }).damaged ?? false
+  const actionRotation = useMemo(() => getTiltRotation(), [])
+
+  return (
+    <Box w="full" position="relative">
+      <Box
+        opacity={isDamaged ? 0.5 : 1}
+        transition="opacity 0.3s ease"
+        transform={isDamaged ? `rotate(${actionRotation}deg)` : undefined}
+        transitionProperty={isDamaged ? 'opacity, transform' : 'opacity'}
+        transitionDuration="0.3s"
+      >
+        <EntityDisplay
+          schemaName={schemaName}
+          data={ref}
+          compact
+          disabled={disabled}
+          damaged={isDamaged}
+          rightContent={
+            !readOnly ? (
+              <Box w="40px" h="40px" display="flex" alignItems="center" justifyContent="center">
+                <StatDisplay
+                  label={isDamaged ? 'RPR' : 'DMG'}
+                  value={isDamaged ? '+' : '-'}
+                  onClick={() => onToggleDamaged(entity)}
+                  bg={isDamaged ? 'su.orange' : 'brand.srd'}
+                  valueColor="su.white"
+                  disabled={disabled}
+                  compact
+                />
+              </Box>
+            ) : undefined
+          }
+          buttonConfig={
+            onRemove
+              ? {
+                  bg: 'brand.srd',
+                  color: 'su.white',
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  _hover: { bg: 'su.black' },
+                  onClick: (e) => {
+                    e.stopPropagation()
+                    const confirmed = window.confirm(
+                      `Are you sure you want to remove "${ref.name}"?`
+                    )
+                    if (confirmed) {
+                      onRemove(entity.id)
+                    }
+                  },
+                  children: `Remove ${schemaName === 'systems' ? 'System' : 'Module'}`,
+                }
+              : undefined
+          }
+        />
+      </Box>
+      {isDamaged && (
+        <Box
+          position="absolute"
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          zIndex={1}
+          px={2}
+          filter="drop-shadow(0 0 4px rgba(0, 0, 0, 0.8))"
+          w="auto"
+        >
+          <Box textAlign="center" w="auto">
+            <Text fontSize="sm" textTransform="uppercase" fontWeight="bold" color="su.black">
+              Damaged
+            </Text>
+          </Box>
+        </Box>
+      )}
+    </Box>
+  )
 }
 
 export function MechEntityList({
   title,
   schemaName,
-  entityIds,
+  entities,
   usedSlots,
   totalSlots,
   onRemove,
   onAdd,
   disabled = false,
+  readOnly = false,
 }: MechEntityListProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const allEntities = useMemo(
-    () => SalvageUnionReference.findAllIn(schemaName, () => true),
-    [schemaName]
-  )
+  const updateEntity = useUpdateEntity()
 
   const sortedEntities = useMemo(() => {
-    return entityIds
-      .map((id) => allEntities.find((e) => e.id === id))
-      .filter((e): e is SURefSystem | SURefModule => e !== undefined)
+    return entities
+      .map((entity) => ({
+        entity,
+        ref: entity.ref as SURefSystem | SURefModule,
+      }))
+      .filter((e) => e.ref !== undefined)
       .sort((a, b) => {
-        if (a.techLevel !== b.techLevel) {
-          return a.techLevel - b.techLevel
+        if (a.ref.techLevel !== b.ref.techLevel) {
+          return a.ref.techLevel - b.ref.techLevel
         }
-        return a.name.localeCompare(b.name)
+        return a.ref.name.localeCompare(b.ref.name)
       })
-  }, [entityIds, allEntities])
+  }, [entities])
 
   const canAddMore = usedSlots < totalSlots
 
@@ -64,6 +174,25 @@ export function MechEntityList({
   }
 
   const label = schemaName === 'systems' ? 'Sys' : 'Mod'
+
+  const handleToggleDamaged = useCallback(
+    (entity: HydratedEntity) => {
+      const currentMetadata = (entity.metadata as { damaged?: boolean } | null) || {
+        damaged: false,
+      }
+      const isDamaged = currentMetadata.damaged ?? false
+      updateEntity.mutate({
+        id: entity.id,
+        updates: {
+          metadata: {
+            ...currentMetadata,
+            damaged: !isDamaged,
+          },
+        },
+      })
+    },
+    [updateEntity]
+  )
 
   return (
     <>
@@ -96,34 +225,16 @@ export function MechEntityList({
         }
       >
         <VStack gap={4} w="full">
-          {sortedEntities.map((entity) => (
-            <EntityDisplay
+          {sortedEntities.map(({ entity, ref }) => (
+            <EntityItem
               key={entity.id}
+              entity={entity}
+              ref={ref}
               schemaName={schemaName}
-              data={entity}
-              compact
               disabled={disabled}
-              buttonConfig={
-                onRemove
-                  ? {
-                      bg: 'brand.srd',
-                      color: 'su.white',
-                      fontWeight: 'bold',
-                      textTransform: 'uppercase',
-                      _hover: { bg: 'su.black' },
-                      onClick: (e) => {
-                        e.stopPropagation()
-                        const confirmed = window.confirm(
-                          `Are you sure you want to remove "${entity.name}"?`
-                        )
-                        if (confirmed) {
-                          onRemove(entity.id)
-                        }
-                      },
-                      children: `Remove ${schemaName === 'systems' ? 'System' : 'Module'}`,
-                    }
-                  : undefined
-              }
+              readOnly={readOnly}
+              onRemove={onRemove}
+              onToggleDamaged={handleToggleDamaged}
             />
           ))}
         </VStack>

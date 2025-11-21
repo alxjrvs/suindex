@@ -31,6 +31,10 @@ type EntityDisplayProps = {
   buttonConfig?: ButtonProps & { children: ReactNode }
   /** Optional label displayed in the top-right corner */
   rightLabel?: string
+  /** Optional custom content displayed in the top-right corner */
+  rightContent?: ReactNode
+  /** Whether the entity is damaged (affects header color and tilts components) */
+  damaged?: boolean
   /** Whether to use compact styling */
   compact?: boolean
   /** Whether to hide the level display */
@@ -49,6 +53,8 @@ type EntityDisplayProps = {
 
 export const EntityDisplay = memo(function EntityDisplay({
   rightLabel,
+  rightContent,
+  damaged = false,
   data,
   hideLevel = false,
   headerColor,
@@ -88,6 +94,8 @@ export const EntityDisplay = memo(function EntityDisplay({
       onClick={onClick}
       hideLevel={hideLevel}
       rightLabel={rightLabel}
+      rightContent={rightContent}
+      damaged={damaged}
       buttonConfig={buttonConfig}
       userChoices={userChoices}
       onChoiceSelection={onChoiceSelection}

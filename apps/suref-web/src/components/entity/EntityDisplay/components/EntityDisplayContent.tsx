@@ -1,5 +1,6 @@
 import { Box, VStack, Button, Flex } from '@chakra-ui/react'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import { getTiltRotation } from '@/utils/tiltUtils'
 import type { SURefClass } from 'salvageunion-reference'
 import { getEffects, getTable } from 'salvageunion-reference'
 import { PageReferenceDisplay } from '@/components/shared/PageReferenceDisplay'
@@ -61,6 +62,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
     hideActions,
     hidePatterns,
     rightLabel,
+    damaged,
     disabled,
     buttonConfig,
     userChoices,
@@ -84,6 +86,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
       }
       compact={compact}
       title={title}
+      titleRotation={useMemo(() => (damaged ? getTiltRotation() : 0), [damaged])}
       bodyPadding="0"
       onHeaderClick={handleHeaderClick}
       headerTestId="frame-header-container"

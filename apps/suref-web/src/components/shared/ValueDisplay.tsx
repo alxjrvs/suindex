@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 import { Text } from '@/components/base/Text'
 
 export function ValueDisplay({
@@ -7,6 +7,8 @@ export function ValueDisplay({
   compact = false,
   inverse = false,
   inline = true,
+  damaged = false,
+  rotation = 0,
 }: {
   label: string | number
   value?: string | number
@@ -14,13 +16,18 @@ export function ValueDisplay({
   inverse?: boolean
   /** Whether to display inline (default: true). Set to false for flex container contexts. */
   inline?: boolean
+  /** Whether the value is damaged (applies tilt) */
+  damaged?: boolean
+  /** Optional rotation angle in degrees */
+  rotation?: number
 }) {
   const semiFontWeight = compact ? 'normal' : 'semibold'
   const fontSize = compact ? 'xs' : 'md'
   const mainVariant = inverse ? 'pseudoheaderInverse' : 'pseudoheader'
   const valueVariant = inverse ? 'pseudoheader' : 'pseudoheaderInverse'
+  const tiltRotation = damaged ? rotation : 0
 
-  return (
+  const content = (
     <Flex
       gap={0}
       cursor="default"
@@ -53,4 +60,18 @@ export function ValueDisplay({
       )}
     </Flex>
   )
+
+  if (damaged && tiltRotation !== 0) {
+    return (
+      <Box
+        transform={`rotate(${tiltRotation}deg)`}
+        transition="transform 0.3s ease"
+        display={inline ? 'inline-block' : 'block'}
+      >
+        {content}
+      </Box>
+    )
+  }
+
+  return content
 }

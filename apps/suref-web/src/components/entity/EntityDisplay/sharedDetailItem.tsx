@@ -3,6 +3,9 @@ import type { SURefObjectDataValue } from 'salvageunion-reference'
 import { ActivationCostBox } from '@/components/shared/ActivationCostBox'
 import { EntityDetailDisplay } from '@/components/entity/EntityDetailDisplay'
 import { ValueDisplay } from '@/components/shared/ValueDisplay'
+import { useEntityDisplayContext } from './useEntityDisplayContext'
+import { useMemo } from 'react'
+import { getTiltRotation } from '@/utils/tiltUtils'
 
 /**
  * Shared DetailItem component for rendering DataValue items
@@ -16,6 +19,8 @@ export function SharedDetailItem({
   item: DataValue | SURefObjectDataValue
   compact?: boolean
 }) {
+  const { damaged } = useEntityDisplayContext()
+  const valueRotation = useMemo(() => (damaged ? getTiltRotation() : 0), [damaged])
   if (item.type === 'cost') {
     // If value is provided, use it as currency; otherwise parse from label
     let cost = item.label
@@ -61,8 +66,25 @@ export function SharedDetailItem({
   }
 
   if (item.type === 'meta') {
-    return <ValueDisplay label={item.label} compact={compact} inline={false} />
+    return (
+      <ValueDisplay
+        label={item.label}
+        compact={compact}
+        inline={false}
+        damaged={damaged}
+        rotation={valueRotation}
+      />
+    )
   }
 
-  return <ValueDisplay label={item.label} value={item.value} compact={compact} inline={false} />
+  return (
+    <ValueDisplay
+      label={item.label}
+      value={item.value}
+      compact={compact}
+      inline={false}
+      damaged={damaged}
+      rotation={valueRotation}
+    />
+  )
 }

@@ -8,12 +8,17 @@ export function DashboardContent() {
       <Flex align="center" justify="center" minH="60vh">
         <Box textAlign="center">
           <Heading level="h1" mb={4}>
-            Welcome to{' '}
-            <Text as="span" variant="pseudoheader" fontSize="inherit">
-              Salvage Union
+            <Text as="span" fontSize="inherit" fontWeight="bold" textTransform="uppercase">
+              SALVAGE UNION
             </Text>{' '}
-            <Text as="span" fontSize="inherit" color="brand.srd" fontWeight="bold">
-              SRD
+            <Text
+              as="span"
+              fontSize="inherit"
+              color="brand.srd"
+              fontWeight="bold"
+              textTransform="uppercase"
+            >
+              DASHBOARD
             </Text>
           </Heading>
           <Text fontSize="lg" color="brand.srd">
