@@ -437,7 +437,12 @@
     "techLevel": 4,
     "slotsRequired": 2,
     "salvageValue": 3,
-    "actions": ["Repair (2)", "System Repair (5)", "Coolant Flush (2)", "Auto-Repair Droid"],
+    "actions": [
+      "Repair (Auto-Repair Droid)",
+      "System Repair (Auto-Repair Droid)",
+      "Coolant Flush (Auto-Repair Droid)",
+      "Auto-Repair Droid"
+    ],
     "page": 203
   },
   {

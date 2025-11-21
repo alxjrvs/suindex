@@ -12,7 +12,12 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Handheld Riveting Gun",
     "techLevel": 1,
-    "actions": ["Patch (5)", "System Repair", "Chassis Repair", "Handheld Riveting Gun"],
+    "actions": [
+      "Patch (Handheld Riveting Gun)",
+      "System Repair",
+      "Chassis Repair",
+      "Handheld Riveting Gun"
+    ],
     "page": 80
   },
   {
@@ -145,7 +150,12 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Portable Arc Welder",
     "techLevel": 2,
-    "actions": ["Patch (6)", "System Repair (6)", "Chassis Repair (5)", "Portable Arc Welder"],
+    "actions": [
+      "Patch (Portable Arc Welder)",
+      "System Repair (Portable Arc Welder)",
+      "Chassis Repair (Portable Arc Welder)",
+      "Portable Arc Welder"
+    ],
     "page": 82
   },
   {
@@ -209,7 +219,12 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Handheld Epoxy Canister",
     "techLevel": 3,
-    "actions": ["Patch (7)", "System Repair (7)", "Chassis Repair", "Handheld Epoxy Canister"],
+    "actions": [
+      "Patch (Handheld Epoxy Canister)",
+      "System Repair (Handheld Epoxy Canister)",
+      "Chassis Repair",
+      "Handheld Epoxy Canister"
+    ],
     "page": 83
   },
   {
@@ -273,7 +288,12 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Adv. Epoxy Applicator",
     "techLevel": 4,
-    "actions": ["Patch (8)", "System Repair", "Chassis Repair", "Adv. Epoxy Applicator"],
+    "actions": [
+      "Patch (Adv. Epoxy Applicator)",
+      "System Repair",
+      "Chassis Repair",
+      "Adv. Epoxy Applicator"
+    ],
     "page": 84
   },
   {
@@ -353,7 +373,12 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Miniaturised Repair Arm",
     "techLevel": 5,
-    "actions": ["Patch (9)", "System Repair (8)", "Chassis Repair (6)", "Miniaturised Repair Arm"],
+    "actions": [
+      "Patch (Miniaturised Repair Arm)",
+      "System Repair (Miniaturised Repair Arm)",
+      "Chassis Repair (Miniaturised Repair Arm)",
+      "Miniaturised Repair Arm"
+    ],
     "page": 86
   },
   {
@@ -385,7 +410,12 @@
     "source": "Salvage Union Workshop Manual",
     "name": "Nanite Repair Injector",
     "techLevel": 6,
-    "actions": ["Patch (10)", "System Repair", "Chassis Repair (7)", "Nanite Repair Injector"],
+    "actions": [
+      "Patch (Nanite Repair Injector)",
+      "System Repair",
+      "Chassis Repair (Nanite Repair Injector)",
+      "Nanite Repair Injector"
+    ],
     "page": 87
   },
   {

@@ -483,7 +483,12 @@
     "techLevel": 3,
     "slotsRequired": 3,
     "salvageValue": 3,
-    "actions": ["Patch (2)", "System Repair (2)", "Chassis Repair (2)", "Fabrication Arm"],
+    "actions": [
+      "Patch (Fabrication Arm)",
+      "System Repair (Fabrication Arm)",
+      "Chassis Repair (Fabrication Arm)",
+      "Fabrication Arm"
+    ],
     "page": 174
   },
   {
@@ -623,7 +628,12 @@
     "techLevel": 4,
     "slotsRequired": 3,
     "salvageValue": 3,
-    "actions": ["Patch (3)", "System Repair (3)", "Chassis Repair (3)", "Adv. Fabrication Arm"],
+    "actions": [
+      "Patch (Adv. Fabrication Arm)",
+      "System Repair (Adv. Fabrication Arm)",
+      "Chassis Repair (Adv. Fabrication Arm)",
+      "Adv. Fabrication Arm"
+    ],
     "page": 177
   },
   {
@@ -953,7 +963,12 @@
     "techLevel": 6,
     "slotsRequired": 3,
     "salvageValue": 3,
-    "actions": ["Patch (4)", "System Repair (4)", "Chassis Repair (4)", "Nanite Repair Arm"],
+    "actions": [
+      "Patch (Nanite Repair Arm)",
+      "System Repair (Nanite Repair Arm)",
+      "Chassis Repair (Nanite Repair Arm)",
+      "Nanite Repair Arm"
+    ],
     "page": 187
   },
   {
