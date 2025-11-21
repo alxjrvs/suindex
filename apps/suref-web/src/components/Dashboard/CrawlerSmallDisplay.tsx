@@ -3,7 +3,6 @@ import { Text } from '@/components/base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { findCrawlerTechLevel } from 'salvageunion-reference'
 import { ValueDisplay } from '@/components/shared/ValueDisplay'
-import { useNavigate } from '@tanstack/react-router'
 import { useHydratedCrawler, useDeleteCrawler } from '@/hooks/crawler'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { useQueryClient } from '@tanstack/react-query'
@@ -17,7 +16,6 @@ interface CrawlerSmallDisplayProps {
 }
 
 export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
-  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const { crawler, selectedCrawlerType, loading } = useHydratedCrawler(id)
@@ -45,13 +43,12 @@ export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
         ? techLevelData.populationMin.toLocaleString()
         : 'Unknown'
 
-  const onClick = () => navigate({ to: '/dashboard/crawlers/$id', params: { id } })
-
   if (loading || !crawler) {
     return (
       <UserEntitySmallDisplay
         label="CRAWLER"
-        onClick={onClick}
+        to="/dashboard/crawlers/$id"
+        params={{ id }}
         bgColor="su.pink"
         leftHeader="Loading..."
         rightHeader="..."
@@ -73,7 +70,8 @@ export function CrawlerSmallDisplay({ id }: CrawlerSmallDisplayProps) {
   return (
     <UserEntitySmallDisplay
       label="CRAWLER"
-      onClick={onClick}
+      to="/dashboard/crawlers/$id"
+      params={{ id }}
       onMouseEnter={handleMouseEnter}
       bgColor="su.pink"
       leftHeader={name ?? 'New Crawler'}

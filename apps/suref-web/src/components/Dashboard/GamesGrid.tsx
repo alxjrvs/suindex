@@ -1,4 +1,3 @@
-import { useNavigate } from '@tanstack/react-router'
 import { GameSmallDisplay } from './GameSmallDisplay'
 import { GridLayout } from './GridLayout'
 import { useUserGamesList } from '@/hooks/game/useGames'
@@ -6,7 +5,6 @@ import { useCreateEntity } from '@/hooks/useCreateEntity'
 import { logger } from '@/lib/logger'
 
 export function GamesGrid() {
-  const navigate = useNavigate()
   const { data: games, isLoading: loading, error, refetch: reload } = useUserGamesList()
 
   const { createEntity: createGame, isLoading: isCreating } = useCreateEntity({
@@ -22,10 +20,6 @@ export function GamesGrid() {
     }
   }
 
-  const handleGameClick = (gameId: string) => {
-    navigate({ to: `/dashboard/games/${gameId}` })
-  }
-
   return (
     <GridLayout<{ game_id: string; role: string }>
       title="Your Games"
@@ -36,7 +30,8 @@ export function GamesGrid() {
         <GameSmallDisplay
           key={game.game_id}
           id={game.game_id}
-          onClick={() => handleGameClick(game.game_id)}
+          to="/dashboard/games/$gameId"
+          params={{ gameId: game.game_id }}
         />
       )}
       createButton={{

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch, Link } from '@tanstack/react-router'
 import { Box, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { useForm } from '@tanstack/react-form'
@@ -51,13 +51,13 @@ export function JoinGame() {
   return (
     <Box p={8} maxW="xl" mx="auto">
       <Button
-        onClick={() => navigate({ to: '/dashboard' })}
+        asChild
         variant="plain"
         color="brand.srd"
         mb={4}
         _hover={{ textDecoration: 'underline' }}
       >
-        ← Back to Dashboard
+        <Link to="/dashboard">← Back to Dashboard</Link>
       </Button>
       <Heading level="h1" mb={6}>
         Join a Game

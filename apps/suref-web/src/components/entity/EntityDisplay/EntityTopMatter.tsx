@@ -55,7 +55,8 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
   // 2. Entity has chassis abilities, OR
   // 3. Entity has an image URL (so images can render even without content), OR
   // 4. Entity has actions that will be displayed (so actions can render even without content)
-  const hasContent = !!showContent || hasChassisAbilities || !!getAssetUrl(data) || hasDisplayableActions
+  const hasContent =
+    !!showContent || hasChassisAbilities || !!getAssetUrl(data) || hasDisplayableActions
 
   if (!hasContent) {
     return null

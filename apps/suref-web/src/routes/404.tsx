@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Heading } from '@/components/base/Heading'
@@ -31,16 +31,6 @@ export const Route = createFileRoute('/404')({
 })
 
 function NotFoundPage() {
-  const navigate = useNavigate()
-
-  const handleGoHome = () => {
-    navigate({ to: '/' })
-  }
-
-  const handleBrowseSchemas = () => {
-    navigate({ to: '/' })
-  }
-
   return (
     <Flex alignItems="center" justifyContent="center" minH="80vh" bg="bg.surface" p={4}>
       <Box
@@ -77,7 +67,7 @@ function NotFoundPage() {
             </Text>
             <VStack gap={2} alignItems="stretch">
               <Button
-                onClick={handleGoHome}
+                asChild
                 w="full"
                 px={4}
                 py={2}
@@ -87,10 +77,10 @@ function NotFoundPage() {
                 _hover={{ bg: 'brand.srd' }}
                 fontWeight="medium"
               >
-                Return to Home
+                <Link to="/">Return to Home</Link>
               </Button>
               <Button
-                onClick={handleBrowseSchemas}
+                asChild
                 w="full"
                 px={4}
                 py={2}
@@ -100,7 +90,7 @@ function NotFoundPage() {
                 _hover={{ bg: 'brand.srd' }}
                 fontWeight="medium"
               >
-                Browse Reference Data
+                <Link to="/">Browse Reference Data</Link>
               </Button>
             </VStack>
           </Box>
@@ -116,7 +106,7 @@ function NotFoundPage() {
                 .map((schema) => (
                   <Button
                     key={schema.id}
-                    onClick={() => navigate({ to: `/schema/${schema.id}` })}
+                    asChild
                     size="sm"
                     px={3}
                     py={1}
@@ -126,7 +116,9 @@ function NotFoundPage() {
                     _hover={{ bg: 'su.orange', color: 'su.white' }}
                     fontSize="xs"
                   >
-                    {schema.displayName}
+                    <Link to="/schema/$schemaId" params={{ schemaId: schema.id }}>
+                      {schema.displayName}
+                    </Link>
                   </Button>
                 ))}
             </Flex>

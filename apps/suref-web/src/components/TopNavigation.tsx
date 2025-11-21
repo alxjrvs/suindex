@@ -1,6 +1,7 @@
 import { Box, Button, Flex, IconButton, HStack, Menu, Portal, Text } from '@chakra-ui/react'
 import type { User } from '@supabase/supabase-js'
 import type { SchemaInfo } from '@/types/schema'
+import { Link } from '@tanstack/react-router'
 import { Heading } from './base/Heading'
 import { useNavigationState } from '@/hooks/useNavigationState'
 import { NavigationLink } from './shared/NavigationLink'
@@ -77,7 +78,7 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           flex={{ base: 'none', lg: 1 }}
         >
           <Button
-            onClick={() => handleNavigate('/')}
+            asChild
             _hover={{ bg: 'bg.hover' }}
             bg="transparent"
             borderRadius="md"
@@ -86,10 +87,12 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
             p={2}
             color="fg.default"
           >
-            <Heading level="h2">Salvage Union</Heading>
-            <Text fontSize="xs" color="brand.srd">
-              SRD
-            </Text>
+            <Link to="/">
+              <Heading level="h2">Salvage Union</Heading>
+              <Text fontSize="xs" color="brand.srd">
+                SRD
+              </Text>
+            </Link>
           </Button>
 
           <HStack
@@ -195,19 +198,13 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
             </Box>
 
             <Box as="li">
-              <NavigationLink
-                isActive={isActive('/randsum')}
-                onClick={() => handleNavigate('/randsum')}
-              >
+              <NavigationLink isActive={isActive('/randsum')} to="/randsum">
                 Discord Bot
               </NavigationLink>
             </Box>
 
             <Box as="li">
-              <NavigationLink
-                isActive={isActive('/about')}
-                onClick={() => handleNavigate('/about')}
-              >
+              <NavigationLink isActive={isActive('/about')} to="/about">
                 About
               </NavigationLink>
             </Box>

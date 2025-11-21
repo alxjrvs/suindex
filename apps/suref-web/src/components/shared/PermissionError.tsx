@@ -1,5 +1,5 @@
 import { Box, VStack, Heading, Text, Button } from '@chakra-ui/react'
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 
 interface PermissionErrorProps {
   message?: string
@@ -13,8 +13,6 @@ export function PermissionError({
   message = 'You do not have permission to view this resource',
   showHomeButton = true,
 }: PermissionErrorProps) {
-  const navigate = useNavigate()
-
   return (
     <Box
       minH="100vh"
@@ -39,14 +37,8 @@ export function PermissionError({
         </Text>
 
         {showHomeButton && (
-          <Button
-            onClick={() => navigate({ to: '/' })}
-            bg="su.orange"
-            color="su.white"
-            _hover={{ opacity: 0.8 }}
-            size="lg"
-          >
-            Go to Home
+          <Button asChild bg="su.orange" color="su.white" _hover={{ opacity: 0.8 }} size="lg">
+            <Link to="/">Go to Home</Link>
           </Button>
         )}
       </VStack>

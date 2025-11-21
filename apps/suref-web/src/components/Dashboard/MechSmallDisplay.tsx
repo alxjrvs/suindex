@@ -1,7 +1,6 @@
 import { VStack, Box } from '@chakra-ui/react'
 import { Text } from '@/components/base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
-import { useNavigate } from '@tanstack/react-router'
 import { useHydratedMech, useDeleteMech } from '@/hooks/mech'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
@@ -19,7 +18,6 @@ interface MechSmallDisplayProps {
 }
 
 export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps) {
-  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const { mech, selectedChassis, loading: mechLoading } = useHydratedMech(id)
@@ -84,18 +82,14 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
   const isOwner = currentUserId === mech?.user_id
   const ownerName = isOwner ? 'You' : ownerData || 'Owner'
 
-  const onClick = () => {
-    if (!id) return
-    navigate({ to: '/dashboard/mechs/$id', params: { id } })
-  }
-
   const isLoading = !id || mechLoading || pilotLoading || crawlerLoading
 
-  if (isLoading || !mech) {
+  if (isLoading || !mech || !id) {
     return (
       <UserEntitySmallDisplay
         reverse={reverse}
-        onClick={onClick}
+        to={id ? '/dashboard/mechs/$id' : undefined}
+        params={id ? { id } : undefined}
         bgColor="su.green"
         leftHeader="Loading..."
         rightHeader="..."
@@ -139,7 +133,8 @@ export function MechSmallDisplay({ id, reverse = false }: MechSmallDisplayProps)
   return (
     <UserEntitySmallDisplay
       reverse={reverse}
-      onClick={onClick}
+      to="/dashboard/mechs/$id"
+      params={{ id }}
       onMouseEnter={handleMouseEnter}
       bgColor="su.green"
       detailLabel="Player"
