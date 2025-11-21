@@ -2,7 +2,7 @@
  * TanStack Query hooks for entity management
  *
  * Provides hooks for fetching and mutating entities with:
- * - Automatic caching and background refetching
+ * - Automatic caching
  * - Optimistic updates for better UX
  * - Cache invalidation on mutations
  * - Loading and error states

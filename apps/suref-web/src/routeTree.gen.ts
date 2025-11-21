@@ -29,6 +29,7 @@ import { Route as DashboardPilotsIdRouteImport } from './routes/dashboard/pilots
 import { Route as DashboardMechsNewRouteImport } from './routes/dashboard/mechs/new'
 import { Route as DashboardMechsIdRouteImport } from './routes/dashboard/mechs/$id'
 import { Route as DashboardGamesGameIdRouteImport } from './routes/dashboard/games/$gameId'
+import { Route as DashboardCrawlersNewRouteImport } from './routes/dashboard/crawlers/new'
 import { Route as DashboardCrawlersIdRouteImport } from './routes/dashboard/crawlers/$id'
 import { Route as SchemaSchemaIdItemItemIdRouteImport } from './routes/schema/$schemaId/item/$itemId'
 
@@ -132,6 +133,11 @@ const DashboardGamesGameIdRoute = DashboardGamesGameIdRouteImport.update({
   path: '/games/$gameId',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCrawlersNewRoute = DashboardCrawlersNewRouteImport.update({
+  id: '/crawlers/new',
+  path: '/crawlers/new',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardCrawlersIdRoute = DashboardCrawlersIdRouteImport.update({
   id: '/crawlers/$id',
   path: '/crawlers/$id',
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/sheets/pilot': typeof SheetsPilotRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/crawlers/$id': typeof DashboardCrawlersIdRoute
+  '/dashboard/crawlers/new': typeof DashboardCrawlersNewRoute
   '/dashboard/games/$gameId': typeof DashboardGamesGameIdRoute
   '/dashboard/mechs/$id': typeof DashboardMechsIdRoute
   '/dashboard/mechs/new': typeof DashboardMechsNewRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/sheets/pilot': typeof SheetsPilotRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/crawlers/$id': typeof DashboardCrawlersIdRoute
+  '/dashboard/crawlers/new': typeof DashboardCrawlersNewRoute
   '/dashboard/games/$gameId': typeof DashboardGamesGameIdRoute
   '/dashboard/mechs/$id': typeof DashboardMechsIdRoute
   '/dashboard/mechs/new': typeof DashboardMechsNewRoute
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/sheets/pilot': typeof SheetsPilotRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/crawlers/$id': typeof DashboardCrawlersIdRoute
+  '/dashboard/crawlers/new': typeof DashboardCrawlersNewRoute
   '/dashboard/games/$gameId': typeof DashboardGamesGameIdRoute
   '/dashboard/mechs/$id': typeof DashboardMechsIdRoute
   '/dashboard/mechs/new': typeof DashboardMechsNewRoute
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/sheets/pilot'
     | '/dashboard/'
     | '/dashboard/crawlers/$id'
+    | '/dashboard/crawlers/new'
     | '/dashboard/games/$gameId'
     | '/dashboard/mechs/$id'
     | '/dashboard/mechs/new'
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/sheets/pilot'
     | '/dashboard'
     | '/dashboard/crawlers/$id'
+    | '/dashboard/crawlers/new'
     | '/dashboard/games/$gameId'
     | '/dashboard/mechs/$id'
     | '/dashboard/mechs/new'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/sheets/pilot'
     | '/dashboard/'
     | '/dashboard/crawlers/$id'
+    | '/dashboard/crawlers/new'
     | '/dashboard/games/$gameId'
     | '/dashboard/mechs/$id'
     | '/dashboard/mechs/new'
@@ -445,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardGamesGameIdRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/crawlers/new': {
+      id: '/dashboard/crawlers/new'
+      path: '/crawlers/new'
+      fullPath: '/dashboard/crawlers/new'
+      preLoaderRoute: typeof DashboardCrawlersNewRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/crawlers/$id': {
       id: '/dashboard/crawlers/$id'
       path: '/crawlers/$id'
@@ -466,6 +485,7 @@ interface DashboardRouteChildren {
   DashboardJoinRoute: typeof DashboardJoinRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardCrawlersIdRoute: typeof DashboardCrawlersIdRoute
+  DashboardCrawlersNewRoute: typeof DashboardCrawlersNewRoute
   DashboardGamesGameIdRoute: typeof DashboardGamesGameIdRoute
   DashboardMechsIdRoute: typeof DashboardMechsIdRoute
   DashboardMechsNewRoute: typeof DashboardMechsNewRoute
@@ -481,6 +501,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardJoinRoute: DashboardJoinRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardCrawlersIdRoute: DashboardCrawlersIdRoute,
+  DashboardCrawlersNewRoute: DashboardCrawlersNewRoute,
   DashboardGamesGameIdRoute: DashboardGamesGameIdRoute,
   DashboardMechsIdRoute: DashboardMechsIdRoute,
   DashboardMechsNewRoute: DashboardMechsNewRoute,

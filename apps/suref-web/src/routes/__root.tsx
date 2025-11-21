@@ -103,6 +103,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap"
           as="style"
         />
+        {/* Content Security Policy - includes localhost for local development */}
+        {/* Note: CSP in meta tag applies to local dev; Netlify headers override in production */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' http://localhost http://127.0.0.1 https://*.supabase.co https://*.netlify.app;"
+        />
         <HeadContent />
       </head>
       <body>

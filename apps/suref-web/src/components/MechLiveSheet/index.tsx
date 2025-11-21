@@ -19,11 +19,10 @@ import { LiveSheetControlBar } from '@/components/shared/LiveSheetControlBar'
 import { LiveSheetLoadingState } from '@/components/shared/LiveSheetLoadingState'
 import { LiveSheetNotFoundState } from '@/components/shared/LiveSheetNotFoundState'
 import { LiveSheetErrorState } from '@/components/shared/LiveSheetErrorState'
-import { useUpdateMech, useHydratedMech, useDeleteMech, mechsKeys } from '@/hooks/mech'
+import { useUpdateMech, useHydratedMech, useDeleteMech } from '@/hooks/mech'
 import { useCreatePilot } from '@/hooks/pilot'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { useImageUpload } from '@/hooks/useImageUpload'
-import { useLiveSheetSubscriptions } from '@/hooks/useLiveSheetSubscriptions'
 import { useEntityRelationships } from '@/hooks/useEntityRelationships'
 import { isOwner } from '@/lib/permissions'
 import { MainMechDisplay } from './MainMechDisplay'
@@ -50,14 +49,6 @@ export default function MechLiveSheet({ id }: { id: string }) {
     entityId: id,
     getCurrentImageUrl: () => mech?.image_url ?? null,
     queryKey: ['mechs', id],
-  })
-
-  useLiveSheetSubscriptions({
-    entityType: 'mech',
-    id,
-    entityQueryKey: mechsKeys.byId(id),
-    enabled: !isLocal && !!id,
-    includeCargo: true,
   })
 
   const createPilot = useCreatePilot()
