@@ -16,4 +16,6 @@ Supabase API patterns for client setup, queries, validation, and hydration.
 - Throw errors (don't return error objects), use descriptive error messages, let TanStack Query handle error states in components
 - Fetch with filtering: `const { data, error } = await supabase.from(table).select('*').eq('user_id' as never, userId); if (error) throw error; return castDatabaseResult<T[]>(data || [])`
 - Create with validation: `const validated = createEntitySchema.parse(data); const { data: entity, error } = await supabase.from('suentities').insert(validated).select().single(); if (error) throw new Error(\`Failed to create entity: ${error.message}\`); return hydrateEntity(entity, [])`
-- Use `useRealtimeSubscription` hook for realtime updates, always provide `queryKey` for cache invalidation, show toast notifications for updates (configurable)
+- Mutations use optimistic updates via `onMutate` for immediate UI feedback
+- Mutations invalidate queries via `onSuccess` to ensure fresh data after API calls
+- Mutations rollback on error via `onError` to restore previous state

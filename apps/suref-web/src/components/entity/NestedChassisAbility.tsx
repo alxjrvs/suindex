@@ -21,6 +21,8 @@ interface NestedChassisAbilityProps {
   compact?: boolean
   /** Whether to hide the action content */
   hideContent?: boolean
+  /** Whether to hide the choices */
+  hideChoices?: boolean
   /** Chassis name to replace [(CHASSIS)] placeholder with */
   chassisName?: string
 }
@@ -37,6 +39,7 @@ export function NestedChassisAbility({
   data,
   compact = false,
   hideContent = false,
+  hideChoices = false,
   chassisName,
 }: NestedChassisAbilityProps) {
   // Chassis abilities use EP currency
@@ -203,7 +206,7 @@ export function NestedChassisAbility({
       )}
 
       {/* Choices */}
-      {hasChoices && (
+      {hasChoices && !hideChoices && (
         <VStack
           gap={spacing}
           pt={

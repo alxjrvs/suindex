@@ -2,7 +2,7 @@
  * TanStack Query hooks for pilot management
  *
  * Provides hooks for fetching and mutating pilots with:
- * - Automatic caching and background refetching
+ * - Automatic caching
  * - Optimistic updates for better UX
  * - Cache invalidation on mutations
  * - Loading and error states

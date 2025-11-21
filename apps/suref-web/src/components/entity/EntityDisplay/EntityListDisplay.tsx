@@ -82,7 +82,7 @@ export function EntityListDisplay({
             : undefined
 
           return (
-            <Box key={idx} p={spacing.contentPadding} bg="su.lightBlue" borderRadius="md" w="full">
+            <Box key={idx} p={spacing.contentPadding} bg="su.white" borderRadius="md" w="full">
               <Text fontSize="md" fontWeight="bold" mb={option.description ? 2 : 0}>
                 {option.label}
               </Text>

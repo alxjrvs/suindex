@@ -1,15 +1,13 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
-import { SheetInput } from './SheetInput'
 import { SheetTextarea } from './SheetTextarea'
+import { NPCCardChoice } from './NPCCardChoice'
 import type { CrawlerNPC } from '@/types/common'
 import type { Tables } from '@/types/database-generated.types'
 import NumericStepper from '@/components/NumericStepper'
 import { Text } from '@/components/base/Text'
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { getTiltRotation } from '@/utils/tiltUtils'
-import { rollTable } from '@randsum/salvageunion'
 import type { SURefCrawler, SURefCrawlerBay } from 'salvageunion-reference'
-import { getParagraphString } from '@/lib/contentBlockHelpers'
 
 export function NPCCard({
   position,
@@ -43,10 +41,7 @@ export function NPCCard({
   const choiceDefinitions = useMemo(() => {
     if (!referenceBay) return []
 
-    if ('choices' in referenceBay && referenceBay.choices) {
-      return referenceBay.choices
-    }
-
+    // Only get NPC choices, not bay-level choices (which have schema and are rendered in BayInfo)
     if ('npc' in referenceBay && referenceBay.npc && 'choices' in referenceBay.npc) {
       return referenceBay.npc.choices || []
     }
@@ -136,34 +131,16 @@ export function NPCCard({
       </Flex>
 
       {choiceDefinitions.map((choice) => (
-        <Box
+        <NPCCardChoice
           key={choice.id}
-          transform={tilted && choice.name === 'Name' ? `rotate(${nameRotation}deg)` : undefined}
-          transition="transform 0.3s ease"
-        >
-          <SheetInput
-            label={choice.name === 'Name' ? undefined : choice.name}
-            placeholder={
-              choice.name === 'Name'
-                ? `Enter ${position} name...`
-                : getParagraphString(choice.content) || 'Enter value...'
-            }
-            suffixText={choice.name === 'Name' ? `the ${position}` : undefined}
-            onDiceRoll={
-              onUpdateChoice
-                ? () => {
-                    const {
-                      result: { label },
-                    } = rollTable(choice.name)
-                    onUpdateChoice(choice.id, label)
-                  }
-                : undefined
-            }
-            value={choicesMap[choice.id] || ''}
-            onChange={onUpdateChoice ? (value) => onUpdateChoice(choice.id, value) : undefined}
-            disabled={disabled || !onUpdateChoice}
-          />
-        </Box>
+          choice={choice}
+          position={position}
+          value={choicesMap[choice.id] || ''}
+          tilted={tilted}
+          nameRotation={nameRotation}
+          disabled={disabled}
+          onUpdateChoice={onUpdateChoice}
+        />
       ))}
 
       <Box

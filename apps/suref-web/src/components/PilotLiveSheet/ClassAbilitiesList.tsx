@@ -37,6 +37,7 @@ export function ClassAbilitiesList({
     }
 
     const allTreeAbilities: Record<string, SURefAbility[]> = {}
+    const isSRDView = !id // When id is undefined, we're in SRD/reference view
 
     // Always show core trees
     if ('coreTrees' in selectedClass && Array.isArray(selectedClass.coreTrees)) {
@@ -50,28 +51,34 @@ export function ClassAbilitiesList({
     let coreAdvancedTree: string | null = null
     let coreLegendaryTree: string | null = null
 
-    if (
-      !selectedAdvancedClass &&
-      'advancedTree' in selectedClass &&
-      selectedClass.advancedTree &&
-      pilot &&
-      abilities.length >= 6
-    ) {
-      // Check if requirements are met for advanced tree
-      if (checkTreeRequirements(abilities, selectedClass.advancedTree)) {
+    // In SRD view, always show advanced and legendary trees if they exist
+    // In pilot view, check requirements
+    if (!selectedAdvancedClass && 'advancedTree' in selectedClass && selectedClass.advancedTree) {
+      const shouldShowAdvanced =
+        isSRDView ||
+        (pilot &&
+          abilities.length >= 6 &&
+          checkTreeRequirements(abilities, selectedClass.advancedTree))
+
+      if (shouldShowAdvanced) {
         coreAdvancedTree = selectedClass.advancedTree
         allTreeAbilities[selectedClass.advancedTree] = []
 
-        // Check if all advanced abilities are selected to show legendary tree
-        const advancedTreeAbilities = allAbilities.filter(
-          (a) => a.tree === selectedClass.advancedTree
-        )
-        const allAdvancedSelected = advancedTreeAbilities.every((ability) =>
-          abilities.some((a) => a.ref.id === ability.id)
-        )
+        // In SRD view, always show legendary tree if it exists
+        // In pilot view, check if all advanced abilities are selected
+        const shouldShowLegendary =
+          isSRDView ||
+          (() => {
+            const advancedTreeAbilities = allAbilities.filter(
+              (a) => a.tree === selectedClass.advancedTree
+            )
+            return advancedTreeAbilities.every((ability) =>
+              abilities.some((a) => a.ref.id === ability.id)
+            )
+          })()
 
         if (
-          allAdvancedSelected &&
+          shouldShowLegendary &&
           'legendaryTree' in selectedClass &&
           selectedClass.legendaryTree
         ) {
@@ -115,7 +122,7 @@ export function ClassAbilitiesList({
       coreAdvancedTree,
       coreLegendaryTree,
     }
-  }, [allAbilities, selectedClass, selectedAdvancedClass, pilot, abilities])
+  }, [allAbilities, selectedClass, selectedAdvancedClass, pilot, abilities, id])
 
   const coreTreeNames =
     selectedClass && 'coreTrees' in selectedClass && Array.isArray(selectedClass.coreTrees)

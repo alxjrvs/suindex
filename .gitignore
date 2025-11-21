@@ -24,6 +24,10 @@ core
 .vite
 apps/suref-web/.vite
 
+# TanStack Router temporary files
+.tanstack
+**/.tanstack
+
 # Environment variables
 .env
 .env.local

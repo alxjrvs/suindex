@@ -28,6 +28,7 @@ interface EntityDisplayProviderProps {
   hideActions: boolean
   hidePatterns: boolean
   hideChoices: boolean
+  showFooter?: boolean
   collapsible: boolean
   defaultExpanded: boolean
   onClick?: () => void
@@ -41,6 +42,8 @@ interface EntityDisplayProviderProps {
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
   onToggleExpanded?: () => void
   children?: ReactNode
+  hideImage?: boolean
+  imageWidth?: string
 }
 
 export function EntityDisplayProvider({
@@ -53,6 +56,7 @@ export function EntityDisplayProvider({
   hideActions,
   hidePatterns,
   hideChoices,
+  showFooter,
   collapsible,
   expanded,
   defaultExpanded,
@@ -66,6 +70,8 @@ export function EntityDisplayProvider({
   onChoiceSelection,
   onToggleExpanded,
   children,
+  hideImage,
+  imageWidth,
 }: EntityDisplayProviderProps) {
   const hasButtonConfig = !!buttonConfig
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
@@ -119,6 +125,7 @@ export function EntityDisplayProvider({
     hideActions,
     hidePatterns,
     hideChoices,
+    showFooter,
     hideLevel,
     rightLabel,
     rightContent,
@@ -127,6 +134,8 @@ export function EntityDisplayProvider({
     buttonConfig,
     userChoices,
     onChoiceSelection,
+    hideImage,
+    imageWidth,
   }
 
   return <EntityDisplayContext.Provider value={value}>{children}</EntityDisplayContext.Provider>

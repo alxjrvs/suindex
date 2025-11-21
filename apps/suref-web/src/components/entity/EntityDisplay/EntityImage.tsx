@@ -4,7 +4,7 @@ import { getAssetUrl } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { logger } from '@/lib/logger'
 
-export function EntityImage() {
+export function EntityImage({ customWidth }: { customWidth?: string }) {
   const { data, title, compact } = useEntityDisplayContext()
   const [showImage, setShowImage] = useState(true)
 
@@ -12,10 +12,12 @@ export function EntityImage() {
 
   if (!showImage || !assetUrl) return null
 
+  const width = customWidth || (compact ? '200px' : '300px')
+
   return (
     <Box
       bg="su.white"
-      width={compact ? '200px' : '300px'}
+      width={width}
       float="left"
       marginRight={4}
       marginBottom={2}

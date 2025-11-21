@@ -110,7 +110,9 @@ TypeScript ORM for Salvage Union game data:
 ### Supabase
 
 - PostgreSQL database with Row Level Security (RLS)
-- Real-time subscriptions via `useRealtimeSubscription`
+- Traditional API calls with TanStack Query for data fetching
+- Optimistic updates for immediate UI feedback
+- Automatic cache invalidation on mutations
 - Storage for file uploads
 - Authentication with Discord OAuth
 

@@ -17,10 +17,9 @@ import { LiveSheetAssetDisplay } from '@/components/shared/LiveSheetAssetDisplay
 import { LiveSheetLoadingState } from '@/components/shared/LiveSheetLoadingState'
 import { LiveSheetNotFoundState } from '@/components/shared/LiveSheetNotFoundState'
 import { LiveSheetErrorState } from '@/components/shared/LiveSheetErrorState'
-import { useUpdatePilot, useHydratedPilot, useDeletePilot, pilotsKeys } from '@/hooks/pilot'
+import { useUpdatePilot, useHydratedPilot, useDeletePilot } from '@/hooks/pilot'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { useImageUpload } from '@/hooks/useImageUpload'
-import { useLiveSheetSubscriptions } from '@/hooks/useLiveSheetSubscriptions'
 import { isOwner } from '@/lib/permissions'
 
 interface PilotLiveSheetProps {
@@ -53,13 +52,6 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
     entityId: id,
     getCurrentImageUrl: () => pilot?.image_url ?? null,
     queryKey: ['pilots', id],
-  })
-
-  useLiveSheetSubscriptions({
-    entityType: 'pilot',
-    id,
-    entityQueryKey: pilotsKeys.byId(id),
-    enabled: !isLocal && !!id,
   })
 
   if (!pilot && !loading) {

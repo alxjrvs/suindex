@@ -31,7 +31,7 @@ export function EntityChoices({ userChoices, onChoiceSelection }: EntityChoicesP
 
   if (!isSchemaPageMode) {
     return (
-      <Box p={spacing.contentPadding} bg="su.lightBlue" borderRadius="md">
+      <Box p={spacing.contentPadding} bg="su.white" borderRadius="md">
         <Text fontSize={fontSize.md} fontWeight="bold" color="su.black">
           WIP - Live sheet choices will be displayed here
         </Text>

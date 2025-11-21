@@ -2,12 +2,11 @@ import type { SURefCrawler, SURefMetaAction } from 'salvageunion-reference'
 import { extractActions } from 'salvageunion-reference'
 
 import { RoundedBox } from '@/components/shared/RoundedBox'
-import { SheetDisplay } from '@/components/shared/SheetDisplay'
 import { VStack } from '@chakra-ui/react'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 import { useHydratedCrawler } from '@/hooks/crawler'
 import { useManageEntityChoices } from '@/hooks/suentity'
-import { getParagraphString } from '@/lib/contentBlockHelpers'
+import { NestedChassisAbility } from '@/components/entity/NestedChassisAbility'
 
 export function CrawlerAbilities({
   id,
@@ -67,7 +66,7 @@ function CrawlerAbility({
 
   return (
     <VStack gap={3} alignItems="stretch" w="full">
-      <SheetDisplay label={ability.name} value={getParagraphString(ability.content)} />
+      <NestedChassisAbility data={ability} compact={false} hideContent={false} hideChoices={true} />
       {wrappedChoice.map((choice, idx) => (
         <SheetEntityChoiceDisplay
           onUpdateChoice={readOnly ? undefined : handleUpdateChoice}

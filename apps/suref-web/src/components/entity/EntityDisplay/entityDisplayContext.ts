@@ -64,6 +64,8 @@ export interface EntityDisplayContextValue {
   hidePatterns: boolean
   /** Whether to hide choices */
   hideChoices: boolean
+  /** Whether to show the footer (page reference). Defaults to !hideActions */
+  showFooter?: boolean
   /** Whether to hide tech level */
   hideLevel: boolean
   /** Right label for header */
@@ -82,6 +84,10 @@ export interface EntityDisplayContextValue {
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
   /** Children to render in the content area */
   children?: ReactNode
+  /** Whether to hide the image */
+  hideImage?: boolean
+  /** Custom width for the image (e.g., '40%') */
+  imageWidth?: string
 }
 
 export const EntityDisplayContext = createContext<EntityDisplayContextValue | null>(null)

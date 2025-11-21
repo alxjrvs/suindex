@@ -31,4 +31,9 @@ export default defineConfig(({ mode }) => ({
   optimizeDeps: {
     exclude: ['salvageunion-reference'],
   },
+  server: {
+    watch: {
+      ignored: ['**/routeTree.gen.ts'],
+    },
+  },
 }))

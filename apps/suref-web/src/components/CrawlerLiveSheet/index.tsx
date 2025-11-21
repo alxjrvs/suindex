@@ -17,15 +17,9 @@ import { PilotMechCell } from '@/components/Dashboard/PilotMechCell'
 import { LiveSheetLoadingState } from '@/components/shared/LiveSheetLoadingState'
 import { LiveSheetNotFoundState } from '@/components/shared/LiveSheetNotFoundState'
 import { LiveSheetErrorState } from '@/components/shared/LiveSheetErrorState'
-import {
-  useUpdateCrawler,
-  useHydratedCrawler,
-  useDeleteCrawler,
-  crawlersKeys,
-} from '@/hooks/crawler'
+import { useUpdateCrawler, useHydratedCrawler, useDeleteCrawler } from '@/hooks/crawler'
 import { useInitializeCrawlerBays } from '@/hooks/crawler/useInitializeCrawlerBays'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
-import { useLiveSheetSubscriptions } from '@/hooks/useLiveSheetSubscriptions'
 import { isOwner } from '@/lib/permissions'
 import { fetchCrawlerPilots, fetchPilotsMechs } from '@/lib/api'
 
@@ -41,14 +35,6 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
   const updateCrawler = useUpdateCrawler()
 
   useInitializeCrawlerBays(id, bays.length > 0)
-
-  useLiveSheetSubscriptions({
-    entityType: 'crawler',
-    id,
-    entityQueryKey: crawlersKeys.byId(id),
-    enabled: !isLocal && !!id,
-    includeCargo: true,
-  })
 
   const { data: pilotsWithMechs = [] } = useQuery({
     queryKey: ['crawler-pilots-mechs', id],
