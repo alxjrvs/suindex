@@ -27,7 +27,7 @@ export function EntityPopulationRange() {
       p={spacing.smallGap}
     >
       <Text color="su.black">
-        <Text as="span" fontWeight="bold" color="su.brick">
+        <Text as="span" fontWeight="bold" color="brand.srd">
           Population Range:{' '}
         </Text>
         {data.populationMin.toLocaleString()} - {data.populationMax.toLocaleString()}

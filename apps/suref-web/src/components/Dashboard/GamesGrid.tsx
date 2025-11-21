@@ -41,7 +41,7 @@ export function GamesGrid() {
       createButton={{
         onClick: handleCreateGame,
         label: 'New Game',
-        bgColor: 'su.brick',
+        bgColor: 'brand.srd',
         color: 'su.white',
         isLoading: isCreating,
       }}

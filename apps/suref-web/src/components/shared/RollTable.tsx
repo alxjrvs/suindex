@@ -120,7 +120,7 @@ export function RollTable({
                 onClick={handleRoll}
                 color="su.white"
                 bg="transparent"
-                _hover={{ bg: 'su.brick' }}
+                _hover={{ bg: 'brand.srd' }}
                 borderRadius="md"
                 size={compact ? 'xs' : 'sm'}
                 aria-label="Roll on this table"
@@ -182,7 +182,7 @@ export function RollTable({
                   color="su.white"
                   fontSize={compact ? 'xs' : 'sm'}
                   fontWeight="bold"
-                  _hover={{ bg: 'su.brick' }}
+                  _hover={{ bg: 'brand.srd' }}
                   borderRadius={0}
                   zIndex={2}
                   display="flex"

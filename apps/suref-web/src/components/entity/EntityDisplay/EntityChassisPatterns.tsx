@@ -28,7 +28,7 @@ export function EntityChassisPatterns() {
       <EntitySubheader label="Patterns" />
 
       <Tabs.Root value={selectedPattern} onValueChange={(e) => handlePatternChange(e.value)}>
-        <Tabs.List borderBottom="3px solid" borderColor="su.black">
+        <Tabs.List borderBottom="3px solid" borderColor="border.default">
           {data.patterns.map((pattern) => {
             const displayName = pattern.name.replace(/\s+Pattern$/i, '')
             const isLegalStarting = 'legalStarting' in pattern && pattern.legalStarting
@@ -39,6 +39,7 @@ export function EntityChassisPatterns() {
                 value={displayName}
                 fontSize="lg"
                 fontWeight="bold"
+                color="fg.default"
                 _selected={{
                   bg: 'su.green',
                   color: 'su.white',

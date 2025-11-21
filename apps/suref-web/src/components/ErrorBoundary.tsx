@@ -64,7 +64,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             borderRadius="md"
             shadow="lg"
             borderWidth="2px"
-            borderColor="su.brick"
+            borderColor="brand.srd"
           >
             <Heading level="h1" fontSize="2xl" fontWeight="bold" mb={4}>
               REACTOR OVERLOAD
@@ -84,7 +84,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
               <Text as="summary" cursor="pointer" fontWeight="semibold" color="su.black">
                 Error Details
               </Text>
-              <Text as="pre" mt={2} fontSize="xs" color="su.brick" overflowY="auto" maxH="40">
+              <Text as="pre" mt={2} fontSize="xs" color="brand.srd" overflowY="auto" maxH="40">
                 {this.state.error?.toString()}
                 {this.state.errorInfo?.componentStack && (
                   <>
@@ -102,7 +102,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
               bg="su.orange"
               color="su.white"
               borderRadius="md"
-              _hover={{ bg: 'su.brick' }}
+              _hover={{ bg: 'brand.srd' }}
               fontWeight="medium"
             >
               Refresh Page

@@ -4,16 +4,16 @@ export default function Footer() {
   return (
     <Box
       as="footer"
-      bg="su.white"
+      bg="bg.canvas"
       borderTopWidth="1px"
-      borderTopColor="su.lightBlue"
+      borderTopColor="border.default"
       py={3}
       shadow={{ base: 'none', lg: 'sm' }}
     >
       <Flex
         maxW="7xl"
         mx="auto"
-        color="su.black"
+        color="fg.default"
         fontSize="xs"
         alignItems="center"
         justifyContent="center"
@@ -28,7 +28,8 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               textDecoration="underline"
-              _hover={{ color: 'su.brick' }}
+              color="fg.default"
+              _hover={{ color: 'brand.srd' }}
             >
               Leyline Press
             </Link>
@@ -42,7 +43,8 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               textDecoration="underline"
-              _hover={{ color: 'su.brick' }}
+              color="fg.default"
+              _hover={{ color: 'brand.srd' }}
             >
               Salvage Union Open Game Licence 1.0b
             </Link>
@@ -55,14 +57,17 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               textDecoration="underline"
-              _hover={{ color: 'su.brick' }}
+              color="fg.default"
+              _hover={{ color: 'brand.srd' }}
             >
               Leyline Press
             </Link>
             .
           </Text>
         </Box>
-        <Image src="/Powered_by_Salvage_Black.webp" alt="Powered by Salvage" h="12" w="auto" />
+        <Box p={2} borderRadius="md" display="inline-block" bg="var(--footer-logo-bg)">
+          <Image src="/Powered_by_Salvage_Black.webp" alt="Powered by Salvage" h="12" w="auto" />
+        </Box>
       </Flex>
     </Box>
   )

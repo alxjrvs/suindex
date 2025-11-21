@@ -60,9 +60,9 @@ export function PatternSelector({
           zIndex={10}
           w="full"
           mt={11}
-          bg="su.white"
+          bg="bg.canvas"
           borderWidth="2px"
-          borderColor="fg.input"
+          borderColor="border.default"
           borderRadius="md"
           shadow="lg"
           maxH="60"
@@ -81,11 +81,11 @@ export function PatternSelector({
               w="full"
               textAlign="left"
               p={3}
-              _hover={{ bg: 'su.lightBlue' }}
+              _hover={{ bg: 'bg.hover' }}
               fontWeight="semibold"
-              color="fg.input"
+              color="fg.default"
               borderBottomWidth={index < filteredPatterns.length - 1 ? '1px' : 0}
-              borderBottomColor="fg.input"
+              borderBottomColor="border.default"
               borderRadius={0}
               justifyContent="flex-start"
               h="auto"

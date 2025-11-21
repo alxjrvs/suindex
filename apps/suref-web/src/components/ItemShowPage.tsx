@@ -35,7 +35,7 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
   const formatValue = (value: unknown): ReactElement => {
     if (value === undefined || value === null) {
       return (
-        <Text as="span" color="su.brick" opacity={0.5}>
+        <Text as="span" color="brand.srd" opacity={0.5}>
           -
         </Text>
       )
@@ -61,7 +61,7 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
           <VStack gap={2} alignItems="stretch">
             {Object.entries(value).map(([k, v]) => (
               <Box key={k}>
-                <Text as="span" fontWeight="medium" color="su.black">
+                <Text as="span" fontWeight="medium" color="fg.default">
                   {k}:{' '}
                 </Text>
                 {formatValue(v)}
@@ -74,7 +74,7 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
 
     if (typeof value === 'boolean') {
       return (
-        <Text as="span" color={value ? 'su.green' : 'su.brick'}>
+        <Text as="span" color={value ? 'su.green' : 'brand.srd'}>
           {value ? 'Yes' : 'No'}
         </Text>
       )
@@ -121,19 +121,19 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
   const specializedContent = renderSpecializedContent()
 
   return (
-    <Flex minH="100%" flexDirection="column" bg="su.white">
+    <Flex minH="100%" flexDirection="column" bg="bg.canvas">
       <Flex flex="1" p={6} alignItems="center" justifyContent="center">
         <Box maxW="6xl" w="full">
           {specializedContent ? (
             specializedContent
           ) : (
             <Box
-              bg="su.white"
+              bg="bg.canvas"
               borderRadius="md"
               shadow="lg"
               p={8}
               borderWidth="2px"
-              borderColor="su.lightBlue"
+              borderColor="border.default"
             >
               <VStack gap={6} alignItems="stretch">
                 {Object.entries(item)
@@ -146,20 +146,20 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
                     <Box
                       key={key}
                       borderBottomWidth="1px"
-                      borderColor="su.lightBlue"
+                      borderColor="border.default"
                       pb={6}
                       _last={{ borderBottomWidth: 0 }}
                     >
                       <Text
                         fontWeight="semibold"
-                        color="su.black"
+                        color="fg.default"
                         mb={3}
                         fontSize="lg"
                         textTransform="capitalize"
                       >
                         {key.replace(/([A-Z])/g, ' $1').trim()}
                       </Text>
-                      <Box color="su.black" fontSize="base">
+                      <Box color="fg.default" fontSize="base">
                         {formatValue(value)}
                       </Box>
                     </Box>

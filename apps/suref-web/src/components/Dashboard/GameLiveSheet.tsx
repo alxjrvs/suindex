@@ -133,7 +133,7 @@ export function GameLiveSheet() {
     return (
       <Box p={8}>
         <Flex align="center" justify="center" minH="60vh">
-          <Text fontSize="xl" color="su.brick">
+          <Text fontSize="xl" color="brand.srd">
             Loading game...
           </Text>
         </Flex>
@@ -159,7 +159,7 @@ export function GameLiveSheet() {
           </Text>
           <Button
             onClick={() => navigate({ to: '/dashboard' })}
-            bg="su.brick"
+            bg="brand.srd"
             color="su.white"
             fontWeight="bold"
             py={2}
@@ -323,7 +323,7 @@ export function GameLiveSheet() {
                 activeInvites.length === 0 ? (
                   <Button
                     onClick={createInvite}
-                    bg="su.brick"
+                    bg="brand.srd"
                     color="su.white"
                     fontWeight="bold"
                     fontSize="sm"
@@ -342,18 +342,18 @@ export function GameLiveSheet() {
                 </Text>
               )}
               {invitesLoading ? (
-                <Text color="su.brick" p={4}>
+                <Text color="brand.srd" p={4}>
                   Loading invites…
                 </Text>
               ) : activeInvites.length === 0 ? (
-                <Text color="su.brick" p={4}>
+                <Text color="brand.srd" p={4}>
                   No invites yet.
                 </Text>
               ) : (
                 <VStack gap={2} align="stretch" p={4}>
                   {activeInvites.map((inv) => (
                     <Box key={inv.id} p={2} bg="su.white" borderRadius="md">
-                      <Text fontSize="xs" color="su.brick">
+                      <Text fontSize="xs" color="brand.srd">
                         Uses: {inv.uses}
                         {inv.max_uses ? ` / ${inv.max_uses}` : ''}
                       </Text>
@@ -368,7 +368,7 @@ export function GameLiveSheet() {
                             )
                           }
                           variant="plain"
-                          color="su.brick"
+                          color="brand.srd"
                           fontSize="xs"
                           p={1}
                           _hover={{ textDecoration: 'underline' }}
@@ -384,7 +384,7 @@ export function GameLiveSheet() {
                             })
                           }}
                           variant="plain"
-                          color="su.brick"
+                          color="brand.srd"
                           fontSize="xs"
                           p={1}
                           _hover={{ textDecoration: 'underline' }}
@@ -406,7 +406,7 @@ export function GameLiveSheet() {
               isMediator ? (
                 <Button
                   onClick={() => setIsLinkModalOpen(true)}
-                  bg="su.brick"
+                  bg="brand.srd"
                   color="su.white"
                   fontWeight="bold"
                   fontSize="sm"
@@ -425,11 +425,11 @@ export function GameLiveSheet() {
               </Text>
             )}
             {linksLoading ? (
-              <Text color="su.brick" p={4}>
+              <Text color="brand.srd" p={4}>
                 Loading resources…
               </Text>
             ) : externalLinks.length === 0 ? (
-              <Text color="su.brick" p={4}>
+              <Text color="brand.srd" p={4}>
                 No external links yet.
               </Text>
             ) : (
@@ -467,7 +467,7 @@ export function GameLiveSheet() {
                           }
                         }}
                         variant="plain"
-                        color="su.brick"
+                        color="brand.srd"
                         fontSize="sm"
                         p={1}
                         _hover={{ color: 'red.700' }}

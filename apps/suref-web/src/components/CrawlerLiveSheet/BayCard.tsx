@@ -93,7 +93,7 @@ export function BayCard({ bay, disabled = false, readOnly = false }: BayCardProp
             label={metadata.damaged ? 'Repair' : 'Damage'}
             value={metadata.damaged ? '+' : '-'}
             onClick={handleToggleDamaged}
-            bg={metadata.damaged ? 'su.orange' : 'su.brick'}
+            bg={metadata.damaged ? 'su.orange' : 'brand.srd'}
             valueColor="su.white"
             disabled={disabled}
           />

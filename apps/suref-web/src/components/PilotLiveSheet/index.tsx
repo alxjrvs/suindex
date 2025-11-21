@@ -104,17 +104,35 @@ export default function PilotLiveSheet({ id }: PilotLiveSheetProps) {
       </Flex>
 
       <Tabs.Root defaultValue="class-abilities">
-        <Tabs.List>
-          <Tabs.Trigger value="class-abilities">Class Abilities</Tabs.Trigger>
-          <Tabs.Trigger value="general-abilities">General Abilities</Tabs.Trigger>
-          <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
+        <Tabs.List borderColor="border.default">
+          <Tabs.Trigger value="class-abilities" color="fg.default">
+            Class Abilities
+          </Tabs.Trigger>
+          <Tabs.Trigger value="general-abilities" color="fg.default">
+            General Abilities
+          </Tabs.Trigger>
+          <Tabs.Trigger value="inventory" color="fg.default">
+            Inventory
+          </Tabs.Trigger>
           {(modules.length > 0 || systems.length > 0) && (
-            <Tabs.Trigger value="modules-systems">Modules & Systems</Tabs.Trigger>
+            <Tabs.Trigger value="modules-systems" color="fg.default">
+              Modules & Systems
+            </Tabs.Trigger>
           )}
-          <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
+          <Tabs.Trigger value="notes" color="fg.default">
+            Notes
+          </Tabs.Trigger>
           <Box flex="1" />
-          {!isLocal && <Tabs.Trigger value="mechs">Mechs</Tabs.Trigger>}
-          {!isLocal && <Tabs.Trigger value="crawler">Crawler</Tabs.Trigger>}
+          {!isLocal && (
+            <Tabs.Trigger value="mechs" color="fg.default">
+              Mechs
+            </Tabs.Trigger>
+          )}
+          {!isLocal && (
+            <Tabs.Trigger value="crawler" color="fg.default">
+              Crawler
+            </Tabs.Trigger>
+          )}
         </Tabs.List>
 
         <Tabs.Content value="class-abilities">

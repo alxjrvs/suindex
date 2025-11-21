@@ -148,7 +148,7 @@ export function CrawlerHeaderInputs({
             value={currentTechLevel + 1}
             onClick={handleUpgradeToNextTechLevel}
             disabled={disabled}
-            bg="su.brick"
+            bg="brand.srd"
             valueColor="su.white"
             ariaLabel={`Upgrade to Tech Level ${currentTechLevel + 1}`}
             flash={flashTL}

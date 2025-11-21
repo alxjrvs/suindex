@@ -98,7 +98,7 @@ export function LiveSheetAssetDisplay({
               onClick={handleUploadClick}
               bg="su.orange"
               color="su.white"
-              _hover={{ bg: 'su.brick' }}
+              _hover={{ bg: 'brand.srd' }}
               loading={isUploading}
               disabled={isUploading || isRemoving}
             >

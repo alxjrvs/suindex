@@ -145,7 +145,7 @@ export function CargoModal({
                 fontWeight="bold"
                 textTransform="uppercase"
                 fontSize="sm"
-                _hover={{ bg: 'su.brick' }}
+                _hover={{ bg: 'brand.srd' }}
               >
                 Select System, Module, or Chassis
               </Button>
@@ -302,7 +302,7 @@ export function CargoModal({
               <Button
                 type="button"
                 onClick={handleClose}
-                bg="su.brick"
+                bg="brand.srd"
                 color="su.white"
                 px={3}
                 py={1.5}

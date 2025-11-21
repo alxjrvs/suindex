@@ -10,6 +10,7 @@ import { getSession, onAuthStateChange } from '@/lib/api'
 import type { User } from '@supabase/supabase-js'
 import { Toaster } from '@/components/ui/ToasterComponent'
 import { EntityViewerModalProvider } from '@/providers/EntityViewerModalProvider'
+import { ThemeProvider } from '@/providers/ThemeProvider'
 import { fetchCurrentUser } from '@/lib/supabase.server'
 import { system } from '@/theme'
 import { queryClient } from '@/lib/queryClient'
@@ -41,7 +42,9 @@ function RootComponent() {
 function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider value={system}>{children}</ChakraProvider>
+      <ThemeProvider>
+        <ChakraProvider value={system}>{children}</ChakraProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }
@@ -67,6 +70,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Salvage Union System Reference Document</title>
+        {/* Initialize theme immediately to prevent flash - next-themes compatible */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const stored = localStorage.getItem('chakra-ui-color-mode');
+                const theme = stored === 'light' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', theme);
+              })();
+            `,
+          }}
+        />
         {/* Resource hints for faster external resource loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -87,7 +102,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <ErrorBoundary>
             <EntityViewerModalProvider>
               <GlobalLoadingBar />
-              <Flex flexDirection="column" h="100vh" bg="su.white">
+              <Flex flexDirection="column" h="100vh" bg="bg.canvas">
                 <TopNavigation
                   user={user}
                   schemas={schemaIndexData.schemas.filter((s) => !s.meta)}
@@ -114,31 +129,37 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 function NotFoundComponent() {
   return (
-    <Flex alignItems="center" justifyContent="center" minH="80vh" bg="su.lightBlue" p={4}>
+    <Flex alignItems="center" justifyContent="center" minH="80vh" bg="bg.surface" p={4}>
       <Box
         maxW="2xl"
         w="full"
         p={8}
-        bg="su.white"
+        bg="bg.canvas"
         borderRadius="md"
         shadow="lg"
         borderWidth="2px"
-        borderColor="su.brick"
+        borderColor="brand.srd"
       >
         <VStack gap={6} alignItems="center">
-          <Heading level="h1" fontSize="6xl" fontWeight="bold" color="su.brick">
+          <Heading level="h1" fontSize="6xl" fontWeight="bold" color="brand.srd">
             404
           </Heading>
-          <Heading level="h2" fontSize="2xl" fontWeight="bold" textAlign="center">
+          <Heading
+            level="h2"
+            fontSize="2xl"
+            fontWeight="bold"
+            textAlign="center"
+            color="fg.default"
+          >
             SALVAGE OPERATION FAILED
           </Heading>
-          <Text color="su.black" textAlign="center" fontSize="lg">
+          <Text color="fg.default" textAlign="center" fontSize="lg">
             The page you're looking for has been lost to the wastes. It might have been scrapped,
             relocated, or never existed in the first place.
           </Text>
 
           <Box w="full" mt={4}>
-            <Text color="su.brick" fontWeight="semibold" mb={2}>
+            <Text color="brand.srd" fontWeight="semibold" mb={2}>
               Try one of these instead:
             </Text>
             <VStack gap={2} alignItems="stretch">
@@ -150,7 +171,7 @@ function NotFoundComponent() {
                 bg="su.orange"
                 color="su.white"
                 borderRadius="md"
-                _hover={{ bg: 'su.brick' }}
+                _hover={{ bg: 'brand.srd' }}
                 fontWeight="medium"
               >
                 <a href="/">Return to Home</a>
@@ -163,7 +184,7 @@ function NotFoundComponent() {
                 bg="su.green"
                 color="su.white"
                 borderRadius="md"
-                _hover={{ bg: 'su.brick' }}
+                _hover={{ bg: 'brand.srd' }}
                 fontWeight="medium"
               >
                 <a href="/">Browse Reference Data</a>
@@ -171,8 +192,8 @@ function NotFoundComponent() {
             </VStack>
           </Box>
 
-          <Box w="full" mt={6} pt={6} borderTopWidth="2px" borderTopColor="su.lightBlue">
-            <Text color="su.brick" fontWeight="semibold" mb={3} fontSize="sm">
+          <Box w="full" mt={6} pt={6} borderTopWidth="2px" borderTopColor="border.default">
+            <Text color="brand.srd" fontWeight="semibold" mb={3} fontSize="sm">
               Popular Schemas:
             </Text>
             <Flex flexWrap="wrap" gap={2}>
@@ -186,8 +207,8 @@ function NotFoundComponent() {
                     size="sm"
                     px={3}
                     py={1}
-                    bg="su.lightBlue"
-                    color="su.black"
+                    bg="bg.surface"
+                    color="fg.default"
                     borderRadius="md"
                     _hover={{ bg: 'su.orange', color: 'su.white' }}
                     fontSize="xs"

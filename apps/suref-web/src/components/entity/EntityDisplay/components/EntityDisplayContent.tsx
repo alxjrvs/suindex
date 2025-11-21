@@ -114,7 +114,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
               {'damagedEffect' in data && data.damagedEffect && compact && (
                 <ConditionalSheetInfo
                   propertyName="damagedEffect"
-                  labelBgColor="su.brick"
+                  labelBgColor="brand.srd"
                   label="Damaged Effect"
                 />
               )}

@@ -56,9 +56,9 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
         top={{ base: 0, lg: 'auto' }}
         left={{ base: 0, lg: 'auto' }}
         right={{ base: 0, lg: 'auto' }}
-        bg="su.white"
+        bg="bg.canvas"
         borderBottomWidth="2px"
-        borderBottomColor="su.lightBlue"
+        borderBottomColor="border.default"
         px={6}
         py={3}
         alignItems="center"
@@ -70,16 +70,17 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
       >
         <Button
           onClick={() => handleNavigate('/')}
-          _hover={{ bg: 'su.lightOrange' }}
+          _hover={{ bg: 'bg.hover' }}
           bg="transparent"
           borderRadius="md"
           variant="ghost"
           h="auto"
           p={2}
           display={{ base: isOpen ? 'block' : 'none', lg: 'block' }}
+          color="fg.default"
         >
           <Heading level="h2">Salvage Union</Heading>
-          <Text fontSize="xs" color="su.brick">
+          <Text fontSize="xs" color="brand.srd">
             Dashboard
           </Text>
         </Button>

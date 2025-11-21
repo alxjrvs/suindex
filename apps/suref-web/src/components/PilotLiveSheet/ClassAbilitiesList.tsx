@@ -408,7 +408,7 @@ function TreeSection({
           let buttonConfig = undefined
           if (alreadySelected && handleRemoveAbility) {
             buttonConfig = {
-              bg: 'su.brick',
+              bg: 'brand.srd',
               color: 'su.white',
               fontWeight: 'bold',
               textTransform: 'uppercase' as const,
@@ -416,7 +416,7 @@ function TreeSection({
               _disabled: {
                 opacity: 0.5,
                 cursor: 'not-allowed',
-                _hover: { bg: 'su.brick' },
+                _hover: { bg: 'brand.srd' },
               },
               disabled: currentTP < 1,
               onClick: (e: React.MouseEvent) => {

@@ -3,11 +3,14 @@
   "workspaces": {
     "": {
       "name": "web",
+      "dependencies": {
+        "next-themes": "^0.4.6",
+      },
       "devDependencies": {
-        "@eslint/js": "latest",
-        "netlify-cli": "latest",
-        "prettier": "latest",
-        "typescript-eslint": "latest",
+        "@eslint/js": "^9.39.1",
+        "netlify-cli": "^23.11.1",
+        "prettier": "^3.6.2",
+        "typescript-eslint": "^8.47.0",
       },
     },
     "apps/suref-web": {
@@ -2102,6 +2105,8 @@
     "netlify-cli": ["netlify-cli@23.11.1", "", { "dependencies": { "@fastify/static": "7.0.4", "@netlify/ai": "0.3.0", "@netlify/api": "14.0.9", "@netlify/blobs": "10.1.0", "@netlify/build": "35.3.1", "@netlify/build-info": "10.0.9", "@netlify/config": "24.0.8", "@netlify/dev-utils": "4.3.0", "@netlify/edge-bundler": "14.8.6", "@netlify/edge-functions": "3.0.1", "@netlify/edge-functions-bootstrap": "2.17.1", "@netlify/headers-parser": "9.0.2", "@netlify/local-functions-proxy": "2.0.3", "@netlify/redirect-parser": "15.0.3", "@netlify/zip-it-and-ship-it": "14.1.13", "@octokit/rest": "22.0.0", "@opentelemetry/api": "1.8.0", "@pnpm/tabtab": "0.5.4", "ansi-escapes": "7.1.1", "ansi-to-html": "0.7.2", "ascii-table": "0.0.9", "backoff": "2.5.0", "boxen": "8.0.1", "chalk": "5.6.2", "chokidar": "4.0.3", "ci-info": "4.3.0", "clean-deep": "3.4.0", "commander": "12.1.0", "comment-json": "4.3.0", "content-type": "1.0.5", "cookie": "1.0.2", "cron-parser": "4.9.0", "debug": "4.4.3", "decache": "4.6.2", "dot-prop": "9.0.0", "dotenv": "17.2.3", "env-paths": "3.0.0", "envinfo": "7.15.0", "etag": "1.8.1", "execa": "5.1.1", "express": "4.21.2", "express-logging": "1.1.1", "extract-zip": "2.0.1", "fastest-levenshtein": "1.0.16", "fastify": "4.29.1", "find-up": "7.0.0", "folder-walker": "3.2.0", "fuzzy": "0.1.3", "get-port": "5.1.1", "gh-release-fetch": "4.0.3", "git-repo-info": "2.1.1", "gitconfiglocal": "2.1.0", "http-proxy": "1.18.1", "http-proxy-middleware": "2.0.9", "https-proxy-agent": "7.0.6", "inquirer": "8.2.7", "inquirer-autocomplete-prompt": "1.4.0", "ipx": "3.1.1", "is-docker": "3.0.0", "is-stream": "4.0.1", "is-wsl": "3.1.0", "isexe": "3.1.1", "jsonwebtoken": "9.0.2", "jwt-decode": "4.0.0", "lambda-local": "2.2.0", "locate-path": "7.2.0", "lodash": "4.17.21", "log-update": "6.1.0", "maxstache": "1.0.7", "maxstache-stream": "1.0.4", "multiparty": "4.2.3", "nanospinner": "1.2.2", "netlify-redirector": "0.5.0", "node-fetch": "3.3.2", "normalize-package-data": "7.0.1", "open": "10.2.0", "p-filter": "4.1.0", "p-map": "7.0.3", "p-wait-for": "5.0.2", "parallel-transform": "1.2.0", "parse-github-url": "1.0.3", "prettyjson": "1.2.5", "raw-body": "3.0.1", "read-package-up": "11.0.0", "readdirp": "4.1.2", "semver": "7.7.2", "source-map-support": "0.5.21", "terminal-link": "4.0.0", "toml": "3.0.0", "tomlify-j0.4": "3.0.0", "ulid": "3.0.1", "update-notifier": "7.3.1", "uuid": "11.1.0", "write-file-atomic": "5.0.1", "ws": "8.18.3" }, "bin": { "ntl": "bin/run.js", "netlify": "bin/run.js" } }, "sha512-NJPk2aQgwSaAPvUULpB2oFm6wVAhhb8TY3wpRjzV5MebEgCyFYdRuDGkVk7Agvu+OV86E6p7KWkGuUdgwG/gJg=="],
 
     "netlify-redirector": ["netlify-redirector@0.5.0", "", {}, "sha512-4zdzIP+6muqPCuE8avnrgDJ6KW/2+UpHTRcTbMXCIRxiRmyrX+IZ4WSJGZdHPWF3WmQpXpy603XxecZ9iygN7w=="],
+
+    "next-themes": ["next-themes@0.4.6", "", { "peerDependencies": { "react": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc", "react-dom": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc" } }, "sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA=="],
 
     "nice-try": ["nice-try@1.0.5", "", {}, "sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ=="],
 

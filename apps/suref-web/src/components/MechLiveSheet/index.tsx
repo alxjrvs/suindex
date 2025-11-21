@@ -134,13 +134,25 @@ export default function MechLiveSheet({ id }: { id: string }) {
       </Flex>
 
       <Tabs.Root defaultValue="abilities">
-        <Tabs.List>
-          <Tabs.Trigger value="abilities">Chassis Abilities</Tabs.Trigger>
-          <Tabs.Trigger value="systems-modules">Systems & Modules</Tabs.Trigger>
-          <Tabs.Trigger value="storage">Storage</Tabs.Trigger>
-          <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
+        <Tabs.List borderColor="border.default">
+          <Tabs.Trigger value="abilities" color="fg.default">
+            Chassis Abilities
+          </Tabs.Trigger>
+          <Tabs.Trigger value="systems-modules" color="fg.default">
+            Systems & Modules
+          </Tabs.Trigger>
+          <Tabs.Trigger value="storage" color="fg.default">
+            Storage
+          </Tabs.Trigger>
+          <Tabs.Trigger value="notes" color="fg.default">
+            Notes
+          </Tabs.Trigger>
           <Box flex="1" />
-          {!isLocal && <Tabs.Trigger value="pilot">Pilot</Tabs.Trigger>}
+          {!isLocal && (
+            <Tabs.Trigger value="pilot" color="fg.default">
+              Pilot
+            </Tabs.Trigger>
+          )}
         </Tabs.List>
 
         <Tabs.Content value="abilities">

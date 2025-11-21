@@ -85,7 +85,7 @@ export function GridLayout<T extends object>({
         <Flex align="center" justify="center" minH="60vh">
           <Button
             onClick={onRetry}
-            bg="su.brick"
+            bg="brand.srd"
             color="su.white"
             fontWeight="bold"
             py={2}

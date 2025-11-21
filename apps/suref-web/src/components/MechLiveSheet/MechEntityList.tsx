@@ -106,7 +106,7 @@ export function MechEntityList({
               buttonConfig={
                 onRemove
                   ? {
-                      bg: 'su.brick',
+                      bg: 'brand.srd',
                       color: 'su.white',
                       fontWeight: 'bold',
                       textTransform: 'uppercase',

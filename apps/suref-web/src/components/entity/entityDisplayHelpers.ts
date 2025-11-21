@@ -102,7 +102,7 @@ export function calculateBackgroundColor(
     if (name.includes('legendary')) {
       return 'su.pink'
     } else if (name.includes('advanced') || name.includes('hybrid')) {
-      return 'su.brick'
+      return 'brand.srd'
     }
     return 'su.orange'
   }

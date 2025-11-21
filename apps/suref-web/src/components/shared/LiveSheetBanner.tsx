@@ -17,7 +17,7 @@ export function LiveSheetBanner() {
             target="_blank"
             rel="noopener noreferrer"
             textDecoration="underline"
-            _hover={{ color: 'su.brick' }}
+            _hover={{ color: 'brand.srd' }}
             color="su.white"
           >
             Github
