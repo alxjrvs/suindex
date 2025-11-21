@@ -321,7 +321,7 @@
     "level": 2,
     "page": 40,
     "description": "You are a dab hand at scouring the wastes for every piece of salvage.",
-    "actions": []
+    "actions": ["Area Salvage (Expert Salvager)", "Mech Salvage (Expert Salvager)"]
   },
   {
     "id": "d3845a5e-d838-4747-8e02-65f181ead511",

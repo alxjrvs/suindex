@@ -3,7 +3,7 @@
   "title": "Salvage Union Data Schema Catalog",
   "description": "Catalog of all available schemas in the salvageunion-data repository",
   "version": "2.1.10",
-  "generated": "2025-11-21T03:46:34.159Z",
+  "generated": "2025-11-21T05:24:48.259Z",
   "schemas": [
     {
       "id": "abilities",
@@ -32,7 +32,7 @@
       "description": "Actions, abilities, and attacks that can be performed in Salvage Union",
       "dataFile": "data/actions.json",
       "schemaFile": "schemas/actions.schema.json",
-      "itemCount": 443,
+      "itemCount": 445,
       "requiredFields": ["id", "name"],
       "displayName": "actions",
       "meta": true

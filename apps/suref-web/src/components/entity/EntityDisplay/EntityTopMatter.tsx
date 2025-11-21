@@ -6,6 +6,8 @@ import {
   getChassisAbilities,
   getAssetUrl,
   findActionByName,
+  extractVisibleActions,
+  filterActionsExcludingName,
 } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { ContentBlockRenderer } from './ContentBlockRenderer'
@@ -37,11 +39,23 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
 
   const hasChassisAbilities = schemaName === 'chassis' && getChassisAbilities(data)
 
+  // Check if entity has actions that will be displayed (after filtering)
+  let hasDisplayableActions = false
+  if (hasActions(data) && (!hideActions || compact)) {
+    const actions = extractVisibleActions(data)
+    if (actions && actions.length > 0) {
+      const entityName = getEntityDisplayName(data, title)
+      const actionsToDisplay = filterActionsExcludingName(actions, entityName)
+      hasDisplayableActions = actionsToDisplay.length > 0
+    }
+  }
+
   // Check if we should render EntityTopMatter:
   // 1. Entity has content blocks, OR
   // 2. Entity has chassis abilities, OR
-  // 3. Entity has an image URL (so images can render even without content)
-  const hasContent = !!showContent || hasChassisAbilities || !!getAssetUrl(data)
+  // 3. Entity has an image URL (so images can render even without content), OR
+  // 4. Entity has actions that will be displayed (so actions can render even without content)
+  const hasContent = !!showContent || hasChassisAbilities || !!getAssetUrl(data) || hasDisplayableActions
 
   if (!hasContent) {
     return null

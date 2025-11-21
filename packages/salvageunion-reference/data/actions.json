@@ -606,7 +606,7 @@
     ],
     "choices": [
       {
-        "id": "b6c7d8e9-f0a1-4b2c-3d4e-5f6a7b8c9d0e1",
+        "id": "6a3f61f2-950c-4fc6-b3ee-07ad6817aad6",
         "name": "A.I. Personality",
         "rollTable": "A.I. Personality",
         "content": [
@@ -665,7 +665,7 @@
     "actionType": "Passive",
     "choices": [
       {
-        "id": "c7d8e9f0-a1b2-4c3d-4e5f-6a7b8c9d0e1f2",
+        "id": "8568b4f0-808e-4398-b20c-009c4d429da0",
         "name": "A.I. Personality",
         "rollTable": "A.I. Personality",
         "content": [
@@ -4622,6 +4622,31 @@
         "value": "You salvage a Mech, this could be one you have found in the wastelands or just downed in combat. This roll represents you finding what is usable on the Mech as not everything on the Mech will be salvageable."
       }
     ]
+  },
+  {
+    "name": "Mech Salvage (Expert Salvager)",
+    "displayName": "Mech Salvage",
+    "activationCost": 1,
+    "actionType": "Free",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When you Salvage a Mech you may activate this Ability to choose to Salvage the Mech Chassis or any attached System or Module of your choice without rolling the die. The rest of the Mech is unsalvageable as per the normal salvaging rules."
+      }
+    ],
+    "id": "884b9800-b88a-4b84-aa28-1e316127e0fd"
+  },
+  {
+    "name": "Area Salvage (Expert Salvager)",
+    "displayName": "Area Salvage",
+    "actionType": "Passive",
+    "content": [
+      {
+        "type": "paragraph",
+        "value": "When you Area Salvage you gain one additional Scrap of the Tech Level of the area, and always find at least 1 Scrap. If you roll a 20 when you Area Salvage you find an additional Mech Chassis, System, or Module of the Tech Level of the area in the Damaged Condition. This is chosen randomly or by the Mediator."
+      }
+    ],
+    "id": "5f741264-28e1-4889-9b03-ad1c0b9b7e32"
   },
   {
     "id": "456f15da-30f2-42a3-84e5-02ee4db2aad6",
