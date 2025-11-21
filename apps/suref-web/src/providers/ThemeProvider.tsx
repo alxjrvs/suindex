@@ -8,13 +8,13 @@ interface ThemeProviderProps extends Omit<NextThemesProviderProps, 'children'> {
 
 /**
  * Theme provider using next-themes for Chakra UI v3 color mode support
- * Defaults to dark mode as specified
+ * Explicitly forces light mode
  */
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute="data-theme"
-      defaultTheme="dark"
+      forcedTheme="light"
       enableSystem={false}
       storageKey="chakra-ui-color-mode"
       {...props}

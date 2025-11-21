@@ -5,7 +5,6 @@ import { Heading } from './base/Heading'
 import { useNavigationState } from '../hooks/useNavigationState'
 import { NavigationLink } from './shared/NavigationLink'
 import { DiscordSignInButton } from './DiscordSignInButton'
-import { ThemeToggle } from './shared/ThemeToggle'
 
 interface TopNavigationProps {
   user: User | null
@@ -300,7 +299,6 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
               gap={2}
             />
           )}
-          <ThemeToggle />
         </Flex>
       </Flex>
     </>

@@ -70,14 +70,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Salvage Union System Reference Document</title>
-        {/* Initialize theme immediately to prevent flash - next-themes compatible */}
+        {/* Initialize theme immediately to prevent flash - explicitly set to light mode */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                const stored = localStorage.getItem('chakra-ui-color-mode');
-                const theme = stored === 'light' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('chakra-ui-color-mode', 'light');
               })();
             `,
           }}
