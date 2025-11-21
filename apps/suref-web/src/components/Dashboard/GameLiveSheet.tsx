@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useParams, useNavigate } from '@tanstack/react-router'
+import { useParams, useNavigate, Link } from '@tanstack/react-router'
 import { Box, Flex, VStack, HStack, Grid } from '@chakra-ui/react'
 import { Text } from '@/components/base/Text'
 import { Button } from '@chakra-ui/react'
@@ -159,7 +159,7 @@ export function GameLiveSheet() {
             {error || 'Game not found'}
           </Text>
           <Button
-            onClick={() => navigate({ to: '/dashboard' })}
+            asChild
             bg="brand.srd"
             color="su.white"
             fontWeight="bold"
@@ -167,7 +167,7 @@ export function GameLiveSheet() {
             px={6}
             _hover={{ opacity: 0.9 }}
           >
-            Back to Dashboard
+            <Link to="/dashboard">Back to Dashboard</Link>
           </Button>
         </VStack>
       </Box>

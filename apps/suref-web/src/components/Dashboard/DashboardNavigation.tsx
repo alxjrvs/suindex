@@ -1,5 +1,6 @@
 import { Box, Button, Flex, IconButton, HStack, Text } from '@chakra-ui/react'
 import type { User } from '@supabase/supabase-js'
+import { Link } from '@tanstack/react-router'
 import { Heading } from '@/components/base/Heading'
 import { useNavigationState } from '@/hooks/useNavigationState'
 import { NavigationLink } from '@/components/shared/NavigationLink'
@@ -11,8 +12,7 @@ interface DashboardNavigationProps {
 }
 
 export function DashboardNavigation({ user }: DashboardNavigationProps) {
-  const { isOpen, signingOut, handleNavigate, handleSignOut, isActive, toggleMenu } =
-    useNavigationState()
+  const { isOpen, signingOut, handleSignOut, isActive, toggleMenu } = useNavigationState()
 
   return (
     <>
@@ -69,7 +69,7 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
         shadow={{ base: isOpen ? 'lg' : 'none', lg: 'sm' }}
       >
         <Button
-          onClick={() => handleNavigate('/')}
+          asChild
           _hover={{ bg: 'bg.hover' }}
           bg="transparent"
           borderRadius="md"
@@ -79,10 +79,12 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
           display={{ base: isOpen ? 'block' : 'none', lg: 'block' }}
           color="fg.default"
         >
-          <Heading level="h2">Salvage Union</Heading>
-          <Text fontSize="xs" color="brand.srd">
-            Dashboard
-          </Text>
+          <Link to="/">
+            <Heading level="h2">Salvage Union</Heading>
+            <Text fontSize="xs" color="brand.srd">
+              Dashboard
+            </Text>
+          </Link>
         </Button>
 
         <HStack
@@ -93,42 +95,27 @@ export function DashboardNavigation({ user }: DashboardNavigationProps) {
           w={{ base: 'full', lg: 'auto' }}
         >
           <Box as="li">
-            <NavigationLink
-              isActive={isActive('/dashboard', true)}
-              onClick={() => handleNavigate('/dashboard')}
-            >
+            <NavigationLink isActive={isActive('/dashboard', true)} to="/dashboard">
               Overview
             </NavigationLink>
           </Box>
           <Box as="li">
-            <NavigationLink
-              isActive={isActive('/dashboard/games')}
-              onClick={() => handleNavigate('/dashboard/games')}
-            >
+            <NavigationLink isActive={isActive('/dashboard/games')} to="/dashboard/games">
               Games
             </NavigationLink>
           </Box>
           <Box as="li">
-            <NavigationLink
-              isActive={isActive('/dashboard/crawlers')}
-              onClick={() => handleNavigate('/dashboard/crawlers')}
-            >
+            <NavigationLink isActive={isActive('/dashboard/crawlers')} to="/dashboard/crawlers">
               Crawlers
             </NavigationLink>
           </Box>
           <Box as="li">
-            <NavigationLink
-              isActive={isActive('/dashboard/pilots')}
-              onClick={() => handleNavigate('/dashboard/pilots')}
-            >
+            <NavigationLink isActive={isActive('/dashboard/pilots')} to="/dashboard/pilots">
               Pilots
             </NavigationLink>
           </Box>
           <Box as="li">
-            <NavigationLink
-              isActive={isActive('/dashboard/mechs')}
-              onClick={() => handleNavigate('/dashboard/mechs')}
-            >
+            <NavigationLink isActive={isActive('/dashboard/mechs')} to="/dashboard/mechs">
               Mechs
             </NavigationLink>
           </Box>

@@ -1,5 +1,6 @@
 import { VStack, Box, Flex } from '@chakra-ui/react'
 import { Text } from '@/components/base/Text'
+import { type LinkProps } from '@tanstack/react-router'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { useGame, useGameCrawler, useDeleteGame } from '@/hooks/game/useGames'
 import { useGameMembers } from '@/hooks/game/useGameMembers'
@@ -9,11 +10,13 @@ import { DeleteButton } from '@/components/shared/DeleteButton'
 
 interface GameSmallDisplayProps {
   id: string
-  onClick: () => void
+  to?: LinkProps['to']
+  params?: LinkProps['params']
+  onClick?: () => void
   isInactive?: boolean
 }
 
-export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayProps) {
+export function GameSmallDisplay({ id, to, params, onClick, isInactive }: GameSmallDisplayProps) {
   const { data: game, isLoading: gameLoading } = useGame(id)
   const { data: members } = useGameMembers(id)
   const { data: crawler } = useGameCrawler(id)
@@ -29,6 +32,8 @@ export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayPr
   if (gameLoading || !game) {
     return (
       <UserEntitySmallDisplay
+        to={to}
+        params={params}
         onClick={onClick}
         bgColor="su.gameBlue"
         w="full"
@@ -82,6 +87,8 @@ export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayPr
 
   return (
     <UserEntitySmallDisplay
+      to={to}
+      params={params}
       onClick={onClick}
       detailLabel="Mediator"
       detailValue={mediatorName || 'Unknown'}

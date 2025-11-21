@@ -2,7 +2,6 @@ import { VStack, Box } from '@chakra-ui/react'
 import { Text } from '@/components/base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
 import { useHydratedPilot, useDeletePilot } from '@/hooks/pilot'
-import { useNavigate } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
@@ -20,7 +19,6 @@ interface PilotSmallDisplayProps {
 }
 
 export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDisplayProps) {
-  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { userId: currentUserId } = useCurrentUser()
   const {
@@ -93,17 +91,13 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
   const isOwner = currentUserId === pilot?.user_id
   const ownerName = isOwner ? 'You' : ownerData || 'Owner'
 
-  const onClick = () => {
-    if (!id) return
-    navigate({ to: '/dashboard/pilots/$id', params: { id } })
-  }
-
   const isLoading = (!id && waitForId) || pilotLoading || crawlerLoading || mechLoading
 
-  if (isLoading || !pilot) {
+  if (isLoading || !pilot || !id) {
     return (
       <UserEntitySmallDisplay
-        onClick={onClick}
+        to={id ? '/dashboard/pilots/$id' : undefined}
+        params={id ? { id } : undefined}
         label={label}
         bgColor="su.orange"
         leftHeader="Loading..."
@@ -151,7 +145,8 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
 
   return (
     <UserEntitySmallDisplay
-      onClick={onClick}
+      to="/dashboard/pilots/$id"
+      params={{ id }}
       onMouseEnter={handleMouseEnter}
       label={label}
       bgColor="su.orange"

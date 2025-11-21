@@ -1,10 +1,11 @@
 import { Button, type ButtonProps } from '@chakra-ui/react'
+import { Link, type LinkProps } from '@tanstack/react-router'
 
-interface NavigationLinkProps extends Omit<ButtonProps, 'onClick'> {
+interface NavigationLinkProps
+  extends Omit<ButtonProps, 'onClick'>,
+    Pick<LinkProps, 'to' | 'params' | 'search'> {
   /** Whether this link is currently active */
   isActive: boolean
-  /** Click handler for navigation */
-  onClick: () => void
   /** Link text */
   children: React.ReactNode
 }
@@ -13,10 +14,17 @@ interface NavigationLinkProps extends Omit<ButtonProps, 'onClick'> {
  * Consistent navigation link component
  * Used across TopNavigation and DashboardNavigation for uniform styling
  */
-export function NavigationLink({ isActive, onClick, children, ...props }: NavigationLinkProps) {
+export function NavigationLink({
+  isActive,
+  to,
+  params,
+  search,
+  children,
+  ...props
+}: NavigationLinkProps) {
   return (
     <Button
-      onClick={onClick}
+      asChild
       px={4}
       py={2}
       _hover={{ bg: 'bg.hover' }}
@@ -31,7 +39,9 @@ export function NavigationLink({ isActive, onClick, children, ...props }: Naviga
       w={{ base: 'full', lg: 'auto' }}
       {...props}
     >
-      {children}
+      <Link to={to} params={params} search={search}>
+        {children}
+      </Link>
     </Button>
   )
 }

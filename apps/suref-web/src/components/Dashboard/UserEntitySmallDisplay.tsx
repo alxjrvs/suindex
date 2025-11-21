@@ -1,12 +1,18 @@
 import type { ReactNode } from 'react'
 import type { BoxProps } from '@chakra-ui/react'
 import { Flex } from '@chakra-ui/react'
+import { Link, type LinkProps } from '@tanstack/react-router'
 import { Text } from '@/components/base/Text'
 import { RoundedBox } from '@/components/shared/RoundedBox'
 import { ValueDisplay } from '@/components/shared/ValueDisplay'
 
-interface UserEntitySmallDisplayProps extends BoxProps {
-  onClick: () => void
+interface UserEntitySmallDisplayProps extends Omit<BoxProps, 'onClick'> {
+  /** Navigation target (when provided, component becomes a link) */
+  to?: LinkProps['to']
+  /** Route params for navigation */
+  params?: LinkProps['params']
+  /** Click handler (only used when to is not provided) */
+  onClick?: () => void
   /** Mouse enter handler for prefetching */
   onMouseEnter?: () => void
   /** Background color for the entire card */
@@ -31,6 +37,8 @@ interface UserEntitySmallDisplayProps extends BoxProps {
 }
 
 export function UserEntitySmallDisplay({
+  to,
+  params,
   onClick,
   onMouseEnter,
   reverse = false,
@@ -54,7 +62,7 @@ export function UserEntitySmallDisplay({
       rightHeader
     )
 
-  return (
+  const roundedBoxContent = (
     <RoundedBox
       minH="90px"
       reverse={reverse}
@@ -67,7 +75,7 @@ export function UserEntitySmallDisplay({
       }
       _hover={{ borderColor: 'brand.srd' }}
       cursor="pointer"
-      onClick={onClick}
+      onClick={to ? undefined : onClick}
       onMouseEnter={onMouseEnter}
       w="full"
       opacity={isInactive ? 0.7 : 1}
@@ -79,4 +87,19 @@ export function UserEntitySmallDisplay({
       )}
     </RoundedBox>
   )
+
+  if (to) {
+    return (
+      <Link
+        to={to}
+        params={params}
+        style={{ textDecoration: 'none', display: 'block', width: '100%' }}
+        onMouseEnter={onMouseEnter}
+      >
+        {roundedBoxContent}
+      </Link>
+    )
+  }
+
+  return roundedBoxContent
 }
