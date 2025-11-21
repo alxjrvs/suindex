@@ -10,7 +10,7 @@ export interface WizardBreadcrumbsProps {
 
 /**
  * Reusable breadcrumb navigation component for multi-step wizards.
- * Shows step labels separated by dashes, with styling based on completion status.
+ * Shows step labels separated by >>>>>, with styling based on completion status.
  * Complete steps have white text and are clickable.
  * Incomplete steps have grey text.
  * The least-concluded (first incomplete) step is clickable to allow navigation forward.
@@ -61,7 +61,7 @@ export function WizardBreadcrumbs({
             </Text>
             {index < labels.length - 1 && (
               <Text fontSize="sm" color="fg.muted" mx={1} lineHeight="1">
-                -
+                {'>>>>>'}
               </Text>
             )}
           </Flex>

@@ -80,7 +80,7 @@ export function ChassisSelectionStep({ wizardState, onComplete }: ChassisSelecti
 
   return (
     <VStack gap={6} align="stretch" w="full">
-      <VStack gap={2} align="stretch">
+      <VStack gap={2} align="center" w="full">
         <Text variant="pseudoheader" fontSize="2xl" textAlign="center" textTransform="uppercase">
           Choose your Mech Chassis
         </Text>

@@ -85,7 +85,7 @@ export function useCreateCrawlerFromWizard() {
         for (const bayEntity of bayEntities) {
           const bayNPC = state.bayNPCs[bayEntity.schema_ref_id]
           const bayChoices = state.bayNPCChoices[bayEntity.schema_ref_id] || {}
-          
+
           if (bayNPC) {
             // Update bay metadata with NPC info (excluding name, which goes in choices)
             await updateEntity.mutateAsync({

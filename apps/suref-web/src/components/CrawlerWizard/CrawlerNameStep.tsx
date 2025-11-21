@@ -22,7 +22,7 @@ export function CrawlerNameStep({ wizardState, onCreateCrawler }: CrawlerNameSte
 
   return (
     <VStack gap={6} align="stretch" w="full">
-      <VStack gap={4} align="stretch">
+      <VStack gap={4} align="center" w="full">
         <Text variant="pseudoheader" fontSize="2xl" textAlign="center" textTransform="uppercase">
           Name Your Crawler
         </Text>

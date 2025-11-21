@@ -1,6 +1,4 @@
-import { Box, VStack, Button, Flex } from '@chakra-ui/react'
-import { Text } from '@/components/base/Text'
-import { WizardBreadcrumbs } from '@/components/shared/WizardBreadcrumbs'
+import { BaseWizard } from '@/components/shared/BaseWizard'
 import { useMechWizardState } from './useMechWizardState'
 import { ChassisSelectionStep } from './ChassisSelectionStep'
 import { SystemsModulesStep } from './SystemsModulesStep'
@@ -28,8 +26,8 @@ export function MechWizard() {
     }
   }
 
-  const renderStep = () => {
-    switch (wizardState.currentStep) {
+  const renderStep = (step: number) => {
+    switch (step) {
       case 1:
         return <ChassisSelectionStep wizardState={wizardState} onComplete={handleStepComplete} />
       case 2:
@@ -44,38 +42,17 @@ export function MechWizard() {
   const stepLabels = ['CHASSIS', 'SYSTEMS & MODULES', 'DETAILS'] as const
 
   return (
-    <VStack gap={6} align="stretch" w="full" maxW="1200px" mx="auto" p={6}>
-      {/* Breadcrumb Navigation */}
-      <Flex justifyContent="space-between" alignItems="center" w="full" gap={4}>
-        <Button
-          variant="ghost"
-          onClick={wizardState.goToPreviousStep}
-          disabled={wizardState.currentStep === 1}
-          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-        >
-          ← BACK
-        </Button>
-        <WizardBreadcrumbs
-          labels={stepLabels}
-          currentStep={wizardState.currentStep}
-          completedSteps={wizardState.completedSteps}
-          onStepClick={wizardState.goToStep}
-        />
-        <BudgetDisplay state={wizardState.state} />
-      </Flex>
-
-      {/* Step Content */}
-      <Box w="full" opacity={isCreating ? 0.5 : 1} pointerEvents={isCreating ? 'none' : 'auto'}>
-        {renderStep()}
-      </Box>
-      {isCreating && (
-        <Box textAlign="center" py={4}>
-          <Text fontSize="lg" fontWeight="bold">
-            Creating your mech...
-          </Text>
-        </Box>
-      )}
-    </VStack>
+    <BaseWizard
+      stepLabels={stepLabels}
+      currentStep={wizardState.currentStep}
+      completedSteps={wizardState.completedSteps}
+      onStepChange={wizardState.goToStep}
+      onPrevious={wizardState.goToPreviousStep}
+      renderStep={renderStep}
+      isCreating={isCreating}
+      creatingMessage="Creating your mech..."
+      headerContent={<BudgetDisplay state={wizardState.state} />}
+    />
   )
 }
 

@@ -1,7 +1,7 @@
 import { useMemo, useState, useCallback, useRef, useEffect } from 'react'
 import { Box, VStack, Button, Tabs } from '@chakra-ui/react'
 import { Link } from '@tanstack/react-router'
-import { SalvageUnionReference, getCoreClasses } from 'salvageunion-reference'
+import { getCoreClasses } from 'salvageunion-reference'
 import { Text } from '@/components/base/Text'
 import { getLevel1AbilitiesForClass, getAllCoreLevel1Abilities } from './utils'
 import { EntityDisplay } from '@/components/entity/EntityDisplay'
@@ -15,11 +15,6 @@ interface ClassSelectionStepProps {
 
 export function ClassSelectionStep({ wizardState, onComplete }: ClassSelectionStepProps) {
   const { state, setSelectedClassId, setSelectedAbilityId } = wizardState
-  const [selectedTab, setSelectedTab] = useState<string>(
-    state.selectedClassId ||
-      SalvageUnionReference.Classes.all().find((c) => c.id === 'engineer')?.id ||
-      ''
-  )
   // Use a ref to track the latest selected ability ID to avoid stale closures
   const selectedAbilityIdRef = useRef<string | null>(state.selectedAbilityId)
 
@@ -31,6 +26,13 @@ export function ClassSelectionStep({ wizardState, onComplete }: ClassSelectionSt
     const classes = getCoreClasses()
     return classes.sort((a, b) => a.name.localeCompare(b.name))
   }, [])
+
+  const [selectedTab, setSelectedTab] = useState<string>(() => {
+    if (state.selectedClassId) return state.selectedClassId
+    // Pre-select first class
+    const classes = getCoreClasses().sort((a, b) => a.name.localeCompare(b.name))
+    return classes.length > 0 && classes[0] ? classes[0].id : ''
+  })
 
   const selectedClass = useMemo(() => {
     return coreClasses.find((c) => c.id === selectedTab) || null
@@ -83,7 +85,7 @@ export function ClassSelectionStep({ wizardState, onComplete }: ClassSelectionSt
 
   return (
     <VStack gap={6} align="stretch" w="full">
-      <VStack gap={2} align="stretch">
+      <VStack gap={2} align="center" w="full">
         <Text variant="pseudoheader" fontSize="2xl" textAlign="center" textTransform="uppercase">
           Choose your Pilot Class and your first Ability
         </Text>

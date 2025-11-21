@@ -53,8 +53,8 @@ export function NestedActionDisplay({
   const displayName = getEntityDisplayName(data) || data.name
 
   return (
-    <Box bg="su.white" overflow="hidden">
-      <Flex bg="su.white" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
+    <Box bg="transparent" overflow="hidden">
+      <Flex bg="transparent" p={spacing} gap={spacing} alignItems="center" flexWrap="wrap">
         <Text
           fontSize={titleFontSize}
           variant="pseudoheader"

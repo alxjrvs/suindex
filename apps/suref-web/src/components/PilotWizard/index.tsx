@@ -1,6 +1,4 @@
-import { Box, VStack, Button, Flex } from '@chakra-ui/react'
-import { Text } from '@/components/base/Text'
-import { WizardBreadcrumbs } from '@/components/shared/WizardBreadcrumbs'
+import { BaseWizard } from '@/components/shared/BaseWizard'
 import { usePilotWizardState } from './usePilotWizardState'
 import { ClassSelectionStep } from './ClassSelectionStep'
 import { EquipmentSelectionStep } from './EquipmentSelectionStep'
@@ -27,8 +25,8 @@ export function PilotWizard() {
     }
   }
 
-  const renderStep = () => {
-    switch (wizardState.currentStep) {
+  const renderStep = (step: number) => {
+    switch (step) {
       case 1:
         return <ClassSelectionStep wizardState={wizardState} onComplete={handleStepComplete} />
       case 2:
@@ -43,37 +41,15 @@ export function PilotWizard() {
   const stepLabels = ['CLASS', 'EQUIPMENT', 'PERSONALIZE'] as const
 
   return (
-    <VStack gap={6} align="stretch" w="full" maxW="1200px" mx="auto" p={6}>
-      {/* Breadcrumb Navigation */}
-      <Flex justifyContent="space-between" alignItems="center" w="full">
-        <Button
-          variant="ghost"
-          onClick={wizardState.goToPreviousStep}
-          disabled={wizardState.currentStep === 1}
-          _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
-        >
-          ← BACK
-        </Button>
-        <WizardBreadcrumbs
-          labels={stepLabels}
-          currentStep={wizardState.currentStep}
-          completedSteps={wizardState.completedSteps}
-          onStepClick={wizardState.goToStep}
-        />
-        <Box w="80px" /> {/* Spacer for alignment */}
-      </Flex>
-
-      {/* Step Content */}
-      <Box w="full" opacity={isCreating ? 0.5 : 1} pointerEvents={isCreating ? 'none' : 'auto'}>
-        {renderStep()}
-      </Box>
-      {isCreating && (
-        <Box textAlign="center" py={4}>
-          <Text fontSize="lg" fontWeight="bold">
-            Creating your pilot...
-          </Text>
-        </Box>
-      )}
-    </VStack>
+    <BaseWizard
+      stepLabels={stepLabels}
+      currentStep={wizardState.currentStep}
+      completedSteps={wizardState.completedSteps}
+      onStepChange={wizardState.goToStep}
+      onPrevious={wizardState.goToPreviousStep}
+      renderStep={renderStep}
+      isCreating={isCreating}
+      creatingMessage="Creating your pilot..."
+    />
   )
 }

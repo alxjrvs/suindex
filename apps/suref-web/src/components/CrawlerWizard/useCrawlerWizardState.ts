@@ -1,6 +1,7 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import type { WizardState, BayNPCData, CrawlerNPCData } from './utils'
 import { validateWizardStep } from './utils'
+import { useBaseWizardState } from '@/hooks/useBaseWizardState'
 
 export interface UseCrawlerWizardStateReturn {
   state: WizardState
@@ -32,129 +33,106 @@ const initialState: WizardState = {
 }
 
 export function useCrawlerWizardState(): UseCrawlerWizardStateReturn {
-  const [state, setState] = useState<WizardState>(initialState)
-  const [currentStep, setCurrentStep] = useState(1)
+  const baseWizard = useBaseWizardState({
+    initialState,
+    validateStep: validateWizardStep,
+    totalSteps: 3,
+  })
 
-  const completedSteps = useMemo(() => {
-    const completed = new Set<number>()
-    for (let step = 1; step <= 3; step++) {
-      if (validateWizardStep(step, state)) {
-        completed.add(step)
-      }
-    }
-    return completed
-  }, [state])
-
-  const isStepComplete = useCallback(
-    (step: number): boolean => {
-      return validateWizardStep(step, state)
-    },
-    [state]
-  )
-
-  const getNextIncompleteStep = useCallback((): number | null => {
-    for (let step = 1; step <= 3; step++) {
-      if (!validateWizardStep(step, state)) {
-        return step
-      }
-    }
-    return null
-  }, [state])
-
-  const goToStep = useCallback((step: number) => {
-    if (step >= 1 && step <= 3) {
-      setCurrentStep(step)
-    }
-  }, [])
-
-  const goToNextStep = useCallback(() => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1)
-    }
-  }, [currentStep])
-
-  const goToPreviousStep = useCallback(() => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
-    }
-  }, [currentStep])
-
-  const reset = useCallback(() => {
-    setState(initialState)
-    setCurrentStep(1)
-  }, [])
+  const { state, setState } = baseWizard
 
   return {
     state,
-    currentStep,
-    completedSteps,
-    isStepComplete,
-    getNextIncompleteStep,
-    goToStep,
-    goToNextStep,
-    goToPreviousStep,
-    setSelectedCrawlerTypeId: useCallback((crawlerTypeId: string | null) => {
-      setState((prev) => {
-        // Only clear bayNPCs and crawlerNPC when selecting a new crawler type
-        // AND there was a previous selection (to avoid clearing on initial selection)
-        const newCrawlerTypeId = crawlerTypeId
-        const isNewType = prev.selectedCrawlerTypeId !== newCrawlerTypeId
-        const hadPreviousSelection = prev.selectedCrawlerTypeId !== null
-        const shouldClear = isNewType && hadPreviousSelection
-        return {
+    currentStep: baseWizard.currentStep,
+    completedSteps: baseWizard.completedSteps,
+    isStepComplete: baseWizard.isStepComplete,
+    getNextIncompleteStep: baseWizard.getNextIncompleteStep,
+    goToStep: baseWizard.goToStep,
+    goToNextStep: baseWizard.goToNextStep,
+    goToPreviousStep: baseWizard.goToPreviousStep,
+    setSelectedCrawlerTypeId: useCallback(
+      (crawlerTypeId: string | null) => {
+        setState((prev) => {
+          // Only clear bayNPCs and crawlerNPC when selecting a new crawler type
+          // AND there was a previous selection (to avoid clearing on initial selection)
+          const newCrawlerTypeId = crawlerTypeId
+          const isNewType = prev.selectedCrawlerTypeId !== newCrawlerTypeId
+          const hadPreviousSelection = prev.selectedCrawlerTypeId !== null
+          const shouldClear = isNewType && hadPreviousSelection
+          return {
+            ...prev,
+            selectedCrawlerTypeId: newCrawlerTypeId,
+            bayNPCs: shouldClear ? {} : prev.bayNPCs,
+            bayNPCChoices: shouldClear ? {} : prev.bayNPCChoices,
+            crawlerNPC: shouldClear ? null : prev.crawlerNPC,
+            crawlerNPCChoices: shouldClear ? {} : prev.crawlerNPCChoices,
+            // Only clear armamentBayWeaponId if there was a previous crawler type
+            armamentBayWeaponId: shouldClear ? null : prev.armamentBayWeaponId,
+          }
+        })
+      },
+      [setState]
+    ),
+    setCrawlerNPC: useCallback(
+      (npc: CrawlerNPCData | null) => {
+        setState((prev) => ({
           ...prev,
-          selectedCrawlerTypeId: newCrawlerTypeId,
-          bayNPCs: shouldClear ? {} : prev.bayNPCs,
-          bayNPCChoices: shouldClear ? {} : prev.bayNPCChoices,
-          crawlerNPC: shouldClear ? null : prev.crawlerNPC,
-          crawlerNPCChoices: shouldClear ? {} : prev.crawlerNPCChoices,
-          // Only clear armamentBayWeaponId if there was a previous crawler type
-          armamentBayWeaponId: shouldClear ? null : prev.armamentBayWeaponId,
-        }
-      })
-    }, []),
-    setCrawlerNPC: useCallback((npc: CrawlerNPCData | null) => {
-      setState((prev) => ({
-        ...prev,
-        crawlerNPC: npc,
-      }))
-    }, []),
-    setCrawlerNPCChoice: useCallback((choiceId: string, value: string) => {
-      setState((prev) => ({
-        ...prev,
-        crawlerNPCChoices: {
-          ...prev.crawlerNPCChoices,
-          [choiceId]: value,
-        },
-      }))
-    }, []),
-    setBayNPC: useCallback((bayId: string, npc: BayNPCData) => {
-      setState((prev) => ({
-        ...prev,
-        bayNPCs: {
-          ...prev.bayNPCs,
-          [bayId]: npc,
-        },
-      }))
-    }, []),
-    setBayNPCChoice: useCallback((bayId: string, choiceId: string, value: string) => {
-      setState((prev) => ({
-        ...prev,
-        bayNPCChoices: {
-          ...prev.bayNPCChoices,
-          [bayId]: {
-            ...prev.bayNPCChoices[bayId],
+          crawlerNPC: npc,
+        }))
+      },
+      [setState]
+    ),
+    setCrawlerNPCChoice: useCallback(
+      (choiceId: string, value: string) => {
+        setState((prev) => ({
+          ...prev,
+          crawlerNPCChoices: {
+            ...prev.crawlerNPCChoices,
             [choiceId]: value,
           },
-        },
-      }))
-    }, []),
-    setArmamentBayWeaponId: useCallback((weaponId: string | null) => {
-      setState((prev) => ({ ...prev, armamentBayWeaponId: weaponId }))
-    }, []),
-    setName: useCallback((name: string) => {
-      setState((prev) => ({ ...prev, name }))
-    }, []),
-    reset,
+        }))
+      },
+      [setState]
+    ),
+    setBayNPC: useCallback(
+      (bayId: string, npc: BayNPCData) => {
+        setState((prev) => ({
+          ...prev,
+          bayNPCs: {
+            ...prev.bayNPCs,
+            [bayId]: npc,
+          },
+        }))
+      },
+      [setState]
+    ),
+    setBayNPCChoice: useCallback(
+      (bayId: string, choiceId: string, value: string) => {
+        setState((prev) => ({
+          ...prev,
+          bayNPCChoices: {
+            ...prev.bayNPCChoices,
+            [bayId]: {
+              ...prev.bayNPCChoices[bayId],
+              [choiceId]: value,
+            },
+          },
+        }))
+      },
+      [setState]
+    ),
+    setArmamentBayWeaponId: useCallback(
+      (weaponId: string | null) => {
+        setState((prev) => ({ ...prev, armamentBayWeaponId: weaponId }))
+      },
+      [setState]
+    ),
+    setName: useCallback(
+      (name: string) => {
+        setState((prev) => ({ ...prev, name }))
+      },
+      [setState]
+    ),
+    reset: baseWizard.reset,
   }
 }
