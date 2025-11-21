@@ -124,9 +124,8 @@ export function CrawlerTypeSelectionStep({
     (choiceId: string, value: string | undefined) => {
       // For wizard, we can store ability choices in crawlerNPCChoices
       // They'll be properly associated when the crawler is created
-      if (value) {
-        setCrawlerNPCChoice(choiceId, value)
-      }
+      // Handle both selection (value provided) and deselection (value undefined)
+      setCrawlerNPCChoice(choiceId, value)
     },
     [setCrawlerNPCChoice]
   )

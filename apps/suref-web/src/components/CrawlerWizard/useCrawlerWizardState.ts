@@ -16,7 +16,7 @@ export interface UseCrawlerWizardStateReturn {
   setBayNPC: (bayId: string, npc: BayNPCData) => void
   setBayNPCChoice: (bayId: string, choiceId: string, value: string) => void
   setCrawlerNPC: (npc: CrawlerNPCData | null) => void
-  setCrawlerNPCChoice: (choiceId: string, value: string) => void
+  setCrawlerNPCChoice: (choiceId: string, value: string | undefined) => void
   setArmamentBayWeaponId: (weaponId: string | null) => void
   setName: (name: string) => void
   reset: () => void
@@ -83,14 +83,25 @@ export function useCrawlerWizardState(): UseCrawlerWizardStateReturn {
       [setState]
     ),
     setCrawlerNPCChoice: useCallback(
-      (choiceId: string, value: string) => {
-        setState((prev) => ({
-          ...prev,
-          crawlerNPCChoices: {
-            ...prev.crawlerNPCChoices,
-            [choiceId]: value,
-          },
-        }))
+      (choiceId: string, value: string | undefined) => {
+        setState((prev) => {
+          if (value === undefined) {
+            // Remove the choice when value is undefined (deselection)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { [choiceId]: _choiceValue, ...rest } = prev.crawlerNPCChoices
+            return {
+              ...prev,
+              crawlerNPCChoices: rest,
+            }
+          }
+          return {
+            ...prev,
+            crawlerNPCChoices: {
+              ...prev.crawlerNPCChoices,
+              [choiceId]: value,
+            },
+          }
+        })
       },
       [setState]
     ),
