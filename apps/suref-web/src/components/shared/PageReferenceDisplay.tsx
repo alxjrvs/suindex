@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import { getDisplayName } from 'salvageunion-reference'
+import { getDisplayName, isAbility } from 'salvageunion-reference'
 import { Text } from '@/components/base/Text'
 import { useEntityDisplayContext } from '@/components/entity/EntityDisplay/useEntityDisplayContext'
 
@@ -7,6 +7,9 @@ export function PageReferenceDisplay({ bg }: { bg?: string }) {
   const { data, schemaName, spacing, compact } = useEntityDisplayContext()
   if (!('page' in data) || !data.page) return null
   const displayName = getDisplayName(schemaName)
+
+  // Get tree name for abilities
+  const treeName = isAbility(data) && 'tree' in data && data.tree ? String(data.tree) : undefined
 
   const fontWeightBold = compact ? 'semibold' : 'bold'
   const fontWeightSemibold = 'semibold'
@@ -20,21 +23,37 @@ export function PageReferenceDisplay({ bg }: { bg?: string }) {
       gap={4}
       bg={bg ?? 'transparent'}
     >
-      {displayName && (
-        <Text
-          variant="pseudoheader"
-          fontWeight={fontWeightBold}
-          textTransform="uppercase"
-          overflow="hidden"
-          textOverflow="ellipsis"
-          whiteSpace="nowrap"
-          fontSize="xs"
-          flex="0 1 auto"
-          minW="0"
-        >
-          {displayName}
-        </Text>
-      )}
+      <Flex gap={2} alignItems="center" flex="0 1 auto" minW="0">
+        {displayName && (
+          <Text
+            variant="pseudoheader"
+            fontWeight={fontWeightBold}
+            textTransform="uppercase"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            fontSize="xs"
+            flexShrink={0}
+          >
+            {displayName}
+          </Text>
+        )}
+        {treeName && (
+          <Text
+            variant="pseudoheader"
+            fontWeight={fontWeightSemibold}
+            textTransform="uppercase"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            fontSize="xs"
+            flex="0 1 auto"
+            minW="0"
+          >
+            {treeName}
+          </Text>
+        )}
+      </Flex>
 
       <Flex>
         <Text
