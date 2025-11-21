@@ -96,7 +96,7 @@ export type {
 
 // Union type of all entity types (excludes meta schemas and non-entities)
 export type SURefEntity =
-  SURefAbility
+  | SURefAbility
   | SURefBioTitan
   | SURefChassis
   | SURefClass
@@ -118,7 +118,7 @@ export type SURefEntity =
 
 // Union type of all meta entity types (includes all schemas except non-entities)
 export type SURefMetaEntity =
-  SURefAbility
+  | SURefAbility
   | SURefBioTitan
   | SURefChassis
   | SURefClass

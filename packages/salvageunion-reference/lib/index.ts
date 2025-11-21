@@ -71,29 +71,29 @@ export type * from './types/index.js'
 
 // Type mapping from schema names to entity types (includes entity schemas and meta schemas)
 export type SchemaToEntityMap = {
-  'abilities': SURefAbility
+  abilities: SURefAbility
   'ability-tree-requirements': SURefMetaAbilityTreeRequirement
-  'actions': SURefMetaAction
+  actions: SURefMetaAction
   'bio-titans': SURefBioTitan
   'chassis-abilities': SURefMetaChassisAbility
-  'chassis': SURefChassis
-  'classes': SURefClass
+  chassis: SURefChassis
+  classes: SURefClass
   'crawler-bays': SURefCrawlerBay
   'crawler-tech-levels': SURefMetaCrawlerTechLevel
-  'crawlers': SURefCrawler
-  'creatures': SURefCreature
-  'distances': SURefDistance
-  'drones': SURefDrone
-  'equipment': SURefEquipment
-  'keywords': SURefKeyword
-  'meld': SURefMeld
-  'modules': SURefModule
-  'npcs': SURefNPC
+  crawlers: SURefCrawler
+  creatures: SURefCreature
+  distances: SURefDistance
+  drones: SURefDrone
+  equipment: SURefEquipment
+  keywords: SURefKeyword
+  meld: SURefMeld
+  modules: SURefModule
+  npcs: SURefNPC
   'roll-tables': SURefRollTable
-  'squads': SURefSquad
-  'systems': SURefSystem
-  'traits': SURefTrait
-  'vehicles': SURefVehicle
+  squads: SURefSquad
+  systems: SURefSystem
+  traits: SURefTrait
+  vehicles: SURefVehicle
 }
 
 // Type for entity schema names (includes entity schemas and meta schemas, excludes non-entity schemas)
@@ -101,7 +101,7 @@ export type EntitySchemaName = keyof SchemaToEntityMap
 
 // Runtime set of entity schema names (for runtime checks)
 export const EntitySchemaNames = new Set<EntitySchemaName>([
-    'abilities',
+  'abilities',
   'ability-tree-requirements',
   'actions',
   'bio-titans',
@@ -123,61 +123,61 @@ export const EntitySchemaNames = new Set<EntitySchemaName>([
   'squads',
   'systems',
   'traits',
-  'vehicles'
+  'vehicles',
 ])
 
 // Runtime mapping from schema names to model property names
 export const SchemaToModelMap = {
-  'abilities': 'Abilities',
+  abilities: 'Abilities',
   'ability-tree-requirements': 'AbilityTreeRequirements',
-  'actions': 'Actions',
+  actions: 'Actions',
   'bio-titans': 'BioTitans',
   'chassis-abilities': 'ChassisAbilities',
-  'chassis': 'Chassis',
-  'classes': 'Classes',
+  chassis: 'Chassis',
+  classes: 'Classes',
   'crawler-bays': 'CrawlerBays',
   'crawler-tech-levels': 'CrawlerTechLevels',
-  'crawlers': 'Crawlers',
-  'creatures': 'Creatures',
-  'distances': 'Distances',
-  'drones': 'Drones',
-  'equipment': 'Equipment',
-  'keywords': 'Keywords',
-  'meld': 'Meld',
-  'modules': 'Modules',
-  'npcs': 'NPCs',
+  crawlers: 'Crawlers',
+  creatures: 'Creatures',
+  distances: 'Distances',
+  drones: 'Drones',
+  equipment: 'Equipment',
+  keywords: 'Keywords',
+  meld: 'Meld',
+  modules: 'Modules',
+  npcs: 'NPCs',
   'roll-tables': 'RollTables',
-  'squads': 'Squads',
-  'systems': 'Systems',
-  'traits': 'Traits',
-  'vehicles': 'Vehicles',
+  squads: 'Squads',
+  systems: 'Systems',
+  traits: 'Traits',
+  vehicles: 'Vehicles',
 } as const
 
 // Runtime mapping from schema names to display names
 export const SchemaToDisplayName = {
-  'abilities': 'Abilities',
+  abilities: 'Abilities',
   'ability-tree-requirements': 'Ability Tree Requirements',
-  'actions': 'actions',
+  actions: 'actions',
   'bio-titans': 'Bio-Titans',
   'chassis-abilities': 'chassis-abilities',
-  'chassis': 'Chassis',
-  'classes': 'Classes',
+  chassis: 'Chassis',
+  classes: 'Classes',
   'crawler-bays': 'Crawler Bays',
   'crawler-tech-levels': 'Crawler Tech Levels',
-  'crawlers': 'Crawlers',
-  'creatures': 'Creatures',
-  'distances': 'Distances',
-  'drones': 'Drones',
-  'equipment': 'Equipment',
-  'keywords': 'Keywords',
-  'meld': 'Meld',
-  'modules': 'Modules',
-  'npcs': 'NPCs',
+  crawlers: 'Crawlers',
+  creatures: 'Creatures',
+  distances: 'Distances',
+  drones: 'Drones',
+  equipment: 'Equipment',
+  keywords: 'Keywords',
+  meld: 'Meld',
+  modules: 'Modules',
+  npcs: 'NPCs',
   'roll-tables': 'Roll Tables',
-  'squads': 'Squads',
-  'systems': 'Systems',
-  'traits': 'Traits',
-  'vehicles': 'Vehicles',
+  squads: 'Squads',
+  systems: 'Systems',
+  traits: 'Traits',
+  vehicles: 'Vehicles',
 } as const
 
 // Auto-generate models from schema catalog (synchronous)
@@ -188,75 +188,31 @@ const models = generateModels()
  */
 export class SalvageUnionReference {
   // Initialize static properties from generated models
-  static Abilities = models.Abilities as ModelWithMetadata<
-    SchemaToEntityMap['abilities']
-  >
-  static AbilityTreeRequirements = models.AbilityTreeRequirements as ModelWithMetadata<
-    SURefMetaAbilityTreeRequirement
-  >
-  static Actions = models.Actions as ModelWithMetadata<
-    SURefMetaAction
-  >
-  static BioTitans = models.BioTitans as ModelWithMetadata<
-    SchemaToEntityMap['bio-titans']
-  >
-  static ChassisAbilities = models.ChassisAbilities as ModelWithMetadata<
-    SURefMetaChassisAbility
-  >
-  static Chassis = models.Chassis as ModelWithMetadata<
-    SchemaToEntityMap['chassis']
-  >
-  static Classes = models.Classes as ModelWithMetadata<
-    SchemaToEntityMap['classes']
-  >
-  static CrawlerBays = models.CrawlerBays as ModelWithMetadata<
-    SchemaToEntityMap['crawler-bays']
-  >
-  static CrawlerTechLevels = models.CrawlerTechLevels as ModelWithMetadata<
-    SURefMetaCrawlerTechLevel
-  >
-  static Crawlers = models.Crawlers as ModelWithMetadata<
-    SchemaToEntityMap['crawlers']
-  >
-  static Creatures = models.Creatures as ModelWithMetadata<
-    SchemaToEntityMap['creatures']
-  >
-  static Distances = models.Distances as ModelWithMetadata<
-    SchemaToEntityMap['distances']
-  >
-  static Drones = models.Drones as ModelWithMetadata<
-    SchemaToEntityMap['drones']
-  >
-  static Equipment = models.Equipment as ModelWithMetadata<
-    SchemaToEntityMap['equipment']
-  >
-  static Keywords = models.Keywords as ModelWithMetadata<
-    SchemaToEntityMap['keywords']
-  >
-  static Meld = models.Meld as ModelWithMetadata<
-    SchemaToEntityMap['meld']
-  >
-  static Modules = models.Modules as ModelWithMetadata<
-    SchemaToEntityMap['modules']
-  >
-  static NPCs = models.NPCs as ModelWithMetadata<
-    SchemaToEntityMap['npcs']
-  >
-  static RollTables = models.RollTables as ModelWithMetadata<
-    SchemaToEntityMap['roll-tables']
-  >
-  static Squads = models.Squads as ModelWithMetadata<
-    SchemaToEntityMap['squads']
-  >
-  static Systems = models.Systems as ModelWithMetadata<
-    SchemaToEntityMap['systems']
-  >
-  static Traits = models.Traits as ModelWithMetadata<
-    SchemaToEntityMap['traits']
-  >
-  static Vehicles = models.Vehicles as ModelWithMetadata<
-    SchemaToEntityMap['vehicles']
-  >
+  static Abilities = models.Abilities as ModelWithMetadata<SchemaToEntityMap['abilities']>
+  static AbilityTreeRequirements =
+    models.AbilityTreeRequirements as ModelWithMetadata<SURefMetaAbilityTreeRequirement>
+  static Actions = models.Actions as ModelWithMetadata<SURefMetaAction>
+  static BioTitans = models.BioTitans as ModelWithMetadata<SchemaToEntityMap['bio-titans']>
+  static ChassisAbilities = models.ChassisAbilities as ModelWithMetadata<SURefMetaChassisAbility>
+  static Chassis = models.Chassis as ModelWithMetadata<SchemaToEntityMap['chassis']>
+  static Classes = models.Classes as ModelWithMetadata<SchemaToEntityMap['classes']>
+  static CrawlerBays = models.CrawlerBays as ModelWithMetadata<SchemaToEntityMap['crawler-bays']>
+  static CrawlerTechLevels =
+    models.CrawlerTechLevels as ModelWithMetadata<SURefMetaCrawlerTechLevel>
+  static Crawlers = models.Crawlers as ModelWithMetadata<SchemaToEntityMap['crawlers']>
+  static Creatures = models.Creatures as ModelWithMetadata<SchemaToEntityMap['creatures']>
+  static Distances = models.Distances as ModelWithMetadata<SchemaToEntityMap['distances']>
+  static Drones = models.Drones as ModelWithMetadata<SchemaToEntityMap['drones']>
+  static Equipment = models.Equipment as ModelWithMetadata<SchemaToEntityMap['equipment']>
+  static Keywords = models.Keywords as ModelWithMetadata<SchemaToEntityMap['keywords']>
+  static Meld = models.Meld as ModelWithMetadata<SchemaToEntityMap['meld']>
+  static Modules = models.Modules as ModelWithMetadata<SchemaToEntityMap['modules']>
+  static NPCs = models.NPCs as ModelWithMetadata<SchemaToEntityMap['npcs']>
+  static RollTables = models.RollTables as ModelWithMetadata<SchemaToEntityMap['roll-tables']>
+  static Squads = models.Squads as ModelWithMetadata<SchemaToEntityMap['squads']>
+  static Systems = models.Systems as ModelWithMetadata<SchemaToEntityMap['systems']>
+  static Traits = models.Traits as ModelWithMetadata<SchemaToEntityMap['traits']>
+  static Vehicles = models.Vehicles as ModelWithMetadata<SchemaToEntityMap['vehicles']>
 
   /**
    * Find a single entity in a specific schema

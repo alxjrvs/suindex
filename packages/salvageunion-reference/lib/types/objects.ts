@@ -11,7 +11,7 @@ import type {
   SURefEnumRange,
   SURefEnumSchemaName,
   SURefEnumSource,
-  SURefEnumTree
+  SURefEnumTree,
 } from './enums.js'
 
 import type {
@@ -23,14 +23,14 @@ import type {
   SURefCommonNonNegativeInteger,
   SURefCommonPositiveInteger,
   SURefCommonSalvageValue,
-  SURefCommonTechLevel
+  SURefCommonTechLevel,
 } from './common.js'
 
 /**
  * Special traits and properties of items, systems, or abilities
  */
 export interface SURefObjectTrait {
-  amount?: (SURefCommonNonNegativeInteger | string)
+  amount?: SURefCommonNonNegativeInteger | string
   type: string
 }
 
@@ -137,19 +137,19 @@ export interface SURefObjectChoice {
    * Structured options for this choice (similar to actionOptions)
    */
   choiceOptions?: {
-/**
- * Display name for this option
- */
-label: string
-/**
- * Identifier value for this option
- */
-value: string
-/**
- * Optional description of this option
- */
-description?: string
-}[]
+    /**
+     * Display name for this option
+     */
+    label: string
+    /**
+     * Identifier value for this option
+     */
+    value: string
+    /**
+     * Optional description of this option
+     */
+    description?: string
+  }[]
   constraints?: {
     field?: string
     min?: SURefCommonNonNegativeInteger
@@ -196,11 +196,11 @@ export interface SURefObjectDataValue {
   /**
    * The label for this data value
    */
-  label: (string | number)
+  label: string | number
   /**
    * Optional value for this data value
    */
-  value?: (string | number)
+  value?: string | number
   /**
    * Optional type for this data value (e.g., 'cost', 'keyword', 'trait', 'meta')
    */
@@ -212,7 +212,7 @@ export interface SURefObjectDataValue {
  */
 export interface SURefObjectContentBlock {
   type?: SURefEnumContentType
-  value?: (string | SURefObjectDataValue[])
+  value?: string | SURefObjectDataValue[]
   /**
    * Optional label for this content block (e.g., for labeled sections)
    */
@@ -231,7 +231,7 @@ export interface SURefObjectContentBlock {
  * Grantable entity with a name and description
  */
 export interface SURefObjectGrant {
-  schema: (SURefEnumSchemaName | 'choice')
+  schema: SURefEnumSchemaName | 'choice'
   name: SURefCommonName
 }
 
@@ -263,7 +263,7 @@ export interface SURefObjectAction {
    */
   damage?: {
     damageType: SURefEnumDamageType
-    amount: (SURefCommonNonNegativeInteger | string)
+    amount: SURefCommonNonNegativeInteger | string
   }
   choices?: SURefObjectChoice[]
   table?: SURefObjectTable
@@ -291,15 +291,13 @@ export interface SURefObjectPattern {
   }
 }
 
-export type SURefObjectSchemaName =
-  SURefEnumSchemaName
-  | 'actions'
+export type SURefObjectSchemaName = SURefEnumSchemaName | 'actions'
 
 /**
  * Roll table for random outcomes based on d20 rolls
  */
 export type SURefObjectTable =
-  {
+  | {
       /**
        * Critical failure outcome
        */
