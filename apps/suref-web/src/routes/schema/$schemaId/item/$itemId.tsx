@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog, SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefEnumSchemaName } from 'salvageunion-reference'
-import ItemShowPage from '../../../../components/ItemShowPage'
-import { ReferenceError } from '../../../../components/errors/ReferenceError'
-import { findEntityBySlug, getEntitySlug } from '../../../../utils/slug'
+import ItemShowPage from '@/components/ItemShowPage'
+import { ReferenceError } from '@/components/errors/ReferenceError'
+import { findEntityBySlug, getEntitySlug } from '@/utils/slug'
 
 const schemaIndexData = getSchemaCatalog()
 

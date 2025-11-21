@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { useCreateEntity, useDeleteEntity } from '../suentity'
+import { useCreateEntity, useDeleteEntity } from '@/hooks/suentity'
 import { useHydratedPilot } from './useHydratedPilot'
 
 export function useManagePilotEquipmentSystemsAndModules(

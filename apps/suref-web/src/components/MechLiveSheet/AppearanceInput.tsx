@@ -1,6 +1,6 @@
 import { rollTable } from '@randsum/salvageunion'
-import { SheetInput } from '../shared/SheetInput'
-import { useHydratedMech, useUpdateMech } from '../../hooks/mech'
+import { SheetInput } from '@/components/shared/SheetInput'
+import { useHydratedMech, useUpdateMech } from '@/hooks/mech'
 
 export function AppearanceInput({ id, disabled }: { disabled: boolean; id: string }) {
   const { mech } = useHydratedMech(id)

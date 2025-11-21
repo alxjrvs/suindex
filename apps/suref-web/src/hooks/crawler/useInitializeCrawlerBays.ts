@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { isLocalId, generateLocalId } from '../../lib/cacheHelpers'
-import { entitiesKeys } from '../suentity/useSUEntities'
-import type { HydratedEntity } from '../../types/hydrated'
+import { isLocalId, generateLocalId } from '@/lib/cacheHelpers'
+import { entitiesKeys } from '@/hooks/suentity/useSUEntities'
+import type { HydratedEntity } from '@/types/hydrated'
 
 /**
  * Initialize crawler bays for local (playground) crawlers

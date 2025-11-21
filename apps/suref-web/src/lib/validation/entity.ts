@@ -13,7 +13,7 @@ import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import {
   publicSuentitiesInsertSchema,
   publicSuentitiesUpdateSchema,
-} from '../../types/database-generated.zod'
+} from '@/types/database-generated.zod'
 
 /**
  * Valid schema names for entities

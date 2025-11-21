@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useNavigate, useLocation } from '@tanstack/react-router'
-import { signOut } from '../lib/api'
+import { signOut } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 /**
  * Shared navigation state and handlers
@@ -25,7 +26,7 @@ export function useNavigationState() {
       setSigningOut(true)
       await signOut()
     } catch (error) {
-      console.error('Error signing out:', error)
+      logger.error('Error signing out:', error)
     } finally {
       setSigningOut(false)
     }

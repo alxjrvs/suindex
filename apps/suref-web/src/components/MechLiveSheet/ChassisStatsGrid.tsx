@@ -1,8 +1,8 @@
 import { Flex } from '@chakra-ui/react'
-import { StatDisplay } from '../StatDisplay'
+import { StatDisplay } from '@/components/StatDisplay'
 import type { SURefChassis } from 'salvageunion-reference'
 import { getSystemSlots, getModuleSlots, getCargoCapacity } from 'salvageunion-reference'
-import { RoundedBox } from '../shared/RoundedBox'
+import { RoundedBox } from '@/components/shared/RoundedBox'
 
 interface ChassisStatsGridProps {
   chassis: SURefChassis | undefined

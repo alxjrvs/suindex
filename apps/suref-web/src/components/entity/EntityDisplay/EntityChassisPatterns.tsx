@@ -1,6 +1,6 @@
 import { VStack, Tabs } from '@chakra-ui/react'
 import { useSearch, useRouter } from '@tanstack/react-router'
-import { Text } from '../../base/Text'
+import { Text } from '@/components/base/Text'
 import { EntitySubheader } from './EntitySubheader'
 import { EntityChassisPattern } from './EntityChassisPattern'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
@@ -12,7 +12,10 @@ export function EntityChassisPatterns() {
 
   if (!('patterns' in data) || !data.patterns || data.patterns.length === 0) return null
 
-  const defaultPattern = data.patterns[0].name.replace(/\s+Pattern$/i, '')
+  const firstPattern = data.patterns[0]
+  if (!firstPattern) return null
+
+  const defaultPattern = firstPattern.name.replace(/\s+Pattern$/i, '')
 
   const patternParam = (search as { pattern?: string }).pattern
   const selectedPattern = patternParam || defaultPattern

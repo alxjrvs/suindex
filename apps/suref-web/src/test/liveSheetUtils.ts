@@ -5,13 +5,13 @@
  */
 
 import type { QueryClient } from '@tanstack/react-query'
-import { generateLocalId, LOCAL_ID } from '../lib/cacheHelpers'
+import { generateLocalId, LOCAL_ID } from '@/lib/cacheHelpers'
 import { createLocalPilot, getPilotFromCache } from './liveSheetHelpers'
 import { createLocalEntity } from './liveSheetHelpers'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import type { Tables } from '../types/database-generated.types'
-import { entitiesKeys } from '../hooks/suentity/useSUEntities'
-import type { HydratedEntity } from '../types/hydrated'
+import type { Tables } from '@/types/database-generated.types'
+import { entitiesKeys } from '@/hooks/suentity/useSUEntities'
+import type { HydratedEntity } from '@/types/hydrated'
 
 /**
  * Set up a local pilot with a class selected

@@ -13,14 +13,14 @@
  */
 
 import { useQuery, useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query'
-import type { TablesInsert, TablesUpdate } from '../../types/database-generated.types'
-import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../../lib/api'
-import type { Tables } from '../../types/database-generated.types'
-import { isLocalId, LOCAL_ID, generateLocalId } from '../../lib/cacheHelpers'
+import type { TablesInsert, TablesUpdate } from '@/types/database-generated.types'
+import { fetchEntity, createEntity, updateEntity, deleteEntity } from '@/lib/api'
+import type { Tables } from '@/types/database-generated.types'
+import { isLocalId, LOCAL_ID, generateLocalId } from '@/lib/cacheHelpers'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { createNormalizedEntity } from '../../lib/api/normalizedEntities'
-import { entitiesKeys } from '../suentity/useSUEntities'
-import type { HydratedEntity } from '../../types/hydrated'
+import { createNormalizedEntity } from '@/lib/api/normalizedEntities'
+import { entitiesKeys } from '@/hooks/suentity/useSUEntities'
+import type { HydratedEntity } from '@/types/hydrated'
 
 type Crawler = Tables<'crawlers'>
 

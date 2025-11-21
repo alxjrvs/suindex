@@ -4,6 +4,8 @@
  * @param scrapByTL - Current scrap amounts by tech level
  * @returns Object with scrap to remove by TL and which TLs were affected
  */
+
+import { logger } from '@/lib/logger'
 export function calculateScrapRemoval(
   totalNeeded: number,
   scrapByTL: Record<number, number>
@@ -68,7 +70,7 @@ export function calculateScrapRemoval(
   }
 
   if (remaining > 0) {
-    console.warn('Not enough scrap to cover upkeep cost')
+    logger.warn('Not enough scrap to cover upkeep cost')
   }
 
   return { updates, affectedTLs }
@@ -79,7 +81,7 @@ export function calculateScrapRemoval(
  */
 function getTLFieldName(tl: number): string {
   const names = ['one', 'two', 'three', 'four', 'five', 'six']
-  return names[tl - 1]
+  return names[tl - 1] ?? 'unknown'
 }
 
 /**

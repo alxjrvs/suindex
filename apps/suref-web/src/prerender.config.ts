@@ -1,6 +1,7 @@
 import { getSchemaCatalog, SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefEnumSchemaName } from 'salvageunion-reference'
 import { getEntitySlug } from './utils/slug'
+import { logger } from './lib/logger'
 
 /**
  * Generate all static paths for prerendering
@@ -27,7 +28,7 @@ export function getStaticPaths() {
         }
       }
     } catch (error) {
-      console.warn(`Could not load items for schema ${schema.id}:`, error)
+      logger.warn(`Could not load items for schema ${schema.id}:`, error)
     }
   }
 

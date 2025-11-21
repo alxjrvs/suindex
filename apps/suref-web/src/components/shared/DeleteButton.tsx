@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@chakra-ui/react'
+import { logger } from '@/lib/logger'
 
 interface DeleteButtonProps {
   entityName: string
@@ -28,7 +29,7 @@ export function DeleteButton({ entityName, onConfirmDelete, disabled = false }: 
       setIsDeleting(true)
       await onConfirmDelete()
     } catch (error) {
-      console.error(`Error deleting ${entityName}:`, error)
+      logger.error(`Error deleting ${entityName}:`, error)
     } finally {
       setIsDeleting(false)
     }

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useHydratedMech } from './useHydratedMech'
-import { useCreateCargo, useDeleteCargo } from '../cargo'
+import { useCreateCargo, useDeleteCargo } from '@/hooks/cargo'
 import { SalvageUnionReference } from 'salvageunion-reference'
 
 export function useManageMechCargo(id: string) {

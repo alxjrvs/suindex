@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Button, Flex } from '@chakra-ui/react'
 import type { ButtonProps } from '@chakra-ui/react'
-import { signInWithDiscord } from '../lib/api'
+import { signInWithDiscord } from '@/lib/api'
 import { DiscordIcon } from './shared/DiscordIcon'
+import { logger } from '@/lib/logger'
 
 interface DiscordSignInButtonProps extends ButtonProps {
   redirectTo?: string
@@ -19,7 +20,7 @@ export function DiscordSignInButton({ redirectTo, ...props }: DiscordSignInButto
         typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : '/dashboard'
       await signInWithDiscord(redirectTo || defaultRedirect)
     } catch (error) {
-      console.error('Error signing in:', error)
+      logger.error('Error signing in:', error)
     } finally {
       setLoading(false)
     }

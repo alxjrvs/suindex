@@ -1,7 +1,7 @@
 import { Flex, Textarea } from '@chakra-ui/react'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 import { useState, useEffect } from 'react'
-import { DEBOUNCE_TIMINGS } from '../../constants/gameRules'
+import { DEBOUNCE_TIMINGS } from '@/constants/gameRules'
 
 interface SheetTextareaProps {
   label?: string

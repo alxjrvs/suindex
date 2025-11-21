@@ -1,6 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
-import { Text } from '../base/Text'
+import { Heading } from '@/components/base/Heading'
+import { Text } from '@/components/base/Text'
 
 export function DashboardContent() {
   return (

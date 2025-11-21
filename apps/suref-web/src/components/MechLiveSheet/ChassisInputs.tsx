@@ -4,9 +4,9 @@ import { PatternSelector } from './PatternSelector'
 import { QuirkInput } from './QuirkInput'
 import { AppearanceInput } from './AppearanceInput'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { useHydratedMech } from '../../hooks/mech'
-import { useChangeMechChassis } from '../../hooks/mech/useChangeMechChassis'
-import { useChangeMechChassisPattern } from '../../hooks/mech/useChangeMechChassisPattern'
+import { useHydratedMech } from '@/hooks/mech'
+import { useChangeMechChassis } from '@/hooks/mech/useChangeMechChassis'
+import { useChangeMechChassisPattern } from '@/hooks/mech/useChangeMechChassisPattern'
 
 interface ChassisInputsProps {
   id: string

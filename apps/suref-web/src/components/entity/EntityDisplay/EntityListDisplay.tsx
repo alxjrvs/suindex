@@ -1,5 +1,5 @@
 import { VStack, Box, Button } from '@chakra-ui/react'
-import { Text } from '../../base/Text'
+import { Text } from '@/components/base/Text'
 import type {
   SURefObjectChoice,
   SURefEnumSchemaName,
@@ -9,7 +9,7 @@ import type {
 import type { ButtonProps } from '@chakra-ui/react'
 import { getModel, extractActions, extractVisibleActions } from 'salvageunion-reference'
 import { EntityDisplay } from './index'
-import { NestedActionDisplay } from '../NestedActionDisplay'
+import { NestedActionDisplay } from '@/components/entity/NestedActionDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export interface EntityListDisplayProps {
@@ -140,7 +140,7 @@ export function EntityListDisplay({
                 : (() => {
                     const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
                     return visibleActions && visibleActions.length > 0
-                      ? visibleActions[0].name
+                      ? visibleActions[0]?.name
                       : undefined
                   })()
           return entityName === selectedChoice
@@ -211,7 +211,7 @@ export function EntityListDisplay({
                     : (() => {
                         const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
                         return visibleActions && visibleActions.length > 0
-                          ? visibleActions[0].name
+                          ? visibleActions[0]?.name
                           : undefined
                       })()
             if (entityNameForSelection) {
@@ -237,13 +237,14 @@ export function EntityListDisplay({
           const systemModule = entity as SURefObjectSystemModule
           const resolvedActions = extractActions(systemModule as SURefMetaEntity)
           const visibleActions = resolvedActions?.filter((a) => !a.hidden)
-          if (visibleActions && visibleActions.length > 0) {
-            return <NestedActionDisplay key={idx} data={visibleActions[0]} compact />
+          const firstAction = visibleActions?.[0]
+          if (firstAction) {
+            return <NestedActionDisplay key={idx} data={firstAction} compact />
           }
           return null
         }
 
-        const schema = (choice.schema?.[0] || 'systems') as SURefEnumSchemaName
+        const schema = (choice.schema?.[0] ?? 'systems') as SURefEnumSchemaName
         return (
           <EntityDisplay
             key={idx}

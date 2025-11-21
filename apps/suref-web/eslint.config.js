@@ -26,7 +26,7 @@ export default [
   ...baseConfig,
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: ['happydom.ts', 'testing-library.ts'],
+    ignores: ['happydom.ts', 'testing-library.ts', 'src/lib/logger.ts'],
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
@@ -42,6 +42,13 @@ export default [
     rules: {
       ...reactHooks.configs.recommended.rules,
       ...reactRefresh.configs.recommended.rules,
+      // Prevent direct console usage - use logger utility instead
+      'no-console': [
+        'warn',
+        {
+          allow: ['warn', 'error'],
+        },
+      ],
     },
   },
   prettier,

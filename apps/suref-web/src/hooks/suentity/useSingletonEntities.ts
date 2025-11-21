@@ -6,7 +6,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
-import { supabase } from '../../lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefEnumSchemaName } from 'salvageunion-reference'
 

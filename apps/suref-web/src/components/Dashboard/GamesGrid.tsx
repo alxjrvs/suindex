@@ -1,8 +1,9 @@
 import { useNavigate } from '@tanstack/react-router'
 import { GameSmallDisplay } from './GameSmallDisplay'
 import { GridLayout } from './GridLayout'
-import { useUserGamesList } from '../../hooks/game/useGames'
-import { useCreateEntity } from '../../hooks/useCreateEntity'
+import { useUserGamesList } from '@/hooks/game/useGames'
+import { useCreateEntity } from '@/hooks/useCreateEntity'
+import { logger } from '@/lib/logger'
 
 export function GamesGrid() {
   const navigate = useNavigate()
@@ -17,7 +18,7 @@ export function GamesGrid() {
     try {
       await createGame()
     } catch (err) {
-      console.error('Failed to create game:', err)
+      logger.error('Failed to create game:', err)
     }
   }
 

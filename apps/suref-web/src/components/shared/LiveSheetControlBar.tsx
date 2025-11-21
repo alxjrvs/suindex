@@ -2,7 +2,7 @@ import { HStack } from '@chakra-ui/react'
 import { ControlBarContainer } from './ControlBarContainer'
 import { ActiveToggle } from './ActiveToggle'
 import { PrivateToggle } from './PrivateToggle'
-import type { Database } from '../../types/database-generated.types'
+import type { Database } from '@/types/database-generated.types'
 
 type TableName = keyof Database['public']['Tables']
 

@@ -1,8 +1,8 @@
 import { VStack } from '@chakra-ui/react'
-import { Text } from '../../base/Text'
+import { Text } from '@/components/base/Text'
 import { getChassisAbilities } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
-import { NestedChassisAbility } from '../NestedChassisAbility'
+import { NestedChassisAbility } from '@/components/entity/NestedChassisAbility'
 
 export function EntityChassisAbilities() {
   const { data, spacing, compact, schemaName } = useEntityDisplayContext()

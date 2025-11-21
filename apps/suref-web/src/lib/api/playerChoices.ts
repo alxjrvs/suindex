@@ -5,9 +5,9 @@
  * This supports chains like: Ability → System choice → Module choice
  */
 
-import { supabase } from '../supabase'
-import type { Tables, TablesInsert } from '../../types/database-generated.types'
-import { upsertPlayerChoiceSchema } from '../validation/playerChoice'
+import { supabase } from '@/lib/supabase'
+import type { Tables, TablesInsert } from '@/types/database-generated.types'
+import { upsertPlayerChoiceSchema } from '@/lib/validation/playerChoice'
 
 /**
  * Fetch all choices for an entity

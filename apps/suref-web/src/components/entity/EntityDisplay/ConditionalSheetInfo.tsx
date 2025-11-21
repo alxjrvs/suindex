@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react'
-import { SheetDisplay } from '../../shared/SheetDisplay'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
-import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
+import { useParseTraitReferences } from '@/utils/parseTraitReferences'
 
 interface ConditionalSheetInfoProps {
   /** Property name to check in data (for backwards compatibility) */

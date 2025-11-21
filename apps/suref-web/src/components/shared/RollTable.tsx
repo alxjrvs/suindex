@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { Box, Flex, IconButton, Button } from '@chakra-ui/react'
 import { resultForTable, type SURefObjectTable } from 'salvageunion-reference'
 import { roll } from '@randsum/roller'
-import { useParseTraitReferences } from '../../utils/parseTraitReferences'
-import { Text } from '../base/Text'
+import { useParseTraitReferences } from '@/utils/parseTraitReferences'
+import { Text } from '@/components/base/Text'
 
 interface DigestedRollTable {
   order: number
@@ -28,24 +28,30 @@ function digestRollTable(table: RollTableType): DigestedRollTable[] {
   if (!table) return []
   const sorted = Object.keys(table)
     .sort((a, b) => {
-      const aNum = parseInt(a.split('-')[0])
-      const bNum = parseInt(b.split('-')[0])
+      const aPart = a.split('-')[0]
+      const bPart = b.split('-')[0]
+      const aNum = aPart ? parseInt(aPart) : 0
+      const bNum = bPart ? parseInt(bPart) : 0
       return aNum - bNum
     })
     .reverse()
 
-  return sorted.map((key, order) => {
-    const fullDescription = table[key as keyof typeof table] || ''
-    const name = fullDescription.split(':')[0]
-    const description = fullDescription.replace(`${name}:`, '').trim()
+  return sorted
+    .map((key, order) => {
+      const fullDescription = table[key as keyof typeof table] || ''
+      const parts = fullDescription.split(':')
+      const namePart = parts[0]
+      const name = namePart ?? ''
+      const description = parts[1] ?? ''
 
-    return {
-      order,
-      name,
-      description,
-      key,
-    }
-  })
+      return {
+        order,
+        name,
+        description,
+        key,
+      }
+    })
+    .filter((item): item is DigestedRollTable => item.name !== undefined)
 }
 
 function RollTableDescription({

@@ -1,10 +1,11 @@
 import { useNavigate } from '@tanstack/react-router'
-import type { Tables } from '../../types/database-generated.types'
-import { useEntityGrid } from '../../hooks/useEntityGrid'
-import { useCreateEntity } from '../../hooks/useCreateEntity'
+import type { Tables } from '@/types/database-generated.types'
+import { useEntityGrid } from '@/hooks/useEntityGrid'
+import { useCreateEntity } from '@/hooks/useCreateEntity'
 import { GridLayout } from './GridLayout'
-import type { ValidTable } from '../../types/common'
+import type { ValidTable } from '@/types/common'
 import type { ReactNode } from 'react'
+import { logger } from '@/lib/logger'
 
 interface EntityGridConfig<T extends ValidTable> {
   /** Database table name */
@@ -54,7 +55,7 @@ export function EntityGrid<T extends ValidTable>({
     try {
       await createEntity()
     } catch (err) {
-      console.error(`Failed to create ${table}:`, err)
+      logger.error(`Failed to create ${table}:`, err)
     }
   }
 

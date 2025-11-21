@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog } from 'salvageunion-reference'
 import { z } from 'zod'
-import SchemaViewer from '../../../components/schema/SchemaViewer'
-import { ReferenceError } from '../../../components/errors/ReferenceError'
+import SchemaViewer from '@/components/schema/SchemaViewer'
+import { ReferenceError } from '@/components/errors/ReferenceError'
 import { getModel } from 'salvageunion-reference'
 import type { SURefEntity } from 'salvageunion-reference'
 

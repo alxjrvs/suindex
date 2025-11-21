@@ -25,12 +25,8 @@
       "url": "./schemas/chassis.schema.json"
     },
     {
-      "fileMatch": ["data/classes.advanced.json"],
-      "url": "./schemas/classes.advanced.schema.json"
-    },
-    {
-      "fileMatch": ["data/classes.core.json"],
-      "url": "./schemas/classes.core.schema.json"
+      "fileMatch": ["data/classes.json"],
+      "url": "./schemas/classes.schema.json"
     },
     {
       "fileMatch": ["data/crawler-bays.json"],

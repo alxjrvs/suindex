@@ -1,6 +1,6 @@
 import { useParams } from '@tanstack/react-router'
 import { Flex, Text } from '@chakra-ui/react'
-import MechLiveSheet from '../MechLiveSheet'
+import MechLiveSheet from '@/components/MechLiveSheet'
 
 export function MechEdit() {
   const params = useParams({ from: '/dashboard/mechs/$id' })

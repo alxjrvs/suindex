@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Box, Button, Flex, HStack, VStack } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
-import { Text } from '../base/Text'
-import { SheetInput } from '../shared/SheetInput'
-import { SheetTextarea } from '../shared/SheetTextarea'
+import { Heading } from '@/components/base/Heading'
+import { Text } from '@/components/base/Text'
+import { SheetInput } from '@/components/shared/SheetInput'
+import { SheetTextarea } from '@/components/shared/SheetTextarea'
 
 interface GameInfoProps {
   name: string

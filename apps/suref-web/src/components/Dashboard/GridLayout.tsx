@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import { Box, Flex, Spinner, VStack, Text } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
+import { Heading } from '@/components/base/Heading'
 
 interface CreateButtonConfig {
   onClick: () => void
@@ -46,7 +46,7 @@ export function GridLayout<T extends object>({
     primaryItems = items.filter((item) => getSectionType(item) === 'primary')
     secondaryItems = items.filter((item) => getSectionType(item) === 'secondary')
   } else {
-    const hasActiveProperty = items.length > 0 && 'active' in items[0]
+    const hasActiveProperty = items.length > 0 && items[0] && 'active' in items[0]
     primaryItems = hasActiveProperty
       ? items.filter((item) => (item as { active?: boolean }).active !== false)
       : items

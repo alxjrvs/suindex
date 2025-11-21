@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 
 export function ValueDisplay({
   label,

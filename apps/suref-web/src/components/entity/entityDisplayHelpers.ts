@@ -108,7 +108,7 @@ export function calculateBackgroundColor(
   }
 
   if (headerColor) return headerColor
-  if (techLevel) return techLevelColors[techLevel]
+  if (techLevel) return techLevelColors[techLevel] ?? 'su.orange'
   return 'su.orange'
 }
 

@@ -10,11 +10,11 @@
  */
 
 import { useCrawler } from './useCrawlers'
-import { useCargo } from '../cargo/useCargo'
-import { useEntitiesFor } from '../suentity/useSUEntities'
-import type { HydratedCargo, HydratedEntity, HydratedBay } from '../../types/hydrated'
-import type { Tables } from '../../types/database-generated.types'
-import { isLocalId } from '../../lib/cacheHelpers'
+import { useCargo } from '@/hooks/cargo/useCargo'
+import { useEntitiesFor } from '@/hooks/suentity/useSUEntities'
+import type { HydratedCargo, HydratedEntity, HydratedBay } from '@/types/hydrated'
+import type { Tables } from '@/types/database-generated.types'
+import { isLocalId } from '@/lib/cacheHelpers'
 import { useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 

@@ -1,5 +1,5 @@
 import { Box, Link, VStack } from '@chakra-ui/react'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 
 export function LiveSheetBanner() {
   return (

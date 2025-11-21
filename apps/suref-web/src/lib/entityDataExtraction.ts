@@ -11,8 +11,8 @@ import {
   getDamage,
   getTraits,
 } from 'salvageunion-reference'
-import type { DataValue } from '../types/common'
-import { getActivationCurrency } from '../components/entity/entityDisplayHelpers'
+import type { DataValue } from '@/types/common'
+import { getActivationCurrency } from '@/components/entity/entityDisplayHelpers'
 
 /**
  * Format action type for display by appending " Action" where needed

@@ -1,4 +1,4 @@
-import { Text } from '../../base/Text'
+import { Text } from '@/components/base/Text'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 
 export function EntitySubheader({

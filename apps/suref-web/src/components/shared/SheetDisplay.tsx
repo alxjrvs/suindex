@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 import type { ReactNode } from 'react'
 
 interface SheetDisplayProps {

@@ -1,5 +1,6 @@
-import { supabase } from '../supabase'
+import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 /**
  * Get the current authenticated user
@@ -32,11 +33,11 @@ export async function signInWithDiscord(redirectUrl: string) {
   })
 
   if (error) {
-    console.error('OAuth error:', error)
+    logger.error('OAuth error:', error)
     throw error
   }
 
-  console.log('OAuth initiated:', data)
+  logger.log('OAuth initiated:', data)
 }
 
 /**

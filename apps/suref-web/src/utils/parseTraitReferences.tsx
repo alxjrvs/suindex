@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react'
-import { EntityDetailDisplay } from '../components/entity/EntityDetailDisplay'
+import { EntityDetailDisplay } from '@/components/entity/EntityDetailDisplay'
 
 /**
  * Hook to parse text content for trait references and replace them with EntityDetailDisplay components

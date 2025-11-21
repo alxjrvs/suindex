@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import type { BoxProps } from '@chakra-ui/react'
 import { Flex } from '@chakra-ui/react'
-import { Text } from '../base/Text'
-import { RoundedBox } from '../shared/RoundedBox'
-import { ValueDisplay } from '../shared/ValueDisplay'
+import { Text } from '@/components/base/Text'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { ValueDisplay } from '@/components/shared/ValueDisplay'
 
 interface UserEntitySmallDisplayProps extends BoxProps {
   onClick: () => void

@@ -1,10 +1,10 @@
 import { Flex, Text, VStack } from '@chakra-ui/react'
-import { RoundedBox } from '../shared/RoundedBox'
-import { SheetSelect } from '../shared/SheetSelect'
-import { LinkButton } from '../shared/LinkButton'
-import { useEntityRelationships } from '../../hooks/useEntityRelationships'
-import { useHydratedPilot } from '../../hooks/pilot'
-import { DiscordSignInButton } from '../DiscordSignInButton'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { SheetSelect } from '@/components/shared/SheetSelect'
+import { LinkButton } from '@/components/shared/LinkButton'
+import { useEntityRelationships } from '@/hooks/useEntityRelationships'
+import { useHydratedPilot } from '@/hooks/pilot'
+import { DiscordSignInButton } from '@/components/DiscordSignInButton'
 
 interface PilotInfoProps {
   mechId?: string

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getSchemaCatalog } from 'salvageunion-reference'
-import { RulesReferenceLanding } from '../components/Reference/RulesReferenceLanding'
-import { ReferenceError } from '../components/errors/ReferenceError'
+import { RulesReferenceLanding } from '@/components/Reference/RulesReferenceLanding'
+import { ReferenceError } from '@/components/errors/ReferenceError'
 
 const schemaIndexData = getSchemaCatalog()
 

@@ -6,11 +6,11 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { TablesUpdate } from '../../types/database-generated.types'
-import { fetchGame, updateGame, deleteGame, fetchUserGamesWithRoles } from '../../lib/api/games'
-import { fetchGameCrawler } from '../../lib/api/crawlers'
-import type { Tables } from '../../types/database-generated.types'
-import { getUser } from '../../lib/api'
+import type { TablesUpdate } from '@/types/database-generated.types'
+import { fetchGame, updateGame, deleteGame, fetchUserGamesWithRoles } from '@/lib/api/games'
+import { fetchGameCrawler } from '@/lib/api/crawlers'
+import type { Tables } from '@/types/database-generated.types'
+import { getUser } from '@/lib/api'
 
 type Game = Tables<'games'>
 

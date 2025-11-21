@@ -1,8 +1,8 @@
 import { Grid, VStack, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import type { SURefSystem, SURefModule } from 'salvageunion-reference'
-import { useHydratedPilot } from '../../hooks/pilot'
-import { RoundedBox } from '../shared/RoundedBox'
+import { useHydratedPilot } from '@/hooks/pilot'
+import { RoundedBox } from '@/components/shared/RoundedBox'
 
 interface PilotModulesSystemsProps {
   id: string

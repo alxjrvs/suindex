@@ -82,6 +82,7 @@ export function getCoreTreeLevel1Ability(baseClass: SURefClass): SURefAbility | 
     return null
   }
   const firstTree = baseClass.coreTrees[0]
+  if (!firstTree) return null
   return getAbilityByTreeAndLevel(firstTree, 1)
 }
 

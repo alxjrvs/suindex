@@ -2,15 +2,15 @@ import { useMemo, useCallback, useState } from 'react'
 import { Box, VStack } from '@chakra-ui/react'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
 
-import type { HydratedBay } from '../../types/hydrated'
-import { RoundedBox } from '../shared/RoundedBox'
-import { NPCCard } from '../shared/NPCCard'
+import type { HydratedBay } from '@/types/hydrated'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { NPCCard } from '@/components/shared/NPCCard'
 import { BayInfo } from './BayInfo'
-import { StatDisplay } from '../StatDisplay'
-import { SheetDisplay } from '../shared/SheetDisplay'
-import { getTiltRotation } from '../../utils/tiltUtils'
-import { useUpdateEntity, useManageEntityChoices } from '../../hooks/suentity'
-import { getParagraphString } from '../../lib/contentBlockHelpers'
+import { StatDisplay } from '@/components/StatDisplay'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
+import { getTiltRotation } from '@/utils/tiltUtils'
+import { useUpdateEntity, useManageEntityChoices } from '@/hooks/suentity'
+import { getParagraphString } from '@/lib/contentBlockHelpers'
 
 interface BayCardProps {
   bay: HydratedBay

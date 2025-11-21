@@ -1,7 +1,7 @@
 import { VStack } from '@chakra-ui/react'
 import { hasActions, extractVisibleActions } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
-import { NestedActionDisplay } from '../NestedActionDisplay'
+import { NestedActionDisplay } from '@/components/entity/NestedActionDisplay'
 
 export function EntityActions() {
   const { data, schemaName, spacing, compact, title } = useEntityDisplayContext()

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useDeleteEntity, useCreateEntity } from '../suentity'
+import { useDeleteEntity, useCreateEntity } from '@/hooks/suentity'
 import { useHydratedPilot } from './useHydratedPilot'
 
 export function useChangePilotClass(id: string | undefined) {

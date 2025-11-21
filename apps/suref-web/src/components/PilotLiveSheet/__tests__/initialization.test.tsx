@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'bun:test'
 import { LOCAL_ID, generateLocalId } from '@/lib/cacheHelpers'
 import { render, waitFor, screen } from '@/test/render'
-import PilotLiveSheet from '../index'
+import PilotLiveSheet from '@/components/PilotLiveSheet/index'
 import { createLocalPilot } from '@/test/liveSheetHelpers'
 
 describe('PilotLiveSheet - Initialization', () => {

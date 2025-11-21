@@ -1,5 +1,5 @@
-import { SheetDisplay } from '../../shared/SheetDisplay'
-import { Text } from '../../base/Text'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
+import { Text } from '@/components/base/Text'
 import { Fragment } from 'react/jsx-runtime'
 import { Flex } from '@chakra-ui/react'
 import { useEntityDisplayContext } from './useEntityDisplayContext'

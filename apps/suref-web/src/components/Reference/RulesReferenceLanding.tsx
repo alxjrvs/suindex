@@ -1,17 +1,17 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '../../routes/index'
+import { Route } from '@/routes/index'
 import { Box, Flex, Link, Input } from '@chakra-ui/react'
-import { Text } from '../base/Text'
-import { ReferenceHeader } from '../shared/ReferenceHeader'
-import Footer from '../Footer'
-import type { SchemaInfo } from '../../types/schema'
+import { Text } from '@/components/base/Text'
+import { ReferenceHeader } from '@/components/shared/ReferenceHeader'
+import Footer from '@/components/Footer'
+import type { SchemaInfo } from '@/types/schema'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefEntity } from 'salvageunion-reference'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { extractMatchSnippet, highlightMatch } from '../../utils/searchHighlight'
-import { DEBOUNCE_TIMINGS } from '../../constants/gameRules'
-import { getEntitySlug } from '../../utils/slug'
+import { extractMatchSnippet, highlightMatch } from '@/utils/searchHighlight'
+import { DEBOUNCE_TIMINGS } from '@/constants/gameRules'
+import { getEntitySlug } from '@/utils/slug'
 
 const SEARCH_RESULT_HEIGHT = 72
 const SEARCH_RESULTS_MAX_HEIGHT = 400
@@ -166,7 +166,10 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
         setSelectedIndex((prev) => Math.max(prev - 1, 0))
       } else if (e.key === 'Enter') {
         e.preventDefault()
-        handleSelectResult(searchResults[selectedIndex])
+        const result = searchResults[selectedIndex]
+        if (result) {
+          handleSelectResult(result)
+        }
       }
     }
 
@@ -282,6 +285,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                 <Box position="relative" h={`${virtualizer.getTotalSize()}px`}>
                   {virtualizer.getVirtualItems().map((virtualItem) => {
                     const result = searchResults[virtualItem.index]
+                    if (!result) return null
                     const index = virtualItem.index
 
                     const matchInTitle =
@@ -331,7 +335,11 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                         cursor="pointer"
                         bg={index === selectedIndex ? 'su.lightBlue' : 'transparent'}
                         _hover={{ bg: 'su.lightOrange' }}
-                        onClick={() => handleSelectResult(result)}
+                        onClick={() => {
+                          if (result) {
+                            handleSelectResult(result)
+                          }
+                        }}
                         borderBottomWidth={index < searchResults.length - 1 ? '1px' : 0}
                         borderBottomColor="su.lightBlue"
                       >

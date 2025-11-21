@@ -18,7 +18,7 @@ interface Action {
 function extractBaseName(name: string): string {
   // Remove "(1)", "(2)", etc. from the end
   const match = name.match(/^(.+?)\s*\(\d+\)$/)
-  return match ? match[1].trim() : name
+  return match && match[1] ? match[1].trim() : name
 }
 
 function hasNumberSuffix(name: string): boolean {
@@ -101,6 +101,8 @@ function analyzeDuplicates() {
       if (unnumbered.length === 1 && numbered.length === 1) {
         const un = unnumbered[0]
         const num = numbered[0]
+
+        if (!un || !num) return
 
         // Get keys excluding 'id' and 'name' for comparison
         const unKeys = new Set(Object.keys(un).filter((k) => k !== 'id' && k !== 'name'))

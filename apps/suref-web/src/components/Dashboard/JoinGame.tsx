@@ -4,8 +4,9 @@ import { Box, Input, Text, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
-import { Heading } from '.././base/Heading'
-import { redeemInviteCode } from '../../lib/api'
+import { Heading } from '@/components/base/Heading'
+import { redeemInviteCode } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 const codeValidator = z.string().min(1, 'Invite code is required').trim()
 
@@ -22,7 +23,7 @@ export function JoinGame() {
         const gameId = await redeemInviteCode(value.code)
         navigate({ to: '/dashboard/games/$gameId', params: { gameId } })
       } catch (err) {
-        console.error('Failed to join game', err)
+        logger.error('Failed to join game', err)
         const message = err instanceof Error ? err.message : 'Failed to join game'
 
         let errorMessage = message

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useUpsertPlayerChoice, useDeletePlayerChoice, playerChoicesKeys } from './usePlayerChoices'
-import type { Tables } from '../../types/database-generated.types'
+import type { Tables } from '@/types/database-generated.types'
 import { useQueryClient } from '@tanstack/react-query'
 
 /**

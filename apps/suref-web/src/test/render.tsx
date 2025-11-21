@@ -7,7 +7,7 @@ import {
   RouterProvider,
 } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { system } from '../theme'
+import { system } from '@/theme'
 import type { ReactNode } from 'react'
 
 // eslint-disable-next-line react-refresh/only-export-components

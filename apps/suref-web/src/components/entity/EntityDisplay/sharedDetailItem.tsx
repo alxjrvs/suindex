@@ -1,8 +1,8 @@
-import type { DataValue } from '../../../types/common'
+import type { DataValue } from '@/types/common'
 import type { SURefObjectDataValue } from 'salvageunion-reference'
-import { ActivationCostBox } from '../../shared/ActivationCostBox'
-import { EntityDetailDisplay } from '../EntityDetailDisplay'
-import { ValueDisplay } from '../../shared/ValueDisplay'
+import { ActivationCostBox } from '@/components/shared/ActivationCostBox'
+import { EntityDetailDisplay } from '@/components/entity/EntityDetailDisplay'
+import { ValueDisplay } from '@/components/shared/ValueDisplay'
 
 /**
  * Shared DetailItem component for rendering DataValue items

@@ -995,13 +995,17 @@ export function parseTraitReferences(text: string): ParsedTraitReference[] {
   // Find all parameterized trait references first
   let match: RegExpExecArray | null
   while ((match = paramPattern.exec(text)) !== null) {
-    references.push({
-      fullMatch: match[0],
-      traitName: match[1],
-      parameter: match[2],
-      startIndex: match.index,
-      endIndex: match.index + match[0].length,
-    })
+    const traitName = match[1]
+    const parameter = match[2]
+    if (traitName && parameter) {
+      references.push({
+        fullMatch: match[0],
+        traitName,
+        parameter,
+        startIndex: match.index,
+        endIndex: match.index + match[0].length,
+      })
+    }
   }
 
   // Find all simple trait references
@@ -1012,12 +1016,15 @@ export function parseTraitReferences(text: string): ParsedTraitReference[] {
     )
 
     if (!isAlreadyMatched) {
-      references.push({
-        fullMatch: match[0],
-        traitName: match[1],
-        startIndex: match.index,
-        endIndex: match.index + match[0].length,
-      })
+      const traitName = match[1]
+      if (traitName) {
+        references.push({
+          fullMatch: match[0],
+          traitName,
+          startIndex: match.index,
+          endIndex: match.index + match[0].length,
+        })
+      }
     }
   }
 

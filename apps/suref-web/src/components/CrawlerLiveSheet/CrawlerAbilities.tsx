@@ -1,8 +1,8 @@
 import type { SURefCrawler, SURefMetaAction } from 'salvageunion-reference'
 import { extractActions } from 'salvageunion-reference'
 
-import { RoundedBox } from '../shared/RoundedBox'
-import { SheetDisplay } from '../shared/SheetDisplay'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
 import { VStack } from '@chakra-ui/react'
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
 import { useHydratedCrawler } from '@/hooks/crawler'

@@ -12,8 +12,9 @@ import {
   type SURefEnumSchemaName,
   type EntitySchemaName,
 } from 'salvageunion-reference'
-import type { Tables } from '../../types/database-generated.types'
-import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
+import type { Tables } from '@/types/database-generated.types'
+import type { HydratedEntity, HydratedCargo } from '@/types/hydrated'
+import { logger } from '@/lib/logger'
 
 /**
  * Hydrate a single entity with reference data
@@ -77,8 +78,10 @@ export function hydrateEntities(
   refs.forEach((ref, index) => {
     if (ref) {
       const request = requests[index]
-      // Only entity schemas are stored in the database, so ref is guaranteed to be SURefEntity
-      refsByKey.set(`${request.schemaName}:${request.id}`, ref as SURefEntity)
+      if (request) {
+        // Only entity schemas are stored in the database, so ref is guaranteed to be SURefEntity
+        refsByKey.set(`${request.schemaName}:${request.id}`, ref as SURefEntity)
+      }
     }
   })
 
@@ -108,11 +111,11 @@ export function hydrateEntities(
 
       if (hydrated && parent) {
         hydrated.parentEntity = parent
-        console.log(
+        logger.log(
           `Associated parent entity: ${parent.ref.name} (${parent.id}) -> ${hydrated.ref.name} (${hydrated.id})`
         )
       } else {
-        console.warn(
+        logger.warn(
           `Parent entity not found for ${entity.schema_name}/${entity.schema_ref_id} (parent_entity_id: ${entity.parent_entity_id})`
         )
       }
@@ -172,8 +175,10 @@ export function hydrateCargoItems(cargoItems: Tables<'cargo'>[]): HydratedCargo[
   refs.forEach((ref, index) => {
     if (ref) {
       const request = requests[index]
-      // Only entity schemas are stored in the database, so ref is guaranteed to be SURefEntity
-      refsByKey.set(`${request.schemaName}:${request.id}`, ref as SURefEntity)
+      if (request) {
+        // Only entity schemas are stored in the database, so ref is guaranteed to be SURefEntity
+        refsByKey.set(`${request.schemaName}:${request.id}`, ref as SURefEntity)
+      }
     }
   })
 

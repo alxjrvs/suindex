@@ -1,6 +1,6 @@
-import { supabase } from '../supabase'
-import type { Tables, TablesInsert } from '../../types/database-generated.types'
-import { assertCanViewMech } from '../permissions'
+import { supabase } from '@/lib/supabase'
+import type { Tables, TablesInsert } from '@/types/database-generated.types'
+import { assertCanViewMech } from '@/lib/permissions'
 
 export type MechRow = Tables<'mechs'>
 

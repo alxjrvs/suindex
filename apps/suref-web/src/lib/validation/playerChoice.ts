@@ -12,7 +12,7 @@
  */
 
 import { z } from 'zod'
-import { publicPlayerChoicesInsertSchema } from '../../types/database-generated.zod'
+import { publicPlayerChoicesInsertSchema } from '@/types/database-generated.zod'
 
 /**
  * Player choice creation/upsert schema

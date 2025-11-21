@@ -1,5 +1,5 @@
 import { Box, VStack } from '@chakra-ui/react'
-import { Text } from '../../base/Text'
+import { Text } from '@/components/base/Text'
 import type { SURefObjectChoice } from 'salvageunion-reference'
 import { getChoices } from 'salvageunion-reference'
 import { EntityChoice } from './EntityChoice'

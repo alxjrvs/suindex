@@ -1,5 +1,5 @@
 import { VStack } from '@chakra-ui/react'
-import { SheetDisplay } from '../../shared/SheetDisplay'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
 import { EntitySubheader } from './EntitySubheader'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 

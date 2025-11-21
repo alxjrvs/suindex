@@ -167,7 +167,9 @@ function fixDuplicates() {
 
       if (refs.length > 0) {
         // Use first entity as context
-        const entityName = refs[0].entityName
+        const firstRef = refs[0]
+        if (!firstRef) return
+        const entityName = firstRef.entityName
         const newName = `${entityName} ${baseName}`
 
         console.log(`Renaming "${action.name}" to "${newName}"`)
@@ -184,7 +186,9 @@ function fixDuplicates() {
       const refs = entityActionMap.get(unnumbered[0].name) || []
 
       if (refs.length > 0) {
-        const entityName = refs[0].entityName
+        const firstRef = refs[0]
+        if (!firstRef) return
+        const entityName = firstRef.entityName
         const newName = `${entityName} ${baseName}`
 
         console.log(`Renaming "${unAction.name}" to "${newName}"`)

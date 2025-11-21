@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import type { Database } from '../types/database-generated.types'
-import { getUser, fetchUserEntities } from '../lib/api'
+import type { Database } from '@/types/database-generated.types'
+import { getUser, fetchUserEntities } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 type TableName = keyof Database['public']['Tables']
 
@@ -48,7 +49,7 @@ export function useEntityRelationships<T extends { id: string } = { id: string; 
 
       setItems(data)
     } catch (err) {
-      console.error(`Error loading ${config.table}:`, err)
+      logger.error(`Error loading ${config.table}:`, err)
       setError(err instanceof Error ? err.message : `Failed to load ${config.table}`)
     } finally {
       setLoading(false)

@@ -2,7 +2,7 @@ import { lazy } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 
 const DashboardContent = lazy(() =>
-  import('../../components/Dashboard/DashboardContent').then((m) => ({
+  import('@/components/Dashboard/DashboardContent').then((m) => ({
     default: m.DashboardContent,
   }))
 )

@@ -1,12 +1,12 @@
 import type { SURefCrawler } from 'salvageunion-reference'
 
-import { RoundedBox } from '../shared/RoundedBox'
-import type { CrawlerNPC as CrawlerNPCType } from '../../types/common'
-import type { Json } from '../../types/database-generated.types'
-import { NPCCard } from '../shared/NPCCard'
-import { useHydratedCrawler, useUpdateCrawler } from '../../hooks/crawler'
-import { useManageEntityChoices } from '../../hooks/suentity'
-import { getParagraphString } from '../../lib/contentBlockHelpers'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import type { CrawlerNPC as CrawlerNPCType } from '@/types/common'
+import type { Json } from '@/types/database-generated.types'
+import { NPCCard } from '@/components/shared/NPCCard'
+import { useHydratedCrawler, useUpdateCrawler } from '@/hooks/crawler'
+import { useManageEntityChoices } from '@/hooks/suentity'
+import { getParagraphString } from '@/lib/contentBlockHelpers'
 import { useCallback, useMemo } from 'react'
 
 export function CrawlerNPC({

@@ -43,6 +43,7 @@
     "react-dom": "^19.2.0",
     "salvageunion-reference": "workspace:*",
     "type-fest": "^5.2.0",
+    "web-vitals": "^5.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

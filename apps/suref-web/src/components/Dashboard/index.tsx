@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Outlet } from '@tanstack/react-router'
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { getSession, onAuthStateChange } from '../../lib/api'
+import { getSession, onAuthStateChange } from '@/lib/api'
 import type { User } from '@supabase/supabase-js'
-import Footer from '../Footer'
+import Footer from '@/components/Footer'
 import { Auth } from './Auth'
+import { logger } from '@/lib/logger'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
@@ -18,12 +19,12 @@ export default function Dashboard() {
 
       if (code) {
         const pkceVerifier = localStorage.getItem('supabase.auth.token')
-        console.log('PKCE verifier in storage:', pkceVerifier ? 'found' : 'NOT FOUND')
+        logger.log('PKCE verifier in storage:', pkceVerifier ? 'found' : 'NOT FOUND')
 
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
         const session = await getSession()
-        console.log('Session after code exchange:', session ? 'found' : 'not found')
+        logger.log('Session after code exchange:', session ? 'found' : 'not found')
 
         if (session) {
           window.history.replaceState({}, document.title, window.location.pathname)

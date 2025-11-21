@@ -2,6 +2,7 @@ import { Box, Image } from '@chakra-ui/react'
 import { useState } from 'react'
 import { getAssetUrl } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
+import { logger } from '@/lib/logger'
 
 export function EntityImage() {
   const { data, title, compact } = useEntityDisplayContext()
@@ -33,7 +34,7 @@ export function EntityImage() {
         loading="lazy"
         decoding="async"
         onError={() => {
-          console.error(`Failed to load image: ${assetUrl}`)
+          logger.error(`Failed to load image: ${assetUrl}`)
           setShowImage(false)
         }}
       />
