@@ -6,7 +6,7 @@ import { StatDisplay } from '@/components/StatDisplay'
 import { AddStatButton } from '@/components/shared/AddStatButton'
 import { RoundedBox } from '@/components/shared/RoundedBox'
 import { EntitySelectionModal } from '@/components/entity/EntitySelectionModal'
-import { SheetDisplay } from '@/components/shared/SheetDisplay'
+import { Text } from '@/components/base/Text'
 import type { HydratedEntity } from '@/types/hydrated'
 import { useUpdateEntity } from '@/hooks/suentity'
 import { getTiltRotation } from '@/utils/tiltUtils'
@@ -119,17 +119,18 @@ function EntityItem({
         <Box
           position="absolute"
           top="50%"
-          left={0}
-          right={0}
-          transform="translateY(-50%)"
+          left="50%"
+          transform="translate(-50%, -50%)"
           zIndex={1}
           px={2}
           filter="drop-shadow(0 0 4px rgba(0, 0, 0, 0.8))"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
+          w="auto"
         >
-          <SheetDisplay label="Damaged" />
+          <Box textAlign="center" w="auto">
+            <Text fontSize="sm" textTransform="uppercase" fontWeight="bold" color="su.black">
+              Damaged
+            </Text>
+          </Box>
         </Box>
       )}
     </Box>

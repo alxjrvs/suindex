@@ -28,11 +28,18 @@ export function SheetDisplay({
           fontWeight="bold"
           color={labelColor}
           mb={1}
+          textAlign="inherit"
         >
           {label}
         </Text>
       )}
-      <Box lineHeight="relaxed" color="su.black" fontWeight="normal" fontSize={fontSize}>
+      <Box
+        lineHeight="relaxed"
+        color="su.black"
+        fontWeight="normal"
+        fontSize={fontSize}
+        textAlign="inherit"
+      >
         {children || value}
       </Box>
     </Box>

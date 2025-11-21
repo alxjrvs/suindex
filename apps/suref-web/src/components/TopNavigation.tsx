@@ -1,4 +1,14 @@
-import { Box, Button, Flex, IconButton, HStack, Menu, Portal, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  HStack,
+  Menu,
+  Portal,
+  Text,
+  Spinner,
+} from '@chakra-ui/react'
 import type { User } from '@supabase/supabase-js'
 import type { SchemaInfo } from '@/types/schema'
 import { Link } from '@tanstack/react-router'
@@ -9,10 +19,11 @@ import { DiscordSignInButton } from './DiscordSignInButton'
 
 interface TopNavigationProps {
   user: User | null
+  userLoading?: boolean
   schemas?: SchemaInfo[]
 }
 
-export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
+export function TopNavigation({ user, userLoading = false, schemas = [] }: TopNavigationProps) {
   const { isOpen, signingOut, handleNavigate, handleSignOut, isActive, toggleMenu } =
     useNavigationState()
 
@@ -219,7 +230,9 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           w={{ base: 'full', lg: 'auto' }}
           ml={{ base: 0, lg: 'auto' }}
         >
-          {user ? (
+          {userLoading ? (
+            <Spinner size="sm" color="fg.default" />
+          ) : user ? (
             <Menu.Root>
               <Menu.Trigger asChild>
                 <Button

@@ -52,14 +52,17 @@ function Providers({ children }: { children: React.ReactNode }) {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [userLoading, setUserLoading] = useState(true)
 
   useEffect(() => {
     getSession().then((session) => {
       setUser(session?.user ?? null)
+      setUserLoading(false)
     })
 
     const subscription = onAuthStateChange((authUser) => {
       setUser(authUser)
+      setUserLoading(false)
     })
 
     return () => subscription.unsubscribe()
@@ -110,6 +113,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               <Flex flexDirection="column" h="100vh" bg="bg.canvas">
                 <TopNavigation
                   user={user}
+                  userLoading={userLoading}
                   schemas={schemaIndexData.schemas.filter((s) => !s.meta)}
                 />
                 <Box
