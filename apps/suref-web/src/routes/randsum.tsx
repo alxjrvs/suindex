@@ -79,7 +79,7 @@ function RandsumPage() {
                   <Text fontSize="md" color="fg.default" lineHeight="relaxed">
                     Visit{' '}
                     <Link
-                      href="https://randsum.github.io"
+                      href="https://randsum.dev/packages/robo/"
                       target="_blank"
                       rel="noopener noreferrer"
                       textDecoration="underline"
