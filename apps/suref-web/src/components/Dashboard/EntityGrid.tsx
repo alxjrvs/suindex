@@ -53,6 +53,11 @@ export function EntityGrid<T extends ValidTable>({
 
   const handleCreate = async () => {
     try {
+      // For pilots, navigate to the wizard instead of creating directly
+      if (table === 'pilots') {
+        navigate({ to: '/dashboard/pilots/new' })
+        return
+      }
       await createEntity()
     } catch (err) {
       logger.error(`Failed to create ${table}:`, err)

@@ -45,10 +45,16 @@ type EntityDisplayProps = {
   hidePatterns?: boolean
   /** Whether to hide choices */
   hideChoices?: boolean
+  /** Whether to show the footer (page reference). Defaults to !hideActions */
+  showFooter?: boolean
   /** User choices object matching the format sent to the API: Record<choiceId, "schemaName||entityId"> */
   userChoices?: Record<string, string> | null
   /** Callback when a choice is selected - if undefined, we're in schema page mode (not a live sheet) */
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
+  /** Whether to hide the image */
+  hideImage?: boolean
+  /** Custom width for the image (e.g., '40%') */
+  imageWidth?: string
 }
 
 export const EntityDisplay = memo(function EntityDisplay({
@@ -70,10 +76,13 @@ export const EntityDisplay = memo(function EntityDisplay({
   hideActions = false,
   hidePatterns = false,
   hideChoices = false,
+  showFooter,
   schemaName,
   compact = false,
   userChoices,
   onChoiceSelection,
+  hideImage,
+  imageWidth,
 }: EntityDisplayProps) {
   if (!data) return null
 
@@ -90,6 +99,7 @@ export const EntityDisplay = memo(function EntityDisplay({
       hideActions={hideActions}
       hidePatterns={hidePatterns}
       hideChoices={hideChoices}
+      showFooter={showFooter}
       collapsible={collapsible}
       onClick={onClick}
       hideLevel={hideLevel}
@@ -100,6 +110,8 @@ export const EntityDisplay = memo(function EntityDisplay({
       userChoices={userChoices}
       onChoiceSelection={onChoiceSelection}
       onToggleExpanded={onToggleExpanded}
+      hideImage={hideImage}
+      imageWidth={imageWidth}
     >
       <EntityDisplayContent>{children}</EntityDisplayContent>
     </EntityDisplayProvider>

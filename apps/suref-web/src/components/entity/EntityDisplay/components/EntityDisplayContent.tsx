@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { getTiltRotation } from '@/utils/tiltUtils'
 import type { SURefClass } from 'salvageunion-reference'
 import { getEffects, getTable } from 'salvageunion-reference'
-import { PageReferenceDisplay } from '@/components/shared/PageReferenceDisplay'
+import { EntityDisplayFooter } from '@/components/shared/EntityDisplayFooter'
 import { RollTable } from '@/components/shared/RollTable'
 import { EntityContainer } from '@/components/shared/EntityContainer'
 import { EntitySubTitleElement } from '@/components/entity/EntityDisplay/EntitySubTitleContent'
@@ -61,17 +61,19 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
     collapsible,
     hideActions,
     hidePatterns,
+    showFooter,
     rightLabel,
     damaged,
     disabled,
     buttonConfig,
     userChoices,
     onChoiceSelection,
+    hideImage,
   } = useEntityDisplayContext()
 
   return (
     <EntityContainer
-      bg={'su.lightBlue'}
+      bg={'su.white'}
       w="full"
       headerBg={headerBg}
       headerOpacity={opacity.header}
@@ -102,7 +104,9 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
           minW="0"
           w="full"
         >
-          <EntityTopMatter hideActions={hideActions} />
+          <EntityTopMatter hideActions={hideActions} hideImage={hideImage}>
+            {children}
+          </EntityTopMatter>
 
           {compact && schemaName === 'chassis' && getChassisAbilities(data) && (
             <Box p={spacing.contentPadding}>
@@ -161,20 +165,15 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
                 />
               )}
               <EntityGrants />
-              {children && (
-                <Box mt="3" p={spacing.contentPadding}>
-                  {children}
-                </Box>
-              )}
-              {buttonConfig && (
-                <Flex p={spacing.contentPadding}>
-                  <ButtonWithConfig buttonConfig={buttonConfig} />
-                </Flex>
-              )}
             </>
           )}
+          {buttonConfig && (
+            <Flex p={spacing.contentPadding}>
+              <ButtonWithConfig buttonConfig={buttonConfig} />
+            </Flex>
+          )}
           <EntityChoices userChoices={userChoices} onChoiceSelection={onChoiceSelection} />
-          {!hideActions && <PageReferenceDisplay bg={headerBg} />}
+          {(showFooter ?? !hideActions) && <EntityDisplayFooter bg={headerBg} />}
         </VStack>
       )}
     </EntityContainer>

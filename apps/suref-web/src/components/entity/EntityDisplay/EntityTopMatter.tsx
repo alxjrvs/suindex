@@ -1,4 +1,5 @@
 import { Box } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
 import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
 import {
@@ -14,8 +15,17 @@ import { ContentBlockRenderer } from './ContentBlockRenderer'
 import { EntityChassisAbilitiesContent } from './EntityChassisAbilitiesContent'
 import { getEntityDisplayName } from '@/components/entity/entityDisplayHelpers'
 
-export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
-  const { data, schemaName, spacing, fontSize, compact, title } = useEntityDisplayContext()
+export function EntityTopMatter({
+  hideActions,
+  hideImage,
+  children,
+}: {
+  hideActions: boolean
+  hideImage?: boolean
+  children?: ReactNode
+}) {
+  const { data, schemaName, spacing, fontSize, compact, title, imageWidth } =
+    useEntityDisplayContext()
 
   // Determine which content to render
   let contentBlocks = 'content' in data ? data.content : undefined
@@ -68,10 +78,11 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
   return (
     <>
       <Box p={spacing.contentPadding}>
-        <EntityImage />
+        {!hideImage && <EntityImage customWidth={imageWidth} />}
         {showContent && (
           <ContentBlockRenderer content={contentBlocks!} fontSize={fontSize.sm} compact={compact} />
         )}
+        {children}
       </Box>
       {hasChassisAbilitiesInTopMatter && <EntityChassisAbilitiesContent />}
       {(!hideActions || compact) && <EntityActions />}
