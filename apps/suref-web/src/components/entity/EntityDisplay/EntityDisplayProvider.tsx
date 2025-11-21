@@ -34,6 +34,7 @@ interface EntityDisplayProviderProps {
   hideLevel: boolean
   expanded?: boolean
   rightLabel?: string
+  rightContent?: ReactNode
   buttonConfig?: ButtonProps & { children: ReactNode }
   userChoices?: Record<string, string> | null
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
@@ -57,6 +58,7 @@ export function EntityDisplayProvider({
   onClick,
   hideLevel,
   rightLabel,
+  rightContent,
   buttonConfig,
   userChoices,
   onChoiceSelection,
@@ -116,6 +118,7 @@ export function EntityDisplayProvider({
     hideChoices,
     hideLevel,
     rightLabel,
+    rightContent,
     disabled,
     buttonConfig,
     userChoices,

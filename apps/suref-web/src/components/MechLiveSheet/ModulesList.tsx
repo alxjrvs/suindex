@@ -21,12 +21,13 @@ export function ModulesList({ id, disabled = false, readOnly = false }: ModulesL
     <MechEntityList
       title="Modules"
       schemaName="modules"
-      entityIds={modules.map((m) => m.ref.id)}
+      entities={modules}
       usedSlots={usedModuleSlots}
       totalSlots={totalModuleSlots}
       onRemove={readOnly ? undefined : handleRemoveModule}
       onAdd={readOnly ? undefined : handleAddModule}
       disabled={disabled}
+      readOnly={readOnly}
     />
   )
 }

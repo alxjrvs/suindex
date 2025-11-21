@@ -14,7 +14,7 @@ export function EntityRightHeaderContent({
   collapsible: boolean
   rightLabel?: string
 }) {
-  const { data, compact, fontSize } = useEntityDisplayContext()
+  const { data, compact, fontSize, rightContent } = useEntityDisplayContext()
   const description = 'description' in data ? data.description : undefined
   const parsedDescription = useParseTraitReferences(description)
 
@@ -39,9 +39,10 @@ export function EntityRightHeaderContent({
   )
 
   return (
-    <Flex>
+    <Flex gap={2}>
       {abilityContent}
       <EntityStats data={data} />
+      {rightContent}
       {rightLabel && (
         <Text
           variant="pseudoheader"

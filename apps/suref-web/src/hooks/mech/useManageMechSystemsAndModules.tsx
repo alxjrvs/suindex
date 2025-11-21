@@ -18,6 +18,9 @@ export function useManageMechSystemsAndModules(id: string | undefined) {
         mech_id: id,
         schema_name: 'systems',
         schema_ref_id: systemId,
+        metadata: {
+          damaged: false,
+        },
       })
     },
     [id, createEntity]
@@ -49,6 +52,9 @@ export function useManageMechSystemsAndModules(id: string | undefined) {
         mech_id: id,
         schema_name: 'modules',
         schema_ref_id: moduleId,
+        metadata: {
+          damaged: false,
+        },
       })
     },
     [id, createEntity]

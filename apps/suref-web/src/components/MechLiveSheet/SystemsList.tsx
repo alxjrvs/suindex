@@ -22,12 +22,13 @@ export function SystemsList({ id, disabled = false, readOnly = false }: SystemsL
     <MechEntityList
       title="Systems"
       schemaName="systems"
-      entityIds={systems.map((s) => s.ref.id)}
+      entities={systems}
       usedSlots={usedSystemSlots}
       totalSlots={totalSystemSlots}
       onRemove={readOnly ? undefined : handleRemoveSystem}
       onAdd={readOnly ? undefined : handleAddSystem}
       disabled={disabled}
+      readOnly={readOnly}
     />
   )
 }

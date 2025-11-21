@@ -31,6 +31,8 @@ type EntityDisplayProps = {
   buttonConfig?: ButtonProps & { children: ReactNode }
   /** Optional label displayed in the top-right corner */
   rightLabel?: string
+  /** Optional custom content displayed in the top-right corner */
+  rightContent?: ReactNode
   /** Whether to use compact styling */
   compact?: boolean
   /** Whether to hide the level display */
@@ -49,6 +51,7 @@ type EntityDisplayProps = {
 
 export const EntityDisplay = memo(function EntityDisplay({
   rightLabel,
+  rightContent,
   data,
   hideLevel = false,
   headerColor,
@@ -88,6 +91,7 @@ export const EntityDisplay = memo(function EntityDisplay({
       onClick={onClick}
       hideLevel={hideLevel}
       rightLabel={rightLabel}
+      rightContent={rightContent}
       buttonConfig={buttonConfig}
       userChoices={userChoices}
       onChoiceSelection={onChoiceSelection}

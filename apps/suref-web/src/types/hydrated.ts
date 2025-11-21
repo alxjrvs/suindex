@@ -68,3 +68,33 @@ export type HydratedBay = Omit<HydratedEntity, 'metadata'> & {
     }
   } | null
 }
+
+/**
+ * System with hydrated reference data and typed metadata
+ *
+ * Systems are stored as suentities with schema_name='systems'
+ * Metadata contains instance-specific state (damaged)
+ */
+export type HydratedSystem = Omit<HydratedEntity, 'metadata'> & {
+  /**
+   * Typed metadata for system instance state
+   */
+  metadata: {
+    damaged: boolean
+  } | null
+}
+
+/**
+ * Module with hydrated reference data and typed metadata
+ *
+ * Modules are stored as suentities with schema_name='modules'
+ * Metadata contains instance-specific state (damaged)
+ */
+export type HydratedModule = Omit<HydratedEntity, 'metadata'> & {
+  /**
+   * Typed metadata for module instance state
+   */
+  metadata: {
+    damaged: boolean
+  } | null
+}
