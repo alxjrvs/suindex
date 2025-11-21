@@ -79,7 +79,9 @@ describe('Search API', () => {
 
       // Scores should be in descending order
       for (let i = 1; i < results.length; i++) {
-        expect(results[i - 1].matchScore).toBeGreaterThanOrEqual(results[i].matchScore)
+        const prev = results[i - 1]!
+        const curr = results[i]!
+        expect(prev.matchScore).toBeGreaterThanOrEqual(curr.matchScore)
       }
     })
 
@@ -87,8 +89,9 @@ describe('Search API', () => {
       const results = search({ query: 'Railgun' })
 
       // Exact match should be first
-      expect(results[0].entityName).toBe('Railgun')
-      expect(results[0].matchScore).toBeGreaterThan(50) // High score for exact match
+      const firstResult = results[0]!
+      expect(firstResult.entityName).toBe('Railgun')
+      expect(firstResult.matchScore).toBeGreaterThan(50) // High score for exact match
     })
 
     test('should be case-insensitive by default', () => {
@@ -124,18 +127,20 @@ describe('Search API', () => {
 
       expect(results.length).toBeGreaterThan(0)
       // Should have matchedFields array
-      expect(results[0].matchedFields).toBeDefined()
-      expect(Array.isArray(results[0].matchedFields)).toBe(true)
-      expect(results[0].matchedFields.length).toBeGreaterThan(0)
+      const firstResult = results[0]!
+      expect(firstResult.matchedFields).toBeDefined()
+      expect(Array.isArray(firstResult.matchedFields)).toBe(true)
+      expect(firstResult.matchedFields.length).toBeGreaterThan(0)
     })
 
     test('should include schema metadata in results', () => {
       const results = search({ query: 'laser' })
 
       expect(results.length).toBeGreaterThan(0)
-      expect(results[0].schemaName).toBeDefined()
-      expect(results[0].schemaTitle).toBeDefined()
-      expect(typeof results[0].schemaTitle).toBe('string')
+      const firstResult = results[0]!
+      expect(firstResult.schemaName).toBeDefined()
+      expect(firstResult.schemaTitle).toBeDefined()
+      expect(typeof firstResult.schemaTitle).toBe('string')
     })
   })
 

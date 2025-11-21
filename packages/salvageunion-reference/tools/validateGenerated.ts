@@ -181,11 +181,13 @@ function validateGenerated(): boolean {
         for (let i = 0; i < Math.min(maxLines, 10); i++) {
           if (originalLines[i] !== newLines[i]) {
             console.error(`   First difference at line ${i + 1}:`)
-            if (originalLines[i] !== undefined) {
-              console.error(`   Original: ${JSON.stringify(originalLines[i].substring(0, 100))}`)
+            const originalLine = originalLines[i]
+            if (originalLine !== undefined) {
+              console.error(`   Original: ${JSON.stringify(originalLine.substring(0, 100))}`)
             }
-            if (newLines[i] !== undefined) {
-              console.error(`   New:      ${JSON.stringify(newLines[i].substring(0, 100))}`)
+            const newLine = newLines[i]
+            if (newLine !== undefined) {
+              console.error(`   New:      ${JSON.stringify(newLine.substring(0, 100))}`)
             }
             break
           }

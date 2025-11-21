@@ -231,7 +231,7 @@ function fixDuplicates() {
         if (entity.actions) {
           for (let i = 0; i < entity.actions.length; i++) {
             const oldName = entity.actions[i]
-            if (nameMappings.has(oldName)) {
+            if (oldName && nameMappings.has(oldName)) {
               const newName = nameMappings.get(oldName)!
               console.log(`  ${schema}:${entity.name}: "${oldName}" -> "${newName}"`)
               entity.actions[i] = newName

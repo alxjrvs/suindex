@@ -97,7 +97,7 @@ function generatePropertyType(schema: JSONSchema): string {
   if (schema.oneOf) {
     const types = schema.oneOf.map((s) => generatePropertyType(s)).filter((t) => t)
     if (types.length === 0) return 'unknown'
-    return types.length > 1 ? `(${types.join(' | ')})` : types[0]
+    return types.length > 1 ? `(${types.join(' | ')})` : types[0]!
   }
 
   // Handle arrays
@@ -211,7 +211,7 @@ function generateInlineType(schema: JSONSchema): string | null {
 
   // If we have base types and no own properties, use type alias
   if (baseTypes.length > 0 && Object.keys(ownProperties).length === 0) {
-    return baseTypes.length === 1 ? baseTypes[0] : `(${baseTypes.join(' & ')})`
+    return baseTypes.length === 1 ? baseTypes[0]! : `(${baseTypes.join(' & ')})`
   }
 
   // Generate inline type
