@@ -11,3 +11,4 @@ WHERE schema_name IN ('classes.core', 'classes.advanced', 'classes.hybrid');
 -- Should return the count of all class entities (core + advanced + hybrid)
 
 
+
