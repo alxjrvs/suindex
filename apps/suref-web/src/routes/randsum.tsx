@@ -29,7 +29,7 @@ function RandsumPage() {
         <VStack gap={8} align="stretch" bg="transparent">
           <Box textAlign="center">
             <Heading level="h1" mb={4}>
-              RANDSUM.io Discord Bot
+              RANDSUM.dev Discord Bot
             </Heading>
             <Text fontSize="lg" color="fg.default" fontWeight="semibold">
               With Special Sauce for Salvage Union!
@@ -74,7 +74,7 @@ function RandsumPage() {
                     mb={4}
                   >
                     Roll on all Salvage Union Roll Tables with contextual results tailored to your
-                    Salvage Union sessions with the RANDSUM.io Discord bot!
+                    Salvage Union sessions with the RANDSUM.dev Discord bot!
                   </Text>
                   <Text fontSize="md" color="fg.default" lineHeight="relaxed">
                     Visit{' '}
@@ -86,9 +86,9 @@ function RandsumPage() {
                       _hover={{ color: 'brand.srd' }}
                       fontWeight="semibold"
                     >
-                      randsum.io
+                      randsum.dev
                     </Link>{' '}
-                    to learn more about the RANDSUM.io ecosystem of tools!
+                    to learn more about the RANDSUM.dev ecosystem of tools!
                   </Text>
                 </Box>
 
@@ -116,7 +116,7 @@ function RandsumPage() {
                       _hover={{ bg: 'su.discordBlurpleHover' }}
                       transition="background-color 0.2s"
                     >
-                      + Add RANDSUM.io to Discord
+                      + Add RANDSUM.dev to Discord
                     </Button>
                   </Link>
                 </Box>
