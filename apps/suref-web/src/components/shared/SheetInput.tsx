@@ -97,7 +97,7 @@ export function SheetInput({
                 h="14px"
                 w="14px"
                 _checked={{
-                  bg: 'su.brick',
+                  bg: 'brand.srd',
                   borderColor: 'su.black',
                 }}
               />
@@ -163,7 +163,7 @@ export function SheetInput({
             disabled={disabled}
             color="su.white"
             bg="su.black"
-            _hover={{ bg: 'su.brick' }}
+            _hover={{ bg: 'brand.srd' }}
             _disabled={{ cursor: 'not-allowed' }}
             borderWidth="2px"
             borderColor="su.black"

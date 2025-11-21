@@ -8,7 +8,7 @@ interface LiveSheetLayoutProps {
 
 export function LiveSheetLayout({ children }: LiveSheetLayoutProps) {
   return (
-    <Box bg="white" minH="100vh" p="6">
+    <Box bg="bg.canvas" minH="100vh" p="6">
       <Container maxW="9xl">
         <VStack gap={4} alignItems="stretch">
           <LiveSheetBanner />

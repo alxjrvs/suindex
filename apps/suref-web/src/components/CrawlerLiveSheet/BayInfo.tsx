@@ -43,7 +43,7 @@ export function BayInfo({ bayRef, bayEntityId }: BayInfoProps) {
           w="full"
           bg="su.black"
           color="su.white"
-          _hover={{ bg: 'su.brick' }}
+          _hover={{ bg: 'brand.srd' }}
           fontWeight="bold"
           py={2}
           borderRadius="md"

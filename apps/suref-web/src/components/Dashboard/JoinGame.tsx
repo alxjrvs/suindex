@@ -52,7 +52,7 @@ export function JoinGame() {
       <Button
         onClick={() => navigate({ to: '/dashboard' })}
         variant="plain"
-        color="su.brick"
+        color="brand.srd"
         mb={4}
         _hover={{ textDecoration: 'underline' }}
       >
@@ -124,7 +124,7 @@ export function JoinGame() {
           <Button
             type="submit"
             disabled={form.state.isSubmitting || !form.state.canSubmit}
-            bg="su.brick"
+            bg="brand.srd"
             color="su.white"
             fontWeight="bold"
             py={2}

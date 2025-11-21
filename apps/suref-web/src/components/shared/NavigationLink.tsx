@@ -19,11 +19,11 @@ export function NavigationLink({ isActive, onClick, children, ...props }: Naviga
       onClick={onClick}
       px={4}
       py={2}
-      _hover={{ bg: 'su.lightOrange' }}
-      bg={isActive ? 'su.lightBlue' : 'transparent'}
+      _hover={{ bg: 'bg.hover' }}
+      bg={isActive ? 'bg.active' : 'transparent'}
       borderBottomWidth={isActive ? '3px' : 0}
       borderBottomColor="su.orange"
-      color="su.black"
+      color="fg.default"
       fontWeight={isActive ? 'semibold' : 'normal'}
       borderRadius="md"
       variant="ghost"

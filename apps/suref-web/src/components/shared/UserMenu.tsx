@@ -37,7 +37,7 @@ export function UserMenu({ user, onSignOut, signingOut, signInComponent }: UserM
             py={2}
             fontSize="sm"
             color="su.white"
-            bg="su.brick"
+            bg="brand.srd"
             _hover={{ bg: 'su.orange' }}
             _disabled={{ opacity: 0.5 }}
             borderRadius="md"

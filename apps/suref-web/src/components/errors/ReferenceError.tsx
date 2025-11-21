@@ -29,7 +29,7 @@ export function ReferenceError({ error }: ErrorComponentProps) {
         borderRadius="md"
         shadow="lg"
         borderWidth="2px"
-        borderColor="su.brick"
+        borderColor="brand.srd"
       >
         <Heading level="h1" fontSize="2xl" fontWeight="bold" mb={4}>
           DATA CORRUPTION DETECTED
@@ -49,7 +49,7 @@ export function ReferenceError({ error }: ErrorComponentProps) {
           <Text as="summary" cursor="pointer" fontWeight="semibold" color="su.black">
             Error Details
           </Text>
-          <Text as="pre" mt={2} fontSize="xs" color="su.brick" overflowY="auto" maxH="40">
+          <Text as="pre" mt={2} fontSize="xs" color="brand.srd" overflowY="auto" maxH="40">
             {error?.toString()}
           </Text>
         </Box>
@@ -62,7 +62,7 @@ export function ReferenceError({ error }: ErrorComponentProps) {
             bg="su.orange"
             color="su.white"
             borderRadius="md"
-            _hover={{ bg: 'su.brick' }}
+            _hover={{ bg: 'brand.srd' }}
             fontWeight="medium"
           >
             Try Again
@@ -75,7 +75,7 @@ export function ReferenceError({ error }: ErrorComponentProps) {
             bg="su.green"
             color="su.white"
             borderRadius="md"
-            _hover={{ bg: 'su.brick' }}
+            _hover={{ bg: 'brand.srd' }}
             fontWeight="medium"
           >
             Go to Home

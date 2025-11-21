@@ -38,7 +38,7 @@ export function DeleteButton({ entityName, onConfirmDelete, disabled = false }: 
     <Button
       onClick={handleClick}
       disabled={disabled || isDeleting}
-      bg="su.brick"
+      bg="brand.srd"
       color="su.white"
       fontWeight="bold"
       borderRadius="md"

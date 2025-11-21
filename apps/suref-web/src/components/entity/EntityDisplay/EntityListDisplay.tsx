@@ -74,7 +74,7 @@ export function EntityListDisplay({
           if (onChoiceSelection) {
             if (isSelected) {
               buttonConfig = {
-                bg: 'su.brick',
+                bg: 'brand.srd',
                 color: 'su.white',
                 fontWeight: 'bold',
                 textTransform: 'uppercase',
@@ -170,7 +170,7 @@ export function EntityListDisplay({
 
           if (isSelected && !isMultiSelect) {
             buttonConfig = {
-              bg: 'su.brick',
+              bg: 'brand.srd',
               color: 'su.white',
               fontWeight: 'bold',
               textTransform: 'uppercase',
@@ -184,7 +184,7 @@ export function EntityListDisplay({
           } else if (isSelected && isMultiSelect && entityName) {
             // For multi-select, show remove button for selected items
             buttonConfig = {
-              bg: 'su.brick',
+              bg: 'brand.srd',
               color: 'su.white',
               fontWeight: 'bold',
               textTransform: 'uppercase',

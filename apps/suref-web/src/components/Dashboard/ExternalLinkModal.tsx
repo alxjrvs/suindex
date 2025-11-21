@@ -67,7 +67,7 @@ export function ExternalLinkModal({ isOpen, onClose, onAdd }: ExternalLinkModalP
         <Flex gap={2} justifyContent="flex-end" pt={2}>
           <Button
             onClick={handleClose}
-            bg="su.brick"
+            bg="brand.srd"
             color="su.white"
             px={4}
             py={2}

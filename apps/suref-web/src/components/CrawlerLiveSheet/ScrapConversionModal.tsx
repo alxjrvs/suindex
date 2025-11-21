@@ -245,7 +245,7 @@ export function ScrapConversionModal({
       <Flex gap={2} justifyContent="flex-end" pt={4}>
         <Button
           onClick={handleClose}
-          bg="su.brick"
+          bg="brand.srd"
           color="su.white"
           px={4}
           py={2}

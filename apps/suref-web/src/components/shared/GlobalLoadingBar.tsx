@@ -22,7 +22,7 @@ export function GlobalLoadingBar() {
       colorPalette="orange"
       value={null}
     >
-      <Progress.Track bg="su.lightBlue">
+      <Progress.Track bg="bg.canvas">
         <Progress.Range bg="su.orange" />
       </Progress.Track>
     </Progress.Root>

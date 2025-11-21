@@ -4,7 +4,8 @@ import type { SchemaInfo } from '../types/schema'
 import { Heading } from './base/Heading'
 import { useNavigationState } from '../hooks/useNavigationState'
 import { NavigationLink } from './shared/NavigationLink'
-import { UserMenu } from './shared/UserMenu'
+import { DiscordSignInButton } from './DiscordSignInButton'
+import { ThemeToggle } from './shared/ThemeToggle'
 
 interface TopNavigationProps {
   user: User | null
@@ -57,9 +58,9 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         top={{ base: 0, lg: 'auto' }}
         left={{ base: 0, lg: 'auto' }}
         right={{ base: 0, lg: 'auto' }}
-        bg="su.white"
+        bg="bg.canvas"
         borderBottomWidth="2px"
-        borderBottomColor="su.lightBlue"
+        borderBottomColor="border.default"
         px={6}
         py={3}
         alignItems="center"
@@ -78,15 +79,16 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
         >
           <Button
             onClick={() => handleNavigate('/')}
-            _hover={{ bg: 'su.lightOrange' }}
+            _hover={{ bg: 'bg.hover' }}
             bg="transparent"
             borderRadius="md"
             variant="ghost"
             h="auto"
             p={2}
+            color="fg.default"
           >
             <Heading level="h2">Salvage Union</Heading>
-            <Text fontSize="xs" color="su.brick">
+            <Text fontSize="xs" color="brand.srd">
               SRD
             </Text>
           </Button>
@@ -104,11 +106,11 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                   <Button
                     px={4}
                     py={2}
-                    _hover={{ bg: 'su.lightOrange' }}
-                    bg={isActive('/schema') ? 'su.lightBlue' : 'transparent'}
+                    _hover={{ bg: 'bg.hover' }}
+                    bg={isActive('/schema') ? 'bg.active' : 'transparent'}
                     borderBottomWidth={isActive('/schema') ? '3px' : 0}
                     borderBottomColor="su.orange"
-                    color="su.black"
+                    color="fg.default"
                     fontWeight={isActive('/schema') ? 'semibold' : 'normal'}
                     borderRadius="md"
                     variant="ghost"
@@ -120,12 +122,19 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                 </Menu.Trigger>
                 <Portal>
                   <Menu.Positioner>
-                    <Menu.Content maxH="300px" minW="200px" overflowY="auto">
+                    <Menu.Content
+                      maxH="300px"
+                      minW="200px"
+                      overflowY="auto"
+                      bg="bg.canvas"
+                      borderColor="border.default"
+                    >
                       {schemas.map((schema) => (
                         <Menu.Item
                           key={schema.id}
                           value={schema.id}
                           onSelect={() => handleNavigate(`/schema/${schema.id}`)}
+                          color="fg.default"
                         >
                           {schema.displayName || schema.title.replace('Salvage Union ', '')}
                         </Menu.Item>
@@ -142,11 +151,11 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                   <Button
                     px={4}
                     py={2}
-                    _hover={{ bg: 'su.lightOrange' }}
-                    bg={isActive('/sheets') ? 'su.lightBlue' : 'transparent'}
+                    _hover={{ bg: 'bg.hover' }}
+                    bg={isActive('/sheets') ? 'bg.active' : 'transparent'}
                     borderBottomWidth={isActive('/sheets') ? '3px' : 0}
                     borderBottomColor="su.orange"
-                    color="su.black"
+                    color="fg.default"
                     fontWeight={isActive('/sheets') ? 'semibold' : 'normal'}
                     borderRadius="md"
                     variant="ghost"
@@ -158,19 +167,25 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
                 </Menu.Trigger>
                 <Portal>
                   <Menu.Positioner>
-                    <Menu.Content minW="200px">
-                      <Menu.Item value="mech-sheet" onSelect={() => handleNavigate('/sheets/mech')}>
+                    <Menu.Content minW="200px" bg="bg.canvas" borderColor="border.default">
+                      <Menu.Item
+                        value="mech-sheet"
+                        onSelect={() => handleNavigate('/sheets/mech')}
+                        color="fg.default"
+                      >
                         Mech Live Sheet
                       </Menu.Item>
                       <Menu.Item
                         value="pilot-sheet"
                         onSelect={() => handleNavigate('/sheets/pilot')}
+                        color="fg.default"
                       >
                         Pilot Live Sheet
                       </Menu.Item>
                       <Menu.Item
                         value="crawler-sheet"
                         onSelect={() => handleNavigate('/sheets/crawler')}
+                        color="fg.default"
                       >
                         Crawler Live Sheet
                       </Menu.Item>
@@ -208,39 +223,84 @@ export function TopNavigation({ user, schemas = [] }: TopNavigationProps) {
           w={{ base: 'full', lg: 'auto' }}
           ml={{ base: 0, lg: 'auto' }}
         >
-          {user && (
-            <>
-              <NavigationLink
-                isActive={isActive('/dashboard/pilots')}
-                onClick={() => handleNavigate('/dashboard/pilots')}
-              >
-                Pilots
-              </NavigationLink>
-
-              <NavigationLink
-                isActive={isActive('/dashboard/mechs')}
-                onClick={() => handleNavigate('/dashboard/mechs')}
-              >
-                Mechs
-              </NavigationLink>
-
-              <NavigationLink
-                isActive={isActive('/dashboard/crawlers')}
-                onClick={() => handleNavigate('/dashboard/crawlers')}
-              >
-                Crawlers
-              </NavigationLink>
-
-              <NavigationLink
-                isActive={isActive('/dashboard/games')}
-                onClick={() => handleNavigate('/dashboard/games')}
-              >
-                Games
-              </NavigationLink>
-            </>
+          {user ? (
+            <Menu.Root>
+              <Menu.Trigger asChild>
+                <Button
+                  px={4}
+                  py={2}
+                  fontSize="sm"
+                  color="fg.default"
+                  fontWeight="medium"
+                  bg="transparent"
+                  _hover={{ bg: 'bg.hover' }}
+                  borderRadius="md"
+                  variant="ghost"
+                  h="auto"
+                  w={{ base: 'full', lg: 'auto' }}
+                >
+                  {user.user_metadata?.preferred_username ||
+                    user.user_metadata?.full_name ||
+                    user.email?.split('@')[0] ||
+                    'User'}
+                </Button>
+              </Menu.Trigger>
+              <Portal>
+                <Menu.Positioner>
+                  <Menu.Content minW="200px" bg="bg.canvas" borderColor="border.default">
+                    <Menu.Item
+                      value="pilots"
+                      onSelect={() => handleNavigate('/dashboard/pilots')}
+                      color="fg.default"
+                    >
+                      Pilots
+                    </Menu.Item>
+                    <Menu.Item
+                      value="mechs"
+                      onSelect={() => handleNavigate('/dashboard/mechs')}
+                      color="fg.default"
+                    >
+                      Mechs
+                    </Menu.Item>
+                    <Menu.Item
+                      value="crawlers"
+                      onSelect={() => handleNavigate('/dashboard/crawlers')}
+                      color="fg.default"
+                    >
+                      Crawlers
+                    </Menu.Item>
+                    <Menu.Item
+                      value="games"
+                      onSelect={() => handleNavigate('/dashboard/games')}
+                      color="fg.default"
+                    >
+                      Games
+                    </Menu.Item>
+                    <Menu.Separator />
+                    <Menu.Item
+                      value="signout"
+                      onSelect={handleSignOut}
+                      disabled={signingOut}
+                      color="brand.srd"
+                    >
+                      {signingOut ? 'Signing out...' : 'Sign out'}
+                    </Menu.Item>
+                  </Menu.Content>
+                </Menu.Positioner>
+              </Portal>
+            </Menu.Root>
+          ) : (
+            <DiscordSignInButton
+              px={4}
+              py={2}
+              fontSize="sm"
+              w={{ base: 'full', lg: 'auto' }}
+              display="flex"
+              alignItems="center"
+              gap={2}
+            />
           )}
-
-          <UserMenu user={user} onSignOut={handleSignOut} signingOut={signingOut} />
+          <ThemeToggle />
         </Flex>
       </Flex>
     </>

@@ -65,7 +65,7 @@ export function UserEntitySmallDisplay({
       subTitleContent={
         detailLabel && <ValueDisplay label={detailLabel} value={detailValue} inline={false} />
       }
-      _hover={{ borderColor: 'su.brick' }}
+      _hover={{ borderColor: 'brand.srd' }}
       cursor="pointer"
       onClick={onClick}
       onMouseEnter={onMouseEnter}

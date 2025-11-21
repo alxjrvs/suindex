@@ -112,7 +112,7 @@ function EquipmentItemWithSlots({
   const canAddMoreModules = moduleSlots !== undefined && usedModuleSlots < moduleSlots
 
   const removeButtonConfig = {
-    bg: 'su.brick',
+    bg: 'brand.srd',
     color: 'su.white',
     fontWeight: 'bold',
     _hover: { bg: 'su.black' },
@@ -126,7 +126,7 @@ function EquipmentItemWithSlots({
   }
 
   const systemRemoveButtonConfig = (system: SURefSystem, systemEntity: HydratedEntity) => ({
-    bg: 'su.brick',
+    bg: 'brand.srd',
     color: 'su.white',
     fontWeight: 'bold',
     textTransform: 'uppercase',
@@ -142,7 +142,7 @@ function EquipmentItemWithSlots({
   })
 
   const moduleRemoveButtonConfig = (module: SURefModule, moduleEntity: HydratedEntity) => ({
-    bg: 'su.brick',
+    bg: 'brand.srd',
     color: 'su.white',
     fontWeight: 'bold',
     textTransform: 'uppercase',

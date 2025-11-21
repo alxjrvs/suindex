@@ -242,12 +242,12 @@ export function DynamicBay({
                 top={1}
                 right={1}
                 bg="transparent"
-                color="su.brick"
+                color="brand.srd"
                 w={6}
                 h={6}
                 borderRadius="md"
                 fontWeight="bold"
-                _hover={{ bg: 'su.brick', color: 'su.white' }}
+                _hover={{ bg: 'brand.srd', color: 'su.white' }}
                 fontSize="sm"
                 display="flex"
                 alignItems="center"

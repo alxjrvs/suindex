@@ -196,7 +196,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
   }, [selectedIndex, searchResults, containerRef])
 
   return (
-    <Flex flexDirection="column" bg="su.lightBlue" h="full" w="full">
+    <Flex flexDirection="column" bg="bg.landing" h="full" w="full">
       <Flex flex="1" alignItems="center" justifyContent="center" w="full">
         <ReferenceHeader
           title={
@@ -211,7 +211,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
               <Text as="span" variant="pseudoheader" fontSize="2xl">
                 Salvage Union
               </Text>
-              <Text as="span" fontSize="2xl" color="su.brick" fontWeight="medium" bg="transparent">
+              <Text as="span" fontSize="2xl" color="brand.srd" fontWeight="medium" bg="transparent">
                 System Reference Document
               </Text>
             </Box>
@@ -225,13 +225,13 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
             alignItems="center"
             justifyContent="center"
           >
-            <Text fontSize="sm" color="su.brick" mb={3} textAlign="center">
+            <Text fontSize="sm" color="brand.srd" mb={3} textAlign="center">
               An SRD for the{' '}
               <Link
                 href="https://leyline.press/collections/salvage-union"
                 target="_blank"
                 rel="noopener noreferrer"
-                color="su.brick"
+                color="brand.srd"
                 textDecoration="underline"
                 _hover={{ color: 'su.orange' }}
               >
@@ -351,7 +351,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                         {descriptionSnippet ? (
                           <Text
                             fontSize="sm"
-                            color="su.brick"
+                            color="brand.srd"
                             overflow="hidden"
                             textOverflow="ellipsis"
                             whiteSpace="nowrap"
@@ -363,7 +363,7 @@ export function RulesReferenceLanding({ schemas }: RulesReferenceLandingProps) {
                             {descriptionSnippet.after}
                           </Text>
                         ) : (
-                          <Text fontSize="sm" color="su.brick">
+                          <Text fontSize="sm" color="brand.srd">
                             {result.type === 'schema' ? 'Schema' : result.schemaTitle}
                           </Text>
                         )}

@@ -59,7 +59,7 @@ export function MechsTab({ pilotId, isLocal, isEditable }: MechsTabProps) {
   if (isLocal) {
     return (
       <Box bg="su.lightBlue" p={8} borderRadius="md" borderWidth="2px" borderColor="black">
-        <Text textAlign="center" color="su.brick" fontWeight="bold">
+        <Text textAlign="center" color="brand.srd" fontWeight="bold">
           Mechs are not available for local pilots
         </Text>
       </Box>

@@ -116,13 +116,25 @@ export default function CrawlerLiveSheet({ id }: CrawlerLiveSheetProps) {
       </Flex>
 
       <Tabs.Root defaultValue="abilities">
-        <Tabs.List>
-          <Tabs.Trigger value="abilities">Abilities</Tabs.Trigger>
-          <Tabs.Trigger value="bays">Bays</Tabs.Trigger>
-          <Tabs.Trigger value="storage">Storage Bay</Tabs.Trigger>
-          <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
+        <Tabs.List borderColor="border.default">
+          <Tabs.Trigger value="abilities" color="fg.default">
+            Abilities
+          </Tabs.Trigger>
+          <Tabs.Trigger value="bays" color="fg.default">
+            Bays
+          </Tabs.Trigger>
+          <Tabs.Trigger value="storage" color="fg.default">
+            Storage Bay
+          </Tabs.Trigger>
+          <Tabs.Trigger value="notes" color="fg.default">
+            Notes
+          </Tabs.Trigger>
           <Box flex="1" />
-          {!isLocal && <Tabs.Trigger value="pilots">Pilots & Mechs</Tabs.Trigger>}
+          {!isLocal && (
+            <Tabs.Trigger value="pilots" color="fg.default">
+              Pilots & Mechs
+            </Tabs.Trigger>
+          )}
         </Tabs.List>
 
         <Tabs.Content value="abilities">

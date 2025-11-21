@@ -12,11 +12,11 @@ export function DashboardContent() {
             <Text as="span" variant="pseudoheader" fontSize="inherit">
               Salvage Union
             </Text>{' '}
-            <Text as="span" fontSize="inherit" color="su.brick" fontWeight="bold">
+            <Text as="span" fontSize="inherit" color="brand.srd" fontWeight="bold">
               SRD
             </Text>
           </Heading>
-          <Text fontSize="lg" color="su.brick">
+          <Text fontSize="lg" color="brand.srd">
             Use the navigation menu to manage your games, crawlers, pilots, and mechs.
           </Text>
         </Box>

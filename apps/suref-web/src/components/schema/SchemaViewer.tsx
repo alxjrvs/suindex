@@ -108,7 +108,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
         px={6}
       >
         <Box maxW="800px" mx="auto" w="full">
-          <Text color="su.brick" textAlign="center" mb={techLevels.length > 1 ? 3 : 2}>
+          <Text color="brand.srd" textAlign="center" mb={techLevels.length > 1 ? 3 : 2}>
             {currentSchema.description}
           </Text>
         </Box>
@@ -124,10 +124,10 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
                 replace: true,
               })
             }}
-            borderColor="su.lightBlue"
+            borderColor="border.default"
             focusRingColor="su.orange"
-            bg="su.white"
-            color="su.black"
+            bg="bg.input"
+            color="fg.input"
             w="full"
           />
         </Box>
@@ -143,11 +143,11 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
               px={4}
               py={2}
               fontWeight="medium"
-              bg={techLevelFilters.size === 0 ? 'su.orange' : 'su.lightBlue'}
-              color={techLevelFilters.size === 0 ? 'su.white' : 'su.black'}
+              bg={techLevelFilters.size === 0 ? 'su.orange' : 'bg.surface'}
+              color={techLevelFilters.size === 0 ? 'su.white' : 'fg.default'}
               borderWidth={techLevelFilters.size === 0 ? '0' : '1px'}
-              borderColor="su.lightBlue"
-              _hover={techLevelFilters.size === 0 ? {} : { bg: 'su.lightOrange' }}
+              borderColor="border.default"
+              _hover={techLevelFilters.size === 0 ? {} : { bg: 'bg.hover' }}
             >
               All
             </Button>
@@ -169,11 +169,11 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
                   px={4}
                   py={2}
                   fontWeight="medium"
-                  bg={isSelected ? 'su.orange' : 'su.lightBlue'}
-                  color={isSelected ? 'su.white' : 'su.black'}
+                  bg={isSelected ? 'su.orange' : 'bg.surface'}
+                  color={isSelected ? 'su.white' : 'fg.default'}
                   borderWidth={isSelected ? '0' : '1px'}
-                  borderColor="su.lightBlue"
-                  _hover={isSelected ? {} : { bg: 'su.lightOrange' }}
+                  borderColor="border.default"
+                  _hover={isSelected ? {} : { bg: 'bg.hover' }}
                 >
                   T{level}
                 </Button>
@@ -183,7 +183,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
         )}
       </ReferenceHeader>
 
-      <Box flex="1" p={6}>
+      <Box flex="1" p={6} bg="bg.canvas">
         <Box
           maxW="1400px"
           mx="auto"

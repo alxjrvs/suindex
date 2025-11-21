@@ -55,7 +55,7 @@ export function GameSmallDisplay({ id, onClick, isInactive }: GameSmallDisplayPr
 
       {mediatorName && (
         <Flex gap={1} alignItems="center">
-          <Box bg="su.brick" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
+          <Box bg="brand.srd" px={2} py={1} borderRadius="sm" borderWidth="2px" borderColor="black">
             <Text fontSize="xs" color="su.white" fontWeight="bold" textTransform="uppercase">
               MEDIATOR
             </Text>

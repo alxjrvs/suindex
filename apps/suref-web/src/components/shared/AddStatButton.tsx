@@ -26,7 +26,7 @@ export function AddStatButton({
       value="+"
       disabled={disabled}
       onClick={onClick}
-      bg="su.brick"
+      bg="brand.srd"
       valueColor="su.white"
       ariaLabel={ariaLabel}
     />

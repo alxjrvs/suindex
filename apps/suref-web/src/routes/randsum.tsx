@@ -10,7 +10,7 @@ export const Route = createFileRoute('/randsum')({
 
 function RandsumPage() {
   return (
-    <Flex direction="column" w="full" h="full" flex="1" justifyContent="center" bg="su.white">
+    <Flex direction="column" w="full" h="full" flex="1" justifyContent="center" bg="bg.canvas">
       <Container
         maxW="6xl"
         h="full"
@@ -31,7 +31,7 @@ function RandsumPage() {
             <Heading level="h1" mb={4}>
               RANDSUM.io Discord Bot
             </Heading>
-            <Text fontSize="lg" color="su.darkGrey">
+            <Text fontSize="lg" color="fg.default" fontWeight="semibold">
               With Special Sauce for Salvage Union!
             </Text>
           </Box>
@@ -44,7 +44,12 @@ function RandsumPage() {
           >
             {/* Left side: Image */}
             <Box flex="1" maxW={{ base: '100%', lg: '50%' }}>
-              <Box borderWidth="2px" borderColor="su.black" borderRadius="md" overflow="hidden">
+              <Box
+                borderWidth="2px"
+                borderColor="border.default"
+                borderRadius="md"
+                overflow="hidden"
+              >
                 <Image
                   src="/robo-su-example.png"
                   alt="Randsum Robo Discord Bot example"
@@ -63,7 +68,7 @@ function RandsumPage() {
                 <Box>
                   <Text
                     fontSize="md"
-                    color="su.black"
+                    color="fg.default"
                     lineHeight="relaxed"
                     fontWeight="semibold"
                     mb={4}
@@ -71,14 +76,14 @@ function RandsumPage() {
                     Roll on all Salvage Union Roll Tables with contextual results tailored to your
                     Salvage Union sessions with the RANDSUM.io Discord bot!
                   </Text>
-                  <Text fontSize="md" color="su.black" lineHeight="relaxed">
+                  <Text fontSize="md" color="fg.default" lineHeight="relaxed">
                     Visit{' '}
                     <Link
                       href="https://randsum.github.io"
                       target="_blank"
                       rel="noopener noreferrer"
                       textDecoration="underline"
-                      _hover={{ color: 'su.brick' }}
+                      _hover={{ color: 'brand.srd' }}
                       fontWeight="semibold"
                     >
                       randsum.io
@@ -107,7 +112,7 @@ function RandsumPage() {
                       px={8}
                       borderRadius="md"
                       borderWidth="3px"
-                      borderColor="su.black"
+                      borderColor="border.default"
                       _hover={{ bg: 'su.discordBlurpleHover' }}
                       transition="background-color 0.2s"
                     >

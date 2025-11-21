@@ -50,7 +50,7 @@ export function EntityDisplayModal({
             color="su.white"
             bg="su.black"
             borderRadius="md"
-            _hover={{ bg: 'su.brick' }}
+            _hover={{ bg: 'brand.srd' }}
             fontSize="2xl"
             fontWeight="bold"
             zIndex={10}

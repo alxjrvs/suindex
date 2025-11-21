@@ -125,7 +125,7 @@ export function SheetEntityChoiceDisplay({
               )}
               {onUpdateChoice && (
                 <Button
-                  bg="su.brick"
+                  bg="brand.srd"
                   color="su.white"
                   size="sm"
                   onClick={() => handleRemove(selection.value)}
@@ -213,7 +213,7 @@ export function SheetEntityChoiceDisplay({
               buttonConfig={
                 onUpdateChoice
                   ? {
-                      bg: 'su.brick',
+                      bg: 'brand.srd',
                       color: 'su.white',
                       fontWeight: 'bold',
                       textTransform: 'uppercase',
@@ -271,7 +271,7 @@ export function SheetEntityChoiceDisplay({
           buttonConfig={
             onUpdateChoice
               ? {
-                  bg: 'su.brick',
+                  bg: 'brand.srd',
                   color: 'su.white',
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
