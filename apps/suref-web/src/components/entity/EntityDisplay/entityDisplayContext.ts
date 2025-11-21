@@ -70,6 +70,8 @@ export interface EntityDisplayContextValue {
   rightLabel?: string
   /** Custom right content for header */
   rightContent?: ReactNode
+  /** Whether the entity is damaged */
+  damaged: boolean
   /** Whether the component is disabled */
   disabled: boolean
   /** Button configuration */

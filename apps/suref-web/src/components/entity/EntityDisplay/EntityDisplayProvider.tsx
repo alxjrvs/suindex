@@ -35,6 +35,7 @@ interface EntityDisplayProviderProps {
   expanded?: boolean
   rightLabel?: string
   rightContent?: ReactNode
+  damaged?: boolean
   buttonConfig?: ButtonProps & { children: ReactNode }
   userChoices?: Record<string, string> | null
   onChoiceSelection?: (choiceId: string, value: string | undefined) => void
@@ -59,6 +60,7 @@ export function EntityDisplayProvider({
   hideLevel,
   rightLabel,
   rightContent,
+  damaged = false,
   buttonConfig,
   userChoices,
   onChoiceSelection,
@@ -78,13 +80,14 @@ export function EntityDisplayProvider({
   }
   const title = extractName(data, schemaName)
   const techLevel = getTechLevel(data)
-  const headerBg = calculateBackgroundColor(
+  const calculatedHeaderBg = calculateBackgroundColor(
     schemaName,
     headerColor,
     techLevel,
     data,
     techLevelColors
   )
+  const headerBg = damaged ? 'su.grey' : calculatedHeaderBg
   const spacing = getEntitySpacing(compact)
   const fontSize = getEntityFontSizes(compact)
   const contentBg = getContentBackground(schemaName)
@@ -119,6 +122,7 @@ export function EntityDisplayProvider({
     hideLevel,
     rightLabel,
     rightContent,
+    damaged,
     disabled,
     buttonConfig,
     userChoices,

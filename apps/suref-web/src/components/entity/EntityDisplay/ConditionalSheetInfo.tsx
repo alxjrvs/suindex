@@ -1,7 +1,9 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 import { SheetDisplay } from '@/components/shared/SheetDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { useParseTraitReferences } from '@/utils/parseTraitReferences'
+import { useMemo } from 'react'
+import { getTiltRotation } from '@/utils/tiltUtils'
 
 interface ConditionalSheetInfoProps {
   /** Property name to check in data (for backwards compatibility) */
@@ -27,7 +29,7 @@ export function ConditionalSheetInfo({
   labelBgColor,
   children,
 }: ConditionalSheetInfoProps) {
-  const { data, spacing, compact } = useEntityDisplayContext()
+  const { data, spacing, compact, damaged } = useEntityDisplayContext()
 
   let displayValue: string | undefined
   if (explicitValue !== undefined) {
@@ -38,15 +40,21 @@ export function ConditionalSheetInfo({
   }
 
   const parsedContent = useParseTraitReferences(displayValue)
+  const valueRotation = useMemo(() => (damaged ? getTiltRotation() : 0), [damaged])
 
   if (!displayValue) return null
   if (!(propertyName in data) && explicitValue === undefined) return null
 
   return (
     <Flex p={spacing.contentPadding}>
-      <SheetDisplay compact={compact} label={label} labelColor={labelBgColor}>
-        {children || parsedContent}
-      </SheetDisplay>
+      <Box
+        transform={damaged ? `rotate(${valueRotation}deg)` : undefined}
+        transition="transform 0.3s ease"
+      >
+        <SheetDisplay compact={compact} label={label} labelColor={labelBgColor}>
+          {children || parsedContent}
+        </SheetDisplay>
+      </Box>
     </Flex>
   )
 }

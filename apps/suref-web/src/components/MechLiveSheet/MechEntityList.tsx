@@ -6,6 +6,7 @@ import { StatDisplay } from '@/components/StatDisplay'
 import { AddStatButton } from '@/components/shared/AddStatButton'
 import { RoundedBox } from '@/components/shared/RoundedBox'
 import { EntitySelectionModal } from '@/components/entity/EntitySelectionModal'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
 import type { HydratedEntity } from '@/types/hydrated'
 import { useUpdateEntity } from '@/hooks/suentity'
 import { getTiltRotation } from '@/utils/tiltUtils'
@@ -62,7 +63,7 @@ function EntityItem({
   const actionRotation = useMemo(() => getTiltRotation(), [])
 
   return (
-    <Box w="full">
+    <Box w="full" position="relative">
       <Box
         opacity={isDamaged ? 0.5 : 1}
         transition="opacity 0.3s ease"
@@ -75,27 +76,19 @@ function EntityItem({
           data={ref}
           compact
           disabled={disabled}
+          damaged={isDamaged}
           rightContent={
             !readOnly ? (
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                w="32px"
-                h="32px"
-                overflow="hidden"
-              >
-                <Box transform="scale(0.85)" transformOrigin="center">
-                  <StatDisplay
-                    label={isDamaged ? 'RPR' : 'DMG'}
-                    value={isDamaged ? '+' : '-'}
-                    onClick={() => onToggleDamaged(entity)}
-                    bg={isDamaged ? 'su.orange' : 'brand.srd'}
-                    valueColor="su.white"
-                    disabled={disabled}
-                    compact
-                  />
-                </Box>
+              <Box w="40px" h="40px" display="flex" alignItems="center" justifyContent="center">
+                <StatDisplay
+                  label={isDamaged ? 'RPR' : 'DMG'}
+                  value={isDamaged ? '+' : '-'}
+                  onClick={() => onToggleDamaged(entity)}
+                  bg={isDamaged ? 'su.orange' : 'brand.srd'}
+                  valueColor="su.white"
+                  disabled={disabled}
+                  compact
+                />
               </Box>
             ) : undefined
           }
@@ -113,7 +106,7 @@ function EntityItem({
                       `Are you sure you want to remove "${ref.name}"?`
                     )
                     if (confirmed) {
-                      onRemove(ref.id)
+                      onRemove(entity.id)
                     }
                   },
                   children: `Remove ${schemaName === 'systems' ? 'System' : 'Module'}`,
@@ -122,6 +115,23 @@ function EntityItem({
           }
         />
       </Box>
+      {isDamaged && (
+        <Box
+          position="absolute"
+          top="50%"
+          left={0}
+          right={0}
+          transform="translateY(-50%)"
+          zIndex={1}
+          px={2}
+          filter="drop-shadow(0 0 4px rgba(0, 0, 0, 0.8))"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <SheetDisplay label="Damaged" />
+        </Box>
+      )}
     </Box>
   )
 }
