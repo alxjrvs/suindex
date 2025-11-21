@@ -12,6 +12,7 @@ import type {
   SURefObjectGrant,
   SURefEntity,
   SURefEnumSchemaName,
+  SURefObjectSystemModule,
 } from './types/index.js'
 import type {
   SURefAbility,
@@ -600,6 +601,69 @@ export function getDescription(entity: SURefMetaEntity): string | undefined {
   }
 
   return undefined
+}
+
+/**
+ * Check if an entity is a system module (has actions but no id)
+ * System modules are used in custom system options and pattern system modules
+ * @param entity - The entity to check
+ * @returns True if the entity is a system module
+ */
+export function isSystemModule(entity: SURefMetaEntity): boolean {
+  return 'actions' in entity && !('id' in entity)
+}
+
+/**
+ * Get entity name from a system module
+ * Extracts the name from the first visible action in the system module
+ * @param entity - The system module entity
+ * @returns The entity name or undefined if not found
+ */
+export function getEntityNameFromSystemModule(entity: SURefObjectSystemModule): string | undefined {
+  const resolvedActions = extractActions(entity as SURefMetaEntity)
+  return resolvedActions?.find((a) => !a.hidden)?.name
+}
+
+/**
+ * Normalize pattern name by removing " Pattern" suffix
+ * @param patternName - The pattern name to normalize
+ * @returns The normalized pattern name
+ */
+export function normalizePatternName(patternName: string): string {
+  return patternName.replace(/\s+Pattern$/i, '')
+}
+
+/**
+ * Find an action by name in an entity
+ * @param entity - The entity to search
+ * @param name - The action name to find
+ * @returns The matching action or undefined
+ */
+export function findActionByName(
+  entity: SURefMetaEntity,
+  name: string
+): SURefMetaAction | undefined {
+  const visibleActions = extractVisibleActions(entity)
+  if (!visibleActions || visibleActions.length === 0) {
+    return undefined
+  }
+  return visibleActions.find((action) => action.name === name || action.displayName === name)
+}
+
+/**
+ * Filter actions excluding a specific name
+ * Used to filter out actions where the action name matches the entity name
+ * @param actions - The actions array to filter
+ * @param excludeName - The name to exclude
+ * @returns Filtered actions array
+ */
+export function filterActionsExcludingName(
+  actions: SURefMetaAction[],
+  excludeName: string
+): SURefMetaAction[] {
+  return actions.filter(
+    (action) => action.displayName !== excludeName && action.name !== excludeName
+  )
 }
 
 /**

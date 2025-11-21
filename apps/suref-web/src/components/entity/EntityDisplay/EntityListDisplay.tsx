@@ -5,12 +5,14 @@ import type {
   SURefEnumSchemaName,
   SURefObjectSystemModule,
   SURefMetaEntity,
+  SURefEntity,
 } from 'salvageunion-reference'
-import type { ButtonProps } from '@chakra-ui/react'
-import { getModel, extractActions, extractVisibleActions } from 'salvageunion-reference'
+import { getModel, extractActions, isSystemModule } from 'salvageunion-reference'
 import { EntityDisplay } from './index'
 import { NestedActionDisplay } from '@/components/entity/NestedActionDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
+import { resolveEntityName } from '@/components/entity/entityDisplayHelpers'
+import { createChoiceButtonConfig } from './buttonConfigHelpers'
 
 export interface EntityListDisplayProps {
   choice: SURefObjectChoice
@@ -69,39 +71,15 @@ export function EntityListDisplay({
             ? userChoices?.[choice.id] === option.value
             : userChoices?.[choice.id] === option.value
 
-          let buttonConfig: (ButtonProps & { children: React.ReactNode }) | undefined
-
-          if (onChoiceSelection) {
-            if (isSelected) {
-              buttonConfig = {
-                bg: 'brand.srd',
-                color: 'su.white',
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                _hover: { bg: 'su.black' },
-                onClick: (e) => {
-                  e.stopPropagation()
-                  // For multi-select, remove this specific selection
-                  // For single-select, clear the choice
-                  onChoiceSelection(choice.id, isMultiSelect ? option.value : undefined)
-                },
-                children: 'Remove',
-              }
-            } else {
-              buttonConfig = {
-                bg: 'su.orange',
-                color: 'su.white',
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                _hover: { bg: 'su.black' },
-                onClick: (e) => {
-                  e.stopPropagation()
-                  onChoiceSelection(choice.id, option.value)
-                },
-                children: 'Add',
-              }
-            }
-          }
+          const buttonConfig = onChoiceSelection
+            ? createChoiceButtonConfig({
+                isSelected,
+                isMultiSelect,
+                choiceId: choice.id,
+                entityValue: option.value,
+                onChoiceSelection,
+              })
+            : undefined
 
           return (
             <Box key={idx} p={spacing.contentPadding} bg="su.lightBlue" borderRadius="md" w="full">
@@ -127,22 +105,7 @@ export function EntityListDisplay({
   const visibleEntities =
     selectedChoice && !isMultiSelect
       ? allEntities.filter((entity) => {
-          const isSystemModule = 'actions' in entity && !('id' in entity)
-          const entityName =
-            'name' in entity
-              ? entity.name
-              : isSystemModule
-                ? (() => {
-                    const systemModule = entity as SURefObjectSystemModule
-                    const resolvedActions = extractActions(systemModule as SURefMetaEntity)
-                    return resolvedActions?.find((a) => !a.hidden)?.name
-                  })()
-                : (() => {
-                    const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
-                    return visibleActions && visibleActions.length > 0
-                      ? visibleActions[0]?.name
-                      : undefined
-                  })()
+          const entityName = resolveEntityName(entity as SURefMetaEntity | SURefObjectSystemModule)
           return entityName === selectedChoice
         })
       : allEntities
@@ -152,88 +115,28 @@ export function EntityListDisplay({
   return (
     <VStack gap={spacing.contentPadding} alignItems="start">
       {visibleEntities.map((entity, idx) => {
-        let buttonConfig: (ButtonProps & { children: React.ReactNode }) | undefined
+        const entityName = resolveEntityName(entity as SURefMetaEntity | SURefObjectSystemModule)
 
-        if (onChoiceSelection) {
-          const entityName: string | undefined =
-            'name' in entity
-              ? (entity.name as string)
-              : 'value' in entity
-                ? (entity.value as string)
-                : undefined
+        // For multi-select, check if this specific value is selected
+        // For single-select, check if any value is selected for this choice
+        const isSelected = isMultiSelect
+          ? entityName !== undefined && userChoices?.[choice.id] === entityName
+          : userChoices?.[choice.id] !== undefined
 
-          // For multi-select, check if this specific value is selected
-          // For single-select, check if any value is selected for this choice
-          const isSelected = isMultiSelect
-            ? entityName !== undefined && userChoices?.[choice.id] === entityName
-            : userChoices?.[choice.id] !== undefined
+        const buttonConfig =
+          onChoiceSelection && entityName
+            ? createChoiceButtonConfig({
+                isSelected,
+                isMultiSelect,
+                choiceId: choice.id,
+                entityValue: entityName,
+                onChoiceSelection,
+              })
+            : undefined
 
-          if (isSelected && !isMultiSelect) {
-            buttonConfig = {
-              bg: 'brand.srd',
-              color: 'su.white',
-              fontWeight: 'bold',
-              textTransform: 'uppercase',
-              _hover: { bg: 'su.black' },
-              onClick: (e) => {
-                e.stopPropagation()
-                onChoiceSelection(choice.id, undefined)
-              },
-              children: 'Remove',
-            }
-          } else if (isSelected && isMultiSelect && entityName) {
-            // For multi-select, show remove button for selected items
-            buttonConfig = {
-              bg: 'brand.srd',
-              color: 'su.white',
-              fontWeight: 'bold',
-              textTransform: 'uppercase',
-              _hover: { bg: 'su.black' },
-              onClick: (e) => {
-                e.stopPropagation()
-                onChoiceSelection(choice.id, entityName)
-              },
-              children: 'Remove',
-            }
-          } else {
-            const isSystemModule = 'actions' in entity && !('id' in entity)
-            const entityNameForSelection: string | undefined =
-              'name' in entity
-                ? (entity.name as string)
-                : 'value' in entity
-                  ? (entity.value as string)
-                  : isSystemModule
-                    ? (() => {
-                        const systemModule = entity as SURefObjectSystemModule
-                        const resolvedActions = extractActions(systemModule as SURefMetaEntity)
-                        return resolvedActions?.find((a) => !a.hidden)?.name
-                      })()
-                    : (() => {
-                        const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
-                        return visibleActions && visibleActions.length > 0
-                          ? visibleActions[0]?.name
-                          : undefined
-                      })()
-            if (entityNameForSelection) {
-              buttonConfig = {
-                bg: 'su.orange',
-                color: 'su.white',
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                _hover: { bg: 'su.black' },
-                onClick: (e) => {
-                  e.stopPropagation()
-                  onChoiceSelection(choice.id, entityNameForSelection)
-                },
-                children: 'Add',
-              }
-            }
-          }
-        }
+        const entityIsSystemModule = isSystemModule(entity as SURefMetaEntity)
 
-        const isSystemModule = 'actions' in entity && !('id' in entity)
-
-        if (isSystemModule) {
+        if (entityIsSystemModule) {
           const systemModule = entity as SURefObjectSystemModule
           const resolvedActions = extractActions(systemModule as SURefMetaEntity)
           const visibleActions = resolvedActions?.filter((a) => !a.hidden)
@@ -245,11 +148,16 @@ export function EntityListDisplay({
         }
 
         const schema = (choice.schema?.[0] ?? 'systems') as SURefEnumSchemaName
+        // EntityDisplay only accepts SURefEntity, so we need to check if entity is a valid entity
+        // System modules without id are handled separately above
+        if (!('id' in entity)) {
+          return null
+        }
         return (
           <EntityDisplay
             key={idx}
             hideActions
-            data={entity}
+            data={entity as SURefEntity}
             schemaName={schema}
             compact
             collapsible

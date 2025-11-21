@@ -2,8 +2,15 @@ import type {
   SURefMetaEntity,
   SURefEnumSchemaName,
   SURefObjectBonusPerTechLevel,
+  SURefObjectSystemModule,
 } from 'salvageunion-reference'
-import { getBlackMarket, isHybridClass } from 'salvageunion-reference'
+import {
+  getBlackMarket,
+  isHybridClass,
+  isSystemModule,
+  getEntityNameFromSystemModule,
+  extractVisibleActions,
+} from 'salvageunion-reference'
 
 /**
  * Local type that extends SURefEnumSchemaName to include meta schemas like 'actions'
@@ -167,4 +174,55 @@ export function createHeaderClickHandler(
  */
 export function shouldShowExtraContent(compact: boolean, hideActions: boolean): boolean {
   return compact ? !hideActions : true
+}
+
+/**
+ * Get entity display name with fallback to title
+ * Consolidates entity name extraction logic from multiple components
+ * @param data - The entity data
+ * @param title - Optional title to use as fallback
+ * @returns The entity display name
+ */
+export function getEntityDisplayName(data: SURefMetaEntity, title?: string): string {
+  return title || ('name' in data ? String(data.name) : '')
+}
+
+/**
+ * Resolve entity name from various entity types
+ * Handles regular entities, system modules, and custom system options
+ * @param entity - The entity (can be SURefMetaEntity or SURefObjectSystemModule)
+ * @param title - Optional title to use as fallback
+ * @returns The resolved entity name or undefined
+ */
+export function resolveEntityName(
+  entity: SURefMetaEntity | SURefObjectSystemModule,
+  title?: string
+): string | undefined {
+  // If we have a title, use it
+  if (title) {
+    return title
+  }
+
+  // Check if entity has a name property
+  if ('name' in entity && typeof entity.name === 'string') {
+    return entity.name
+  }
+
+  // Check if entity has a value property (for custom system options)
+  if ('value' in entity && typeof entity.value === 'string') {
+    return entity.value
+  }
+
+  // Check if entity is a system module
+  if (isSystemModule(entity as SURefMetaEntity)) {
+    return getEntityNameFromSystemModule(entity as SURefObjectSystemModule)
+  }
+
+  // Try to get name from visible actions (fallback for entities without direct name)
+  const visibleActions = extractVisibleActions(entity as SURefMetaEntity)
+  if (visibleActions && visibleActions.length > 0) {
+    return visibleActions[0]?.name
+  }
+
+  return undefined
 }

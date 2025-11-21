@@ -1,4 +1,5 @@
 import { Box, VStack, Button, Flex } from '@chakra-ui/react'
+import { useCallback } from 'react'
 import type { SURefClass } from 'salvageunion-reference'
 import { getEffects, getTable } from 'salvageunion-reference'
 import { PageReferenceDisplay } from '@/components/shared/PageReferenceDisplay'
@@ -20,6 +21,28 @@ import { EntityBonusPerTechLevel } from '@/components/entity/EntityDisplay/Entit
 import { useEntityDisplayContext } from '@/components/entity/EntityDisplay/useEntityDisplayContext'
 import { ConditionalSheetInfo } from '@/components/entity/EntityDisplay/ConditionalSheetInfo'
 import { EntityPopulationRange } from '@/components/entity/EntityDisplay/EntityPopulationRange'
+import type { ButtonProps } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
+
+function ButtonWithConfig({
+  buttonConfig,
+}: {
+  buttonConfig: ButtonProps & { children: ReactNode }
+}) {
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      buttonConfig.onClick?.(e)
+    },
+    [buttonConfig]
+  )
+
+  return (
+    <Button w="full" mt={3} onClick={handleClick} {...buttonConfig}>
+      {buttonConfig.children}
+    </Button>
+  )
+}
 
 export function EntityDisplayContent({ children }: { children?: React.ReactNode }) {
   const {
@@ -142,17 +165,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
               )}
               {buttonConfig && (
                 <Flex p={spacing.contentPadding}>
-                  <Button
-                    w="full"
-                    mt={3}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      buttonConfig.onClick?.(e)
-                    }}
-                    {...buttonConfig}
-                  >
-                    {buttonConfig.children}
-                  </Button>
+                  <ButtonWithConfig buttonConfig={buttonConfig} />
                 </Flex>
               )}
             </>
