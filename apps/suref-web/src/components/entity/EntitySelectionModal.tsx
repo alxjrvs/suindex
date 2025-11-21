@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { Box, Flex, Input, Text, VStack, Spinner } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import {
@@ -7,9 +7,13 @@ import {
   type SURefEntity,
   type SURefEnumSchemaName,
 } from 'salvageunion-reference'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import Modal from '@/components/Modal'
 import { EntityDisplay } from './EntityDisplay'
 import { TECH_LEVELS } from '@/constants/gameRules'
+
+// Estimated height for an expanded EntityDisplay item
+const ESTIMATED_ITEM_HEIGHT = 300
 
 interface EntitySelectionModalProps {
   isOpen: boolean
@@ -144,10 +148,13 @@ export function EntitySelectionModal({
       })
   }, [allEntities, filterSearchTerm, techLevelFilter, schemaFilter, disabledEntities])
 
-  const handleSelect = (entityId: string, schemaName: SURefEnumSchemaName) => {
-    onSelect(entityId, schemaName)
-    onClose()
-  }
+  const handleSelect = useCallback(
+    (entityId: string, schemaName: SURefEnumSchemaName) => {
+      onSelect(entityId, schemaName)
+      onClose()
+    },
+    [onSelect, onClose]
+  )
 
   const showTechLevelFilter = useMemo(() => {
     if (!schemaNames || schemaNames.length === 0) return false
@@ -156,6 +163,16 @@ export function EntitySelectionModal({
   }, [schemaNames, allEntities])
 
   const isFiltering = searchTerm !== filterSearchTerm
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const virtualizer = useVirtualizer({
+    count: filteredEntities.length,
+    getScrollElement: () => scrollContainerRef.current,
+    estimateSize: () => ESTIMATED_ITEM_HEIGHT,
+    overscan: 10,
+  })
 
   return (
     <Modal key={isOpen ? 'open' : 'closed'} isOpen={isOpen} onClose={onClose} title={title}>
@@ -272,11 +289,11 @@ export function EntitySelectionModal({
         </VStack>
 
         <Box
+          ref={scrollContainerRef}
           flex="1"
           minH={0}
           overflowY="auto"
           px={4}
-          py={4}
           css={{
             '&::-webkit-scrollbar': {
               width: '8px',
@@ -288,11 +305,6 @@ export function EntitySelectionModal({
               background: 'var(--chakra-colors-su-orange)',
               borderRadius: '4px',
             },
-            columnCount: 2,
-            columnGap: '16px',
-            '@media (max-width: 768px)': {
-              columnCount: 1,
-            },
           }}
         >
           {filteredEntities.length === 0 ? (
@@ -300,11 +312,13 @@ export function EntitySelectionModal({
               No items found matching your criteria.
             </Text>
           ) : (
-            <>
-              {filteredEntities.map(({ entity, schemaName }) => {
+            <Box position="relative" h={`${virtualizer.getTotalSize()}px`} w="full">
+              {virtualizer.getVirtualItems().map((virtualItem) => {
+                const item = filteredEntities[virtualItem.index]
+                if (!item) return null
+
+                const { entity, schemaName } = item
                 const entityId = 'id' in entity ? (entity.id as string) : ''
-                const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
-                const buttonText = `${selectButtonTextPrefix} ${entityName}`
                 const isDisabled = shouldDisableEntity ? shouldDisableEntity(entity) : false
                 const isSelected =
                   selectedEntityId !== undefined &&
@@ -312,15 +326,26 @@ export function EntitySelectionModal({
                   selectedEntityId === entityId &&
                   selectedEntitySchemaName === schemaName
 
+                const entityName = 'name' in entity ? (entity.name as string) : 'Unknown'
+                const buttonText = `${selectButtonTextPrefix} ${entityName}`
+
                 return (
                   <Box
                     key={`${schemaName}-${entityId}`}
-                    mb={4}
-                    breakInside="avoid"
-                    css={{
-                      pageBreakInside: 'avoid',
-                      breakInside: 'avoid-column',
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    w="full"
+                    transform={`translateY(${virtualItem.start}px)`}
+                    data-index={virtualItem.index}
+                    ref={(node: HTMLDivElement | null) => {
+                      if (node) {
+                        // Register element with virtualizer for dynamic measurement
+                        virtualizer.measureElement(node)
+                      }
                     }}
+                    pb={4}
+                    px={2}
                   >
                     <EntityDisplay
                       schemaName={schemaName}
@@ -348,7 +373,7 @@ export function EntitySelectionModal({
                   </Box>
                 )
               })}
-            </>
+            </Box>
           )}
         </Box>
       </VStack>
