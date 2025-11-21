@@ -1,9 +1,9 @@
 import { Flex, Box } from '@chakra-ui/react'
-import { Text } from '../../base/Text'
+import { Text } from '@/components/base/Text'
 import { isAbility } from 'salvageunion-reference'
 import { EntityStats } from './EntityStats'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
-import { useParseTraitReferences } from '../../../utils/parseTraitReferences'
+import { useParseTraitReferences } from '@/utils/parseTraitReferences'
 
 export function EntityRightHeaderContent({
   rightLabel,

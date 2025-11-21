@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import PilotLiveSheet from '../../components/PilotLiveSheet'
-import { LOCAL_ID } from '../../lib/cacheHelpers'
+import PilotLiveSheet from '@/components/PilotLiveSheet'
+import { LOCAL_ID } from '@/lib/cacheHelpers'
 
 export const Route = createFileRoute('/sheets/pilot')({
   component: PilotLiveSheetPage,

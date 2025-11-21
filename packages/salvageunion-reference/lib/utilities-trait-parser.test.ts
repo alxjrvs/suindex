@@ -7,9 +7,10 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(1)
-    expect(refs[0].traitName).toBe('Shield')
-    expect(refs[0].parameter).toBeUndefined()
-    expect(refs[0].fullMatch).toBe('[[Shield]]')
+    const ref = refs[0]!
+    expect(ref.traitName).toBe('Shield')
+    expect(ref.parameter).toBeUndefined()
+    expect(ref.fullMatch).toBe('[[Shield]]')
   })
 
   test('should parse parameterized trait references', () => {
@@ -17,9 +18,10 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(1)
-    expect(refs[0].traitName).toBe('Hot')
-    expect(refs[0].parameter).toBe('3')
-    expect(refs[0].fullMatch).toBe('[[[Hot] (3)]]')
+    const ref = refs[0]!
+    expect(ref.traitName).toBe('Hot')
+    expect(ref.parameter).toBe('3')
+    expect(ref.fullMatch).toBe('[[[Hot] (3)]]')
   })
 
   test('should parse parameterized trait with variable', () => {
@@ -27,9 +29,10 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(1)
-    expect(refs[0].traitName).toBe('Burn')
-    expect(refs[0].parameter).toBe('X')
-    expect(refs[0].fullMatch).toBe('[[[Burn] (X)]]')
+    const ref = refs[0]!
+    expect(ref.traitName).toBe('Burn')
+    expect(ref.parameter).toBe('X')
+    expect(ref.fullMatch).toBe('[[[Burn] (X)]]')
   })
 
   test('should parse multiple trait references', () => {
@@ -37,10 +40,10 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(2)
-    expect(refs[0].traitName).toBe('Shield')
-    expect(refs[0].parameter).toBeUndefined()
-    expect(refs[1].traitName).toBe('Hot')
-    expect(refs[1].parameter).toBe('3')
+    expect(refs[0]!.traitName).toBe('Shield')
+    expect(refs[0]!.parameter).toBeUndefined()
+    expect(refs[1]!.traitName).toBe('Hot')
+    expect(refs[1]!.parameter).toBe('3')
   })
 
   test('should parse hyphenated trait names', () => {
@@ -48,7 +51,7 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(1)
-    expect(refs[0].traitName).toBe('Multi-Attack')
+    expect(refs[0]!.traitName).toBe('Multi-Attack')
   })
 
   test('should parse multi-word trait names', () => {
@@ -56,7 +59,7 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(1)
-    expect(refs[0].traitName).toBe('The Communicator')
+    expect(refs[0]!.traitName).toBe('The Communicator')
   })
 
   test('should handle real-world example from Vorpal chassis', () => {
@@ -65,9 +68,10 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(1)
-    expect(refs[0].traitName).toBe('Hot')
-    expect(refs[0].parameter).toBe('3')
-    expect(refs[0].fullMatch).toBe('[[[Hot] (3)]]')
+    const ref = refs[0]!
+    expect(ref.traitName).toBe('Hot')
+    expect(ref.parameter).toBe('3')
+    expect(ref.fullMatch).toBe('[[[Hot] (3)]]')
   })
 
   test('should handle real-world example with multiple traits', () => {
@@ -76,19 +80,20 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(2)
-    expect(refs[0].traitName).toBe('Explosive')
-    expect(refs[0].parameter).toBe('X')
-    expect(refs[1].traitName).toBe('Burn')
-    expect(refs[1].parameter).toBe('X')
+    expect(refs[0]!.traitName).toBe('Explosive')
+    expect(refs[0]!.parameter).toBe('X')
+    expect(refs[1]!.traitName).toBe('Burn')
+    expect(refs[1]!.parameter).toBe('X')
   })
 
   test('should return correct start and end indices', () => {
     const text = 'This has the [[Shield]] Trait'
     const refs = parseTraitReferences(text)
 
-    expect(refs[0].startIndex).toBe(13)
-    expect(refs[0].endIndex).toBe(23)
-    expect(text.substring(refs[0].startIndex, refs[0].endIndex)).toBe('[[Shield]]')
+    const ref = refs[0]!
+    expect(ref.startIndex).toBe(13)
+    expect(ref.endIndex).toBe(23)
+    expect(text.substring(ref.startIndex, ref.endIndex)).toBe('[[Shield]]')
   })
 
   test('should handle empty text', () => {
@@ -107,10 +112,10 @@ describe('parseTraitReferences', () => {
     const refs = parseTraitReferences(text)
 
     expect(refs).toHaveLength(3)
-    expect(refs[0].traitName).toBe('Shield')
-    expect(refs[1].traitName).toBe('Hot')
-    expect(refs[2].traitName).toBe('Vulnerable')
-    expect(refs[0].startIndex).toBeLessThan(refs[1].startIndex)
-    expect(refs[1].startIndex).toBeLessThan(refs[2].startIndex)
+    expect(refs[0]!.traitName).toBe('Shield')
+    expect(refs[1]!.traitName).toBe('Hot')
+    expect(refs[2]!.traitName).toBe('Vulnerable')
+    expect(refs[0]!.startIndex).toBeLessThan(refs[1]!.startIndex)
+    expect(refs[1]!.startIndex).toBeLessThan(refs[2]!.startIndex)
   })
 })

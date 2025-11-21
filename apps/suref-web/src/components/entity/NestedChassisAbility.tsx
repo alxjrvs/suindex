@@ -5,13 +5,13 @@ import type {
   SURefObjectChoice,
   SURefObjectContentBlock,
 } from 'salvageunion-reference'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
 import { EntityChoice } from './EntityDisplay/EntityChoice'
-import { useParseTraitReferences } from '../../utils/parseTraitReferences'
-import { parseContentBlockString } from '../../utils/contentBlockHelpers'
-import type { DataValue } from '../../types/common'
-import { extractEntityDetails } from '../../lib/entityDataExtraction'
+import { useParseTraitReferences } from '@/utils/parseTraitReferences'
+import { parseContentBlockString } from '@/utils/contentBlockHelpers'
+import type { DataValue } from '@/types/common'
+import { extractEntityDetails } from '@/lib/entityDataExtraction'
 import { SharedDetailItem } from './EntityDisplay/sharedDetailItem'
 
 interface NestedChassisAbilityProps {
@@ -109,7 +109,7 @@ export function NestedChassisAbility({
   if (!hasDataItems && hasContent && contentToRender && contentToRender.length > 0) {
     // Case 1: Only content, no data items - render first content block inline
     renderFirstContentInline = true
-    firstContentBlock = contentToRender[0]
+    firstContentBlock = contentToRender[0] ?? null
     if (contentToRender.length > 1) {
       remainingContent = contentToRender.slice(1) as typeof data.content
     }
@@ -118,7 +118,7 @@ export function NestedChassisAbility({
     if (remainingContentBlockCount > 1) {
       // Case 2a: >1 content blocks - render first content block inline, detail row below
       renderFirstContentInline = true
-      firstContentBlock = contentToRender[0]
+      firstContentBlock = contentToRender[0] ?? null
       remainingContent = contentToRender.slice(1) as typeof data.content
       renderDetailsInline = false
     } else {

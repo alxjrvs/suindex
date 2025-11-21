@@ -12,10 +12,10 @@
 
 import { useMemo } from 'react'
 import { usePilot } from './usePilots'
-import { useEntitiesFor } from '../suentity/useSUEntities'
-import type { HydratedEntity } from '../../types/hydrated'
-import type { Tables } from '../../types/database-generated.types'
-import { isLocalId } from '../../lib/cacheHelpers'
+import { useEntitiesFor } from '@/hooks/suentity/useSUEntities'
+import type { HydratedEntity } from '@/types/hydrated'
+import type { Tables } from '@/types/database-generated.types'
+import { isLocalId } from '@/lib/cacheHelpers'
 
 export interface HydratedPilot {
   pilot: Tables<'pilots'> | undefined

@@ -9,16 +9,16 @@ import {
   getModuleSlots,
   getSlotsRequired,
 } from 'salvageunion-reference'
-import { StatDisplay } from '../StatDisplay'
-import { AddStatButton } from '../shared/AddStatButton'
-import { RoundedBox } from '../shared/RoundedBox'
-import { EntityDisplay } from '../entity/EntityDisplay'
-import { EntitySelectionModal } from '../entity/EntitySelectionModal'
+import { StatDisplay } from '@/components/StatDisplay'
+import { AddStatButton } from '@/components/shared/AddStatButton'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { EntityDisplay } from '@/components/entity/EntityDisplay'
+import { EntitySelectionModal } from '@/components/entity/EntitySelectionModal'
 import { EquipmentSelector } from './EquipmentSelector'
-import { useManagePilotInventory } from '../../hooks/pilot/useManagePilotInventory'
-import { useHydratedPilot } from '../../hooks/pilot'
-import { useManagePilotEquipmentSystemsAndModules } from '../../hooks/pilot/useManagePilotEquipmentSystemsAndModules'
-import type { HydratedEntity } from '../../types/hydrated'
+import { useManagePilotInventory } from '@/hooks/pilot/useManagePilotInventory'
+import { useHydratedPilot } from '@/hooks/pilot'
+import { useManagePilotEquipmentSystemsAndModules } from '@/hooks/pilot/useManagePilotEquipmentSystemsAndModules'
+import type { HydratedEntity } from '@/types/hydrated'
 
 interface PilotInventoryProps {
   id: string

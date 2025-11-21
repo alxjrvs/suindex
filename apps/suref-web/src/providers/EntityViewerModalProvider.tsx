@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import type { SURefEnumSchemaName } from 'salvageunion-reference'
-import { EntityDisplayModal } from '../components/entity/EntityDisplayModal'
+import { EntityDisplayModal } from '@/components/entity/EntityDisplayModal'
 import { EntityViewerModalContext } from './EntityViewerModalContext'
 
 interface EntityViewerModalProviderProps {

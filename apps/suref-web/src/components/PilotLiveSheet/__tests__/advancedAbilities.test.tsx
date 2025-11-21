@@ -2,7 +2,7 @@ import { describe, test, expect } from 'bun:test'
 import { screen, waitFor } from '@testing-library/react'
 import { LOCAL_ID } from '@/lib/cacheHelpers'
 import { render } from '@/test/render'
-import PilotLiveSheet from '../index'
+import PilotLiveSheet from '@/components/PilotLiveSheet/index'
 import { setupPilotWithClass, addAbilityToPilot } from '@/test/liveSheetUtils'
 import { getBaseClass, getAbilitiesByTree } from '@/test/fixtures'
 
@@ -18,6 +18,7 @@ describe('PilotLiveSheet - Advanced & Legendary Trees', () => {
         // Add 6 abilities from core trees
         if ('coreTrees' in baseClass && Array.isArray(baseClass.coreTrees)) {
           const firstTree = baseClass.coreTrees[0]
+          if (!firstTree) return
           const abilities = getAbilitiesByTree(firstTree).slice(0, 6)
 
           if (abilities.length >= 6) {

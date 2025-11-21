@@ -81,7 +81,7 @@ describe('Extra Properties Validation', () => {
       expect(valid).toBe(false)
       expect(validate.errors).toBeDefined()
       expect(validate.errors?.length).toBeGreaterThan(0)
-      expect(validate.errors?.[0].keyword).toBe('unevaluatedProperties')
+      expect(validate.errors?.[0]?.keyword).toBe('unevaluatedProperties')
     })
 
     it('should accept valid abilities without extra properties', () => {
@@ -139,7 +139,7 @@ describe('Extra Properties Validation', () => {
       expect(valid).toBe(false)
       expect(validate.errors).toBeDefined()
       expect(validate.errors?.length).toBeGreaterThan(0)
-      expect(validate.errors?.[0].keyword).toBe('unevaluatedProperties')
+      expect(validate.errors?.[0]?.keyword).toBe('unevaluatedProperties')
     })
   })
 
@@ -170,7 +170,7 @@ describe('Extra Properties Validation', () => {
       expect(valid).toBe(false)
       expect(validate.errors).toBeDefined()
       expect(validate.errors?.length).toBeGreaterThan(0)
-      expect(validate.errors?.[0].keyword).toBe('unevaluatedProperties')
+      expect(validate.errors?.[0]?.keyword).toBe('unevaluatedProperties')
     })
   })
 })

@@ -2,8 +2,8 @@ import { useCallback } from 'react'
 import { SalvageUnionReference, getEnergyPoints } from 'salvageunion-reference'
 import { useHydratedMech } from './useHydratedMech'
 import { useUpdateMech } from './useMechs'
-import { useDeleteEntity, useCreateEntity } from '../suentity/useSUEntities'
-import { useDeleteCargo } from '../cargo/useCargo'
+import { useDeleteEntity, useCreateEntity } from '@/hooks/suentity/useSUEntities'
+import { useDeleteCargo } from '@/hooks/cargo/useCargo'
 
 export function useChangeMechChassis(id: string | undefined) {
   const { mech, systems, modules, cargo, selectedChassis } = useHydratedMech(id)

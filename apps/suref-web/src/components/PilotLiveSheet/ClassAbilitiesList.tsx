@@ -1,14 +1,14 @@
 import { useMemo, useCallback } from 'react'
 import { Box, Grid, Stack } from '@chakra-ui/react'
-import { Heading } from '../base/Heading'
-import { Text } from '../base/Text'
-import { RoundedBox } from '../shared/RoundedBox'
+import { Heading } from '@/components/base/Heading'
+import { Text } from '@/components/base/Text'
+import { RoundedBox } from '@/components/shared/RoundedBox'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefAbility, SURefClass } from 'salvageunion-reference'
-import { EntityDisplay } from '../entity/EntityDisplay'
+import { EntityDisplay } from '@/components/entity/EntityDisplay'
 import { getAbilityCost } from './utils/getAbilityCost'
-import { useManagePilotAbilities } from '../../hooks/pilot/useManagePilotAbilities'
-import { useHydratedPilot } from '../../hooks/pilot'
+import { useManagePilotAbilities } from '@/hooks/pilot/useManagePilotAbilities'
+import { useHydratedPilot } from '@/hooks/pilot'
 import { checkTreeRequirements } from './utils/checkTreeRequirements'
 
 export function ClassAbilitiesList({
@@ -93,17 +93,20 @@ export function ClassAbilitiesList({
     }
 
     allAbilities.forEach((ability) => {
-      if (allTreeAbilities[ability.tree]) {
-        allTreeAbilities[ability.tree].push(ability)
+      const tree = allTreeAbilities[ability.tree]
+      if (tree) {
+        tree.push(ability)
       }
     })
 
     Object.keys(allTreeAbilities).forEach((tree) => {
+      const treeAbilities = allTreeAbilities[tree]
+      if (!treeAbilities) return
       // Legendary trees are sorted by name, others by level
       if (selectedAdvancedClass?.legendaryTree === tree || coreLegendaryTree === tree) {
-        allTreeAbilities[tree].sort((a, b) => a.name.localeCompare(b.name))
+        treeAbilities.sort((a, b) => a.name.localeCompare(b.name))
       } else {
-        allTreeAbilities[tree].sort((a, b) => Number(a.level) - Number(b.level))
+        treeAbilities.sort((a, b) => Number(a.level) - Number(b.level))
       }
     })
 

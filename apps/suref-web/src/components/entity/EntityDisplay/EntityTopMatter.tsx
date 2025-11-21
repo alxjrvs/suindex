@@ -3,13 +3,14 @@ import { EntityActions } from './EntityActions'
 import { EntityImage } from './EntityImage'
 import {
   hasActions,
-  extractVisibleActions,
   getChassisAbilities,
   getAssetUrl,
+  findActionByName,
 } from 'salvageunion-reference'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { ContentBlockRenderer } from './ContentBlockRenderer'
 import { EntityChassisAbilitiesContent } from './EntityChassisAbilitiesContent'
+import { getEntityDisplayName } from '@/components/entity/entityDisplayHelpers'
 
 export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
   const { data, schemaName, spacing, fontSize, compact, title } = useEntityDisplayContext()
@@ -18,13 +19,12 @@ export function EntityTopMatter({ hideActions }: { hideActions: boolean }) {
   let contentBlocks = 'content' in data ? data.content : undefined
 
   // Check if any action name matches the entity name - if so, use that action's content
-  const visibleActions = extractVisibleActions(data)
-  if (hasActions(data) && visibleActions && visibleActions.length > 0) {
+  if (hasActions(data)) {
     // Get entity name - prefer title from context, fallback to data.name
-    const entityName = title || ('name' in data ? String(data.name) : '')
+    const entityName = getEntityDisplayName(data, title)
 
     // Find action with matching name
-    const matchingAction = visibleActions.find((action) => action.name === entityName)
+    const matchingAction = findActionByName(data, entityName)
 
     // Only replace entity content if action has content
     if (matchingAction && matchingAction.content && matchingAction.content.length > 0) {

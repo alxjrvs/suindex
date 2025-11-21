@@ -4,11 +4,11 @@
  * All functions validate input with Zod schemas and return hydrated cargo.
  */
 
-import { supabase } from '../supabase'
-import type { TablesInsert, TablesUpdate } from '../../types/database-generated.types'
-import type { HydratedCargo } from '../../types/hydrated'
+import { supabase } from '@/lib/supabase'
+import type { TablesInsert, TablesUpdate } from '@/types/database-generated.types'
+import type { HydratedCargo } from '@/types/hydrated'
 import { hydrateCargo, hydrateCargoItems } from './hydration'
-import { createCargoSchema, updateCargoSchema } from '../validation/cargo'
+import { createCargoSchema, updateCargoSchema } from '@/lib/validation/cargo'
 
 /**
  * Fetch all cargo for a parent (mech or crawler)

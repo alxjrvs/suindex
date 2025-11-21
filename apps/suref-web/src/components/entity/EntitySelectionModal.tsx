@@ -7,9 +7,9 @@ import {
   type SURefEntity,
   type SURefEnumSchemaName,
 } from 'salvageunion-reference'
-import Modal from '../Modal'
+import Modal from '@/components/Modal'
 import { EntityDisplay } from './EntityDisplay'
-import { TECH_LEVELS } from '../../constants/gameRules'
+import { TECH_LEVELS } from '@/constants/gameRules'
 
 interface EntitySelectionModalProps {
   isOpen: boolean

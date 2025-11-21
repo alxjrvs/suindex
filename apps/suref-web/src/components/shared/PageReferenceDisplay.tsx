@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react'
 import { getDisplayName } from 'salvageunion-reference'
-import { Text } from '../base/Text'
-import { useEntityDisplayContext } from '../entity/EntityDisplay/useEntityDisplayContext'
+import { Text } from '@/components/base/Text'
+import { useEntityDisplayContext } from '@/components/entity/EntityDisplay/useEntityDisplayContext'
 
 export function PageReferenceDisplay({ bg }: { bg?: string }) {
   const { data, schemaName, spacing, compact } = useEntityDisplayContext()

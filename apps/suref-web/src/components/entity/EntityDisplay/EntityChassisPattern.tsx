@@ -1,10 +1,10 @@
 import { VStack, Box } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefChassis, SURefModule, SURefSystem } from 'salvageunion-reference'
-import { Text } from '../../base/Text'
-import { SheetDisplay } from '../../shared/SheetDisplay'
+import { Text } from '@/components/base/Text'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
 import { EntityDisplay } from './index'
-import { getParagraphString } from '../../../lib/contentBlockHelpers'
+import { getParagraphString } from '@/lib/contentBlockHelpers'
 
 interface EntityChassisPatternProps {
   pattern: SURefChassis['patterns'][0]

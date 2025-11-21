@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import type { TablesInsert } from '../types/database-generated.types'
-import type { ValidTable, CrawlerNPC } from '../types/common'
-import { getUser, createEntity as createEntityAPI } from '../lib/api'
+import type { TablesInsert } from '@/types/database-generated.types'
+import type { ValidTable, CrawlerNPC } from '@/types/common'
+import { getUser, createEntity as createEntityAPI } from '@/lib/api'
 import { useCreateCrawler } from './crawler/useCrawlers'
+import { logger } from '@/lib/logger'
 
 interface useCreateEntityConfig<T extends ValidTable> {
   table: T
@@ -136,7 +137,7 @@ export function useCreateEntity<T extends ValidTable>(
       navigate({ to: navigationUrl })
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : `Failed to create ${config.table}`
-      console.error(`Error creating ${config.table}:`, err)
+      logger.error(`Error creating ${config.table}:`, err)
       setError(errorMessage)
       throw err
     } finally {

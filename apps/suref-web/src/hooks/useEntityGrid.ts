@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { ValidTable } from '../types/common'
-import { getUser, fetchUserEntities } from '../lib/api'
+import type { ValidTable } from '@/types/common'
+import { getUser, fetchUserEntities } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 export interface UseEntityGridConfig {
   table: ValidTable
@@ -45,7 +46,7 @@ export function useEntityGrid<T extends { id: string }>(
 
       setItems(data)
     } catch (err) {
-      console.error(`Error loading ${config.table}:`, err)
+      logger.error(`Error loading ${config.table}:`, err)
       setError(err instanceof Error ? err.message : `Failed to load ${config.table}`)
     } finally {
       setLoading(false)

@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import type { ButtonProps } from '@chakra-ui/react'
 import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
 import { getTechLevel } from 'salvageunion-reference'
-import { techLevelColors } from '../../../theme'
+import { techLevelColors } from '@/theme'
 import {
   calculateBackgroundColor,
   extractName,
@@ -10,7 +10,7 @@ import {
   calculateOpacity,
   shouldShowExtraContent as calculateShouldShowExtraContent,
   createHeaderClickHandler,
-} from '../entityDisplayHelpers'
+} from '@/components/entity/entityDisplayHelpers'
 import {
   EntityDisplayContext,
   getEntityFontSizes,

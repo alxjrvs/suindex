@@ -5,12 +5,12 @@
  */
 
 import { QueryClient } from '@tanstack/react-query'
-import { generateLocalId, LOCAL_ID, isLocalId } from '../lib/cacheHelpers'
-import { pilotsKeys } from '../hooks/pilot'
-import { mechsKeys } from '../hooks/mech/useMechs'
-import { entitiesKeys } from '../hooks/suentity/useSUEntities'
-import type { Tables, Json } from '../types/database-generated.types'
-import type { HydratedEntity } from '../types/hydrated'
+import { generateLocalId, LOCAL_ID, isLocalId } from '@/lib/cacheHelpers'
+import { pilotsKeys } from '@/hooks/pilot'
+import { mechsKeys } from '@/hooks/mech/useMechs'
+import { entitiesKeys } from '@/hooks/suentity/useSUEntities'
+import type { Tables, Json } from '@/types/database-generated.types'
+import type { HydratedEntity } from '@/types/hydrated'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefEnumSchemaName, SURefEntity } from 'salvageunion-reference'
 

@@ -328,7 +328,7 @@ export function extractPropertyType(
       }
     }
     if (types.size === 1) {
-      info.type = Array.from(types)[0]
+      info.type = Array.from(types)[0]!
     } else if (types.size > 1) {
       info.type = Array.from(types).join(' | ')
     }

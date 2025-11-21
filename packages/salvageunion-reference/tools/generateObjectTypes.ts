@@ -112,7 +112,7 @@ function generatePropertyType(schema: JSONSchema, depth: number = 0): string {
   if (schema.oneOf) {
     const types = schema.oneOf.map((s) => generatePropertyType(s, depth)).filter((t) => t)
     if (types.length === 0) return 'unknown'
-    return types.length > 1 ? `(${types.join(' | ')})` : types[0]
+    return types.length > 1 ? `(${types.join(' | ')})` : types[0]!
   }
 
   // Handle arrays
@@ -420,7 +420,9 @@ async function generateObjectTypes() {
   if (simpleTypeOrder.length > 0) {
     console.log('\n📋 Generating simple union types...')
     for (const typeName of simpleTypeOrder) {
-      const typeCode = generateObjectType(typeName, simpleTypeDefs[typeName])
+      const typeDef = simpleTypeDefs[typeName]
+      if (!typeDef) continue
+      const typeCode = generateObjectType(typeName, typeDef)
       if (typeCode) {
         typeDefinitions.push(typeCode)
         typeDefinitions.push('')
@@ -434,7 +436,9 @@ async function generateObjectTypes() {
 
   console.log('\n📋 Generating array types...')
   for (const typeName of arrayOrder) {
-    const typeCode = generateArrayType(typeName, arrayDefs[typeName])
+    const arrayDef = arrayDefs[typeName]
+    if (!arrayDef) continue
+    const typeCode = generateArrayType(typeName, arrayDef)
     if (typeCode) {
       typeDefinitions.push(typeCode)
       typeDefinitions.push('')

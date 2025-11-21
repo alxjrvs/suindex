@@ -1,7 +1,7 @@
 import { VStack } from '@chakra-ui/react'
-import NumericStepper from '../NumericStepper'
-import { RoundedBox } from '../shared/RoundedBox'
-import { useHydratedPilot, useUpdatePilot } from '../../hooks/pilot'
+import NumericStepper from '@/components/NumericStepper'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { useHydratedPilot, useUpdatePilot } from '@/hooks/pilot'
 
 interface PilotResourceSteppersProps {
   id: string

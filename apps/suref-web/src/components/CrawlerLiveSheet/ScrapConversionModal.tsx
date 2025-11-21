@@ -8,7 +8,7 @@ import {
   NativeSelectField,
   Input,
 } from '@chakra-ui/react'
-import Modal from '../Modal'
+import Modal from '@/components/Modal'
 
 interface ScrapConversionModalProps {
   isOpen: boolean
@@ -124,7 +124,7 @@ export function ScrapConversionModal({
 
   const getTLFieldName = (tl: TechLevel): string => {
     const names = ['one', 'two', 'three', 'four', 'five', 'six']
-    return names[tl - 1]
+    return names[tl - 1] ?? 'unknown'
   }
 
   return (

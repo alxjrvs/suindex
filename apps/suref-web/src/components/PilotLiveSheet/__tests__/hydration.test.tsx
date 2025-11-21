@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'bun:test'
 import { LOCAL_ID } from '@/lib/cacheHelpers'
 import { render } from '@/test/render'
-import PilotLiveSheet from '../index'
+import PilotLiveSheet from '@/components/PilotLiveSheet/index'
 import { getHydratedPilotFromCache, getEntitiesFromCache } from '@/test/liveSheetHelpers'
 import { setupPilotWithClass, addAbilityToPilot, addEquipmentToPilot } from '@/test/liveSheetUtils'
 import { getBaseClass, getCoreTreeLevel1Ability, getEquipmentWithoutSlots } from '@/test/fixtures'

@@ -12,12 +12,12 @@
 
 import { useMemo } from 'react'
 import { useMech } from './useMechs'
-import { useEntitiesFor } from '../suentity/useSUEntities'
-import { useCargo } from '../cargo/useCargo'
-import type { HydratedEntity, HydratedCargo } from '../../types/hydrated'
-import type { Tables } from '../../types/database-generated.types'
+import { useEntitiesFor } from '@/hooks/suentity/useSUEntities'
+import { useCargo } from '@/hooks/cargo/useCargo'
+import type { HydratedEntity, HydratedCargo } from '@/types/hydrated'
+import type { Tables } from '@/types/database-generated.types'
 import { getSlotsRequired, getSalvageValue } from 'salvageunion-reference'
-import { isLocalId } from '../../lib/cacheHelpers'
+import { isLocalId } from '@/lib/cacheHelpers'
 
 export interface HydratedMech {
   mech: Tables<'mechs'> | undefined

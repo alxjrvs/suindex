@@ -1,10 +1,10 @@
 import { Box, Button, Flex, IconButton, HStack, Text } from '@chakra-ui/react'
 import type { User } from '@supabase/supabase-js'
-import { Heading } from '../base/Heading'
-import { useNavigationState } from '../../hooks/useNavigationState'
-import { NavigationLink } from '../shared/NavigationLink'
-import { UserMenu } from '../shared/UserMenu'
-import { DiscordSignInButton } from '../DiscordSignInButton'
+import { Heading } from '@/components/base/Heading'
+import { useNavigationState } from '@/hooks/useNavigationState'
+import { NavigationLink } from '@/components/shared/NavigationLink'
+import { UserMenu } from '@/components/shared/UserMenu'
+import { DiscordSignInButton } from '@/components/DiscordSignInButton'
 
 interface DashboardNavigationProps {
   user: User | null

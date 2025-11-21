@@ -3,6 +3,8 @@
  * Provides validated access to environment variables with helpful error messages
  */
 
+import { logger } from './logger'
+
 const requiredEnvVars = {
   VITE_SUPABASE_URL: {
     name: 'VITE_SUPABASE_URL',
@@ -115,7 +117,7 @@ export function validateEnvVars(): void {
     getSupabaseAnonKey()
   } catch (error) {
     if (typeof process !== 'undefined' && process.env.NODE_ENV !== 'test') {
-      console.error('Environment variable validation failed:', error)
+      logger.error('Environment variable validation failed:', error)
       throw error
     }
   }

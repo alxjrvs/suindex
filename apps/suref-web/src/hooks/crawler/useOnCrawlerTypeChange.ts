@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useHydratedCrawler } from './useHydratedCrawler'
-import { useDeleteEntity, useCreateEntity } from '../suentity/useSUEntities'
+import { useDeleteEntity, useCreateEntity } from '@/hooks/suentity/useSUEntities'
 
 export function useOnCrawlerTypeChange(id: string) {
   const { crawler, selectedCrawlerType } = useHydratedCrawler(id)

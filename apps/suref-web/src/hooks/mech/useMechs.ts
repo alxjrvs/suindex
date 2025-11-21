@@ -13,10 +13,10 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { TablesInsert, TablesUpdate } from '../../types/database-generated.types'
-import { fetchEntity, createEntity, updateEntity, deleteEntity } from '../../lib/api'
-import { LOCAL_ID, isLocalId } from '../../lib/cacheHelpers'
-import type { Tables } from '../../types/database-generated.types'
+import type { TablesInsert, TablesUpdate } from '@/types/database-generated.types'
+import { fetchEntity, createEntity, updateEntity, deleteEntity } from '@/lib/api'
+import { LOCAL_ID, isLocalId } from '@/lib/cacheHelpers'
+import type { Tables } from '@/types/database-generated.types'
 
 export { LOCAL_ID }
 

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { uploadImage, deleteImage, updateEntityImage } from '../lib/api/storage'
-import { toaster } from '../components/ui/toaster'
+import { uploadImage, deleteImage, updateEntityImage } from '@/lib/api/storage'
+import { toaster } from '@/components/ui/toaster'
+import { logger } from '@/lib/logger'
 
 interface UseImageUploadOptions {
   entityType: 'pilots' | 'mechs'
@@ -29,7 +30,7 @@ export function useImageUpload({
         try {
           await deleteImage(currentImageUrl)
         } catch (error) {
-          console.warn('Failed to delete old image:', error)
+          logger.warn('Failed to delete old image:', error)
         }
       }
 

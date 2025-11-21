@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import type { SURefChassis } from 'salvageunion-reference'
 import { useHydratedMech } from './useHydratedMech'
-import { useCreateEntity, useDeleteEntity } from '../suentity'
+import { useCreateEntity, useDeleteEntity } from '@/hooks/suentity'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import { useUpdateMech } from './useMechs'
 

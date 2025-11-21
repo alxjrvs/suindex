@@ -1,4 +1,5 @@
-import { supabase } from '../supabase'
+import { supabase } from '@/lib/supabase'
+import { logger } from '@/lib/logger'
 
 /**
  * Fetch user display name by user ID
@@ -10,7 +11,7 @@ export async function fetchUserDisplayName(userId: string): Promise<string | nul
   })
 
   if (error) {
-    console.error('Error fetching user display name:', error)
+    logger.error('Error fetching user display name:', error)
     return null
   }
 

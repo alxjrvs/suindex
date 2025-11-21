@@ -18,9 +18,10 @@
 
 import { useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import { logger } from '@/lib/logger'
 import type { RealtimeChannel } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
-import { toaster } from '../components/ui/toaster'
+import { supabase } from '@/lib/supabase'
+import { toaster } from '@/components/ui/toaster'
 
 interface UseRealtimeSubscriptionOptions {
   /**
@@ -86,7 +87,7 @@ export function useRealtimeSubscription({
           ...(id && { filter: `id=eq.${id}` }),
         },
         (payload) => {
-          console.log(`[Realtime] ${table} change:`, payload)
+          logger.log(`[Realtime] ${table} change:`, payload)
 
           queryClient.invalidateQueries({ queryKey })
 

@@ -7,11 +7,11 @@
  * Note: This is separate from the legacy entities.ts which handles generic table operations.
  */
 
-import { supabase } from '../supabase'
-import type { Tables, TablesInsert, TablesUpdate } from '../../types/database-generated.types'
-import type { HydratedEntity } from '../../types/hydrated'
+import { supabase } from '@/lib/supabase'
+import type { Tables, TablesInsert, TablesUpdate } from '@/types/database-generated.types'
+import type { HydratedEntity } from '@/types/hydrated'
 import { hydrateEntity, hydrateEntities } from './hydration'
-import { createEntitySchema, updateEntitySchema } from '../validation/entity'
+import { createEntitySchema, updateEntitySchema } from '@/lib/validation/entity'
 
 /**
  * Fetch all entities for a parent (pilot, mech, or crawler)

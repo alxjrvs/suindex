@@ -10,8 +10,8 @@ import {
   createGameInvite,
   expireGameInvite,
   redeemInviteCode,
-} from '../../lib/api/games'
-import type { GameInvite } from '../../lib/api/games'
+} from '@/lib/api/games'
+import type { GameInvite } from '@/lib/api/games'
 import { gamesKeys } from './useGames'
 
 /**

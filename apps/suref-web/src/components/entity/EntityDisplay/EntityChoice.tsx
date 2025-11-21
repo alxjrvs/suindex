@@ -1,13 +1,13 @@
 import { Box, HStack } from '@chakra-ui/react'
-import { Text } from '../../base/Text'
+import { Text } from '@/components/base/Text'
 import type { SURefObjectChoice } from 'salvageunion-reference'
 
-import { SheetInput } from '../../shared/SheetInput'
+import { SheetInput } from '@/components/shared/SheetInput'
 import { EntitySubheader } from './EntitySubheader'
 import { EntityListDisplay } from './EntityListDisplay'
 import { PreselectedEntityDisplay } from './PreselectedEntityDisplay'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
-import { getParagraphString } from '../../../lib/contentBlockHelpers'
+import { getParagraphString } from '@/lib/contentBlockHelpers'
 
 interface EntityChoiceProps {
   choice: SURefObjectChoice

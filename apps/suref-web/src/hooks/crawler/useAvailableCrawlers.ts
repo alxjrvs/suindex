@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { supabase } from '../../lib/supabase'
-import type { Tables } from '../../types/database-generated.types'
+import { supabase } from '@/lib/supabase'
+import type { Tables } from '@/types/database-generated.types'
 
 type CrawlerRow = Tables<'crawlers'>
 

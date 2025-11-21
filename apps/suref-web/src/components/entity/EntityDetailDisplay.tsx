@@ -5,7 +5,7 @@ import {
   type EntitySchemaName,
 } from 'salvageunion-reference'
 import { EntityDisplayTooltip } from './EntityDisplayTooltip'
-import { ValueDisplay } from '../shared/ValueDisplay'
+import { ValueDisplay } from '@/components/shared/ValueDisplay'
 import { useMemo } from 'react'
 
 export function EntityDetailDisplay({

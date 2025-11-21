@@ -14,8 +14,8 @@ import {
   DialogCloseTrigger,
   DialogPositioner,
 } from '@chakra-ui/react'
-import { Text } from '../components/base/Text'
-import Footer from '../components/Footer'
+import { Text } from '@/components/base/Text'
+import Footer from '@/components/Footer'
 
 function AboutPage() {
   const search = useSearch({ strict: false })

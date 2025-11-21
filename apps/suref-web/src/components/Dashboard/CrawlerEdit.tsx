@@ -1,6 +1,6 @@
 import { useParams } from '@tanstack/react-router'
 import { Flex, Text } from '@chakra-ui/react'
-import CrawlerLiveSheet from '../CrawlerLiveSheet'
+import CrawlerLiveSheet from '@/components/CrawlerLiveSheet'
 
 export function CrawlerEdit() {
   const params = useParams({ from: '/dashboard/crawlers/$id' })

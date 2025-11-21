@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { VStack, Box } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { SheetDisplay } from '../shared/SheetDisplay'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
 import type { SURefCrawlerBay } from 'salvageunion-reference'
 
 import { SheetEntityChoiceDisplay } from './SheetEntityChoiceDisplay'
-import { useManageEntityChoices } from '../../hooks/suentity'
-import { useParseTraitReferences } from '../../utils/parseTraitReferences'
-import { getParagraphString } from '../../lib/contentBlockHelpers'
+import { useManageEntityChoices } from '@/hooks/suentity'
+import { useParseTraitReferences } from '@/utils/parseTraitReferences'
+import { getParagraphString } from '@/lib/contentBlockHelpers'
 
 interface BayInfoProps {
   bayRef: SURefCrawlerBay

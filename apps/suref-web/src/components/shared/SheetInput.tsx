@@ -1,8 +1,8 @@
 import { Flex, Group, IconButton, Input } from '@chakra-ui/react'
 import { Checkbox as ChakraCheckbox } from '@chakra-ui/react'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 import { useState, useEffect, type ReactNode } from 'react'
-import { DEBOUNCE_TIMINGS } from '../../constants/gameRules'
+import { DEBOUNCE_TIMINGS } from '@/constants/gameRules'
 
 interface SheetInputProps {
   label?: string

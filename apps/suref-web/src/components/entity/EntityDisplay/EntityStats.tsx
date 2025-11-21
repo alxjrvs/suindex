@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react'
-import { StatDisplay } from '../../StatDisplay'
+import { StatDisplay } from '@/components/StatDisplay'
 import type { SURefObjectBonusPerTechLevel, SURefMetaEntity } from 'salvageunion-reference'
-import { Text } from '../../base/Text'
+import { Text } from '@/components/base/Text'
 import { ENTITY_STATS_CONFIG, applyStatLabel } from './entityStatsConfig'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 

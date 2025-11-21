@@ -5,7 +5,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
-import { fetchGameMembers, getUserGameRole } from '../../lib/api/games'
+import { fetchGameMembers, getUserGameRole } from '@/lib/api/games'
 
 /**
  * Query key factory for game members

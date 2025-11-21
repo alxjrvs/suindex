@@ -1,14 +1,14 @@
 import { Box, VStack, HStack } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Text } from '../base/Text'
-import { RoundedBox } from '../shared/RoundedBox'
-import { AddStatButton } from '../shared/AddStatButton'
-import { MechSmallDisplay } from '../Dashboard/MechSmallDisplay'
-import { useCreateMech } from '../../hooks/mech'
-import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { supabase } from '../../lib/supabase'
-import type { Tables } from '../../types/database-generated.types'
+import { Text } from '@/components/base/Text'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { AddStatButton } from '@/components/shared/AddStatButton'
+import { MechSmallDisplay } from '@/components/Dashboard/MechSmallDisplay'
+import { useCreateMech } from '@/hooks/mech'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { supabase } from '@/lib/supabase'
+import type { Tables } from '@/types/database-generated.types'
 
 type Mech = Tables<'mechs'>
 

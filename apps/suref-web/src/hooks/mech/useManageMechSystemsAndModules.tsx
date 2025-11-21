@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { useCreateEntity, useDeleteEntity } from '../suentity'
+import { useCreateEntity, useDeleteEntity } from '@/hooks/suentity'
 import { useHydratedMech } from './useHydratedMech'
 
 export function useManageMechSystemsAndModules(id: string | undefined) {

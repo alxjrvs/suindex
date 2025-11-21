@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
-import { Heading } from '../components/base/Heading'
-import { Text } from '../components/base/Text'
+import { Heading } from '@/components/base/Heading'
+import { Text } from '@/components/base/Text'
 import { getSchemaCatalog } from 'salvageunion-reference'
 
 const schemaIndexData = getSchemaCatalog()

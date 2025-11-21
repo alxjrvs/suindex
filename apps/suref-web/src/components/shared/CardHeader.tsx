@@ -1,4 +1,4 @@
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 
 export function CardHeader({
   title,

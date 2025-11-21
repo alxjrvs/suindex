@@ -1,6 +1,6 @@
-import { supabase } from '../supabase'
-import type { Tables, TablesInsert } from '../../types/database-generated.types'
-import { assertCanViewGame } from '../permissions'
+import { supabase } from '@/lib/supabase'
+import type { Tables, TablesInsert } from '@/types/database-generated.types'
+import { assertCanViewGame } from '@/lib/permissions'
 
 export type GameRow = Tables<'games'>
 export type GameMember = {

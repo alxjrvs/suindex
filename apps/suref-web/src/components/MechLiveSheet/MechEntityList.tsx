@@ -2,11 +2,11 @@ import { useState, useMemo } from 'react'
 import { Flex, VStack } from '@chakra-ui/react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefSystem, SURefModule } from 'salvageunion-reference'
-import { EntityDisplay } from '../entity/EntityDisplay'
-import { StatDisplay } from '../StatDisplay'
-import { AddStatButton } from '../shared/AddStatButton'
-import { RoundedBox } from '../shared/RoundedBox'
-import { EntitySelectionModal } from '../entity/EntitySelectionModal'
+import { EntityDisplay } from '@/components/entity/EntityDisplay'
+import { StatDisplay } from '@/components/StatDisplay'
+import { AddStatButton } from '@/components/shared/AddStatButton'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { EntitySelectionModal } from '@/components/entity/EntitySelectionModal'
 
 interface MechEntityListProps {
   /** Title for the box (e.g., "Systems" or "Modules") */

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
-import { useCreateCargo, useDeleteCargo } from '../cargo'
+import { useCreateCargo, useDeleteCargo } from '@/hooks/cargo'
 import { useHydratedCrawler } from './useHydratedCrawler'
 
 export function useManageCrawlerCargo(id: string) {

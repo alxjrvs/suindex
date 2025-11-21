@@ -1,10 +1,10 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import type { SURefMetaAction, SURefObjectChoice } from 'salvageunion-reference'
 import { getEntityDisplayName } from 'salvageunion-reference'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 import { ContentBlockRenderer } from './EntityDisplay/ContentBlockRenderer'
 import { EntityChoice } from './EntityDisplay/EntityChoice'
-import { extractEntityDetails } from '../../lib/entityDataExtraction'
+import { extractEntityDetails } from '@/lib/entityDataExtraction'
 import { SharedDetailItem } from './EntityDisplay/sharedDetailItem'
 
 interface NestedActionDisplayProps {

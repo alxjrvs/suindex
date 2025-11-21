@@ -6,9 +6,9 @@ import {
   getModuleSlots,
   getCargoCapacity,
 } from 'salvageunion-reference'
-import { RoundedBox } from '../shared/RoundedBox'
-import { StatDisplay } from '../StatDisplay'
-import { NestedChassisAbility } from '../entity/NestedChassisAbility'
+import { RoundedBox } from '@/components/shared/RoundedBox'
+import { StatDisplay } from '@/components/StatDisplay'
+import { NestedChassisAbility } from '@/components/entity/NestedChassisAbility'
 
 interface ChassisAbilitiesProps {
   chassis: SURefChassis | undefined

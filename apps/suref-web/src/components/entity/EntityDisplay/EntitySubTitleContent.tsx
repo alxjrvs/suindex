@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react'
-import { getActivationCurrency } from '../entityDisplayHelpers'
-import { extractEntityDetails } from '../../../lib/entityDataExtraction'
+import { getActivationCurrency } from '@/components/entity/entityDisplayHelpers'
+import { extractEntityDetails } from '@/lib/entityDataExtraction'
 import { useEntityDisplayContext } from './useEntityDisplayContext'
 import { SharedDetailItem } from './sharedDetailItem'
 

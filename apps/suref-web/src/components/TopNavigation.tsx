@@ -1,8 +1,8 @@
 import { Box, Button, Flex, IconButton, HStack, Menu, Portal, Text } from '@chakra-ui/react'
 import type { User } from '@supabase/supabase-js'
-import type { SchemaInfo } from '../types/schema'
+import type { SchemaInfo } from '@/types/schema'
 import { Heading } from './base/Heading'
-import { useNavigationState } from '../hooks/useNavigationState'
+import { useNavigationState } from '@/hooks/useNavigationState'
 import { NavigationLink } from './shared/NavigationLink'
 import { DiscordSignInButton } from './DiscordSignInButton'
 

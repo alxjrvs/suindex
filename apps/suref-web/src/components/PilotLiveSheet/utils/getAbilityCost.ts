@@ -4,7 +4,7 @@ import {
   ADVANCED_ABILITY_COST,
   CORE_ABILITY_COST,
   DEFAULT_ABILITY_COST,
-} from '../../../constants/gameRules'
+} from '@/constants/gameRules'
 
 /**
  * Calculate the TP cost for selecting an ability based on the character's class(es)

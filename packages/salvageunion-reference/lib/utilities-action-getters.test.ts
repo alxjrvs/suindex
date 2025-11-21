@@ -19,14 +19,14 @@ import {
 describe('Action Property Getters', () => {
   describe('getDescription', () => {
     test('should get description from ability', () => {
-      const ability = SalvageUnionReference.Abilities.all()[0]
+      const ability = SalvageUnionReference.Abilities.all()[0]!
       const description = getDescription(ability)
       expect(description).toBeDefined()
       expect(typeof description).toBe('string')
     })
 
     test('should return undefined for non-ability entities (deprecated)', () => {
-      const chassis = SalvageUnionReference.Chassis.all()[0]
+      const chassis = SalvageUnionReference.Chassis.all()[0]!
       const description = getDescription(chassis)
       expect(description).toBeUndefined()
     })
@@ -177,7 +177,7 @@ describe('Action Property Getters', () => {
 
   describe('getActionType', () => {
     test('should get action type from ability (action property)', () => {
-      const ability = SalvageUnionReference.Abilities.all()[0]
+      const ability = SalvageUnionReference.Abilities.all()[0]!
       const actionType = getActionType(ability)
       expect(actionType).toBeDefined()
       expect(typeof actionType).toBe('string')
@@ -310,7 +310,7 @@ describe('Action Property Getters', () => {
     test('should get damage from chassis action (base level)', () => {
       const chassis = SalvageUnionReference.Chassis.all().find((c) => {
         const abilities = getChassisAbilities(c)
-        return abilities && abilities.length > 0 && abilities[0].damage !== undefined
+        return abilities && abilities.length > 0 && abilities[0]?.damage !== undefined
       })
       if (chassis) {
         const damage = getDamage(chassis)
@@ -372,7 +372,7 @@ describe('Action Property Getters', () => {
     })
 
     test('should get traits from creature (base level)', () => {
-      const creature = SalvageUnionReference.Creatures.all()[0]
+      const creature = SalvageUnionReference.Creatures.all()[0]!
       const traits = getTraits(creature)
       if (traits) {
         expect(Array.isArray(traits)).toBe(true)

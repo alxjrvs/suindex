@@ -1,25 +1,48 @@
 import { Box, VStack, Button, Flex } from '@chakra-ui/react'
+import { useCallback } from 'react'
 import type { SURefClass } from 'salvageunion-reference'
 import { getEffects, getTable } from 'salvageunion-reference'
-import { PageReferenceDisplay } from '../../../shared/PageReferenceDisplay'
-import { RollTable } from '../../../shared/RollTable'
-import { EntityContainer } from '../../../shared/EntityContainer'
-import { EntitySubTitleElement } from '../EntitySubTitleContent'
-import { EntityLeftContent } from '../EntityLeftContent'
-import { EntityRightHeaderContent } from '../EntityRightHeaderContent'
-import { EntityChassisPatterns } from '../EntityChassisPatterns'
-import { EntityOptions } from '../EntityOptions'
-import { EntityTopMatter } from '../EntityTopMatter'
-import { EntityChassisAbilitiesContent } from '../EntityChassisAbilitiesContent'
-import { EntityRequirementDisplay } from '../EntityRequirementDisplay'
+import { PageReferenceDisplay } from '@/components/shared/PageReferenceDisplay'
+import { RollTable } from '@/components/shared/RollTable'
+import { EntityContainer } from '@/components/shared/EntityContainer'
+import { EntitySubTitleElement } from '@/components/entity/EntityDisplay/EntitySubTitleContent'
+import { EntityLeftContent } from '@/components/entity/EntityDisplay/EntityLeftContent'
+import { EntityRightHeaderContent } from '@/components/entity/EntityDisplay/EntityRightHeaderContent'
+import { EntityChassisPatterns } from '@/components/entity/EntityDisplay/EntityChassisPatterns'
+import { EntityOptions } from '@/components/entity/EntityDisplay/EntityOptions'
+import { EntityTopMatter } from '@/components/entity/EntityDisplay/EntityTopMatter'
+import { EntityChassisAbilitiesContent } from '@/components/entity/EntityDisplay/EntityChassisAbilitiesContent'
+import { EntityRequirementDisplay } from '@/components/entity/EntityDisplay/EntityRequirementDisplay'
 import { getChassisAbilities } from 'salvageunion-reference'
-import { EntityChoices } from '../EntityChoices'
-import { EntityGrants } from '../EntityGrants'
-import { ClassAbilitiesList } from '../../../PilotLiveSheet/ClassAbilitiesList'
-import { EntityBonusPerTechLevel } from '../EntityBonusPerTechLevel'
-import { useEntityDisplayContext } from '../useEntityDisplayContext'
-import { ConditionalSheetInfo } from '../ConditionalSheetInfo'
-import { EntityPopulationRange } from '../EntityPopulationRange'
+import { EntityChoices } from '@/components/entity/EntityDisplay/EntityChoices'
+import { EntityGrants } from '@/components/entity/EntityDisplay/EntityGrants'
+import { ClassAbilitiesList } from '@/components/PilotLiveSheet/ClassAbilitiesList'
+import { EntityBonusPerTechLevel } from '@/components/entity/EntityDisplay/EntityBonusPerTechLevel'
+import { useEntityDisplayContext } from '@/components/entity/EntityDisplay/useEntityDisplayContext'
+import { ConditionalSheetInfo } from '@/components/entity/EntityDisplay/ConditionalSheetInfo'
+import { EntityPopulationRange } from '@/components/entity/EntityDisplay/EntityPopulationRange'
+import type { ButtonProps } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
+
+function ButtonWithConfig({
+  buttonConfig,
+}: {
+  buttonConfig: ButtonProps & { children: ReactNode }
+}) {
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      buttonConfig.onClick?.(e)
+    },
+    [buttonConfig]
+  )
+
+  return (
+    <Button w="full" mt={3} onClick={handleClick} {...buttonConfig}>
+      {buttonConfig.children}
+    </Button>
+  )
+}
 
 export function EntityDisplayContent({ children }: { children?: React.ReactNode }) {
   const {
@@ -142,17 +165,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
               )}
               {buttonConfig && (
                 <Flex p={spacing.contentPadding}>
-                  <Button
-                    w="full"
-                    mt={3}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      buttonConfig.onClick?.(e)
-                    }}
-                    {...buttonConfig}
-                  >
-                    {buttonConfig.children}
-                  </Button>
+                  <ButtonWithConfig buttonConfig={buttonConfig} />
                 </Flex>
               )}
             </>

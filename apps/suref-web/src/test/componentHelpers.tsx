@@ -6,8 +6,8 @@
 
 import { screen, waitFor } from '@testing-library/react'
 import { QueryClient } from '@tanstack/react-query'
-import { LOCAL_ID } from '../lib/cacheHelpers'
-import PilotLiveSheet from '../components/PilotLiveSheet'
+import { LOCAL_ID } from '@/lib/cacheHelpers'
+import PilotLiveSheet from '@/components/PilotLiveSheet'
 import type { RenderResult } from '@testing-library/react'
 import { render } from './render'
 import { expect } from 'bun:test'

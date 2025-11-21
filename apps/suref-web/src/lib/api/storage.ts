@@ -1,4 +1,4 @@
-import { supabase } from '../supabase'
+import { supabase } from '@/lib/supabase'
 
 const BUCKET_NAME = 'user-images'
 
@@ -54,7 +54,7 @@ export async function uploadImage(
  */
 export async function deleteImage(imageUrl: string): Promise<void> {
   const urlParts = imageUrl.split(`/storage/v1/object/public/${BUCKET_NAME}/`)
-  if (urlParts.length !== 2) {
+  if (urlParts.length !== 2 || !urlParts[1]) {
     throw new Error('Invalid image URL format')
   }
 

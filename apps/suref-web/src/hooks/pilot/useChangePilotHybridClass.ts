@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
-import { useDeleteEntity, useCreateEntity } from '../suentity'
+import { useDeleteEntity, useCreateEntity } from '@/hooks/suentity'
 import { useHydratedPilot } from './useHydratedPilot'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefClass } from 'salvageunion-reference'
+import { logger } from '@/lib/logger'
 
 export function useChangePilotHybridClass(id: string | undefined) {
   const { pilot, abilities, selectedAdvancedClass } = useHydratedPilot(id)
@@ -46,13 +47,13 @@ export function useChangePilotHybridClass(id: string | undefined) {
       const schemaName = 'classes'
 
       if (!hybridClass) {
-        console.error(`Hybrid class not found: ${hybridClassId}`)
+        logger.error(`Hybrid class not found: ${hybridClassId}`)
         return
       }
 
       // Verify this is a hybrid class (hybrid === true)
       if (!('hybrid' in hybridClass && hybridClass.hybrid === true)) {
-        console.error(`Class ${hybridClassId} is not a hybrid class`)
+        logger.error(`Class ${hybridClassId} is not a hybrid class`)
         return
       }
 

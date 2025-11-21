@@ -17,6 +17,7 @@ import { queryClient } from '@/lib/queryClient'
 import type React from 'react'
 import { Heading } from '@/components/base/Heading'
 import { Text } from '@/components/base/Text'
+import { initPerformanceMonitoring } from '@/lib/performance'
 
 const schemaIndexData = getSchemaCatalog()
 
@@ -62,6 +63,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     })
 
     return () => subscription.unsubscribe()
+  }, [])
+
+  // Initialize performance monitoring
+  useEffect(() => {
+    initPerformanceMonitoring()
   }, [])
 
   return (

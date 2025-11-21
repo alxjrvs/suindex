@@ -1,11 +1,11 @@
 import { VStack, Box, Flex } from '@chakra-ui/react'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
-import { useGame, useGameCrawler, useDeleteGame } from '../../hooks/game/useGames'
-import { useGameMembers } from '../../hooks/game/useGameMembers'
-import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { isGameMediator } from '../../lib/permissions'
-import { DeleteButton } from '../shared/DeleteButton'
+import { useGame, useGameCrawler, useDeleteGame } from '@/hooks/game/useGames'
+import { useGameMembers } from '@/hooks/game/useGameMembers'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { isGameMediator } from '@/lib/permissions'
+import { DeleteButton } from '@/components/shared/DeleteButton'
 
 interface GameSmallDisplayProps {
   id: string

@@ -5,8 +5,8 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { fetchGameExternalLinks, createExternalLink, deleteExternalLink } from '../../lib/api/games'
-import type { ExternalLink } from '../../lib/api/games'
+import { fetchGameExternalLinks, createExternalLink, deleteExternalLink } from '@/lib/api/games'
+import type { ExternalLink } from '@/lib/api/games'
 
 /**
  * Query key factory for external links

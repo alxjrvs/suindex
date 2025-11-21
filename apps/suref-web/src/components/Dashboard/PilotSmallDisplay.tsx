@@ -1,16 +1,17 @@
 import { VStack, Box } from '@chakra-ui/react'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 import { UserEntitySmallDisplay } from './UserEntitySmallDisplay'
-import { useHydratedPilot, useDeletePilot } from '../../hooks/pilot'
+import { useHydratedPilot, useDeletePilot } from '@/hooks/pilot'
 import { useNavigate } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { supabase } from '../../lib/supabase'
-import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { fetchUserDisplayName } from '../../lib/api/users'
-import { pilotsKeys } from '../../hooks/pilot/usePilots'
-import { fetchEntity } from '../../lib/api/entities'
-import type { Tables } from '../../types/database-generated.types'
-import { DeleteButton } from '../shared/DeleteButton'
+import { supabase } from '@/lib/supabase'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { fetchUserDisplayName } from '@/lib/api/users'
+import { pilotsKeys } from '@/hooks/pilot/usePilots'
+import { fetchEntity } from '@/lib/api/entities'
+import type { Tables } from '@/types/database-generated.types'
+import { DeleteButton } from '@/components/shared/DeleteButton'
+import { logger } from '@/lib/logger'
 
 interface PilotSmallDisplayProps {
   id?: string
@@ -52,7 +53,7 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
         .single()
 
       if (error) {
-        console.error('Error fetching crawler:', error)
+        logger.error('Error fetching crawler:', error)
         return null
       }
       return data.name
@@ -72,7 +73,7 @@ export function PilotSmallDisplay({ id, label, waitForId = false }: PilotSmallDi
 
       if (error) {
         if (error.code === 'PGRST116') return null
-        console.error('Error fetching mech:', error)
+        logger.error('Error fetching mech:', error)
         return null
       }
       return data.pattern

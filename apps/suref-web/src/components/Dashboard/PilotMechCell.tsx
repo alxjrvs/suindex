@@ -2,11 +2,11 @@ import { VStack } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { PilotSmallDisplay } from './PilotSmallDisplay'
 import { MechSmallDisplay } from './MechSmallDisplay'
-import { useHydratedMech } from '../../hooks/mech'
-import { supabase } from '../../lib/supabase'
-import { SheetDisplay } from '../shared/SheetDisplay'
-import { fetchCrawlerPilots } from '../../lib/api/pilots'
-import { fetchPilotsMechs } from '../../lib/api/mechs'
+import { useHydratedMech } from '@/hooks/mech'
+import { supabase } from '@/lib/supabase'
+import { SheetDisplay } from '@/components/shared/SheetDisplay'
+import { fetchCrawlerPilots } from '@/lib/api/pilots'
+import { fetchPilotsMechs } from '@/lib/api/mechs'
 
 interface PilotMechCellProps {
   crawlerId: string

@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
-import { EntityDisplay } from '../../entity/EntityDisplay'
+import { EntityDisplay } from '@/components/entity/EntityDisplay'
 
 interface EntityDisplayProps {
   data: SURefEntity

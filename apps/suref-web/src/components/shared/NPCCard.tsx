@@ -1,15 +1,15 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import { SheetInput } from './SheetInput'
 import { SheetTextarea } from './SheetTextarea'
-import type { CrawlerNPC } from '../../types/common'
-import type { Tables } from '../../types/database-generated.types'
-import NumericStepper from '../NumericStepper'
-import { Text } from '../base/Text'
+import type { CrawlerNPC } from '@/types/common'
+import type { Tables } from '@/types/database-generated.types'
+import NumericStepper from '@/components/NumericStepper'
+import { Text } from '@/components/base/Text'
 import { useRef, useEffect, useState, useMemo } from 'react'
-import { getTiltRotation } from '../../utils/tiltUtils'
+import { getTiltRotation } from '@/utils/tiltUtils'
 import { rollTable } from '@randsum/salvageunion'
 import type { SURefCrawler, SURefCrawlerBay } from 'salvageunion-reference'
-import { getParagraphString } from '../../lib/contentBlockHelpers'
+import { getParagraphString } from '@/lib/contentBlockHelpers'
 
 export function NPCCard({
   position,

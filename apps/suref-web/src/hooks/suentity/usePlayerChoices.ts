@@ -14,8 +14,8 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { Tables, TablesInsert } from '../../types/database-generated.types'
-import type { HydratedEntity } from '../../types/hydrated'
+import type { Tables, TablesInsert } from '@/types/database-generated.types'
+import type { HydratedEntity } from '@/types/hydrated'
 import {
   fetchChoicesForEntity,
   fetchChoicesForChoice,
@@ -23,9 +23,9 @@ import {
   deletePlayerChoice,
   deleteChoicesForEntity,
   deleteChoicesForChoice,
-} from '../../lib/api/playerChoices'
+} from '@/lib/api/playerChoices'
 import { entitiesKeys } from './useSUEntities'
-import { isLocalId, generateLocalId } from '../../lib/cacheHelpers'
+import { isLocalId, generateLocalId } from '@/lib/cacheHelpers'
 
 /**
  * Query key factory for player choices
@@ -188,9 +188,10 @@ export function useUpsertPlayerChoice() {
             (c) => c.choice_ref_id === data.choice_ref_id
           )
 
+          const existingChoice = existingIndex >= 0 ? currentChoices[existingIndex] : undefined
           const upsertedChoice: Tables<'player_choices'> = {
-            id: existingIndex >= 0 ? currentChoices[existingIndex].id : generateLocalId(),
-            created_at: existingIndex >= 0 ? currentChoices[existingIndex].created_at : now,
+            id: existingChoice?.id ?? generateLocalId(),
+            created_at: existingChoice?.created_at ?? now,
             updated_at: now,
             entity_id: data.entity_id || null,
             player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
@@ -252,9 +253,10 @@ export function useUpsertPlayerChoice() {
           (c) => c.choice_ref_id === data.choice_ref_id
         )
 
+        const existingChoice = existingIndex >= 0 ? previousChoices[existingIndex] : undefined
         const optimisticChoice: Tables<'player_choices'> = {
-          id: existingIndex >= 0 ? previousChoices[existingIndex].id : generateLocalId(),
-          created_at: existingIndex >= 0 ? previousChoices[existingIndex].created_at : now,
+          id: existingChoice?.id ?? generateLocalId(),
+          created_at: existingChoice?.created_at ?? now,
           updated_at: now,
           entity_id: data.entity_id || null,
           player_choice_id: (data as { player_choice_id?: string }).player_choice_id || null,
@@ -291,17 +293,17 @@ export function useUpsertPlayerChoice() {
 
             return oldEntities.map((entity) => {
               if (entity.id === entityId) {
-                const existingIndex = entity.choices.findIndex(
-                  (c) => c.choice_ref_id === choice.choice_ref_id
-                )
+                const existingIndex =
+                  entity.choices?.findIndex((c) => c.choice_ref_id === choice.choice_ref_id) ?? -1
 
                 // For multi-select, append; for single-select, replace
                 // Note: We can't reliably detect multi-select from cache, so we'll just replace
                 // The UI will handle displaying multiple selections correctly
+                const currentChoices = entity.choices ?? []
                 const updatedChoices =
                   existingIndex >= 0
-                    ? entity.choices.map((c, i) => (i === existingIndex ? choice : c))
-                    : [...entity.choices, choice]
+                    ? currentChoices.map((c, i) => (i === existingIndex ? choice : c))
+                    : [...currentChoices, choice]
 
                 return {
                   ...entity,
@@ -405,7 +407,7 @@ export function useDeletePlayerChoice() {
               if (entity.id === variables.entityId) {
                 return {
                   ...entity,
-                  choices: entity.choices.filter((c) => c.id !== variables.id),
+                  choices: (entity.choices ?? []).filter((c) => c.id !== variables.id),
                 }
               }
               return entity

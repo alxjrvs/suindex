@@ -3,12 +3,12 @@ import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import type { ReactElement } from 'react'
 import { useSearch } from '@tanstack/react-router'
 import Footer from './Footer'
-import type { SchemaInfo } from '../types/schema'
+import type { SchemaInfo } from '@/types/schema'
 import { getDisplayComponent } from './componentRegistry'
 import { useSchemaData } from './schema/useSchemaData'
-import { useSchemaParams } from '../hooks/useSchemaParams'
+import { useSchemaParams } from '@/hooks/useSchemaParams'
 import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
-import { findEntityBySlug } from '../utils/slug'
+import { findEntityBySlug } from '@/utils/slug'
 
 interface ItemShowPageProps {
   schemas: SchemaInfo[]

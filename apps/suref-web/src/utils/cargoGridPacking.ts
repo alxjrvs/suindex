@@ -5,7 +5,8 @@
  * occupies a connected region of cells, creating a "single box" visual appearance.
  */
 
-import { getCargoGridConfig } from '../constants/gameRules'
+import { getCargoGridConfig } from '@/constants/gameRules'
+import { logger } from '@/lib/logger'
 
 export interface GridCell {
   itemId: string | null
@@ -46,7 +47,11 @@ function findBestShape(amount: number, maxCols: number): { width: number; height
   }
 
   factors.sort((a, b) => a.perimeter - b.perimeter)
-  return { width: factors[0].width, height: factors[0].height }
+  const firstFactor = factors[0]
+  if (!firstFactor) {
+    return { width: 1, height: amount }
+  }
+  return { width: firstFactor.width, height: firstFactor.height }
 }
 
 /**
@@ -105,7 +110,8 @@ function findConnectedRegion(
   }
 
   for (let startIdx = 0; startIdx < cells.length; startIdx++) {
-    if (cells[startIdx].itemId !== null || visited.has(startIdx)) continue
+    const startCell = cells[startIdx]
+    if (!startCell || startCell.itemId !== null || visited.has(startIdx)) continue
 
     const region: number[] = []
     const queue: number[] = [startIdx]
@@ -118,7 +124,8 @@ function findConnectedRegion(
       regionVisited.add(idx)
       visited.add(idx)
 
-      if (cells[idx].itemId === null) {
+      const cell = cells[idx]
+      if (cell && cell.itemId === null) {
         region.push(idx)
 
         const pos = indexToPos(idx, cols)
@@ -126,7 +133,8 @@ function findConnectedRegion(
 
         for (const neighborPos of neighbors) {
           const neighborIdx = posToIndex(neighborPos, cols)
-          if (!regionVisited.has(neighborIdx) && cells[neighborIdx].itemId === null) {
+          const neighborCell = cells[neighborIdx]
+          if (!regionVisited.has(neighborIdx) && neighborCell?.itemId === null) {
             queue.push(neighborIdx)
           }
         }
@@ -159,7 +167,8 @@ function findRectangularRegion(
       for (let r = startRow; r < startRow + height && valid; r++) {
         for (let c = startCol; c < startCol + width && valid; c++) {
           const idx = posToIndex({ row: r, col: c }, cols)
-          if (cells[idx].itemId !== null) {
+          const cell = cells[idx]
+          if (!cell || cell.itemId !== null) {
             valid = false
           } else {
             region.push(idx)
@@ -190,7 +199,13 @@ function findConnectedRegionIncludingCell(
 ): number[] | null {
   const targetIdx = posToIndex(targetCell, cols)
 
-  if (targetIdx < 0 || targetIdx >= cells.length || cells[targetIdx].itemId !== null) {
+  const targetCellData = cells[targetIdx]
+  if (
+    targetIdx < 0 ||
+    targetIdx >= cells.length ||
+    !targetCellData ||
+    targetCellData.itemId !== null
+  ) {
     return null
   }
 
@@ -213,7 +228,8 @@ function findConnectedRegionIncludingCell(
           for (let r = startRow; r < startRow + height && valid; r++) {
             for (let c = startCol; c < startCol + width && valid; c++) {
               const idx = posToIndex({ row: r, col: c }, cols)
-              if (cells[idx].itemId !== null) {
+              const cell = cells[idx]
+              if (!cell || cell.itemId !== null) {
                 valid = false
               } else {
                 region.push(idx)
@@ -239,7 +255,8 @@ function findConnectedRegionIncludingCell(
 
     visited.add(idx)
 
-    if (cells[idx].itemId === null) {
+    const cell = cells[idx]
+    if (cell && cell.itemId === null) {
       region.push(idx)
 
       const pos = indexToPos(idx, cols)
@@ -247,7 +264,8 @@ function findConnectedRegionIncludingCell(
 
       for (const neighborPos of neighbors) {
         const neighborIdx = posToIndex(neighborPos, cols)
-        if (!visited.has(neighborIdx) && cells[neighborIdx].itemId === null) {
+        const neighborCell = cells[neighborIdx]
+        if (!visited.has(neighborIdx) && neighborCell?.itemId === null) {
           queue.push(neighborIdx)
         }
       }
@@ -273,7 +291,12 @@ function findSpecialCells(
   const avgRow = positions.reduce((sum, p) => sum + p.row, 0) / positions.length
   const avgCol = positions.reduce((sum, p) => sum + p.col, 0) / positions.length
 
-  let centerIdx = region[0]
+  const firstIdx = region[0]
+  if (firstIdx === undefined) {
+    throw new Error('Region cannot be empty')
+  }
+
+  let centerIdx = firstIdx
   let minDist = Infinity
 
   for (const idx of region) {
@@ -285,7 +308,7 @@ function findSpecialCells(
     }
   }
 
-  let topRightIdx = region[0]
+  let topRightIdx = firstIdx
   let minRow = Infinity
   let maxCol = -Infinity
 
@@ -326,14 +349,16 @@ export function packCargoGrid(
 
     for (let i = 0; i < Math.min(previousGrid.cells.length, cells.length); i++) {
       const prevCell = previousGrid.cells[i]
-      if (prevCell.itemId && itemIds.has(prevCell.itemId)) {
+      if (prevCell?.itemId && itemIds.has(prevCell.itemId)) {
         cells[i] = { ...prevCell }
       }
     }
   }
 
   const placedItemIds = new Set(
-    cells.filter((cell) => cell.itemId !== null).map((cell) => cell.itemId)
+    cells
+      .filter((cell) => cell?.itemId !== null && cell.itemId !== undefined)
+      .map((cell) => cell.itemId!)
   )
   const itemsToPlace = items.filter((item) => !placedItemIds.has(item.id))
 
@@ -365,9 +390,12 @@ export function packCargoGrid(
     const { centerIdx, topRightIdx } = findSpecialCells(region, cols)
 
     for (const idx of region) {
-      cells[idx].itemId = item.id
-      cells[idx].isCenter = idx === centerIdx
-      cells[idx].isTopRight = idx === topRightIdx
+      const cell = cells[idx]
+      if (cell) {
+        cell.itemId = item.id
+        cell.isCenter = idx === centerIdx
+        cell.isTopRight = idx === topRightIdx
+      }
     }
   }
 
@@ -390,16 +418,19 @@ export function packCargoGrid(
       const region = findConnectedRegion(cells, rows, cols, item.amount, preferredShape)
 
       if (!region) {
-        console.warn(`Could not fit item ${item.id} with amount ${item.amount}`)
+        logger.warn(`Could not fit item ${item.id} with amount ${item.amount}`)
         continue
       }
 
       const { centerIdx, topRightIdx } = findSpecialCells(region, cols)
 
       for (const idx of region) {
-        cells[idx].itemId = item.id
-        cells[idx].isCenter = idx === centerIdx
-        cells[idx].isTopRight = idx === topRightIdx
+        const cell = cells[idx]
+        if (cell) {
+          cell.itemId = item.id
+          cell.isCenter = idx === centerIdx
+          cell.isTopRight = idx === topRightIdx
+        }
       }
     }
   }

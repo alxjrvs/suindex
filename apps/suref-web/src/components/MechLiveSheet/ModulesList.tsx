@@ -1,7 +1,7 @@
 import type { SURefChassis } from 'salvageunion-reference'
 import { getModuleSlots } from 'salvageunion-reference'
-import { useHydratedMech } from '../../hooks/mech'
-import { useManageMechSystemsAndModules } from '../../hooks/mech/useManageMechSystemsAndModules'
+import { useHydratedMech } from '@/hooks/mech'
+import { useManageMechSystemsAndModules } from '@/hooks/mech/useManageMechSystemsAndModules'
 import { MechEntityList } from './MechEntityList'
 
 interface ModulesListProps {

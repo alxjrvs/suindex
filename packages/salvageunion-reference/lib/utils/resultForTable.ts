@@ -111,7 +111,10 @@ function rollInRange(roll: number, range: string): boolean {
   }
 
   // Range format "X-Y"
-  const [minStr, maxStr] = range.split('-')
+  const parts = range.split('-')
+  const minStr = parts[0]
+  const maxStr = parts[1]
+  if (!minStr || !maxStr) return false
   const min = parseInt(minStr, 10)
   const max = parseInt(maxStr, 10)
 

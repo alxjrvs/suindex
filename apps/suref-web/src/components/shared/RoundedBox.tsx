@@ -1,6 +1,6 @@
 import { Flex, type FlexProps } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
-import { Text } from '../base/Text'
+import { Text } from '@/components/base/Text'
 
 type RoundedBoxProps = Omit<FlexProps, 'bg' | 'children' | 'borderColor' | 'direction'> & {
   /** Background color token (e.g., 'bg.builder.pilot', 'su.orange', 'su.green') */

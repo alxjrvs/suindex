@@ -2,10 +2,10 @@ import { Button, VStack, Box } from '@chakra-ui/react'
 import { useState, useMemo } from 'react'
 import { SalvageUnionReference } from 'salvageunion-reference'
 import type { SURefObjectChoice, SURefEnumSchemaName, SURefEntity } from 'salvageunion-reference'
-import { EntityDisplay } from '../entity/EntityDisplay'
-import { EntitySelectionModal } from '../entity/EntitySelectionModal'
-import { usePlayerChoices, getSelectionsForChoice } from '../../hooks/suentity'
-import { Text } from '../base/Text'
+import { EntityDisplay } from '@/components/entity/EntityDisplay'
+import { EntitySelectionModal } from '@/components/entity/EntitySelectionModal'
+import { usePlayerChoices, getSelectionsForChoice } from '@/hooks/suentity'
+import { Text } from '@/components/base/Text'
 
 export function SheetEntityChoiceDisplay({
   choice,
@@ -69,13 +69,15 @@ export function SheetEntityChoiceDisplay({
       CrawlerTechLevels: 'crawler-tech-levels',
     }
 
-    return schema.map((schema) => {
-      if (schema in pluralToSchemaName) {
-        return pluralToSchemaName[schema as keyof typeof pluralToSchemaName]
-      }
+    return schema
+      .map((schema) => {
+        if (schema in pluralToSchemaName) {
+          return pluralToSchemaName[schema as keyof typeof pluralToSchemaName]
+        }
 
-      return schema as SURefEnumSchemaName
-    })
+        return schema as SURefEnumSchemaName
+      })
+      .filter((name): name is SURefEnumSchemaName => name !== undefined)
   }, [choice])
 
   const handleSelect = (entityId: string, schemaName: SURefEnumSchemaName) => {
