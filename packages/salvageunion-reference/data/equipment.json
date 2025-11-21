@@ -114,7 +114,29 @@
     "content": [
       {
         "type": "paragraph",
-        "value": "You have created an intelligent, holographic, A.I. companion that only you can use. Describe your Companion’s appearance, and name them. They project from a small, portable device which you can hold on your person. Add this to your Pilot Inventory.  Your Holo Companion cannot interact physi- cally with the material world, but can see, be seen, speak, and traverse it. You can project or un-project them as a Turn Action, and they can appear anywhere within Medium Range of the device. Nominate another player at the table to voice your companion."
+        "value": "You have created an intelligent, holographic, A.I. companion that only you can use. Describe your Companion's appearance, and name them. They project from a small, portable device which you can hold on your person. Add this to your Pilot Inventory.  Your Holo Companion cannot interact physi- cally with the material world, but can see, be seen, speak, and traverse it. You can project or un-project them as a Turn Action, and they can appear anywhere within Medium Range of the device. Nominate another player at the table to voice your companion."
+      }
+    ],
+    "choices": [
+      {
+        "id": "a8b9c0d1-e2f3-4a5b-8c9d-0e1f2a3b4c5d",
+        "name": "Name",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "The name of your Holo Companion."
+          }
+        ]
+      },
+      {
+        "id": "e3f4a5b6-c7d8-4e9f-0a1b-2c3d4e5f6a7b",
+        "name": "Appearance",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Describe your Companion's appearance."
+          }
+        ]
       }
     ]
   },
@@ -485,6 +507,29 @@
         "type": "paragraph",
         "value": "Portable"
       }
+    ],
+    "choices": [
+      {
+        "id": "b9c0d1e2-f3a4-4b5c-9d0e-1f2a3b4c5d6e",
+        "name": "Name",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "The name of your Auto-Turret."
+          }
+        ]
+      },
+      {
+        "id": "a5b6c7d8-e9f0-4a1b-2c3d-4e5f6a7b8c9d",
+        "name": "A.I. Personality",
+        "rollTable": "A.I. Personality",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Roll on the A.I. Personality Table or choose your own."
+          }
+        ]
+      }
     ]
   },
   {
@@ -668,7 +713,29 @@
     "actions": ["Mecha Companion"],
     "page": 68,
     "id": "248c2e65-5159-4518-a0ce-9d8083794871",
-    "source": "Salvage Union Workshop Manual"
+    "source": "Salvage Union Workshop Manual",
+    "choices": [
+      {
+        "id": "c0d1e2f3-a4b5-4c6d-9e0f-1a2b3c4d5e6f",
+        "name": "Name",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "The name of your Mecha Companion."
+          }
+        ]
+      },
+      {
+        "id": "f4a5b6c7-d8e9-4f0a-1b2c-3d4e5f6a7b8c",
+        "name": "Appearance",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Describe your Mecha Companion's appearance."
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "fbb3002c-24d2-4a1b-a623-9c9eab3ac566",

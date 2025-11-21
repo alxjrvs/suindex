@@ -603,6 +603,19 @@
         "type": "list-item",
         "value": "You reduce the Heat of your Mech by 2."
       }
+    ],
+    "choices": [
+      {
+        "id": "b6c7d8e9-f0a1-4b2c-3d4e-5f6a7b8c9d0e1",
+        "name": "A.I. Personality",
+        "rollTable": "A.I. Personality",
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Roll on the A.I. Personality Table or choose your own."
+          }
+        ]
+      }
     ]
   },
   {
@@ -652,9 +665,15 @@
     "actionType": "Passive",
     "choices": [
       {
-        "name": "Turret Personality ",
+        "id": "c7d8e9f0-a1b2-4c3d-4e5f-6a7b8c9d0e1f2",
+        "name": "A.I. Personality",
         "rollTable": "A.I. Personality",
-        "id": "cce464f5-c443-4d19-982f-13b010400860"
+        "content": [
+          {
+            "type": "paragraph",
+            "value": "Roll on the A.I. Personality Table or choose your own."
+          }
+        ]
       },
       {
         "id": "c05fd7f4-cd5a-4c0d-8518-3566cece416d",
