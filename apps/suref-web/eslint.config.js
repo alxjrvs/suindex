@@ -49,6 +49,8 @@ export default [
           allow: ['warn', 'error'],
         },
       ],
+      // Disallow any types - use unknown or proper types instead
+      '@typescript-eslint/no-explicit-any': 'error',
     },
   },
   prettier,
