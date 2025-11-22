@@ -13,7 +13,7 @@ export function EntityChassisAbilitiesContent() {
   const chassisName = 'name' in data ? data.name : undefined
 
   return (
-    <VStack gap={spacing.smallGap} alignItems="stretch">
+    <VStack gap={spacing.smallGap} p="2" alignItems="stretch">
       {chassisAbilities.map((ability) => {
         return (
           <NestedChassisAbility

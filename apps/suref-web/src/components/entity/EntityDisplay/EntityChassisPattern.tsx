@@ -46,7 +46,7 @@ export function EntityChassisPattern({ pattern }: EntityChassisPatternProps) {
   const isLegalStarting = 'legalStarting' in pattern && pattern.legalStarting
 
   return (
-    <VStack gap={4} alignItems="stretch">
+    <VStack gap={4} alignItems="stretch" px={2}>
       {isLegalStarting && (
         <Box bg="su.green" color="su.white" px={4} py={2} textAlign="center" fontWeight="bold">
           LEGAL STARTING PATTERN

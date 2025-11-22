@@ -2,7 +2,16 @@ import { Box, VStack, Button, Flex } from '@chakra-ui/react'
 import { useCallback, useMemo } from 'react'
 import { getTiltRotation } from '@/utils/tiltUtils'
 import type { SURefClass } from 'salvageunion-reference'
-import { getEffects, getTable } from 'salvageunion-reference'
+import {
+  getEffects,
+  getTable,
+  getChassisAbilities,
+  hasActions,
+  getAssetUrl,
+  findActionByName,
+  extractVisibleActions,
+  filterActionsExcludingName,
+} from 'salvageunion-reference'
 import { EntityDisplayFooter } from '@/components/shared/EntityDisplayFooter'
 import { RollTable } from '@/components/shared/RollTable'
 import { EntityContainer } from '@/components/shared/EntityContainer'
@@ -11,10 +20,8 @@ import { EntityLeftContent } from '@/components/entity/EntityDisplay/EntityLeftC
 import { EntityRightHeaderContent } from '@/components/entity/EntityDisplay/EntityRightHeaderContent'
 import { EntityChassisPatterns } from '@/components/entity/EntityDisplay/EntityChassisPatterns'
 import { EntityOptions } from '@/components/entity/EntityDisplay/EntityOptions'
-import { EntityTopMatter } from '@/components/entity/EntityDisplay/EntityTopMatter'
 import { EntityChassisAbilitiesContent } from '@/components/entity/EntityDisplay/EntityChassisAbilitiesContent'
 import { EntityRequirementDisplay } from '@/components/entity/EntityDisplay/EntityRequirementDisplay'
-import { getChassisAbilities } from 'salvageunion-reference'
 import { EntityChoices } from '@/components/entity/EntityDisplay/EntityChoices'
 import { EntityGrants } from '@/components/entity/EntityDisplay/EntityGrants'
 import { ClassAbilitiesList } from '@/components/PilotLiveSheet/ClassAbilitiesList'
@@ -22,6 +29,10 @@ import { EntityBonusPerTechLevel } from '@/components/entity/EntityDisplay/Entit
 import { useEntityDisplayContext } from '@/components/entity/EntityDisplay/useEntityDisplayContext'
 import { ConditionalSheetInfo } from '@/components/entity/EntityDisplay/ConditionalSheetInfo'
 import { EntityPopulationRange } from '@/components/entity/EntityDisplay/EntityPopulationRange'
+import { EntityActions } from '@/components/entity/EntityDisplay/EntityActions'
+import { EntityImage } from '@/components/entity/EntityDisplay/EntityImage'
+import { ContentBlockRenderer } from '@/components/entity/EntityDisplay/ContentBlockRenderer'
+import { getEntityDisplayName } from '@/components/entity/entityDisplayHelpers'
 import type { ButtonProps } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
 
@@ -69,7 +80,53 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
     userChoices,
     onChoiceSelection,
     hideImage,
+    fontSize,
+    imageWidth,
   } = useEntityDisplayContext()
+
+  // Determine which content to render (from EntityTopMatter)
+  let contentBlocks = 'content' in data ? data.content : undefined
+
+  // Check if any action name matches the entity name - if so, use that action's content
+  if (hasActions(data)) {
+    // Get entity name - prefer title from context, fallback to data.name
+    const entityName = getEntityDisplayName(data, title)
+
+    // Find action with matching name
+    const matchingAction = findActionByName(data, entityName)
+
+    // Only replace entity content if action has content
+    if (matchingAction && matchingAction.content && matchingAction.content.length > 0) {
+      contentBlocks = matchingAction.content
+    }
+  }
+
+  // Show content if entity has content blocks
+  const showContent = contentBlocks && contentBlocks.length > 0
+
+  const hasChassisAbilities = schemaName === 'chassis' && getChassisAbilities(data)
+
+  // Check if entity has actions that will be displayed (after filtering)
+  let hasDisplayableActions = false
+  if (hasActions(data) && (!hideActions || compact)) {
+    const actions = extractVisibleActions(data)
+    if (actions && actions.length > 0) {
+      const entityName = getEntityDisplayName(data, title)
+      const actionsToDisplay = filterActionsExcludingName(actions, entityName)
+      hasDisplayableActions = actionsToDisplay.length > 0
+    }
+  }
+
+  // Check if we should render top matter content:
+  // 1. Entity has content blocks, OR
+  // 2. Entity has chassis abilities, OR
+  // 3. Entity has an image URL (so images can render even without content), OR
+  // 4. Entity has actions that will be displayed (so actions can render even without content)
+  const hasTopMatterContent =
+    !!showContent || hasChassisAbilities || !!getAssetUrl(data) || hasDisplayableActions
+
+  const hasChassisAbilitiesInTopMatter =
+    schemaName === 'chassis' && getChassisAbilities(data) && !hideActions && !compact
 
   return (
     <EntityContainer
@@ -104,14 +161,22 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
           minW="0"
           w="full"
         >
-          <EntityTopMatter hideActions={hideActions} hideImage={hideImage}>
-            {children}
-          </EntityTopMatter>
+          {hasTopMatterContent && (
+            <>
+              <Box p={spacing.contentPadding}>
+                {!hideImage && <EntityImage customWidth={imageWidth} />}
+                {showContent && (
+                  <ContentBlockRenderer content={contentBlocks!} fontSize={fontSize.sm} compact={compact} />
+                )}
+                {children}
+              </Box>
+              {hasChassisAbilitiesInTopMatter && <EntityChassisAbilitiesContent />}
+              {(!hideActions || compact) && <EntityActions />}
+            </>
+          )}
 
           {compact && schemaName === 'chassis' && getChassisAbilities(data) && (
-            <Box p={spacing.contentPadding}>
-              <EntityChassisAbilitiesContent />
-            </Box>
+            <EntityChassisAbilitiesContent />
           )}
 
           <EntityPopulationRange />
