@@ -83,4 +83,3 @@ export function useCreatePilotFromWizard() {
     [createPilot, updatePilot, createEntity, navigate]
   )
 }
-
