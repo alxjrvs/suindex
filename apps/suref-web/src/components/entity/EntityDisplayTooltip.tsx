@@ -18,6 +18,8 @@ interface EntityDisplayTooltipProps {
   openDelay?: number
   /** Delay before hiding tooltip in ms (default: 100) */
   closeDelay?: number
+  /** Whether the wrapper should take full width (default: false) */
+  fullWidth?: boolean
 }
 
 /**
@@ -36,6 +38,7 @@ export function EntityDisplayTooltip({
   showArrow = false,
   openDelay = 200,
   closeDelay = 100,
+  fullWidth = false,
 }: EntityDisplayTooltipProps) {
   const entity = SalvageUnionReference.get(schemaName, entityId)
 
@@ -51,9 +54,10 @@ export function EntityDisplayTooltip({
             margin: 0,
             lineHeight: 1,
             cursor: 'help',
-            display: 'inline-flex',
+            display: fullWidth ? 'block' : 'inline-flex',
             flexShrink: 0,
             flexGrow: 0,
+            width: fullWidth ? '100%' : 'auto',
           }}
         >
           {children}
@@ -62,7 +66,7 @@ export function EntityDisplayTooltip({
       <Portal>
         <HoverCard.Positioner>
           <HoverCard.Content
-            minW="533px"
+            minW="933px"
             maxH="80vh"
             overflowY="auto"
             bg="transparent"

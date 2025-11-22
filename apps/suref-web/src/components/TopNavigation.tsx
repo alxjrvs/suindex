@@ -16,6 +16,7 @@ import { Heading } from './base/Heading'
 import { useNavigationState } from '@/hooks/useNavigationState'
 import { NavigationLink } from './shared/NavigationLink'
 import { DiscordSignInButton } from './DiscordSignInButton'
+import { UniversalSearchBar } from './shared/UniversalSearchBar'
 
 interface TopNavigationProps {
   user: User | null
@@ -113,6 +114,10 @@ export function TopNavigation({ user, userLoading = false, schemas = [] }: TopNa
             flexDirection={{ base: 'column', lg: 'row' }}
             w={{ base: 'full', lg: 'auto' }}
           >
+            <Box as="li">
+              <UniversalSearchBar schemas={schemas} />
+            </Box>
+
             <Box as="li">
               <Menu.Root>
                 <Menu.Trigger asChild>

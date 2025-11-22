@@ -15,7 +15,7 @@ export function EntitySubTitleElement() {
   if (values.length === 0) return null
 
   return (
-    <Flex gap={spacing.minimalGap} flexWrap="wrap">
+    <Flex gap={spacing.minimalGap} flexWrap="wrap" alignItems="center">
       {values.map((item, index) => (
         <SharedDetailItem key={index} item={item} compact={compact} />
       ))}

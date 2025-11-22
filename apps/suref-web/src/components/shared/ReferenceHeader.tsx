@@ -10,10 +10,8 @@ interface ReferenceHeaderProps extends Omit<BoxProps, 'title'> {
 export function ReferenceHeader({ title, children, ...boxProps }: ReferenceHeaderProps) {
   return (
     <Box
-      bg="bg.canvas"
+      bg="su.white"
       shadow="sm"
-      borderBottomWidth="1px"
-      borderColor="border.default"
       p={8}
       display="flex"
       flexDirection="column"

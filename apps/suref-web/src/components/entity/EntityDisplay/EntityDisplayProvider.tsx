@@ -1,7 +1,17 @@
-import { useState, type ReactNode } from 'react'
+import { useState, useMemo, type ReactNode } from 'react'
 import type { ButtonProps } from '@chakra-ui/react'
 import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
-import { getTechLevel } from 'salvageunion-reference'
+import {
+  getTechLevel,
+  hasActions,
+  getChassisAbilities,
+  getEffects,
+  getTable,
+  getAssetUrl,
+  extractVisibleActions,
+  filterActionsExcludingName,
+  findActionByName,
+} from 'salvageunion-reference'
 import { techLevelColors } from '@/theme'
 import {
   calculateBackgroundColor,
@@ -10,6 +20,7 @@ import {
   calculateOpacity,
   shouldShowExtraContent as calculateShouldShowExtraContent,
   createHeaderClickHandler,
+  getEntityDisplayName,
 } from '@/components/entity/entityDisplayHelpers'
 import {
   EntityDisplayContext,
@@ -107,6 +118,31 @@ export function EntityDisplayProvider({
     onToggle
   )
 
+  // Memoize expensive computations
+  const entityName = useMemo(() => getEntityDisplayName(data, title), [data, title])
+
+  const hasActionsValue = useMemo(() => hasActions(data), [data])
+
+  const chassisAbilities = useMemo(() => getChassisAbilities(data), [data])
+
+  const effects = useMemo(() => getEffects(data), [data])
+
+  const table = useMemo(() => getTable(data), [data])
+
+  const assetUrl = useMemo(() => getAssetUrl(data), [data])
+
+  const visibleActions = useMemo(() => extractVisibleActions(data), [data])
+
+  const actionsToDisplay = useMemo(() => {
+    if (!visibleActions || visibleActions.length === 0) return undefined
+    return filterActionsExcludingName(visibleActions, entityName)
+  }, [visibleActions, entityName])
+
+  const matchingAction = useMemo(() => {
+    if (!hasActionsValue) return undefined
+    return findActionByName(data, entityName)
+  }, [hasActionsValue, data, entityName])
+
   const value: EntityDisplayContextValue = {
     data,
     schemaName,
@@ -136,6 +172,15 @@ export function EntityDisplayProvider({
     onChoiceSelection,
     hideImage,
     imageWidth,
+    entityName,
+    hasActions: hasActionsValue,
+    chassisAbilities,
+    effects,
+    table,
+    assetUrl,
+    visibleActions,
+    actionsToDisplay,
+    matchingAction,
   }
 
   return <EntityDisplayContext.Provider value={value}>{children}</EntityDisplayContext.Provider>

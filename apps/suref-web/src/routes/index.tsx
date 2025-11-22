@@ -6,8 +6,7 @@ import { ReferenceError } from '@/components/errors/ReferenceError'
 const schemaIndexData = getSchemaCatalog()
 
 function IndexPage() {
-  const { schemas } = Route.useLoaderData()
-  return <RulesReferenceLanding schemas={schemas} />
+  return <RulesReferenceLanding />
 }
 
 export const Route = createFileRoute('/')({

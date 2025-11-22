@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import type {
   SURefMetaAction,
@@ -144,11 +143,15 @@ export function NestedChassisAbility({
       p={spacing}
     >
       {/* Name, details, and/or first content block on same line - wraps inline */}
-      <Box
+      <Flex
         color="su.black"
         fontWeight="medium"
         lineHeight="relaxed"
         fontSize={fontSize}
+        flexWrap="wrap"
+        alignItems="center"
+        direction="row"
+        gap={compact ? 0.5 : 1}
         mb={
           (details.length > 0 && !renderDetailsInline) || remainingContent || hasChoices
             ? spacing
@@ -162,10 +165,7 @@ export function NestedChassisAbility({
         {renderDetailsInline &&
           details.length > 0 &&
           details.map((item, index) => (
-            <React.Fragment key={index}>
-              {' '}
-              <SharedDetailItem item={item} compact={compact} />
-            </React.Fragment>
+            <SharedDetailItem key={index} item={item} compact={compact} />
           ))}
         {/* Render first content block inline when condition is met */}
         {renderFirstContentInline && firstContentBlock && (
@@ -175,7 +175,7 @@ export function NestedChassisAbility({
             chassisName={chassisName}
           />
         )}
-      </Box>
+      </Flex>
 
       {/* Detail row below name (only if not rendered inline) */}
       {details.length > 0 && !renderDetailsInline && (
@@ -183,12 +183,11 @@ export function NestedChassisAbility({
           gap={compact ? 0.5 : 1}
           flexWrap="wrap"
           alignItems="center"
+          direction="row"
           mb={remainingContent || hasChoices ? spacing : 0}
         >
           {details.map((item, index) => (
-            <Box key={index} flexShrink={0} flexGrow={0} width="auto" minWidth="0">
-              <SharedDetailItem item={item} compact={compact} />
-            </Box>
+            <SharedDetailItem key={index} item={item} compact={compact} />
           ))}
         </Flex>
       )}
