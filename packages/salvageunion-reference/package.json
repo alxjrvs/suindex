@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist && bun test && npm-run-all --parallel docs generate && tsc --project tsconfig.build.json && npm-run-all --parallel format lint",
-    "build:quick": "bun run generate && tsc --project tsconfig.build.json",
+    "build:quick": "bun run generate && tsc --project tsconfig.build.json && bun run lint -- --fix && bun run format",
     "build:incremental": "bun run generate && tsc --project tsconfig.build.json --incremental",
     "watch": "bun run generate && tsc --project tsconfig.build.json --watch",
     "watch:quick": "tsc --project tsconfig.build.json --watch",
