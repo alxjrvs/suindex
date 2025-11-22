@@ -113,7 +113,9 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
           </Flex>
         }
       >
-        <DisplayComponent data={item} compact={compact} />
+        <Box maxW="80%" mx="auto">
+          <DisplayComponent data={item} compact={compact} />
+        </Box>
       </Suspense>
     )
   }
@@ -121,7 +123,7 @@ export default function ItemShowPage({ schemas, prefetchedItem }: ItemShowPagePr
   const specializedContent = renderSpecializedContent()
 
   return (
-    <Flex minH="100%" flexDirection="column" bg="bg.canvas">
+    <Flex minH="100%" flexDirection="column" bg="bg.landing">
       <Flex flex="1" p={6} alignItems="center" justifyContent="center">
         <Box maxW="6xl" w="full">
           {specializedContent ? (

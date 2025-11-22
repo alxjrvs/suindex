@@ -67,7 +67,14 @@ export function NestedActionDisplay({
 
       {/* Detail row - always on new line for default variant */}
       {details.length > 0 && (
-        <Flex gap={compact ? 0.5 : 1} flexWrap="wrap" alignItems="center" p={spacing} pt={0}>
+        <Flex
+          gap={compact ? 0.5 : 1}
+          flexWrap="wrap"
+          alignItems="center"
+          p={spacing}
+          pt={0}
+          direction="row"
+        >
           {details.map((item, index) => (
             <SharedDetailItem key={index} item={item} compact={compact} />
           ))}

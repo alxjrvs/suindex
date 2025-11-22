@@ -108,7 +108,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
         px={6}
       >
         <Box maxW="800px" mx="auto" w="full">
-          <Text color="brand.srd" textAlign="center" mb={techLevels.length > 1 ? 3 : 2}>
+          <Text color="su.black" textAlign="center" mb={techLevels.length > 1 ? 3 : 2}>
             {currentSchema.description}
           </Text>
         </Box>
@@ -126,7 +126,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
             }}
             borderColor="border.default"
             focusRingColor="su.orange"
-            bg="bg.input"
+            bg="su.white"
             color="fg.input"
             w="full"
           />
@@ -183,7 +183,7 @@ export default function SchemaViewer({ schemas, data: prefetchedData }: SchemaVi
         )}
       </ReferenceHeader>
 
-      <Box flex="1" p={6} bg="bg.canvas">
+      <Box flex="1" p={6} bg="bg.landing">
         <Box
           maxW="1400px"
           mx="auto"

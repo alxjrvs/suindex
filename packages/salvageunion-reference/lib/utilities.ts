@@ -13,6 +13,10 @@ import type {
   SURefEntity,
   SURefEnumSchemaName,
   SURefObjectSystemModule,
+  SURefObjectTable,
+  SURefObjectTrait,
+  SURefObjectChoice,
+  SURefObjectActionOptions,
 } from './types/index.js'
 import type {
   SURefAbility,
@@ -793,15 +797,10 @@ export function getDamage(entity: SURefMetaEntity):
  * @param entity - The entity to extract traits from
  * @returns The traits array or undefined if not present
  */
-export function getTraits(entity: SURefMetaEntity):
-  | Array<{
-      amount?: number | string
-      type: string
-    }>
-  | undefined {
+export function getTraits(entity: SURefMetaEntity): SURefObjectTrait[] | undefined {
   // Check base level first
   if ('traits' in entity && Array.isArray(entity.traits)) {
-    return entity.traits as Array<{ amount?: number | string; type: string }>
+    return entity.traits
   }
 
   // Check action property (only if action name matches entity name)
@@ -813,10 +812,7 @@ export function getTraits(entity: SURefMetaEntity):
     'traits' in matchingAction &&
     Array.isArray(matchingAction.traits)
   ) {
-    return matchingAction.traits as Array<{
-      amount?: number | string
-      type: string
-    }>
+    return matchingAction.traits
   }
 
   return undefined
@@ -836,7 +832,7 @@ export function getEffects(entity: SURefMetaEntity):
   | undefined {
   // Check base level only (effects don't exist in actions)
   if ('effects' in entity && Array.isArray(entity.effects)) {
-    return entity.effects as Array<{ label?: string; value: string }>
+    return entity.effects
   }
 
   return undefined
@@ -848,18 +844,10 @@ export function getEffects(entity: SURefMetaEntity):
  * @param entity - The entity to extract table from
  * @returns The table object or undefined if not present
  */
-export function getTable(entity: SURefMetaEntity):
-  | {
-      type: 'standard' | 'alternate' | 'flat' | 'full'
-      [key: string]: string
-    }
-  | undefined {
+export function getTable(entity: SURefMetaEntity): SURefObjectTable | undefined {
   // Check base level first
   if ('table' in entity && entity.table !== null && typeof entity.table === 'object') {
-    return entity.table as {
-      type: 'standard' | 'alternate' | 'flat' | 'full'
-      [key: string]: string
-    }
+    return entity.table
   }
 
   // Check action property (only if action name matches entity name)
@@ -872,10 +860,7 @@ export function getTable(entity: SURefMetaEntity):
     matchingAction.table !== null &&
     typeof matchingAction.table === 'object'
   ) {
-    return matchingAction.table as {
-      type: 'standard' | 'alternate' | 'flat' | 'full'
-      [key: string]: string
-    }
+    return matchingAction.table
   }
 
   return undefined
@@ -887,15 +872,10 @@ export function getTable(entity: SURefMetaEntity):
  * @param entity - The entity to extract options from
  * @returns The options array or undefined if not present
  */
-export function getOptions(entity: SURefMetaEntity):
-  | Array<{
-      label: string
-      value: string
-    }>
-  | undefined {
+export function getOptions(entity: SURefMetaEntity): SURefObjectActionOptions | undefined {
   // Check base level first
   if ('options' in entity && Array.isArray(entity.options)) {
-    return entity.options as Array<{ label: string; value: string }>
+    return entity.options
   }
 
   // Check action property (only if action name matches entity name)
@@ -907,7 +887,7 @@ export function getOptions(entity: SURefMetaEntity):
     'options' in matchingAction &&
     Array.isArray(matchingAction.options)
   ) {
-    return matchingAction.options as Array<{ label: string; value: string }>
+    return matchingAction.options
   }
 
   return undefined
@@ -921,14 +901,7 @@ export function getOptions(entity: SURefMetaEntity):
  * @param entity - The entity to extract choices from
  * @returns The choices array or undefined if not present
  */
-export function getChoices(entity: SURefMetaEntity):
-  | Array<{
-      id: string
-      name: string
-      description?: string
-      [key: string]: unknown
-    }>
-  | undefined {
+export function getChoices(entity: SURefMetaEntity): SURefObjectChoice[] | undefined {
   // Check if entity has an action with matching name that has choices - use those first
   const matchingAction = findMatchingAction(entity)
   const hasMatchingActionWithChoices =
@@ -983,22 +956,12 @@ export function getChoices(entity: SURefMetaEntity):
 
   // If we have matching action choices and shouldn't filter them, return them
   if (hasMatchingActionWithChoices && !shouldFilterActionChoices) {
-    return matchingAction.choices as Array<{
-      id: string
-      name: string
-      description?: string
-      [key: string]: unknown
-    }>
+    return matchingAction.choices
   }
 
   // Fall back to root-level choices (always return these, even if action choices were filtered)
   if ('choices' in entity && Array.isArray(entity.choices)) {
-    return entity.choices as Array<{
-      id: string
-      name: string
-      description?: string
-      [key: string]: unknown
-    }>
+    return entity.choices
   }
 
   return undefined
@@ -1011,7 +974,7 @@ export function getChoices(entity: SURefMetaEntity):
  */
 export function getGrants(entity: SURefMetaEntity): SURefObjectGrant[] | undefined {
   if ('grants' in entity && Array.isArray(entity.grants)) {
-    return entity.grants as SURefObjectGrant[]
+    return entity.grants
   }
 
   return undefined

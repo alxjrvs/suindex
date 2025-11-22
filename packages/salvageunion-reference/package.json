@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist && bun test && npm-run-all --parallel docs generate && tsc --project tsconfig.build.json && npm-run-all --parallel format lint",
-    "build:quick": "bun run generate && tsc --project tsconfig.build.json && bun run lint -- --fix && bun run format",
+    "build:quick": "bun run generate && tsc --project tsconfig.build.json",
     "build:incremental": "bun run generate && tsc --project tsconfig.build.json --incremental",
     "watch": "bun run generate && tsc --project tsconfig.build.json --watch",
     "watch:quick": "tsc --project tsconfig.build.json --watch",
@@ -54,7 +54,7 @@
     "generate:typeIndex": "tsx tools/generateTypeIndex.ts",
     "generate:types": "npm-run-all --parallel generate:enums generate:common generate:objects generate:schemas",
     "generate:index": "tsx tools/generateIndexFile.ts",
-    "generate": "bun run generate:types && bun run generate:typeIndex && bun run generate:index && bun run generate:utilities",
+    "generate": "bun run generate:types && bun run generate:typeIndex && bun run generate:index && bun run generate:utilities && bun run lint -- --fix && bun run format",
     "validate:generated": "tsx tools/validateGenerated.ts",
     "validate:references": "tsx tools/validateReferences.ts",
     "typecheck": "tsc --project tsconfig.json --noEmit",

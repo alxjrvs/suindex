@@ -78,7 +78,7 @@ function ContentBlock({
       return null
     }
     return (
-      <Flex gap={1} flexWrap="wrap">
+      <Flex gap={1} flexWrap="wrap" alignItems="center" direction="row">
         {blockValue.map((item, index) => (
           <SharedDetailItem key={index} item={item} compact={compact} />
         ))}

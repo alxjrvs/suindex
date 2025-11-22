@@ -1,7 +1,15 @@
 import { createContext } from 'react'
 import type { ReactNode } from 'react'
 import type { ButtonProps } from '@chakra-ui/react'
-import type { SURefEntity, SURefEnumSchemaName } from 'salvageunion-reference'
+import type {
+  SURefEntity,
+  SURefEnumSchemaName,
+  SURefMetaAction,
+  SURefMetaChassisAbility,
+  SURefObjectTable,
+} from 'salvageunion-reference'
+// Import functions for type extraction (typeof requires actual values, not types)
+import type { getEffects } from 'salvageunion-reference'
 
 /**
  * Spacing helpers based on compact mode
@@ -88,6 +96,24 @@ export interface EntityDisplayContextValue {
   hideImage?: boolean
   /** Custom width for the image (e.g., '40%') */
   imageWidth?: string
+  /** Computed entity display name */
+  entityName: string
+  /** Whether entity has actions */
+  hasActions: boolean
+  /** Array of chassis abilities (or undefined) */
+  chassisAbilities?: SURefMetaChassisAbility[]
+  /** Array of effects (or undefined) */
+  effects?: ReturnType<typeof getEffects>
+  /** Table data (or undefined) */
+  table?: SURefObjectTable
+  /** Asset URL string (or undefined) */
+  assetUrl?: string
+  /** Array of visible actions (or undefined) */
+  visibleActions?: SURefMetaAction[]
+  /** Filtered actions excluding entity name (or undefined) */
+  actionsToDisplay?: SURefMetaAction[]
+  /** Action with matching name for content replacement (or undefined) */
+  matchingAction?: SURefMetaAction
 }
 
 export const EntityDisplayContext = createContext<EntityDisplayContextValue | null>(null)

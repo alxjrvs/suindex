@@ -12,7 +12,9 @@ export const suColors = {
   darkOrange: 'rgb(200, 100, 50)',
   lightOrange: 'rgb(245, 193, 163)',
   lightBlue: 'rgb(199, 223, 231)',
+  paleBlue: 'rgb(230, 240, 245)', // Paler than lightBlue
   oneBlue: 'rgb(115, 201, 230)',
+  oneTwoBlue: 'rgb(101, 185, 215)', // Midpoint between tech level 1 and 2
   twoBlue: 'rgb(87, 169, 200)',
   threeBlue: 'rgb(68, 135, 162)',
   fourBlue: 'rgb(48, 107, 128)',
@@ -27,6 +29,7 @@ export const suColors = {
   lightGrey: 'rgb(100, 100, 100)',
   mediumGrey: 'rgb(130, 130, 130)',
   darkGrey: 'rgb(80, 80, 80)',
+  lightGray: 'rgb(199, 199, 199)', // Gray with similar lightness to lightBlue
   deepPurple: 'rgb(60, 30, 80)',
 
   inputBg: 'rgb(232, 229, 216)',
@@ -65,7 +68,9 @@ const config = defineConfig({
           darkOrange: { value: suColors.darkOrange },
           lightOrange: { value: suColors.lightOrange },
           lightBlue: { value: suColors.lightBlue },
+          paleBlue: { value: suColors.paleBlue },
           oneBlue: { value: suColors.oneBlue },
+          oneTwoBlue: { value: suColors.oneTwoBlue },
           twoBlue: { value: suColors.twoBlue },
           threeBlue: { value: suColors.threeBlue },
           fourBlue: { value: suColors.fourBlue },
@@ -80,6 +85,7 @@ const config = defineConfig({
           lightGrey: { value: suColors.lightGrey },
           mediumGrey: { value: suColors.mediumGrey },
           darkGrey: { value: suColors.darkGrey },
+          lightGray: { value: suColors.lightGray },
           deepPurple: { value: suColors.deepPurple },
           inputBg: { value: suColors.inputBg },
           inputText: { value: suColors.inputText },
@@ -119,7 +125,7 @@ const config = defineConfig({
         'bg.input': { value: 'var(--chakra-colors-bg-input)' },
         'bg.hover': { value: 'var(--chakra-colors-bg-hover)' },
         'bg.active': { value: 'var(--chakra-colors-bg-active)' },
-        'bg.landing': { value: 'var(--chakra-colors-bg-landing)' },
+        'bg.landing': { value: '{colors.su.lightGray}' },
 
         'fg.default': { value: 'var(--chakra-colors-fg-default)' },
         'fg.muted': { value: 'var(--chakra-colors-fg-muted)' },
@@ -152,7 +158,6 @@ const config = defineConfig({
       '--chakra-colors-fg-inverted': suColors.white,
       '--chakra-colors-border-default': suColors.black,
       '--chakra-colors-brand-srd': suColors.brick,
-      '--chakra-colors-bg-landing': suColors.lightBlue,
       '--footer-logo-bg': 'transparent',
     },
     '[data-theme="dark"]': {
@@ -168,7 +173,6 @@ const config = defineConfig({
       '--chakra-colors-fg-inverted': suColors.black,
       '--chakra-colors-border-default': suColors.white,
       '--chakra-colors-brand-srd': suColors.orange,
-      '--chakra-colors-bg-landing': suColors.fourBlue,
       '--footer-logo-bg': suColors.white,
     },
     body: {
