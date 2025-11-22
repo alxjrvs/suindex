@@ -126,7 +126,7 @@ export function EntityDisplayContent({ children }: { children?: React.ReactNode 
 
   return (
     <EntityContainer
-      bg={'su.lightBlue'}
+      bg="su.lightBlue"
       w="full"
       headerBg={headerBg}
       headerOpacity={opacity.header}

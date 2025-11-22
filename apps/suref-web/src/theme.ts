@@ -125,7 +125,7 @@ const config = defineConfig({
         'bg.input': { value: 'var(--chakra-colors-bg-input)' },
         'bg.hover': { value: 'var(--chakra-colors-bg-hover)' },
         'bg.active': { value: 'var(--chakra-colors-bg-active)' },
-        'bg.landing': { value: '{colors.su.lightGray}' },
+        'bg.landing': { value: '{colors.su.lightBlue}' },
 
         'fg.default': { value: 'var(--chakra-colors-fg-default)' },
         'fg.muted': { value: 'var(--chakra-colors-fg-muted)' },
