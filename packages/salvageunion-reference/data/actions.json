@@ -462,6 +462,7 @@
   },
   {
     "name": "Armour Plating (Typhon)",
+    "displayName": "Armour Plating",
     "actionType": "Passive",
     "traits": [
       {
