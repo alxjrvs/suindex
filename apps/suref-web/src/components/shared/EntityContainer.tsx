@@ -76,7 +76,7 @@ export function EntityContainer({
       justifyContent={justifyContent}
       bg={actualBodyBg}
       p={0}
-      shadow="lg"
+      shadow="2xl"
       overflow="visible"
       minH="fit-content"
       flexShrink={0}
